@@ -137,7 +137,7 @@ void KMLprManager::initHandlers()
 	insertHandler(new LPRngToolHandler(this));
 
 	// now load external handlers
-	QStringList	l = KGlobal::dirs()->findAllResources("data", "kdeprint/lpr/*.la");
+	QStringList	l = KGlobal::dirs()->findAllResources("data", "kdeprint/lpr/*.so");
 	for (QStringList::ConstIterator it=l.begin(); it!=l.end(); ++it)
 	{
 		KLibrary	*library = KLibLoader::self()->library(QFile::encodeName(*it));

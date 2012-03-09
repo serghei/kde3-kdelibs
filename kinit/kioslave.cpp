@@ -31,20 +31,8 @@
 
 #include <qstring.h>
 
-#include "ltdl.h"
-
 #ifdef HAVE_DLFCN_H
 # include <dlfcn.h>
-#endif
-
-#ifdef RTLD_GLOBAL
-# define LTDL_GLOBAL	RTLD_GLOBAL
-#else
-# ifdef DL_GLOBAL
-#  define LTDL_GLOBAL	DL_GLOBAL
-# else
-#  define LTDL_GLOBAL	0
-# endif
 #endif
 
 /* These are to link libkio even if 'smart' linker is used */
@@ -65,24 +53,23 @@ int main(int argc, char **argv)
         fprintf(stderr, "library path is empty.\n");
         exit(1); 
      }
-     lt_dlinit();
 
-     lt_dlhandle handle = lt_dlopen( libpath.data() );
+     void *handle = dlopen( libpath.data(), RTLD_LAZY );
      if (!handle )
      {
-        const char * ltdlError = lt_dlerror();
-        fprintf(stderr, "could not open %s: %s", libpath.data(), ltdlError != 0 ? ltdlError : "(null)" );
+        const char * dlError = dlerror();
+        fprintf(stderr, "could not open %s: %s", libpath.data(), dlError != 0 ? dlError : "(null)" );
         exit(1);
      }  
 
-     lt_ptr sym = lt_dlsym( handle, "kdemain");
+     void *sym = dlsym( handle, "kdemain");
      if (!sym )
      {
-        sym = lt_dlsym( handle, "main");
+        sym = dlsym( handle, "main");
         if (!sym )
         {
-           const char * ltdlError = lt_dlerror();
-           fprintf(stderr, "Could not find main: %s\n", ltdlError != 0 ? ltdlError : "(null)" );
+           const char * dlError = dlerror();
+           fprintf(stderr, "Could not find main: %s\n", dlError != 0 ? dlError : "(null)" );
            exit(1);
         }
      }

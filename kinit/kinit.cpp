@@ -73,7 +73,6 @@
 
 #include <kdeversion.h>
 
-#include "ltdl.h"
 #include "klauncher_cmds.h"
 
 //#if defined Q_WS_X11 && ! defined K_WS_QTONLY
@@ -87,16 +86,6 @@
 # include <dlfcn.h>
 #endif
 
-#ifdef RTLD_GLOBAL
-# define LTDL_GLOBAL	RTLD_GLOBAL
-#else
-# ifdef DL_GLOBAL
-#  define LTDL_GLOBAL	DL_GLOBAL
-# else
-#  define LTDL_GLOBAL	0
-# endif
-#endif
-
 #if defined(KDEINIT_USE_XFT) && defined(KDEINIT_USE_FONTCONFIG)
 #include <X11/Xft/Xft.h>
 extern "C" FcBool XftInitFtLibrary (void);
@@ -105,7 +94,7 @@ extern "C" FcBool XftInitFtLibrary (void);
 
 extern char **environ;
 
-extern int lt_dlopen_flag;
+static int dlopen_flag = RTLD_LAZY;
 //#if defined Q_WS_X11 && ! defined K_WS_QTONLY
 #ifdef Q_WS_X11
 static int X11fd = -1;
@@ -146,13 +135,13 @@ static struct {
   pid_t launcher_pid;
   pid_t my_pid;
   int n;
-  lt_dlhandle handle;
-  lt_ptr sym;
+  void *handle;
+  void *sym;
   char **argv;
   int (*func)(int, char *[]);
   int (*launcher_func)(int);
   bool debug_wait;
-  int lt_dlopen_flag;
+  int dlopen_flag;
   QCString errorMsg;
   bool launcher_ok;
   bool suicide;
@@ -445,9 +434,9 @@ static pid_t launch(int argc, const char *_name, const char *args,
   QCString execpath;
   if (_name[0] != '/')
   {
-     /* Relative name without '.la' */
+     /* Relative name without '.so' */
      name = _name;
-     lib = name + ".la";
+     lib = name + ".so";
      exec = name;
      libpath = QFile::encodeName(KLibLoader::findLibrary( lib, s_instance ));
      execpath = execpath_avoid_loops( exec, envc, envs, avoid_loops );
@@ -458,7 +447,7 @@ static pid_t launch(int argc, const char *_name, const char *args,
      name = _name;
      name = name.mid( name.findRev('/') + 1);
      exec = _name;
-     if (lib.right(3) == ".la")
+     if (lib.right(3) == ".so")
         libpath = lib;
      else
         execpath = exec;
@@ -595,25 +584,25 @@ static pid_t launch(int argc, const char *_name, const char *args,
 
      if ( !libpath.isEmpty() )
      {
-       d.handle = lt_dlopen( QFile::encodeName(libpath) );
+       d.handle = dlopen( QFile::encodeName(libpath), RTLD_LAZY );
        if (!d.handle )
        {
-          const char * ltdlError = lt_dlerror();
+          const char * dlError = dlerror();
           if (execpath.isEmpty())
           {
              // Error
              QString errorMsg = i18n("Could not open library '%1'.\n%2").arg(QFile::decodeName(libpath))
-		.arg(ltdlError ? QFile::decodeName(ltdlError) : i18n("Unknown error"));
+		.arg(dlError ? QFile::decodeName(dlError) : i18n("Unknown error"));
              exitWithErrorMsg(errorMsg);
           }
           else
           {
              // Print warning
-             fprintf(stderr, "Could not open library %s: %s\n", lib.data(), ltdlError != 0 ? ltdlError : "(null)" );
+             fprintf(stderr, "Could not open library %s: %s\n", lib.data(), dlError != 0 ? dlError : "(null)" );
           }
        }
      }
-     lt_dlopen_flag = d.lt_dlopen_flag;
+     dlopen_flag = d.dlopen_flag;
      if (!d.handle )
      {
         d.result = 2; // Try execing
@@ -632,21 +621,21 @@ static pid_t launch(int argc, const char *_name, const char *args,
         exit(255);
      }
 
-     d.sym = lt_dlsym( d.handle, "kdeinitmain");
+     d.sym = dlsym( d.handle, "kdeinitmain");
      if (!d.sym )
      {
-        d.sym = lt_dlsym( d.handle, "kdemain" );
+        d.sym = dlsym( d.handle, "kdemain" );
         if ( !d.sym )
         {
 #if ! KDE_IS_VERSION( 3, 90, 0 )
-           d.sym = lt_dlsym( d.handle, "main");
+           d.sym = dlsym( d.handle, "main");
 #endif
            if (!d.sym )
            {
-              const char * ltdlError = lt_dlerror();
-              fprintf(stderr, "Could not find kdemain: %s\n", ltdlError != 0 ? ltdlError : "(null)" );
+              const char * dlError = dlerror();
+              fprintf(stderr, "Could not find kdemain: %s\n", dlError != 0 ? dlError : "(null)" );
               QString errorMsg = i18n("Could not find 'kdemain' in '%1'.\n%2").arg(libpath)
-                 .arg(ltdlError ? QFile::decodeName(ltdlError) : i18n("Unknown error"));
+                 .arg(dlError ? QFile::decodeName(dlError) : i18n("Unknown error"));
               exitWithErrorMsg(errorMsg);
            }
         }
@@ -1502,13 +1491,9 @@ static void kdeinit_library_path()
       extra_path += dir;
    }
 
-   if (lt_dlinit())
-   {
-      const char * ltdlError = lt_dlerror();
-      fprintf(stderr, "can't initialize dynamic loading: %s\n", ltdlError != 0 ? ltdlError : "(null)" );
-   }
-   if (!extra_path.isEmpty())
-      lt_dlsetsearchpath(extra_path.data());
+   // FIXME check if is need to be implemented
+   //if (!extra_path.isEmpty())
+   //   lt_dlsetsearchpath(extra_path.data());
 
    QCString display = getenv(DISPLAY);
    if (display.isEmpty())
@@ -1771,8 +1756,8 @@ int main(int argc, char **argv, char **envp)
    d.wrapper_old = 0;
    d.debug_wait = false;
    d.launcher_ok = false;
-   d.lt_dlopen_flag = lt_dlopen_flag;
-   lt_dlopen_flag |= LTDL_GLOBAL;
+   d.dlopen_flag = dlopen_flag;
+   dlopen_flag |= RTLD_GLOBAL;
    init_signals();
 #ifdef Q_WS_X11
    setupX();
@@ -1806,9 +1791,9 @@ int main(int argc, char **argv, char **envp)
 #ifndef __CYGWIN__
    if (!d.suicide && !getenv("KDE_IS_PRELINKED"))
    {
-      QString konq = locate("lib", "libkonq.la", s_instance);
+      QString konq = locate("lib", "libkonq.so", s_instance);
       if (!konq.isEmpty())
-	  (void) lt_dlopen(QFile::encodeName(konq).data());
+	  (void) dlopen(QFile::encodeName(konq).data(), dlopen_flag);
    }
 #endif 
    if (launch_klauncher)

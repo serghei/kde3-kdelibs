@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 
         config.setGroup( "KDE" );
 
-        if (config.readEntry( "widgetStyle" ) == "basicstyle.la")
+        if (config.readEntry( "widgetStyle" ) == "basicstyle.so")
         {
             //OK, emit a style entry...
             if (!themes.contains(name)) //Only add first occurrence, i.e. user local one.

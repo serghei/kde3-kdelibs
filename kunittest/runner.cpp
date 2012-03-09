@@ -54,7 +54,7 @@ namespace KUnitTest
     void Runner::loadModules(const QString &folder, const QString &query)
     {
         QRegExp reQuery(query);
-        QDir dir(folder, "kunittest_*.la");
+        QDir dir(folder, "kunittest_*.so");
 
         // Add the folder to the "module" resource such that the KLibLoader can
         // find the modules in this folder.

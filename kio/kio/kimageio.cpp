@@ -17,7 +17,7 @@
 #include <qregexp.h>
 #include <qvaluelist.h>
 
-#include <ltdl.h>
+#include <dlfcn.h>
 #include "kimageio.h"
 #include "kimageiofactory.h"
 #include <klocale.h>
@@ -109,10 +109,10 @@ KImageIOFormat::callLibFunc( bool read, QImageIO *iio)
          iio->setStatus(1); // Error
          return;
       }
-      lt_dlhandle libhandle = lt_dlopen( QFile::encodeName(libpath) );
+      void *libhandle = dlopen( QFile::encodeName(libpath), RTLD_LAZY );
       if (libhandle == 0) {
          iio->setStatus(1); // error
-         kdWarning() << "KImageIOFormat::callLibFunc: couldn't dlopen " << mLib << "(" << lt_dlerror() << ")" << endl;
+         kdWarning() << "KImageIOFormat::callLibFunc: couldn't dlopen " << mLib << "(" << dlerror() << ")" << endl;
          return;
       }
       bLibLoaded = true;
@@ -120,22 +120,22 @@ KImageIOFormat::callLibFunc( bool read, QImageIO *iio)
       if (bRead)
       {
          funcName = "kimgio_"+mType.lower()+"_read";
-         lt_ptr func = lt_dlsym(libhandle, funcName.ascii());
+         void *func = dlsym(libhandle, funcName.ascii());
 
          if (func == NULL) {
             iio->setStatus(1); // error
-            kdWarning() << "couln't find " << funcName << " (" << lt_dlerror() << ")" << endl;
+            kdWarning() << "couln't find " << funcName << " (" << dlerror() << ")" << endl;
          }
          mReadFunc = (void (*)(QImageIO *))func;
       }
       if (bWrite)
       {
          funcName = "kimgio_"+mType.lower()+"_write";
-         lt_ptr func = lt_dlsym(libhandle, funcName.ascii());
+         void *func = dlsym(libhandle, funcName.ascii());
 
          if (func == NULL) {
             iio->setStatus(1); // error
-            kdWarning() << "couln't find " << funcName << " (" << lt_dlerror() << ")" << endl;
+            kdWarning() << "couln't find " << funcName << " (" << dlerror() << ")" << endl;
          }
          mWriteFunc = (void (*)(QImageIO *))func;
       }
@@ -171,11 +171,10 @@ KImageIOFactory::KImageIOFactory() : KSycocaFactory( KST_KImageIO )
      if (!formatList)
      {
         kiioflsd.setObject( formatList, new KImageIOFormatList());
-        lt_dlinit(); // Do this only once!
         // Add rPaths.
         for(QStringList::Iterator it = rPath.begin();
             it != rPath.end(); ++it)
-           lt_dladdsearchdir( QFile::encodeName(*it) );
+           {}//lt_dladdsearchdir( QFile::encodeName(*it) ); FIXME check if this should be implemented
      }
      load();
   }
