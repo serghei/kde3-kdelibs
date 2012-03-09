@@ -1,0 +1,35 @@
+#################################################
+#
+#  (C) 2010-2012 Serghei Amelian
+#  serghei (DOT) amelian (AT) gmail.com
+#
+#  Improvements and feedback are welcome
+#
+#  This file is released under GPL >= 2
+#
+#################################################
+
+include_directories(
+  ${CMAKE_BINARY_DIR}/kdecore
+  ${CMAKE_SOURCE_DIR}/kdecore
+  ${CMAKE_SOURCE_DIR}/kdeui
+  ${CMAKE_SOURCE_DIR}/kio
+  ${CMAKE_SOURCE_DIR}/kio/kio
+  ${CMAKE_SOURCE_DIR}/kio/kfile
+  ${QT_INCLUDE_DIR}
+)
+
+
+##### kfile #####################################
+
+set( target kfile )
+
+set( ${target}_SRCS
+  fileprops.cpp
+)
+
+kde_add_executable( ${target}
+  SOURCES ${${target}_SRCS}
+  LINK kio-shared
+  DESTINATION ${BIN_INSTALL_DIR}
+)
