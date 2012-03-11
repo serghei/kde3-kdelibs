@@ -83,6 +83,25 @@ if( NOT DEFINED QT_VERSION )
   endif( )
 
 
+  if( DEFINED QUI_LIBRARY )
+    if( EXISTS "${QUI_LIBRARY}" )
+      set( QUI_LIBRARY_MSG "${QUI_LIBRARY} (ok)" )
+    else( )
+      set( QUI_LIBRARY_MSG "invalid path ${QUI_LIBRARY}" )
+    endif( )
+  else( )
+    if( DEFINED QT_LIBRARY_DIR )
+      find_library( QUI_LIBRARY NAMES qui HINTS "${QT_LIBRARY_DIR}" NO_DEFAULT_PATH )
+      if( QUI_LIBRARY )
+        set( QUI_LIBRARY_MSG "${QUI_LIBRARY} (ok)" )
+      else( )
+        set( QUI_LIBRARY_MSG "not found in ${QT_LIBRARY_DIR}" )
+      endif( )
+    else( )
+      set( QUI_LIBRARY_MSG "none of QT_LIBRARY_DIR or QUI_LIBRARY is set" )
+    endif( )
+  endif( )
+
 
   if( DEFINED QT_MOC_EXECUTABLE )
     if( EXISTS "${QT_MOC_EXECUTABLE}" )
@@ -149,11 +168,12 @@ if( NOT DEFINED QT_VERSION )
   message( "   QT_PREFIX_DIR: ${QT_PREFIX_DIR_MSG}" )
   message( "   QT_INCLUDE_DIR: ${QT_INCLUDE_DIR_MSG}" )
   message( "   QT_LIBRARY: ${QT_LIBRARY_MSG}" )
+  message( "   QUI_LIBRARY: ${QUI_LIBRARY_MSG}" )
   message( "   QT_MOC_EXECUTABLE: ${QT_MOC_EXECUTABLE_MSG}" )
   message( "   QT_UIC_EXECUTABLE: ${QT_UIC_EXECUTABLE_MSG}" )
 
 
-  if( NOT QT_VERSION OR NOT QT_INCLUDE_DIR OR NOT QT_LIBRARY OR NOT QT_MOC_EXECUTABLE OR NOT QT_UIC_EXECUTABLE )
+  if( NOT QT_VERSION OR NOT QT_INCLUDE_DIR OR NOT QT_LIBRARY OR NOT QUI_LIBRARY OR NOT QT_MOC_EXECUTABLE OR NOT QT_UIC_EXECUTABLE )
     message( FATAL_ERROR
       "\n"
       "####################################################################\n "
