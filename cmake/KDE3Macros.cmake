@@ -1417,6 +1417,23 @@ macro( kde_setup_install_path _path _default )
 endmacro( )
 
 
+#################################################
+#####
+##### kde_var_to_01
+
+macro( kde_var_to_01 _var )
+  if( ${_var} )
+    foreach( _arg ${ARGV} )
+      set( ${_arg} 1 )
+    endforeach( )
+  else( )
+    foreach( _arg ${ARGV} )
+      set( ${_arg} 0 )
+    endforeach( )
+  endif( )
+endmacro( )
+
+
 ##################################################
 
 if( ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR} )
