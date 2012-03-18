@@ -296,6 +296,12 @@ if( DL_LIBRARY )
   set( HAVE_LIBDL 1 CACHE INTERNAL "" )
 endif( )
 
+# pthread
+find_library( PTHREAD_LIBRARY pthread )
+if( NOT PTHREAD_LIBRARY )
+  kde_message_fatal( "pthread library is required, but was not found on your system" )
+endif( )
+
 kde_search_module( X11 x11 )
 kde_search_module( LIBXML2 libxml-2.0 )
 kde_search_module( LIBXSLT libxslt )
@@ -424,7 +430,17 @@ endif( )
 if( WITH_ALSA )
   kde_search_module( ALSA alsa )
   check_include_file( alsa/asoundlib.h HAVE_ALSA_ASOUNDLIB_H )
+  if( NOT HAVE_ALSA_ASOUNDLIB_H )
+    check_include_file( "sys/asoundlib.h" HAVE_SYS_ASOUNDLIB_H )
+  endif( )
+  find_library( ASOUND_LIBRARY asound )
+  if( NOT ASOUND_LIBRARY )
+    kde_message_fatal( "libasound.so.2 is required, but was not found on your system" )
+  endif( )
+  check_library_exists( ${ASOUND_LIBRARY} snd_pcm_resume "" HAVE_SND_PCM_RESUME )
   set( HAVE_LIBASOUND2 1 CACHE INTERNAL "" )
+  set( ALSA_PCM_OLD_SW_PARAMS_API 1 CACHE INTERNAL "" )
+  set( ALSA_PCM_OLD_HW_PARAMS_API 1 CACHE INTERNAL "" )
 endif( )
 
 # arts
@@ -463,6 +479,7 @@ set( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--no-undefined 
 
 ##### internal tools ############################
 
+set( KDE_MCOPIDL_EXECUTABLE "${CMAKE_BINARY_DIR}/arts/arts/mcopidl/mcopidl" )
 set( KDE_DCOPIDL_EXECUTABLE "${CMAKE_BINARY_DIR}/dcop/dcopidl/dcopidl" )
 set( KDE_DCOPIDL2CPP_EXECUTABLE "${CMAKE_BINARY_DIR}/dcop/dcopidl2cpp/dcopidl2cpp" )
 set( KDE_KCFGC_EXECUTABLE "${CMAKE_BINARY_DIR}/kdecore/kconfig_compiler/kconfig_compiler" )

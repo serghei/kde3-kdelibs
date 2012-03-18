@@ -28,6 +28,18 @@
 /* Define to 1 if you have the <alsa/asoundlib.h> header file. */
 #cmakedefine HAVE_ALSA_ASOUNDLIB_H 1
 
+/* Define to 1 if you have the <sys/asoundlib.h> header file. */
+#cmakedefine HAVE_SYS_ASOUNDLIB_H 1
+
+#cmakedefine ALSA_PCM_OLD_SW_PARAMS_API 1
+#cmakedefine ALSA_PCM_OLD_HW_PARAMS_API 1
+
+/* Define if you have libasound.so.2 (required for >= ALSA 0.9.x support) */
+#cmakedefine HAVE_LIBASOUND2 1
+
+/* Define if libasound has snd_pcm_resume() */
+#cmakedefine HAVE_SND_PCM_RESUME 1
+
 /* Define to 1 if you have the <arpa/nameser8_compat.h> header file. */
 #cmakedefine HAVE_ARPA_NAMESER8_COMPAT_H 1
 
@@ -217,12 +229,6 @@
 
 /* Defines if your system has the libart library */
 #cmakedefine HAVE_LIBART 1
-
-/* Define if you have libasound.so.1 (required for ALSA 0.5.x support) */
-#undef HAVE_LIBASOUND
-
-/* Define if you have libasound.so.2 (required for ALSA 0.9.x support) */
-#cmakedefine HAVE_LIBASOUND2 1
 
 /* Define if you have the libdl library or equivalent. */
 #cmakedefine HAVE_LIBDL 1
@@ -762,6 +768,9 @@
 /* Defined if compiling without arts */
 #cmakedefine WITHOUT_ARTS 1
 
+/* audiofile support for aRts */
+#cmakedefine HAVE_AUDIOFILE 1
+
 /* where rgb.txt is in */
 #undef X11_RGBFILE
 
@@ -770,6 +779,12 @@
 
 /* Defined if your system has XRandR support */
 #cmakedefine XRANDR_SUPPORT 1
+
+/* ioctl type */
+
+#cmakedefine HAVE_IOCTL_INT_INT_DOTS 1
+#cmakedefine HAVE_IOCTL_INT_ULONG_DOTS 1
+#cmakedefine HAVE_IOCTL_INT_ULONGINT_DOTS 1
 
 /*
  * jpeg.h needs HAVE_BOOLEAN, when the system uses boolean in system

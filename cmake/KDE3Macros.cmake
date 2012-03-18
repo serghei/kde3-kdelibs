@@ -391,6 +391,30 @@ endmacro( )
 
 #################################################
 #####
+##### kde_add_idl( arg )
+
+macro( kde_add_idl _sources _arg )
+  # extract paths
+  get_filename_component( _idl ${_arg} ABSOLUTE )
+  get_filename_component( _path ${_idl} PATH )
+  get_filename_component( _basename ${_idl} NAME_WE )
+
+  # set filenames
+  set( _h ${_basename}.h )
+  set( _cpp ${_basename}.cc )
+
+  # generate sources
+  add_custom_command( OUTPUT ${_h} ${_cpp}
+    COMMAND ${KDE_MCOPIDL_EXECUTABLE} -t ${KDE_MCOPIDL_PARAMS} ${_idl}
+    DEPENDS ${_idl} ${KDE_MCOPIDL_EXECUTABLE} )
+
+  # append new generated file to sources
+  list( APPEND ${_sources} ${_cpp} )
+endmacro( )
+
+
+#################################################
+#####
 ##### kde_add_kcfg_files
 
 macro( kde_add_kcfg_files _sources )
@@ -546,6 +570,10 @@ macro( __kde_internal_process_sources _sources )
     # handle .kcfgc files
     elseif( "${_ext}" STREQUAL ".kcfgc" )
       kde_add_kcfg_files( ${_sources} ${_arg} )
+
+    # handle .idl files (arts)
+    elseif( "${_ext}" STREQUAL ".idl" )
+      kde_add_idl( ${_sources} ${_arg} )
 
     # handle any other files
     else( )

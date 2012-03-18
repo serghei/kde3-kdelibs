@@ -12,6 +12,9 @@
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_BINARY_DIR}/kdecore
+  ${CMAKE_BINARY_DIR}/arts/arts/mcop
+  ${CMAKE_BINARY_DIR}/arts/arts/flow
+  ${CMAKE_BINARY_DIR}/arts/arts/soundserver
   ${CMAKE_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/dcop
   ${CMAKE_SOURCE_DIR}/interfaces
@@ -20,6 +23,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/kio
   ${CMAKE_SOURCE_DIR}/kio/kio
   ${CMAKE_SOURCE_DIR}/kio/kfile
+  ${CMAKE_SOURCE_DIR}/arts/arts/mcop
   ${CMAKE_SOURCE_DIR}/arts/kde
   ${QT_INCLUDE_DIR}
 )

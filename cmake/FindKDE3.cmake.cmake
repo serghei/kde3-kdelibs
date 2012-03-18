@@ -62,6 +62,7 @@ include( "${CMAKE_INSTALL_DIR}/KDE3Macros.cmake" )
 
 # paths to kde3 tools
 set( KDE_CONFIG_EXECUTABLE "${BIN_INSTALL_DIR}/kde-config" )
+set( KDE_MCOPIDL_EXECUTABLE "${BIN_INSTALL_DIR}/mcopidl" )
 set( KDE_DCOPIDL_EXECUTABLE "${BIN_INSTALL_DIR}/dcopidl" )
 set( KDE_DCOPIDLNG_EXECUTABLE "${BIN_INSTALL_DIR}/dcopidlng" )
 set( KDE_DCOPIDL2CPP_EXECUTABLE "${BIN_INSTALL_DIR}/dcopidl2cpp" )

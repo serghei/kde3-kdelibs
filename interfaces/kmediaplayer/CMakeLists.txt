@@ -9,9 +9,9 @@
 #
 #################################################
 
-if( ARTS_FOUND )
+if( WITH_ARTS )
   add_subdirectory( kfileaudiopreview )
-endif( ARTS_FOUND )
+endif( )
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}

@@ -10,6 +10,7 @@
 #################################################
 
 include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/../arts/arts/mcop
   ${CMAKE_BINARY_DIR}/kdecore
   ${CMAKE_SOURCE_DIR}/kdecore
   ${CMAKE_SOURCE_DIR}/kdeui

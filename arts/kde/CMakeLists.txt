@@ -11,9 +11,15 @@
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_BINARY_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}/../arts/mcop
+  ${CMAKE_CURRENT_BINARY_DIR}/../arts/flow
+  ${CMAKE_CURRENT_BINARY_DIR}/../arts/soundserver
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/../arts/mcop
+  ${CMAKE_CURRENT_SOURCE_DIR}/../arts/flow
+  ${CMAKE_CURRENT_SOURCE_DIR}/../arts/qtmcop
   ${CMAKE_BINARY_DIR}/kdecore
+  ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/kdecore
   ${CMAKE_SOURCE_DIR}/kdeui
   ${CMAKE_SOURCE_DIR}/kio
@@ -34,26 +40,18 @@ install( FILES
 
 ##### artskde ###################################
 
-set( target artskde )
+set( KDE_MCOPIDL_PARAMS
+  -I${CMAKE_CURRENT_SOURCE_DIR}/../arts/flow
+  -I${CMAKE_CURRENT_SOURCE_DIR}/../arts/soundserver )
 
-set( ${target}_SRCS
-  artskde.cc kioinputstream_impl.cpp kplayobject.cc
-  kplayobjectfactory.cc kartsfloatwatch.cpp kartsdispatcher.cc
-  kaudiorecordstream.cpp kaudioplaystream.cpp kartsserver.cpp
-  kdatarequest_impl.cpp kaudioconverter.cc kvideowidget.cpp
-  kplayobjectcreator.cc kaudiomanagerplay.cpp
-)
-
-add_custom_command(
-  OUTPUT artskde.cc artskde.h
-  COMMAND ${ARTS_MCOPIDL_EXECUTABLE}
-    -I${ARTS_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/artskde.idl
-  DEPENDS artskde.idl
-)
-
-kde_add_library( ${target} SHARED AUTOMOC
-  SOURCES ${${target}_SRCS}
+kde_add_library( artskde SHARED AUTOMOC
+  SOURCES
+    artskde.idl kioinputstream_impl.cpp kplayobject.cc
+    kplayobjectfactory.cc kartsfloatwatch.cpp kartsdispatcher.cc
+    kaudiorecordstream.cpp kaudioplaystream.cpp kartsserver.cpp
+    kdatarequest_impl.cpp kaudioconverter.cc kvideowidget.cpp
+    kplayobjectcreator.cc kaudiomanagerplay.cpp
   VERSION 1.2.0
-  LINK kio-shared mcop artsflow_idl kmedia2_idl soundserver_idl artsflow qtmcop
+  LINK kio-shared soundserver_idl-shared qtmcop-shared
   DESTINATION ${LIB_INSTALL_DIR}
 )

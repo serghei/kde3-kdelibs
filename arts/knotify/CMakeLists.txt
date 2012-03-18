@@ -11,6 +11,11 @@
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}/../arts/mcop
+  ${CMAKE_CURRENT_BINARY_DIR}/../arts/flow
+  ${CMAKE_CURRENT_BINARY_DIR}/../arts/soundserver
+  ${CMAKE_CURRENT_SOURCE_DIR}/../arts/mcop
+  ${CMAKE_CURRENT_SOURCE_DIR}/../arts/qtmcop
   ${CMAKE_BINARY_DIR}
   ${CMAKE_BINARY_DIR}/kdecore
   ${CMAKE_SOURCE_DIR}/arts/kde
@@ -28,11 +33,11 @@ install( FILES knotify.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 
 ##### knotify ###################################
 
-if( ARTS_FOUND )
+if( WITH_ARTS )
   set( LIBS artskde-shared )
-else( ARTS_FOUND )
+else( )
   set( LIBS kdeui-shared )
-endif( ARTS_FOUND )
+endif( )
 
 kde_add_kpart( knotify AUTOMOC
   SOURCES knotify.cpp knotify.skel
