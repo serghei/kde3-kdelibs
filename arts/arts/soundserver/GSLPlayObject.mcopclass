@@ -3,5 +3,5 @@ Author="Hans Meine <hans_meine@gmx.net>"
 URL="http://www.arts-project.org/"
 Extension=wav,mp3,ogg
 Language=C++
-Library=libartsgslplayobject.la
+Library=libartsgslplayobject.so
 MimeType=audio/wav,audio/x-wav,audio/x-mp3,audio/x-mp1,audio/x-mp2,audio/vorbis,application/ogg

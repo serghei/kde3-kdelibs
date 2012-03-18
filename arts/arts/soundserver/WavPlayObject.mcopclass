@@ -3,5 +3,5 @@ Author="Stefan Westerfeld <stefan@space.twc.de>"
 URL="http://www.arts-project.org"
 Extension=wav
 Language=C++
-Library=libartswavplayobject.la
+Library=libartswavplayobject.so
 MimeType=audio/wav,audio/x-wav

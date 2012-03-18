@@ -11,7 +11,7 @@
 
 configure_file( arts_export.h.cmake arts_export.h )
 
-add_definitions( -DEXTENSION_DIR="${LIB_INSTALL_DIR}" -DTRADER_DIR="${LIB_INSTALL_DIR}/mcop" )
+add_definitions( -DEXTENSION_DIR="${PLUGIN_INSTALL_DIR}" -DTRADER_DIR="${LIB_INSTALL_DIR}/mcop" )
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
