@@ -289,13 +289,21 @@ public:
      */
     ShutdownTypeNone = 0,
     /**
+     * Suspend the machine.
+     */
+    ShutdownTypeSuspend = 1,
+    /**
+     * Hibernate the machine.
+     */
+    ShutdownTypeHibernate = 2,
+    /**
      * Log out and reboot the machine.
      */
-    ShutdownTypeReboot = 1,
+    ShutdownTypeReboot = 3,
     /**
      * Log out and halt the machine.
      */
-    ShutdownTypeHalt = 2
+    ShutdownTypeHalt = 4
   };
 
   /**
