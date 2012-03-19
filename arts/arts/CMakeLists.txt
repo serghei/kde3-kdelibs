@@ -9,8 +9,6 @@
 #
 #################################################
 
-project( arts )
-
 set( ARTS_MAJOR_VERSION 1 )
 set( ARTS_MINOR_VERSION 5 )
 set( ARTS_MICRO_VERSION 10 )
@@ -23,5 +21,3 @@ add_subdirectory( mcop_mt )
 add_subdirectory( mcopidl )
 add_subdirectory( qtmcop )
 add_subdirectory( soundserver )
-
-kde_install_export( )
