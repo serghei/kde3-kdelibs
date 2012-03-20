@@ -303,6 +303,7 @@ if( NOT PTHREAD_LIBRARY )
 endif( )
 
 kde_search_module( X11 x11 )
+kde_search_module( DBUS dbus-1 )
 kde_search_module( LIBXML2 libxml-2.0 )
 kde_search_module( LIBXSLT libxslt )
 
@@ -479,6 +480,7 @@ set( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--no-undefined 
 ##### internal tools ############################
 
 set( KDE_MCOPIDL_EXECUTABLE "${CMAKE_BINARY_DIR}/arts/arts/mcopidl/mcopidl" )
+set( KDE_DBUSXML2QT3_EXECUTABLE "${CMAKE_BINARY_DIR}/dbus/dbusxml2qt3/dbusxml2qt3" )
 set( KDE_DCOPIDL_EXECUTABLE "${CMAKE_BINARY_DIR}/dcop/dcopidl/dcopidl" )
 set( KDE_DCOPIDL2CPP_EXECUTABLE "${CMAKE_BINARY_DIR}/dcop/dcopidl2cpp/dcopidl2cpp" )
 set( KDE_KCFGC_EXECUTABLE "${CMAKE_BINARY_DIR}/kdecore/kconfig_compiler/kconfig_compiler" )

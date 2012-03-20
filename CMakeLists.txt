@@ -68,6 +68,7 @@ include( ConfigureChecks.cmake )
 
 add_subdirectory( arts )
 add_subdirectory( cmake )
+add_subdirectory( dbus )
 add_subdirectory( dcop )
 add_subdirectory( dnssd )
 add_subdirectory( doc )
