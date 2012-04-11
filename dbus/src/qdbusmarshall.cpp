@@ -342,6 +342,19 @@ void qFetchStringKeyMapEntry(QDBusDataMap<QString>& map, DBusMessageIter* it)
     map.insert(key, qFetchParameter(&itemIter));
 }
 
+void qFetchObjectPathKeyMapEntry(QDBusDataMap<QDBusObjectPath>& map, DBusMessageIter* it)
+{
+    DBusMessageIter itemIter;
+    dbus_message_iter_recurse(it, &itemIter);
+    Q_ASSERT(dbus_message_iter_has_next(&itemIter));
+
+    QDBusObjectPath key = qFetchParameter(&itemIter).toObjectPath();
+
+    dbus_message_iter_next(&itemIter);
+
+    map.insert(key, qFetchParameter(&itemIter));
+}
+
 static QDBusData qFetchMap(DBusMessageIter *it, const QDBusData& prototype)
 {
     if (dbus_message_iter_get_arg_type(it) == DBUS_TYPE_INVALID)
@@ -417,7 +430,6 @@ static QDBusData qFetchMap(DBusMessageIter *it, const QDBusData& prototype)
         }
 
         case DBUS_TYPE_STRING:      // fall through
-        case DBUS_TYPE_OBJECT_PATH: // fall through
         case DBUS_TYPE_SIGNATURE: {
             QDBusDataMap<QString> map = prototype.toStringKeyMap();
             do {
@@ -425,6 +437,14 @@ static QDBusData qFetchMap(DBusMessageIter *it, const QDBusData& prototype)
             } while (dbus_message_iter_next(it));
 
             return QDBusData::fromStringKeyMap(map);
+        }
+
+        case DBUS_TYPE_OBJECT_PATH: {
+            QDBusDataMap<QDBusObjectPath> map = prototype.toObjectPathKeyMap();
+            do {
+                qFetchObjectPathKeyMapEntry(map, it);
+            } while (dbus_message_iter_next(it));
+            return QDBusData::fromObjectPathKeyMap(map);
         }
 
         default:
