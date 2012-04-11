@@ -335,8 +335,7 @@ void qFetchStringKeyMapEntry(QDBusDataMap<QString>& map, DBusMessageIter* it)
     dbus_message_iter_recurse(it, &itemIter);
     Q_ASSERT(dbus_message_iter_has_next(&itemIter));
 
-    QDBusData param = qFetchParameter(&itemIter);
-    QString key = (QDBusData::ObjectPath == param.type() ? param.toObjectPath( ) : param.toString());
+    QString key = qFetchParameter(&itemIter).toString();
 
     dbus_message_iter_next(&itemIter);
 
