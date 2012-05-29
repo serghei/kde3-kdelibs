@@ -285,6 +285,9 @@ QDBusMessage QDBusConnection::sendWithReply(const QDBusMessage &message, QDBusEr
 
     dbus_message_unref(msg);
 
+    // dispatch signals occurred while waiting for reply
+    scheduleDispatch();
+
     return QDBusMessage::fromDBusMessage(reply);
 }
 
