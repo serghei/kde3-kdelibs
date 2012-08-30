@@ -86,3 +86,7 @@ Comment[zh_CN]=Rar 归档
 Comment[zh_HK]=Rar 壓縮檔
 Comment[zh_TW]=Rar 壓縮檔案
 Comment[zu]=Umqulu we-Rar
+
+[Property::X-KDE-LocalProtocol]
+Type=QString
+Value=rar
