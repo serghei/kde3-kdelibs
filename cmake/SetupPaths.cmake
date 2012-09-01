@@ -1,6 +1,6 @@
 #################################################
 #
-#  (C) 2010-2011 Serghei Amelian
+#  (C) 2010-2012 Serghei Amelian
 #  serghei (DOT) amelian (AT) gmail.com
 #
 #  Improvements and feedback are welcome
@@ -35,7 +35,7 @@ _kde_internal_setup_path( CMAKE_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/cma
 _kde_internal_setup_path( PLUGIN_INSTALL_DIR        "${LIB_INSTALL_DIR}/kde3"                     "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde3)" )
 _kde_internal_setup_path( CONFIG_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/config"              "The config file install dir" )
 _kde_internal_setup_path( DATA_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/apps"                "The parent directory where applications can install their data" )
-_kde_internal_setup_path( HTML_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/doc/kde/HTML"        "The HTML install dir for documentation" )
+_kde_internal_setup_path( HTML_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/doc/HTML"            "The HTML install dir for documentation" )
 _kde_internal_setup_path( ICON_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/icons"               "The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)" )
 _kde_internal_setup_path( KCFG_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/config.kcfg"         "The install dir for kconfig files" )
 _kde_internal_setup_path( LOCALE_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/locale"              "The install dir for translations" )

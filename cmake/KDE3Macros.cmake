@@ -1334,7 +1334,7 @@ macro( kde_create_handbook )
   endif( )
 
   install( FILES ${_srcs} ${_extra} DESTINATION ${_dest} )
-  kde_install_symlink( ${TDE_HTML_DIR}/${_lang}/common ${_dest} )
+  kde_install_symlink( ${HTML_INSTALL_DIR}/${_lang}/common ${_dest} )
 
 endmacro( )
 
