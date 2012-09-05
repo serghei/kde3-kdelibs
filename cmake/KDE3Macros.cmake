@@ -492,29 +492,37 @@ macro( kde_automoc )
           # create header filename
           get_filename_component( _src_path "${_src_file}" ABSOLUTE )
           get_filename_component( _src_path "${_src_path}" PATH )
-          get_filename_component( _src_header "${_moc_file}" NAME_WE )
-          set( _header_file "${_src_path}/${_src_header}.h" )
+          # strip extension workaround
+          # see Bug http://public.kitware.com/Bug/view.php?id=6854
+          get_filename_component( _input_name "${_moc_file}" NAME )
+          string( REGEX REPLACE "^(.+)(\\.[^.]+)$" "\\1" _input_name "${_input_name}" )
+          set( _input_file "${_src_path}/${_input_name}" )
+
+          # if the input file doesn't exists, try for its header
+          if( NOT EXISTS "${_input_file}" )
+            set( _input_file "${_input_file}.h" )
+          endif( )
 
           # if header doesn't exists, check in META_INCLUDES
-          if( NOT EXISTS "${_header_file}" )
+          if( NOT EXISTS "${_input_file}" )
             unset( _found )
             foreach( _src_path ${_meta_includes} )
-              set( _header_file "${_src_path}/${_src_header}.h" )
-              if( EXISTS "${_header_file}" )
+              set( _input_file "${_src_path}/${_input_name}.h" )
+              if( EXISTS "${_input_file}" )
                 set( _found 1 )
                 break( )
               endif( )
             endforeach( )
             if( NOT _found )
               get_filename_component( _moc_file "${_moc_file}" NAME )
-              kde_message_fatal( "AUTOMOC error: '${_moc_file}' cannot be generated.\n Reason: '${_src_file}.h' not found." )
+              kde_message_fatal( "AUTOMOC error: '${_moc_file}' cannot be generated.\n Reason: '${_input_file}.h' not found." )
             endif( )
           endif( )
 
-          # moc-ing header
+          # moc-ing the input file
           add_custom_command( OUTPUT ${_moc_file}
-            COMMAND ${QT_MOC_EXECUTABLE} ${_header_file} -o ${_moc_file}
-            DEPENDS ${_header_file} )
+            COMMAND ${QT_MOC_EXECUTABLE} ${_input_file} -o ${_moc_file}
+            DEPENDS ${_input_file} )
 
           # create dependency between source file and moc file
           set_property( SOURCE ${_src_file} APPEND PROPERTY OBJECT_DEPENDS ${_moc_file} )
