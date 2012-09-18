@@ -496,10 +496,11 @@ macro( kde_automoc )
           # see Bug http://public.kitware.com/Bug/view.php?id=6854
           get_filename_component( _input_name "${_moc_file}" NAME )
           string( REGEX REPLACE "^(.+)(\\.[^.]+)$" "\\1" _input_name "${_input_name}" )
+          get_filename_component( _input_ext "${_input_name}" EXT )
           set( _input_file "${_src_path}/${_input_name}" )
 
-          # if the input file doesn't exists, try for its header
-          if( NOT EXISTS "${_input_file}" )
+          # the input file is not cpp, so we assume that is header file
+          if( NOT "${_input_ext}" STREQUAL ".cpp" )
             set( _input_file "${_input_file}.h" )
           endif( )
 
