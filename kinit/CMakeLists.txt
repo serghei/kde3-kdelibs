@@ -35,7 +35,7 @@ set( ${target}_SRCS
 
 kde_add_executable( ${target}
   SOURCES ${${target}_SRCS}
-  LINK kparts-shared
+  LINK kparts-shared ${XFT_LIBRARIES}
   DESTINATION ${BIN_INSTALL_DIR}
 )
 
