@@ -323,6 +323,7 @@ KDECORE_EXPORT int revoke(const char *tty)
 #endif
 
 #ifndef HAVE_STRLCPY
+#include <string.h>
 KDECORE_EXPORT unsigned long strlcpy(char* d, const char* s, unsigned long bufsize)
 {
     unsigned long len, ret = strlen(s);
@@ -341,6 +342,7 @@ KDECORE_EXPORT unsigned long strlcpy(char* d, const char* s, unsigned long bufsi
 #endif
 
 #ifndef HAVE_STRLCAT
+#include <string.h>
 KDECORE_EXPORT unsigned long strlcat(char* d, const char* s, unsigned long bufsize)
 {
     char *cp;
