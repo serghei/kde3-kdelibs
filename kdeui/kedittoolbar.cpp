@@ -62,7 +62,7 @@ static void dump_xml(const QDomDocument& doc)
 
 typedef QValueList<QDomElement> ToolbarList;
 
-namespace
+namespace ns_KEditToolbar
 {
 class XmlData
 {
@@ -202,7 +202,9 @@ protected:
     return ToolbarItemDrag::canDecode( event );
   }
 };
-} // namespace
+} // namespace ns_KEditToolbar
+
+using namespace ns_KEditToolbar;
 
 class KEditToolbarWidgetPrivate
 {
