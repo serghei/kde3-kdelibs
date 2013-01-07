@@ -351,7 +351,8 @@ macro( kde_add_dcop _sources _dcop _type )
   elseif( "${_type}" STREQUAL "SKEL_NG" )
     set( _suff "skel" )
     set( _no "stub" )
-    set( _dcopidl KDECONFIG=${KDE_CONFIG_EXECUTABLE} ${KDE_DCOPIDLNG_EXECUTABLE} )
+    set( _dcopidl ${KDE_DCOPIDLNG_EXECUTABLE} )
+    set( _kdeconfig KDECONFIG=${KDE_CONFIG_EXECUTABLE} )
   elseif( "${_type}" STREQUAL "STUB" )
     set( _suff "stub" )
     set( _no "skel" )
@@ -359,7 +360,8 @@ macro( kde_add_dcop _sources _dcop _type )
   elseif( "${_type}" STREQUAL "STUB_NG" )
     set( _suff "stub" )
     set( _no "skel" )
-    set( _dcopidl KDECONFIG=${KDE_CONFIG_EXECUTABLE} ${KDE_DCOPIDLNG_EXECUTABLE} )
+    set( _dcopidl ${KDE_DCOPIDLNG_EXECUTABLE} )
+    set( _kdeconfig KDECONFIG=${KDE_CONFIG_EXECUTABLE} )
   else( )
     kde_message_fatal( "Invalid dcop file type: ${_type}" )
   endif( )
@@ -376,7 +378,7 @@ macro( kde_add_dcop _sources _dcop _type )
 
   # generate .kidl
   add_custom_command( OUTPUT ${_kidl}
-  COMMAND ${_dcopidl} ${_header} > ${_kidl}
+  COMMAND ${_kdeconfig} ${_dcopidl} ${_header} > ${_kidl}
   DEPENDS ${_header} ${_dcopidl} )
 
   # generate _{skel/stub}.cpp
