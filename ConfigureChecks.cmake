@@ -56,6 +56,11 @@ set( STDC_HEADERS 1 CACHE INTERNAL "" )
 # we really want to use kde's malloc?
 set( KDE_MALLOC_GLIBC 1 CACHE INTERNAL "" )
 
+# detect 64 bit system and set libsuffix
+if( CMAKE_SIZEOF_VOID_P MATCHES 8 )
+    set( KDELIBSUFF "64" )
+endif( )
+
 
 ##### check of include files ####################
 
