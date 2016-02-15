@@ -449,6 +449,19 @@ if( WITH_ALSA )
   set( ALSA_PCM_OLD_HW_PARAMS_API 1 CACHE INTERNAL "" )
 endif( )
 
+# vorbis
+if( WITH_VORBIS )
+  kde_search_module( VORBISFILE vorbisfile )
+endif( )
+
+# pulseaudio
+if( WITH_PULSEAUDIO )
+  if( NOT WITH_VORBIS )
+	kde_message_fatal( "PulseAudio support needs vorbis decoder (-DWITH_VORBIS=ON)" )
+  endif( )
+  kde_search_module( PULSEAUDIO libpulse-simple )
+endif( )
+
 # arts
 if( WITH_ARTS )
   kde_search_module( GLIB2 glib-2.0 )

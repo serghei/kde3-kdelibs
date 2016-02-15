@@ -27,6 +27,14 @@
 #include <sys/stat.h>
 
 #include <config.h>
+
+#ifdef WITH_PULSEAUDIO
+	#ifndef WITHOUT_ARTS
+		#define WITHOUT_ARTS
+	#endif
+	#include "kpulseplayer.h"
+#endif
+
 #ifndef WITHOUT_ARTS
 // aRts headers
 #include <connect.h>
@@ -93,6 +101,10 @@ public:
     QTimer *playTimer;
     bool inStartup;
     QString startupEvents;
+
+#ifdef WITH_PULSEAUDIO
+	KPulsePlayer pulsePlayer;
+#endif
 };
 
 // Yes, it's ugly to put this here, but this facilitates the cautious startup
@@ -466,6 +478,10 @@ bool KNotify::notifyBySound( const QString &sound, const QString &appname, int e
     // kdDebug() << "KNotify::notifyBySound - trying to play file " << soundFile << endl;
 
     if (!external) {
+#ifdef WITH_PULSEAUDIO
+		d->pulsePlayer.play(soundFile.utf8());
+#endif
+
         //If we disabled using aRts, just return,
         //(If we don't, we'll blow up accessing the null soundServer)
         if (!d->useArts)

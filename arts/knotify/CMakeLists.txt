@@ -9,6 +9,9 @@
 #
 #################################################
 
+# enable c++11 support (for <atomic.h>)
+#add_definitions( -std=c++11 )
+
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/../arts/mcop
@@ -33,14 +36,17 @@ install( FILES knotify.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 
 ##### knotify ###################################
 
-if( WITH_ARTS )
+if( WITH_PULSEAUDIO )
+  set( SRCS kpulseplayer.cpp )
+  set( LIBS kdeui-shared ${PULSEAUDIO_LIBRARIES} ${VORBISFILE_LIBRARIES} )
+elseif( WITH_ARTS )
   set( LIBS artskde-shared )
 else( )
   set( LIBS kdeui-shared )
 endif( )
 
 kde_add_kpart( knotify AUTOMOC
-  SOURCES knotify.cpp knotify.skel
+  SOURCES knotify.cpp knotify.skel ${SRCS}
   LINK ${LIBS}
   DEPENDENCIES dcopidl
   DESTINATION ${PLUGIN_INSTALL_DIR}

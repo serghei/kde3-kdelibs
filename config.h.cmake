@@ -765,6 +765,9 @@
 /* Version number of package */
 #define VERSION "@VERSION@"
 
+/* pulseaudio support */
+#cmakedefine WITH_PULSEAUDIO
+
 /* Defined if compiling without arts */
 #cmakedefine WITHOUT_ARTS 1
 
