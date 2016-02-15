@@ -869,7 +869,7 @@ macro( kde_add_library _arg_target )
       list( APPEND _shared_libs ${_lib} )
     endif(  )
   endforeach( )
-  target_link_libraries( ${_target} LINK_INTERFACE_LIBRARIES ${_shared_libs} )
+  target_link_libraries( ${_target} INTERFACE ${_shared_libs} )
 
   # set embedded archives
   if( _embed )
@@ -878,7 +878,7 @@ macro( kde_add_library _arg_target )
 
   # set link libraries
   if( _link )
-    target_link_libraries( ${_target} ${_link} )
+    target_link_libraries( ${_target} PRIVATE ${_link} )
   endif( )
 
   # set dependencies
