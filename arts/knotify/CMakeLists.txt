@@ -38,7 +38,7 @@ install( FILES knotify.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 
 if( WITH_PULSEAUDIO )
   set( SRCS kpulseplayer.cpp )
-  set( LIBS kdeui-shared ${PULSEAUDIO_LIBRARIES} ${VORBISFILE_LIBRARIES} )
+  set( LIBS kdeui-shared ${PULSEAUDIO_LIBRARIES} ${VORBISFILE_LIBRARIES} ${AUDIOFILE_LIBRARIES} )
 elseif( WITH_ARTS )
   set( LIBS artskde-shared )
 else( )
