@@ -671,11 +671,11 @@ void KDialogBase::setButtonStyle( int style )
   if( style < 0 || style >= ActionStyleMAX ) { style = ActionStyle0; }
   d->mButton.style = style;
 
-  const int *layout;
+  const unsigned int *layout;
   int layoutMax = 0;
   if (mMessageBoxMode)
   {
-    static const int layoutRule[5][6] =
+    static const unsigned int layoutRule[5][6] =
     {
       {Details,Stretch,User2|Stretch,User1|Stretch,Cancel|Stretch, Details|Filler},
       {Details,Stretch,User2|Stretch,User1|Stretch,Cancel|Stretch, Details|Filler},
@@ -688,7 +688,7 @@ void KDialogBase::setButtonStyle( int style )
   }
   else if (mButtonOrientation == Horizontal)
   {
-    static const int layoutRule[5][10] =
+    static const unsigned int layoutRule[5][10] =
     {
       {Details,Help,Default,Stretch,User3,User2,User1,Ok,Apply|Try,Cancel|Close},
       {Details,Help,Default,Stretch,User3,User2,User1,Cancel|Close,Apply|Try,Ok},
@@ -701,7 +701,7 @@ void KDialogBase::setButtonStyle( int style )
   }
   else
   {
-    static const int layoutRule[5][10] =
+    static const unsigned int layoutRule[5][10] =
     {
       {Ok,Apply|Try,User1,User2,User3,Stretch,Default,Cancel|Close,Help, Details},
       //{Ok,Apply|Try,Cancel|Close,User1,User2,User3,Stretch, Default,Help, Details},

@@ -1892,7 +1892,7 @@ NodeImpl::Id DocumentImpl::getId( NodeImpl::IdType _type, DOMStringImpl* _nsURI,
             QConstString px( _prefix->s, _prefix->l );
             QString qn("aliases: " + (cs ? px.string() : px.string().upper()) + ":" + name);
             if (!map->ids.find( qn )) {
-                map->ids.insert( qn, (void*)id );
+                map->ids.insert( qn, (void*)(intptr_t)id );
             }
         }
     }
@@ -1912,7 +1912,7 @@ NodeImpl::Id DocumentImpl::getId( NodeImpl::IdType _type, DOMStringImpl* _nsURI,
     map->names.insert( cid, _name );
     _name->ref();
 
-    map->ids.insert( name, (void*)cid );
+    map->ids.insert( name, (void*)(intptr_t)cid );
 
     // and register an alias if needed for DOM1 methods compatibility
     map->addAlias(_prefix, _name, cs, cid);

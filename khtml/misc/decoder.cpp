@@ -265,8 +265,8 @@ QString Decoder::decode(const char *data, int len)
                 if (m_codec->mibEnum() == 1000 && c2 == 0x00)
                 {
                   // utf16LE, we need to put the decoder in LE mode
-                  char reverseUtf16[3] = {0xFF, 0xFE, 0x00};
-                  m_decoder->toUnicode(reverseUtf16, 2);
+                  unsigned char reverseUtf16[3] = {0xFF, 0xFE, 0x00};
+                  m_decoder->toUnicode(reinterpret_cast<const char*>(reverseUtf16), 2);
                 }
             }
         }

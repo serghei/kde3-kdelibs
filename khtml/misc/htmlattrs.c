@@ -823,12 +823,6 @@ static const short lookup[] =
      -1,  -1, 150,  -1,  -1,  -1, 151
   };
 
-#ifdef __GNUC__
-__inline
-#ifdef __GNUC_STDC_INLINE__
-__attribute__ ((__gnu_inline__))
-#endif
-#endif
 const struct attrs *
 findAttr (register const char *str, register unsigned int len)
 {

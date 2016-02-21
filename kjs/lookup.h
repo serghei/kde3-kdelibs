@@ -42,7 +42,7 @@ namespace KJS {
     /**
      * value is the result value (usually an enum value)
      */
-    short int value;
+    int value;
     /**
      * attr is a set for flags (e.g. the property flags, see object.h)
      */

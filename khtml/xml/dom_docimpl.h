@@ -617,7 +617,7 @@ protected:
                 QString name = cs ? n.string() : n.string().upper();
                 QString qn("aliases: " + (cs ? px.string() : px.string().upper()) + ":" + name);
                 if (!ids.find( qn )) {
-                    ids.insert( qn, (void*)id );
+                    ids.insert( qn, (void*)(intptr_t)id );
                 }
             }
             expandIfNeeded();
