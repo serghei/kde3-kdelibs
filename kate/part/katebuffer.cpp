@@ -917,7 +917,7 @@ void KateBuffer::updatePreviousNotEmptyLine(KateBufBlock *blk,uint current_line,
   } while (textLine->firstChar()==-1);
   kdDebug(13020)<<"updatePreviousNotEmptyLine: updating line:"<<(blk->startLine()+current_line)<<endl;
   QMemArray<uint> foldingList=textLine->foldingListArray();
-  while ( (foldingList.size()>0)  && ( abs(foldingList[foldingList.size()-2])==1)) {
+  while ( (foldingList.size()>0)  && ( abs((int)foldingList[foldingList.size()-2])==1)) {
     foldingList.resize(foldingList.size()-2,QGArray::SpeedOptim);
   }
   addIndentBasedFoldingInformation(foldingList,addindent,deindent);
