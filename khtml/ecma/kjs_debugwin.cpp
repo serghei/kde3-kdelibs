@@ -179,7 +179,7 @@ void SourceDisplay::showEvent(QShowEvent *)
     setSource(m_sourceFile);
 }
 
-void SourceDisplay::drawContents(QPainter *p, int clipx, int clipy, int clipw, int cliph)
+void SourceDisplay::drawContents2(QPainter *p, int clipx, int clipy, int clipw, int cliph)
 {
   if (!m_sourceFile) {
     p->fillRect(clipx,clipy,clipw,cliph,palette().active().base());
