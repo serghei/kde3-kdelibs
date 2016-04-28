@@ -5,7 +5,7 @@
    based on the KDE3 HighColor Style
 
    Copyright (C) 2001-2002 Karol Szwed      <gallium@kde.org>
-             (C) 2001-2002 Fredrik Höglund  <fredrik@kde.org>
+             (C) 2001-2002 Fredrik HÃ¶glund  <fredrik@kde.org>
 
    Drawing routines adapted from the KDE2 HCStyle,
    Copyright (C) 2000 Daniel M. Duley       <mosfet@kde.org>
@@ -2797,11 +2797,11 @@ bool KeramikStyle::eventFilter( QObject* object, QEvent* event )
 		
 				//CHECKME: Not sure the rects are perfect..
 				XRectangle rects[5] = {
-					{0, 0, resize->size().width()-2, resize->size().height()-6},
-					{0, resize->size().height()-6, resize->size().width()-2, 1},
-					{1, resize->size().height()-5, resize->size().width()-3, 1},
-					{2, resize->size().height()-4, resize->size().width()-5, 1},
-					{3, resize->size().height()-3, resize->size().width()-7, 1}
+					{0, 0, uint16_t(resize->size().width()-2), uint16_t(resize->size().height()-6)},
+					{0, int16_t(resize->size().height()-6), uint16_t(resize->size().width()-2), 1},
+					{1, int16_t(resize->size().height()-5), uint16_t(resize->size().width()-3), 1},
+					{2, int16_t(resize->size().height()-4), uint16_t(resize->size().width()-5), 1},
+					{3, int16_t(resize->size().height()-3), uint16_t(resize->size().width()-7), 1}
 				};
 		
 				XShapeCombineRectangles(qt_xdisplay(), listbox->handle(), ShapeBounding, 0, 0,
