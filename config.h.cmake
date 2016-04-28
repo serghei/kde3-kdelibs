@@ -504,7 +504,7 @@
 #undef HAVE_STRUCT_SOCKADDR_SA_LEN
 
 /* Define if struct ucred is present from sys/socket.h */
-#undef HAVE_STRUCT_UCRED
+#cmakedefine HAVE_STRUCT_UCRED 1
 
 /* Define to 1 if you have the <sysent.h> header file. */
 #cmakedefine HAVE_SYSENT_H 1

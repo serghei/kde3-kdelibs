@@ -275,6 +275,10 @@ set( CMAKE_EXTRA_INCLUDE_FILES "netdb.h" )
 check_type_size( "struct addrinfo" STRUCT_ADDRINFO )
 set( CMAKE_EXTRA_INCLUDE_FILES "netinet/in.h" )
 check_type_size( "struct sockaddr_in6" HAVE_STRUCT_SOCKADDR_IN6 )
+set( CMAKE_EXTRA_INCLUDE_FILES "sys/socket.h" )
+kde_save_and_set( CMAKE_REQUIRED_DEFINITIONS "-D_GNU_SOURCE" )
+check_type_size( "struct ucred" STRUCT_UCRED )
+kde_restore( CMAKE_REQUIRED_DEFINITIONS )
 unset( CMAKE_EXTRA_INCLUDE_FILES )
 
 
