@@ -25,15 +25,14 @@
 
 #include "kdetrayproxy.h"
 
-class KDETrayModule
-    : public KDEDModule
-    {
+class KDETrayModule : public KDEDModule {
     Q_OBJECT
     K_DCOP
-    public:
-        KDETrayModule( const QCString& obj );
-    private:
-        KDETrayProxy proxy;
-    };
+public:
+    KDETrayModule(const QCString &obj);
+
+private:
+    KDETrayProxy proxy;
+};
 
 #endif

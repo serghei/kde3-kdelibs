@@ -30,33 +30,34 @@
 class DrOptionView;
 class DrMain;
 
-class KDEPRINT_EXPORT DrListView : public KListView
-{
+class KDEPRINT_EXPORT DrListView : public KListView {
 public:
-	DrListView(QWidget *parent = 0, const char *name = 0);
+    DrListView(QWidget *parent = 0, const char *name = 0);
 };
 
-class KDEPRINT_EXPORT DriverView : public QWidget
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT DriverView : public QWidget {
+    Q_OBJECT
 public:
-	DriverView(QWidget *parent = 0, const char *name = 0);
-	~DriverView();
+    DriverView(QWidget *parent = 0, const char *name = 0);
+    ~DriverView();
 
-	void setDriver(DrMain*);
-	void setOptions(const QMap<QString,QString>& opts);
-	void getOptions(QMap<QString,QString>& opts, bool incldef = false);
-	void setAllowFixed(bool on);
-	bool hasConflict() const 	{ return (m_conflict != 0); }
+    void setDriver(DrMain *);
+    void setOptions(const QMap< QString, QString > &opts);
+    void getOptions(QMap< QString, QString > &opts, bool incldef = false);
+    void setAllowFixed(bool on);
+    bool hasConflict() const
+    {
+        return (m_conflict != 0);
+    }
 
 protected slots:
-	void slotChanged();
+    void slotChanged();
 
 private:
-	DrListView	*m_view;
-	DrOptionView	*m_optview;
-	DrMain		*m_driver;
-	int 		m_conflict;
+    DrListView *m_view;
+    DrOptionView *m_optview;
+    DrMain *m_driver;
+    int m_conflict;
 };
 
 #endif

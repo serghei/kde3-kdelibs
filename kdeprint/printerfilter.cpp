@@ -25,11 +25,10 @@
 #include <kglobal.h>
 #include <kdebug.h>
 
-PrinterFilter::PrinterFilter(QObject *parent, const char *name)
-: QObject(parent, name)
+PrinterFilter::PrinterFilter(QObject *parent, const char *name) : QObject(parent, name)
 {
-	m_locationRe.setWildcard(true);
-	update();
+    m_locationRe.setWildcard(true);
+    update();
 }
 
 PrinterFilter::~PrinterFilter()
@@ -38,34 +37,33 @@ PrinterFilter::~PrinterFilter()
 
 void PrinterFilter::update()
 {
-	KConfig	*conf = KMFactory::self()->printConfig();
-	conf->setGroup("Filter");
-	m_locationRe.setPattern(conf->readEntry("LocationRe"));
-	m_printers = conf->readListEntry("Printers");
-	// filter enable state is saved on a per application basis,
-	// so this option is retrieve from the application config file
-	conf = KGlobal::config();
-	conf->setGroup("KPrinter Settings");
-	m_enabled = conf->readBoolEntry("FilterEnabled", false);
+    KConfig *conf = KMFactory::self()->printConfig();
+    conf->setGroup("Filter");
+    m_locationRe.setPattern(conf->readEntry("LocationRe"));
+    m_printers = conf->readListEntry("Printers");
+    // filter enable state is saved on a per application basis,
+    // so this option is retrieve from the application config file
+    conf = KGlobal::config();
+    conf->setGroup("KPrinter Settings");
+    m_enabled = conf->readBoolEntry("FilterEnabled", false);
 }
 
 void PrinterFilter::setEnabled(bool on)
 {
-	m_enabled = on;
-	KConfig	*conf = KGlobal::config();
-	conf->setGroup("KPrinter Settings");
-	conf->writeEntry("FilterEnabled", m_enabled);
+    m_enabled = on;
+    KConfig *conf = KGlobal::config();
+    conf->setGroup("KPrinter Settings");
+    conf->writeEntry("FilterEnabled", m_enabled);
 }
 
 bool PrinterFilter::filter(KMPrinter *prt)
 {
-	if (m_enabled)
-	{
-		if ((!m_locationRe.isEmpty() && m_locationRe.exactMatch(prt->location())) ||
-		    m_printers.find(prt->printerName()) != m_printers.end())
-			return true;
-		else
-			return false;
-	}
-	return true;
+    if(m_enabled)
+    {
+        if((!m_locationRe.isEmpty() && m_locationRe.exactMatch(prt->location())) || m_printers.find(prt->printerName()) != m_printers.end())
+            return true;
+        else
+            return false;
+    }
+    return true;
 }

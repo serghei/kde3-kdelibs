@@ -13,19 +13,26 @@
 
 void KBetterThanKDialogBase::clicked()
 {
-    if (sender() == _allowOnce) {
-	done(0);
-    } else if (sender() == _allowAlways) {
-	done(1);
-    } else if (sender() == _deny) {
-	done(2);
-    } else if (sender() == _denyForever) {
-	done(3);
+    if(sender() == _allowOnce)
+    {
+        done(0);
+    }
+    else if(sender() == _allowAlways)
+    {
+        done(1);
+    }
+    else if(sender() == _deny)
+    {
+        done(2);
+    }
+    else if(sender() == _denyForever)
+    {
+        done(3);
     }
 }
 
 
-void KBetterThanKDialogBase::setLabel( const QString & label )
+void KBetterThanKDialogBase::setLabel(const QString &label)
 {
     _label->setText(label);
 }

@@ -6,8 +6,7 @@
 
 #include <kdelibs_export.h>
 
-namespace KParts
-{
+namespace KParts {
 
 /**
  * The purpose of this interface is to allow a direct communication between
@@ -35,20 +34,18 @@ namespace KParts
  * </code>
  *
  */
-class KPARTS_EXPORT BrowserInterface : public QObject
-{
+class KPARTS_EXPORT BrowserInterface : public QObject {
     Q_OBJECT
 public:
-    BrowserInterface( QObject *parent, const char *name = 0 );
+    BrowserInterface(QObject *parent, const char *name = 0);
     virtual ~BrowserInterface();
 
     /**
      * Perform a dynamic invocation of a method in the BrowserInterface
      * implementation. Methods are to be implemented as simple Qt slots.
      */
-    void callMethod( const char *name, const QVariant &argument );
+    void callMethod(const char *name, const QVariant &argument);
 };
-
 }
 
 #endif

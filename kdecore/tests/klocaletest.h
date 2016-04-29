@@ -9,24 +9,23 @@ class QLabel;
 
 /** test: a small test program for KLocale
     */
-class Test : public QWidget
-{
-  Q_OBJECT
-  
+class Test : public QWidget {
+    Q_OBJECT
+
 public:
-  /**@name methods */
-  //@{
-  /** Constructor  
-	*/
-  Test( QWidget *parent=0, const char *name=0 );
-  /** Destructor
-	*/
-  ~Test();
+    /**@name methods */
+    //@{
+    /** Constructor
+      */
+    Test(QWidget *parent = 0, const char *name = 0);
+    /** Destructor
+      */
+    ~Test();
 
 private:
-  QString showLocale(QString cat);
-  void createFields();
+    QString showLocale(QString cat);
+    void createFields();
 
-  QLabel *label;
+    QLabel *label;
 };
 #endif // TEST_H

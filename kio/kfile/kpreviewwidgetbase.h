@@ -41,8 +41,7 @@ class KURL;
  * @short Abstract baseclass for all preview widgets.
  * @author Frerich Raabe <raabe@kde.org>
  */
-class KIO_EXPORT KPreviewWidgetBase : public QWidget
-{
+class KIO_EXPORT KPreviewWidgetBase : public QWidget {
     Q_OBJECT
 
 public:
@@ -54,7 +53,7 @@ public:
      * @param parent The KFileDialog this preview widget is going to be used in
      * @param name The internal name of this object
      */
-    KPreviewWidgetBase(QWidget *parent, const char *name=0);
+    KPreviewWidgetBase(QWidget *parent, const char *name = 0);
     ~KPreviewWidgetBase();
 
 public slots:
@@ -76,17 +75,18 @@ public slots:
     QStringList supportedMimeTypes() const;
 
 protected:
-    void setSupportedMimeTypes( const QStringList& mimeTypes );
+    void setSupportedMimeTypes(const QStringList &mimeTypes);
 
 protected:
-    virtual void virtual_hook( int, void* ) {};
+    virtual void virtual_hook(int, void *){};
 
 private:
     class KPreviewWidgetBasePrivate;
-    KPreviewWidgetBasePrivate * d() const {
-        return s_private->find( const_cast<KPreviewWidgetBase*>( this ) );
+    KPreviewWidgetBasePrivate *d() const
+    {
+        return s_private->find(const_cast< KPreviewWidgetBase * >(this));
     }
-    static QPtrDict<KPreviewWidgetBasePrivate> * s_private;
+    static QPtrDict< KPreviewWidgetBasePrivate > *s_private;
 };
 
 #endif

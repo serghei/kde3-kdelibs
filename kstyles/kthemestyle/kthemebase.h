@@ -43,60 +43,68 @@ Copyright (C) 1998, 1999, 2000 KDE Team
 class QImage;
 
 
-
 /**
  * This class adds simple time management to KPixmap for use in flushing
  * KThemeCache.
  *
  * @author Daniel M. Duley <mosfet@kde.org>
  */
-class KThemePixmap : public KPixmap
-{
+class KThemePixmap : public KPixmap {
 public:
-    enum BorderType{Top = 0, Bottom, Left, Right, TopLeft, TopRight, BottomLeft,
-                    BottomRight};
+    enum BorderType
+    {
+        Top = 0,
+        Bottom,
+        Left,
+        Right,
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight
+    };
 
-    KThemePixmap( bool timer = true );
-    KThemePixmap( const KThemePixmap &p );
-    KThemePixmap( const KThemePixmap &p, const QPixmap& rp );
+    KThemePixmap(bool timer = true);
+    KThemePixmap(const KThemePixmap &p);
+    KThemePixmap(const KThemePixmap &p, const QPixmap &rp);
     ~KThemePixmap();
-    QPixmap* border( BorderType type );
-    void setBorder( BorderType type, const QPixmap &p );
+    QPixmap *border(BorderType type);
+    void setBorder(BorderType type, const QPixmap &p);
     void updateAccessed();
     bool isOld();
+
 protected:
     QTime *t;
-    QPixmap *b[ 8 ];
+    QPixmap *b[8];
 
 private:
     class KThemePixmapPrivate;
     KThemePixmapPrivate *d;
 };
 
-inline QPixmap* KThemePixmap::border( BorderType type )
+inline QPixmap *KThemePixmap::border(BorderType type)
 {
-    return ( b[ type ] );
+    return (b[type]);
 }
 
-inline void KThemePixmap::setBorder( BorderType type, const QPixmap &p )
+inline void KThemePixmap::setBorder(BorderType type, const QPixmap &p)
 {
-    if ( b[ type ] )
+    if(b[type])
     {
-        qWarning( "KThemePixmap: Overwriting existing border!" );
-        delete( b[ type ] );
+        qWarning("KThemePixmap: Overwriting existing border!");
+        delete(b[type]);
     }
-    b[ type ] = new QPixmap( p );
+    b[type] = new QPixmap(p);
 }
 
 inline void KThemePixmap::updateAccessed()
 {
-    if ( t )
+    if(t)
         t->start();
 }
 
 inline bool KThemePixmap::isOld()
 {
-    return ( t ? t->elapsed() >= 300000 : false );
+    return (t ? t->elapsed() >= 300000 : false);
 }
 
 /**
@@ -120,15 +128,19 @@ inline bool KThemePixmap::isOld()
  * @author Daniel M. Duley <mosfet@kde.org>
  *
  */
-class KThemeCache : public QObject
-{
+class KThemeCache : public QObject {
     Q_OBJECT
 public:
     /**
      * The scale hints supported by the cache. Note that Tiled is not here
      * since tiled pixmaps are kept only once in KThemeBase.
      */
-    enum ScaleHint{FullScale, HorizontalScale, VerticalScale};
+    enum ScaleHint
+    {
+        FullScale,
+        HorizontalScale,
+        VerticalScale
+    };
     /**
      * The constructor.
      *
@@ -136,7 +148,7 @@ public:
      * @param parent The parent object.
      * @param name The name of the object.
      */
-    KThemeCache( int maxSize, QObject *parent = 0, const char *name = 0 );
+    KThemeCache(int maxSize, QObject *parent = 0, const char *name = 0);
     /**
      * Inserts a new pixmap into the cache.
      *
@@ -149,8 +161,7 @@ public:
      *
      * @return True if the insert was successful, false otherwise.
      */
-    bool insert( KThemePixmap *pixmap, ScaleHint scale, int widgetID,
-                 bool border = false, bool mask = false );
+    bool insert(KThemePixmap *pixmap, ScaleHint scale, int widgetID, bool border = false, bool mask = false);
     /**
      * Returns a fully scaled pixmap.
      *
@@ -163,8 +174,7 @@ public:
      * @return True if a pixmap matching the width, height, and widget ID of
      * the pixmap exists, NULL otherwise.
      */
-    KThemePixmap* pixmap( int w, int h, int widgetID, bool border = false,
-                          bool mask = false );
+    KThemePixmap *pixmap(int w, int h, int widgetID, bool border = false, bool mask = false);
     /**
      * Returns a horizontally scaled pixmap.
      *
@@ -174,7 +184,7 @@ public:
      * @return True if a pixmap matching the width and widget ID of
      * the pixmap exists, NULL otherwise.
      */
-    KThemePixmap* horizontalPixmap( int w, int widgetID );
+    KThemePixmap *horizontalPixmap(int w, int widgetID);
     /**
      * Returns a vertically scaled pixmap.
      *
@@ -184,18 +194,18 @@ public:
      * @return True if a pixmap matching the height and widget ID of
      * the pixmap exists, NULL otherwise.
      */
-    KThemePixmap* verticalPixmap( int h, int widgetID );
+    KThemePixmap *verticalPixmap(int h, int widgetID);
 protected slots:
     void flushTimeout();
+
 protected:
-    QIntCache<KThemePixmap> cache;
+    QIntCache< KThemePixmap > cache;
     QTimer flushTimer;
 
 private:
     class KThemeCachePrivate;
     KThemeCachePrivate *d;
 };
-
 
 
 class KThemeBasePrivate;
@@ -211,40 +221,70 @@ class KThemeBasePrivate;
  *
  * @author Daniel M. Duley <mosfet@kde.org>
  */
-class KThemeBase: public KStyle
-{
+class KThemeBase : public KStyle {
     Q_OBJECT
 public:
     /**
      * Constructs a new KThemeBase object.
      */
-    KThemeBase( const QString &dirs, const QString &configFile );
+    KThemeBase(const QString &dirs, const QString &configFile);
     ~KThemeBase();
     /**
      * Describes if a pixmap should be scaled fully, horizontally, vertically,
      * or not at all and tiled.
      */
-    enum ScaleHint{FullScale, HorizontalScale, VerticalScale, TileScale};
+    enum ScaleHint
+    {
+        FullScale,
+        HorizontalScale,
+        VerticalScale,
+        TileScale
+    };
     /**
      * The default arrow types.
      */
-    enum ArrowStyle{MotifArrow, LargeArrow, SmallArrow};
+    enum ArrowStyle
+    {
+        MotifArrow,
+        LargeArrow,
+        SmallArrow
+    };
     /**
      * The default frame shading styles.
      */
-    enum ShadeStyle{Motif, Windows, Next, KDE};
+    enum ShadeStyle
+    {
+        Motif,
+        Windows,
+        Next,
+        KDE
+    };
     /**
      * The default scrollbar button layout. BottomLeft is like what Next
      * uses, BottomRight is like Platinum, and Opposite it like Windows and
      * Motif.
      */
-    enum SButton{SBBottomLeft, SBBottomRight, SBOpposite};
+    enum SButton
+    {
+        SBBottomLeft,
+        SBBottomRight,
+        SBOpposite
+    };
     /**
      * The gradient types. Horizontal is left to right, Vertical is top to
      * bottom, and diagonal is upper-left to bottom-right.
      */
-    enum Gradient{GrNone, GrHorizontal, GrVertical, GrDiagonal, GrPyramid,
-                  GrRectangle, GrElliptic, GrReverseBevel};
+    enum Gradient
+    {
+        GrNone,
+        GrHorizontal,
+        GrVertical,
+        GrDiagonal,
+        GrPyramid,
+        GrRectangle,
+        GrElliptic,
+        GrReverseBevel
+    };
     /**
      * This provides a list of widget types that KThemeBase recognizes.
      */
@@ -260,24 +300,71 @@ public:
      * so if 0 == PushButtonOff then INHERIT_ITEMS should == PushButtonOn
      * and so on. WIDGETS define the total number of widgets.
      */
-    enum WidgetType{
+    enum WidgetType
+    {
         // Off (unsunken widgets)
-        PushButton = 0, ComboBox, HScrollBarSlider, VScrollBarSlider, Bevel,
-        ToolButton, ScrollButton, HScrollDeco, VScrollDeco,
-        ComboDeco, MenuItem, InactiveTab, ArrowUp, ArrowDown, ArrowLeft,
+        PushButton = 0,
+        ComboBox,
+        HScrollBarSlider,
+        VScrollBarSlider,
+        Bevel,
+        ToolButton,
+        ScrollButton,
+        HScrollDeco,
+        VScrollDeco,
+        ComboDeco,
+        MenuItem,
+        InactiveTab,
+        ArrowUp,
+        ArrowDown,
+        ArrowLeft,
         ArrowRight,
         // On (sunken widgets)
-        PushButtonDown, ComboBoxDown, HScrollBarSliderDown,
-        VScrollBarSliderDown, BevelDown, ToolButtonDown, ScrollButtonDown,
-        HScrollDecoDown, VScrollDecoDown, ComboDecoDown, MenuItemDown,
-        ActiveTab, SunkenArrowUp, SunkenArrowDown, SunkenArrowLeft,
+        PushButtonDown,
+        ComboBoxDown,
+        HScrollBarSliderDown,
+        VScrollBarSliderDown,
+        BevelDown,
+        ToolButtonDown,
+        ScrollButtonDown,
+        HScrollDecoDown,
+        VScrollDecoDown,
+        ComboDecoDown,
+        MenuItemDown,
+        ActiveTab,
+        SunkenArrowUp,
+        SunkenArrowDown,
+        SunkenArrowLeft,
         SunkenArrowRight,
         // Everything else (indicators must have separate settings)
-        HScrollGroove, VScrollGroove, Slider, SliderGroove, IndicatorOn,
-        IndicatorOff, IndicatorTri, ExIndicatorOn, ExIndicatorOff, HBarHandle, VBarHandle,
-        ToolBar, Splitter, CheckMark, MenuBar, DisArrowUp, DisArrowDown,
-        DisArrowLeft, DisArrowRight, ProgressBar, ProgressBg, MenuBarItem,
-        Background, RotSliderGroove, RotInactiveTab, RotActiveTab, WIDGETS};
+        HScrollGroove,
+        VScrollGroove,
+        Slider,
+        SliderGroove,
+        IndicatorOn,
+        IndicatorOff,
+        IndicatorTri,
+        ExIndicatorOn,
+        ExIndicatorOff,
+        HBarHandle,
+        VBarHandle,
+        ToolBar,
+        Splitter,
+        CheckMark,
+        MenuBar,
+        DisArrowUp,
+        DisArrowDown,
+        DisArrowLeft,
+        DisArrowRight,
+        ProgressBar,
+        ProgressBg,
+        MenuBarItem,
+        Background,
+        RotSliderGroove,
+        RotInactiveTab,
+        RotActiveTab,
+        WIDGETS
+    };
 
     /**
      * The scaling type specified by the KConfig file.
@@ -286,7 +373,7 @@ public:
      *
      * @return A ScaleHint enum value.
      */
-    ScaleHint scaleHint( WidgetType widget ) const;
+    ScaleHint scaleHint(WidgetType widget) const;
     /**
      * The gradient type specified by the KConfig file.
      *
@@ -294,7 +381,7 @@ public:
      *
      * @return A Gradient enum value.
      */
-    Gradient gradientHint( WidgetType widget ) const;
+    Gradient gradientHint(WidgetType widget) const;
     /**
      * The color group specified for a given widget.
      * If a color group is set in the theme configuration
@@ -305,19 +392,17 @@ public:
      * @param widget The widget whose color group to retrieve.
      *
      */
-    const QColorGroup* colorGroup( const QColorGroup &defaultGroup,
-                                   WidgetType widget ) const;
+    const QColorGroup *colorGroup(const QColorGroup &defaultGroup, WidgetType widget) const;
 
-    QBrush pixmapBrush( const QColorGroup &group, QColorGroup::ColorRole role,
-                        int w, int h, WidgetType widget );
+    QBrush pixmapBrush(const QColorGroup &group, QColorGroup::ColorRole role, int w, int h, WidgetType widget);
     /**
      * True if the widget has a pixmap or gradient specified.
      */
-    bool isPixmap( WidgetType widget ) const;
+    bool isPixmap(WidgetType widget) const;
     /**
      * True if the widget has a color group specified.
      */
-    bool isColor( WidgetType widget ) const;
+    bool isColor(WidgetType widget) const;
     /**
      * True if the user specified a 3D focus rectangle
      */
@@ -331,25 +416,25 @@ public:
     /**
      * The border width of the specified widget.
      */
-    int borderWidth( WidgetType widget ) const;
+    int borderWidth(WidgetType widget) const;
     /**
      * Pixmap border width of the specified widget.
      */
-    int pixBorderWidth( WidgetType widget ) const;
+    int pixBorderWidth(WidgetType widget) const;
     /**
      * Returns the border pixmap if enabled for the specified widget. This
      * will contain the originial pixmap, plus the edges separated in
      * KThemePixmap::border() if valid. If invalid it will return NULL.
      */
-    KThemePixmap* borderPixmap( WidgetType widget ) const;
+    KThemePixmap *borderPixmap(WidgetType widget) const;
     /**
      * The highlight width of the specified widget.
      */
-    int highlightWidth( WidgetType widget ) const;
+    int highlightWidth(WidgetType widget) const;
     /**
      * The border plus highlight width of the widget.
      */
-    int decoWidth( WidgetType widget ) const;
+    int decoWidth(WidgetType widget) const;
     /**
      * The extent (width for vertical, height for horizontal) requested
      * for the scrollbars.
@@ -378,7 +463,7 @@ public:
     /**
      * The contrast for some bevel effects such as reverse gradient.
      */
-    int bevelContrast( WidgetType widget ) const;
+    int bevelContrast(WidgetType widget) const;
     /**
      * The button text X shift.
      */
@@ -418,7 +503,7 @@ public:
      * been specified in the config file, the original pixmap if not, or NULL
      * if no pixmap has been specified.
      */
-    KThemePixmap* uncached( WidgetType widget ) const;
+    KThemePixmap *uncached(WidgetType widget) const;
     /**
      * Returns the pixmap for the given widget at the specified width and
      * height. This will return NULL if no pixmap or gradient is specified.
@@ -433,7 +518,8 @@ public:
      * @param widget Widget type.
      * @return The pixmap or NULL if one is not specified.
      */
-    virtual KThemePixmap *scalePixmap( int w, int h, WidgetType widget ) const;
+    virtual KThemePixmap *scalePixmap(int w, int h, WidgetType widget) const;
+
 protected:
     /**
      * This method reads a configuration file and sets things up so
@@ -443,13 +529,13 @@ protected:
      *
      * @param config The configuration file to apply.
      */
-    void applyConfigFile( QSettings & config );
+    void applyConfigFile(QSettings &config);
 
     /*
     * Generates a new palette based on the values for which have been specified explicitly
     * in the .themerc file.
     */
-    QPalette overridePalette( const QPalette& pal );
+    QPalette overridePalette(const QPalette &pal);
 
     /**
      * Returns a QImage for the given widget if the widget is scaled, NULL
@@ -457,15 +543,15 @@ protected:
      * widgets in order to facilitate fast and accurate smooth-scaling. This
      * also saves us a conversion from a pixmap to an image then back again.
      */
-    QImage* image( WidgetType widget ) const;
+    QImage *image(WidgetType widget) const;
     /**
      * Returns the gradient high color if one is specified, NULL otherwise.
      */
-    QColor* gradientHigh( WidgetType widget ) const;
+    QColor *gradientHigh(WidgetType widget) const;
     /**
      * Returns the gradient low color if one is specified, NULL otherwise.
      */
-    QColor* gradientLow( WidgetType widget ) const;
+    QColor *gradientLow(WidgetType widget) const;
     /**
      * Reads in all the configuration file entries supported.
      *
@@ -473,123 +559,87 @@ protected:
      * calculated a little differently for Motif vs Windows styles. This
      * is obsolete.
      */
-    void readConfig( Qt::GUIStyle colorStyle = Qt::WindowsStyle );
-    void readWidgetConfig( int i, QSettings *config, QString *pixnames,
-                           QString *brdnames, bool *loadArray );
-    void copyWidgetConfig( int sourceID, int destID, QString *pixnames,
-                           QString *brdnames );
+    void readConfig(Qt::GUIStyle colorStyle = Qt::WindowsStyle);
+    void readWidgetConfig(int i, QSettings *config, QString *pixnames, QString *brdnames, bool *loadArray);
+    void copyWidgetConfig(int sourceID, int destID, QString *pixnames, QString *brdnames);
     /**
      * Makes a full color group based on the given foreground and background
      * colors. This is the same code used by KDE (kapp.cpp) in previous
      * versions.
      */
-    QColorGroup* makeColorGroup( const QColor &fg, const QColor &bg,
-                                 Qt::GUIStyle style = Qt::WindowsStyle );
-    KThemePixmap* scale( int w, int h, WidgetType widget ) const;
-    KThemePixmap* scaleBorder( int w, int h, WidgetType type ) const;
-    KThemePixmap* gradient( int w, int h, WidgetType widget ) const ;
-    KThemePixmap* blend( WidgetType widget ) const;
-    void generateBorderPix( int i );
-    void applyResourceGroup( QSettings *config, int i );
-    void applyMiscResourceGroup( QSettings *config );
-    void readResourceGroup( int i, QString *pixnames, QString *brdnames,
-                            bool *loadArray );
+    QColorGroup *makeColorGroup(const QColor &fg, const QColor &bg, Qt::GUIStyle style = Qt::WindowsStyle);
+    KThemePixmap *scale(int w, int h, WidgetType widget) const;
+    KThemePixmap *scaleBorder(int w, int h, WidgetType type) const;
+    KThemePixmap *gradient(int w, int h, WidgetType widget) const;
+    KThemePixmap *blend(WidgetType widget) const;
+    void generateBorderPix(int i);
+    void applyResourceGroup(QSettings *config, int i);
+    void applyMiscResourceGroup(QSettings *config);
+    void readResourceGroup(int i, QString *pixnames, QString *brdnames, bool *loadArray);
     void readMiscResourceGroup();
     /**
      * Attempts to load a pixmap from the default KThemeBase locations.
      */
-    KThemePixmap* loadPixmap( const QString &name );
+    KThemePixmap *loadPixmap(const QString &name);
     /**
      * Attempts to load a image from the default KThemeBase locations.
      */
-    QImage* loadImage( const QString &name );
+    QImage *loadImage(const QString &name);
 
 
     /**
     These are included for fuuture extension purposes..
     */
-    virtual int pixelMetric ( PixelMetric metric, const QWidget * widget = 0 ) const
+    virtual int pixelMetric(PixelMetric metric, const QWidget *widget = 0) const
     {
-        return KStyle::pixelMetric( metric, widget );
+        return KStyle::pixelMetric(metric, widget);
     }
 
-    virtual void drawPrimitive ( PrimitiveElement pe, QPainter * p, const QRect & r, const QColorGroup & cg,
-                                 SFlags flags = Style_Default,
-                                 const QStyleOption& option = QStyleOption::Default ) const
+    virtual void drawPrimitive(PrimitiveElement pe, QPainter *p, const QRect &r, const QColorGroup &cg, SFlags flags = Style_Default,
+                               const QStyleOption &option = QStyleOption::Default) const
     {
-        KStyle::drawPrimitive ( pe, p, r, cg,
-                                flags, option );
-    }
-
-
-    virtual void drawControl( ControlElement element,
-                              QPainter *p,
-                              const QWidget *widget,
-                              const QRect &r,
-                              const QColorGroup &cg,
-                              SFlags how = Style_Default,
-                              const QStyleOption& opt = QStyleOption::Default ) const
-    {
-        KStyle::drawControl( element, p, widget,
-                             r, cg, how, opt );
-    }
-
-    virtual void drawControlMask( ControlElement element,
-                                  QPainter *p,
-                                  const QWidget *widget,
-                                  const QRect &r,
-                                  const QStyleOption& opt = QStyleOption::Default ) const
-    {
-        KStyle::drawControlMask( element, p, widget, r, opt );
+        KStyle::drawPrimitive(pe, p, r, cg, flags, option);
     }
 
 
-    virtual void drawComplexControl( ComplexControl control,
-                                     QPainter *p,
-                                     const QWidget* widget,
-                                     const QRect &r,
-                                     const QColorGroup &cg,
-                                     SFlags flags = Style_Default,
-                                     SCFlags controls = SC_All,
-                                     SCFlags active = SC_None,
-                                     const QStyleOption& opt = QStyleOption::Default ) const
+    virtual void drawControl(ControlElement element, QPainter *p, const QWidget *widget, const QRect &r, const QColorGroup &cg,
+                             SFlags how = Style_Default, const QStyleOption &opt = QStyleOption::Default) const
     {
-        KStyle::drawComplexControl( control, p, widget, r, cg, flags, controls, active, opt );
+        KStyle::drawControl(element, p, widget, r, cg, how, opt);
+    }
+
+    virtual void drawControlMask(ControlElement element, QPainter *p, const QWidget *widget, const QRect &r,
+                                 const QStyleOption &opt = QStyleOption::Default) const
+    {
+        KStyle::drawControlMask(element, p, widget, r, opt);
     }
 
 
-    virtual void drawKStylePrimitive( KStylePrimitive kpe,
-                                      QPainter* p,
-                                      const QWidget* widget,
-                                      const QRect &r,
-                                      const QColorGroup &cg,
-                                      SFlags flags = Style_Default,
-                                      const QStyleOption& opt = QStyleOption::Default ) const
+    virtual void drawComplexControl(ComplexControl control, QPainter *p, const QWidget *widget, const QRect &r, const QColorGroup &cg,
+                                    SFlags flags = Style_Default, SCFlags controls = SC_All, SCFlags active = SC_None,
+                                    const QStyleOption &opt = QStyleOption::Default) const
     {
-        KStyle::drawKStylePrimitive( kpe,
-                                     p, widget, r,
-                                     cg, flags, opt );
+        KStyle::drawComplexControl(control, p, widget, r, cg, flags, controls, active, opt);
     }
 
 
-    virtual int styleHint( StyleHint sh,
-                           const QWidget *widget = 0,
-                           const QStyleOption& opt = QStyleOption::Default,
-                           QStyleHintReturn* returnData = 0 ) const
+    virtual void drawKStylePrimitive(KStylePrimitive kpe, QPainter *p, const QWidget *widget, const QRect &r, const QColorGroup &cg,
+                                     SFlags flags = Style_Default, const QStyleOption &opt = QStyleOption::Default) const
     {
-        return KStyle::styleHint( sh,
-                                  widget,
-                                  opt,
-                                  returnData );
+        KStyle::drawKStylePrimitive(kpe, p, widget, r, cg, flags, opt);
     }
 
-    virtual QSize sizeFromContents( ContentsType contents,
-                                    const QWidget *widget,
-                                    const QSize &contentsSize,
-                                    const QStyleOption& opt = QStyleOption::Default ) const
+
+    virtual int styleHint(StyleHint sh, const QWidget *widget = 0, const QStyleOption &opt = QStyleOption::Default,
+                          QStyleHintReturn *returnData = 0) const
     {
-        return KStyle::sizeFromContents( contents,
-                                         widget, contentsSize, opt );
+        return KStyle::styleHint(sh, widget, opt, returnData);
+    }
+
+    virtual QSize sizeFromContents(ContentsType contents, const QWidget *widget, const QSize &contentsSize,
+                                   const QStyleOption &opt = QStyleOption::Default) const
+    {
+        return KStyle::sizeFromContents(contents, widget, contentsSize, opt);
     }
 
 private:
@@ -620,234 +670,230 @@ private:
      * this acts as a cache. Otherwise this will hold whatever the last scaled
      * pixmap was.
      */
-    mutable KThemePixmap *pixmaps[ WIDGETS ];
+    mutable KThemePixmap *pixmaps[WIDGETS];
     /**
      * The theme images. These are for scaled images and are kept in order
      * to maintain fast smoothscaling.
      */
-    mutable QImage *images[ WIDGETS ];
+    mutable QImage *images[WIDGETS];
     /**
      * The border widths
      */
-    mutable unsigned char borders[ WIDGETS ];
+    mutable unsigned char borders[WIDGETS];
     /**
      * The highlight widths
      */
-    mutable unsigned char highlights[ WIDGETS ];
+    mutable unsigned char highlights[WIDGETS];
     /**
      * The scale hints for pixmaps and gradients.
      */
-    mutable ScaleHint scaleHints[ WIDGETS ];
+    mutable ScaleHint scaleHints[WIDGETS];
     /**
      * All the color groups.
      */
-    mutable QColorGroup *colors[ WIDGETS ];
+    mutable QColorGroup *colors[WIDGETS];
     /**
      * Gradient low colors (or blend background).
      */
-    mutable QColor *grLowColors[ WIDGETS ];
+    mutable QColor *grLowColors[WIDGETS];
     /**
      * Gradient high colors.
      */
-    mutable QColor *grHighColors[ WIDGETS ];
+    mutable QColor *grHighColors[WIDGETS];
     /**
      * Gradient types.
      */
-    mutable Gradient gradients[ WIDGETS ];
+    mutable Gradient gradients[WIDGETS];
     /**
      * Blend intensity factors
      */
-    mutable float blends[ WIDGETS ];
+    mutable float blends[WIDGETS];
     /**
      * Bevel contrasts
      */
-    mutable unsigned char bContrasts[ WIDGETS ];
+    mutable unsigned char bContrasts[WIDGETS];
     /**
      * Duplicate pixmap entries (used during destruction).
      */
-    mutable bool duplicate[ WIDGETS ];
+    mutable bool duplicate[WIDGETS];
     /**
      * Pixmapped border widths
      */
-    mutable int pbWidth[ WIDGETS ];
+    mutable int pbWidth[WIDGETS];
     /**
      * Pixmapped borders
      */
-    mutable KThemePixmap *pbPixmaps[ WIDGETS ];
+    mutable KThemePixmap *pbPixmaps[WIDGETS];
     /**
      * Duplicate border pixmapped border entries
      */
-    mutable bool pbDuplicate[ WIDGETS ];
-
+    mutable bool pbDuplicate[WIDGETS];
 };
 
-inline bool KThemeBase::isPixmap( WidgetType widget ) const
+inline bool KThemeBase::isPixmap(WidgetType widget) const
 {
-    return ( pixmaps[ widget ] != NULL || gradients[ widget ] != GrNone );
+    return (pixmaps[widget] != NULL || gradients[widget] != GrNone);
 }
 
-inline bool KThemeBase::isColor( WidgetType widget ) const
+inline bool KThemeBase::isColor(WidgetType widget) const
 {
-    return ( colors[ widget ] != NULL );
+    return (colors[widget] != NULL);
 }
 
 inline bool KThemeBase::is3DFocus() const
 {
-    return ( focus3D );
+    return (focus3D);
 }
 
 inline int KThemeBase::focusOffset() const
 {
-    return ( focus3DOffset );
+    return (focus3DOffset);
 }
 
-inline int KThemeBase::bevelContrast( WidgetType widget ) const
+inline int KThemeBase::bevelContrast(WidgetType widget) const
 {
-    return ( bContrasts[ widget ] );
+    return (bContrasts[widget]);
 }
 
-inline KThemeBase::ScaleHint KThemeBase::scaleHint( WidgetType widget ) const
+inline KThemeBase::ScaleHint KThemeBase::scaleHint(WidgetType widget) const
 {
-    return ( ( widget < WIDGETS ) ? scaleHints[ widget ] : TileScale );
+    return ((widget < WIDGETS) ? scaleHints[widget] : TileScale);
 }
 
-inline KThemeBase::Gradient KThemeBase::gradientHint( WidgetType widget ) const
+inline KThemeBase::Gradient KThemeBase::gradientHint(WidgetType widget) const
 {
-    return ( ( widget < WIDGETS ) ? gradients[ widget ] : GrNone );
+    return ((widget < WIDGETS) ? gradients[widget] : GrNone);
 }
 
-inline KThemePixmap* KThemeBase::uncached( WidgetType widget ) const
+inline KThemePixmap *KThemeBase::uncached(WidgetType widget) const
 {
-    return ( pixmaps[ widget ] );
+    return (pixmaps[widget]);
 }
 
-inline QBrush KThemeBase::pixmapBrush( const QColorGroup &group,
-                                       QColorGroup::ColorRole role,
-                                       int w, int h, WidgetType widget )
+inline QBrush KThemeBase::pixmapBrush(const QColorGroup &group, QColorGroup::ColorRole role, int w, int h, WidgetType widget)
 {
-    if ( pixmaps[ widget ] || images[ widget ] )
-        return ( QBrush( group.color( role ), *scalePixmap( w, h, widget ) ) );
+    if(pixmaps[widget] || images[widget])
+        return (QBrush(group.color(role), *scalePixmap(w, h, widget)));
     else
-        return ( group.color( role ) );
+        return (group.color(role));
 }
 
-inline const QColorGroup* KThemeBase::colorGroup( const QColorGroup &defaultGroup,
-        WidgetType widget ) const
+inline const QColorGroup *KThemeBase::colorGroup(const QColorGroup &defaultGroup, WidgetType widget) const
 {
-    return ( ( colors[ widget ] ) ? colors[ widget ] : &defaultGroup );
+    return ((colors[widget]) ? colors[widget] : &defaultGroup);
 }
 
-inline int KThemeBase::borderWidth( WidgetType widget ) const
+inline int KThemeBase::borderWidth(WidgetType widget) const
 {
-    return ( pbWidth[ widget ] ? pbWidth[ widget ] : borders[ widget ] );
+    return (pbWidth[widget] ? pbWidth[widget] : borders[widget]);
 }
 
-inline int KThemeBase::pixBorderWidth( WidgetType widget ) const
+inline int KThemeBase::pixBorderWidth(WidgetType widget) const
 {
-    return ( pbWidth[ widget ] );
+    return (pbWidth[widget]);
 }
 
-inline int KThemeBase::highlightWidth( WidgetType widget ) const
+inline int KThemeBase::highlightWidth(WidgetType widget) const
 {
-    return ( pbWidth[ widget ] ? 0 : highlights[ widget ] );
+    return (pbWidth[widget] ? 0 : highlights[widget]);
 }
 
-inline int KThemeBase::decoWidth( WidgetType widget ) const
+inline int KThemeBase::decoWidth(WidgetType widget) const
 {
-    return ( pbWidth[ widget ] ? pbWidth[ widget ] : borders[ widget ] + highlights[ widget ] );
+    return (pbWidth[widget] ? pbWidth[widget] : borders[widget] + highlights[widget]);
 }
 
-inline QColor* KThemeBase::gradientHigh( WidgetType widget ) const
+inline QColor *KThemeBase::gradientHigh(WidgetType widget) const
 {
-    return ( grHighColors[ widget ] );
+    return (grHighColors[widget]);
 }
 
-inline QColor* KThemeBase::gradientLow( WidgetType widget ) const
+inline QColor *KThemeBase::gradientLow(WidgetType widget) const
 {
-    return ( grLowColors[ widget ] );
+    return (grLowColors[widget]);
 }
 
-inline QImage* KThemeBase::image( WidgetType widget ) const
+inline QImage *KThemeBase::image(WidgetType widget) const
 {
-    return ( images[ widget ] );
+    return (images[widget]);
 }
 
 inline KThemeBase::SButton KThemeBase::scrollBarLayout() const
 {
-    return ( sbPlacement );
+    return (sbPlacement);
 }
 
 inline KThemeBase::ArrowStyle KThemeBase::arrowType() const
 {
-    return ( arrowStyle );
+    return (arrowStyle);
 }
 
 inline KThemeBase::ShadeStyle KThemeBase::shade() const
 {
-    return ( shading );
+    return (shading);
 }
 
 inline int KThemeBase::frameWidth() const
 {
-    return ( defaultFrame );
+    return (defaultFrame);
 }
 
 inline int KThemeBase::buttonXShift() const
 {
-    return ( btnXShift );
+    return (btnXShift);
 }
 
 inline int KThemeBase::splitWidth() const
 {
-    return ( splitterWidth );
+    return (splitterWidth);
 }
 
 inline int KThemeBase::buttonYShift() const
 {
-    return ( btnYShift );
+    return (btnYShift);
 }
 
 inline int KThemeBase::sliderButtonLength() const
 {
-    if ( isPixmap( Slider ) )
-        return ( uncached( Slider ) ->width() );
+    if(isPixmap(Slider))
+        return (uncached(Slider)->width());
     else
-        return ( sliderLen );
+        return (sliderLen);
 }
 
 inline bool KThemeBase::roundButton() const
 {
-    return ( roundedButton );
+    return (roundedButton);
 }
 
 inline bool KThemeBase::roundComboBox() const
 {
-    return ( roundedCombo );
+    return (roundedCombo);
 }
 
 inline bool KThemeBase::roundSlider() const
 {
-    return ( roundedSlider );
+    return (roundedSlider);
 }
 
 inline bool KThemeBase::activeTabLine() const
 {
-    return ( aTabLine );
+    return (aTabLine);
 }
 
 inline bool KThemeBase::inactiveTabLine() const
 {
-    return ( iTabLine );
+    return (iTabLine);
 }
 
 inline int KThemeBase::getSBExtent() const
 {
-    return ( sbExtent );
+    return (sbExtent);
 }
 
-inline KThemePixmap* KThemeBase::borderPixmap( WidgetType widget ) const
+inline KThemePixmap *KThemeBase::borderPixmap(WidgetType widget) const
 {
-    return ( pbPixmaps[ widget ] );
+    return (pbPixmaps[widget]);
 }
 
 #endif

@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,60 +27,52 @@
 
 using namespace VCARD;
 
-EmailParam::EmailParam()
-	:	Param()
+EmailParam::EmailParam() : Param()
 {
-	vDebug("ctor");
+    vDebug("ctor");
 }
 
-EmailParam::EmailParam(const EmailParam & x)
-	:	Param(x),
-		emailType_	(x.emailType_),
-		pref_		(x.pref_)
+EmailParam::EmailParam(const EmailParam &x) : Param(x), emailType_(x.emailType_), pref_(x.pref_)
 {
 }
 
-EmailParam::EmailParam(const QCString & s)
-	:	Param(s)
+EmailParam::EmailParam(const QCString &s) : Param(s)
 {
 }
 
-	EmailParam &
-EmailParam::operator = (EmailParam & x)
+EmailParam &EmailParam::operator=(EmailParam &x)
 {
-	if (*this == x) return *this;
-	
-	emailType_	= x.emailType();
-	pref_		= x.pref_;
+    if(*this == x)
+        return *this;
 
-	Param::operator = (x);
-	return *this;
+    emailType_ = x.emailType();
+    pref_ = x.pref_;
+
+    Param::operator=(x);
+    return *this;
 }
 
-	EmailParam &
-EmailParam::operator = (const QCString & s)
+EmailParam &EmailParam::operator=(const QCString &s)
 {
-	Param::operator = (s);
-	return *this;
+    Param::operator=(s);
+    return *this;
 }
 
-	bool
-EmailParam::operator == (EmailParam & x)
+bool EmailParam::operator==(EmailParam &x)
 {
-	parse();
+    parse();
 
-	if (pref_)
-		return (x.pref_ && x.emailType() == emailType_);
+    if(pref_)
+        return (x.pref_ && x.emailType() == emailType_);
 
-	return !x.pref();
+    return !x.pref();
 }
 
 EmailParam::~EmailParam()
 {
 }
 
-	void
-EmailParam::_parse()
+void EmailParam::_parse()
 {
 #if 0
 	Param::parseToList();
@@ -104,13 +96,11 @@ EmailParam::_parse()
 #endif
 }
 
-	void
-EmailParam::_assemble()
+void EmailParam::_assemble()
 {
-	strRep_ = "TYPE=";
-	strRep_ += emailType_;
+    strRep_ = "TYPE=";
+    strRep_ += emailType_;
 
-	if (pref_)
-		strRep_ += ",PREF";
+    if(pref_)
+        strRep_ += ",PREF";
 }
-

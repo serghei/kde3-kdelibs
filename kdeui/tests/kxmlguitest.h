@@ -4,14 +4,21 @@
 #include <kxmlguiclient.h>
 #include <qobject.h>
 
-class Client : public QObject, public KXMLGUIClient
-{
+class Client : public QObject, public KXMLGUIClient {
     Q_OBJECT
 public:
-    Client() {}
+    Client()
+    {
+    }
 
-    void setXMLFile( const QString &f, bool merge = true ) { KXMLGUIClient::setXMLFile( f, merge ); }
-    void setInstance( KInstance *inst ) { KXMLGUIClient::setInstance( inst ); }
+    void setXMLFile(const QString &f, bool merge = true)
+    {
+        KXMLGUIClient::setXMLFile(f, merge);
+    }
+    void setInstance(KInstance *inst)
+    {
+        KXMLGUIClient::setInstance(inst);
+    }
 
 public slots:
     void slotSec();

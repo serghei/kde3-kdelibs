@@ -22,60 +22,60 @@
 
 #ifndef QT_NO_DRAGANDDROP
 
-KMultipleDrag::KMultipleDrag( QWidget *dragSource, const char *name )
-    : QDragObject( dragSource, name )
+KMultipleDrag::KMultipleDrag(QWidget *dragSource, const char *name) : QDragObject(dragSource, name)
 {
-    m_dragObjects.setAutoDelete( true );
+    m_dragObjects.setAutoDelete(true);
 }
 
-void KMultipleDrag::addDragObject( QDragObject *dragObject )
+void KMultipleDrag::addDragObject(QDragObject *dragObject)
 {
-    //kdDebug() << "KMultipleDrag::addDragObject" << endl;
-    m_dragObjects.append( dragObject );
+    // kdDebug() << "KMultipleDrag::addDragObject" << endl;
+    m_dragObjects.append(dragObject);
     // We need to find out how many formats this dragObject supports
     int i = 0;
-    while ( dragObject->format( i ) )
+    while(dragObject->format(i))
         ++i;
-    m_numberFormats.append( i ); // e.g. if it supports two formats, 0 and 1, store 2.
+    m_numberFormats.append(i); // e.g. if it supports two formats, 0 and 1, store 2.
 }
 
-QByteArray KMultipleDrag::encodedData( const char *mime ) const
+QByteArray KMultipleDrag::encodedData(const char *mime) const
 {
-    //kdDebug() << "KMultipleDrag::encodedData " << mime << endl;
+    // kdDebug() << "KMultipleDrag::encodedData " << mime << endl;
     // Iterate over the drag objects, and find the format in the right one
-    QPtrListIterator<QDragObject> it( m_dragObjects );
-    for ( ; it.current(); ++it )
+    QPtrListIterator< QDragObject > it(m_dragObjects);
+    for(; it.current(); ++it)
     {
-        for ( int i = 0; it.current()->format( i ); ++i )
+        for(int i = 0; it.current()->format(i); ++i)
         {
-            if ( ::qstrcmp( it.current()->format( i ), mime ) == 0 )
-                return it.current()->encodedData( mime );
+            if(::qstrcmp(it.current()->format(i), mime) == 0)
+                return it.current()->encodedData(mime);
         }
     }
     return QByteArray();
 }
 
-const char* KMultipleDrag::format( int i ) const
+const char *KMultipleDrag::format(int i) const
 {
-    //kdDebug() << "KMultipleDrag::format " << i << endl;
+    // kdDebug() << "KMultipleDrag::format " << i << endl;
     // example: m_numberFormats: 1, 4
     //          m_dragObjects: storeddrag, textdrag
     // i=0 -> storeddrag->format( 0 )
     // i=1 -> textdrag->format( 0 )
     // i=2 -> textdrag->format( 1 )
     // etc.
-    QValueList<int>::ConstIterator nit = m_numberFormats.begin();
-    QValueList<int>::ConstIterator nend = m_numberFormats.end();
-    QPtrListIterator<QDragObject> it( m_dragObjects );
-    for ( ; nit != nend && i >= *nit ; ++nit, ++it )
+    QValueList< int >::ConstIterator nit = m_numberFormats.begin();
+    QValueList< int >::ConstIterator nend = m_numberFormats.end();
+    QPtrListIterator< QDragObject > it(m_dragObjects);
+    for(; nit != nend && i >= *nit; ++nit, ++it)
         i -= *nit;
-    if ( it.current() )
-        return it.current()->format( i );
+    if(it.current())
+        return it.current()->format(i);
     return 0;
 }
 
-void KMultipleDrag::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KMultipleDrag::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kmultipledrag.moc"
 

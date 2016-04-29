@@ -37,9 +37,8 @@
  * @author Espen Sand (espen@kde.org)
  */
 
-class KDEUI_EXPORT KAboutKDE : public KAboutDialog
-{
-  public:
+class KDEUI_EXPORT KAboutKDE : public KAboutDialog {
+public:
     /**
      * Constructor. Creates a fully featured "About KDE" dialog box.
      * Note that this dialog is made modeless in the KHelpMenu class so
@@ -53,10 +52,8 @@ class KDEUI_EXPORT KAboutKDE : public KAboutDialog
      *        made visible using QWidget::show(). Otherwise it will be
      *        modal and must be made visible using QWidget::exec()
      */
-    KAboutKDE( QWidget *parent=0, const char *name=0, bool modal=true );
+    KAboutKDE(QWidget *parent = 0, const char *name = 0, bool modal = true);
 };
 
 
 #endif
-
-

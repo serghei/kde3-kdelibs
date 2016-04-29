@@ -27,31 +27,32 @@
 #include "aspell.h"
 
 namespace KSpell2 {
-    class Dictionary;
+class Dictionary;
 }
 using KSpell2::Dictionary;
 
-class ASpellClient : public KSpell2::Client
-{
+class ASpellClient : public KSpell2::Client {
     Q_OBJECT
 public:
-    ASpellClient( QObject *parent, const char *name, const QStringList & /* args */  );
+    ASpellClient(QObject *parent, const char *name, const QStringList & /* args */);
     ~ASpellClient();
 
-    virtual int reliability() const {
+    virtual int reliability() const
+    {
         return 20;
     }
 
-    virtual Dictionary* dictionary( const QString& language );
+    virtual Dictionary *dictionary(const QString &language);
 
     virtual QStringList languages() const;
 
-    virtual QString name() const {
+    virtual QString name() const
+    {
         return "ASpell";
     }
+
 private:
     AspellConfig *m_config;
-
 };
 
 #endif

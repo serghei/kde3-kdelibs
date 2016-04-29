@@ -17,7 +17,7 @@
  *  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  *  Boston, MA 02110-1301, USA.
  **/
- 
+
 #ifndef __KATE_PRINTER_H__
 #define __KATE_PRINTER_H__
 
@@ -34,39 +34,37 @@ class QLabel;
 class QLineEdit;
 class QSpinBox;
 
-class KatePrinter
-{
-  public:
-    static bool print (KateDocument *doc);
+class KatePrinter {
+public:
+    static bool print(KateDocument *doc);
 };
 
-#ifndef Q_WS_WIN //TODO: reenable
-//BEGIN Text settings
-/*
-  Text settings page:
-  - [ ] Print Selection (enabled if there is a selection in the view)
-  - Print Line Numbers
-    () Smart () Yes () No
-*/
-class KatePrintTextSettings : public KPrintDialogPage
-{
-  Q_OBJECT
-  public:
-    KatePrintTextSettings( KPrinter *printer, QWidget *parent=0, const char *name=0 );
+#ifndef Q_WS_WIN // TODO: reenable
+                 // BEGIN Text settings
+                 /*
+                   Text settings page:
+                   - [ ] Print Selection (enabled if there is a selection in the view)
+                   - Print Line Numbers
+                     () Smart () Yes () No
+                 */
+class KatePrintTextSettings : public KPrintDialogPage {
+    Q_OBJECT
+public:
+    KatePrintTextSettings(KPrinter *printer, QWidget *parent = 0, const char *name = 0);
     ~KatePrintTextSettings(){};
 
-    void getOptions(QMap<QString,QString>& opts, bool incldef = false);
-    void setOptions(const QMap<QString,QString>& opts);
-    
+    void getOptions(QMap< QString, QString > &opts, bool incldef = false);
+    void setOptions(const QMap< QString, QString > &opts);
+
     /* call if view has a selection, enables the seelction checkbox according to the arg */
-    void enableSelection( bool );
-  
-  private:
+    void enableSelection(bool);
+
+private:
     QCheckBox *cbSelection, *cbLineNumbers, *cbGuide;
 };
-//END Text Settings
+// END Text Settings
 
-//BEGIN Header/Footer
+// BEGIN Header/Footer
 /*
   Header & Footer page:
   - enable header/footer
@@ -75,20 +73,19 @@ class KatePrintTextSettings : public KPrintDialogPage
     o colors
 */
 
-class KatePrintHeaderFooter : public KPrintDialogPage
-{
-  Q_OBJECT
-  public:
-    KatePrintHeaderFooter( KPrinter *printer, QWidget *parent=0, const char *name=0 );
+class KatePrintHeaderFooter : public KPrintDialogPage {
+    Q_OBJECT
+public:
+    KatePrintHeaderFooter(KPrinter *printer, QWidget *parent = 0, const char *name = 0);
     ~KatePrintHeaderFooter(){};
 
-    void getOptions(QMap<QString,QString>& opts, bool incldef = false);
-    void setOptions(const QMap<QString,QString>& opts);
+    void getOptions(QMap< QString, QString > &opts, bool incldef = false);
+    void setOptions(const QMap< QString, QString > &opts);
 
-  public slots:  
+public slots:
     void setHFFont();
-        
-  private:
+
+private:
     QCheckBox *cbEnableHeader, *cbEnableFooter;
     QLabel *lFontPreview;
     QString strFont;
@@ -98,12 +95,12 @@ class KatePrintHeaderFooter : public KPrintDialogPage
     QCheckBox *cbHeaderEnableBgColor;
     QLineEdit *leFooterLeft, *leFooterCenter, *leFooterRight;
     KColorButton *kcbtnFooterFg, *kcbtnFooterBg;
-    QCheckBox *cbFooterEnableBgColor;    
+    QCheckBox *cbFooterEnableBgColor;
 };
 
-//END Header/Footer
+// END Header/Footer
 
-//BEGIN Layout
+// BEGIN Layout
 /*
   Layout page:
   - Color scheme
@@ -113,24 +110,23 @@ class KatePrintHeaderFooter : public KPrintDialogPage
     o Margin
     o Color
 */
-class KatePrintLayout : public KPrintDialogPage
-{
-  Q_OBJECT
-  public:
-    KatePrintLayout( KPrinter *printer, QWidget *parent=0, const char *name=0 );
+class KatePrintLayout : public KPrintDialogPage {
+    Q_OBJECT
+public:
+    KatePrintLayout(KPrinter *printer, QWidget *parent = 0, const char *name = 0);
     ~KatePrintLayout(){};
 
-    void getOptions(QMap<QString,QString>& opts, bool incldef = false);
-    void setOptions(const QMap<QString,QString>& opts);
-  
-  private:
+    void getOptions(QMap< QString, QString > &opts, bool incldef = false);
+    void setOptions(const QMap< QString, QString > &opts);
+
+private:
     QComboBox *cmbSchema;
     QCheckBox *cbEnableBox, *cbDrawBackground;
     QGroupBox *gbBoxProps;
     QSpinBox *sbBoxWidth, *sbBoxMargin;
-    KColorButton* kcbtnBoxColor;
+    KColorButton *kcbtnBoxColor;
 };
-//END Layout
-#endif //!Q_WS_WIN
+// END Layout
+#endif //! Q_WS_WIN
 
 #endif

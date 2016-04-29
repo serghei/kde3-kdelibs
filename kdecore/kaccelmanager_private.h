@@ -39,45 +39,61 @@ class QWidgetStack;
  * @author Matthias Hoelzer-Kluepfel <mhk@kde.org>
 */
 
-class KAccelString
-{
+class KAccelString {
 public:
+    KAccelString() : m_pureText(), m_accel(-1)
+    {
+    }
+    KAccelString(const QString &input, int initalWeight = -1);
 
-  KAccelString() : m_pureText(), m_accel(-1) {}
-  KAccelString(const QString &input, int initalWeight=-1);
+    void calculateWeights(int initialWeight);
 
-  void calculateWeights(int initialWeight);
+    const QString &pure() const
+    {
+        return m_pureText;
+    }
+    QString accelerated() const;
 
-  const QString &pure() const { return m_pureText; }
-  QString accelerated() const;
+    int accel() const
+    {
+        return m_accel;
+    }
+    void setAccel(int accel)
+    {
+        m_accel = accel;
+    }
 
-  int accel() const { return m_accel; }
-  void setAccel(int accel) { m_accel = accel; }
+    int originalAccel() const
+    {
+        return m_orig_accel;
+    }
+    QString originalText() const
+    {
+        return m_origText;
+    }
 
-  int originalAccel() const { return m_orig_accel; }
-  QString originalText() const { return m_origText; }
+    QChar accelerator() const;
 
-  QChar accelerator() const;
+    int maxWeight(int &index, const QString &used);
 
-  int maxWeight(int &index, const QString &used);
-
-  bool operator == (const KAccelString &c) const { return m_pureText == c.m_pureText && m_accel == c.m_accel && m_orig_accel == c.m_orig_accel; }
+    bool operator==(const KAccelString &c) const
+    {
+        return m_pureText == c.m_pureText && m_accel == c.m_accel && m_orig_accel == c.m_orig_accel;
+    }
 
 
 private:
+    int stripAccelerator(QString &input);
 
-  int stripAccelerator(QString &input);
+    void dump();
 
-  void dump();
-
-  QString        m_pureText,  m_origText;
-  int            m_accel, m_orig_accel;
-  QMemArray<int> m_weight;
-
+    QString m_pureText, m_origText;
+    int m_accel, m_orig_accel;
+    QMemArray< int > m_weight;
 };
 
 
-typedef QValueList<KAccelString> KAccelStringList;
+typedef QValueList< KAccelString > KAccelStringList;
 
 
 /**
@@ -87,35 +103,33 @@ typedef QValueList<KAccelString> KAccelStringList;
  * @author Matthias Hoelzer-Kluepfel <mhk@kde.org>
 */
 
-class KAccelManagerAlgorithm
-{
+class KAccelManagerAlgorithm {
 public:
+    /// Constants used in the algorithm
+    enum
+    {
+        /// Default control weight
+        DEFAULT_WEIGHT = 50,
+        /// Additional weight for first character in string
+        FIRST_CHARACTER_EXTRA_WEIGHT = 50,
+        /// Additional weight for the beginning of a word
+        WORD_BEGINNING_EXTRA_WEIGHT = 50,
+        /// Additional weight for the dialog buttons (large, we basically never want these reassigned)
+        DIALOG_BUTTON_EXTRA_WEIGHT = 300,
+        /// Additional weight for a 'wanted' accelerator
+        WANTED_ACCEL_EXTRA_WEIGHT = 150,
+        /// Default weight for an 'action' widget (ie, pushbuttons)
+        ACTION_ELEMENT_WEIGHT = 50,
+        /// Default weight for group boxes (low priority)
+        GROUP_BOX_WEIGHT = -2000,
+        /// Default weight for menu titles
+        MENU_TITLE_WEIGHT = 250,
+        /// Additional weight for KDE standard accelerators
+        STANDARD_ACCEL = 300
+    };
 
-  /// Constants used in the algorithm
-  enum {
-    /// Default control weight
-    DEFAULT_WEIGHT = 50,
-    /// Additional weight for first character in string
-    FIRST_CHARACTER_EXTRA_WEIGHT = 50,
-    /// Additional weight for the beginning of a word
-    WORD_BEGINNING_EXTRA_WEIGHT = 50,
-    /// Additional weight for the dialog buttons (large, we basically never want these reassigned)
-    DIALOG_BUTTON_EXTRA_WEIGHT = 300,
-    /// Additional weight for a 'wanted' accelerator
-    WANTED_ACCEL_EXTRA_WEIGHT = 150,
-    /// Default weight for an 'action' widget (ie, pushbuttons)
-    ACTION_ELEMENT_WEIGHT = 50,
-    /// Default weight for group boxes (low priority)
-    GROUP_BOX_WEIGHT = -2000,
-    /// Default weight for menu titles
-    MENU_TITLE_WEIGHT = 250,
-    /// Additional weight for KDE standard accelerators
-    STANDARD_ACCEL = 300
-  };
-
-  /// Method to call to find the best distribution of accelerators.
-  static void findAccelerators(KAccelStringList &result, QString &used);
-
+    /// Method to call to find the best distribution of accelerators.
+    static void findAccelerators(KAccelStringList &result, QString &used);
 };
 
 
@@ -131,65 +145,55 @@ class QPopupMenu;
  * @author Matthias Hoelzer-Kluepfel <mhk@kde.org>
 */
 
-class KPopupAccelManager : public QObject
-{
-  Q_OBJECT
+class KPopupAccelManager : public QObject {
+    Q_OBJECT
 
 public:
-
-  static void manage(QPopupMenu *popup);
+    static void manage(QPopupMenu *popup);
 
 
 protected:
-
-  KPopupAccelManager(QPopupMenu *popup);
+    KPopupAccelManager(QPopupMenu *popup);
 
 
 private slots:
 
-  void aboutToShow();
+    void aboutToShow();
 
 
 private:
+    void calculateAccelerators();
 
-  void calculateAccelerators();
+    void findMenuEntries(KAccelStringList &list);
+    void setMenuEntries(const KAccelStringList &list);
 
-  void findMenuEntries(KAccelStringList &list);
-  void setMenuEntries(const KAccelStringList &list);
-
-  QPopupMenu       *m_popup;
-  KAccelStringList m_entries;
-  int              m_count;
-
+    QPopupMenu *m_popup;
+    KAccelStringList m_entries;
+    int m_count;
 };
 
 
-class QWidgetStackAccelManager : public QObject
-{
-  Q_OBJECT
+class QWidgetStackAccelManager : public QObject {
+    Q_OBJECT
 
 public:
-
-  static void manage(QWidgetStack *popup);
+    static void manage(QWidgetStack *popup);
 
 
 protected:
-
-  QWidgetStackAccelManager(QWidgetStack *popup);
+    QWidgetStackAccelManager(QWidgetStack *popup);
 
 
 private slots:
 
-  void aboutToShow(QWidget *);
-    bool eventFilter ( QObject * watched, QEvent * e );
+    void aboutToShow(QWidget *);
+    bool eventFilter(QObject *watched, QEvent *e);
 
 private:
+    void calculateAccelerators();
 
-  void calculateAccelerators();
-
-  QWidgetStack     *m_stack;
-  KAccelStringList m_entries;
-
+    QWidgetStack *m_stack;
+    KAccelStringList m_entries;
 };
 
 

@@ -22,14 +22,13 @@
 
 #include <klibloader.h>
 
-class KLpdFactory : public KLibFactory
-{
+class KLpdFactory : public KLibFactory {
 public:
-	KLpdFactory(QObject *parent = 0, const char *name = 0);
-	virtual ~KLpdFactory();
+    KLpdFactory(QObject *parent = 0, const char *name = 0);
+    virtual ~KLpdFactory();
 
 protected:
-	QObject* createObject(QObject *parent = 0, const char *name = 0, const char *className = "QObject", const QStringList& args = QStringList());
+    QObject *createObject(QObject *parent = 0, const char *name = 0, const char *className = "QObject", const QStringList &args = QStringList());
 };
 
 #endif

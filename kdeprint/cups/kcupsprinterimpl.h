@@ -22,15 +22,14 @@
 
 #include "kprinterimpl.h"
 
-class KCupsPrinterImpl : public KPrinterImpl
-{
+class KCupsPrinterImpl : public KPrinterImpl {
 public:
-	KCupsPrinterImpl(QObject *parent, const char *name, const QStringList & /*args*/ = QStringList());
-	~KCupsPrinterImpl();
+    KCupsPrinterImpl(QObject *parent, const char *name, const QStringList & /*args*/ = QStringList());
+    ~KCupsPrinterImpl();
 
-	bool setupCommand(QString&, KPrinter*);
-	void preparePrinting(KPrinter*);
-	void broadcastOption(const QString& key, const QString& value);
+    bool setupCommand(QString &, KPrinter *);
+    void preparePrinting(KPrinter *);
+    void broadcastOption(const QString &key, const QString &value);
 };
 
 #endif

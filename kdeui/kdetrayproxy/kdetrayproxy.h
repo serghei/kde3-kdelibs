@@ -25,26 +25,26 @@
 #include <kwinmodule.h>
 #include <qwidget.h>
 
-class KDETrayProxy
-    : public QWidget
-    {
+class KDETrayProxy : public QWidget {
     Q_OBJECT
-    public:
-        KDETrayProxy();
-    public slots:
-        void windowAdded( WId );
-        void newOwner( Window );
-    protected:
-        virtual bool x11Event( XEvent* );
-    private:
-        void dockWindow( Window w, Window owner );
-        void withdrawWindow( Window w );
-        static Atom makeSelectionAtom();
-        KSelectionWatcher selection;
-        KWinModule module;
-        QValueList< Window > pending_windows;
-        QValueList< Window > tray_windows;
-        QMap< Window, unsigned long > docked_windows;
-    };
+public:
+    KDETrayProxy();
+public slots:
+    void windowAdded(WId);
+    void newOwner(Window);
+
+protected:
+    virtual bool x11Event(XEvent *);
+
+private:
+    void dockWindow(Window w, Window owner);
+    void withdrawWindow(Window w);
+    static Atom makeSelectionAtom();
+    KSelectionWatcher selection;
+    KWinModule module;
+    QValueList< Window > pending_windows;
+    QValueList< Window > tray_windows;
+    QMap< Window, unsigned long > docked_windows;
+};
 
 #endif

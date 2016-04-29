@@ -27,8 +27,8 @@
 
 namespace KJS {
 
-  class StringInstanceImp : public ObjectImp {
-  public:
+class StringInstanceImp : public ObjectImp {
+public:
     StringInstanceImp(ObjectImp *proto);
     StringInstanceImp(ObjectImp *proto, const UString &string);
 
@@ -38,82 +38,114 @@ namespace KJS {
     virtual bool deleteProperty(ExecState *exec, const Identifier &propertyName);
     virtual ReferenceList propList(ExecState *exec, bool recursive);
 
-    virtual const ClassInfo *classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
- };
+};
 
-  /**
-   * @internal
-   *
-   * The initial value of String.prototype (and thus all objects created
-   * with the String constructor
-   */
-  class StringPrototypeImp : public StringInstanceImp {
-  public:
-    StringPrototypeImp(ExecState *exec,
-                       ObjectPrototypeImp *objProto);
+/**
+ * @internal
+ *
+ * The initial value of String.prototype (and thus all objects created
+ * with the String constructor
+ */
+class StringPrototypeImp : public StringInstanceImp {
+public:
+    StringPrototypeImp(ExecState *exec, ObjectPrototypeImp *objProto);
     Value get(ExecState *exec, const Identifier &p) const;
-    virtual const ClassInfo *classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-  };
+};
 
-  /**
-   * @internal
-   *
-   * Class to implement all methods that are properties of the
-   * String.prototype object
-   */
-  class StringProtoFuncImp : public InternalFunctionImp {
-  public:
+/**
+ * @internal
+ *
+ * Class to implement all methods that are properties of the
+ * String.prototype object
+ */
+class StringProtoFuncImp : public InternalFunctionImp {
+public:
     StringProtoFuncImp(ExecState *exec, int i, int len);
 
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
 
-    enum { ToString, ValueOf, CharAt, CharCodeAt, Concat, IndexOf, LastIndexOf,
-	   Match, Replace, Search, Slice, Split,
-	   Substr, Substring, FromCharCode, ToLowerCase, ToUpperCase,
-	   ToLocaleLowerCase, ToLocaleUpperCase, LocaleCompare
+    enum
+    {
+        ToString,
+        ValueOf,
+        CharAt,
+        CharCodeAt,
+        Concat,
+        IndexOf,
+        LastIndexOf,
+        Match,
+        Replace,
+        Search,
+        Slice,
+        Split,
+        Substr,
+        Substring,
+        FromCharCode,
+        ToLowerCase,
+        ToUpperCase,
+        ToLocaleLowerCase,
+        ToLocaleUpperCase,
+        LocaleCompare
 #ifndef KJS_PURE_ECMA
-	   , Big, Small, Blink, Bold, Fixed, Italics, Strike, Sub, Sup,
-	   Fontcolor, Fontsize, Anchor, Link
+        ,
+        Big,
+        Small,
+        Blink,
+        Bold,
+        Fixed,
+        Italics,
+        Strike,
+        Sub,
+        Sup,
+        Fontcolor,
+        Fontsize,
+        Anchor,
+        Link
 #endif
     };
-  private:
+private:
     int id;
-  };
+};
 
-  /**
-   * @internal
-   *
-   * The initial value of the the global variable's "String" property
-   */
-  class StringObjectImp : public InternalFunctionImp {
-  public:
-    StringObjectImp(ExecState *exec,
-                    FunctionPrototypeImp *funcProto,
-                    StringPrototypeImp *stringProto);
+/**
+ * @internal
+ *
+ * The initial value of the the global variable's "String" property
+ */
+class StringObjectImp : public InternalFunctionImp {
+public:
+    StringObjectImp(ExecState *exec, FunctionPrototypeImp *funcProto, StringPrototypeImp *stringProto);
 
     virtual bool implementsConstruct() const;
     virtual Object construct(ExecState *exec, const List &args);
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
-  };
+};
 
-  /**
-   * @internal
-   *
-   * Class to implement all methods that are properties of the
-   * String object
-   */
-  class StringObjectFuncImp : public InternalFunctionImp {
-  public:
+/**
+ * @internal
+ *
+ * Class to implement all methods that are properties of the
+ * String object
+ */
+class StringObjectFuncImp : public InternalFunctionImp {
+public:
     StringObjectFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto);
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
-  };
+};
 
 } // namespace
 
 #endif
-

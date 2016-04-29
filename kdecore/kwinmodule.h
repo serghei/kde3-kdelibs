@@ -49,25 +49,26 @@ class KWinModulePrivate;
  * @short Base class for KDE Window Manager modules.
  * @author Matthias Ettrich (ettrich@kde.org)
  */
-class KDECORE_EXPORT KWinModule : public QObject
-{
+class KDECORE_EXPORT KWinModule : public QObject {
     Q_OBJECT
 
 public:
-
-    enum { INFO_DESKTOP=1,
-           INFO_WINDOWS=2,
-           INFO_ALL=32767 };
+    enum
+    {
+        INFO_DESKTOP = 1,
+        INFO_WINDOWS = 2,
+        INFO_ALL = 32767
+    };
     /**
      * Creates a KWinModule object and connects to the window
      * manager.
      * @param parent the parent for the QObject
      * @param what The information you are interested in:
-     *   INFO_DESKTOP:  currentDesktop, 
-     *                  numberOfDesktops, 
-     *                  desktopName, 
-     *                  currentDesktopChanged, 
-     *                  numberOfDesktopsChanged, 
+     *   INFO_DESKTOP:  currentDesktop,
+     *                  numberOfDesktops,
+     *                  desktopName,
+     *                  currentDesktopChanged,
+     *                  numberOfDesktopsChanged,
      *                  desktopNameChanged,
      *                  activeWindow,
      *                  activeWindowChanged,
@@ -85,13 +86,13 @@ public:
      *                  strutChanged,
      *                  workArea(const QValueList<WId> &excludes, int desktop)
      **/
-    KWinModule( QObject* parent, int what );
+    KWinModule(QObject *parent, int what);
     /**
      * Creates a KWinModule object and connects to the window
      * manager.
      * @param parent the parent for the QObject
      **/
-    KWinModule( QObject* parent = 0 );
+    KWinModule(QObject *parent = 0);
 
     /**
      * Destructor. Internal cleanup, nothing fancy.
@@ -116,7 +117,7 @@ public:
      * \endcode
      * @return the list of all toplevel windows
      */
-    const QValueList<WId>& windows() const;
+    const QValueList< WId > &windows() const;
 
     /**
      * Returns the list of all toplevel windows currently managed by the
@@ -124,7 +125,7 @@ public:
      * higher). May be useful for pagers.
      * @return the list of all toplevel windows in stacking order
      */
-    const QValueList<WId>& stackingOrder() const;
+    const QValueList< WId > &stackingOrder() const;
 
     /**
      * Test to see if @p id still managed at present.
@@ -137,7 +138,7 @@ public:
      * Returns a list of the system tray windows.
      * @return a list of all system tray windows
      **/
-    const QValueList<WId>& systemTrayWindows() const;
+    const QValueList< WId > &systemTrayWindows() const;
 
     /**
      * Returns the current virtual desktop.
@@ -168,7 +169,7 @@ public:
 
     /**
      * Returns the currently active window, or 0 if no window is active.
-     * @return the window id of the active window, or 0 if no window is 
+     * @return the window id of the active window, or 0 if no window is
      *  active
      **/
     WId activeWindow() const;
@@ -180,7 +181,7 @@ public:
      *        current desktop
      * @return the size and position of the desktop
      **/
-    QRect workArea( int desktop = - 1 ) const;
+    QRect workArea(int desktop = -1) const;
 
 
     /**
@@ -193,21 +194,21 @@ public:
      *        current desktop
      * @return the size and position of the desktop
      **/
-    QRect workArea( const QValueList<WId> &excludes, int desktop = -1) const;
+    QRect workArea(const QValueList< WId > &excludes, int desktop = -1) const;
 
     /**
      * Returns the name of the specified desktop.
      * @param desktop the number of the desktop
      * @return the name of the desktop
      **/
-    QString desktopName( int desktop ) const;
+    QString desktopName(int desktop) const;
 
     /**
      * Sets the name of the specified desktop.
      * @param desktop the number of the desktop
      * @param name the new name for the desktop
      **/
-    void setDesktopName( int desktop, const QString& name );
+    void setDesktopName(int desktop, const QString &name);
 
     /**
      * Returns the state of showing the desktop.
@@ -224,7 +225,7 @@ public:
      *
      * @param title the title of the window
      */
-    void doNotManage( const QString& title );
+    void doNotManage(const QString &title);
 
 
 signals:
@@ -233,11 +234,11 @@ signals:
      * Switched to another virtual desktop.
      * @param desktop the number of the new desktop
      */
-    void currentDesktopChanged( int desktop);
+    void currentDesktopChanged(int desktop);
 
     /**
      * A window has been added.
-     * @param id the id of the the window 
+     * @param id the id of the the window
      */
     void windowAdded(WId id);
 
@@ -281,13 +282,13 @@ signals:
      */
     void workAreaChanged();
 
-    /** 
+    /**
      * Something changed with the struts, may or may not have changed
      * the work area. Usually just using the workAreaChanged() signal
      * is sufficient.
      */
     void strutChanged();
-    
+
     /**
      * Emitted when the stacking order of the window changed. The new order
      * can be obtained with stackingOrder().
@@ -305,7 +306,7 @@ signals:
      * @param id the id of the window
      * @param properties the properties that were modified
      */
-    void windowChanged(WId id, const unsigned long* properties );
+    void windowChanged(WId id, const unsigned long *properties);
 
     /**
      * @deprecated
@@ -328,7 +329,7 @@ signals:
      * The state of showing the desktop has changed.
      * @since 3.5
      */
-    void showingDesktopChanged( bool showing );
+    void showingDesktopChanged(bool showing);
 
     /**
      * The state of showing the desktop has changed.
@@ -340,19 +341,19 @@ signals:
      * The viewport position has changed
      * @since 3.5
      */
-    void currentDesktopViewportChanged(int desktop, const QPoint& viewport);
+    void currentDesktopViewportChanged(int desktop, const QPoint &viewport);
 
 protected:
-    virtual void connectNotify( const char* signal );
+    virtual void connectNotify(const char *signal);
 
 private:
     void init(int);
 
-    KWinModulePrivate* d;
+    KWinModulePrivate *d;
 
     friend class KWinModulePrivate;
 };
 
-#endif //Q_OS_UNIX
+#endif // Q_OS_UNIX
 
 #endif

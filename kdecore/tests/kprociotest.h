@@ -15,28 +15,26 @@
 #include <qobject.h>
 #include "kprocio.h"
 
-class Dummy : public QObject
-{
- Q_OBJECT
+class Dummy : public QObject {
+    Q_OBJECT
 
- public slots:
-   void printMessage(KProcess *proc)
-   {
-     printf("Process %d exited!\n", (int)proc->getPid()); 
-   } 
- 
-   void gotOutput(KProcIO*proc)
-   {
-    QString line;
-    while(true) {
-       int result = proc->readln(line);
-       if (result == -1) return;
-       printf("OUTPUT>> [%d] '%s'\n", result, line.latin1());
+public slots:
+    void printMessage(KProcess *proc)
+    {
+        printf("Process %d exited!\n", (int)proc->getPid());
     }
-   }
 
+    void gotOutput(KProcIO *proc)
+    {
+        QString line;
+        while(true)
+        {
+            int result = proc->readln(line);
+            if(result == -1)
+                return;
+            printf("OUTPUT>> [%d] '%s'\n", result, line.latin1());
+        }
+    }
 };
 
 #endif
-
-

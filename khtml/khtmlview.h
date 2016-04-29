@@ -32,39 +32,39 @@
 
 class QPainter;
 class QRect;
-template< typename T > class QValueVector;
+template < typename T > class QValueVector;
 
 namespace DOM {
-    class HTMLDocumentImpl;
-    class DocumentImpl;
-    class ElementImpl;
-    class HTMLElementImpl;
-    class HTMLTitleElementImpl;
-    class HTMLGenericFormElementImpl;
-    class HTMLFormElementImpl;
-    class HTMLAnchorElementImpl;
-    class HTMLInputElementImpl;
-    class Range;
-    class NodeImpl;
-    class CSSProperty;
+class HTMLDocumentImpl;
+class DocumentImpl;
+class ElementImpl;
+class HTMLElementImpl;
+class HTMLTitleElementImpl;
+class HTMLGenericFormElementImpl;
+class HTMLFormElementImpl;
+class HTMLAnchorElementImpl;
+class HTMLInputElementImpl;
+class Range;
+class NodeImpl;
+class CSSProperty;
 }
 
 namespace KJS {
-    class WindowFunc;
-    class ExternalFunc;
+class WindowFunc;
+class ExternalFunc;
 }
 
 namespace khtml {
-    class RenderObject;
-    class RenderCanvas;
-    class RenderStyle;
-    class RenderLineEdit;
-    class RenderPartObject;
-    class RenderWidget;
-    class CSSStyleSelector;
-    class LineEditWidget;
-    class CaretBox;
-    void applyRule(DOM::CSSProperty *prop);
+class RenderObject;
+class RenderCanvas;
+class RenderStyle;
+class RenderLineEdit;
+class RenderPartObject;
+class RenderWidget;
+class CSSStyleSelector;
+class LineEditWidget;
+class CaretBox;
+void applyRule(DOM::CSSProperty *prop);
 }
 
 class KHTMLPart;
@@ -75,8 +75,7 @@ class KHTMLViewPrivate;
  *
  * Suitable for use as an application's main view.
  **/
-class KHTML_EXPORT KHTMLView : public QScrollView
-{
+class KHTML_EXPORT KHTMLView : public QScrollView {
     Q_OBJECT
 
     friend class DOM::HTMLDocumentImpl;
@@ -103,16 +102,22 @@ public:
     /**
      * Constructs a KHTMLView.
      */
-    KHTMLView( KHTMLPart *part, QWidget *parent, const char *name=0 );
+    KHTMLView(KHTMLPart *part, QWidget *parent, const char *name = 0);
     virtual ~KHTMLView();
 
     /**
      * Returns a pointer to the KHTMLPart that is
      * rendering the page.
      **/
-    KHTMLPart *part() const { return m_part; }
+    KHTMLPart *part() const
+    {
+        return m_part;
+    }
 
-    int frameWidth() const { return _width; }
+    int frameWidth() const
+    {
+        return _width;
+    }
 
     /**
      * Sets a margin in x direction.
@@ -124,7 +129,10 @@ public:
      *
      * A return value of -1 means the default value will be used.
      */
-    int marginWidth() const { return _marginWidth; }
+    int marginWidth() const
+    {
+        return _marginWidth;
+    }
 
     /*
      * Sets a margin in y direction.
@@ -136,17 +144,20 @@ public:
      *
      * A return value of -1 means the default value will be used.
      */
-    int marginHeight() { return _marginHeight; }
+    int marginHeight()
+    {
+        return _marginHeight;
+    }
 
     /**
      * Sets verticals scrollbar mode. Reimplemented for internal reasons.
      */
-    virtual void setVScrollBarMode ( ScrollBarMode mode );
+    virtual void setVScrollBarMode(ScrollBarMode mode);
 
     /**
      * Sets horizontal scrollbar mode. Reimplemented for internal reasons.
      */
-    virtual void setHScrollBarMode ( ScrollBarMode mode );
+    virtual void setHScrollBarMode(ScrollBarMode mode);
 
     /**
      * Prints the HTML document.
@@ -157,17 +168,16 @@ public:
      * Prints the HTML document.
      * @param quick if true, fully automated printing, without print dialog
      */
-    void print( bool quick ); // KDE 4.0: merge with above
+    void print(bool quick); // KDE 4.0: merge with above
 
     /**
      * ensure the display is up to date
      */
     void layout(); // KDE 4.0: make private
-    /**
-     * Display all accesskeys in small tooltips
-     */
+                   /**
+                    * Display all accesskeys in small tooltips
+                    */
     void displayAccessKeys();
-
 
 
 signals:
@@ -177,40 +187,40 @@ signals:
      */
     void finishedLayout();
     void cleared();
-    void zoomView( int );
+    void zoomView(int);
     void hideAccessKeys();
     void repaintAccessKeys();
-    void findAheadActive( bool );
+    void findAheadActive(bool);
 
 protected:
     void clear();
 
-    virtual void resizeEvent ( QResizeEvent * event );
-    virtual void showEvent ( QShowEvent * );
-    virtual void hideEvent ( QHideEvent *);
-    virtual bool focusNextPrevChild( bool next );
-    virtual void drawContents ( QPainter * p, int clipx, int clipy, int clipw, int cliph );
-    virtual void drawContents( QPainter* );
-    virtual void viewportMousePressEvent( QMouseEvent * );
-    virtual void focusInEvent( QFocusEvent * );
-    virtual void focusOutEvent( QFocusEvent * );
-    virtual void viewportMouseDoubleClickEvent( QMouseEvent * );
+    virtual void resizeEvent(QResizeEvent *event);
+    virtual void showEvent(QShowEvent *);
+    virtual void hideEvent(QHideEvent *);
+    virtual bool focusNextPrevChild(bool next);
+    virtual void drawContents(QPainter *p, int clipx, int clipy, int clipw, int cliph);
+    virtual void drawContents(QPainter *);
+    virtual void viewportMousePressEvent(QMouseEvent *);
+    virtual void focusInEvent(QFocusEvent *);
+    virtual void focusOutEvent(QFocusEvent *);
+    virtual void viewportMouseDoubleClickEvent(QMouseEvent *);
     virtual void viewportMouseMoveEvent(QMouseEvent *);
     virtual void viewportMouseReleaseEvent(QMouseEvent *);
-    virtual void viewportResizeEvent(QResizeEvent*);
+    virtual void viewportResizeEvent(QResizeEvent *);
 #ifndef QT_NO_WHEELEVENT
-    virtual void viewportWheelEvent(QWheelEvent*);
+    virtual void viewportWheelEvent(QWheelEvent *);
 #endif
-    virtual void dragEnterEvent( QDragEnterEvent* );
-    virtual void dropEvent( QDropEvent* );
-    virtual void closeEvent ( QCloseEvent * );
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
+    virtual void closeEvent(QCloseEvent *);
     virtual bool eventFilter(QObject *, QEvent *);
 
-    void keyPressEvent( QKeyEvent *_ke );
-    void keyReleaseEvent ( QKeyEvent *_ke );
-    void contentsContextMenuEvent ( QContextMenuEvent *_ce );
+    void keyPressEvent(QKeyEvent *_ke);
+    void keyReleaseEvent(QKeyEvent *_ke);
+    void contentsContextMenuEvent(QContextMenuEvent *_ce);
     void doAutoScroll();
-    void timerEvent ( QTimerEvent * );
+    void timerEvent(QTimerEvent *);
 protected slots:
     void slotPaletteChanged();
     void slotScrollBarMoved();
@@ -228,11 +238,10 @@ private slots:
     void slotMouseScrollTimer();
 
 private:
-
-    void scheduleRelayout(khtml::RenderObject* clippedObj=0);
+    void scheduleRelayout(khtml::RenderObject *clippedObj = 0);
     void unscheduleRelayout();
 
-    void scheduleRepaint(int x, int y, int w, int h, bool asap=false);
+    void scheduleRepaint(int x, int y, int w, int h, bool asap = false);
     void unscheduleRepaint();
 
     bool needsFullRepaint() const;
@@ -268,7 +277,7 @@ private:
      * you only need to enable the media type in the view and if necessary
      * add the media type dependent changes to the renderer.
      */
-    void setMediaType( const QString &medium );
+    void setMediaType(const QString &medium);
     QString mediaType() const;
 
     bool pagedMode() const;
@@ -276,10 +285,10 @@ private:
     bool scrollTo(const QRect &);
 
     bool focusNextPrevNode(bool next);
-    bool handleAccessKey(const QKeyEvent* ev);
-    bool focusNodeWithAccessKey(QChar c, KHTMLView* caller = NULL);
-    QMap< DOM::ElementImpl*, QChar > buildFallbackAccessKeys() const;
-    void displayAccessKeys( KHTMLView* caller, KHTMLView* origview, QValueVector< QChar >& taken, bool use_fallbacks );
+    bool handleAccessKey(const QKeyEvent *ev);
+    bool focusNodeWithAccessKey(QChar c, KHTMLView *caller = NULL);
+    QMap< DOM::ElementImpl *, QChar > buildFallbackAccessKeys() const;
+    void displayAccessKeys(KHTMLView *caller, KHTMLView *origview, QValueVector< QChar > &taken, bool use_fallbacks);
 
     void useSlowRepaints();
 
@@ -293,25 +302,23 @@ private:
     void restoreScrollBar();
 
     QStringList formCompletionItems(const QString &name) const;
-    void clearCompletionHistory(const QString& name);
+    void clearCompletionHistory(const QString &name);
     void addFormCompletionItem(const QString &name, const QString &value);
 
-    void addNonPasswordStorableSite( const QString& host );
-    bool nonPasswordStorableSite( const QString& host ) const;
+    void addNonPasswordStorableSite(const QString &host);
+    bool nonPasswordStorableSite(const QString &host) const;
 
-    bool dispatchMouseEvent(int eventId, DOM::NodeImpl *targetNode,
-			    DOM::NodeImpl *targetNodeNonShared, bool cancelable,
-			    int detail,QMouseEvent *_mouse, bool setUnder,
-			    int mouseEventType);
-    bool dispatchKeyEvent( QKeyEvent *_ke );
-    bool dispatchKeyEventHelper( QKeyEvent *_ke, bool generate_keypress );
+    bool dispatchMouseEvent(int eventId, DOM::NodeImpl *targetNode, DOM::NodeImpl *targetNodeNonShared, bool cancelable, int detail,
+                            QMouseEvent *_mouse, bool setUnder, int mouseEventType);
+    bool dispatchKeyEvent(QKeyEvent *_ke);
+    bool dispatchKeyEventHelper(QKeyEvent *_ke, bool generate_keypress);
 
-    void complete( bool pendingAction );
+    void complete(bool pendingAction);
 
 #ifndef KHTML_NO_TYPE_AHEAD_FIND
     void findAhead(bool increase);
     void updateFindAheadTimeout();
-    void startFindAhead( bool linksOnly );
+    void startFindAhead(bool linksOnly);
 #endif // KHTML_NO_TYPE_AHEAD_FIND
 
 #ifndef KHTML_NO_CARET
@@ -396,8 +403,7 @@ private:
      * @param endOffset offset within the end node.
      * @return @p true if there had been a selection, and it was folded.
      */
-    bool foldSelectionToCaret(DOM::NodeImpl *startNode, long startOffset,
-    				DOM::NodeImpl *endNode, long endOffset);
+    bool foldSelectionToCaret(DOM::NodeImpl *startNode, long startOffset, DOM::NodeImpl *endNode, long endOffset);
 
     /** places the caret on the current position.
      *
@@ -426,8 +432,7 @@ private:
      * @param endOffset offset within the end node.
      * @return @p true when the current selection has been changed
      */
-    bool extendSelection(DOM::NodeImpl *startNode, long startOffset,
-				DOM::NodeImpl *endNode, long endOffset);
+    bool extendSelection(DOM::NodeImpl *startNode, long startOffset, DOM::NodeImpl *endNode, long endOffset);
 
     /** updates the selection from the last to the current caret position.
      *
@@ -438,8 +443,7 @@ private:
      * @param endNode ending node of selection
      * @param endOffset offset within the end node.
      */
-    void updateSelection(DOM::NodeImpl *startNode, long startOffset,
-			DOM::NodeImpl *endNode, long endOffset);
+    void updateSelection(DOM::NodeImpl *startNode, long startOffset, DOM::NodeImpl *endNode, long endOffset);
 
     /**
      * Returns the current caret policy when the view is not focused.
@@ -482,7 +486,11 @@ private:
      * @li CaretByCharacter move caret character-wise
      * @li CaretByWord move caret word-wise
      */
-    enum CaretMovement { CaretByCharacter, CaretByWord };
+    enum CaretMovement
+    {
+        CaretByCharacter,
+        CaretByWord
+    };
 
     /** moves the caret.
      *
@@ -584,9 +592,8 @@ private:
 #endif // KHTML_NO_CARET
 
     // ------------------------------------- member variables ------------------------------------
- private:
-
-    void setWidgetVisible(::khtml::RenderWidget*, bool visible);
+private:
+    void setWidgetVisible(::khtml::RenderWidget *, bool visible);
 
     int _width;
     int _height;
@@ -597,8 +604,7 @@ private:
     KHTMLPart *m_part;
     KHTMLViewPrivate *d;
 
-    QString m_medium;   // media type
+    QString m_medium; // media type
 };
 
 #endif
-

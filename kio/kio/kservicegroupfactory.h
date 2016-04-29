@@ -33,48 +33,53 @@ class KSycocaDict;
  * A sycoca factory for service groups (e.g. list of applications)
  * It loads the services from parsing directories (e.g. applnk/)
  */
-class KIO_EXPORT KServiceGroupFactory : public KSycocaFactory
-{
-  K_SYCOCAFACTORY( KST_KServiceGroupFactory )
+class KIO_EXPORT KServiceGroupFactory : public KSycocaFactory {
+    K_SYCOCAFACTORY(KST_KServiceGroupFactory)
 public:
-  /**
-   * Create factory
-   */
-  KServiceGroupFactory();
-  virtual ~KServiceGroupFactory();
+    /**
+     * Create factory
+     */
+    KServiceGroupFactory();
+    virtual ~KServiceGroupFactory();
 
-  /**
-   * Construct a KServiceGroup from a config file.
-   */
-  virtual KSycocaEntry *createEntry(const QString &, const char *)
-    { assert(0); return 0; }
+    /**
+     * Construct a KServiceGroup from a config file.
+     */
+    virtual KSycocaEntry *createEntry(const QString &, const char *)
+    {
+        assert(0);
+        return 0;
+    }
 
-  /**
-   * Find a group ( by desktop path, e.g. "Applications/Editors")
-   */
-  KServiceGroup * findGroupByDesktopPath( const QString &_name, bool deep = true );
+    /**
+     * Find a group ( by desktop path, e.g. "Applications/Editors")
+     */
+    KServiceGroup *findGroupByDesktopPath(const QString &_name, bool deep = true);
 
-  /**
-   * Find a base group by name, e.g. "settings"
-   */
-  KServiceGroup * findBaseGroup( const QString &_baseGroupName, bool deep = true );
+    /**
+     * Find a base group by name, e.g. "settings"
+     */
+    KServiceGroup *findBaseGroup(const QString &_baseGroupName, bool deep = true);
 
-  /**
-   * @return the unique service group factory, creating it if necessary
-   */
-  static KServiceGroupFactory * self();
+    /**
+     * @return the unique service group factory, creating it if necessary
+     */
+    static KServiceGroupFactory *self();
+
 protected:
-  KServiceGroup* createGroup(int offset, bool deep);
-  KServiceGroup* createEntry(int offset);
-  KSycocaDict *m_baseGroupDict;
-  int m_baseGroupDictOffset;
+    KServiceGroup *createGroup(int offset, bool deep);
+    KServiceGroup *createEntry(int offset);
+    KSycocaDict *m_baseGroupDict;
+    int m_baseGroupDictOffset;
 
 private:
-  static KServiceGroupFactory *_self;
+    static KServiceGroupFactory *_self;
+
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KServiceGroupFactoryPrivate* d;
+    class KServiceGroupFactoryPrivate *d;
 };
 
 #endif

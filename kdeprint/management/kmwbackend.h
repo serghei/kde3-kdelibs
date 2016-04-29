@@ -27,28 +27,27 @@
 class QButtonGroup;
 class QVBoxLayout;
 
-class KDEPRINT_EXPORT KMWBackend : public KMWizardPage
-{
+class KDEPRINT_EXPORT KMWBackend : public KMWizardPage {
 public:
-	KMWBackend(QWidget *parent = 0, const char *name = 0);
+    KMWBackend(QWidget *parent = 0, const char *name = 0);
 
-	bool isValid(QString&);
-	void initPrinter(KMPrinter*);
-	void updatePrinter(KMPrinter*);
+    bool isValid(QString &);
+    void initPrinter(KMPrinter *);
+    void updatePrinter(KMPrinter *);
 
-	void addBackend(int ID, const QString& txt, bool on = true, const QString& whatsThis = QString::null, int nextpage = -1);
-	void addBackend(int ID = -1, bool on = true, int nextpage = -1);
-	void enableBackend(int ID, bool on = true);
+    void addBackend(int ID, const QString &txt, bool on = true, const QString &whatsThis = QString::null, int nextpage = -1);
+    void addBackend(int ID = -1, bool on = true, int nextpage = -1);
+    void enableBackend(int ID, bool on = true);
 
 private:
-	QButtonGroup	*m_buttons;
-	QVBoxLayout	*m_layout;
-	// keep a map between button ID and the real next page to switch to. This enables
-	// to have different backends switching to the same page (like backends requiring
-	// a password). If the next page is not given when adding the backend, the ID is
-	// used by default.
-	QMap<int,int>	m_map;
-	int 		m_count;
+    QButtonGroup *m_buttons;
+    QVBoxLayout *m_layout;
+    // keep a map between button ID and the real next page to switch to. This enables
+    // to have different backends switching to the same page (like backends requiring
+    // a password). If the next page is not given when adding the backend, the ID is
+    // used by default.
+    QMap< int, int > m_map;
+    int m_count;
 };
 
 #endif

@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "test_dpointer.h"
 #include "kinstance.h"
 
-int main( int, char*[] )
+int main(int, char *[])
 {
-  KInstance i("test");
-  TestDPointer *t = TestDPointer::self();
-  delete t;
+    KInstance i("test");
+    TestDPointer *t = TestDPointer::self();
+    delete t;
 }

@@ -24,18 +24,15 @@
 
 using namespace KABC;
 
-Sound::Sound()
-  : mIntern( false )
+Sound::Sound() : mIntern(false)
 {
 }
 
-Sound::Sound( const QString &url )
-  : mUrl( url ), mIntern( false )
+Sound::Sound(const QString &url) : mUrl(url), mIntern(false)
 {
 }
 
-Sound::Sound( const QByteArray &data )
-  : mData( data ), mIntern( true )
+Sound::Sound(const QByteArray &data) : mData(data), mIntern(true)
 {
 }
 
@@ -43,76 +40,79 @@ Sound::~Sound()
 {
 }
 
-bool Sound::operator==( const Sound &s ) const
+bool Sound::operator==(const Sound &s) const
 {
-  if ( mIntern != s.mIntern ) return false;
+    if(mIntern != s.mIntern)
+        return false;
 
-  if ( mIntern ) {
-    if ( mData != s.mData )
-      return false;
-  } else {
-    if ( mUrl != s.mUrl )
-      return false;
-  }
+    if(mIntern)
+    {
+        if(mData != s.mData)
+            return false;
+    }
+    else
+    {
+        if(mUrl != s.mUrl)
+            return false;
+    }
 
-  return true;
+    return true;
 }
 
-bool Sound::operator!=( const Sound &s ) const
+bool Sound::operator!=(const Sound &s) const
 {
-  return !( s == *this );
+    return !(s == *this);
 }
 
-void Sound::setUrl( const QString &url )
+void Sound::setUrl(const QString &url)
 {
-  mUrl = url;
-  mIntern = false;
+    mUrl = url;
+    mIntern = false;
 }
 
-void Sound::setData( const QByteArray &data )
+void Sound::setData(const QByteArray &data)
 {
-  mData = data;
-  mIntern = true;
+    mData = data;
+    mIntern = true;
 }
 
 bool Sound::isIntern() const
 {
-  return mIntern;
+    return mIntern;
 }
 
 bool Sound::isEmpty() const
 {
-  return (!mIntern) && mUrl.isEmpty();
-
+    return (!mIntern) && mUrl.isEmpty();
 }
 
 QString Sound::url() const
 {
-  return mUrl;
+    return mUrl;
 }
 
 QByteArray Sound::data() const
 {
-  return mData;
+    return mData;
 }
 
 QString Sound::asString() const
 {
-  if ( mIntern )
-    return "intern sound";
-  else
-    return mUrl;
+    if(mIntern)
+        return "intern sound";
+    else
+        return mUrl;
 }
 
-QDataStream &KABC::operator<<( QDataStream &s, const Sound &sound )
+QDataStream &KABC::operator<<(QDataStream &s, const Sound &sound)
 {
-  return s << sound.mIntern << sound.mUrl;
-//  return s << sound.mIntern << sound.mUrl << sound.mData;
+    return s << sound.mIntern << sound.mUrl;
+    //  return s << sound.mIntern << sound.mUrl << sound.mData;
 }
 
-QDataStream &KABC::operator>>( QDataStream &s, Sound &sound )
+QDataStream &KABC::operator>>(QDataStream &s, Sound &sound)
 {
-  s >> sound.mIntern >> sound.mUrl;
-//  s >> sound.mIntern >> sound.mUrl >> sound.mData;
-  return s;
+    s >> sound.mIntern >> sound.mUrl;
+    //  s >> sound.mIntern >> sound.mUrl >> sound.mData;
+    return s;
 }

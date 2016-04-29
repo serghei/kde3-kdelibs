@@ -26,120 +26,131 @@
 #include <kurl.h>
 #include <kiconloader.h>
 
-KTextBrowser::KTextBrowser( QWidget *parent, const char *name,
-			    bool notifyClick )
-  : QTextBrowser( parent, name ), mNotifyClick(notifyClick)
+KTextBrowser::KTextBrowser(QWidget *parent, const char *name, bool notifyClick) : QTextBrowser(parent, name), mNotifyClick(notifyClick)
 {
-  //
-  //1999-10-04 Espen Sand: Not required anymore ?
-  //connect( this, SIGNAL(highlighted(const QString &)),
-  //   this, SLOT(refChanged(const QString &)));
+    //
+    // 1999-10-04 Espen Sand: Not required anymore ?
+    // connect( this, SIGNAL(highlighted(const QString &)),
+    //   this, SLOT(refChanged(const QString &)));
 }
 
-KTextBrowser::~KTextBrowser( void )
+KTextBrowser::~KTextBrowser(void)
 {
 }
 
 
-void KTextBrowser::setNotifyClick( bool notifyClick )
+void KTextBrowser::setNotifyClick(bool notifyClick)
 {
-  mNotifyClick = notifyClick;
+    mNotifyClick = notifyClick;
 }
 
 
 bool KTextBrowser::isNotifyClick() const
 {
-  return mNotifyClick;
+    return mNotifyClick;
 }
 
 
-void KTextBrowser::setSource( const QString& name )
+void KTextBrowser::setSource(const QString &name)
 {
-  if( name.isNull() )
-  {
-    return;
-  }
+    if(name.isNull())
+    {
+        return;
+    }
 
-  if( name.find('@') > -1 )
-  {
-    if( !mNotifyClick )
+    if(name.find('@') > -1)
     {
-      kapp->invokeMailer( KURL( name ) );
+        if(!mNotifyClick)
+        {
+            kapp->invokeMailer(KURL(name));
+        }
+        else
+        {
+            emit mailClick(QString::null, name);
+        }
     }
     else
     {
-      emit mailClick( QString::null, name );
+        if(!mNotifyClick)
+        {
+            kapp->invokeBrowser(name);
+        }
+        else
+        {
+            emit urlClick(name);
+        }
     }
-  }
-  else
-  {
-    if( !mNotifyClick )
-    {
-      kapp->invokeBrowser( name );
-    }
-    else
-    {
-      emit urlClick( name );
-    }
-  }
 }
 
 
 void KTextBrowser::keyPressEvent(QKeyEvent *e)
 {
-  if( e->key() == Key_Escape )
-  {
-    e->ignore();
-  }
-  else if( e->key() == Key_F1 )
-  {
-    e->ignore();
-  }
-  else
-  {
-    QTextBrowser::keyPressEvent(e);
-  }
+    if(e->key() == Key_Escape)
+    {
+        e->ignore();
+    }
+    else if(e->key() == Key_F1)
+    {
+        e->ignore();
+    }
+    else
+    {
+        QTextBrowser::keyPressEvent(e);
+    }
 }
 
-void KTextBrowser::viewportMouseMoveEvent( QMouseEvent* e)
+void KTextBrowser::viewportMouseMoveEvent(QMouseEvent *e)
 {
-  // do this first so we get the right type of cursor
-  QTextBrowser::viewportMouseMoveEvent(e);
+    // do this first so we get the right type of cursor
+    QTextBrowser::viewportMouseMoveEvent(e);
 
-  if ( viewport()->cursor().shape() == PointingHandCursor )
-    viewport()->setCursor( KCursor::handCursor() );
+    if(viewport()->cursor().shape() == PointingHandCursor)
+        viewport()->setCursor(KCursor::handCursor());
 }
 
-void KTextBrowser::contentsWheelEvent( QWheelEvent *e )
+void KTextBrowser::contentsWheelEvent(QWheelEvent *e)
 {
-    if ( KGlobalSettings::wheelMouseZooms() )
-        QTextBrowser::contentsWheelEvent( e );
+    if(KGlobalSettings::wheelMouseZooms())
+        QTextBrowser::contentsWheelEvent(e);
     else // thanks, we don't want to zoom, so skip QTextEdit's impl.
-        QScrollView::contentsWheelEvent( e );
+        QScrollView::contentsWheelEvent(e);
 }
 
-QPopupMenu *KTextBrowser::createPopupMenu( const QPoint & pos )
+QPopupMenu *KTextBrowser::createPopupMenu(const QPoint &pos)
 {
-    enum { IdUndo, IdRedo, IdSep1, IdCut, IdCopy, IdPaste, IdClear, IdSep2, IdSelectAll };
+    enum
+    {
+        IdUndo,
+        IdRedo,
+        IdSep1,
+        IdCut,
+        IdCopy,
+        IdPaste,
+        IdClear,
+        IdSep2,
+        IdSelectAll
+    };
 
-    QPopupMenu *popup = QTextBrowser::createPopupMenu( pos );
+    QPopupMenu *popup = QTextBrowser::createPopupMenu(pos);
 
-    if ( isReadOnly() )
-      popup->changeItem( popup->idAt(0), SmallIconSet("editcopy"), popup->text( popup->idAt(0) ) );
-    else {
-      int id = popup->idAt(0);
-      popup->changeItem( id - IdUndo, SmallIconSet("undo"), popup->text( id - IdUndo) );
-      popup->changeItem( id - IdRedo, SmallIconSet("redo"), popup->text( id - IdRedo) );
-      popup->changeItem( id - IdCut, SmallIconSet("editcut"), popup->text( id - IdCut) );
-      popup->changeItem( id - IdCopy, SmallIconSet("editcopy"), popup->text( id - IdCopy) );
-      popup->changeItem( id - IdPaste, SmallIconSet("editpaste"), popup->text( id - IdPaste) );
-      popup->changeItem( id - IdClear, SmallIconSet("editclear"), popup->text( id - IdClear) );
+    if(isReadOnly())
+        popup->changeItem(popup->idAt(0), SmallIconSet("editcopy"), popup->text(popup->idAt(0)));
+    else
+    {
+        int id = popup->idAt(0);
+        popup->changeItem(id - IdUndo, SmallIconSet("undo"), popup->text(id - IdUndo));
+        popup->changeItem(id - IdRedo, SmallIconSet("redo"), popup->text(id - IdRedo));
+        popup->changeItem(id - IdCut, SmallIconSet("editcut"), popup->text(id - IdCut));
+        popup->changeItem(id - IdCopy, SmallIconSet("editcopy"), popup->text(id - IdCopy));
+        popup->changeItem(id - IdPaste, SmallIconSet("editpaste"), popup->text(id - IdPaste));
+        popup->changeItem(id - IdClear, SmallIconSet("editclear"), popup->text(id - IdClear));
     }
 
     return popup;
 }
 
-void KTextBrowser::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KTextBrowser::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "ktextbrowser.moc"

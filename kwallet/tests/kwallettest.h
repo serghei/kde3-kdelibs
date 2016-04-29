@@ -3,13 +3,14 @@
 
 #include <qobject.h>
 
-namespace KWallet { class Wallet; }
+namespace KWallet {
+class Wallet;
+}
 
-class WalletReceiver : public QObject
-{
-	Q_OBJECT
+class WalletReceiver : public QObject {
+    Q_OBJECT
 public slots:
-	void walletOpened( bool );
+    void walletOpened(bool);
 };
 
 #endif

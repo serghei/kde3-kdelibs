@@ -29,77 +29,81 @@ DynamicDomRestyler::DynamicDomRestyler()
 {
 }
 
-void DynamicDomRestyler::addDependency(ElementImpl* subject, ElementImpl* dependency, StructuralDependencyType type)
+void DynamicDomRestyler::addDependency(ElementImpl *subject, ElementImpl *dependency, StructuralDependencyType type)
 {
     assert(type < LastStructuralDependency);
 
     dependency_map[type].append(dependency, subject);
-    reverse_map.append(subject,dependency);
+    reverse_map.append(subject, dependency);
 }
 
-void DynamicDomRestyler::removeDependency(ElementImpl* subject, ElementImpl* dependency, StructuralDependencyType type)
+void DynamicDomRestyler::removeDependency(ElementImpl *subject, ElementImpl *dependency, StructuralDependencyType type)
 {
     dependency_map[type].remove(dependency, subject);
     // don't remove from reverse_map as there might be other depencies to the same element
 }
 
-void DynamicDomRestyler::removeDependencies(ElementImpl* subject, StructuralDependencyType type)
+void DynamicDomRestyler::removeDependencies(ElementImpl *subject, StructuralDependencyType type)
 {
-    KMultiMap<ElementImpl>::List* my_dependencies = reverse_map.find(subject);
+    KMultiMap< ElementImpl >::List *my_dependencies = reverse_map.find(subject);
 
-    if (!my_dependencies) return;
+    if(!my_dependencies)
+        return;
 
-    for (my_dependencies->first(); my_dependencies->current() ; my_dependencies->next())
+    for(my_dependencies->first(); my_dependencies->current(); my_dependencies->next())
     {
-        ElementImpl* e = my_dependencies->current();
-        dependency_map[type].remove(e,subject);
+        ElementImpl *e = my_dependencies->current();
+        dependency_map[type].remove(e, subject);
     }
 
     // don't remove from reverse_map as there might be other depencies to the same elements
 }
 
-void DynamicDomRestyler::resetDependencies(ElementImpl* subject)
+void DynamicDomRestyler::resetDependencies(ElementImpl *subject)
 {
-    KMultiMap<ElementImpl>::List* my_dependencies = reverse_map.find(subject);
+    KMultiMap< ElementImpl >::List *my_dependencies = reverse_map.find(subject);
 
-    if (!my_dependencies) return;
+    if(!my_dependencies)
+        return;
 
-    for (my_dependencies->first(); my_dependencies->current() ; my_dependencies->next())
+    for(my_dependencies->first(); my_dependencies->current(); my_dependencies->next())
     {
-        ElementImpl* e = my_dependencies->current();
-        for (int type = 0; type < LastStructuralDependency; type++) {
-            dependency_map[type].remove(e,subject);
+        ElementImpl *e = my_dependencies->current();
+        for(int type = 0; type < LastStructuralDependency; type++)
+        {
+            dependency_map[type].remove(e, subject);
         }
     }
 
     reverse_map.remove(subject);
 }
 
-void DynamicDomRestyler::restyleDepedent(ElementImpl* dependency, StructuralDependencyType type)
+void DynamicDomRestyler::restyleDepedent(ElementImpl *dependency, StructuralDependencyType type)
 {
     assert(type < LastStructuralDependency);
-    KMultiMap<ElementImpl>::List* dep = dependency_map[type].find(dependency);
+    KMultiMap< ElementImpl >::List *dep = dependency_map[type].find(dependency);
 
-    if (!dep) return;
+    if(!dep)
+        return;
 
     // take copy as the restyle will change the list
-    KMultiMap<ElementImpl>::List dependent(*dep);
+    KMultiMap< ElementImpl >::List dependent(*dep);
 
-    for (dependent.first(); dependent.current() ; dependent.next())
+    for(dependent.first(); dependent.current(); dependent.next())
     {
-//         kdDebug() << "Restyling dependent" << endl;
+        //         kdDebug() << "Restyling dependent" << endl;
         dependent.current()->setChanged(true);
     }
 }
 
 void DynamicDomRestyler::dumpStats() const
 {
-/*
-    kdDebug() << "Keys in structural dependencies: " << dependency_map[StructuralDependency].size() << endl;
-    kdDebug() << "Keys in attribute dependencies: " << dependency_map[AttributeDependency].size() << endl;
+    /*
+        kdDebug() << "Keys in structural dependencies: " << dependency_map[StructuralDependency].size() << endl;
+        kdDebug() << "Keys in attribute dependencies: " << dependency_map[AttributeDependency].size() << endl;
 
-    kdDebug() << "Keys in reverse map: " << reverse_map.size() << endl;
-    */
+        kdDebug() << "Keys in reverse map: " << reverse_map.size() << endl;
+        */
 }
 
 void DynamicDomRestyler::addDependency(uint attrID, AttributeDependencyType type)

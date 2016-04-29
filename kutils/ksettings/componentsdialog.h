@@ -25,8 +25,7 @@
 class QString;
 class KPluginInfo;
 
-namespace KSettings
-{
+namespace KSettings {
 
 /**
   @ingroup plugin
@@ -37,51 +36,49 @@ namespace KSettings
   to the okClicked() and applyClicked() signals to be notified about
   configuration changes.
 */
-class KUTILS_EXPORT ComponentsDialog : public KDialogBase
-{
+class KUTILS_EXPORT ComponentsDialog : public KDialogBase {
     Q_OBJECT
-    public:
-        /**
-          Create Dialog.
+public:
+    /**
+      Create Dialog.
 
-          @param parent parent widget
-          @param name   name
-        */
-        ComponentsDialog( QWidget * parent = 0, const char * name = 0 );
-        ~ComponentsDialog();
+      @param parent parent widget
+      @param name   name
+    */
+    ComponentsDialog(QWidget *parent = 0, const char *name = 0);
+    ~ComponentsDialog();
 
-        /**
-          Add a plugin that the dialog offers for selection.
-        */
-        void addPluginInfo( KPluginInfo * );
-        /**
-          Set list of plugins the dialog offers for selection. (Overwrites a previous list)
-        */
-        void setPluginInfos( const QMap<QString, KPluginInfo*> & plugininfos );
-        /**
-          Set list of plugins the dialog offers for selection. (Overwrites a previous list)
-        */
-        void setPluginInfos( const QValueList<KPluginInfo *> &plugins );
+    /**
+      Add a plugin that the dialog offers for selection.
+    */
+    void addPluginInfo(KPluginInfo *);
+    /**
+      Set list of plugins the dialog offers for selection. (Overwrites a previous list)
+    */
+    void setPluginInfos(const QMap< QString, KPluginInfo * > &plugininfos);
+    /**
+      Set list of plugins the dialog offers for selection. (Overwrites a previous list)
+    */
+    void setPluginInfos(const QValueList< KPluginInfo * > &plugins);
 
-        /**
-         * reimplemented
-         */
-        void show();
+    /**
+     * reimplemented
+     */
+    void show();
 
-    protected slots:
-        void slotOk();
-        void slotApply();
+protected slots:
+    void slotOk();
+    void slotApply();
 
-    private slots:
-        void executed( QListViewItem * );
+private slots:
+    void executed(QListViewItem *);
 
-    private:
-        void savePluginInfos();
+private:
+    void savePluginInfos();
 
-        class ComponentsDialogPrivate;
-        ComponentsDialogPrivate * d;
+    class ComponentsDialogPrivate;
+    ComponentsDialogPrivate *d;
 };
-
 }
 
 // vim: sw=4 sts=4 et

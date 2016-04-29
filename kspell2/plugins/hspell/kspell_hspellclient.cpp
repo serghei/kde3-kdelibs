@@ -26,13 +26,12 @@
 #include <kgenericfactory.h>
 #include <kdebug.h>
 
-typedef KGenericFactory<HSpellClient> HSpellClientFactory;
-K_EXPORT_COMPONENT_FACTORY( kspell_hspell, HSpellClientFactory( "kspell_hspell" )  )
+typedef KGenericFactory< HSpellClient > HSpellClientFactory;
+K_EXPORT_COMPONENT_FACTORY(kspell_hspell, HSpellClientFactory("kspell_hspell"))
 
 using namespace KSpell2;
 
-HSpellClient::HSpellClient( QObject *parent, const char *name, const QStringList& /* args */  )
-    : Client( parent, name )
+HSpellClient::HSpellClient(QObject *parent, const char *name, const QStringList & /* args */) : Client(parent, name)
 {
 }
 
@@ -40,16 +39,16 @@ HSpellClient::~HSpellClient()
 {
 }
 
-Dictionary* HSpellClient::dictionary( const QString& language )
+Dictionary *HSpellClient::dictionary(const QString &language)
 {
-    HSpellDict *ad = new HSpellDict( language );
+    HSpellDict *ad = new HSpellDict(language);
     return ad;
 }
 
 QStringList HSpellClient::languages() const
 {
     QStringList langs;
-    langs.append( "he" );
+    langs.append("he");
 
     return langs;
 }

@@ -112,9 +112,9 @@ struct DBusMessage;
  *   }
  * @endcode
  */
-class QDBUS_EXPORT QDBusMessage: public QValueList<QDBusData>
-{
+class QDBUS_EXPORT QDBusMessage : public QValueList< QDBusData > {
     friend class QDBusConnection;
+
 public:
     /**
      * @brief Anonymous enum for timeout constants
@@ -246,8 +246,7 @@ public:
      *
      * @see QDBusConnection::send()
      */
-    static QDBusMessage signal(const QString &path, const QString &interface,
-                               const QString &member);
+    static QDBusMessage signal(const QString &path, const QString &interface, const QString &member);
 
     /**
      * @brief Creates a message for sending a D-Bus method call
@@ -269,8 +268,7 @@ public:
      * @see methodError()
      * @see QDBusConnection::send()
      */
-    static QDBusMessage methodCall(const QString &service, const QString &path,
-                                   const QString &interface, const QString &method);
+    static QDBusMessage methodCall(const QString &service, const QString &path, const QString &interface, const QString &method);
 
     /**
      * @brief Creates a message for replying to a D-Bus method call
@@ -305,7 +303,7 @@ public:
      * @see methodReply()
      * @see QDBusConnection::send()
      */
-    static QDBusMessage methodError(const QDBusMessage &other, const QDBusError& error);
+    static QDBusMessage methodError(const QDBusMessage &other, const QDBusError &error);
 
     /**
      * @brief Returns the message's object path
@@ -474,7 +472,7 @@ public:
      */
     int replySerialNumber() const;
 
-//protected:
+    // protected:
     /**
      * @brief Creates a raw D-Bus message from this Qt3-bindings message
      *
@@ -511,4 +509,3 @@ private:
 };
 
 #endif
-

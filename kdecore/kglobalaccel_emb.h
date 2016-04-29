@@ -4,15 +4,14 @@
 #include "kaccelbase.h"
 #include "kshortcut.h"
 
-class KGlobalAccelPrivate
-{
+class KGlobalAccelPrivate {
 public:
-	KGlobalAccelPrivate();
+    KGlobalAccelPrivate();
 
-	virtual void setEnabled( bool bEnabled );
+    virtual void setEnabled(bool bEnabled);
 
-	virtual bool connectKey( KAccelAction&, KKeySequence );
-	virtual bool disconnectKey( KAccelAction&, KKeySequence );
+    virtual bool connectKey(KAccelAction &, KKeySequence);
+    virtual bool disconnectKey(KAccelAction &, KKeySequence);
 };
 
 #endif // _KGLOBALACCEL_EMB_H

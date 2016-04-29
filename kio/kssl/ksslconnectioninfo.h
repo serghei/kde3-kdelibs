@@ -38,58 +38,58 @@ class KSSL;
  * @short KDE SSL Connection Information
  */
 class KIO_EXPORT KSSLConnectionInfo {
-friend class KSSL;
+    friend class KSSL;
+
 public:
-	/**
-	 *  Destroy this object.
-	 */
-	~KSSLConnectionInfo();
+    /**
+     *  Destroy this object.
+     */
+    ~KSSLConnectionInfo();
 
-	/**
-	 *  Get the cipher in use.
-	 *  @return the cipher in use
-	 */
-	const QString& getCipher() const;
+    /**
+     *  Get the cipher in use.
+     *  @return the cipher in use
+     */
+    const QString &getCipher() const;
 
-	/**
-	 *  Describe the cipher in use.
-	 *  @return the cipher description (from OpenSSL)
-	 */
-	const QString& getCipherDescription() const;
+    /**
+     *  Describe the cipher in use.
+     *  @return the cipher description (from OpenSSL)
+     */
+    const QString &getCipherDescription() const;
 
-	/**
-	 *  Get the version of the cipher in use.
-	 *  @return the version of the cipher
-	 */
-	const QString& getCipherVersion() const;
+    /**
+     *  Get the version of the cipher in use.
+     *  @return the version of the cipher
+     */
+    const QString &getCipherVersion() const;
 
-	/**
-	 *  Get the number of bits of the cipher that are actually used.
-	 *  @return the number of bits in use
-	 */
-	int getCipherUsedBits() const;
+    /**
+     *  Get the number of bits of the cipher that are actually used.
+     *  @return the number of bits in use
+     */
+    int getCipherUsedBits() const;
 
-	/**
-	 *  Get bit-size of the cipher
-	 *  @return the number of bits
-	 */
-	int getCipherBits() const;
+    /**
+     *  Get bit-size of the cipher
+     *  @return the number of bits
+     */
+    int getCipherBits() const;
 
 protected:
-	KSSLConnectionInfo();
-	void clean();
+    KSSLConnectionInfo();
+    void clean();
 
-	// These are here so KSSL can access them directly
-	// It's just as easy as making accessors - they're friends afterall!
-	int m_iCipherUsedBits, m_iCipherBits;
-	QString m_cipherName;
-	QString m_cipherDescription;
-	QString m_cipherVersion;
+    // These are here so KSSL can access them directly
+    // It's just as easy as making accessors - they're friends afterall!
+    int m_iCipherUsedBits, m_iCipherBits;
+    QString m_cipherName;
+    QString m_cipherDescription;
+    QString m_cipherVersion;
 
 private:
-	class KSSLConnectionInfoPrivate;
-	KSSLConnectionInfoPrivate *d;
+    class KSSLConnectionInfoPrivate;
+    KSSLConnectionInfoPrivate *d;
 };
 
 #endif
-

@@ -22,7 +22,7 @@
 #include <iostream>
 
 #include <qcstring.h>
-#include <qfile.h> 
+#include <qfile.h>
 
 #include <dcopclient.h>
 #include <qxembed.h>
@@ -51,62 +51,58 @@ using namespace std;
 
 KService::List m_modules;
 
-static KCmdLineOptions options[] =
-{
-    { "list", I18N_NOOP("List all possible modules"), 0},
-    { "+module", I18N_NOOP("Configuration module to open"), 0 },
-    { "lang <language>", I18N_NOOP("Specify a particular language"), 0 },
-    { "embed <id>", I18N_NOOP("Embeds the module with buttons in window with id <id>"), 0 },
-    { "embed-proxy <id>", I18N_NOOP("Embeds the module without buttons in window with id <id>"), 0 },
-    { "silent", I18N_NOOP("Do not display main window"), 0 },
-    KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"list", I18N_NOOP("List all possible modules"), 0},
+                                    {"+module", I18N_NOOP("Configuration module to open"), 0},
+                                    {"lang <language>", I18N_NOOP("Specify a particular language"), 0},
+                                    {"embed <id>", I18N_NOOP("Embeds the module with buttons in window with id <id>"), 0},
+                                    {"embed-proxy <id>", I18N_NOOP("Embeds the module without buttons in window with id <id>"), 0},
+                                    {"silent", I18N_NOOP("Do not display main window"), 0},
+                                    KCmdLineLastOption};
 
 static void listModules(const QString &baseGroup)
 {
 
-  KServiceGroup::Ptr group = KServiceGroup::group(baseGroup);
+    KServiceGroup::Ptr group = KServiceGroup::group(baseGroup);
 
-  if (!group || !group->isValid())
-      return;
+    if(!group || !group->isValid())
+        return;
 
-  KServiceGroup::List list = group->entries(true, true);
+    KServiceGroup::List list = group->entries(true, true);
 
-  for( KServiceGroup::List::ConstIterator it = list.begin();
-       it != list.end(); it++)
-  {
-     KSycocaEntry *p = (*it);
-     if (p->isType(KST_KService))
-     {
-        KService *s = static_cast<KService*>(p);
-        if (!kapp->authorizeControlModule(s->menuId()))
-           continue;
-        m_modules.append(s);
-     }
-     else if (p->isType(KST_KServiceGroup))
-        listModules(p->entryPath());
-  }
+    for(KServiceGroup::List::ConstIterator it = list.begin(); it != list.end(); it++)
+    {
+        KSycocaEntry *p = (*it);
+        if(p->isType(KST_KService))
+        {
+            KService *s = static_cast< KService * >(p);
+            if(!kapp->authorizeControlModule(s->menuId()))
+                continue;
+            m_modules.append(s);
+        }
+        else if(p->isType(KST_KServiceGroup))
+            listModules(p->entryPath());
+    }
 }
 
-static KService::Ptr locateModule(const QCString& module)
+static KService::Ptr locateModule(const QCString &module)
 {
     QString path = QFile::decodeName(module);
 
-    if (!path.endsWith(".desktop"))
+    if(!path.endsWith(".desktop"))
         path += ".desktop";
 
-    KService::Ptr service = KService::serviceByStorageId( path );
-    if (!service)
+    KService::Ptr service = KService::serviceByStorageId(path);
+    if(!service)
     {
         kdWarning(780) << "Could not find module '" << module << "'." << endl;
         return 0;
     }
 
     // avoid finding random non-kde applications
-    if ( module.left( 4 ) != "kde-" && service->library().isEmpty() )
-        return locateModule( "kde-" + module );
+    if(module.left(4) != "kde-" && service->library().isEmpty())
+        return locateModule("kde-" + module);
 
-    if(!KCModuleLoader::testModule( module ))
+    if(!KCModuleLoader::testModule(module))
     {
         kdDebug(780) << "According to \"" << module << "\"'s test function, it should Not be loaded." << endl;
         return 0;
@@ -117,22 +113,20 @@ static KService::Ptr locateModule(const QCString& module)
 
 bool KCMShell::isRunning()
 {
-    if( dcopClient()->appId() == m_dcopName )
+    if(dcopClient()->appId() == m_dcopName)
         return false; // We are the one and only.
 
-    kdDebug(780) << "kcmshell with modules '" << 
-        m_dcopName << "' is already running." << endl;
+    kdDebug(780) << "kcmshell with modules '" << m_dcopName << "' is already running." << endl;
 
     dcopClient()->attach(); // Reregister as anonymous
     dcopClient()->setNotifications(true);
 
     QByteArray data;
-    QDataStream str( data, IO_WriteOnly );
+    QDataStream str(data, IO_WriteOnly);
     str << kapp->startupId();
     QCString replyType;
     QByteArray replyData;
-    if (!dcopClient()->call(m_dcopName, "dialog", "activate(QCString)", 
-                data, replyType, replyData))
+    if(!dcopClient()->call(m_dcopName, "dialog", "activate(QCString)", data, replyType, replyData))
     {
         kdDebug(780) << "Calling DCOP function dialog::activate() failed." << endl;
         return false; // Error, we have to do it ourselves.
@@ -141,28 +135,26 @@ bool KCMShell::isRunning()
     return true;
 }
 
-KCMShellMultiDialog::KCMShellMultiDialog( int dialogFace, const QString& caption,
-        QWidget *parent, const char *name, bool modal)
-    : KCMultiDialog( dialogFace, caption, parent, name, modal ),
-        DCOPObject("dialog")
+KCMShellMultiDialog::KCMShellMultiDialog(int dialogFace, const QString &caption, QWidget *parent, const char *name, bool modal)
+    : KCMultiDialog(dialogFace, caption, parent, name, modal), DCOPObject("dialog")
 {
 }
 
-void KCMShellMultiDialog::activate( QCString asn_id )
+void KCMShellMultiDialog::activate(QCString asn_id)
 {
     kdDebug(780) << k_funcinfo << endl;
 
-    KStartupInfo::setNewStartupId( this, asn_id );
+    KStartupInfo::setNewStartupId(this, asn_id);
 }
 
-void KCMShell::setDCOPName(const QCString &dcopName, bool rootMode )
+void KCMShell::setDCOPName(const QCString &dcopName, bool rootMode)
 {
     m_dcopName = "kcmshell_";
-    if( rootMode )
+    if(rootMode)
         m_dcopName += "rootMode_";
 
     m_dcopName += dcopName;
-    
+
     dcopClient()->registerAs(m_dcopName, false);
 }
 
@@ -170,8 +162,7 @@ void KCMShell::waitForExit()
 {
     kdDebug(780) << k_funcinfo << endl;
 
-    connect(dcopClient(), SIGNAL(applicationRemoved(const QCString&)),
-            SLOT( appExit(const QCString&) ));
+    connect(dcopClient(), SIGNAL(applicationRemoved(const QCString &)), SLOT(appExit(const QCString &)));
     exec();
 }
 
@@ -179,7 +170,7 @@ void KCMShell::appExit(const QCString &appId)
 {
     kdDebug(780) << k_funcinfo << endl;
 
-    if( appId == m_dcopName )
+    if(appId == m_dcopName)
     {
         kdDebug(780) << "'" << appId << "' closed, dereferencing." << endl;
         deref();
@@ -190,68 +181,64 @@ static void setIcon(QWidget *w, const QString &iconName)
 {
     QPixmap icon = DesktopIcon(iconName);
     QPixmap miniIcon = SmallIcon(iconName);
-    w->setIcon( icon ); //standard X11
-#if defined Q_WS_X11 && ! defined K_WS_QTONLY
-    KWin::setIcons(w->winId(), icon, miniIcon );
+    w->setIcon(icon); // standard X11
+#if defined Q_WS_X11 && !defined K_WS_QTONLY
+    KWin::setIcons(w->winId(), icon, miniIcon);
 #endif
 }
 
 extern "C" KDE_EXPORT int kdemain(int _argc, char *_argv[])
 {
-    KAboutData aboutData( "kcmshell", I18N_NOOP("KDE Control Module"),
-                          0,
-                          I18N_NOOP("A tool to start single KDE control modules"),
-                          KAboutData::License_GPL,
-                          I18N_NOOP("(c) 1999-2004, The KDE Developers") );
+    KAboutData aboutData("kcmshell", I18N_NOOP("KDE Control Module"), 0, I18N_NOOP("A tool to start single KDE control modules"),
+                         KAboutData::License_GPL, I18N_NOOP("(c) 1999-2004, The KDE Developers"));
 
     aboutData.addAuthor("Frans Englich", I18N_NOOP("Maintainer"), "frans.englich@kde.org");
     aboutData.addAuthor("Daniel Molkentin", 0, "molkentin@kde.org");
-    aboutData.addAuthor("Matthias Hoelzer-Kluepfel",0, "hoelzer@kde.org");
-    aboutData.addAuthor("Matthias Elter",0, "elter@kde.org");
-    aboutData.addAuthor("Matthias Ettrich",0, "ettrich@kde.org");
-    aboutData.addAuthor("Waldo Bastian",0, "bastian@kde.org");
-    
+    aboutData.addAuthor("Matthias Hoelzer-Kluepfel", 0, "hoelzer@kde.org");
+    aboutData.addAuthor("Matthias Elter", 0, "elter@kde.org");
+    aboutData.addAuthor("Matthias Ettrich", 0, "ettrich@kde.org");
+    aboutData.addAuthor("Waldo Bastian", 0, "bastian@kde.org");
+
     KGlobal::locale()->setMainCatalogue("kcmshell");
 
     KCmdLineArgs::init(_argc, _argv, &aboutData);
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KCmdLineArgs::addCmdLineOptions(options); // Add our own options.
     KCMShell app;
 
     const KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     const QCString lang = args->getOption("lang");
-    if( !lang.isNull() )
+    if(!lang.isNull())
         KGlobal::locale()->setLanguage(lang);
 
-    if (args->isSet("list"))
+    if(args->isSet("list"))
     {
         cout << i18n("The following modules are available:").local8Bit() << endl;
 
-        listModules( "Settings/" );
+        listModules("Settings/");
 
-        int maxLen=0;
+        int maxLen = 0;
 
-        for( KService::List::ConstIterator it = m_modules.begin(); it != m_modules.end(); ++it)
+        for(KService::List::ConstIterator it = m_modules.begin(); it != m_modules.end(); ++it)
         {
             int len = (*it)->desktopEntryName().length();
-            if (len > maxLen)
+            if(len > maxLen)
                 maxLen = len;
         }
 
-        for( KService::List::ConstIterator it = m_modules.begin(); it != m_modules.end(); ++it)
+        for(KService::List::ConstIterator it = m_modules.begin(); it != m_modules.end(); ++it)
         {
             QString entry("%1 - %2");
 
             entry = entry.arg((*it)->desktopEntryName().leftJustify(maxLen, ' '))
-                         .arg(!(*it)->comment().isEmpty() ? (*it)->comment() 
-                                 : i18n("No description available"));
+                        .arg(!(*it)->comment().isEmpty() ? (*it)->comment() : i18n("No description available"));
 
             cout << entry.local8Bit() << endl;
         }
         return 0;
     }
 
-    if (args->count() < 1)
+    if(args->count() < 1)
     {
         args->usage();
         return -1;
@@ -259,24 +246,23 @@ extern "C" KDE_EXPORT int kdemain(int _argc, char *_argv[])
 
     QCString dcopName;
     KService::List modules;
-    for (int i = 0; i < args->count(); i++)
+    for(int i = 0; i < args->count(); i++)
     {
         KService::Ptr service = locateModule(args->arg(i));
-        if( service )
+        if(service)
         {
             modules.append(service);
-            if( !dcopName.isEmpty() )
+            if(!dcopName.isEmpty())
                 dcopName += "_";
 
             dcopName += args->arg(i);
         }
     }
 
-    /* Check if this particular module combination is already running, but 
+    /* Check if this particular module combination is already running, but
      * allow the same module to run when embedding(root mode) */
-    app.setDCOPName(dcopName, 
-            ( args->isSet( "embed-proxy" ) || args->isSet( "embed" )));
-    if( app.isRunning() )
+    app.setDCOPName(dcopName, (args->isSet("embed-proxy") || args->isSet("embed")));
+    if(app.isRunning())
     {
         app.waitForExit();
         return 0;
@@ -284,22 +270,22 @@ extern "C" KDE_EXPORT int kdemain(int _argc, char *_argv[])
 
     KDialogBase::DialogType dtype = KDialogBase::Plain;
 
-    if ( modules.count() < 1 )
+    if(modules.count() < 1)
         return 0;
-    else if( modules.count() > 1 )
+    else if(modules.count() > 1)
         dtype = KDialogBase::IconList;
 
     bool idValid;
     int id;
 
-    if ( args->isSet( "embed-proxy" ))
+    if(args->isSet("embed-proxy"))
     {
-        id = args->getOption( "embed-proxy" ).toInt(&idValid);    
-        if( idValid )
+        id = args->getOption("embed-proxy").toInt(&idValid);
+        if(idValid)
         {
-            KCModuleProxy *module = new KCModuleProxy( modules.first()->desktopEntryName() );
+            KCModuleProxy *module = new KCModuleProxy(modules.first()->desktopEntryName());
             module->realModule();
-            QXEmbed::embedClientIntoWindow( module, id);
+            QXEmbed::embedClientIntoWindow(module, id);
             app.exec();
             delete module;
         }
@@ -307,35 +293,32 @@ extern "C" KDE_EXPORT int kdemain(int _argc, char *_argv[])
             kdDebug(780) << "Supplied id '" << id << "' is not valid." << endl;
 
         return 0;
-
     }
 
-    KCMShellMultiDialog *dlg = new KCMShellMultiDialog( dtype, 
-            i18n("Configure - %1").arg(kapp->caption()), 0, "", true );
+    KCMShellMultiDialog *dlg = new KCMShellMultiDialog(dtype, i18n("Configure - %1").arg(kapp->caption()), 0, "", true);
 
-    for (KService::List::ConstIterator it = modules.begin(); it != modules.end(); ++it)
+    for(KService::List::ConstIterator it = modules.begin(); it != modules.end(); ++it)
         dlg->addModule(KCModuleInfo(*it));
 
-    if ( args->isSet( "embed" ))
+    if(args->isSet("embed"))
     {
-        id = args->getOption( "embed" ).toInt(&idValid);    
-        if( idValid )
+        id = args->getOption("embed").toInt(&idValid);
+        if(idValid)
         {
-            QXEmbed::embedClientIntoWindow( dlg, id );
+            QXEmbed::embedClientIntoWindow(dlg, id);
             dlg->exec();
             delete dlg;
         }
         else
             kdDebug(780) << "Supplied id '" << id << "' is not valid." << endl;
-
     }
     else
     {
 
-        if (kapp->iconName() != kapp->name())
+        if(kapp->iconName() != kapp->name())
             setIcon(dlg, kapp->iconName());
-        else if ( modules.count() == 1 )
-            setIcon(dlg, KCModuleInfo( modules.first()).icon());
+        else if(modules.count() == 1)
+            setIcon(dlg, KCModuleInfo(modules.first()).icon());
 
         dlg->exec();
         delete dlg;

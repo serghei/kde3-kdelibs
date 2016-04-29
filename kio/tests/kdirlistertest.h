@@ -31,90 +31,108 @@
 
 using namespace std;
 
-class PrintSignals : public QObject
-{
-   Q_OBJECT
+class PrintSignals : public QObject {
+    Q_OBJECT
 public:
-   PrintSignals() : QObject() { }
+    PrintSignals() : QObject()
+    {
+    }
 
 public slots:
-   void started( const KURL &url )
-   {
-      cout << "*** started( " << url.url().local8Bit() << " )" << endl;
-   }
-   void canceled() { cout << "canceled()" << endl; }
-   void canceled( const KURL& url )
-   {
-      cout << "*** canceled( " << url.prettyURL().local8Bit() << " )" << endl;
-   }
-   void completed() { cout << "*** completed()" << endl; }
-   void completed( const KURL& url )
-   {
-      cout << "*** completed( " << url.prettyURL().local8Bit() << " )" << endl;
-   }
-   void redirection( const KURL& url )
-   {
-      cout << "*** redirection( " << url.prettyURL().local8Bit() << " )" << endl;
-   }
-   void redirection( const KURL& src, const KURL& dest )
-   {
-      cout << "*** redirection( " << src.prettyURL().local8Bit() << ", "
-           << dest.prettyURL().local8Bit() << " )" << endl;
-   }
-   void clear() { cout << "*** clear()" << endl; }
-   void newItems( const KFileItemList& items )
-   {
-      cout << "*** newItems: " << endl;
-      for ( KFileItemListIterator it( items ) ; it.current() ; ++it )
-          cout << it.current() << " " << it.current()->name().local8Bit() << endl;
-   }
-   void deleteItem( KFileItem* item )
-   {
-      cout << "*** deleteItem: " << item->url().prettyURL().local8Bit() << endl;
-   }
-   void itemsFilteredByMime( const KFileItemList&  )
-   {
-      cout << "*** itemsFilteredByMime: " << endl;
-      // TODO
-   }
-   void refreshItems( const KFileItemList&  )
-   {
-      cout << "*** refreshItems: " << endl;
-      // TODO
-   }
-   void infoMessage( const QString& msg )
-   { cout << "*** infoMessage: " << msg.local8Bit() << endl; }
+    void started(const KURL &url)
+    {
+        cout << "*** started( " << url.url().local8Bit() << " )" << endl;
+    }
+    void canceled()
+    {
+        cout << "canceled()" << endl;
+    }
+    void canceled(const KURL &url)
+    {
+        cout << "*** canceled( " << url.prettyURL().local8Bit() << " )" << endl;
+    }
+    void completed()
+    {
+        cout << "*** completed()" << endl;
+    }
+    void completed(const KURL &url)
+    {
+        cout << "*** completed( " << url.prettyURL().local8Bit() << " )" << endl;
+    }
+    void redirection(const KURL &url)
+    {
+        cout << "*** redirection( " << url.prettyURL().local8Bit() << " )" << endl;
+    }
+    void redirection(const KURL &src, const KURL &dest)
+    {
+        cout << "*** redirection( " << src.prettyURL().local8Bit() << ", " << dest.prettyURL().local8Bit() << " )" << endl;
+    }
+    void clear()
+    {
+        cout << "*** clear()" << endl;
+    }
+    void newItems(const KFileItemList &items)
+    {
+        cout << "*** newItems: " << endl;
+        for(KFileItemListIterator it(items); it.current(); ++it)
+            cout << it.current() << " " << it.current()->name().local8Bit() << endl;
+    }
+    void deleteItem(KFileItem *item)
+    {
+        cout << "*** deleteItem: " << item->url().prettyURL().local8Bit() << endl;
+    }
+    void itemsFilteredByMime(const KFileItemList &)
+    {
+        cout << "*** itemsFilteredByMime: " << endl;
+        // TODO
+    }
+    void refreshItems(const KFileItemList &)
+    {
+        cout << "*** refreshItems: " << endl;
+        // TODO
+    }
+    void infoMessage(const QString &msg)
+    {
+        cout << "*** infoMessage: " << msg.local8Bit() << endl;
+    }
 
-   void percent( int percent )
-   { cout << "*** percent: " << percent << endl; }
+    void percent(int percent)
+    {
+        cout << "*** percent: " << percent << endl;
+    }
 
-   void totalSize( KIO::filesize_t size )
-   { cout << "*** totalSize: " << (long)size << endl; }
+    void totalSize(KIO::filesize_t size)
+    {
+        cout << "*** totalSize: " << (long)size << endl;
+    }
 
-   void processedSize( KIO::filesize_t size )
-   { cout << "*** processedSize: " << (long)size << endl; }
+    void processedSize(KIO::filesize_t size)
+    {
+        cout << "*** processedSize: " << (long)size << endl;
+    }
 
-   void speed( int bytes_per_second )
-   { cout << "*** speed: " << bytes_per_second << endl; }
+    void speed(int bytes_per_second)
+    {
+        cout << "*** speed: " << bytes_per_second << endl;
+    }
 };
 
-class KDirListerTest : public QWidget
-{
-   Q_OBJECT
+class KDirListerTest : public QWidget {
+    Q_OBJECT
 public:
-   KDirListerTest( QWidget *parent=0, const char *name=0 );
-   ~KDirListerTest();
+    KDirListerTest(QWidget *parent = 0, const char *name = 0);
+    ~KDirListerTest();
 
 public slots:
-   void startRoot();
-   void startHome();
-   void startTar();
-   void test();
-   void completed();
+    void startRoot();
+    void startHome();
+    void startTar();
+    void test();
+    void completed();
 
 private:
-   KDirLister *lister;
-   PrintSignals *debug;
+    KDirLister *lister;
+    PrintSignals *debug;
 };
 
 #endif

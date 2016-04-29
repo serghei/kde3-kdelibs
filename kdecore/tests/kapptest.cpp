@@ -25,16 +25,15 @@
 #include <kglobalsettings.h>
 #include <ksycoca.h>
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-   KAboutData about("kapptest", "kapptest", "version");
-   KCmdLineArgs::init(argc, argv, &about);
+    KAboutData about("kapptest", "kapptest", "version");
+    KCmdLineArgs::init(argc, argv, &about);
 
-   KApplication a;
+    KApplication a;
 
-   KSycoca *s = KSycoca::self();
-  
-   qWarning("s->language() %s", s->language().latin1());
-   qWarning("Offset of aIconName: %ld", (long) &(static_cast<KApplication *>(0)->aIconName));
+    KSycoca *s = KSycoca::self();
+
+    qWarning("s->language() %s", s->language().latin1());
+    qWarning("Offset of aIconName: %ld", (long)&(static_cast< KApplication * >(0)->aIconName));
 }

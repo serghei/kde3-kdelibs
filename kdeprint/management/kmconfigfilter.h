@@ -26,27 +26,26 @@ class KListBox;
 class QToolButton;
 class QLineEdit;
 
-class KMConfigFilter : public KMConfigPage
-{
-	Q_OBJECT
+class KMConfigFilter : public KMConfigPage {
+    Q_OBJECT
 public:
-	KMConfigFilter(QWidget *parent = 0, const char *name = 0);
+    KMConfigFilter(QWidget *parent = 0, const char *name = 0);
 
-	void loadConfig(KConfig*);
-	void saveConfig(KConfig*);
+    void loadConfig(KConfig *);
+    void saveConfig(KConfig *);
 
 protected slots:
-	void slotSelectionChanged();
-	void slotAddClicked();
-	void slotRemoveClicked();
+    void slotSelectionChanged();
+    void slotAddClicked();
+    void slotRemoveClicked();
 
 protected:
-	void transfer(KListBox *from, KListBox *to);
+    void transfer(KListBox *from, KListBox *to);
 
 private:
-	KListBox	*m_list1, *m_list2;
-	QToolButton	*m_add, *m_remove;
-	QLineEdit	*m_locationre;
+    KListBox *m_list1, *m_list2;
+    QToolButton *m_add, *m_remove;
+    QLineEdit *m_locationre;
 };
 
 #endif

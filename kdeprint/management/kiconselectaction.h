@@ -24,26 +24,25 @@
 
 class KIconSelectActionPrivate;
 
-class KIconSelectAction : public KSelectAction
-{
-	Q_OBJECT
+class KIconSelectAction : public KSelectAction {
+    Q_OBJECT
 public:
-	KIconSelectAction(const QString& text, int accel = 0, QObject* parent = 0, const char* name = 0);
-	virtual ~KIconSelectAction();
+    KIconSelectAction(const QString &text, int accel = 0, QObject *parent = 0, const char *name = 0);
+    virtual ~KIconSelectAction();
 
-	virtual int plug(QWidget* widget, int index = -1);
+    virtual int plug(QWidget *widget, int index = -1);
 
 public slots:
-	virtual void setItems(const QStringList& lst, const QStringList& iconlst);
-	virtual void setCurrentItem(int index);
+    virtual void setItems(const QStringList &lst, const QStringList &iconlst);
+    virtual void setCurrentItem(int index);
 
 protected:
-	void createPopupMenu();
-	void updateIcons();
-	virtual void updateCurrentItem(int id);
+    void createPopupMenu();
+    void updateIcons();
+    virtual void updateCurrentItem(int id);
 
 private:
-	KIconSelectActionPrivate*	d;
+    KIconSelectActionPrivate *d;
 };
 
 #endif

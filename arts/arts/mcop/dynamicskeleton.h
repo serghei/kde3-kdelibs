@@ -1,24 +1,24 @@
-    /*
+/*
 
-    Copyright (C) 2001 Stefan Westerfeld
-                       stefan@space.twc.de
+Copyright (C) 2001 Stefan Westerfeld
+                   stefan@space.twc.de
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-  
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-   
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-    */
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
+
+*/
 
 #ifndef ARTS_MCOP_DYNAMICSKELETON_H
 #define ARTS_MCOP_DYNAMICSKELETON_H
@@ -38,38 +38,35 @@ class DynamicSkeletonData;
 
 class ARTS_EXPORT DynamicSkeletonBase {
 private:
-	DynamicSkeletonData *d;
+    DynamicSkeletonData *d;
 
 protected:
-	DynamicSkeletonBase();
-	/* <obsolete compatibility code> */
-	DynamicSkeletonBase(Object_skel *skel,
-			    const std::string& interfacename,
-			    const std::string& interfacenameparent);
-	/* </obsolete compatibility code> */
-	virtual ~DynamicSkeletonBase();
+    DynamicSkeletonBase();
+    /* <obsolete compatibility code> */
+    DynamicSkeletonBase(Object_skel *skel, const std::string &interfacename, const std::string &interfacenameparent);
+    /* </obsolete compatibility code> */
+    virtual ~DynamicSkeletonBase();
 
-	void _dsInit(Object_skel *skel, const std::string& interfacename,
-									   const std::string& interfacenameparent);
-	std::string _dsInterfaceName();
-	bool _dsIsCompatibleWith(const std::string& interfacename);
-	void _dsBuildMethodTable();
+    void _dsInit(Object_skel *skel, const std::string &interfacename, const std::string &interfacenameparent);
+    std::string _dsInterfaceName();
+    bool _dsIsCompatibleWith(const std::string &interfacename);
+    void _dsBuildMethodTable();
 
 public:
-	/**
-	 * process is called whenever you get a request that you need to implement
-	 * dynamically
-	 *
-	 * @param methodID contains the ID of the method that you need to
-	 *                 implement - you can get the full signature by calling
-	 *                 getMethodDef
-	 *
-	 * @param request  contains the marshalled parameters
-	 *
-	 * @param result   is for the return code - if your method returns a
-	 *                 value, you need to write the it in the result Buffer
-	 */
-	virtual void process(long methodID, Buffer *request, Buffer *result) = 0;
+    /**
+     * process is called whenever you get a request that you need to implement
+     * dynamically
+     *
+     * @param methodID contains the ID of the method that you need to
+     *                 implement - you can get the full signature by calling
+     *                 getMethodDef
+     *
+     * @param request  contains the marshalled parameters
+     *
+     * @param result   is for the return code - if your method returns a
+     *                 value, you need to write the it in the result Buffer
+     */
+    virtual void process(long methodID, Buffer *request, Buffer *result) = 0;
 };
 
 /**
@@ -103,7 +100,7 @@ public:
  *   void process(long methodID, Arts::Buffer *request, Arts::Buffer *result)
  *   {
  *	   const Arts::MethodDef& methodDef = getMethodDef(methodID);
- *	 
+ *
  *	   if(methodDef.name == "b")
  *	     arts_info("b called!");
  *	   else
@@ -112,52 +109,54 @@ public:
  * };
  * </pre>
  */
-template<class Parent_skel>
-class DynamicSkeleton : virtual public Parent_skel, public DynamicSkeletonBase
-{
+template < class Parent_skel > class DynamicSkeleton : virtual public Parent_skel, public DynamicSkeletonBase {
 public:
-	/**
-	 * constructor
-	 */
-	DynamicSkeleton(const std::string& interface)
-	{
-		_dsInit(this, interface, Parent_skel::_interfaceNameSkel());
-	}
+    /**
+     * constructor
+     */
+    DynamicSkeleton(const std::string &interface)
+    {
+        _dsInit(this, interface, Parent_skel::_interfaceNameSkel());
+    }
 
-	/**
-	 * getMethodDef returns a MethodDef structure for a given methodID - it
-	 * is quite useful if you implement process
-	 *
-	 * <pre>
-	 * void process(long methodID, Arts::Buffer *request, Arts::Buffer *result)
-	 * {
-	 *   const Arts::MethodDef& methodDef = getMethodDef(methodID);
-	 * 
-	 *	 if(methodDef.name == "hello") // the method named hello was called
-	 *	   printf("Hello!\n");
-	 *	 else                          // method with other name was called
-	 *	   arts_fatal("Method '%s' not implemented",methodDef.name.c_str());
-	 * }
-	 * </pre>
-	 */
-	const MethodDef& getMethodDef(long methodID) {
-		return this->_dsGetMethodDef(methodID);
-	}
+    /**
+     * getMethodDef returns a MethodDef structure for a given methodID - it
+     * is quite useful if you implement process
+     *
+     * <pre>
+     * void process(long methodID, Arts::Buffer *request, Arts::Buffer *result)
+     * {
+     *   const Arts::MethodDef& methodDef = getMethodDef(methodID);
+     *
+     *	 if(methodDef.name == "hello") // the method named hello was called
+     *	   printf("Hello!\n");
+     *	 else                          // method with other name was called
+     *	   arts_fatal("Method '%s' not implemented",methodDef.name.c_str());
+     * }
+     * </pre>
+     */
+    const MethodDef &getMethodDef(long methodID)
+    {
+        return this->_dsGetMethodDef(methodID);
+    }
 
-/*-- reimplemented from Arts::Object_skel: --*/
-	std::string _interfaceName() {
-		return _dsInterfaceName();
-	}
+    /*-- reimplemented from Arts::Object_skel: --*/
+    std::string _interfaceName()
+    {
+        return _dsInterfaceName();
+    }
 
-	bool _isCompatibleWith(const std::string& interfacename) {
-		if(_dsIsCompatibleWith(interfacename)) return true;
-		return Parent_skel::_isCompatibleWith(interfacename);
-	}
-	void _buildMethodTable() {
-		Parent_skel::_buildMethodTable();
-		_dsBuildMethodTable();
-	}
+    bool _isCompatibleWith(const std::string &interfacename)
+    {
+        if(_dsIsCompatibleWith(interfacename))
+            return true;
+        return Parent_skel::_isCompatibleWith(interfacename);
+    }
+    void _buildMethodTable()
+    {
+        Parent_skel::_buildMethodTable();
+        _dsBuildMethodTable();
+    }
 };
-
 }
 #endif /* ARTS_MCOP_DYNAMICSKELETON_H */

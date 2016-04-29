@@ -24,81 +24,92 @@
 
 using namespace KABC;
 
-Geo::Geo()
-  : mLatitude( 91 ), mLongitude( 181 ), mValidLat( false ), mValidLong( false )
+Geo::Geo() : mLatitude(91), mLongitude(181), mValidLat(false), mValidLong(false)
 {
 }
 
-Geo::Geo( float latitude, float longitude )
+Geo::Geo(float latitude, float longitude)
 {
-  setLatitude( latitude );
-  setLongitude( longitude );
+    setLatitude(latitude);
+    setLongitude(longitude);
 }
 
-void Geo::setLatitude( float latitude )
+void Geo::setLatitude(float latitude)
 {
-  if ( latitude >= -90 && latitude <= 90 ) {
-    mLatitude = latitude;
-    mValidLat = true;
-  } else {
-    mLatitude = 91;
-    mValidLat = false;
-  }
+    if(latitude >= -90 && latitude <= 90)
+    {
+        mLatitude = latitude;
+        mValidLat = true;
+    }
+    else
+    {
+        mLatitude = 91;
+        mValidLat = false;
+    }
 }
 
 float Geo::latitude() const
 {
-  return mLatitude;
+    return mLatitude;
 }
 
-void Geo::setLongitude( float longitude)
+void Geo::setLongitude(float longitude)
 {
-  if ( longitude >= -180 && longitude <= 180 ) {
-    mLongitude = longitude;
-    mValidLong = true;
-  } else {
-    mLongitude = 181;
-    mValidLong = false;
-  }
+    if(longitude >= -180 && longitude <= 180)
+    {
+        mLongitude = longitude;
+        mValidLong = true;
+    }
+    else
+    {
+        mLongitude = 181;
+        mValidLong = false;
+    }
 }
 
 float Geo::longitude() const
 {
-  return mLongitude;
+    return mLongitude;
 }
 
 bool Geo::isValid() const
 {
-  return mValidLat && mValidLong;
+    return mValidLat && mValidLong;
 }
 
-bool Geo::operator==( const Geo &g ) const
+bool Geo::operator==(const Geo &g) const
 {
-  if ( !g.isValid() && !isValid() ) return true;
-  if ( !g.isValid() || !isValid() ) return false;
-  if ( g.mLatitude == mLatitude && g.mLongitude == mLongitude ) return true;
-  return false;
+    if(!g.isValid() && !isValid())
+        return true;
+    if(!g.isValid() || !isValid())
+        return false;
+    if(g.mLatitude == mLatitude && g.mLongitude == mLongitude)
+        return true;
+    return false;
 }
 
-bool Geo::operator!=( const Geo &g ) const
+bool Geo::operator!=(const Geo &g) const
 {
-  if ( !g.isValid() && !isValid() ) return false;
-  if ( !g.isValid() || !isValid() ) return true;
-  if ( g.mLatitude == mLatitude && g.mLongitude == mLongitude ) return false;
-  return true;
+    if(!g.isValid() && !isValid())
+        return false;
+    if(!g.isValid() || !isValid())
+        return true;
+    if(g.mLatitude == mLatitude && g.mLongitude == mLongitude)
+        return false;
+    return true;
 }
 
 QString Geo::asString() const
 {
-  return "(" + QString::number(mLatitude) + "," + QString::number(mLongitude) + ")";
+    return "(" + QString::number(mLatitude) + "," + QString::number(mLongitude) + ")";
 }
 
-QDataStream &KABC::operator<<( QDataStream &s, const Geo &geo )
+QDataStream &KABC::operator<<(QDataStream &s, const Geo &geo)
 {
     return s << (float)geo.mLatitude << (float)geo.mLongitude;
 }
 
-QDataStream &KABC::operator>>( QDataStream &s, Geo &geo )
+QDataStream &KABC::operator>>(QDataStream &s, Geo &geo)
 {
     s >> geo.mLatitude >> geo.mLongitude;
 

@@ -26,29 +26,28 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "dcopclient.h"
 #include "dcopref.h"
 
-class DCOPStubPrivate
-{
+class DCOPStubPrivate {
 public:
-    DCOPStubPrivate():dcopClient(0){}
-    DCOPClient* dcopClient;
+    DCOPStubPrivate() : dcopClient(0)
+    {
+    }
+    DCOPClient *dcopClient;
 };
 
-DCOPStub::DCOPStub( const QCString& app, const QCString& obj )
-    : m_app( app ), m_obj( obj ), m_status( CallSucceeded ),d(0)
+DCOPStub::DCOPStub(const QCString &app, const QCString &obj) : m_app(app), m_obj(obj), m_status(CallSucceeded), d(0)
 {
 }
 
-DCOPStub::DCOPStub( DCOPClient* client, const QCString& app, const QCString& obj )
-    : m_app( app ), m_obj( obj ), m_status( CallSucceeded ),d(0)
+DCOPStub::DCOPStub(DCOPClient *client, const QCString &app, const QCString &obj) : m_app(app), m_obj(obj), m_status(CallSucceeded), d(0)
 {
-    if ( client ) {
-	d = new DCOPStubPrivate;
-	d->dcopClient = client;
+    if(client)
+    {
+        d = new DCOPStubPrivate;
+        d->dcopClient = client;
     }
 }
 
-DCOPStub::DCOPStub( const DCOPRef& ref )
-    : m_app( ref.app() ), m_obj( ref.obj() ), m_status( CallSucceeded ),d(0)
+DCOPStub::DCOPStub(const DCOPRef &ref) : m_app(ref.app()), m_obj(ref.obj()), m_status(CallSucceeded), d(0)
 {
 }
 
@@ -57,10 +56,10 @@ DCOPStub::~DCOPStub()
     delete d;
 }
 
-DCOPClient* DCOPStub::dcopClient()
+DCOPClient *DCOPStub::dcopClient()
 {
-    if ( d )
-	return d->dcopClient;
+    if(d)
+        return d->dcopClient;
     return DCOPClient::mainClient();
 }
 
@@ -69,7 +68,7 @@ DCOPStub::Status DCOPStub::status() const
     return m_status;
 }
 
-void DCOPStub::setStatus( Status _status )
+void DCOPStub::setStatus(Status _status)
 {
     m_status = _status;
 }
@@ -81,7 +80,7 @@ bool DCOPStub::ok() const
 
 void DCOPStub::callFailed()
 {
-    setStatus( CallFailed );
+    setStatus(CallFailed);
 }
 
 QCString DCOPStub::app() const
@@ -94,5 +93,6 @@ QCString DCOPStub::obj() const
     return m_obj;
 }
 
-void DCOPStub::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void DCOPStub::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}

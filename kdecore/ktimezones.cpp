@@ -48,9 +48,7 @@
  * Thus, this class can be used as a heuristic when trying to lookup the
  * real timezone from the abbreviated zone names.
  */
-class AbbreviationsMatch :
-    public KTimezoneDetails
-{
+class AbbreviationsMatch : public KTimezoneDetails {
 public:
     AbbreviationsMatch(const QString &stdZone, const QString &dstZone = "")
     {
@@ -77,11 +75,11 @@ private:
 
     virtual void gotAbbreviation(int /*index*/, const QString &value)
     {
-        if (m_stdZone == value)
+        if(m_stdZone == value)
         {
             m_foundStd = true;
         }
-        if (m_dstZone == value)
+        if(m_dstZone == value)
         {
             m_foundDst = true;
         }
@@ -91,16 +89,13 @@ private:
 /**
  * Internal dummy source for UTC timezone.
  */
-class DummySource :
-    public KTimezoneSource
-{
+class DummySource : public KTimezoneSource {
 public:
-    DummySource() :
-        KTimezoneSource("")
+    DummySource() : KTimezoneSource("")
     {
     }
 
-    virtual bool parse(const QString &/*zone*/, KTimezoneDetails &/*dataReceiver*/) const
+    virtual bool parse(const QString & /*zone*/, KTimezoneDetails & /*dataReceiver*/) const
     {
         return true;
     }
@@ -109,9 +104,7 @@ public:
 /**
  * Find offset at a particular point in time.
  */
-class OffsetFind :
-    public KTimezoneDetails
-{
+class OffsetFind : public KTimezoneDetails {
 public:
     OffsetFind(unsigned dateTime)
     {
@@ -154,7 +147,7 @@ private:
 
     virtual void gotTransitionTime(int index, unsigned transitionTime)
     {
-        if (transitionTime <= m_dateTime)
+        if(transitionTime <= m_dateTime)
         {
             // Remember the index of the transition time that relates to dateTime.
             m_transitionTimeIndex = index;
@@ -163,7 +156,7 @@ private:
 
     virtual void gotLocalTimeIndex(int index, unsigned localTimeIndex)
     {
-        if (index == m_transitionTimeIndex)
+        if(index == m_transitionTimeIndex)
         {
             // Remember the index of the local time that relates to dateTime.
             m_localTimeIndex = localTimeIndex;
@@ -172,7 +165,7 @@ private:
 
     virtual void gotLocalTime(int index, int gmtOff, bool isDst, unsigned abbrInd)
     {
-        if (index == m_localTimeIndex)
+        if(index == m_localTimeIndex)
         {
             // Remember the results that relate to gmtOffset.
             m_offset = gmtOff;
@@ -183,7 +176,7 @@ private:
 
     virtual void gotAbbreviation(int index, const QString &value)
     {
-        if (index == m_abbrIndex)
+        if(index == m_abbrIndex)
         {
             m_abbr = value;
         }
@@ -202,22 +195,14 @@ bool KTimezone::isValidLongitude(float longitude)
     return (longitude >= -180.0) && (longitude <= 180.0);
 }
 
-KTimezone::KTimezone(
-    KSharedPtr<KTimezoneSource> db, const QString& name,
-    const QString &countryCode, float latitude, float longitude,
-    const QString &comment) :
-    m_db(db),
-    m_name(name),
-    m_countryCode(countryCode),
-    m_latitude(latitude),
-    m_longitude(longitude),
-    m_comment(comment),
-    d(0)
+KTimezone::KTimezone(KSharedPtr< KTimezoneSource > db, const QString &name, const QString &countryCode, float latitude, float longitude,
+                     const QString &comment)
+    : m_db(db), m_name(name), m_countryCode(countryCode), m_latitude(latitude), m_longitude(longitude), m_comment(comment), d(0)
 {
     // Detect duff values.
-    if (m_latitude * m_latitude > 90 * 90)
+    if(m_latitude * m_latitude > 90 * 90)
         m_latitude = UNKNOWN;
-    if (m_longitude * m_longitude > 180 * 180)
+    if(m_longitude * m_longitude > 180 * 180)
         m_longitude = UNKNOWN;
 }
 
@@ -248,7 +233,7 @@ QDateTime KTimezone::convert(const KTimezone *newZone, const QDateTime &dateTime
     remoteTime.setTime_t(utc, Qt::LocalTime);
 
     // Now restore things
-    if (!originalZone)
+    if(!originalZone)
     {
         ::unsetenv("TZ");
     }
@@ -294,7 +279,7 @@ int KTimezone::offset(Qt::TimeSpec basisSpec) const
     int offset = remoteTime.secsTo(basisTime);
 
     // Now restore things
-    if (!originalZone)
+    if(!originalZone)
     {
         ::unsetenv("TZ");
     }
@@ -310,7 +295,7 @@ int KTimezone::offset(const QDateTime &dateTime) const
 {
     OffsetFind finder(dateTime.toTime_t());
     int result = 0;
-    if (parse(finder))
+    if(parse(finder))
     {
         result = finder.offset();
     }
@@ -325,10 +310,7 @@ bool KTimezone::parse(KTimezoneDetails &dataReceiver) const
     return result;
 }
 
-KTimezones::KTimezones() :
-    m_zoneinfoDir(),
-    m_zones(0),
-    d(0)
+KTimezones::KTimezones() : m_zoneinfoDir(), m_zones(0), d(0)
 {
     // Create the database (and resolve m_zoneinfoDir!).
     allZones();
@@ -342,9 +324,9 @@ KTimezones::~KTimezones()
     // delete d;
 
     // Autodelete behavior.
-    if (m_zones)
+    if(m_zones)
     {
-        for (ZoneMap::ConstIterator it = m_zones->begin(); it != m_zones->end(); ++it)
+        for(ZoneMap::ConstIterator it = m_zones->begin(); it != m_zones->end(); ++it)
         {
             delete it.data();
         }
@@ -360,7 +342,7 @@ void KTimezones::add(KTimezone *zone)
 const KTimezones::ZoneMap KTimezones::allZones()
 {
     // Have we already done all the hard work? If not, create the cache.
-    if (m_zones)
+    if(m_zones)
         return *m_zones;
     m_zones = new ZoneMap();
 
@@ -373,17 +355,17 @@ const KTimezones::ZoneMap KTimezones::allZones()
     QFile f;
     m_zoneinfoDir = "/usr/share/zoneinfo";
     f.setName(m_zoneinfoDir + "/zone.tab");
-    if (!f.open(IO_ReadOnly))
+    if(!f.open(IO_ReadOnly))
     {
         kdDebug() << "Can't open " << f.name() << endl;
         m_zoneinfoDir = "/usr/lib/zoneinfo";
         f.setName(m_zoneinfoDir + "/zone.tab");
-        if (!f.open(IO_ReadOnly))
+        if(!f.open(IO_ReadOnly))
         {
             kdDebug() << "Can't open " << f.name() << endl;
             m_zoneinfoDir = ::getenv("TZDIR");
             f.setName(m_zoneinfoDir + "/zone.tab");
-            if (m_zoneinfoDir.isEmpty() || !f.open(IO_ReadOnly))
+            if(m_zoneinfoDir.isEmpty() || !f.open(IO_ReadOnly))
             {
                 kdDebug() << "Can't open " << f.name() << endl;
 
@@ -396,13 +378,16 @@ const KTimezones::ZoneMap KTimezones::allZones()
                 m_zoneinfoDir = "/usr/share/lib/zoneinfo";
                 KTempFile temp;
                 KShellProcess reader;
-                reader << "/bin/grep" << "-h" << "^Zone" << m_zoneinfoDir << "/src/*" << temp.name() << "|" <<
-                    "/bin/awk" << "'{print \"??\\t+9999+99999\\t\" $2}'";
+                reader << "/bin/grep"
+                       << "-h"
+                       << "^Zone" << m_zoneinfoDir << "/src/*" << temp.name() << "|"
+                       << "/bin/awk"
+                       << "'{print \"??\\t+9999+99999\\t\" $2}'";
                 // Note the use of blocking here...it is a trivial amount of data!
                 temp.close();
                 reader.start(KProcess::Block);
                 f.setName(temp.name());
-                if (!temp.status() || !f.open(IO_ReadOnly))
+                if(!temp.status() || !f.open(IO_ReadOnly))
                 {
                     kdDebug() << "Can't open " << f.name() << endl;
                     return *m_zones;
@@ -415,14 +400,14 @@ const KTimezones::ZoneMap KTimezones::allZones()
     QTextStream str(&f);
     QRegExp lineSeparator("[ \t]");
     QRegExp ordinateSeparator("[+-]");
-    KSharedPtr<KTimezoneSource> db(new KTimezoneSource(m_zoneinfoDir));
-    while (!str.atEnd())
+    KSharedPtr< KTimezoneSource > db(new KTimezoneSource(m_zoneinfoDir));
+    while(!str.atEnd())
     {
         QString line = str.readLine();
-        if (line.isEmpty() || '#' == line[0])
+        if(line.isEmpty() || '#' == line[0])
             continue;
         QStringList tokens = KStringHandler::perlSplit(lineSeparator, line, 4);
-        if (tokens.count() < 3)
+        if(tokens.count() < 3)
         {
             kdError() << "invalid record: " << line << endl;
             continue;
@@ -430,7 +415,7 @@ const KTimezones::ZoneMap KTimezones::allZones()
 
         // Got three tokens. Now check for two ordinates plus first one is "".
         QStringList ordinates = KStringHandler::perlSplit(ordinateSeparator, tokens[1], 2);
-        if (ordinates.count() < 2)
+        if(ordinates.count() < 2)
         {
             kdError() << "invalid coordinates: " << tokens[1] << endl;
             continue;
@@ -440,7 +425,7 @@ const KTimezones::ZoneMap KTimezones::allZones()
         float longitude = convertCoordinate(ordinates[2]);
 
         // Add entry to list.
-        if (tokens[0] == "??")
+        if(tokens[0] == "??")
             tokens[0] = "";
         KTimezone *timezone = new KTimezone(db, tokens[2], tokens[0], latitude, longitude, tokens[3]);
         add(timezone);
@@ -459,7 +444,7 @@ float KTimezones::convertCoordinate(const QString &coordinate)
     int minutes = 0;
     int seconds = 0;
 
-    if (coordinate.length() > 11)
+    if(coordinate.length() > 11)
     {
         degrees = value / 10000;
         value -= degrees * 10000;
@@ -483,26 +468,25 @@ const KTimezone *KTimezones::local()
 
     // First try the simplest solution of checking for well-formed TZ setting.
     char *envZone = ::getenv("TZ");
-    if (envZone)
+    if(envZone)
     {
-        if (envZone[0] == '\0')
+        if(envZone[0] == '\0')
         {
             return m_UTC;
         }
-        else
-        if (envZone[0] == ':')
+        else if(envZone[0] == ':')
         {
             envZone++;
         }
         local = zone(envZone);
     }
-    if (local)
+    if(local)
         return local;
 
     // Try to match /etc/localtime against the list of zoneinfo files.
     QFile f;
     f.setName("/etc/localtime");
-    if (f.open(IO_ReadOnly))
+    if(f.open(IO_ReadOnly))
     {
         // Compute the MD5 sum of /etc/localtime.
         KMD5 context("");
@@ -511,18 +495,18 @@ const KTimezone *KTimezones::local()
         QIODevice::Offset referenceSize = f.size();
         QString referenceMd5Sum = context.hexDigest();
         f.close();
-        if (!m_zoneinfoDir.isEmpty())
+        if(!m_zoneinfoDir.isEmpty())
         {
             // Compare it with each zoneinfo file.
-            for (ZoneMap::Iterator it = m_zones->begin(); it != m_zones->end(); ++it)
+            for(ZoneMap::Iterator it = m_zones->begin(); it != m_zones->end(); ++it)
             {
                 KTimezone *zone = it.data();
                 f.setName(m_zoneinfoDir + '/' + zone->name());
-                if (f.open(IO_ReadOnly))
+                if(f.open(IO_ReadOnly))
                 {
                     QIODevice::Offset candidateSize = f.size();
                     QString candidateMd5Sum;
-                    if (candidateSize == referenceSize)
+                    if(candidateSize == referenceSize)
                     {
                         // Only do the heavy lifting for file sizes which match.
                         context.reset();
@@ -530,7 +514,7 @@ const KTimezone *KTimezones::local()
                         candidateMd5Sum = context.hexDigest();
                     }
                     f.close();
-                    if (candidateMd5Sum == referenceMd5Sum)
+                    if(candidateMd5Sum == referenceMd5Sum)
                     {
                         // kdError() << "local=" << zone->name() << endl;
                         local = zone;
@@ -540,19 +524,19 @@ const KTimezone *KTimezones::local()
             }
         }
     }
-    if (local)
+    if(local)
         return local;
 
     // BSD support.
     QString fileZone;
     f.setName("/etc/timezone");
-    if (!f.open(IO_ReadOnly))
+    if(!f.open(IO_ReadOnly))
     {
         kdDebug() << "Can't open " << f.name() << endl;
 
         // Solaris support using /etc/default/init.
         f.setName("/etc/default/init");
-        if (!f.open(IO_ReadOnly))
+        if(!f.open(IO_ReadOnly))
         {
             kdDebug() << "Can't open " << f.name() << endl;
         }
@@ -562,10 +546,10 @@ const KTimezone *KTimezones::local()
             ts.setEncoding(QTextStream::Latin1);
 
             // Read the last line starting "TZ=".
-            while (!ts.atEnd())
+            while(!ts.atEnd())
             {
                 fileZone = ts.readLine();
-                if (fileZone.startsWith("TZ="))
+                if(fileZone.startsWith("TZ="))
                 {
                     fileZone = fileZone.mid(3);
 
@@ -582,7 +566,7 @@ const KTimezone *KTimezones::local()
         ts.setEncoding(QTextStream::Latin1);
 
         // Read the first line.
-        if (!ts.atEnd())
+        if(!ts.atEnd())
         {
             fileZone = ts.readLine();
 
@@ -591,22 +575,22 @@ const KTimezone *KTimezones::local()
         }
         f.close();
     }
-    if (local)
+    if(local)
         return local;
 
     // None of the deterministic stuff above has worked: try a heuristic. We
     // try to find a pair of matching timezone abbreviations...that way, we'll
     // likely return a value in the user's own country.
-    if (!m_zoneinfoDir.isEmpty())
+    if(!m_zoneinfoDir.isEmpty())
     {
         tzset();
         AbbreviationsMatch matcher(tzname[0], tzname[1]);
         int bestOffset = INT_MAX;
-        for (ZoneMap::Iterator it = m_zones->begin(); it != m_zones->end(); ++it)
+        for(ZoneMap::Iterator it = m_zones->begin(); it != m_zones->end(); ++it)
         {
             KTimezone *zone = it.data();
             int candidateOffset = QABS(zone->offset(Qt::LocalTime));
-            if (zone->parse(matcher) && matcher.test() && (candidateOffset < bestOffset))
+            if(zone->parse(matcher) && matcher.test() && (candidateOffset < bestOffset))
             {
                 // kdError() << "local=" << zone->name() << endl;
                 bestOffset = candidateOffset;
@@ -614,17 +598,17 @@ const KTimezone *KTimezones::local()
             }
         }
     }
-    if (local)
+    if(local)
         return local;
     return m_UTC;
 }
 
 const KTimezone *KTimezones::zone(const QString &name)
 {
-    if (name.isEmpty())
+    if(name.isEmpty())
         return m_UTC;
     ZoneMap::ConstIterator it = m_zones->find(name);
-    if (it != m_zones->end())
+    if(it != m_zones->end())
         return it.data();
 
     // Error.
@@ -640,39 +624,46 @@ KTimezoneDetails::~KTimezoneDetails()
 }
 
 void KTimezoneDetails::gotAbbreviation(int /*index*/, const QString &)
-{}
+{
+}
 
-void KTimezoneDetails::gotHeader(
-        unsigned, unsigned, unsigned,
-        unsigned, unsigned, unsigned)
-{}
+void KTimezoneDetails::gotHeader(unsigned, unsigned, unsigned, unsigned, unsigned, unsigned)
+{
+}
 
 void KTimezoneDetails::gotLeapAdjustment(int /*index*/, unsigned, unsigned)
-{}
+{
+}
 
 void KTimezoneDetails::gotLocalTime(int /*index*/, int, bool, unsigned)
-{}
+{
+}
 
 void KTimezoneDetails::gotLocalTimeIndex(int /*index*/, unsigned)
-{}
+{
+}
 
 void KTimezoneDetails::gotIsStandard(int /*index*/, bool)
-{}
+{
+}
 
 void KTimezoneDetails::gotTransitionTime(int /*index*/, unsigned)
-{}
+{
+}
 
 void KTimezoneDetails::gotIsUTC(int /*index*/, bool)
-{}
+{
+}
 
 void KTimezoneDetails::parseEnded()
-{}
+{
+}
 
 void KTimezoneDetails::parseStarted()
-{}
+{
+}
 
-KTimezoneSource::KTimezoneSource(const QString &db) :
-    m_db(db)
+KTimezoneSource::KTimezoneSource(const QString &db) : m_db(db)
 {
 }
 
@@ -688,7 +679,7 @@ QString KTimezoneSource::db()
 bool KTimezoneSource::parse(const QString &zone, KTimezoneDetails &dataReceiver) const
 {
     QFile f(m_db + '/' + zone);
-    if (!f.open(IO_ReadOnly))
+    if(!f.open(IO_ReadOnly))
     {
         kdError() << "Cannot open " << f.name() << endl;
         return false;
@@ -722,24 +713,24 @@ bool KTimezoneSource::parse(const QString &zone, KTimezoneDetails &dataReceiver)
     str >> T >> z >> i_ >> f_;
     // kdError() << "signature: " << QChar(T) << QChar(z) << QChar(i_) << QChar(f_) << endl;
     unsigned i;
-    for (i = 0; i < 4; i++)
+    for(i = 0; i < 4; i++)
         str >> tzh.ttisgmtcnt;
     str >> tzh.ttisgmtcnt >> tzh.ttisstdcnt >> tzh.leapcnt >> tzh.timecnt >> tzh.typecnt >> tzh.charcnt;
     // kdError() << "header: " << tzh.ttisgmtcnt << ", " << tzh.ttisstdcnt << ", " << tzh.leapcnt << ", " <<
     //    tzh.timecnt << ", " << tzh.typecnt << ", " << tzh.charcnt << endl;
     dataReceiver.gotHeader(tzh.ttisgmtcnt, tzh.ttisstdcnt, tzh.leapcnt, tzh.timecnt, tzh.typecnt, tzh.charcnt);
-    for (i = 0; i < tzh.timecnt; i++)
+    for(i = 0; i < tzh.timecnt; i++)
     {
         str >> transitionTime;
         dataReceiver.gotTransitionTime(i, transitionTime);
     }
-    for (i = 0; i < tzh.timecnt; i++)
+    for(i = 0; i < tzh.timecnt; i++)
     {
         // NB: these appear to be 1-based, not zero-based!
         str >> localTimeIndex;
         dataReceiver.gotLocalTimeIndex(i, localTimeIndex);
     }
-    for (i = 0; i < tzh.typecnt; i++)
+    for(i = 0; i < tzh.typecnt; i++)
     {
         str >> tt.gmtoff >> tt.isdst >> tt.abbrind;
         // kdError() << "local type: " << tt.gmtoff << ", " << tt.isdst << ", " << tt.abbrind << endl;
@@ -747,7 +738,7 @@ bool KTimezoneSource::parse(const QString &zone, KTimezoneDetails &dataReceiver)
     }
 
     // Make sure we don't run foul of maliciously coded timezone abbreviations.
-    if (tzh.charcnt > 64)
+    if(tzh.charcnt > 64)
     {
         kdError() << "excessive length for timezone abbreviations: " << tzh.charcnt << endl;
         return false;
@@ -755,32 +746,32 @@ bool KTimezoneSource::parse(const QString &zone, KTimezoneDetails &dataReceiver)
     QByteArray array(tzh.charcnt);
     str.readRawBytes(array.data(), array.size());
     char *abbrs = array.data();
-    if (abbrs[tzh.charcnt - 1] != 0)
+    if(abbrs[tzh.charcnt - 1] != 0)
     {
         // These abbrevations are corrupt!
         kdError() << "timezone abbreviations not terminated: " << abbrs[tzh.charcnt - 1] << endl;
         return false;
     }
     char *abbr = abbrs;
-    while (abbr < abbrs + tzh.charcnt)
+    while(abbr < abbrs + tzh.charcnt)
     {
         // kdError() << "abbr: " << abbr << endl;
         dataReceiver.gotAbbreviation((abbr - abbrs), abbr);
         abbr += strlen(abbr) + 1;
     }
-    for (i = 0; i < tzh.leapcnt; i++)
+    for(i = 0; i < tzh.leapcnt; i++)
     {
         str >> leapTime >> leapSeconds;
         // kdError() << "leap entry: " << leapTime << ", " << leapSeconds << endl;
         dataReceiver.gotLeapAdjustment(i, leapTime, leapSeconds);
     }
-    for (i = 0; i < tzh.ttisstdcnt; i++)
+    for(i = 0; i < tzh.ttisstdcnt; i++)
     {
         str >> isStandard;
         // kdError() << "standard: " << isStandard << endl;
         dataReceiver.gotIsStandard(i, (isStandard != 0));
     }
-    for (i = 0; i < tzh.ttisgmtcnt; i++)
+    for(i = 0; i < tzh.ttisgmtcnt; i++)
     {
         str >> isUTC;
         // kdError() << "UTC: " << isUTC << endl;

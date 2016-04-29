@@ -1,6 +1,6 @@
 /* This file is part of the KDE libraries
    Copyright (C) 2002 Joseph Wenninger <jowenn@jowenn.at> and Daniel Naber <daniel.naber@t-online.de>
-   
+
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
    License version 2 as published by the Free Software Foundation.
@@ -29,48 +29,48 @@
 class KActionMenu;
 class KDataToolInfo;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 class View;
 
-class KDataToolPlugin : public KTextEditor::Plugin, public KTextEditor::PluginViewInterface
-{
-	Q_OBJECT
+class KDataToolPlugin : public KTextEditor::Plugin, public KTextEditor::PluginViewInterface {
+    Q_OBJECT
 
 public:
-	KDataToolPlugin( QObject *parent = 0, const char* name = 0, const QStringList &args = QStringList() );
-	virtual ~KDataToolPlugin();
-	void addView (KTextEditor::View *view);
-	void removeView (KTextEditor::View *view);
+    KDataToolPlugin(QObject *parent = 0, const char *name = 0, const QStringList &args = QStringList());
+    virtual ~KDataToolPlugin();
+    void addView(KTextEditor::View *view);
+    void removeView(KTextEditor::View *view);
 
-  private:
-	QPtrList<class KDataToolPluginView> m_views;
-};
-
-
-class KDataToolPluginView : public QObject, public KXMLGUIClient
-{
-	Q_OBJECT
-
-public:
-	KDataToolPluginView( KTextEditor::View *view );
-	virtual ~KDataToolPluginView();
-	void setView( KTextEditor::View* ){;}
 private:
-	View *m_view;
-	bool m_singleWord;
-	int m_singleWord_line, m_singleWord_start, m_singleWord_end;
-	QString m_wordUnderCursor;
-	QPtrList<KAction> m_actionList;
-	QGuardedPtr<KActionMenu> m_menu;
-	KAction *m_notAvailable;
-protected slots:
-	void aboutToShow();
-	void slotToolActivated( const KDataToolInfo &datatoolinfo, const QString &string );
-	void slotNotAvailable();
+    QPtrList< class KDataToolPluginView > m_views;
 };
 
+
+class KDataToolPluginView : public QObject, public KXMLGUIClient {
+    Q_OBJECT
+
+public:
+    KDataToolPluginView(KTextEditor::View *view);
+    virtual ~KDataToolPluginView();
+    void setView(KTextEditor::View *)
+    {
+        ;
+    }
+
+private:
+    View *m_view;
+    bool m_singleWord;
+    int m_singleWord_line, m_singleWord_start, m_singleWord_end;
+    QString m_wordUnderCursor;
+    QPtrList< KAction > m_actionList;
+    QGuardedPtr< KActionMenu > m_menu;
+    KAction *m_notAvailable;
+protected slots:
+    void aboutToShow();
+    void slotToolActivated(const KDataToolInfo &datatoolinfo, const QString &string);
+    void slotNotAvailable();
+};
 }
 
 #endif

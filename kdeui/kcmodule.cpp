@@ -34,22 +34,18 @@
 #include "kcmodule.h"
 #include "kcmodule.moc"
 
-class KCModulePrivate
-{
+class KCModulePrivate {
 public:
-    KCModulePrivate():
-        _about( 0 ),
-        _useRootOnlyMsg( false ),
-        _hasOwnInstance( true ),
-        _unmanagedWidgetChangeState( false )
-        { }
+    KCModulePrivate() : _about(0), _useRootOnlyMsg(false), _hasOwnInstance(true), _unmanagedWidgetChangeState(false)
+    {
+    }
 
     KInstance *_instance;
     KAboutData *_about;
     QString _rootOnlyMsg;
     bool _useRootOnlyMsg;
     bool _hasOwnInstance;
-    QPtrList<KConfigDialogManager> managers;
+    QPtrList< KConfigDialogManager > managers;
     QString _quickHelp;
 
     // this member is used to record the state on non-automatically
@@ -59,28 +55,27 @@ public:
     bool _unmanagedWidgetChangeState;
 };
 
-KCModule::KCModule(QWidget *parent, const char *name, const QStringList &)
-    : QWidget(parent, name)
+KCModule::KCModule(QWidget *parent, const char *name, const QStringList &) : QWidget(parent, name)
 {
     init();
-    if (name && strlen(name)) {
+    if(name && strlen(name))
+    {
         d->_instance = new KInstance(name);
         KGlobal::locale()->insertCatalogue(name);
-    } else
+    }
+    else
         d->_instance = new KInstance("kcmunnamed");
     KGlobal::setActiveInstance(this->instance());
 
-    d->managers.setAutoDelete( true );
-
+    d->managers.setAutoDelete(true);
 }
 
-KCModule::KCModule(KInstance *instance, QWidget *parent, const QStringList & )
-    : QWidget(parent, instance ? instance->instanceName().data() : 0)
+KCModule::KCModule(KInstance *instance, QWidget *parent, const QStringList &) : QWidget(parent, instance ? instance->instanceName().data() : 0)
 {
     init();
     d->_instance = instance;
 
-    if (instance)
+    if(instance)
     {
         KGlobal::locale()->insertCatalogue(instance->instanceName());
     }
@@ -92,44 +87,44 @@ KCModule::KCModule(KInstance *instance, QWidget *parent, const QStringList & )
 void KCModule::init()
 {
     d = new KCModulePrivate;
-   _btn = Help|Default|Apply;
+    _btn = Help | Default | Apply;
 }
 
-KConfigDialogManager* KCModule::addConfig( KConfigSkeleton *config, QWidget* widget )
+KConfigDialogManager *KCModule::addConfig(KConfigSkeleton *config, QWidget *widget)
 {
-    KConfigDialogManager* manager = new KConfigDialogManager( widget, config, name() );
-    connect( manager, SIGNAL( widgetModified() ), SLOT( widgetChanged() ));
-    d->managers.append( manager );
+    KConfigDialogManager *manager = new KConfigDialogManager(widget, config, name());
+    connect(manager, SIGNAL(widgetModified()), SLOT(widgetChanged()));
+    d->managers.append(manager);
     return manager;
 }
 
 KCModule::~KCModule()
 {
-    if (d->_hasOwnInstance)
-       delete d->_instance;
+    if(d->_hasOwnInstance)
+        delete d->_instance;
     delete d->_about;
     delete d;
 }
 
 void KCModule::load()
 {
-    KConfigDialogManager* manager;
-    for( manager = d->managers.first(); manager; manager = d->managers.next() )
+    KConfigDialogManager *manager;
+    for(manager = d->managers.first(); manager; manager = d->managers.next())
         manager->updateWidgets();
 }
 
 void KCModule::save()
 {
-    KConfigDialogManager* manager;
-    for( manager = d->managers.first(); manager; manager = d->managers.next() )
+    KConfigDialogManager *manager;
+    for(manager = d->managers.first(); manager; manager = d->managers.next())
         manager->updateSettings();
-    emit( changed( false ));
+    emit(changed(false));
 }
 
 void KCModule::defaults()
 {
-    KConfigDialogManager* manager;
-    for( manager = d->managers.first(); manager; manager = d->managers.next() )
+    KConfigDialogManager *manager;
+    for(manager = d->managers.first(); manager; manager = d->managers.next())
         manager->updateWidgetsDefault();
 }
 
@@ -140,10 +135,10 @@ void KCModule::widgetChanged()
 
 bool KCModule::managedWidgetChangeState() const
 {
-    KConfigDialogManager* manager;
-    for( manager = d->managers.first(); manager; manager = d->managers.next() )
+    KConfigDialogManager *manager;
+    for(manager = d->managers.first(); manager; manager = d->managers.next())
     {
-        if ( manager->hasChanged() )
+        if(manager->hasChanged())
             return true;
     }
 
@@ -161,13 +156,13 @@ const KAboutData *KCModule::aboutData() const
     return d->_about;
 }
 
-void KCModule::setAboutData( KAboutData* about )
+void KCModule::setAboutData(KAboutData *about)
 {
     delete d->_about;
     d->_about = about;
 }
 
-void KCModule::setRootOnlyMsg(const QString& msg)
+void KCModule::setRootOnlyMsg(const QString &msg)
 {
     d->_rootOnlyMsg = msg;
 }
@@ -197,10 +192,10 @@ KInstance *KCModule::instance() const
     return d->_instance;
 }
 
-void KCModule::setQuickHelp( const QString& help )
+void KCModule::setQuickHelp(const QString &help)
 {
     d->_quickHelp = help;
-    emit( quickHelpChanged() );
+    emit(quickHelpChanged());
 }
 
 QString KCModule::quickHelp() const
@@ -209,12 +204,13 @@ QString KCModule::quickHelp() const
 }
 
 
-const QPtrList<KConfigDialogManager>& KCModule::configs() const
+const QPtrList< KConfigDialogManager > &KCModule::configs() const
 {
     return d->managers;
 }
 
-void KCModule::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KCModule::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 // vim: sw=4 et sts=4

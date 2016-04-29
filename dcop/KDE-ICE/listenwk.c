@@ -32,124 +32,117 @@ in this Software without prior written authorization from The Open Group.
 #include <stdio.h>
 #include <string.h>
 
-
-Status
-IceListenForWellKnownConnections (port, countRet, listenObjsRet, errorLength, errorStringRet)
 
-char		*port;
-int		*countRet;
-IceListenObj	**listenObjsRet;
-int		errorLength;
-char		*errorStringRet;
+Status IceListenForWellKnownConnections(port, countRet, listenObjsRet, errorLength, errorStringRet)
+
+    char *port;
+int *countRet;
+IceListenObj **listenObjsRet;
+int errorLength;
+char *errorStringRet;
 
 {
-    struct _IceListenObj	*listenObjs;
-    char			*networkId;
-    int				transCount, partial, i, j;
-    Status			status = 1;
-    XtransConnInfo		*transConns = NULL;
+    struct _IceListenObj *listenObjs;
+    char *networkId;
+    int transCount, partial, i, j;
+    Status status = 1;
+    XtransConnInfo *transConns = NULL;
 
 
-    if ((_kde_IceTransMakeAllCOTSServerListeners (port, &partial,
-	&transCount, &transConns) < 0) || (transCount < 1))
+    if((_kde_IceTransMakeAllCOTSServerListeners(port, &partial, &transCount, &transConns) < 0) || (transCount < 1))
     {
-	*listenObjsRet = NULL;
-	*countRet = 0;
+        *listenObjsRet = NULL;
+        *countRet = 0;
 
-        strncpy (errorStringRet,
-	    "Cannot establish any listening sockets", errorLength);
+        strncpy(errorStringRet, "Cannot establish any listening sockets", errorLength);
 
-	return (0);
+        return (0);
     }
 
-    if ((listenObjs = (struct _IceListenObj *) malloc (
-	transCount * sizeof (struct _IceListenObj))) == NULL)
+    if((listenObjs = (struct _IceListenObj *)malloc(transCount * sizeof(struct _IceListenObj))) == NULL)
     {
-	for (i = 0; i < transCount; i++)
-	    _kde_IceTransClose (transConns[i]);
-	free ((char *) transConns);
-	return (0);
+        for(i = 0; i < transCount; i++)
+            _kde_IceTransClose(transConns[i]);
+        free((char *)transConns);
+        return (0);
     }
 
     *countRet = 0;
 
-    for (i = 0; i < transCount; i++)
+    for(i = 0; i < transCount; i++)
     {
-	networkId = (char *)_kde_IceTransGetMyNetworkId (transConns[i]);
+        networkId = (char *)_kde_IceTransGetMyNetworkId(transConns[i]);
 
-	if (networkId)
-	{
-	    listenObjs[*countRet].trans_conn = transConns[i];
-	    listenObjs[*countRet].network_id = networkId;
+        if(networkId)
+        {
+            listenObjs[*countRet].trans_conn = transConns[i];
+            listenObjs[*countRet].network_id = networkId;
 
-	    (*countRet)++;
-	}
+            (*countRet)++;
+        }
     }
 
-    if (*countRet == 0)
+    if(*countRet == 0)
     {
-	*listenObjsRet = NULL;
+        *listenObjsRet = NULL;
 
-        strncpy (errorStringRet,
-	    "Cannot establish any listening sockets", errorLength);
+        strncpy(errorStringRet, "Cannot establish any listening sockets", errorLength);
 
-	status = 0;
-    }
-    else
-    {
-	*listenObjsRet = (IceListenObj *) malloc (
-	    *countRet * sizeof (IceListenObj));
-
-	if (*listenObjsRet == NULL)
-	{
-	    strncpy (errorStringRet, "Malloc failed", errorLength);
-
-	    status = 0;
-	}
-	else
-	{
-	    for (i = 0; i < *countRet; i++)
-	    {
-		(*listenObjsRet)[i] = (IceListenObj) malloc (
-		    sizeof (struct _IceListenObj));
-
-		if ((*listenObjsRet)[i] == NULL)
-		{
-		    strncpy (errorStringRet, "Malloc failed", errorLength);
-
-		    for (j = 0; j < i; j++)
-			free ((char *) (*listenObjsRet)[j]);
-
-		    free ((char *) *listenObjsRet);
-
-		    status = 0;
-		}
-		else
-		{
-		    *((*listenObjsRet)[i]) = listenObjs[i];
-		}
-	    }
-	}
-    }
-
-    if (status == 1)
-    {
-	if (errorStringRet && errorLength > 0)
-	    *errorStringRet = '\0';
-
-	for (i = 0; i < *countRet; i++)
-	{
-	    (*listenObjsRet)[i]->host_based_auth_proc = NULL;
-	}
+        status = 0;
     }
     else
     {
-	for (i = 0; i < transCount; i++)
-	    _kde_IceTransClose (transConns[i]);
+        *listenObjsRet = (IceListenObj *)malloc(*countRet * sizeof(IceListenObj));
+
+        if(*listenObjsRet == NULL)
+        {
+            strncpy(errorStringRet, "Malloc failed", errorLength);
+
+            status = 0;
+        }
+        else
+        {
+            for(i = 0; i < *countRet; i++)
+            {
+                (*listenObjsRet)[i] = (IceListenObj)malloc(sizeof(struct _IceListenObj));
+
+                if((*listenObjsRet)[i] == NULL)
+                {
+                    strncpy(errorStringRet, "Malloc failed", errorLength);
+
+                    for(j = 0; j < i; j++)
+                        free((char *)(*listenObjsRet)[j]);
+
+                    free((char *)*listenObjsRet);
+
+                    status = 0;
+                }
+                else
+                {
+                    *((*listenObjsRet)[i]) = listenObjs[i];
+                }
+            }
+        }
     }
 
-    free ((char *) listenObjs);
-    free ((char *) transConns);
+    if(status == 1)
+    {
+        if(errorStringRet && errorLength > 0)
+            *errorStringRet = '\0';
+
+        for(i = 0; i < *countRet; i++)
+        {
+            (*listenObjsRet)[i]->host_based_auth_proc = NULL;
+        }
+    }
+    else
+    {
+        for(i = 0; i < transCount; i++)
+            _kde_IceTransClose(transConns[i]);
+    }
+
+    free((char *)listenObjs);
+    free((char *)transConns);
 
     return (status);
 }

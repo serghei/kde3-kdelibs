@@ -16,7 +16,7 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- */ 
+ */
 
 #ifndef KWALLET_TYPES_H
 #define KWALLET_TYPES_H
@@ -25,8 +25,17 @@
 
 class QString;
 
-inline const char* dcopTypeName(const QByteArray&) { return "QByteArray"; }
-inline const char* dcopTypeName(const QMap<QString,QString>&) { return "QMap<QString,QString>"; }
-inline const char* dcopTypeName(const QMap<QString,QByteArray>&) { return "QMap<QString,QByteArray>"; }
+inline const char *dcopTypeName(const QByteArray &)
+{
+    return "QByteArray";
+}
+inline const char *dcopTypeName(const QMap< QString, QString > &)
+{
+    return "QMap<QString,QString>";
+}
+inline const char *dcopTypeName(const QMap< QString, QByteArray > &)
+{
+    return "QMap<QString,QByteArray>";
+}
 
 #endif

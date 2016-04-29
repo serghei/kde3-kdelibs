@@ -57,15 +57,15 @@ class CustomNodeFilterImpl;
  * interface.
  *
  */
-class KHTML_EXPORT NodeIterator
-{
+class KHTML_EXPORT NodeIterator {
     friend class NodeIteratorImpl;
     friend class Document;
+
 public:
     NodeIterator();
     NodeIterator(const NodeIterator &other);
 
-    NodeIterator & operator = (const NodeIterator &other);
+    NodeIterator &operator=(const NodeIterator &other);
 
     ~NodeIterator();
 
@@ -181,19 +181,19 @@ protected:
  * an instance of it to the NodeFilter. For more details see the
  * CustomNodeFilter class
  */
-class KHTML_EXPORT NodeFilter
-{
+class KHTML_EXPORT NodeFilter {
     friend class NodeIterator;
     friend class NodeIteratorImpl;
     friend class TreeWalker;
     friend class TreeWalkerImpl;
     friend class NodeFilterImpl;
+
 public:
     NodeFilter();
     NodeFilter(const NodeFilter &other);
     NodeFilter(NodeFilterImpl *i);
 
-    virtual NodeFilter & operator = (const NodeFilter &other);
+    virtual NodeFilter &operator=(const NodeFilter &other);
 
     virtual ~NodeFilter();
     /**
@@ -201,10 +201,11 @@ public:
      * method:
      *
      */
-    enum AcceptCode {
+    enum AcceptCode
+    {
         FILTER_ACCEPT = 1,
         FILTER_REJECT = 2,
-        FILTER_SKIP   = 3
+        FILTER_SKIP = 3
     };
 
     /**
@@ -214,20 +215,21 @@ public:
      * to the value of NodeType for the equivalent node type.
      *
      */
-    enum ShowCode {
-        SHOW_ALL                       = ~0,
-        SHOW_ELEMENT                   = 0x00000001,
-        SHOW_ATTRIBUTE                 = 0x00000002,
-        SHOW_TEXT                      = 0x00000004,
-        SHOW_CDATA_SECTION             = 0x00000008,
-        SHOW_ENTITY_REFERENCE          = 0x00000010,
-        SHOW_ENTITY                    = 0x00000020,
-        SHOW_PROCESSING_INSTRUCTION    = 0x00000040,
-        SHOW_COMMENT                   = 0x00000080,
-        SHOW_DOCUMENT                  = 0x00000100,
-        SHOW_DOCUMENT_TYPE             = 0x00000200,
-        SHOW_DOCUMENT_FRAGMENT         = 0x00000400,
-        SHOW_NOTATION                  = 0x00000800
+    enum ShowCode
+    {
+        SHOW_ALL = ~0,
+        SHOW_ELEMENT = 0x00000001,
+        SHOW_ATTRIBUTE = 0x00000002,
+        SHOW_TEXT = 0x00000004,
+        SHOW_CDATA_SECTION = 0x00000008,
+        SHOW_ENTITY_REFERENCE = 0x00000010,
+        SHOW_ENTITY = 0x00000020,
+        SHOW_PROCESSING_INSTRUCTION = 0x00000040,
+        SHOW_COMMENT = 0x00000080,
+        SHOW_DOCUMENT = 0x00000100,
+        SHOW_DOCUMENT_TYPE = 0x00000200,
+        SHOW_DOCUMENT_FRAGMENT = 0x00000400,
+        SHOW_NOTATION = 0x00000800
     };
 
     /**
@@ -244,7 +246,7 @@ public:
      * href="#Traversal-NodeFilter-acceptNode-constants"> above </a> .
      *
      */
-    virtual short acceptNode (const Node &n);
+    virtual short acceptNode(const Node &n);
 
     /**
      * @internal
@@ -296,7 +298,7 @@ class KHTML_EXPORT CustomNodeFilter : public DomShared {
 public:
     CustomNodeFilter();
     virtual ~CustomNodeFilter();
-    virtual short acceptNode (const Node &n);
+    virtual short acceptNode(const Node &n);
     virtual bool isNull();
 
     /**
@@ -336,15 +338,15 @@ protected:
  * how deeply nested the structure of the original document.
  *
  */
-class KHTML_EXPORT TreeWalker
-{
+class KHTML_EXPORT TreeWalker {
     friend class Document;
     friend class TreeWalkerImpl;
+
 public:
     TreeWalker();
     TreeWalker(const TreeWalker &other);
 
-    TreeWalker & operator = (const TreeWalker &other);
+    TreeWalker &operator=(const TreeWalker &other);
 
     ~TreeWalker();
 
@@ -575,7 +577,7 @@ public:
      *
      *
     NodeIterator createNodeIterator ( const Node &root, long whatToShow,
-				      const NodeFilter &filter, bool entityReferenceExpansion );
+                      const NodeFilter &filter, bool entityReferenceExpansion );
 
      **
      * Create a new TreeWalker over the subtree rooted by the
@@ -608,7 +610,7 @@ public:
      *
      *
     TreeWalker createTreeWalker ( const Node &root, long whatToShow,
-				  const NodeFilter &filter, bool entityReferenceExpansion );
+                  const NodeFilter &filter, bool entityReferenceExpansion );
 };
 */
 

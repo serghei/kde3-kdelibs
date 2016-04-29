@@ -1,16 +1,16 @@
-/* 
+/*
    This file is part of the KDE libraries
    Copyright (c) 2002 Waldo Bastian <bastian@kde.org>
-   
+
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
    License version 2 as published by the Free Software Foundation.
-   
+
    This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Library General Public License for more details.
-   
+
    You should have received a copy of the GNU Library General Public License
    along with this library; see the file COPYING.LIB.  If not, write to
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -33,8 +33,7 @@
 #include <qobject.h>
 #include <kmdcodec.h>
 
-class HTTPFilterBase : public QObject
-{
+class HTTPFilterBase : public QObject {
     Q_OBJECT
 public:
     HTTPFilterBase();
@@ -44,7 +43,7 @@ public:
 
 public slots:
     virtual void slotInput(const QByteArray &d) = 0;
-    
+
 signals:
     void output(const QByteArray &d);
     void error(int, const QString &);
@@ -53,8 +52,7 @@ protected:
     HTTPFilterBase *last;
 };
 
-class HTTPFilterChain : public HTTPFilterBase
-{
+class HTTPFilterChain : public HTTPFilterBase {
     Q_OBJECT
 public:
     HTTPFilterChain();
@@ -68,8 +66,7 @@ private:
     HTTPFilterBase *first;
 };
 
-class HTTPFilterMD5 : public HTTPFilterBase
-{
+class HTTPFilterMD5 : public HTTPFilterBase {
     Q_OBJECT
 public:
     HTTPFilterMD5();
@@ -78,14 +75,13 @@ public:
 
 public slots:
     void slotInput(const QByteArray &d);
-    
+
 private:
-    KMD5 context;      
+    KMD5 context;
 };
 
 
-class HTTPFilterGZip : public HTTPFilterBase
-{
+class HTTPFilterGZip : public HTTPFilterBase {
     Q_OBJECT
 public:
     HTTPFilterGZip();
@@ -93,7 +89,7 @@ public:
 
 public slots:
     void slotInput(const QByteArray &d);
-    
+
 protected:
     int get_byte();
     int checkHeader();
@@ -109,8 +105,7 @@ protected:
 #endif
 };
 
-class HTTPFilterDeflate : public HTTPFilterGZip
-{
+class HTTPFilterDeflate : public HTTPFilterGZip {
     Q_OBJECT
 public:
     HTTPFilterDeflate();

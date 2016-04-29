@@ -32,60 +32,59 @@ class KTabBarPrivate;
 /**
  * @since 3.2
  */
-class KDEUI_EXPORT KTabBar: public QTabBar
-{
+class KDEUI_EXPORT KTabBar : public QTabBar {
     Q_OBJECT
 
 public:
-    KTabBar( QWidget* parent=0, const char* name=0 );
+    KTabBar(QWidget *parent = 0, const char *name = 0);
     virtual ~KTabBar();
 
-    virtual void setTabEnabled( int, bool );
+    virtual void setTabEnabled(int, bool);
 
-    const QColor &tabColor( int ) const;
-    void setTabColor( int, const QColor& );
+    const QColor &tabColor(int) const;
+    void setTabColor(int, const QColor &);
 
-    virtual int insertTab( QTab *, int index = -1 );
-    virtual void removeTab( QTab * );
+    virtual int insertTab(QTab *, int index = -1);
+    virtual void removeTab(QTab *);
 
-    void setTabReorderingEnabled( bool enable );
+    void setTabReorderingEnabled(bool enable);
     bool isTabReorderingEnabled() const;
 
-    void setHoverCloseButton( bool );
+    void setHoverCloseButton(bool);
     bool hoverCloseButton() const;
 
-    void setHoverCloseButtonDelayed( bool );
+    void setHoverCloseButtonDelayed(bool);
     bool hoverCloseButtonDelayed() const;
 
-    void setTabCloseActivatePrevious( bool );
+    void setTabCloseActivatePrevious(bool);
     bool tabCloseActivatePrevious() const;
 
 signals:
-    void contextMenu( int, const QPoint & );
-    void mouseDoubleClick( int );
-    void mouseMiddleClick( int );
-    void initiateDrag( int );
+    void contextMenu(int, const QPoint &);
+    void mouseDoubleClick(int);
+    void mouseMiddleClick(int);
+    void initiateDrag(int);
     void testCanDecode(const QDragMoveEvent *e, bool &accept /* result */);
-    void receivedDropEvent( int, QDropEvent * );
-    void moveTab( int, int );
-    void closeRequest( int );
+    void receivedDropEvent(int, QDropEvent *);
+    void moveTab(int, int);
+    void closeRequest(int);
 #ifndef QT_NO_WHEELEVENT
-    void wheelDelta( int );
+    void wheelDelta(int);
 #endif
 
 protected:
-    virtual void mouseDoubleClickEvent( QMouseEvent *e );
-    virtual void mousePressEvent( QMouseEvent *e );
-    virtual void mouseMoveEvent( QMouseEvent *e );
-    virtual void mouseReleaseEvent( QMouseEvent *e );
+    virtual void mouseDoubleClickEvent(QMouseEvent *e);
+    virtual void mousePressEvent(QMouseEvent *e);
+    virtual void mouseMoveEvent(QMouseEvent *e);
+    virtual void mouseReleaseEvent(QMouseEvent *e);
 #ifndef QT_NO_WHEELEVENT
-    virtual void wheelEvent( QWheelEvent *e );
+    virtual void wheelEvent(QWheelEvent *e);
 #endif
 
-    virtual void dragMoveEvent( QDragMoveEvent *e );
-    virtual void dropEvent( QDropEvent *e );
+    virtual void dragMoveEvent(QDragMoveEvent *e);
+    virtual void dropEvent(QDropEvent *e);
 
-    virtual void paintLabel( QPainter*, const QRect&, QTab*, bool ) const;
+    virtual void paintLabel(QPainter *, const QRect &, QTab *, bool) const;
 
 protected slots:
     virtual void closeButtonClicked();
@@ -97,7 +96,7 @@ private:
     QPoint mDragStart;
     int mReorderStartTab;
     int mReorderPreviousTab;
-    QMap<int, QColor> mTabColors;
+    QMap< int, QColor > mTabColors;
     QTab *mHoverCloseButtonTab, *mDragSwitchTab;
     QPushButton *mHoverCloseButton;
     QTimer *mEnableCloseButtonTimer, *mActivateDragSwitchTabTimer;
@@ -107,7 +106,7 @@ private:
     bool mTabReorderingEnabled;
     bool mTabCloseActivatePrevious;
 
-    KTabBarPrivate * d;
+    KTabBarPrivate *d;
 };
 
 #endif

@@ -27,64 +27,63 @@
 #include <qptrlist.h>
 #include <klocale.h>
 
-KMLprJobManager::KMLprJobManager(QObject *parent, const char *name, const QStringList & /*args*/)
-: KMJobManager(parent, name)
+KMLprJobManager::KMLprJobManager(QObject *parent, const char *name, const QStringList & /*args*/) : KMJobManager(parent, name)
 {
-	m_lpqhelper = new LpqHelper(this, "LpqHelper");
+    m_lpqhelper = new LpqHelper(this, "LpqHelper");
 }
 
-bool KMLprJobManager::listJobs(const QString& prname, JobType, int limit)
+bool KMLprJobManager::listJobs(const QString &prname, JobType, int limit)
 {
-	QPtrList<KMJob>	jobList;
-	jobList.setAutoDelete(false);
-	m_lpqhelper->listJobs(jobList, prname, limit);
-	QPtrListIterator<KMJob>	it(jobList);
-	for (; it.current(); ++it)
-		addJob(it.current());
-	return false;
+    QPtrList< KMJob > jobList;
+    jobList.setAutoDelete(false);
+    m_lpqhelper->listJobs(jobList, prname, limit);
+    QPtrListIterator< KMJob > it(jobList);
+    for(; it.current(); ++it)
+        addJob(it.current());
+    return false;
 }
 
-LpcHelper* KMLprJobManager::lpcHelper()
+LpcHelper *KMLprJobManager::lpcHelper()
 {
-	return static_cast<KMLprManager*>(KMManager::self())->lpcHelper();
+    return static_cast< KMLprManager * >(KMManager::self())->lpcHelper();
 }
 
 int KMLprJobManager::actions()
 {
-	if (LprSettings::self()->mode() == LprSettings::LPR)
-		return KMJob::Remove;
-	else
-		// some additional actions to be added here
-		return (KMJob::Remove | KMJob::Hold | KMJob::Resume);
+    if(LprSettings::self()->mode() == LprSettings::LPR)
+        return KMJob::Remove;
+    else
+        // some additional actions to be added here
+        return (KMJob::Remove | KMJob::Hold | KMJob::Resume);
 }
 
-bool KMLprJobManager::sendCommandSystemJob(const QPtrList<KMJob>& jobs, int action, const QString& arg)
+bool KMLprJobManager::sendCommandSystemJob(const QPtrList< KMJob > &jobs, int action, const QString &arg)
 {
-	QString	msg;
-	QPtrListIterator<KMJob>	it(jobs);
-	bool	status(true);
-	LpcHelper	*helper = lpcHelper();
+    QString msg;
+    QPtrListIterator< KMJob > it(jobs);
+    bool status(true);
+    LpcHelper *helper = lpcHelper();
 
-	for (; it.current() && status; ++it)
-	{
-		switch (action)
-		{
-			case KMJob::Remove:
-				status = helper->removeJob(it.current(), msg);
-				break;
-			case KMJob::Hold:
-				status = helper->changeJobState(it.current(), KMJob::Held, msg);
-				break;
-			case KMJob::Resume:
-				status = helper->changeJobState(it.current(), KMJob::Queued, msg);
-				break;
-			default:
-				status = false;
-				msg = i18n("Unsupported operation.");
-				break;
-		}
-	}
-	if (!status && !msg.isEmpty())
-		KMManager::self()->setErrorMsg(msg);
-	return status;
+    for(; it.current() && status; ++it)
+    {
+        switch(action)
+        {
+            case KMJob::Remove:
+                status = helper->removeJob(it.current(), msg);
+                break;
+            case KMJob::Hold:
+                status = helper->changeJobState(it.current(), KMJob::Held, msg);
+                break;
+            case KMJob::Resume:
+                status = helper->changeJobState(it.current(), KMJob::Queued, msg);
+                break;
+            default:
+                status = false;
+                msg = i18n("Unsupported operation.");
+                break;
+        }
+    }
+    if(!status && !msg.isEmpty())
+        KMManager::self()->setErrorMsg(msg);
+    return status;
 }

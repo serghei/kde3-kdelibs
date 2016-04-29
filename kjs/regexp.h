@@ -28,46 +28,65 @@
 
 #ifdef HAVE_PCREPOSIX
 #include <pcre.h>
-#else  // POSIX regex - not so good...
+#else // POSIX regex - not so good...
 extern "C" { // bug with some libc5 distributions
 #include <regex.h>
 }
-#endif //HAVE_PCREPOSIX
+#endif // HAVE_PCREPOSIX
 
 #include "ustring.h"
 
 namespace KJS {
 
-  class RegExp {
-  public:
-    enum { None = 0, Global = 1, IgnoreCase = 2, Multiline = 4 };
+class RegExp {
+public:
+    enum
+    {
+        None = 0,
+        Global = 1,
+        IgnoreCase = 2,
+        Multiline = 4
+    };
     RegExp(const UString &p, int f = None);
     ~RegExp();
-    int flags() const { return flgs; }
-    UString pattern() const { return pat; }
-    bool isValid() const { return valid; }
+    int flags() const
+    {
+        return flgs;
+    }
+    UString pattern() const
+    {
+        return pat;
+    }
+    bool isValid() const
+    {
+        return valid;
+    }
     UString match(const UString &s, int i, int *pos = 0, int **ovector = 0);
     // test is unused. The JS spec says that RegExp.test should use
     // RegExp.exec, so it has to store $1 etc.
     // bool test(const UString &s, int i = -1);
-    unsigned int subPatterns() const { return nrSubPatterns; }
-    
-    //These methods should be called around the match of the same string..
+    unsigned int subPatterns() const
+    {
+        return nrSubPatterns;
+    }
+
+    // These methods should be called around the match of the same string..
     void prepareMatch(const UString &s);
     void doneMatch();
-  private:
+
+private:
     const UString pat;
     int flgs : 8;
     bool m_notEmpty;
     bool valid;
-    
-    // Cached encoding info...
-    char* buffer;
-    int*  originalPos;
-    int   bufferSize;
 
-    void prepareUtf8  (const UString& s);
-    void prepareASCII (const UString& s);
+    // Cached encoding info...
+    char *buffer;
+    int *originalPos;
+    int bufferSize;
+
+    void prepareUtf8(const UString &s);
+    void prepareASCII(const UString &s);
 #ifndef NDEBUG
     UString originalS; // the original string, used for sanity-checking
 #endif
@@ -76,13 +95,14 @@ namespace KJS {
     regex_t preg;
 #else
     pcre *pcregex;
-    
-    enum UTF8SupportState {
-      Unknown,
-      Supported,
-      Unsupported
+
+    enum UTF8SupportState
+    {
+        Unknown,
+        Supported,
+        Unsupported
     };
-    
+
 #ifdef PCRE_CONFIG_UTF8
     static UTF8SupportState utf8Support;
 #endif
@@ -90,7 +110,7 @@ namespace KJS {
     unsigned int nrSubPatterns;
 
     RegExp();
-  };
+};
 
 } // namespace
 

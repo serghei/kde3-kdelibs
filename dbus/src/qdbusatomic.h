@@ -24,8 +24,7 @@
 #ifndef ATOMIC_H
 #define ATOMIC_H
 
-class Atomic
-{
+class Atomic {
 public:
     Atomic(int value);
 

@@ -28,15 +28,14 @@
 
 class KFileFilterComboPrivate;
 
-class KIO_EXPORT KFileFilterCombo : public KComboBox
-{
+class KIO_EXPORT KFileFilterCombo : public KComboBox {
     Q_OBJECT
 
- public:
-    KFileFilterCombo(QWidget *parent= 0, const char *name= 0);
+public:
+    KFileFilterCombo(QWidget *parent = 0, const char *name = 0);
     ~KFileFilterCombo();
 
-    void setFilter(const QString& filter);
+    void setFilter(const QString &filter);
 
     /**
      * @returns the current filter, either something like "*.cpp *.h"
@@ -50,19 +49,22 @@ class KIO_EXPORT KFileFilterCombo : public KComboBox
      * passed before to this widget.
      * @since 3.4
      */
-    void setCurrentFilter( const QString& filter );
+    void setCurrentFilter(const QString &filter);
 
     /**
      * Sets a list of mimetypes.
      * If @p defaultType is set, it will be set as the current item.
      * Otherwise, a first item showing all the mimetypes will be created.
      */
-    void setMimeFilter( const QStringList& types, const QString& defaultType );
+    void setMimeFilter(const QStringList &types, const QString &defaultType);
 
     /**
      * @return true if the filter's first item is the list of all mimetypes
      */
-    bool showsAllTypes() const { return m_allTypes; }
+    bool showsAllTypes() const
+    {
+        return m_allTypes;
+    }
 
     /**
      * This method allows you to set a default-filter, that is used when an
@@ -72,7 +74,7 @@ class KIO_EXPORT KFileFilterCombo : public KComboBox
      * By default, this is set to i18n("*|All Files")
      * @see defaultFilter
      */
-    void setDefaultFilter( const QString& filter );
+    void setDefaultFilter(const QString &filter);
 
     /**
      * @return the default filter, used when an empty filter is set.
@@ -80,21 +82,22 @@ class KIO_EXPORT KFileFilterCombo : public KComboBox
      */
     QString defaultFilter() const;
 
- protected:
-    virtual bool eventFilter( QObject *o, QEvent *e );
+protected:
+    virtual bool eventFilter(QObject *o, QEvent *e);
 
-// KDE4: those variables are private. filters() was added
+    // KDE4: those variables are private. filters() was added
     QStringList filters;
     bool m_allTypes;
 
- signals:
+signals:
     void filterChanged();
 
 private slots:
     void slotFilterChanged();
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     friend class KFileDialog; // gone in KDE4
     class KFileFilterComboPrivate;

@@ -27,50 +27,51 @@
 /**
  * Class that represents a single object in the tree
  */
-class TreeListBoxItem : public QListBoxPixmap
-{
+class TreeListBoxItem : public QListBoxPixmap {
 public:
-	TreeListBoxItem(QListBox *lb, const QPixmap& pix, const QString& txt, bool oneBlock = false);
+    TreeListBoxItem(QListBox *lb, const QPixmap &pix, const QString &txt, bool oneBlock = false);
 
-	virtual int width(const QListBox *lb) const;
+    virtual int width(const QListBox *lb) const;
 
 protected:
-	virtual void paint(QPainter *p);
-	int stepSize() const { return 16; }
+    virtual void paint(QPainter *p);
+    int stepSize() const
+    {
+        return 16;
+    }
 
 private:
-	QStringList	m_path;
-	int		m_depth;
-	TreeListBoxItem	*m_child, *m_next, *m_parent;
+    QStringList m_path;
+    int m_depth;
+    TreeListBoxItem *m_child, *m_next, *m_parent;
 };
 
 /**
  * Class for the listbox shown on popup
  */
-class TreeListBox : public QListBox
-{
-	friend class TreeListBoxItem;
+class TreeListBox : public QListBox {
+    friend class TreeListBoxItem;
+
 public:
-	TreeListBox(QWidget *parent = 0, const char *name = 0);
+    TreeListBox(QWidget *parent = 0, const char *name = 0);
 
 protected:
-	virtual void paintCell(QPainter *p, int row, int col);
+    virtual void paintCell(QPainter *p, int row, int col);
 
 private:
-	bool	m_painting;
+    bool m_painting;
 };
 
 /**
  * Main class.
  */
-class TreeComboBox : public QComboBox
-{
+class TreeComboBox : public QComboBox {
 public:
-	TreeComboBox(QWidget *parent = 0, const char *name = 0);
-	void insertItem(const QPixmap& pix, const QString& txt, bool oneBlock = false);
+    TreeComboBox(QWidget *parent = 0, const char *name = 0);
+    void insertItem(const QPixmap &pix, const QString &txt, bool oneBlock = false);
 
 private:
-	QListBox	*m_listbox;
+    QListBox *m_listbox;
 };
 
 #endif

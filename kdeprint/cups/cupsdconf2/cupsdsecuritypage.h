@@ -28,29 +28,28 @@ class EditList;
 class QDirLineEdit;
 struct CupsLocation;
 
-class CupsdSecurityPage : public CupsdPage
-{
-	Q_OBJECT
+class CupsdSecurityPage : public CupsdPage {
+    Q_OBJECT
 
 public:
-	CupsdSecurityPage(QWidget *parent = 0, const char *name = 0);
+    CupsdSecurityPage(QWidget *parent = 0, const char *name = 0);
 
-	bool loadConfig(CupsdConf*, QString&);
-	bool saveConfig(CupsdConf*, QString&);
-	void setInfos(CupsdConf*);
+    bool loadConfig(CupsdConf *, QString &);
+    bool saveConfig(CupsdConf *, QString &);
+    void setInfos(CupsdConf *);
 
 protected slots:
-	void slotAdd();
-	void slotEdit(int);
-	void slotDefaultList();
-	void slotDeleted(int);
+    void slotAdd();
+    void slotEdit(int);
+    void slotDefaultList();
+    void slotDeleted(int);
 
 private:
-	QLineEdit	*remoteroot_, *systemgroup_;
-	QDirLineEdit	*encryptcert_, *encryptkey_;
-	EditList	*locations_;
+    QLineEdit *remoteroot_, *systemgroup_;
+    QDirLineEdit *encryptcert_, *encryptkey_;
+    EditList *locations_;
 
-	QPtrList<CupsLocation>	locs_;
+    QPtrList< CupsLocation > locs_;
 };
 
 #endif

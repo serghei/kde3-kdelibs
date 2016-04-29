@@ -29,84 +29,80 @@
 #include <kprocess.h>
 #include <ksimpleconfig.h>
 
-static const KCmdLineOptions options[] =
-{
-	{"+url", 0, 0},
-	KCmdLineLastOption
-};
+static const KCmdLineOptions options[] = {{"+url", 0, 0}, KCmdLineLastOption};
 
 int main(int argc, char **argv)
 {
-	KLocale::setMainCatalogue("kdelibs");
-	KCmdLineArgs::init(argc, argv, "ktelnetservice", I18N_NOOP("telnet service"),
-			   I18N_NOOP("telnet protocol handler"), "unknown");
-	KCmdLineArgs::addCmdLineOptions(options);
+    KLocale::setMainCatalogue("kdelibs");
+    KCmdLineArgs::init(argc, argv, "ktelnetservice", I18N_NOOP("telnet service"), I18N_NOOP("telnet protocol handler"), "unknown");
+    KCmdLineArgs::addCmdLineOptions(options);
 
-	KApplication app;
+    KApplication app;
 
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-	
-	if (args->count() != 1)
-		return 1;
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-	KConfig *config = new KConfig("kdeglobals", true);
-	config->setGroup("General");
-	QString terminal = config->readPathEntry("TerminalApplication", "konsole");
+    if(args->count() != 1)
+        return 1;
 
-	KURL url(args->arg(0));
-	QStringList cmd;
-	if (terminal == "konsole")
-	    cmd << "--noclose";
+    KConfig *config = new KConfig("kdeglobals", true);
+    config->setGroup("General");
+    QString terminal = config->readPathEntry("TerminalApplication", "konsole");
 
-	cmd << "-e";
-        if ( url.protocol() == "telnet" )
-            cmd << "telnet";
-        else if ( url.protocol() == "ssh" )
-            cmd << "ssh";
-        else if ( url.protocol() == "rlogin" )
-            cmd << "rlogin";
-        else {
-            kdError() << "Invalid protocol " << url.protocol() << endl;
-            return 2;
-        }
-        
-        if (!app.authorize("shell_access"))
-        {
-            KMessageBox::sorry(0, 
-            	i18n("You do not have permission to access the %1 protocol.").arg(url.protocol()));
-            return 3;
-        }
-        
-	if (!url.user().isEmpty())
-	{
-		cmd << "-l";
-		cmd << url.user();
-	}
+    KURL url(args->arg(0));
+    QStringList cmd;
+    if(terminal == "konsole")
+        cmd << "--noclose";
 
-        QString host;
-        if (!url.host().isEmpty())
-           host = url.host(); // telnet://host
-        else if (!url.path().isEmpty())
-           host = url.path(); // telnet:host
+    cmd << "-e";
+    if(url.protocol() == "telnet")
+        cmd << "telnet";
+    else if(url.protocol() == "ssh")
+        cmd << "ssh";
+    else if(url.protocol() == "rlogin")
+        cmd << "rlogin";
+    else
+    {
+        kdError() << "Invalid protocol " << url.protocol() << endl;
+        return 2;
+    }
 
-        if (host.isEmpty() || host.startsWith("-"))
-        {
-            kdError() << "Invalid hostname " << host << endl;
-            return 2;
-        }
+    if(!app.authorize("shell_access"))
+    {
+        KMessageBox::sorry(0, i18n("You do not have permission to access the %1 protocol.").arg(url.protocol()));
+        return 3;
+    }
 
-        cmd << host;
-        
-	if (url.port()){
-            if ( url.protocol() == "ssh" )
-		cmd << "-p" << QString::number(url.port());
-	    else
-		cmd << QString::number(url.port());
-	}
+    if(!url.user().isEmpty())
+    {
+        cmd << "-l";
+        cmd << url.user();
+    }
 
-	app.kdeinitExec(terminal, cmd);
+    QString host;
+    if(!url.host().isEmpty())
+        host = url.host(); // telnet://host
+    else if(!url.path().isEmpty())
+        host = url.path(); // telnet:host
 
-	return 0;
+    if(host.isEmpty() || host.startsWith("-"))
+    {
+        kdError() << "Invalid hostname " << host << endl;
+        return 2;
+    }
+
+    cmd << host;
+
+    if(url.port())
+    {
+        if(url.protocol() == "ssh")
+            cmd << "-p" << QString::number(url.port());
+        else
+            cmd << QString::number(url.port());
+    }
+
+    app.kdeinitExec(terminal, cmd);
+
+    return 0;
 }
 
 // vim: ts=4 sw=4 noet

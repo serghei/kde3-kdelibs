@@ -55,7 +55,7 @@
  * KRun::run(*ptr, lst);
  * \endcode
  *
- * Now, say that you want to list all KParts component that can handle HTML. 
+ * Now, say that you want to list all KParts component that can handle HTML.
  * \code
  * KTrader::OfferList offers = KTrader::self()->query("text/html", "KParts/ReadOnlyPart");
  * \endcode
@@ -82,15 +82,14 @@
  *        applications or components.
  * @author Torben Weis <weis@kde.org>
  */
-class KIO_EXPORT KTrader : public QObject
-{
+class KIO_EXPORT KTrader : public QObject {
     Q_OBJECT
 public:
     /**
      * A list of services.
      */
-    typedef QValueList<KService::Ptr> OfferList;
-    typedef QValueListIterator<KService::Ptr> OfferListIterator;
+    typedef QValueList< KService::Ptr > OfferList;
+    typedef QValueListIterator< KService::Ptr > OfferListIterator;
 
     /**
      * Standard destructor
@@ -126,9 +125,7 @@ public:
      * @return A list of services that satisfy the query
      * @see http://developer.kde.org/documentation/library/3.5-api/kdelibs-apidocs/kio/kio/html/tradersyntax.html
      */
-    virtual OfferList query( const QString& servicetype,
-			     const QString& constraint = QString::null,
-			     const QString& preferences = QString::null) const;
+    virtual OfferList query(const QString &servicetype, const QString &constraint = QString::null, const QString &preferences = QString::null) const;
 
     /**
      * A variant of query(), that takes two service types as an input.
@@ -153,9 +150,8 @@ public:
      * @return A list of services that satisfy the query
      * @see http://developer.kde.org/documentation/library/kdeqt/tradersyntax.html
      */
-    OfferList query( const QString& servicetype, const QString& genericServiceType,
-                     const QString& constraint /*= QString::null*/,
-                     const QString& preferences /*= QString::null*/) const;
+    OfferList query(const QString &servicetype, const QString &genericServiceType, const QString &constraint /*= QString::null*/,
+                    const QString &preferences /*= QString::null*/) const;
 
     /**
      * This is a static pointer to a KTrader instance.
@@ -166,7 +162,7 @@ public:
      *
      * @return Static KTrader instance
      */
-    static KTrader* self();
+    static KTrader *self();
 
 protected:
     /**
@@ -175,9 +171,10 @@ protected:
     KTrader();
 
 private:
-    static KTrader* s_self;
+    static KTrader *s_self;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 };
 
 /** @page tradersyntax Trader Syntax

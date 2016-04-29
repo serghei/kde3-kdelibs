@@ -47,72 +47,84 @@ class CoverWidget;
 class KJavaAppletViewerBrowserExtension : public KParts::BrowserExtension {
     Q_OBJECT
 public:
-    KJavaAppletViewerBrowserExtension (KJavaAppletViewer *parent);
-    void urlChanged (const QString & url);
-    void setLoadingProgress (int percentage);
+    KJavaAppletViewerBrowserExtension(KJavaAppletViewer *parent);
+    void urlChanged(const QString &url);
+    void setLoadingProgress(int percentage);
 
-    void setURLArgs (const KParts::URLArgs & args);
-    void saveState (QDataStream & stream);
-    void restoreState (QDataStream & stream);
+    void setURLArgs(const KParts::URLArgs &args);
+    void saveState(QDataStream &stream);
+    void restoreState(QDataStream &stream);
 public slots:
-    void showDocument (const QString & doc, const QString & frame);
+    void showDocument(const QString &doc, const QString &frame);
 };
 
 class KJavaAppletViewerLiveConnectExtension : public KParts::LiveConnectExtension {
     Q_OBJECT
 public:
-    KJavaAppletViewerLiveConnectExtension(KJavaAppletViewer * parent);
+    KJavaAppletViewerLiveConnectExtension(KJavaAppletViewer *parent);
 
-    bool get (const unsigned long objid, const QString & field, KParts::LiveConnectExtension::Type & type, unsigned long & retobjid, QString & value);
-    bool put(const unsigned long, const QString & field, const QString & value);
-    bool call (const unsigned long , const QString & func, const QStringList & args, KParts::LiveConnectExtension::Type & type, unsigned long & retobjid, QString & value);
-    void unregister (const unsigned long objid);
+    bool get(const unsigned long objid, const QString &field, KParts::LiveConnectExtension::Type &type, unsigned long &retobjid, QString &value);
+    bool put(const unsigned long, const QString &field, const QString &value);
+    bool call(const unsigned long, const QString &func, const QStringList &args, KParts::LiveConnectExtension::Type &type, unsigned long &retobjid,
+              QString &value);
+    void unregister(const unsigned long objid);
 
-    int jsSessions () const { return m_jssessions; }
+    int jsSessions() const
+    {
+        return m_jssessions;
+    }
 public slots:
-    void jsEvent (const QStringList & args);
+    void jsEvent(const QStringList &args);
 signals:
-    virtual void partEvent (const unsigned long objid, const QString & event, const KParts::LiveConnectExtension::ArgList & args);
+    virtual void partEvent(const unsigned long objid, const QString &event, const KParts::LiveConnectExtension::ArgList &args);
 
 private:
-    KJavaAppletViewer * m_viewer;
+    KJavaAppletViewer *m_viewer;
     static int m_jssessions;
 };
 
 class KJavaAppletViewer : public KParts::ReadOnlyPart {
     Q_OBJECT
-public: 
-    KJavaAppletViewer (QWidget * wparent, const char * wname,
-              QObject * parent, const char * name, const QStringList &args);
-    ~KJavaAppletViewer ();
-    CoverWidget * view () const { return m_view; }
-    static KAboutData* createAboutData ();
+public:
+    KJavaAppletViewer(QWidget *wparent, const char *wname, QObject *parent, const char *name, const QStringList &args);
+    ~KJavaAppletViewer();
+    CoverWidget *view() const
+    {
+        return m_view;
+    }
+    static KAboutData *createAboutData();
 
-    KJavaAppletViewerBrowserExtension * browserextension() const
-        { return m_browserextension; }
-    KParts::LiveConnectExtension * liveConnectExtension () const
-        { return m_liveconnect; }
+    KJavaAppletViewerBrowserExtension *browserextension() const
+    {
+        return m_browserextension;
+    }
+    KParts::LiveConnectExtension *liveConnectExtension() const
+    {
+        return m_liveconnect;
+    }
 
-    bool eventFilter (QObject *o, QEvent *e);
+    bool eventFilter(QObject *o, QEvent *e);
 
-    bool appletAlive () const;
+    bool appletAlive() const;
 public slots:
-    virtual bool openURL (const KURL & url);
-    virtual bool closeURL ();
-    void appletLoaded ();
-    void infoMessage (const QString &);
+    virtual bool openURL(const KURL &url);
+    virtual bool closeURL();
+    void appletLoaded();
+    void infoMessage(const QString &);
+
 protected:
     bool openFile();
 private slots:
-    void delayedCreateTimeOut ();
+    void delayedCreateTimeOut();
+
 private:
-    QGuardedPtr <CoverWidget> m_view;
-    KConfig * m_config;
-    KJavaProcess * process;
-    KJavaAppletViewerBrowserExtension * m_browserextension;
-    KJavaAppletViewerLiveConnectExtension * m_liveconnect;
-    KParts::StatusBarExtension * m_statusbar;
-    QGuardedPtr <QLabel> m_statusbar_icon;
+    QGuardedPtr< CoverWidget > m_view;
+    KConfig *m_config;
+    KJavaProcess *process;
+    KJavaAppletViewerBrowserExtension *m_browserextension;
+    KJavaAppletViewerLiveConnectExtension *m_liveconnect;
+    KParts::StatusBarExtension *m_statusbar;
+    QGuardedPtr< QLabel > m_statusbar_icon;
     QString baseurl;
     bool m_closed;
 };
@@ -120,26 +132,29 @@ private:
 class KJavaAppletViewerFactory : public KParts::Factory {
     Q_OBJECT
 public:
-    KJavaAppletViewerFactory ();
-    virtual ~KJavaAppletViewerFactory ();
-    virtual KParts::Part *createPartObject 
-        (QWidget *wparent, const char *wname,
-         QObject *parent, const char *name,
-         const char *className, const QStringList &args);
-    static KInstance * instance () { return s_instance; }
+    KJavaAppletViewerFactory();
+    virtual ~KJavaAppletViewerFactory();
+    virtual KParts::Part *createPartObject(QWidget *wparent, const char *wname, QObject *parent, const char *name, const char *className,
+                                           const QStringList &args);
+    static KInstance *instance()
+    {
+        return s_instance;
+    }
+
 private:
-    static KInstance * s_instance;
+    static KInstance *s_instance;
 };
 
 class AppletParameterDialog : public KDialogBase {
     Q_OBJECT
 public:
-    AppletParameterDialog (KJavaAppletWidget * parent);
+    AppletParameterDialog(KJavaAppletWidget *parent);
 protected slots:
-    void slotClose ();
+    void slotClose();
+
 private:
-    KJavaAppletWidget * m_appletWidget;
-    QTable * table;
+    KJavaAppletWidget *m_appletWidget;
+    QTable *table;
 };
 
 #endif

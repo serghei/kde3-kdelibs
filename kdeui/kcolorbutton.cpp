@@ -31,177 +31,178 @@
 #include "kcolorbutton.h"
 #include "kcolordrag.h"
 
-class KColorButton::KColorButtonPrivate
-{
+class KColorButton::KColorButtonPrivate {
 public:
     bool m_bdefaultColor;
     QColor m_defaultColor;
 };
 
-KColorButton::KColorButton( QWidget *parent, const char *name )
-  : QPushButton( parent, name )
+KColorButton::KColorButton(QWidget *parent, const char *name) : QPushButton(parent, name)
 {
-  d = new KColorButtonPrivate;
-  d->m_bdefaultColor = false;
-  d->m_defaultColor = QColor();
-  setAcceptDrops( true);
+    d = new KColorButtonPrivate;
+    d->m_bdefaultColor = false;
+    d->m_defaultColor = QColor();
+    setAcceptDrops(true);
 
-  // 2000-10-15 (putzer): fixes broken keyboard usage
-  connect (this, SIGNAL(clicked()), this, SLOT(chooseColor()));
+    // 2000-10-15 (putzer): fixes broken keyboard usage
+    connect(this, SIGNAL(clicked()), this, SLOT(chooseColor()));
 }
 
-KColorButton::KColorButton( const QColor &c, QWidget *parent,
-			    const char *name )
-  : QPushButton( parent, name ), col(c)
+KColorButton::KColorButton(const QColor &c, QWidget *parent, const char *name) : QPushButton(parent, name), col(c)
 {
-  d = new KColorButtonPrivate;
-  d->m_bdefaultColor = false;
-  d->m_defaultColor = QColor();
-  setAcceptDrops( true);
+    d = new KColorButtonPrivate;
+    d->m_bdefaultColor = false;
+    d->m_defaultColor = QColor();
+    setAcceptDrops(true);
 
-  // 2000-10-15 (putzer): fixes broken keyboard usage
-  connect (this, SIGNAL(clicked()), this, SLOT(chooseColor()));
+    // 2000-10-15 (putzer): fixes broken keyboard usage
+    connect(this, SIGNAL(clicked()), this, SLOT(chooseColor()));
 }
 
-KColorButton::KColorButton( const QColor &c, const QColor &defaultColor, QWidget *parent,
-			    const char *name )
-  : QPushButton( parent, name ), col(c)
+KColorButton::KColorButton(const QColor &c, const QColor &defaultColor, QWidget *parent, const char *name) : QPushButton(parent, name), col(c)
 {
-  d = new KColorButtonPrivate;
-  d->m_bdefaultColor = true;
-  d->m_defaultColor = defaultColor;
-  setAcceptDrops( true);
+    d = new KColorButtonPrivate;
+    d->m_bdefaultColor = true;
+    d->m_defaultColor = defaultColor;
+    setAcceptDrops(true);
 
-  // 2000-10-15 (putzer): fixes broken keyboard usage
-  connect (this, SIGNAL(clicked()), this, SLOT(chooseColor()));
+    // 2000-10-15 (putzer): fixes broken keyboard usage
+    connect(this, SIGNAL(clicked()), this, SLOT(chooseColor()));
 }
 
 KColorButton::~KColorButton()
 {
-  delete d;
+    delete d;
 }
 
-void KColorButton::setColor( const QColor &c )
+void KColorButton::setColor(const QColor &c)
 {
-  if ( col != c ) {
-    col = c;
-    repaint( false );
-    emit changed( col );
-  }
+    if(col != c)
+    {
+        col = c;
+        repaint(false);
+        emit changed(col);
+    }
 }
 
 QColor KColorButton::defaultColor() const
 {
-  return d->m_defaultColor;
+    return d->m_defaultColor;
 }
 
-void KColorButton::setDefaultColor( const QColor &c )
+void KColorButton::setDefaultColor(const QColor &c)
 {
-  d->m_bdefaultColor = c.isValid();
-  d->m_defaultColor = c;
+    d->m_bdefaultColor = c.isValid();
+    d->m_defaultColor = c;
 }
 
 
-void KColorButton::drawButtonLabel( QPainter *painter )
+void KColorButton::drawButtonLabel(QPainter *painter)
 {
-  int x, y, w, h;
-  QRect r = style().subRect( QStyle::SR_PushButtonContents, this );
-  r.rect(&x, &y, &w, &h);
+    int x, y, w, h;
+    QRect r = style().subRect(QStyle::SR_PushButtonContents, this);
+    r.rect(&x, &y, &w, &h);
 
-  int margin = style().pixelMetric( QStyle::PM_ButtonMargin, this );
-  x += margin;
-  y += margin;
-  w -= 2*margin;
-  h -= 2*margin;
+    int margin = style().pixelMetric(QStyle::PM_ButtonMargin, this);
+    x += margin;
+    y += margin;
+    w -= 2 * margin;
+    h -= 2 * margin;
 
-  if (isOn() || isDown()) {
-    x += style().pixelMetric( QStyle::PM_ButtonShiftHorizontal, this );
-    y += style().pixelMetric( QStyle::PM_ButtonShiftVertical, this );
-  }
+    if(isOn() || isDown())
+    {
+        x += style().pixelMetric(QStyle::PM_ButtonShiftHorizontal, this);
+        y += style().pixelMetric(QStyle::PM_ButtonShiftVertical, this);
+    }
 
-  QColor fillCol = isEnabled() ? col : backgroundColor();
-  qDrawShadePanel( painter, x, y, w, h, colorGroup(), true, 1, NULL);
-  if ( fillCol.isValid() )
-    painter->fillRect( x+1, y+1, w-2, h-2, fillCol );
+    QColor fillCol = isEnabled() ? col : backgroundColor();
+    qDrawShadePanel(painter, x, y, w, h, colorGroup(), true, 1, NULL);
+    if(fillCol.isValid())
+        painter->fillRect(x + 1, y + 1, w - 2, h - 2, fillCol);
 
-  if ( hasFocus() ) {
-    QRect focusRect = style().subRect( QStyle::SR_PushButtonFocusRect, this );
-    style().drawPrimitive( QStyle::PE_FocusRect, painter, focusRect, colorGroup() );
-  }
+    if(hasFocus())
+    {
+        QRect focusRect = style().subRect(QStyle::SR_PushButtonFocusRect, this);
+        style().drawPrimitive(QStyle::PE_FocusRect, painter, focusRect, colorGroup());
+    }
 }
 
 QSize KColorButton::sizeHint() const
 {
-  return style().sizeFromContents(QStyle::CT_PushButton, this, QSize(40, 15)).
-	  	expandedTo(QApplication::globalStrut());
+    return style().sizeFromContents(QStyle::CT_PushButton, this, QSize(40, 15)).expandedTo(QApplication::globalStrut());
 }
 
-void KColorButton::dragEnterEvent( QDragEnterEvent *event)
+void KColorButton::dragEnterEvent(QDragEnterEvent *event)
 {
-  event->accept( KColorDrag::canDecode( event) && isEnabled());
+    event->accept(KColorDrag::canDecode(event) && isEnabled());
 }
 
-void KColorButton::dropEvent( QDropEvent *event)
+void KColorButton::dropEvent(QDropEvent *event)
 {
-  QColor c;
-  if( KColorDrag::decode( event, c)) {
-    setColor(c);
-  }
+    QColor c;
+    if(KColorDrag::decode(event, c))
+    {
+        setColor(c);
+    }
 }
 
-void KColorButton::keyPressEvent( QKeyEvent *e )
+void KColorButton::keyPressEvent(QKeyEvent *e)
 {
-  KKey key( e );
+    KKey key(e);
 
-  if ( KStdAccel::copy().contains( key ) ) {
-    QMimeSource* mime = new KColorDrag( color() );
-    QApplication::clipboard()->setData( mime, QClipboard::Clipboard );
-  }
-  else if ( KStdAccel::paste().contains( key ) ) {
-    QColor color;
-    KColorDrag::decode( QApplication::clipboard()->data( QClipboard::Clipboard ), color );
-    setColor( color );
-  }
-  else
-    QPushButton::keyPressEvent( e );
+    if(KStdAccel::copy().contains(key))
+    {
+        QMimeSource *mime = new KColorDrag(color());
+        QApplication::clipboard()->setData(mime, QClipboard::Clipboard);
+    }
+    else if(KStdAccel::paste().contains(key))
+    {
+        QColor color;
+        KColorDrag::decode(QApplication::clipboard()->data(QClipboard::Clipboard), color);
+        setColor(color);
+    }
+    else
+        QPushButton::keyPressEvent(e);
 }
 
-void KColorButton::mousePressEvent( QMouseEvent *e)
+void KColorButton::mousePressEvent(QMouseEvent *e)
 {
-  mPos = e->pos();
-  QPushButton::mousePressEvent(e);
+    mPos = e->pos();
+    QPushButton::mousePressEvent(e);
 }
 
-void KColorButton::mouseMoveEvent( QMouseEvent *e)
+void KColorButton::mouseMoveEvent(QMouseEvent *e)
 {
-  if( (e->state() & LeftButton) &&
-    (e->pos()-mPos).manhattanLength() > KGlobalSettings::dndEventDelay() )
-  {
-    // Drag color object
-    KColorDrag *dg = new KColorDrag( color(), this);
-    dg->dragCopy();
-    setDown(false);
-  }
+    if((e->state() & LeftButton) && (e->pos() - mPos).manhattanLength() > KGlobalSettings::dndEventDelay())
+    {
+        // Drag color object
+        KColorDrag *dg = new KColorDrag(color(), this);
+        dg->dragCopy();
+        setDown(false);
+    }
 }
 
 void KColorButton::chooseColor()
 {
-  QColor c = color();
-  if ( d->m_bdefaultColor )
-  {
-      if( KColorDialog::getColor( c, d->m_defaultColor, this ) != QDialog::Rejected ) {
-          setColor( c );
-      }
-  }
-  else
-  {
-      if( KColorDialog::getColor( c, this ) != QDialog::Rejected ) {
-          setColor( c );
-      }
-  }
+    QColor c = color();
+    if(d->m_bdefaultColor)
+    {
+        if(KColorDialog::getColor(c, d->m_defaultColor, this) != QDialog::Rejected)
+        {
+            setColor(c);
+        }
+    }
+    else
+    {
+        if(KColorDialog::getColor(c, this) != QDialog::Rejected)
+        {
+            setColor(c);
+        }
+    }
 }
 
-void KColorButton::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KColorButton::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kcolorbutton.moc"

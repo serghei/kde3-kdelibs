@@ -35,47 +35,47 @@ class QString;
  * @author Matthias Kretz <kretz@kde.org>
  * @since 3.2
  */
-class KDE_ARTS_EXPORT KAudioManagerPlay
-{
-	public:
-		KAudioManagerPlay( KArtsServer * server, const QString & title = QString::null );
-		~KAudioManagerPlay();
+class KDE_ARTS_EXPORT KAudioManagerPlay {
+public:
+    KAudioManagerPlay(KArtsServer *server, const QString &title = QString::null);
+    ~KAudioManagerPlay();
 
-		/**
-		 * Returns the internal Arts::Synth_AMAN_PLAY
-		 */
-		Arts::Synth_AMAN_PLAY amanPlay();
+    /**
+     * Returns the internal Arts::Synth_AMAN_PLAY
+     */
+    Arts::Synth_AMAN_PLAY amanPlay();
 
-		/**
-		 * return true if this == 0 or amanPlay().isNull()
-		 *
-		 * in essence, ((KDE::PlayObject*)0)->isNull() will not
-		 * crash
-		 **/
-		bool isNull() const;
+    /**
+     * return true if this == 0 or amanPlay().isNull()
+     *
+     * in essence, ((KDE::PlayObject*)0)->isNull() will not
+     * crash
+     **/
+    bool isNull() const;
 
-		/**
-		 * Set the name of the output in the AudioManager
-		 */
-		void setTitle( const QString & title );
+    /**
+     * Set the name of the output in the AudioManager
+     */
+    void setTitle(const QString &title);
 
-		/**
-		 * returns the name of the output as it appears in the AudioManager
-		 */
-		QString title();
+    /**
+     * returns the name of the output as it appears in the AudioManager
+     */
+    QString title();
 
-		void setAutoRestoreID( const QString & autoRestoreID );
-		QString autoRestoreID();
+    void setAutoRestoreID(const QString &autoRestoreID);
+    QString autoRestoreID();
 
-		void start();
-		void stop();
+    void start();
+    void stop();
 
-	private:
-		struct PrivateData {
-			Arts::Synth_AMAN_PLAY amanPlay;
-			bool started;
-		};
-		PrivateData* d;
+private:
+    struct PrivateData
+    {
+        Arts::Synth_AMAN_PLAY amanPlay;
+        bool started;
+    };
+    PrivateData *d;
 };
 
 

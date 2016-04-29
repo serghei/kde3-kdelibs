@@ -32,30 +32,29 @@ class KAccelActions;
 /**
  * @internal
  */
-class KDECORE_EXPORT KShortcutMenu : public QPopupMenu
-{
-	Q_OBJECT
- public:
-	KShortcutMenu( QWidget* pParent, KAccelActions* pActions, KKeySequence seq );
+class KDECORE_EXPORT KShortcutMenu : public QPopupMenu {
+    Q_OBJECT
+public:
+    KShortcutMenu(QWidget *pParent, KAccelActions *pActions, KKeySequence seq);
 
-	bool insertAction( uint iAction, KKeySequence seq );
+    bool insertAction(uint iAction, KKeySequence seq);
 
-	void updateShortcuts();
- 
- protected:
-	void keyPressEvent( QKeyEvent* pEvent );
+    void updateShortcuts();
 
- private:
-	int searchForKey( KKey key );
-	void keepItemsMatching( KKey key );
- 
- private:
-	typedef QMap<uint, KKeySequence> IndexToKKeySequence;
-	
-	KAccelActions* m_pActions;
-	KKeySequence m_seq;
-	QLabel* pTitle;
-	IndexToKKeySequence m_seqs;
+protected:
+    void keyPressEvent(QKeyEvent *pEvent);
+
+private:
+    int searchForKey(KKey key);
+    void keepItemsMatching(KKey key);
+
+private:
+    typedef QMap< uint, KKeySequence > IndexToKKeySequence;
+
+    KAccelActions *m_pActions;
+    KKeySequence m_seq;
+    QLabel *pTitle;
+    IndexToKKeySequence m_seqs;
 };
 
 #endif // __KSHORTCUTMENU_H

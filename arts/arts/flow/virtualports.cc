@@ -1,24 +1,24 @@
-    /*
+/*
 
-    Copyright (C) 2000 Stefan Westerfeld
-                       stefan@space.twc.de
+Copyright (C) 2000 Stefan Westerfeld
+                   stefan@space.twc.de
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-  
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-   
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-    */
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
+
+*/
 
 #include "virtualports.h"
 #include <algorithm>
@@ -87,7 +87,7 @@ complex forwarding strategy, which will have a graph which contains
 - "user-made" connections (made with connect())
 - "virtualize-made" connections, which can be either forwarding
   (input to output port) or masquerading (input to input or output to output)
- 
+
 Out of all these, the algorithm builds "real" connections, which are
 then really performed inside the flow system. If you change the "user-made"
 or "virtualize-made" connections, the "real" connections are recalculated.
@@ -110,173 +110,176 @@ know where the "real" connections where real data will flow must be made.
 
 */
 
-VPortConnection::VPortConnection(VPort *source, VPort *dest, Style style)
-		:source(source),dest(dest),style(style)
+VPortConnection::VPortConnection(VPort *source, VPort *dest, Style style) : source(source), dest(dest), style(style)
 {
-	if(style != vcTransport)
-	{
-		list<VPortConnection *>::iterator i;
+    if(style != vcTransport)
+    {
+        list< VPortConnection * >::iterator i;
 
-		// remove transport connections ending at "source" (they will 
-		// probably be forwarded/masqueraded elsewhere by this VPortConnection)
-		i = source->incoming.begin();
-		while(i != source->incoming.end())
-		{
-			if((*i)->style == vcTransport)
-			{
-				delete *i;
-				i = source->incoming.begin();
-			}
-			else i++;
-		}
+        // remove transport connections ending at "source" (they will
+        // probably be forwarded/masqueraded elsewhere by this VPortConnection)
+        i = source->incoming.begin();
+        while(i != source->incoming.end())
+        {
+            if((*i)->style == vcTransport)
+            {
+                delete *i;
+                i = source->incoming.begin();
+            }
+            else
+                i++;
+        }
 
-		// remove transport connections starting at "dest" (they will 
-		// probably be forwarded/masqueraded elsewhere by this VPortConnection)
-		i = dest->outgoing.begin();
-		while(i != dest->outgoing.end())
-		{
-			if((*i)->style == vcTransport)
-			{
-				delete *i;
-				i = dest->outgoing.begin();
-			}
-			else i++;
-		}
-	}
+        // remove transport connections starting at "dest" (they will
+        // probably be forwarded/masqueraded elsewhere by this VPortConnection)
+        i = dest->outgoing.begin();
+        while(i != dest->outgoing.end())
+        {
+            if((*i)->style == vcTransport)
+            {
+                delete *i;
+                i = dest->outgoing.begin();
+            }
+            else
+                i++;
+        }
+    }
 
-	// add to the connection lists
-	source->outgoing.push_back(this);
-	dest->incoming.push_back(this);
+    // add to the connection lists
+    source->outgoing.push_back(this);
+    dest->incoming.push_back(this);
 
-	if(style == vcTransport)
-	{
+    if(style == vcTransport)
+    {
 #ifdef VPORT_DEBUG
-		arts_debug("emit a connection consumer = %s, producer = %s",
-			dest->name(), source->name());
+        arts_debug("emit a connection consumer = %s, producer = %s", dest->name(), source->name());
 #endif
-		dest->port->connect(source->port);
-	}
-	else
-	{
-		source->makeTransport(this);
-	}
+        dest->port->connect(source->port);
+    }
+    else
+    {
+        source->makeTransport(this);
+    }
 }
 
 VPortConnection::~VPortConnection()
 {
 #ifdef VPORT_DEBUG
-	cout << "~VPortConnection" << endl;
+    cout << "~VPortConnection" << endl;
 #endif
 
-	if(style != vcTransport)
-	{
-		// remove transport connection which go through this connection
-		source->removeTransport(this);
-	}
+    if(style != vcTransport)
+    {
+        // remove transport connection which go through this connection
+        source->removeTransport(this);
+    }
 
-	// remove this connection from the lists
-	list<VPortConnection *>::iterator ci;
+    // remove this connection from the lists
+    list< VPortConnection * >::iterator ci;
 
-	ci = find(source->outgoing.begin(),source->outgoing.end(),this);
-	assert(ci != source->outgoing.end());
-	source->outgoing.erase(ci);
+    ci = find(source->outgoing.begin(), source->outgoing.end(), this);
+    assert(ci != source->outgoing.end());
+    source->outgoing.erase(ci);
 
-	ci = find(dest->incoming.begin(),dest->incoming.end(),this);
-	assert(ci != dest->incoming.end());
-	dest->incoming.erase(ci);
+    ci = find(dest->incoming.begin(), dest->incoming.end(), this);
+    assert(ci != dest->incoming.end());
+    dest->incoming.erase(ci);
 
-	if(style == vcTransport)
-	{
+    if(style == vcTransport)
+    {
 #ifdef VPORT_DEBUG
-		arts_debug("delete connection %s -> %s",dest->name(), source->name());
+        arts_debug("delete connection %s -> %s", dest->name(), source->name());
 #endif
-		dest->port->disconnect(source->port);
-	}
+        dest->port->disconnect(source->port);
+    }
 
-	// reestablish all connections which started/ended here before
-	if(style != vcTransport)
-	{
-		list<VPortConnection *>::iterator i;
-		stack<VPortConnection *> todo;
+    // reestablish all connections which started/ended here before
+    if(style != vcTransport)
+    {
+        list< VPortConnection * >::iterator i;
+        stack< VPortConnection * > todo;
 
-		// reestablish transport connections which were ending at source...
-		for(i = source->incoming.begin(); i != source->incoming.end(); i++)
-			if((*i)->style != vcTransport) todo.push(*i);
+        // reestablish transport connections which were ending at source...
+        for(i = source->incoming.begin(); i != source->incoming.end(); i++)
+            if((*i)->style != vcTransport)
+                todo.push(*i);
 
-		// ... and starting at dest
-		for(i = dest->outgoing.begin(); i != dest->outgoing.end(); i++)
-			if((*i)->style != vcTransport) todo.push(*i);
+        // ... and starting at dest
+        for(i = dest->outgoing.begin(); i != dest->outgoing.end(); i++)
+            if((*i)->style != vcTransport)
+                todo.push(*i);
 
-		// we need to do this with the stack as makeTransport can affect the
-		// incoming/outgoing lists by adding new vcTransport connections
-		while(!todo.empty())
-		{
-			todo.top()->source->makeTransport(todo.top());
-			todo.pop();
-		}
-	}
+        // we need to do this with the stack as makeTransport can affect the
+        // incoming/outgoing lists by adding new vcTransport connections
+        while(!todo.empty())
+        {
+            todo.top()->source->makeTransport(todo.top());
+            todo.pop();
+        }
+    }
 
 #ifdef VPORT_DEBUG
-	cout << "~VPortConnection done" << endl;
+    cout << "~VPortConnection done" << endl;
 #endif
 }
 
 /*---------------------- virtual port implementation ----------------------*/
 
-VPort::VPort(Port *port) :port(port)
+VPort::VPort(Port *port) : port(port)
 {
 #ifdef VPORT_DEBUG
-	cout << "VPort: " << name() << endl;
+    cout << "VPort: " << name() << endl;
 #endif
 }
 
 VPort::~VPort()
 {
 #ifdef VPORT_DEBUG
-	cout << "~VPort: " << name() << endl;
+    cout << "~VPort: " << name() << endl;
 #endif
-	while(!incoming.empty()) delete *incoming.begin();
-	while(!outgoing.empty()) delete *outgoing.begin();
+    while(!incoming.empty())
+        delete *incoming.begin();
+    while(!outgoing.empty())
+        delete *outgoing.begin();
 #ifdef VPORT_DEBUG
-	cout << "~VPort done" << endl;
+    cout << "~VPort done" << endl;
 #endif
 }
 
-bool VPort::makeVirtualizeParams(VPort *forward, VPort*& source, VPort*& dest,
-	VPortConnection::Style& style)
+bool VPort::makeVirtualizeParams(VPort *forward, VPort *&source, VPort *&dest, VPortConnection::Style &style)
 {
-	source = dest = 0;
-	// masquerading
-	if((port->flags() & streamIn) && (forward->port->flags() & streamIn))
-	{
-		// input: data flow direction is from us to the "forward" port
-		// XXX?
-		source = this;
-		dest = forward;
-		style = VPortConnection::vcMasquerade;
-	}
-	else if((port->flags() & streamOut) && (forward->port->flags() & streamOut))
-	{
-		// output: data flow direction is from the "forward" port to us
-		// XXX?
-		source = forward;
-		dest = this;
-		style = VPortConnection::vcMasquerade;
-	}
-	// forwarding
-	else if((port->flags() & streamIn) && (forward->port->flags() & streamOut))
-	{
-		source = this;
-		dest = forward;
-		style = VPortConnection::vcForward;
-	}
-	else if((port->flags() & streamOut) && (forward->port->flags() & streamIn))
-	{
-		source = forward;
-		dest = this;
-		style = VPortConnection::vcForward;
-	}
-	return source != 0;
+    source = dest = 0;
+    // masquerading
+    if((port->flags() & streamIn) && (forward->port->flags() & streamIn))
+    {
+        // input: data flow direction is from us to the "forward" port
+        // XXX?
+        source = this;
+        dest = forward;
+        style = VPortConnection::vcMasquerade;
+    }
+    else if((port->flags() & streamOut) && (forward->port->flags() & streamOut))
+    {
+        // output: data flow direction is from the "forward" port to us
+        // XXX?
+        source = forward;
+        dest = this;
+        style = VPortConnection::vcMasquerade;
+    }
+    // forwarding
+    else if((port->flags() & streamIn) && (forward->port->flags() & streamOut))
+    {
+        source = this;
+        dest = forward;
+        style = VPortConnection::vcForward;
+    }
+    else if((port->flags() & streamOut) && (forward->port->flags() & streamIn))
+    {
+        source = forward;
+        dest = this;
+        style = VPortConnection::vcForward;
+    }
+    return source != 0;
 }
 
 /**
@@ -285,207 +288,205 @@ bool VPort::makeVirtualizeParams(VPort *forward, VPort*& source, VPort*& dest,
  */
 void VPort::virtualize(VPort *forward)
 {
-	VPort *source, *dest;
-	VPortConnection::Style style;
+    VPort *source, *dest;
+    VPortConnection::Style style;
 
-	if(makeVirtualizeParams(forward,source,dest,style))
-	{
+    if(makeVirtualizeParams(forward, source, dest, style))
+    {
 #ifdef VPORT_DEBUG
-		cout << "virtualize ... source (producer) is " << source->name() <<
-				" dest (consumer) is " << dest->name() << endl;
+        cout << "virtualize ... source (producer) is " << source->name() << " dest (consumer) is " << dest->name() << endl;
 #endif
-		new VPortConnection(source,dest,style);
-	}
+        new VPortConnection(source, dest, style);
+    }
 }
 
 void VPort::devirtualize(VPort *forward)
 {
-	VPort *source, *dest;
-	VPortConnection::Style style;
+    VPort *source, *dest;
+    VPortConnection::Style style;
 
-	// XXX?
-	if(makeVirtualizeParams(forward,source,dest,style))
-	{
-		list<VPortConnection *>::iterator i;
-		for(i = source->outgoing.begin(); i != source->outgoing.end(); i++)
-		{
-			if((*i)->source == source && (*i)->dest == dest
-			&& (*i)->style == style)
-			{
-				delete (*i);
-				return;
-			}
-		}
-	}
+    // XXX?
+    if(makeVirtualizeParams(forward, source, dest, style))
+    {
+        list< VPortConnection * >::iterator i;
+        for(i = source->outgoing.begin(); i != source->outgoing.end(); i++)
+        {
+            if((*i)->source == source && (*i)->dest == dest && (*i)->style == style)
+            {
+                delete(*i);
+                return;
+            }
+        }
+    }
 }
 
 void VPort::setFloatValue(float value)
 {
-	if(outgoing.empty())
-	{
-		AudioPort *aport = port->audioPort();
-		assert(aport);
-		aport->setFloatValue(value);
-	}
-	else
-	{
-		list<VPortConnection *>::iterator i;
-		for(i=outgoing.begin();i != outgoing.end(); i++)
-		{
-			VPortConnection *conn = *i;
-			assert(conn->style == VPortConnection::vcMasquerade);
+    if(outgoing.empty())
+    {
+        AudioPort *aport = port->audioPort();
+        assert(aport);
+        aport->setFloatValue(value);
+    }
+    else
+    {
+        list< VPortConnection * >::iterator i;
+        for(i = outgoing.begin(); i != outgoing.end(); i++)
+        {
+            VPortConnection *conn = *i;
+            assert(conn->style == VPortConnection::vcMasquerade);
 
-			conn->dest->setFloatValue(value);
-		}
-	}
+            conn->dest->setFloatValue(value);
+        }
+    }
 }
 
 void VPort::connect(VPort *dest)
 {
-	VPortConnection *conn;
-	if(port->flags() & streamOut)
-	{
-		conn = new VPortConnection(this,dest,VPortConnection::vcConnect);
-	}
-	else
-	{
-		conn = new VPortConnection(dest,this,VPortConnection::vcConnect);
-	}
+    VPortConnection *conn;
+    if(port->flags() & streamOut)
+    {
+        conn = new VPortConnection(this, dest, VPortConnection::vcConnect);
+    }
+    else
+    {
+        conn = new VPortConnection(dest, this, VPortConnection::vcConnect);
+    }
 }
 
 void VPort::disconnect(VPort *dest)
 {
-	if(port->flags() & streamOut)
-	{
-		list<VPortConnection *>::iterator ci = outgoing.begin();
-		while(ci != outgoing.end())
-		{
-			assert((*ci)->source == this);
-			if((*ci)->dest == dest && (*ci)->style==VPortConnection::vcConnect)
-			{
-				delete (*ci);	// will remove itself from the outgoing list
-				return;
-			}
-			ci++;
-		}
-	}
-	else
-	{
-		if(dest->port->flags() & streamOut)
-		{
-			dest->disconnect(this);
-			return;
-		}
-	}
+    if(port->flags() & streamOut)
+    {
+        list< VPortConnection * >::iterator ci = outgoing.begin();
+        while(ci != outgoing.end())
+        {
+            assert((*ci)->source == this);
+            if((*ci)->dest == dest && (*ci)->style == VPortConnection::vcConnect)
+            {
+                delete(*ci); // will remove itself from the outgoing list
+                return;
+            }
+            ci++;
+        }
+    }
+    else
+    {
+        if(dest->port->flags() & streamOut)
+        {
+            dest->disconnect(this);
+            return;
+        }
+    }
 }
 
-void VPort::expandHelper(VPortConnection *conn, int state, VPort *current,
-									VPort *source, VPort *dest, bool remove)
+void VPort::expandHelper(VPortConnection *conn, int state, VPort *current, VPort *source, VPort *dest, bool remove)
 {
-	list<VPortConnection *>::iterator ci;
+    list< VPortConnection * >::iterator ci;
 
 #ifdef VPORT_DEBUG
-	cout << "expandhelper state " << state << " name " << current->name() << endl;
+    cout << "expandhelper state " << state << " name " << current->name() << endl;
 #endif
 
-	if(state == 1)				/* state 1: scan backward for output ports */
-	{
-		if(current->incoming.empty())
-		{
-			if(current->port->flags() & streamOut)
-				expandHelper(conn,2,current,current,dest,remove);
-		}
-		for(ci = current->incoming.begin(); ci != current->incoming.end();ci++)
-		{
-			assert((*ci)->style != VPortConnection::vcTransport);
-			expandHelper(conn,1,(*ci)->source,source,dest,remove);
-		}
-	}
-	else if(state == 2)			/* state 2: output port expansion */
-	{
-		assert(current->port->flags() & streamOut);
+    if(state == 1) /* state 1: scan backward for output ports */
+    {
+        if(current->incoming.empty())
+        {
+            if(current->port->flags() & streamOut)
+                expandHelper(conn, 2, current, current, dest, remove);
+        }
+        for(ci = current->incoming.begin(); ci != current->incoming.end(); ci++)
+        {
+            assert((*ci)->style != VPortConnection::vcTransport);
+            expandHelper(conn, 1, (*ci)->source, source, dest, remove);
+        }
+    }
+    else if(state == 2) /* state 2: output port expansion */
+    {
+        assert(current->port->flags() & streamOut);
 
-		for(ci = current->outgoing.begin(); ci != current->outgoing.end();ci++)
-		{
-			/* xconn=0 ensures that only paths are counted which contain conn */
-			VPortConnection *xconn = conn;
-			if(*ci == conn) xconn = 0;
+        for(ci = current->outgoing.begin(); ci != current->outgoing.end(); ci++)
+        {
+            /* xconn=0 ensures that only paths are counted which contain conn */
+            VPortConnection *xconn = conn;
+            if(*ci == conn)
+                xconn = 0;
 
-			if((*ci)->style == VPortConnection::vcMasquerade)
-			{
-				expandHelper(xconn,2,(*ci)->dest,source,dest,remove);
-			}
-			else if((*ci)->style == VPortConnection::vcConnect)
-			{
-				expandHelper(xconn,3,(*ci)->dest,source,(*ci)->dest,remove);
-			}
-		}
-	}
-	else if(state == 3)			/* state 3: input port expansion */
-	{
-		assert(current->port->flags() & streamIn);
+            if((*ci)->style == VPortConnection::vcMasquerade)
+            {
+                expandHelper(xconn, 2, (*ci)->dest, source, dest, remove);
+            }
+            else if((*ci)->style == VPortConnection::vcConnect)
+            {
+                expandHelper(xconn, 3, (*ci)->dest, source, (*ci)->dest, remove);
+            }
+        }
+    }
+    else if(state == 3) /* state 3: input port expansion */
+    {
+        assert(current->port->flags() & streamIn);
 
-		for(ci = current->outgoing.begin(); ci != current->outgoing.end();ci++)
-		{
-			/* xconn=0 ensures that only paths are counted which contain conn */
-			VPortConnection *xconn = conn;
-			if(*ci == conn) xconn = 0;	
+        for(ci = current->outgoing.begin(); ci != current->outgoing.end(); ci++)
+        {
+            /* xconn=0 ensures that only paths are counted which contain conn */
+            VPortConnection *xconn = conn;
+            if(*ci == conn)
+                xconn = 0;
 
-			if((*ci)->style == VPortConnection::vcMasquerade)
-			{
-				// XXX ?
-				expandHelper(xconn,3,(*ci)->dest,source,(*ci)->dest,remove);
-			}
-			else if((*ci)->style == VPortConnection::vcForward)
-			{
-				expandHelper(xconn,2,(*ci)->dest,source,dest,remove);
-			}
-		}
+            if((*ci)->style == VPortConnection::vcMasquerade)
+            {
+                // XXX ?
+                expandHelper(xconn, 3, (*ci)->dest, source, (*ci)->dest, remove);
+            }
+            else if((*ci)->style == VPortConnection::vcForward)
+            {
+                expandHelper(xconn, 2, (*ci)->dest, source, dest, remove);
+            }
+        }
 
-		if(current->outgoing.empty() && conn == 0)
-		{
-			if(remove)
-			{
-				// delete exactly one transport connection
+        if(current->outgoing.empty() && conn == 0)
+        {
+            if(remove)
+            {
+                // delete exactly one transport connection
 
-				bool removeOk = false;
-				ci = current->incoming.begin();
-				while(ci != current->incoming.end() && !removeOk)
-				{
-					if((*ci)->source == source && (*ci)->dest == dest
-						&& (*ci)->style == VPortConnection::vcTransport)
-					{
-						delete (*ci);
-						removeOk = true;
-					}
-					else ci++;
-				}
-				assert(removeOk);
-			}
-			else
-			{
-				new VPortConnection(source,dest,VPortConnection::vcTransport);
-			}
-		}
-	}
+                bool removeOk = false;
+                ci = current->incoming.begin();
+                while(ci != current->incoming.end() && !removeOk)
+                {
+                    if((*ci)->source == source && (*ci)->dest == dest && (*ci)->style == VPortConnection::vcTransport)
+                    {
+                        delete(*ci);
+                        removeOk = true;
+                    }
+                    else
+                        ci++;
+                }
+                assert(removeOk);
+            }
+            else
+            {
+                new VPortConnection(source, dest, VPortConnection::vcTransport);
+            }
+        }
+    }
 }
 
 void VPort::makeTransport(VPortConnection *conn)
 {
-	expandHelper(conn,1,this,0,0,false);
+    expandHelper(conn, 1, this, 0, 0, false);
 }
 
 void VPort::removeTransport(VPortConnection *conn)
 {
-	expandHelper(conn,1,this,0,0,true);
+    expandHelper(conn, 1, this, 0, 0, true);
 }
 
 const char *VPort::name()
 {
-	if(_name.empty())
-	{
-		_name = port->parent->object()->_interfaceName() + "." +
-				port->name();
-	}
-	return _name.c_str();
+    if(_name.empty())
+    {
+        _name = port->parent->object()->_interfaceName() + "." + port->name();
+    }
+    return _name.c_str();
 }

@@ -84,28 +84,27 @@ class KServerSocketPrivate;
  * @author Torben Weis <weis@uni-frankfurt.de>
  * @short A TCP/IP client socket.
  */
-class KDECORE_EXPORT KSocket : public QObject
-{
+class KDECORE_EXPORT KSocket : public QObject {
     Q_OBJECT
 public:
     /**
      * Constructs a KSocket with the provided file descriptor.
      * @param _sock	The file descriptor to use.
      */
-    KSocket( int _sock ) KDE_DEPRECATED;
+    KSocket(int _sock) KDE_DEPRECATED;
     /**
      * Creates a socket and connects to a host.
      * @param _host	The remote host to which to connect.
      * @param _port	The port on the remote host.
      * @param timeOut	The number of seconds waiting for connect (default 30).
      */
-    KSocket( const char *_host, unsigned short int _port, int timeOut = 30) KDE_DEPRECATED;
+    KSocket(const char *_host, unsigned short int _port, int timeOut = 30) KDE_DEPRECATED;
 
     /**
      * Connects to a UNIX domain socket.
      * @param _path    The filename of the socket.
      */
-    KSocket( const char * _path ) KDE_DEPRECATED;
+    KSocket(const char *_path) KDE_DEPRECATED;
 
     /**
      * Destructor. Closes the socket if it is still open.
@@ -116,7 +115,10 @@ public:
      * Returns a file descriptor for this socket.
      * @return the file descriptor, or -1 when an error occurred.
      */
-    int socket() const { return sock; }
+    int socket() const
+    {
+        return sock;
+    }
 
     /**
      * Enables the socket for reading.
@@ -126,7 +128,7 @@ public:
      * socket.
      * @param enable true to enable reading signals
      */
-    void enableRead( bool enable );
+    void enableRead(bool enable);
 
     /**
      * Enables the socket for writing.
@@ -139,7 +141,7 @@ public:
      * in the order of thousands a second !
      * @param enable true to enable writing signals
      */
-    void enableWrite( bool enable );
+    void enableWrite(bool enable);
 
 #ifdef KSOCK_NO_BROKEN
     // BCI: remove in libkdecore.so.4
@@ -169,7 +171,7 @@ signals:
      * first.
      * @param s the KSocket that triggered the event
      */
-    void readEvent( KSocket *s );
+    void readEvent(KSocket *s);
 
     /**
      * Socket is ready for writing.
@@ -182,13 +184,13 @@ signals:
      * in the order of thousands a second !
      * @param s the KSocket that triggered the event
      */
-    void writeEvent( KSocket *s );
+    void writeEvent(KSocket *s);
 
     /**
      * Raised when the connection is broken.
      * @param s the KSocket that triggered the event
      */
-    void closeEvent( KSocket *s );
+    void closeEvent(KSocket *s);
 
 public slots:
     /**
@@ -198,7 +200,7 @@ public slots:
      *  the socket is ready for writing.
      * @param x ignored
      */
-    void slotWrite( int x);
+    void slotWrite(int x);
 
     /**
      * Connected to the readNotifier.
@@ -207,11 +209,11 @@ public slots:
      *  the socket is ready for reading.
      * @param x ignored
      */
-    void slotRead( int x );
+    void slotRead(int x);
 
 protected:
-    bool connect( const QString& _host, unsigned short int _port, int timeout = 0 );
-    bool connect( const char *_path );
+    bool connect(const QString &_host, unsigned short int _port, int timeout = 0);
+    bool connect(const char *_path);
 
     /******************************************************
      * The file descriptor for this socket. sock may be -1.
@@ -220,11 +222,10 @@ protected:
     int sock;
 
 private:
-    KSocket(const KSocket&);
-    KSocket& operator=(const KSocket&);
+    KSocket(const KSocket &);
+    KSocket &operator=(const KSocket &);
 
     KSocketPrivate *d;
-
 };
 
 
@@ -233,9 +234,9 @@ private:
  *
  * @deprecated
  * This class is deprecated and will be removed in the future.
- * Please use the classes in KNetwork for new programs. 
+ * Please use the classes in KNetwork for new programs.
  * In special, this class is replaced by KNetwork::KStreamSocket
- * and KNetwork::KServerSocket. 
+ * and KNetwork::KServerSocket.
  *
  * You can use a KServerSocket to listen on a port for incoming
  * connections. When a connection arrived in the port, a KSocket
@@ -247,8 +248,7 @@ private:
  *
  * @author Torben Weis <weis@stud.uni-frankfurt.de>
 */
-class KDECORE_EXPORT KServerSocket : public QObject
-{
+class KDECORE_EXPORT KServerSocket : public QObject {
     Q_OBJECT
 public:
     /**
@@ -258,7 +258,7 @@ public:
      *                  This gives you the opportunity to set options on the
      *                  socket.
      */
-    KServerSocket( unsigned short int _port, bool _bind = true );
+    KServerSocket(unsigned short int _port, bool _bind = true);
 
     /**
      * Creates a UNIX domain server socket.
@@ -267,7 +267,7 @@ public:
      *                  This gives you the opportunity to set options on the
      *                  socket.
      */
-    KServerSocket( const char *_path, bool _bind = true);
+    KServerSocket(const char *_path, bool _bind = true);
 
     /**
      * Destructor. Closes the socket if it was not already closed.
@@ -287,7 +287,10 @@ public:
      * @return the file descriptor, -1 when an error occurred during
      *         construction or bindAndListen
      */
-    int socket() const { return sock; }
+    int socket() const
+    {
+        return sock;
+    }
 
     /**
      * Returns the port number which is being monitored.
@@ -310,7 +313,7 @@ public slots:
     /**
      * Called when someone connected to our port.
      */
-    virtual void slotAccept( int ); // why is this virtual?
+    virtual void slotAccept(int); // why is this virtual?
 
 signals:
     /**
@@ -322,11 +325,11 @@ signals:
      * created go to oblivion.
      * @param s the socket that accepted
      */
-    void accepted( KSocket*s );
+    void accepted(KSocket *s);
 
 protected:
-    bool init( unsigned short int );
-    bool init( const char *_path );
+    bool init(unsigned short int);
+    bool init(const char *_path);
 
     /**
      * The file descriptor for this socket. sock may be -1.
@@ -335,12 +338,12 @@ protected:
     int sock;
 
 private:
-    KServerSocket(const KServerSocket&);
-    KServerSocket& operator=(const KServerSocket&);
+    KServerSocket(const KServerSocket &);
+    KServerSocket &operator=(const KServerSocket &);
 
     KServerSocketPrivate *d;
 };
 
-#endif //Q_OS_UNIX
+#endif // Q_OS_UNIX
 
 #endif

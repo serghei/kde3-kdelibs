@@ -10,13 +10,16 @@
 #include <qwidget.h>
 #include <kpixmap.h>
 
-class KGradientWidget : public QWidget
-{
+class KGradientWidget : public QWidget {
 public:
-    KGradientWidget(QWidget *parent=0, const char *name=0)
-        : QWidget(parent, name){;}
+    KGradientWidget(QWidget *parent = 0, const char *name = 0) : QWidget(parent, name)
+    {
+        ;
+    }
+
 protected:
     void paintEvent(QPaintEvent *ev);
+
 private:
     KPixmap pix;
 };

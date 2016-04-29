@@ -25,19 +25,18 @@
 
 #include "kmconfigpage.h"
 
-class KDEPRINT_EXPORT KMConfigDialog : public KDialogBase
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT KMConfigDialog : public KDialogBase {
+    Q_OBJECT
 public:
-	KMConfigDialog(QWidget *parent = 0, const char *name = 0);
+    KMConfigDialog(QWidget *parent = 0, const char *name = 0);
 
-	void addConfigPage(KMConfigPage*);
+    void addConfigPage(KMConfigPage *);
 
 protected slots:
-	void slotOk();
+    void slotOk();
 
 private:
-	QPtrList<KMConfigPage>	m_pages;
+    QPtrList< KMConfigPage > m_pages;
 };
 
 #endif

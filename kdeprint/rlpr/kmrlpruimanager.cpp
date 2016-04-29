@@ -28,8 +28,7 @@
 
 #include <klocale.h>
 
-KMRlprUiManager::KMRlprUiManager(QObject *parent, const char *name, const QStringList & /*args*/)
-: KMUiManager(parent,name)
+KMRlprUiManager::KMRlprUiManager(QObject *parent, const char *name, const QStringList & /*args*/) : KMUiManager(parent, name)
 {
 }
 
@@ -39,17 +38,17 @@ KMRlprUiManager::~KMRlprUiManager()
 
 void KMRlprUiManager::setupPropertyPages(KMPropertyPage *pages)
 {
-	pages->addPropPage(new KMPropRlpr(pages,"RlprPage"));
+    pages->addPropPage(new KMPropRlpr(pages, "RlprPage"));
 }
 
 void KMRlprUiManager::setupWizard(KMWizard *wizard)
 {
-	wizard->setNextPage(KMWizard::Start,KMWizard::Custom+1);
-	// add page
-	wizard->addPage(new KMWRlpr(wizard,"Rlpr"));
+    wizard->setNextPage(KMWizard::Start, KMWizard::Custom + 1);
+    // add page
+    wizard->addPage(new KMWRlpr(wizard, "Rlpr"));
 }
 
 void KMRlprUiManager::setupConfigDialog(KMConfigDialog *dlg)
 {
-	dlg->addConfigPage(new KMConfigProxy(dlg));
+    dlg->addConfigPage(new KMConfigProxy(dlg));
 }

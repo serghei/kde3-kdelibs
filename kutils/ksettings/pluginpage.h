@@ -25,8 +25,7 @@
 
 class KPluginSelector;
 
-namespace KSettings
-{
+namespace KSettings {
 
 /**
  * @ingroup settings
@@ -70,49 +69,47 @@ namespace KSettings
  * @author Matthias Kretz <kretz@kde.org>
  * @since 3.2
  */
-class KUTILS_EXPORT PluginPage : public KCModule
-{
+class KUTILS_EXPORT PluginPage : public KCModule {
     Q_OBJECT
-    public:
-        /**
-         * Standart KCModule constructor. Automatically creates the the
-         * KPluginSelector widget.
-         */
-        PluginPage( QWidget * parent = 0, const char * name = 0, const QStringList & args = QStringList() );
+public:
+    /**
+     * Standart KCModule constructor. Automatically creates the the
+     * KPluginSelector widget.
+     */
+    PluginPage(QWidget *parent = 0, const char *name = 0, const QStringList &args = QStringList());
 
-        /**
-         * Standart KCModule constructor. Automatically creates the the
-         * KPluginSelector widget.
-         */
-        PluginPage( KInstance * instance, QWidget * parent = 0, const QStringList & args = QStringList() );
+    /**
+     * Standart KCModule constructor. Automatically creates the the
+     * KPluginSelector widget.
+     */
+    PluginPage(KInstance *instance, QWidget *parent = 0, const QStringList &args = QStringList());
 
-        ~PluginPage();
+    ~PluginPage();
 
-        /**
-         * @return a reference to the KPluginSelector.
-         */
-        KPluginSelector * pluginSelector();
+    /**
+     * @return a reference to the KPluginSelector.
+     */
+    KPluginSelector *pluginSelector();
 
-        /**
-         * Load the state of the plugins (selected or not) from the KPluginInfo
-         * objects. For KParts plugins everything should work automatically. For
-         * your own type of plugins you might need to reimplement the
-         * KPluginInfo::pluginLoaded() method. If that doesn't fit your needs
-         * you can also reimplement this method.
-         */
-        virtual void load();
+    /**
+     * Load the state of the plugins (selected or not) from the KPluginInfo
+     * objects. For KParts plugins everything should work automatically. For
+     * your own type of plugins you might need to reimplement the
+     * KPluginInfo::pluginLoaded() method. If that doesn't fit your needs
+     * you can also reimplement this method.
+     */
+    virtual void load();
 
-        /**
-         * Save the state of the plugins to KConfig objects
-         */
-        virtual void save();
-        virtual void defaults();
+    /**
+     * Save the state of the plugins to KConfig objects
+     */
+    virtual void save();
+    virtual void defaults();
 
-    private:
-        class PluginPagePrivate;
-        PluginPagePrivate * d;
+private:
+    class PluginPagePrivate;
+    PluginPagePrivate *d;
 };
-
 }
 
 // vim: sw=4 sts=4 et

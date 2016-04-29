@@ -19,7 +19,7 @@
 #ifndef __GSL_ENGINE_MASTER_H__
 #define __GSL_ENGINE_MASTER_H__
 
-#include	<gsl/gslengine.h>
+#include <gsl/gslengine.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,12 +27,11 @@ extern "C" {
 
 
 /* --- internal (EngineThread) --- */
-gboolean	_engine_master_prepare		(GslEngineLoop		*loop);
-gboolean	_engine_master_check		(const GslEngineLoop	*loop);
-void		_engine_master_dispatch_jobs	(void);
-void		_engine_master_dispatch		(void);
-void		_engine_master_thread		(gpointer		 data);
-
+gboolean _engine_master_prepare(GslEngineLoop *loop);
+gboolean _engine_master_check(const GslEngineLoop *loop);
+void _engine_master_dispatch_jobs(void);
+void _engine_master_dispatch(void);
+void _engine_master_thread(gpointer data);
 
 
 #ifdef __cplusplus

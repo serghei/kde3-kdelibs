@@ -29,8 +29,9 @@ namespace KJS {
 
 inline void ScopeChain::ref() const
 {
-    for (ScopeChainNode *n = _node; n; n = n->next) {
-        if (n->refCount++ != 0)
+    for(ScopeChainNode *n = _node; n; n = n->next)
+    {
+        if(n->refCount++ != 0)
             break;
     }
 }
@@ -55,11 +56,14 @@ void ScopeChain::pop()
     assert(oldNode);
     ScopeChainNode *newNode = oldNode->next;
     _node = newNode;
-    
-    if (--oldNode->refCount != 0) {
-        if (newNode)
+
+    if(--oldNode->refCount != 0)
+    {
+        if(newNode)
             ++newNode->refCount;
-    } else {
+    }
+    else
+    {
         delete oldNode;
     }
 }
@@ -70,18 +74,20 @@ void ScopeChain::release()
     // Deref ensures these conditions are true.
     assert(_node && _node->refCount == 0);
     ScopeChainNode *n = _node;
-    do {
+    do
+    {
         ScopeChainNode *next = n->next;
         delete n;
         n = next;
-    } while (n && --n->refCount == 0);
+    } while(n && --n->refCount == 0);
 }
 
 void ScopeChain::mark()
 {
-    for (ScopeChainNode *n = _node; n; n = n->next) {
+    for(ScopeChainNode *n = _node; n; n = n->next)
+    {
         ObjectImp *o = n->object;
-        if (!o->marked())
+        if(!o->marked())
             o->mark();
     }
 }

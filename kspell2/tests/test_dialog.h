@@ -26,15 +26,15 @@
 
 #include <qobject.h>
 
-class TestDialog : public QObject
-{
+class TestDialog : public QObject {
     Q_OBJECT
 public:
     TestDialog();
 
 public slots:
-    void check( const QString& buffer );
-    void doneChecking( const QString& );
+    void check(const QString &buffer);
+    void doneChecking(const QString &);
+
 private:
     KSpell2::Broker *m_broker;
 };

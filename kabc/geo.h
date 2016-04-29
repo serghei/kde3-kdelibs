@@ -29,15 +29,14 @@ namespace KABC {
 
 /**
   @short Geographic position
-  
+
   This class represents a geographic position.
 */
-class KABC_EXPORT Geo
-{
-    friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const Geo & );
-    friend KABC_EXPORT QDataStream &operator>>( QDataStream &, Geo & );
+class KABC_EXPORT Geo {
+    friend KABC_EXPORT QDataStream &operator<<(QDataStream &, const Geo &);
+    friend KABC_EXPORT QDataStream &operator>>(QDataStream &, Geo &);
 
-  public:
+public:
     /**
       Construct invalid geographics position object.
     */
@@ -45,57 +44,56 @@ class KABC_EXPORT Geo
 
     /**
       Construct geographics position object.
-      
+
       @param latitude  Geographical latitude
       @param longitude Geographical longitude
     */
-    Geo( float latitude, float longitude );
-    
+    Geo(float latitude, float longitude);
+
     /**
       Sets the latitude.
     */
-    void setLatitude( float );
+    void setLatitude(float);
 
     /**
       Returns the latitude.
     */
     float latitude() const;
-    
+
     /**
       Sets the longitude.
     */
-    void setLongitude( float );
+    void setLongitude(float);
 
     /**
       Returns the longitude.
     */
     float longitude() const;
-  
+
     /**
       Returns, if this object contains a valid geographical position.
     */
     bool isValid() const;
-    
-    bool operator==( const Geo & ) const;
-    bool operator!=( const Geo & ) const;
+
+    bool operator==(const Geo &) const;
+    bool operator!=(const Geo &) const;
 
     /**
       Returns string representation of geographical position.
     */
     QString asString() const;
-      
-  private:
+
+private:
     float mLatitude;
     float mLongitude;
-    
+
     bool mValid;
     bool mValidLat;
     bool mValidLong;
 };
 
-KABC_EXPORT QDataStream &operator<<( QDataStream &, const Geo & );
-KABC_EXPORT QDataStream &operator>>( QDataStream &, Geo & );
-
+KABC_EXPORT QDataStream &operator<<(QDataStream &, const Geo &);
+KABC_EXPORT QDataStream &operator>>(QDataStream &, Geo &);
 }
 
 #endif

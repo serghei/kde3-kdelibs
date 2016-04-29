@@ -34,7 +34,8 @@
  * @internal
  * Contains all settings which are both available globally and per-domain
  */
-struct KPerDomainSettings {
+struct KPerDomainSettings
+{
     bool m_bEnableJava : 1;
     bool m_bEnableJavaScript : 1;
     bool m_bEnablePlugins : 1;
@@ -46,24 +47,24 @@ struct KPerDomainSettings {
     KHTMLSettings::KJSWindowResizePolicy m_windowResizePolicy : 1;
 
 #ifdef DEBUG_SETTINGS
-    void dump(const QString &infix = QString::null) const {
-      kdDebug() << "KPerDomainSettings " << infix << " @" << this << ":" << endl;
-      kdDebug() << "  m_bEnableJava: " << m_bEnableJava << endl;
-      kdDebug() << "  m_bEnableJavaScript: " << m_bEnableJavaScript << endl;
-      kdDebug() << "  m_bEnablePlugins: " << m_bEnablePlugins << endl;
-      kdDebug() << "  m_windowOpenPolicy: " << m_windowOpenPolicy << endl;
-      kdDebug() << "  m_windowStatusPolicy: " << m_windowStatusPolicy << endl;
-      kdDebug() << "  m_windowFocusPolicy: " << m_windowFocusPolicy << endl;
-      kdDebug() << "  m_windowMovePolicy: " << m_windowMovePolicy << endl;
-      kdDebug() << "  m_windowResizePolicy: " << m_windowResizePolicy << endl;
+    void dump(const QString &infix = QString::null) const
+    {
+        kdDebug() << "KPerDomainSettings " << infix << " @" << this << ":" << endl;
+        kdDebug() << "  m_bEnableJava: " << m_bEnableJava << endl;
+        kdDebug() << "  m_bEnableJavaScript: " << m_bEnableJavaScript << endl;
+        kdDebug() << "  m_bEnablePlugins: " << m_bEnablePlugins << endl;
+        kdDebug() << "  m_windowOpenPolicy: " << m_windowOpenPolicy << endl;
+        kdDebug() << "  m_windowStatusPolicy: " << m_windowStatusPolicy << endl;
+        kdDebug() << "  m_windowFocusPolicy: " << m_windowFocusPolicy << endl;
+        kdDebug() << "  m_windowMovePolicy: " << m_windowMovePolicy << endl;
+        kdDebug() << "  m_windowResizePolicy: " << m_windowResizePolicy << endl;
     }
 #endif
 };
 
-typedef QMap<QString,KPerDomainSettings> PolicyMap;
+typedef QMap< QString, KPerDomainSettings > PolicyMap;
 
-class KHTMLSettingsPrivate
-{
+class KHTMLSettingsPrivate {
 public:
     bool m_bChangeCursor : 1;
     bool m_bOpenMiddleClick : 1;
@@ -106,7 +107,7 @@ public:
     QStringList fonts;
     QStringList defaultFonts;
 
-    QValueVector<QRegExp> adFilters;
+    QValueVector< QRegExp > adFilters;
     QValueList< QPair< QString, QChar > > m_fallbackAccessKeysAssignments;
 };
 
@@ -114,55 +115,59 @@ public:
 /** Returns a writeable per-domains settings instance for the given domain
   * or a deep copy of the global settings if not existent.
   */
-static KPerDomainSettings &setup_per_domain_policy(
-				KHTMLSettingsPrivate *d,
-				const QString &domain) {
-  if (domain.isEmpty()) {
-    kdWarning() << "setup_per_domain_policy: domain is empty" << endl;
-  }
-  const QString ldomain = domain.lower();
-  PolicyMap::iterator it = d->domainPolicy.find(ldomain);
-  if (it == d->domainPolicy.end()) {
-    // simply copy global domain settings (they should have been initialized
-    // by this time)
-    it = d->domainPolicy.insert(ldomain,d->global);
-  }
-  return *it;
+static KPerDomainSettings &setup_per_domain_policy(KHTMLSettingsPrivate *d, const QString &domain)
+{
+    if(domain.isEmpty())
+    {
+        kdWarning() << "setup_per_domain_policy: domain is empty" << endl;
+    }
+    const QString ldomain = domain.lower();
+    PolicyMap::iterator it = d->domainPolicy.find(ldomain);
+    if(it == d->domainPolicy.end())
+    {
+        // simply copy global domain settings (they should have been initialized
+        // by this time)
+        it = d->domainPolicy.insert(ldomain, d->global);
+    }
+    return *it;
 }
 
 
-KHTMLSettings::KJavaScriptAdvice KHTMLSettings::strToAdvice(const QString& _str)
+KHTMLSettings::KJavaScriptAdvice KHTMLSettings::strToAdvice(const QString &_str)
 {
-  KJavaScriptAdvice ret = KJavaScriptDunno;
+    KJavaScriptAdvice ret = KJavaScriptDunno;
 
-  if (!_str)
+    if(!_str)
         ret = KJavaScriptDunno;
 
-  if (_str.lower() == QString::fromLatin1("accept"))
+    if(_str.lower() == QString::fromLatin1("accept"))
         ret = KJavaScriptAccept;
-  else if (_str.lower() == QString::fromLatin1("reject"))
+    else if(_str.lower() == QString::fromLatin1("reject"))
         ret = KJavaScriptReject;
 
-  return ret;
+    return ret;
 }
 
-const char* KHTMLSettings::adviceToStr(KJavaScriptAdvice _advice)
+const char *KHTMLSettings::adviceToStr(KJavaScriptAdvice _advice)
 {
-    switch( _advice ) {
-    case KJavaScriptAccept: return I18N_NOOP("Accept");
-    case KJavaScriptReject: return I18N_NOOP("Reject");
-    default: return 0;
+    switch(_advice)
+    {
+        case KJavaScriptAccept:
+            return I18N_NOOP("Accept");
+        case KJavaScriptReject:
+            return I18N_NOOP("Reject");
+        default:
+            return 0;
     }
-        return 0;
+    return 0;
 }
 
 
-void KHTMLSettings::splitDomainAdvice(const QString& configStr, QString &domain,
-                                      KJavaScriptAdvice &javaAdvice, KJavaScriptAdvice& javaScriptAdvice)
+void KHTMLSettings::splitDomainAdvice(const QString &configStr, QString &domain, KJavaScriptAdvice &javaAdvice, KJavaScriptAdvice &javaScriptAdvice)
 {
     QString tmp(configStr);
     int splitIndex = tmp.find(':');
-    if ( splitIndex == -1)
+    if(splitIndex == -1)
     {
         domain = configStr.lower();
         javaAdvice = KJavaScriptDunno;
@@ -171,437 +176,433 @@ void KHTMLSettings::splitDomainAdvice(const QString& configStr, QString &domain,
     else
     {
         domain = tmp.left(splitIndex).lower();
-        QString adviceString = tmp.mid( splitIndex+1, tmp.length() );
-        int splitIndex2 = adviceString.find( ':' );
-        if( splitIndex2 == -1 ) {
+        QString adviceString = tmp.mid(splitIndex + 1, tmp.length());
+        int splitIndex2 = adviceString.find(':');
+        if(splitIndex2 == -1)
+        {
             // Java advice only
-            javaAdvice = strToAdvice( adviceString );
+            javaAdvice = strToAdvice(adviceString);
             javaScriptAdvice = KJavaScriptDunno;
-        } else {
+        }
+        else
+        {
             // Java and JavaScript advice
-            javaAdvice = strToAdvice( adviceString.left( splitIndex2 ) );
-            javaScriptAdvice = strToAdvice( adviceString.mid( splitIndex2+1,
-                                                              adviceString.length() ) );
+            javaAdvice = strToAdvice(adviceString.left(splitIndex2));
+            javaScriptAdvice = strToAdvice(adviceString.mid(splitIndex2 + 1, adviceString.length()));
         }
     }
 }
 
-void KHTMLSettings::readDomainSettings(KConfig *config, bool reset,
-	bool global, KPerDomainSettings &pd_settings) {
-  QString jsPrefix = global ? QString::null
-  				: QString::fromLatin1("javascript.");
-  QString javaPrefix = global ? QString::null
-  				: QString::fromLatin1("java.");
-  QString pluginsPrefix = global ? QString::null
-  				: QString::fromLatin1("plugins.");
+void KHTMLSettings::readDomainSettings(KConfig *config, bool reset, bool global, KPerDomainSettings &pd_settings)
+{
+    QString jsPrefix = global ? QString::null : QString::fromLatin1("javascript.");
+    QString javaPrefix = global ? QString::null : QString::fromLatin1("java.");
+    QString pluginsPrefix = global ? QString::null : QString::fromLatin1("plugins.");
 
-  // The setting for Java
-  QString key = javaPrefix + QString::fromLatin1("EnableJava");
-  if ( (global && reset) || config->hasKey( key ) )
-    pd_settings.m_bEnableJava = config->readBoolEntry( key, false );
-  else if ( !global )
-    pd_settings.m_bEnableJava = d->global.m_bEnableJava;
+    // The setting for Java
+    QString key = javaPrefix + QString::fromLatin1("EnableJava");
+    if((global && reset) || config->hasKey(key))
+        pd_settings.m_bEnableJava = config->readBoolEntry(key, false);
+    else if(!global)
+        pd_settings.m_bEnableJava = d->global.m_bEnableJava;
 
-  // The setting for Plugins
-  key = pluginsPrefix + QString::fromLatin1("EnablePlugins");
-  if ( (global && reset) || config->hasKey( key ) )
-    pd_settings.m_bEnablePlugins = config->readBoolEntry( key, true );
-  else if ( !global )
-    pd_settings.m_bEnablePlugins = d->global.m_bEnablePlugins;
+    // The setting for Plugins
+    key = pluginsPrefix + QString::fromLatin1("EnablePlugins");
+    if((global && reset) || config->hasKey(key))
+        pd_settings.m_bEnablePlugins = config->readBoolEntry(key, true);
+    else if(!global)
+        pd_settings.m_bEnablePlugins = d->global.m_bEnablePlugins;
 
-  // The setting for JavaScript
-  key = jsPrefix + QString::fromLatin1("EnableJavaScript");
-  if ( (global && reset) || config->hasKey( key ) )
-    pd_settings.m_bEnableJavaScript = config->readBoolEntry( key, true );
-  else if ( !global )
-    pd_settings.m_bEnableJavaScript = d->global.m_bEnableJavaScript;
+    // The setting for JavaScript
+    key = jsPrefix + QString::fromLatin1("EnableJavaScript");
+    if((global && reset) || config->hasKey(key))
+        pd_settings.m_bEnableJavaScript = config->readBoolEntry(key, true);
+    else if(!global)
+        pd_settings.m_bEnableJavaScript = d->global.m_bEnableJavaScript;
 
-  // window property policies
-  key = jsPrefix + QString::fromLatin1("WindowOpenPolicy");
-  if ( (global && reset) || config->hasKey( key ) )
-    pd_settings.m_windowOpenPolicy = (KJSWindowOpenPolicy)
-    		config->readUnsignedNumEntry( key, KJSWindowOpenSmart );
-  else if ( !global )
-    pd_settings.m_windowOpenPolicy = d->global.m_windowOpenPolicy;
+    // window property policies
+    key = jsPrefix + QString::fromLatin1("WindowOpenPolicy");
+    if((global && reset) || config->hasKey(key))
+        pd_settings.m_windowOpenPolicy = (KJSWindowOpenPolicy)config->readUnsignedNumEntry(key, KJSWindowOpenSmart);
+    else if(!global)
+        pd_settings.m_windowOpenPolicy = d->global.m_windowOpenPolicy;
 
-  key = jsPrefix + QString::fromLatin1("WindowMovePolicy");
-  if ( (global && reset) || config->hasKey( key ) )
-    pd_settings.m_windowMovePolicy = (KJSWindowMovePolicy)
-    		config->readUnsignedNumEntry( key, KJSWindowMoveAllow );
-  else if ( !global )
-    pd_settings.m_windowMovePolicy = d->global.m_windowMovePolicy;
+    key = jsPrefix + QString::fromLatin1("WindowMovePolicy");
+    if((global && reset) || config->hasKey(key))
+        pd_settings.m_windowMovePolicy = (KJSWindowMovePolicy)config->readUnsignedNumEntry(key, KJSWindowMoveAllow);
+    else if(!global)
+        pd_settings.m_windowMovePolicy = d->global.m_windowMovePolicy;
 
-  key = jsPrefix + QString::fromLatin1("WindowResizePolicy");
-  if ( (global && reset) || config->hasKey( key ) )
-    pd_settings.m_windowResizePolicy = (KJSWindowResizePolicy)
-    		config->readUnsignedNumEntry( key, KJSWindowResizeAllow );
-  else if ( !global )
-    pd_settings.m_windowResizePolicy = d->global.m_windowResizePolicy;
+    key = jsPrefix + QString::fromLatin1("WindowResizePolicy");
+    if((global && reset) || config->hasKey(key))
+        pd_settings.m_windowResizePolicy = (KJSWindowResizePolicy)config->readUnsignedNumEntry(key, KJSWindowResizeAllow);
+    else if(!global)
+        pd_settings.m_windowResizePolicy = d->global.m_windowResizePolicy;
 
-  key = jsPrefix + QString::fromLatin1("WindowStatusPolicy");
-  if ( (global && reset) || config->hasKey( key ) )
-    pd_settings.m_windowStatusPolicy = (KJSWindowStatusPolicy)
-    		config->readUnsignedNumEntry( key, KJSWindowStatusAllow );
-  else if ( !global )
-    pd_settings.m_windowStatusPolicy = d->global.m_windowStatusPolicy;
+    key = jsPrefix + QString::fromLatin1("WindowStatusPolicy");
+    if((global && reset) || config->hasKey(key))
+        pd_settings.m_windowStatusPolicy = (KJSWindowStatusPolicy)config->readUnsignedNumEntry(key, KJSWindowStatusAllow);
+    else if(!global)
+        pd_settings.m_windowStatusPolicy = d->global.m_windowStatusPolicy;
 
-  key = jsPrefix + QString::fromLatin1("WindowFocusPolicy");
-  if ( (global && reset) || config->hasKey( key ) )
-    pd_settings.m_windowFocusPolicy = (KJSWindowFocusPolicy)
-    		config->readUnsignedNumEntry( key, KJSWindowFocusAllow );
-  else if ( !global )
-    pd_settings.m_windowFocusPolicy = d->global.m_windowFocusPolicy;
-
+    key = jsPrefix + QString::fromLatin1("WindowFocusPolicy");
+    if((global && reset) || config->hasKey(key))
+        pd_settings.m_windowFocusPolicy = (KJSWindowFocusPolicy)config->readUnsignedNumEntry(key, KJSWindowFocusAllow);
+    else if(!global)
+        pd_settings.m_windowFocusPolicy = d->global.m_windowFocusPolicy;
 }
 
 
 KHTMLSettings::KHTMLSettings()
 {
-  d = new KHTMLSettingsPrivate();
-  init();
+    d = new KHTMLSettingsPrivate();
+    init();
 }
 
 KHTMLSettings::KHTMLSettings(const KHTMLSettings &other)
 {
-  d = new KHTMLSettingsPrivate();
-  *d = *other.d;
+    d = new KHTMLSettingsPrivate();
+    *d = *other.d;
 }
 
 KHTMLSettings::~KHTMLSettings()
 {
-  delete d;
+    delete d;
 }
 
 bool KHTMLSettings::changeCursor() const
 {
-  return d->m_bChangeCursor;
+    return d->m_bChangeCursor;
 }
 
 bool KHTMLSettings::underlineLink() const
 {
-  return d->m_underlineLink;
+    return d->m_underlineLink;
 }
 
 bool KHTMLSettings::hoverLink() const
 {
-  return d->m_hoverLink;
+    return d->m_hoverLink;
 }
 
 void KHTMLSettings::init()
 {
-  KConfig global( "khtmlrc", true, false );
-  init( &global, true );
+    KConfig global("khtmlrc", true, false);
+    init(&global, true);
 
-  KConfig *local = KGlobal::config();
-  if ( !local )
-    return;
+    KConfig *local = KGlobal::config();
+    if(!local)
+        return;
 
-  init( local, false );
+    init(local, false);
 }
 
-void KHTMLSettings::init( KConfig * config, bool reset )
+void KHTMLSettings::init(KConfig *config, bool reset)
 {
-  QString group_save = config->group();
-  if (reset || config->hasGroup("MainView Settings"))
-  {
-    config->setGroup( "MainView Settings" );
-
-    if ( reset || config->hasKey( "OpenMiddleClick" ) )
-        d->m_bOpenMiddleClick = config->readBoolEntry( "OpenMiddleClick", true );
-
-    if ( reset || config->hasKey( "BackRightClick" ) )
-        d->m_bBackRightClick = config->readBoolEntry( "BackRightClick", false );
-  }
-
-  if (reset || config->hasGroup("Access Keys")) {
-      config->setGroup( "Access Keys" );
-      d->m_accessKeysEnabled = config->readBoolEntry( "Enabled", true );
-  }
-
-  if (reset || config->hasGroup("Filter Settings"))
-  {
-      config->setGroup( "Filter Settings" );
-      d->m_adFilterEnabled = config->readBoolEntry("Enabled", false);
-      d->m_hideAdsEnabled = config->readBoolEntry("Shrink", false);
-
-      d->adFilters.clear();
-
-      QMap<QString,QString> entryMap = config->entryMap("Filter Settings");
-      QMap<QString,QString>::ConstIterator it;
-      d->adFilters.reserve(entryMap.count());
-      for( it = entryMap.constBegin(); it != entryMap.constEnd(); ++it )
-      {
-          QString name = it.key();
-          QString url = it.data();
-
-          if (url.startsWith("!"))
-              continue;
-
-          if (name.startsWith("Filter"))
-          {
-              if (url.length()>2 && url[0]=='/' && url[url.length()-1] == '/')
-              {
-                  QString inside = url.mid(1, url.length()-2);
-                  QRegExp rx(inside);
-                  d->adFilters.append(rx);
-              }
-              else
-              {
-                  QRegExp rx;
-                  int left,right;
-
-                  for (right=url.length(); right>0 && url[right-1]=='*' ; --right);
-                  for (left=0; left<right && url[left]=='*' ; ++left);
-
-                  rx.setWildcard(true);
-                  rx.setPattern(url.mid(left,right-left));
-
-                  d->adFilters.append(rx);
-              }
-          }
-      }
-  }
-
-
-  if (reset || config->hasGroup("HTML Settings"))
-  {
-    config->setGroup( "HTML Settings" );
-    // Fonts and colors
-    if( reset ) {
-        d->defaultFonts = QStringList();
-        d->defaultFonts.append( config->readEntry( "StandardFont", KGlobalSettings::generalFont().family() ) );
-        d->defaultFonts.append( config->readEntry( "FixedFont", KGlobalSettings::fixedFont().family() ) );
-        d->defaultFonts.append( config->readEntry( "SerifFont", HTML_DEFAULT_VIEW_SERIF_FONT ) );
-        d->defaultFonts.append( config->readEntry( "SansSerifFont", HTML_DEFAULT_VIEW_SANSSERIF_FONT ) );
-        d->defaultFonts.append( config->readEntry( "CursiveFont", HTML_DEFAULT_VIEW_CURSIVE_FONT ) );
-        d->defaultFonts.append( config->readEntry( "FantasyFont", HTML_DEFAULT_VIEW_FANTASY_FONT ) );
-        d->defaultFonts.append( QString( "0" ) ); // font size adjustment
-    }
-
-    if ( reset || config->hasKey( "MinimumFontSize" ) )
-        d->m_minFontSize = config->readNumEntry( "MinimumFontSize", HTML_DEFAULT_MIN_FONT_SIZE );
-
-    if ( reset || config->hasKey( "MediumFontSize" ) )
-        d->m_fontSize = config->readNumEntry( "MediumFontSize", 12 );
-
-    d->fonts = config->readListEntry( "Fonts" );
-
-    if ( reset || config->hasKey( "DefaultEncoding" ) )
-        d->m_encoding = config->readEntry( "DefaultEncoding", "" );
-
-    if ( reset || config->hasKey( "EnforceDefaultCharset" ) )
-        d->enforceCharset = config->readBoolEntry( "EnforceDefaultCharset", false );
-
-    // Behavior
-    if ( reset || config->hasKey( "ChangeCursor" ) )
-        d->m_bChangeCursor = config->readBoolEntry( "ChangeCursor", KDE_DEFAULT_CHANGECURSOR );
-
-    if ( reset || config->hasKey("UnderlineLinks") )
-        d->m_underlineLink = config->readBoolEntry( "UnderlineLinks", true );
-
-    if ( reset || config->hasKey( "HoverLinks" ) )
+    QString group_save = config->group();
+    if(reset || config->hasGroup("MainView Settings"))
     {
-        if ( ( d->m_hoverLink = config->readBoolEntry( "HoverLinks", false ) ) )
-            d->m_underlineLink = false;
+        config->setGroup("MainView Settings");
+
+        if(reset || config->hasKey("OpenMiddleClick"))
+            d->m_bOpenMiddleClick = config->readBoolEntry("OpenMiddleClick", true);
+
+        if(reset || config->hasKey("BackRightClick"))
+            d->m_bBackRightClick = config->readBoolEntry("BackRightClick", false);
     }
 
-    if ( reset || config->hasKey( "AllowTabulation" ) )
-        d->m_allowTabulation = config->readBoolEntry( "AllowTabulation", false );
-
-    if ( reset || config->hasKey( "AutoSpellCheck" ) )
-        d->m_autoSpellCheck = config->readBoolEntry( "AutoSpellCheck", true );
-
-    // Other
-    if ( reset || config->hasKey( "AutoLoadImages" ) )
-      d->m_bAutoLoadImages = config->readBoolEntry( "AutoLoadImages", true );
-
-    if ( reset || config->hasKey( "UnfinishedImageFrame" ) )
-      d->m_bUnfinishedImageFrame = config->readBoolEntry( "UnfinishedImageFrame", true );
-
-    if ( reset || config->hasKey( "ShowAnimations" ) )
+    if(reset || config->hasGroup("Access Keys"))
     {
-      QString value = config->readEntry( "ShowAnimations").lower();
-      if (value == "disabled")
-         d->m_showAnimations = KAnimationDisabled;
-      else if (value == "looponce")
-         d->m_showAnimations = KAnimationLoopOnce;
-      else
-         d->m_showAnimations = KAnimationEnabled;
+        config->setGroup("Access Keys");
+        d->m_accessKeysEnabled = config->readBoolEntry("Enabled", true);
     }
 
-    if ( config->readBoolEntry( "UserStyleSheetEnabled", false ) == true ) {
-        if ( reset || config->hasKey( "UserStyleSheet" ) )
-            d->m_userSheet = config->readEntry( "UserStyleSheet", "" );
+    if(reset || config->hasGroup("Filter Settings"))
+    {
+        config->setGroup("Filter Settings");
+        d->m_adFilterEnabled = config->readBoolEntry("Enabled", false);
+        d->m_hideAdsEnabled = config->readBoolEntry("Shrink", false);
+
+        d->adFilters.clear();
+
+        QMap< QString, QString > entryMap = config->entryMap("Filter Settings");
+        QMap< QString, QString >::ConstIterator it;
+        d->adFilters.reserve(entryMap.count());
+        for(it = entryMap.constBegin(); it != entryMap.constEnd(); ++it)
+        {
+            QString name = it.key();
+            QString url = it.data();
+
+            if(url.startsWith("!"))
+                continue;
+
+            if(name.startsWith("Filter"))
+            {
+                if(url.length() > 2 && url[0] == '/' && url[url.length() - 1] == '/')
+                {
+                    QString inside = url.mid(1, url.length() - 2);
+                    QRegExp rx(inside);
+                    d->adFilters.append(rx);
+                }
+                else
+                {
+                    QRegExp rx;
+                    int left, right;
+
+                    for(right = url.length(); right > 0 && url[right - 1] == '*'; --right)
+                        ;
+                    for(left = 0; left < right && url[left] == '*'; ++left)
+                        ;
+
+                    rx.setWildcard(true);
+                    rx.setPattern(url.mid(left, right - left));
+
+                    d->adFilters.append(rx);
+                }
+            }
+        }
     }
 
-    d->m_formCompletionEnabled = config->readBoolEntry("FormCompletion", true);
-    d->m_maxFormCompletionItems = config->readNumEntry("MaxFormCompletionItems", 10);
-    d->m_autoDelayedActionsEnabled = config->readBoolEntry ("AutoDelayedActions", true);
-    d->m_jsErrorsEnabled = config->readBoolEntry("ReportJSErrors", true);
-    QStringList accesskeys = config->readListEntry("FallbackAccessKeysAssignments");
-    d->m_fallbackAccessKeysAssignments.clear();
-    for( QStringList::ConstIterator it = accesskeys.begin(); it != accesskeys.end(); ++it )
-        if( (*it).length() > 2 && (*it)[ 1 ] == ':' )
-            d->m_fallbackAccessKeysAssignments.append( qMakePair( (*it).mid( 2 ), (*it)[ 0 ] ));
-  }
 
-  // Colors
+    if(reset || config->hasGroup("HTML Settings"))
+    {
+        config->setGroup("HTML Settings");
+        // Fonts and colors
+        if(reset)
+        {
+            d->defaultFonts = QStringList();
+            d->defaultFonts.append(config->readEntry("StandardFont", KGlobalSettings::generalFont().family()));
+            d->defaultFonts.append(config->readEntry("FixedFont", KGlobalSettings::fixedFont().family()));
+            d->defaultFonts.append(config->readEntry("SerifFont", HTML_DEFAULT_VIEW_SERIF_FONT));
+            d->defaultFonts.append(config->readEntry("SansSerifFont", HTML_DEFAULT_VIEW_SANSSERIF_FONT));
+            d->defaultFonts.append(config->readEntry("CursiveFont", HTML_DEFAULT_VIEW_CURSIVE_FONT));
+            d->defaultFonts.append(config->readEntry("FantasyFont", HTML_DEFAULT_VIEW_FANTASY_FONT));
+            d->defaultFonts.append(QString("0")); // font size adjustment
+        }
 
-  if ( reset || config->hasKey( "FollowSystemColors" ) )
-      d->m_follow_system_colors = config->readBoolEntry( "FollowSystemColors", false );
+        if(reset || config->hasKey("MinimumFontSize"))
+            d->m_minFontSize = config->readNumEntry("MinimumFontSize", HTML_DEFAULT_MIN_FONT_SIZE);
 
-  if ( reset || config->hasGroup( "General" ) )
-  {
-    config->setGroup( "General" ); // group will be restored by cgs anyway
-    if ( reset || config->hasKey( "foreground" ) )
-      d->m_textColor = config->readColorEntry( "foreground", &HTML_DEFAULT_TXT_COLOR );
+        if(reset || config->hasKey("MediumFontSize"))
+            d->m_fontSize = config->readNumEntry("MediumFontSize", 12);
 
-    if ( reset || config->hasKey( "linkColor" ) )
-      d->m_linkColor = config->readColorEntry( "linkColor", &HTML_DEFAULT_LNK_COLOR );
+        d->fonts = config->readListEntry("Fonts");
 
-    if ( reset || config->hasKey( "visitedLinkColor" ) )
-      d->m_vLinkColor = config->readColorEntry( "visitedLinkColor", &HTML_DEFAULT_VLNK_COLOR);
+        if(reset || config->hasKey("DefaultEncoding"))
+            d->m_encoding = config->readEntry("DefaultEncoding", "");
 
-    if ( reset || config->hasKey( "background" ) )
-      d->m_baseColor = config->readColorEntry( "background", &HTML_DEFAULT_BASE_COLOR);
-  }
+        if(reset || config->hasKey("EnforceDefaultCharset"))
+            d->enforceCharset = config->readBoolEntry("EnforceDefaultCharset", false);
 
-  if( reset || config->hasGroup( "Java/JavaScript Settings" ) )
-  {
-    config->setGroup( "Java/JavaScript Settings" );
+        // Behavior
+        if(reset || config->hasKey("ChangeCursor"))
+            d->m_bChangeCursor = config->readBoolEntry("ChangeCursor", KDE_DEFAULT_CHANGECURSOR);
 
-    // The global setting for JavaScript debugging
-    // This is currently always enabled by default
-    if ( reset || config->hasKey( "EnableJavaScriptDebug" ) )
-      d->m_bEnableJavaScriptDebug = config->readBoolEntry( "EnableJavaScriptDebug", false );
+        if(reset || config->hasKey("UnderlineLinks"))
+            d->m_underlineLink = config->readBoolEntry("UnderlineLinks", true);
 
-    // The global setting for JavaScript error reporting
-    if ( reset || config->hasKey( "ReportJavaScriptErrors" ) )
-      d->m_bEnableJavaScriptErrorReporting = config->readBoolEntry( "ReportJavaScriptErrors", false );
+        if(reset || config->hasKey("HoverLinks"))
+        {
+            if((d->m_hoverLink = config->readBoolEntry("HoverLinks", false)))
+                d->m_underlineLink = false;
+        }
 
-    // The global setting for popup block passive popup
-    if ( reset || config->hasKey( "PopupBlockerPassivePopup" ) )
-      d->m_jsPopupBlockerPassivePopup = config->readBoolEntry("PopupBlockerPassivePopup", true);
+        if(reset || config->hasKey("AllowTabulation"))
+            d->m_allowTabulation = config->readBoolEntry("AllowTabulation", false);
 
-    // Read options from the global "domain"
-    readDomainSettings(config,reset,true,d->global);
+        if(reset || config->hasKey("AutoSpellCheck"))
+            d->m_autoSpellCheck = config->readBoolEntry("AutoSpellCheck", true);
+
+        // Other
+        if(reset || config->hasKey("AutoLoadImages"))
+            d->m_bAutoLoadImages = config->readBoolEntry("AutoLoadImages", true);
+
+        if(reset || config->hasKey("UnfinishedImageFrame"))
+            d->m_bUnfinishedImageFrame = config->readBoolEntry("UnfinishedImageFrame", true);
+
+        if(reset || config->hasKey("ShowAnimations"))
+        {
+            QString value = config->readEntry("ShowAnimations").lower();
+            if(value == "disabled")
+                d->m_showAnimations = KAnimationDisabled;
+            else if(value == "looponce")
+                d->m_showAnimations = KAnimationLoopOnce;
+            else
+                d->m_showAnimations = KAnimationEnabled;
+        }
+
+        if(config->readBoolEntry("UserStyleSheetEnabled", false) == true)
+        {
+            if(reset || config->hasKey("UserStyleSheet"))
+                d->m_userSheet = config->readEntry("UserStyleSheet", "");
+        }
+
+        d->m_formCompletionEnabled = config->readBoolEntry("FormCompletion", true);
+        d->m_maxFormCompletionItems = config->readNumEntry("MaxFormCompletionItems", 10);
+        d->m_autoDelayedActionsEnabled = config->readBoolEntry("AutoDelayedActions", true);
+        d->m_jsErrorsEnabled = config->readBoolEntry("ReportJSErrors", true);
+        QStringList accesskeys = config->readListEntry("FallbackAccessKeysAssignments");
+        d->m_fallbackAccessKeysAssignments.clear();
+        for(QStringList::ConstIterator it = accesskeys.begin(); it != accesskeys.end(); ++it)
+            if((*it).length() > 2 && (*it)[1] == ':')
+                d->m_fallbackAccessKeysAssignments.append(qMakePair((*it).mid(2), (*it)[0]));
+    }
+
+    // Colors
+
+    if(reset || config->hasKey("FollowSystemColors"))
+        d->m_follow_system_colors = config->readBoolEntry("FollowSystemColors", false);
+
+    if(reset || config->hasGroup("General"))
+    {
+        config->setGroup("General"); // group will be restored by cgs anyway
+        if(reset || config->hasKey("foreground"))
+            d->m_textColor = config->readColorEntry("foreground", &HTML_DEFAULT_TXT_COLOR);
+
+        if(reset || config->hasKey("linkColor"))
+            d->m_linkColor = config->readColorEntry("linkColor", &HTML_DEFAULT_LNK_COLOR);
+
+        if(reset || config->hasKey("visitedLinkColor"))
+            d->m_vLinkColor = config->readColorEntry("visitedLinkColor", &HTML_DEFAULT_VLNK_COLOR);
+
+        if(reset || config->hasKey("background"))
+            d->m_baseColor = config->readColorEntry("background", &HTML_DEFAULT_BASE_COLOR);
+    }
+
+    if(reset || config->hasGroup("Java/JavaScript Settings"))
+    {
+        config->setGroup("Java/JavaScript Settings");
+
+        // The global setting for JavaScript debugging
+        // This is currently always enabled by default
+        if(reset || config->hasKey("EnableJavaScriptDebug"))
+            d->m_bEnableJavaScriptDebug = config->readBoolEntry("EnableJavaScriptDebug", false);
+
+        // The global setting for JavaScript error reporting
+        if(reset || config->hasKey("ReportJavaScriptErrors"))
+            d->m_bEnableJavaScriptErrorReporting = config->readBoolEntry("ReportJavaScriptErrors", false);
+
+        // The global setting for popup block passive popup
+        if(reset || config->hasKey("PopupBlockerPassivePopup"))
+            d->m_jsPopupBlockerPassivePopup = config->readBoolEntry("PopupBlockerPassivePopup", true);
+
+        // Read options from the global "domain"
+        readDomainSettings(config, reset, true, d->global);
 #ifdef DEBUG_SETTINGS
-    d->global.dump("init global");
+        d->global.dump("init global");
 #endif
 
-    // The domain-specific settings.
+        // The domain-specific settings.
 
-    static const char *const domain_keys[] = {	// always keep order of keys
-    	"ECMADomains", "JavaDomains", "PluginDomains"
-    };
-    bool check_old_ecma_settings = true;
-    bool check_old_java_settings = true;
-    // merge all domains into one list
-    QMap<QString,int> domainList;	// why can't Qt have a QSet?
-    for (unsigned i = 0; i < sizeof domain_keys/sizeof domain_keys[0]; ++i) {
-      if ( reset || config->hasKey(domain_keys[i]) ) {
-        if (i == 0) check_old_ecma_settings = false;
-	else if (i == 1) check_old_java_settings = false;
-        const QStringList dl = config->readListEntry( domain_keys[i] );
-	const QMap<QString,int>::Iterator notfound = domainList.end();
-	QStringList::ConstIterator it = dl.begin();
-	const QStringList::ConstIterator itEnd = dl.end();
-	for (; it != itEnd; ++it) {
-	  const QString domain = (*it).lower();
-	  QMap<QString,int>::Iterator pos = domainList.find(domain);
-	  if (pos == notfound) domainList.insert(domain,0);
-	}/*next it*/
-      }
-    }/*next i*/
+        static const char *const domain_keys[] = {// always keep order of keys
+                                                  "ECMADomains", "JavaDomains", "PluginDomains"};
+        bool check_old_ecma_settings = true;
+        bool check_old_java_settings = true;
+        // merge all domains into one list
+        QMap< QString, int > domainList; // why can't Qt have a QSet?
+        for(unsigned i = 0; i < sizeof domain_keys / sizeof domain_keys[0]; ++i)
+        {
+            if(reset || config->hasKey(domain_keys[i]))
+            {
+                if(i == 0)
+                    check_old_ecma_settings = false;
+                else if(i == 1)
+                    check_old_java_settings = false;
+                const QStringList dl = config->readListEntry(domain_keys[i]);
+                const QMap< QString, int >::Iterator notfound = domainList.end();
+                QStringList::ConstIterator it = dl.begin();
+                const QStringList::ConstIterator itEnd = dl.end();
+                for(; it != itEnd; ++it)
+                {
+                    const QString domain = (*it).lower();
+                    QMap< QString, int >::Iterator pos = domainList.find(domain);
+                    if(pos == notfound)
+                        domainList.insert(domain, 0);
+                } /*next it*/
+            }
+        } /*next i*/
 
-    if (reset)
-      d->domainPolicy.clear();
+        if(reset)
+            d->domainPolicy.clear();
 
-    QString js_group_save = config->group();
-    {
-      QMap<QString,int>::ConstIterator it = domainList.begin();
-      const QMap<QString,int>::ConstIterator itEnd = domainList.end();
-      for ( ; it != itEnd; ++it)
-      {
-        const QString domain = it.key();
-        config->setGroup(domain);
-        readDomainSettings(config,reset,false,d->domainPolicy[domain]);
+        QString js_group_save = config->group();
+        {
+            QMap< QString, int >::ConstIterator it = domainList.begin();
+            const QMap< QString, int >::ConstIterator itEnd = domainList.end();
+            for(; it != itEnd; ++it)
+            {
+                const QString domain = it.key();
+                config->setGroup(domain);
+                readDomainSettings(config, reset, false, d->domainPolicy[domain]);
 #ifdef DEBUG_SETTINGS
-        d->domainPolicy[domain].dump("init "+domain);
+                d->domainPolicy[domain].dump("init " + domain);
 #endif
-      }
-    }
-    config->setGroup(js_group_save);
+            }
+        }
+        config->setGroup(js_group_save);
 
-    bool check_old_java = true;
-    if( ( reset || config->hasKey( "JavaDomainSettings" ) )
-    	&& check_old_java_settings )
-    {
-      check_old_java = false;
-      const QStringList domainList = config->readListEntry( "JavaDomainSettings" );
-      QStringList::ConstIterator it = domainList.begin();
-      const QStringList::ConstIterator itEnd = domainList.end();
-      for ( ; it != itEnd; ++it)
-      {
-        QString domain;
-        KJavaScriptAdvice javaAdvice;
-        KJavaScriptAdvice javaScriptAdvice;
-        splitDomainAdvice(*it, domain, javaAdvice, javaScriptAdvice);
-        setup_per_domain_policy(d,domain).m_bEnableJava =
-		javaAdvice == KJavaScriptAccept;
+        bool check_old_java = true;
+        if((reset || config->hasKey("JavaDomainSettings")) && check_old_java_settings)
+        {
+            check_old_java = false;
+            const QStringList domainList = config->readListEntry("JavaDomainSettings");
+            QStringList::ConstIterator it = domainList.begin();
+            const QStringList::ConstIterator itEnd = domainList.end();
+            for(; it != itEnd; ++it)
+            {
+                QString domain;
+                KJavaScriptAdvice javaAdvice;
+                KJavaScriptAdvice javaScriptAdvice;
+                splitDomainAdvice(*it, domain, javaAdvice, javaScriptAdvice);
+                setup_per_domain_policy(d, domain).m_bEnableJava = javaAdvice == KJavaScriptAccept;
 #ifdef DEBUG_SETTINGS
-	setup_per_domain_policy(d,domain).dump("JavaDomainSettings 4 "+domain);
+                setup_per_domain_policy(d, domain).dump("JavaDomainSettings 4 " + domain);
 #endif
-      }
-    }
+            }
+        }
 
-    bool check_old_ecma = true;
-    if( ( reset || config->hasKey( "ECMADomainSettings" ) )
-	&& check_old_ecma_settings )
-    {
-      check_old_ecma = false;
-      const QStringList domainList = config->readListEntry( "ECMADomainSettings" );
-      QStringList::ConstIterator it = domainList.begin();
-      const QStringList::ConstIterator itEnd = domainList.end();
-      for ( ; it != itEnd; ++it)
-      {
-        QString domain;
-        KJavaScriptAdvice javaAdvice;
-        KJavaScriptAdvice javaScriptAdvice;
-        splitDomainAdvice(*it, domain, javaAdvice, javaScriptAdvice);
-        setup_per_domain_policy(d,domain).m_bEnableJavaScript =
-			javaScriptAdvice == KJavaScriptAccept;
+        bool check_old_ecma = true;
+        if((reset || config->hasKey("ECMADomainSettings")) && check_old_ecma_settings)
+        {
+            check_old_ecma = false;
+            const QStringList domainList = config->readListEntry("ECMADomainSettings");
+            QStringList::ConstIterator it = domainList.begin();
+            const QStringList::ConstIterator itEnd = domainList.end();
+            for(; it != itEnd; ++it)
+            {
+                QString domain;
+                KJavaScriptAdvice javaAdvice;
+                KJavaScriptAdvice javaScriptAdvice;
+                splitDomainAdvice(*it, domain, javaAdvice, javaScriptAdvice);
+                setup_per_domain_policy(d, domain).m_bEnableJavaScript = javaScriptAdvice == KJavaScriptAccept;
 #ifdef DEBUG_SETTINGS
-	setup_per_domain_policy(d,domain).dump("ECMADomainSettings 4 "+domain);
+                setup_per_domain_policy(d, domain).dump("ECMADomainSettings 4 " + domain);
 #endif
-      }
-    }
+            }
+        }
 
-    if( ( reset || config->hasKey( "JavaScriptDomainAdvice" ) )
-             && ( check_old_java || check_old_ecma )
-	     && ( check_old_ecma_settings || check_old_java_settings ) )
-    {
-      const QStringList domainList = config->readListEntry( "JavaScriptDomainAdvice" );
-      QStringList::ConstIterator it = domainList.begin();
-      const QStringList::ConstIterator itEnd = domainList.end();
-      for ( ; it != itEnd; ++it)
-      {
-        QString domain;
-        KJavaScriptAdvice javaAdvice;
-        KJavaScriptAdvice javaScriptAdvice;
-        splitDomainAdvice(*it, domain, javaAdvice, javaScriptAdvice);
-        if( check_old_java )
-          setup_per_domain_policy(d,domain).m_bEnableJava =
-	  		javaAdvice == KJavaScriptAccept;
-        if( check_old_ecma )
-          setup_per_domain_policy(d,domain).m_bEnableJavaScript =
-	  		javaScriptAdvice == KJavaScriptAccept;
+        if((reset || config->hasKey("JavaScriptDomainAdvice")) && (check_old_java || check_old_ecma)
+           && (check_old_ecma_settings || check_old_java_settings))
+        {
+            const QStringList domainList = config->readListEntry("JavaScriptDomainAdvice");
+            QStringList::ConstIterator it = domainList.begin();
+            const QStringList::ConstIterator itEnd = domainList.end();
+            for(; it != itEnd; ++it)
+            {
+                QString domain;
+                KJavaScriptAdvice javaAdvice;
+                KJavaScriptAdvice javaScriptAdvice;
+                splitDomainAdvice(*it, domain, javaAdvice, javaScriptAdvice);
+                if(check_old_java)
+                    setup_per_domain_policy(d, domain).m_bEnableJava = javaAdvice == KJavaScriptAccept;
+                if(check_old_ecma)
+                    setup_per_domain_policy(d, domain).m_bEnableJavaScript = javaScriptAdvice == KJavaScriptAccept;
 #ifdef DEBUG_SETTINGS
-	setup_per_domain_policy(d,domain).dump("JavaScriptDomainAdvice 4 "+domain);
+                setup_per_domain_policy(d, domain).dump("JavaScriptDomainAdvice 4 " + domain);
 #endif
-      }
+            }
 
-      //save all the settings into the new keywords if they don't exist
+// save all the settings into the new keywords if they don't exist
 #if 0
       if( check_old_java )
       {
@@ -629,9 +630,9 @@ void KHTMLSettings::init( KConfig * config, bool reset )
         config->writeEntry( "ECMADomainSettings", domainConfig );
       }
 #endif
+        }
     }
-  }
-  config->setGroup(group_save);
+    config->setGroup(group_save);
 }
 
 
@@ -639,68 +640,70 @@ void KHTMLSettings::init( KConfig * config, bool reset )
   *
   * In case of doubt, the global domain is returned.
   */
-static const KPerDomainSettings &lookup_hostname_policy(
-			const KHTMLSettingsPrivate *d,
-			const QString& hostname)
+static const KPerDomainSettings &lookup_hostname_policy(const KHTMLSettingsPrivate *d, const QString &hostname)
 {
 #ifdef DEBUG_SETTINGS
-  kdDebug() << "lookup_hostname_policy(" << hostname << ")" << endl;
+    kdDebug() << "lookup_hostname_policy(" << hostname << ")" << endl;
 #endif
-  if (hostname.isEmpty()) {
+    if(hostname.isEmpty())
+    {
 #ifdef DEBUG_SETTINGS
+        d->global.dump("global");
+#endif
+        return d->global;
+    }
+
+    const PolicyMap::const_iterator notfound = d->domainPolicy.end();
+
+    // First check whether there is a perfect match.
+    PolicyMap::const_iterator it = d->domainPolicy.find(hostname);
+    if(it != notfound)
+    {
+#ifdef DEBUG_SETTINGS
+        kdDebug() << "perfect match" << endl;
+        (*it).dump(hostname);
+#endif
+        // yes, use it (unless dunno)
+        return *it;
+    }
+
+    // Now, check for partial match.  Chop host from the left until
+    // there's no dots left.
+    QString host_part = hostname;
+    int dot_idx = -1;
+    while((dot_idx = host_part.find(QChar('.'))) >= 0)
+    {
+        host_part.remove(0, dot_idx);
+        it = d->domainPolicy.find(host_part);
+        Q_ASSERT(notfound == d->domainPolicy.end());
+        if(it != notfound)
+        {
+#ifdef DEBUG_SETTINGS
+            kdDebug() << "partial match" << endl;
+            (*it).dump(host_part);
+#endif
+            return *it;
+        }
+        // assert(host_part[0] == QChar('.'));
+        host_part.remove(0, 1); // Chop off the dot.
+    }
+
+// No domain-specific entry: use global domain
+#ifdef DEBUG_SETTINGS
+    kdDebug() << "no match" << endl;
     d->global.dump("global");
 #endif
     return d->global;
-  }
-
-  const PolicyMap::const_iterator notfound = d->domainPolicy.end();
-
-  // First check whether there is a perfect match.
-  PolicyMap::const_iterator it = d->domainPolicy.find(hostname);
-  if( it != notfound ) {
-#ifdef DEBUG_SETTINGS
-    kdDebug() << "perfect match" << endl;
-    (*it).dump(hostname);
-#endif
-    // yes, use it (unless dunno)
-    return *it;
-  }
-
-  // Now, check for partial match.  Chop host from the left until
-  // there's no dots left.
-  QString host_part = hostname;
-  int dot_idx = -1;
-  while( (dot_idx = host_part.find(QChar('.'))) >= 0 ) {
-    host_part.remove(0,dot_idx);
-    it = d->domainPolicy.find(host_part);
-    Q_ASSERT(notfound == d->domainPolicy.end());
-    if( it != notfound ) {
-#ifdef DEBUG_SETTINGS
-      kdDebug() << "partial match" << endl;
-      (*it).dump(host_part);
-#endif
-      return *it;
-    }
-    // assert(host_part[0] == QChar('.'));
-    host_part.remove(0,1); // Chop off the dot.
-  }
-
-  // No domain-specific entry: use global domain
-#ifdef DEBUG_SETTINGS
-  kdDebug() << "no match" << endl;
-  d->global.dump("global");
-#endif
-  return d->global;
 }
 
 bool KHTMLSettings::isOpenMiddleClickEnabled()
 {
-  return d->m_bOpenMiddleClick;
+    return d->m_bOpenMiddleClick;
 }
 
 bool KHTMLSettings::isBackRightClickEnabled()
 {
-  return d->m_bBackRightClick;
+    return d->m_bBackRightClick;
 }
 
 bool KHTMLSettings::accessKeysEnabled() const
@@ -718,19 +721,19 @@ bool KHTMLSettings::isHideAdsEnabled() const
     return d->m_hideAdsEnabled;
 }
 
-bool KHTMLSettings::isAdFiltered( const QString &url ) const
+bool KHTMLSettings::isAdFiltered(const QString &url) const
 {
-    if (d->m_adFilterEnabled)
+    if(d->m_adFilterEnabled)
     {
-        if (!url.startsWith("data:"))
+        if(!url.startsWith("data:"))
         {
-            QValueVector<QRegExp>::const_iterator it(d->adFilters.constBegin());
-            QValueVector<QRegExp>::const_iterator end(d->adFilters.constEnd());
-            for (; it != end; ++it)
+            QValueVector< QRegExp >::const_iterator it(d->adFilters.constBegin());
+            QValueVector< QRegExp >::const_iterator end(d->adFilters.constEnd());
+            for(; it != end; ++it)
             {
-                if ((*it).search(url) != -1)
+                if((*it).search(url) != -1)
                 {
-                    kdDebug( 6080 ) << "Filtered: " << url << endl;
+                    kdDebug(6080) << "Filtered: " << url << endl;
                     return true;
                 }
             }
@@ -739,97 +742,97 @@ bool KHTMLSettings::isAdFiltered( const QString &url ) const
     return false;
 }
 
-void KHTMLSettings::addAdFilter( const QString &url )
+void KHTMLSettings::addAdFilter(const QString &url)
 {
-    KConfig config( "khtmlrc", false, false );
-    config.setGroup( "Filter Settings" );
+    KConfig config("khtmlrc", false, false);
+    config.setGroup("Filter Settings");
 
     QRegExp rx;
-    if (url.length()>2 && url[0]=='/' && url[url.length()-1] == '/')
+    if(url.length() > 2 && url[0] == '/' && url[url.length() - 1] == '/')
     {
-        QString inside = url.mid(1, url.length()-2);
+        QString inside = url.mid(1, url.length() - 2);
         rx.setWildcard(false);
         rx.setPattern(inside);
     }
     else
     {
-        int left,right;
+        int left, right;
 
         rx.setWildcard(true);
-        for (right=url.length(); right>0 && url[right-1]=='*' ; --right);
-        for (left=0; left<right && url[left]=='*' ; ++left);
+        for(right = url.length(); right > 0 && url[right - 1] == '*'; --right)
+            ;
+        for(left = 0; left < right && url[left] == '*'; ++left)
+            ;
 
-        rx.setPattern(url.mid(left,right-left));
+        rx.setPattern(url.mid(left, right - left));
     }
 
-    if (rx.isValid())
+    if(rx.isValid())
     {
-        int last=config.readNumEntry("Count",0);
+        int last = config.readNumEntry("Count", 0);
         QString key = "Filter-" + QString::number(last);
         config.writeEntry(key, url);
-        config.writeEntry("Count",last+1);
+        config.writeEntry("Count", last + 1);
         config.sync();
 
         d->adFilters.append(rx);
     }
     else
     {
-        KMessageBox::error(0,
-                           rx.errorString(),
-                           i18n("Filter error"));
+        KMessageBox::error(0, rx.errorString(), i18n("Filter error"));
     }
 }
 
-bool KHTMLSettings::isJavaEnabled( const QString& hostname )
+bool KHTMLSettings::isJavaEnabled(const QString &hostname)
 {
-  return lookup_hostname_policy(d,hostname.lower()).m_bEnableJava;
+    return lookup_hostname_policy(d, hostname.lower()).m_bEnableJava;
 }
 
-bool KHTMLSettings::isJavaScriptEnabled( const QString& hostname )
+bool KHTMLSettings::isJavaScriptEnabled(const QString &hostname)
 {
-  return lookup_hostname_policy(d,hostname.lower()).m_bEnableJavaScript;
+    return lookup_hostname_policy(d, hostname.lower()).m_bEnableJavaScript;
 }
 
-bool KHTMLSettings::isJavaScriptDebugEnabled( const QString& /*hostname*/ )
+bool KHTMLSettings::isJavaScriptDebugEnabled(const QString & /*hostname*/)
 {
-  // debug setting is global for now, but could change in the future
-  return d->m_bEnableJavaScriptDebug;
+    // debug setting is global for now, but could change in the future
+    return d->m_bEnableJavaScriptDebug;
 }
 
-bool KHTMLSettings::isJavaScriptErrorReportingEnabled( const QString& /*hostname*/ ) const
+bool KHTMLSettings::isJavaScriptErrorReportingEnabled(const QString & /*hostname*/) const
 {
-  // error reporting setting is global for now, but could change in the future
-  return d->m_bEnableJavaScriptErrorReporting;
+    // error reporting setting is global for now, but could change in the future
+    return d->m_bEnableJavaScriptErrorReporting;
 }
 
-bool KHTMLSettings::isPluginsEnabled( const QString& hostname )
+bool KHTMLSettings::isPluginsEnabled(const QString &hostname)
 {
-  return lookup_hostname_policy(d,hostname.lower()).m_bEnablePlugins;
+    return lookup_hostname_policy(d, hostname.lower()).m_bEnablePlugins;
 }
 
-KHTMLSettings::KJSWindowOpenPolicy KHTMLSettings::windowOpenPolicy(
-				const QString& hostname) const {
-  return lookup_hostname_policy(d,hostname.lower()).m_windowOpenPolicy;
+KHTMLSettings::KJSWindowOpenPolicy KHTMLSettings::windowOpenPolicy(const QString &hostname) const
+{
+    return lookup_hostname_policy(d, hostname.lower()).m_windowOpenPolicy;
 }
 
-KHTMLSettings::KJSWindowMovePolicy KHTMLSettings::windowMovePolicy(
-				const QString& hostname) const {
-  return lookup_hostname_policy(d,hostname.lower()).m_windowMovePolicy;
+KHTMLSettings::KJSWindowMovePolicy KHTMLSettings::windowMovePolicy(const QString &hostname) const
+{
+    return lookup_hostname_policy(d, hostname.lower()).m_windowMovePolicy;
 }
 
-KHTMLSettings::KJSWindowResizePolicy KHTMLSettings::windowResizePolicy(
-				const QString& hostname) const {
-  return lookup_hostname_policy(d,hostname.lower()).m_windowResizePolicy;
+KHTMLSettings::KJSWindowResizePolicy KHTMLSettings::windowResizePolicy(const QString &hostname) const
+{
+    return lookup_hostname_policy(d, hostname.lower()).m_windowResizePolicy;
 }
 
-KHTMLSettings::KJSWindowStatusPolicy KHTMLSettings::windowStatusPolicy(
-				const QString& hostname) const {
-  return lookup_hostname_policy(d,hostname.lower()).m_windowStatusPolicy;
+KHTMLSettings::KJSWindowStatusPolicy KHTMLSettings::windowStatusPolicy(const QString &hostname) const
+{
+    return lookup_hostname_policy(d, hostname.lower()).m_windowStatusPolicy;
 }
 
-KHTMLSettings::KJSWindowFocusPolicy KHTMLSettings::windowFocusPolicy(
-				const QString& hostname) const {
-  return lookup_hostname_policy(d,hostname.lower()).m_windowFocusPolicy;
+KHTMLSettings::KJSWindowFocusPolicy KHTMLSettings::windowFocusPolicy(const QString &hostname) const
+{
+    return lookup_hostname_policy(d, hostname.lower()).m_windowFocusPolicy;
 }
 
 int KHTMLSettings::mediumFontSize() const
@@ -839,7 +842,7 @@ int KHTMLSettings::mediumFontSize() const
 
 int KHTMLSettings::minFontSize() const
 {
-  return d->m_minFontSize;
+    return d->m_minFontSize;
 }
 
 QString KHTMLSettings::settingsToCSS() const
@@ -851,7 +854,7 @@ QString KHTMLSettings::settingsToCSS() const
     if(d->m_underlineLink)
         str += "\ntext-decoration: underline;";
 
-    if( d->m_bChangeCursor )
+    if(d->m_bChangeCursor)
     {
         str += "\ncursor: pointer;";
         str += "\n}\ninput[type=image] { cursor: pointer;";
@@ -863,7 +866,7 @@ QString KHTMLSettings::settingsToCSS() const
     if(d->m_underlineLink)
         str += "\ntext-decoration: underline;";
 
-    if( d->m_bChangeCursor )
+    if(d->m_bChangeCursor)
         str += "\ncursor: pointer;";
     str += "\n}\n";
 
@@ -875,36 +878,38 @@ QString KHTMLSettings::settingsToCSS() const
 
 const QString &KHTMLSettings::availableFamilies()
 {
-    if ( !avFamilies ) {
+    if(!avFamilies)
+    {
         avFamilies = new QString;
         QFontDatabase db;
         QStringList families = db.families();
         QStringList s;
         QRegExp foundryExp(" \\[.+\\]");
 
-        //remove foundry info
+        // remove foundry info
         QStringList::Iterator f = families.begin();
         const QStringList::Iterator fEnd = families.end();
 
-        for ( ; f != fEnd; ++f ) {
-                (*f).replace( foundryExp, "");
-                if (!s.contains(*f))
-                        s << *f;
+        for(; f != fEnd; ++f)
+        {
+            (*f).replace(foundryExp, "");
+            if(!s.contains(*f))
+                s << *f;
         }
         s.sort();
 
         *avFamilies = ',' + s.join(",") + ',';
     }
 
-  return *avFamilies;
+    return *avFamilies;
 }
 
 QString KHTMLSettings::lookupFont(int i) const
 {
     QString font;
-    if (d->fonts.count() > (uint) i)
-       font = d->fonts[i];
-    if (font.isEmpty())
+    if(d->fonts.count() > (uint)i)
+        font = d->fonts[i];
+    if(font.isEmpty())
         font = d->defaultFonts[i];
     return font;
 }
@@ -960,17 +965,17 @@ QString KHTMLSettings::userStyleSheet() const
 
 bool KHTMLSettings::isFormCompletionEnabled() const
 {
-  return d->m_formCompletionEnabled;
+    return d->m_formCompletionEnabled;
 }
 
 int KHTMLSettings::maxFormCompletionItems() const
 {
-  return d->m_maxFormCompletionItems;
+    return d->m_maxFormCompletionItems;
 }
 
 const QString &KHTMLSettings::encoding() const
 {
-  return d->m_encoding;
+    return d->m_encoding;
 }
 
 bool KHTMLSettings::followSystemColors() const
@@ -978,59 +983,59 @@ bool KHTMLSettings::followSystemColors() const
     return d->m_follow_system_colors;
 }
 
-const QColor& KHTMLSettings::textColor() const
+const QColor &KHTMLSettings::textColor() const
 {
-  return d->m_textColor;
+    return d->m_textColor;
 }
 
-const QColor& KHTMLSettings::baseColor() const
+const QColor &KHTMLSettings::baseColor() const
 {
-  return d->m_baseColor;
+    return d->m_baseColor;
 }
 
-const QColor& KHTMLSettings::linkColor() const
+const QColor &KHTMLSettings::linkColor() const
 {
-  return d->m_linkColor;
+    return d->m_linkColor;
 }
 
-const QColor& KHTMLSettings::vLinkColor() const
+const QColor &KHTMLSettings::vLinkColor() const
 {
-  return d->m_vLinkColor;
+    return d->m_vLinkColor;
 }
 
 bool KHTMLSettings::autoLoadImages() const
 {
-  return d->m_bAutoLoadImages;
+    return d->m_bAutoLoadImages;
 }
 
 bool KHTMLSettings::unfinishedImageFrame() const
 {
-  return d->m_bUnfinishedImageFrame;
+    return d->m_bUnfinishedImageFrame;
 }
 
 KHTMLSettings::KAnimationAdvice KHTMLSettings::showAnimations() const
 {
-  return d->m_showAnimations;
+    return d->m_showAnimations;
 }
 
 bool KHTMLSettings::isAutoDelayedActionsEnabled() const
 {
-  return d->m_autoDelayedActionsEnabled;
+    return d->m_autoDelayedActionsEnabled;
 }
 
 bool KHTMLSettings::jsErrorsEnabled() const
 {
-  return d->m_jsErrorsEnabled;
+    return d->m_jsErrorsEnabled;
 }
 
 void KHTMLSettings::setJSErrorsEnabled(bool enabled)
 {
-  d->m_jsErrorsEnabled = enabled;
-  // save it
-  KConfig *config = KGlobal::config();
-  config->setGroup("HTML Settings");
-  config->writeEntry("ReportJSErrors", enabled);
-  config->sync();
+    d->m_jsErrorsEnabled = enabled;
+    // save it
+    KConfig *config = KGlobal::config();
+    config->setGroup("HTML Settings");
+    config->writeEntry("ReportJSErrors", enabled);
+    config->sync();
 }
 
 bool KHTMLSettings::allowTabulation() const

@@ -45,95 +45,89 @@ class QGridLayout;
 
 
 class KX509Item : public KListViewItem {
-	public:
-		KX509Item(KListViewItem *parent, KSSLCertificate *x);
-		KX509Item(KListView *parent, KSSLCertificate *x);
-		void setup(KSSLCertificate *x);
-		~KX509Item();
-		virtual int rtti() const { return 1; }
-	KSSLCertificate *cert;
-	QString _prettyName;
+public:
+    KX509Item(KListViewItem *parent, KSSLCertificate *x);
+    KX509Item(KListView *parent, KSSLCertificate *x);
+    void setup(KSSLCertificate *x);
+    ~KX509Item();
+    virtual int rtti() const
+    {
+        return 1;
+    }
+    KSSLCertificate *cert;
+    QString _prettyName;
 };
 
 
 class KPKCS12Item : public KListViewItem {
-	public:
-		KPKCS12Item(KListViewItem *parent, KSSLPKCS12 *x);
-		~KPKCS12Item();
-	KSSLPKCS12 *cert;
-	QString _prettyName;
+public:
+    KPKCS12Item(KListViewItem *parent, KSSLPKCS12 *x);
+    ~KPKCS12Item();
+    KSSLPKCS12 *cert;
+    QString _prettyName;
 };
 
 
 class KCertPart : public KParts::ReadWritePart {
-Q_OBJECT
+    Q_OBJECT
 public:
-  KCertPart(QWidget *parentWidget, const char *widgetName,
-            QObject *parent = 0L, const char *name = 0L,
-	    const QStringList &args = QStringList() );
-  virtual ~KCertPart();
+    KCertPart(QWidget *parentWidget, const char *widgetName, QObject *parent = 0L, const char *name = 0L, const QStringList &args = QStringList());
+    virtual ~KCertPart();
 
-  virtual void setReadWrite(bool readwrite);
+    virtual void setReadWrite(bool readwrite);
 
-  static KAboutData *createAboutData();
+    static KAboutData *createAboutData();
 
 protected slots:
-  void slotChain(int c);
-  void slotImport();
-  void slotSave();
-  void slotDone();
-  void slotLaunch();
-  void slotSelectionChanged(QListViewItem *x);
-  void slotImportAll();
+    void slotChain(int c);
+    void slotImport();
+    void slotSave();
+    void slotDone();
+    void slotLaunch();
+    void slotSelectionChanged(QListViewItem *x);
+    void slotImportAll();
 
 protected:
+    virtual bool openFile();
+    virtual bool saveFile();
 
-  virtual bool openFile();
-  virtual bool saveFile();
+    void displayPKCS12Cert(KSSLCertificate *c);
+    void displayCACert(KSSLCertificate *c);
 
-  void displayPKCS12Cert(KSSLCertificate *c);
-  void displayCACert(KSSLCertificate *c);
+    KListView *_sideList;
+    KListViewItem *_parentCA, *_parentP12;
+    QFrame *_pkcsFrame, *_blankFrame, *_x509Frame, *_frame;
 
-  KListView *_sideList;
-  KListViewItem *_parentCA, *_parentP12;
-  QFrame *_pkcsFrame, *_blankFrame, *_x509Frame, *_frame;
+    // for the PKCS12 widget
+    QLabel *_p12_filenameLabel, *_p12_validFrom, *_p12_validUntil, *_p12_serialNum, *_p12_certState;
+    QLabel *_p12_digest;
+    KComboBox *_p12_chain;
+    QMultiLineEdit *_p12_pubkey, *_p12_sig;
+    KSSLCertBox *_p12_subject, *_p12_issuer;
 
-  // for the PKCS12 widget
-  QLabel *_p12_filenameLabel, *_p12_validFrom, *_p12_validUntil, 
-         *_p12_serialNum, *_p12_certState;
-  QLabel *_p12_digest;
-  KComboBox *_p12_chain;
-  QMultiLineEdit *_p12_pubkey, *_p12_sig;
-  KSSLCertBox *_p12_subject, *_p12_issuer;
-
-  // for the CA widget
-  QLabel *_ca_filenameLabel, *_ca_validFrom, *_ca_validUntil, 
-         *_ca_serialNum, *_ca_certState;
-  QLabel *_ca_digest;
-  QMultiLineEdit *_ca_pubkey, *_ca_sig;
-  KSSLCertBox *_ca_subject, *_ca_issuer;
+    // for the CA widget
+    QLabel *_ca_filenameLabel, *_ca_validFrom, *_ca_validUntil, *_ca_serialNum, *_ca_certState;
+    QLabel *_ca_digest;
+    QMultiLineEdit *_ca_pubkey, *_ca_sig;
+    KSSLCertBox *_ca_subject, *_ca_issuer;
 
 
-  // The rest
-  KInstance *_instance;
-  QButton *_import, *_save, *_done, *_launch, *_importAll;
-  // Store the pointer to the current item
-  KSSLPKCS12 *_p12;
-  KSSLCertificate *_ca;
-  QTabWidget *_tabs;
-  QGridLayout *_baseGrid;
-  KSSLSigners *_signers;
-  bool _silentImport;
-  QString _curName;
+    // The rest
+    KInstance *_instance;
+    QButton *_import, *_save, *_done, *_launch, *_importAll;
+    // Store the pointer to the current item
+    KSSLPKCS12 *_p12;
+    KSSLCertificate *_ca;
+    QTabWidget *_tabs;
+    QGridLayout *_baseGrid;
+    KSSLSigners *_signers;
+    bool _silentImport;
+    QString _curName;
 
 private:
-  KCertPartPrivate *d;
-  void displayPKCS12();
+    KCertPartPrivate *d;
+    void displayPKCS12();
 };
 
 
-
-
 #endif
-
-

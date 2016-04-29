@@ -11,8 +11,7 @@
 
 #include "previewtest.moc"
 
-PreviewTest::PreviewTest()
-    :QWidget()
+PreviewTest::PreviewTest() : QWidget()
 {
     QGridLayout *layout = new QGridLayout(this, 2, 2);
     m_url = new KLineEdit(this);
@@ -31,12 +30,12 @@ void PreviewTest::slotGenerate()
     KURL::List urls;
     urls.append(m_url->text());
     KIO::PreviewJob *job = KIO::filePreview(urls, m_preview->width(), m_preview->height(), true, 48);
-    connect(job, SIGNAL(result(KIO::Job*)), SLOT(slotResult(KIO::Job*)));
+    connect(job, SIGNAL(result(KIO::Job *)), SLOT(slotResult(KIO::Job *)));
     connect(job, SIGNAL(gotPreview(const KFileItem *, const QPixmap &)), SLOT(slotPreview(const KFileItem *, const QPixmap &)));
     connect(job, SIGNAL(failed(const KFileItem *)), SLOT(slotFailed()));
 }
 
-void PreviewTest::slotResult(KIO::Job*)
+void PreviewTest::slotResult(KIO::Job *)
 {
     kdDebug() << "PreviewTest::slotResult(...)" << endl;
 }
@@ -61,4 +60,3 @@ int main(int argc, char **argv)
     app.setMainWidget(w);
     return app.exec();
 }
-

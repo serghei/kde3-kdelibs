@@ -30,262 +30,271 @@
 #include <kstandarddirs.h>
 #include <kstaticdeleter.h>
 
-KServiceFactory::KServiceFactory()
- : KSycocaFactory( KST_KServiceFactory )
+KServiceFactory::KServiceFactory() : KSycocaFactory(KST_KServiceFactory)
 {
-   m_offerListOffset = 0;
-   m_nameDictOffset = 0;
-   m_relNameDictOffset = 0;
-   m_menuIdDictOffset = 0;
-   if (m_str)
-   {
-      // Read Header
-      Q_INT32 i;
-      (*m_str) >> i;
-      m_nameDictOffset = i;
-      (*m_str) >> i;
-      m_relNameDictOffset = i;
-      (*m_str) >> i;
-      m_offerListOffset = i;
-      (*m_str) >> i;
-      m_initListOffset = i;
-      (*m_str) >> i;
-      m_menuIdDictOffset = i;
+    m_offerListOffset = 0;
+    m_nameDictOffset = 0;
+    m_relNameDictOffset = 0;
+    m_menuIdDictOffset = 0;
+    if(m_str)
+    {
+        // Read Header
+        Q_INT32 i;
+        (*m_str) >> i;
+        m_nameDictOffset = i;
+        (*m_str) >> i;
+        m_relNameDictOffset = i;
+        (*m_str) >> i;
+        m_offerListOffset = i;
+        (*m_str) >> i;
+        m_initListOffset = i;
+        (*m_str) >> i;
+        m_menuIdDictOffset = i;
 
-      int saveOffset = m_str->device()->at();
-      // Init index tables
-      m_nameDict = new KSycocaDict(m_str, m_nameDictOffset);
-      // Init index tables
-      m_relNameDict = new KSycocaDict(m_str, m_relNameDictOffset);
-      // Init index tables
-      m_menuIdDict = new KSycocaDict(m_str, m_menuIdDictOffset);
-      saveOffset = m_str->device()->at(saveOffset);
-   }
-   else
-   {
-      // Build new database
-      m_nameDict = new KSycocaDict();
-      m_relNameDict = new KSycocaDict();
-      m_menuIdDict = new KSycocaDict();
-   }
-   _self = this;
+        int saveOffset = m_str->device()->at();
+        // Init index tables
+        m_nameDict = new KSycocaDict(m_str, m_nameDictOffset);
+        // Init index tables
+        m_relNameDict = new KSycocaDict(m_str, m_relNameDictOffset);
+        // Init index tables
+        m_menuIdDict = new KSycocaDict(m_str, m_menuIdDictOffset);
+        saveOffset = m_str->device()->at(saveOffset);
+    }
+    else
+    {
+        // Build new database
+        m_nameDict = new KSycocaDict();
+        m_relNameDict = new KSycocaDict();
+        m_menuIdDict = new KSycocaDict();
+    }
+    _self = this;
 }
 
 KServiceFactory::~KServiceFactory()
 {
-   _self = 0L;
-   delete m_nameDict;
-   delete m_relNameDict;
-   delete m_menuIdDict;
+    _self = 0L;
+    delete m_nameDict;
+    delete m_relNameDict;
+    delete m_menuIdDict;
 }
 
-KServiceFactory * KServiceFactory::self()
+KServiceFactory *KServiceFactory::self()
 {
-    if (!_self) {
+    if(!_self)
+    {
         _self = new KServiceFactory();
     }
     return _self;
 }
 
-KService * KServiceFactory::findServiceByName(const QString &_name)
+KService *KServiceFactory::findServiceByName(const QString &_name)
 {
-   if (!m_sycocaDict) return 0; // Error!
+    if(!m_sycocaDict)
+        return 0; // Error!
 
-   // Warning : this assumes we're NOT building a database
-   // But since findServiceByName isn't called in that case...
-   // [ see KServiceTypeFactory for how to do it if needed ]
+    // Warning : this assumes we're NOT building a database
+    // But since findServiceByName isn't called in that case...
+    // [ see KServiceTypeFactory for how to do it if needed ]
 
-   int offset = m_sycocaDict->find_string( _name );
-   if (!offset) return 0; // Not found
+    int offset = m_sycocaDict->find_string(_name);
+    if(!offset)
+        return 0; // Not found
 
-   KService * newService = createEntry(offset);
+    KService *newService = createEntry(offset);
 
-   // Check whether the dictionary was right.
-   if (newService && (newService->name() != _name))
-   {
-      // No it wasn't...
-      delete newService;
-      newService = 0; // Not found
-   }
-   return newService;
+    // Check whether the dictionary was right.
+    if(newService && (newService->name() != _name))
+    {
+        // No it wasn't...
+        delete newService;
+        newService = 0; // Not found
+    }
+    return newService;
 }
 
-KService * KServiceFactory::findServiceByDesktopName(const QString &_name)
+KService *KServiceFactory::findServiceByDesktopName(const QString &_name)
 {
-   if (!m_nameDict) return 0; // Error!
+    if(!m_nameDict)
+        return 0; // Error!
 
-   // Warning : this assumes we're NOT building a database
-   // But since findServiceByName isn't called in that case...
-   // [ see KServiceTypeFactory for how to do it if needed ]
+    // Warning : this assumes we're NOT building a database
+    // But since findServiceByName isn't called in that case...
+    // [ see KServiceTypeFactory for how to do it if needed ]
 
-   int offset = m_nameDict->find_string( _name );
-   if (!offset) return 0; // Not found
+    int offset = m_nameDict->find_string(_name);
+    if(!offset)
+        return 0; // Not found
 
-   KService * newService = createEntry(offset);
+    KService *newService = createEntry(offset);
 
-   // Check whether the dictionary was right.
-   if (newService && (newService->desktopEntryName() != _name))
-   {
-      // No it wasn't...
-      delete newService;
-      newService = 0; // Not found
-   }
-   return newService;
+    // Check whether the dictionary was right.
+    if(newService && (newService->desktopEntryName() != _name))
+    {
+        // No it wasn't...
+        delete newService;
+        newService = 0; // Not found
+    }
+    return newService;
 }
 
-KService * KServiceFactory::findServiceByDesktopPath(const QString &_name)
+KService *KServiceFactory::findServiceByDesktopPath(const QString &_name)
 {
-   if (!m_relNameDict) return 0; // Error!
+    if(!m_relNameDict)
+        return 0; // Error!
 
-   // Warning : this assumes we're NOT building a database
-   // But since findServiceByName isn't called in that case...
-   // [ see KServiceTypeFactory for how to do it if needed ]
+    // Warning : this assumes we're NOT building a database
+    // But since findServiceByName isn't called in that case...
+    // [ see KServiceTypeFactory for how to do it if needed ]
 
-   int offset = m_relNameDict->find_string( _name );
-   if (!offset) return 0; // Not found
+    int offset = m_relNameDict->find_string(_name);
+    if(!offset)
+        return 0; // Not found
 
-   KService * newService = createEntry(offset);
+    KService *newService = createEntry(offset);
 
-   // Check whether the dictionary was right.
-   if (newService && (newService->desktopEntryPath() != _name))
-   {
-      // No it wasn't...
-      delete newService;
-      newService = 0; // Not found
-   }
-   return newService;
+    // Check whether the dictionary was right.
+    if(newService && (newService->desktopEntryPath() != _name))
+    {
+        // No it wasn't...
+        delete newService;
+        newService = 0; // Not found
+    }
+    return newService;
 }
 
-KService * KServiceFactory::findServiceByMenuId(const QString &_menuId)
+KService *KServiceFactory::findServiceByMenuId(const QString &_menuId)
 {
-   if (!m_menuIdDict) return 0; // Error!
+    if(!m_menuIdDict)
+        return 0; // Error!
 
-   // Warning : this assumes we're NOT building a database
-   // But since findServiceByMenuId isn't called in that case...
-   // [ see KServiceTypeFactory for how to do it if needed ]
+    // Warning : this assumes we're NOT building a database
+    // But since findServiceByMenuId isn't called in that case...
+    // [ see KServiceTypeFactory for how to do it if needed ]
 
-   int offset = m_menuIdDict->find_string( _menuId );
-   if (!offset) return 0; // Not found
+    int offset = m_menuIdDict->find_string(_menuId);
+    if(!offset)
+        return 0; // Not found
 
-   KService * newService = createEntry(offset);
+    KService *newService = createEntry(offset);
 
-   // Check whether the dictionary was right.
-   if (newService && (newService->menuId() != _menuId))
-   {
-      // No it wasn't...
-      delete newService;
-      newService = 0; // Not found
-   }
-   return newService;
+    // Check whether the dictionary was right.
+    if(newService && (newService->menuId() != _menuId))
+    {
+        // No it wasn't...
+        delete newService;
+        newService = 0; // Not found
+    }
+    return newService;
 }
 
-KService* KServiceFactory::createEntry(int offset)
+KService *KServiceFactory::createEntry(int offset)
 {
-   KService * newEntry = 0L;
-   KSycocaType type;
-   QDataStream *str = KSycoca::self()->findEntry(offset, type);
-   switch(type)
-   {
-     case KST_KService:
-        newEntry = new KService(*str, offset);
-        break;
+    KService *newEntry = 0L;
+    KSycocaType type;
+    QDataStream *str = KSycoca::self()->findEntry(offset, type);
+    switch(type)
+    {
+        case KST_KService:
+            newEntry = new KService(*str, offset);
+            break;
 
-     default:
-        kdError(7011) << QString("KServiceFactory: unexpected object entry in KSycoca database (type = %1)").arg((int)type) << endl;
-        return 0;
-   }
-   if (!newEntry->isValid())
-   {
-      kdError(7011) << "KServiceFactory: corrupt object in KSycoca database!\n" << endl;
-      delete newEntry;
-      newEntry = 0;
-   }
-   return newEntry;
+        default:
+            kdError(7011) << QString("KServiceFactory: unexpected object entry in KSycoca database (type = %1)").arg((int)type) << endl;
+            return 0;
+    }
+    if(!newEntry->isValid())
+    {
+        kdError(7011) << "KServiceFactory: corrupt object in KSycoca database!\n" << endl;
+        delete newEntry;
+        newEntry = 0;
+    }
+    return newEntry;
 }
 
 KService::List KServiceFactory::allServices()
 {
-   KService::List result;
-   KSycocaEntry::List list = allEntries();
-   for( KSycocaEntry::List::Iterator it = list.begin();
-        it != list.end();
-        ++it)
-   {
-      KService *newService = dynamic_cast<KService *>((*it).data());
-      if (newService)
-         result.append( KService::Ptr( newService ) );
-   }
-   return result;
+    KService::List result;
+    KSycocaEntry::List list = allEntries();
+    for(KSycocaEntry::List::Iterator it = list.begin(); it != list.end(); ++it)
+    {
+        KService *newService = dynamic_cast< KService * >((*it).data());
+        if(newService)
+            result.append(KService::Ptr(newService));
+    }
+    return result;
 }
 
 KService::List KServiceFactory::allInitServices()
 {
-   KService::List list;
-   if (!m_str) return list;
+    KService::List list;
+    if(!m_str)
+        return list;
 
-   // Assume we're NOT building a database
+    // Assume we're NOT building a database
 
-   m_str->device()->at(m_initListOffset);
-   Q_INT32 entryCount;
-   (*m_str) >> entryCount;
+    m_str->device()->at(m_initListOffset);
+    Q_INT32 entryCount;
+    (*m_str) >> entryCount;
 
-   Q_INT32 *offsetList = new Q_INT32[entryCount];
-   for(int i = 0; i < entryCount; i++)
-   {
-      (*m_str) >> offsetList[i];
-   }
+    Q_INT32 *offsetList = new Q_INT32[entryCount];
+    for(int i = 0; i < entryCount; i++)
+    {
+        (*m_str) >> offsetList[i];
+    }
 
-   for(int i = 0; i < entryCount; i++)
-   {
-      KService *newEntry = createEntry(offsetList[i]);
-      if (newEntry)
-      {
-         list.append( KService::Ptr( newEntry ) );
-      }
-   }
-   delete [] offsetList;
-   return list;
+    for(int i = 0; i < entryCount; i++)
+    {
+        KService *newEntry = createEntry(offsetList[i]);
+        if(newEntry)
+        {
+            list.append(KService::Ptr(newEntry));
+        }
+    }
+    delete[] offsetList;
+    return list;
 }
 
-KService::List KServiceFactory::offers( int serviceTypeOffset )
+KService::List KServiceFactory::offers(int serviceTypeOffset)
 {
-   KService::List list;
+    KService::List list;
 
-   QDataStream *str = m_str;
-   // Jump to the offer list
-   str->device()->at( m_offerListOffset );
+    QDataStream *str = m_str;
+    // Jump to the offer list
+    str->device()->at(m_offerListOffset);
 
-   Q_INT32 aServiceTypeOffset;
-   Q_INT32 aServiceOffset;
-   // We might want to do a binary search instead of a linear search
-   // since servicetype offsets are sorted. Bah.
-   while (true)
-   {
-      (*str) >> aServiceTypeOffset;
-      if ( aServiceTypeOffset )
-      {
-         (*str) >> aServiceOffset;
-         if ( aServiceTypeOffset == serviceTypeOffset )
-         {
-            // Save stream position !
-            int savedPos = str->device()->at();
-            // Create Service
-            KService * serv = createEntry( aServiceOffset );
-            if (serv)
-                list.append( KService::Ptr( serv ) );
-            // Restore position
-            str->device()->at( savedPos );
-         } else if ( aServiceTypeOffset > (Q_INT32)serviceTypeOffset )
-            break; // too far
-      }
-      else
-         break; // 0 => end of list
-   }
-   return list;
+    Q_INT32 aServiceTypeOffset;
+    Q_INT32 aServiceOffset;
+    // We might want to do a binary search instead of a linear search
+    // since servicetype offsets are sorted. Bah.
+    while(true)
+    {
+        (*str) >> aServiceTypeOffset;
+        if(aServiceTypeOffset)
+        {
+            (*str) >> aServiceOffset;
+            if(aServiceTypeOffset == serviceTypeOffset)
+            {
+                // Save stream position !
+                int savedPos = str->device()->at();
+                // Create Service
+                KService *serv = createEntry(aServiceOffset);
+                if(serv)
+                    list.append(KService::Ptr(serv));
+                // Restore position
+                str->device()->at(savedPos);
+            }
+            else if(aServiceTypeOffset > (Q_INT32)serviceTypeOffset)
+                break; // too far
+        }
+        else
+            break; // 0 => end of list
+    }
+    return list;
 }
 
 KServiceFactory *KServiceFactory::_self = 0;
 
-void KServiceFactory::virtual_hook( int id, void* data )
-{ KSycocaFactory::virtual_hook( id, data ); }
-
+void KServiceFactory::virtual_hook(int id, void *data)
+{
+    KSycocaFactory::virtual_hook(id, data);
+}

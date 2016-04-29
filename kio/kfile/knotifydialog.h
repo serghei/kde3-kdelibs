@@ -28,9 +28,8 @@
 
 class QShowEvent;
 
-namespace KNotify
-{
-    class KNotifyWidget;
+namespace KNotify {
+class KNotifyWidget;
 }
 
 /**
@@ -49,8 +48,7 @@ namespace KNotify
  * @since 3.1
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-class KIO_EXPORT KNotifyDialog : public KDialogBase
-{
+class KIO_EXPORT KNotifyDialog : public KDialogBase {
     Q_OBJECT
 
 public:
@@ -59,7 +57,7 @@ public:
      * yourself instead of using the configure() method.
      *
      * KDE4.0 modal default will be false.
-     * 
+     *
      * @param parent The parent widget for the dialog
      * @param name The widget name
      * @param modal If true, this will be a modal dialog, otherwise non-modal.
@@ -68,10 +66,7 @@ public:
      *                  Set this to 0L if you want to add all events yourself with
      * addApplicationEvents().
      */
-    KNotifyDialog( QWidget *parent = 0, const char *name = 0,
-                   bool modal = true,
-                   const KAboutData *aboutData =
-                   KGlobal::instance()->aboutData() );
+    KNotifyDialog(QWidget *parent = 0, const char *name = 0, bool modal = true, const KAboutData *aboutData = KGlobal::instance()->aboutData());
     /**
      * Destroys the KNotifyDialog
      */
@@ -87,19 +82,18 @@ public:
      * @see exec for the return values.
      * @return The value of QDialog::exec()
      */
-    static int configure( QWidget *parent = 0, const char *name = 0,
-                          const KAboutData *aboutData = KGlobal::instance()->aboutData() );
+    static int configure(QWidget *parent = 0, const char *name = 0, const KAboutData *aboutData = KGlobal::instance()->aboutData());
 
     /**
      * With this method, you can add the KNotify events of one eventsrc
      * files to the view.
      * KNotifyDialog can handle events for multiple applications (i.e. eventsrc files).
      * Successive calls with a different @p appName will add them.
-     * @param appName The application's name, i.e. the name passed to the 
+     * @param appName The application's name, i.e. the name passed to the
      *                KApplication constructor or KAboutData.
      * @see clearApplicationEvents()
      */
-    virtual void addApplicationEvents( const char *appName );
+    virtual void addApplicationEvents(const char *appName);
 
     /**
      * With this method, you can add the KNotify events of one eventsrc
@@ -110,7 +104,7 @@ public:
      *             A relative path would be e.g. "kwin/eventsrc".
      * @see clearApplicationEvents()
      */
-    virtual void addApplicationEvents( const QString& path );
+    virtual void addApplicationEvents(const QString &path);
 
     /**
      * Removes all the events added with addApplicationEvents()
@@ -129,212 +123,225 @@ private:
 
     void updateView();
 
-    KNotify::KNotifyWidget * m_notifyWidget;
+    KNotify::KNotifyWidget *m_notifyWidget;
 
     class Private;
     Private *d;
 };
 
 
-namespace KNotify
-{
-    class Application;
-    class Event;
-    class ListViewItem;
-    typedef QPtrList<Event> EventList;
-    typedef QPtrListIterator<Application> ApplicationListIterator;
-    typedef QPtrListIterator<Event> EventListIterator;
+namespace KNotify {
+class Application;
+class Event;
+class ListViewItem;
+typedef QPtrList< Event > EventList;
+typedef QPtrListIterator< Application > ApplicationListIterator;
+typedef QPtrListIterator< Event > EventListIterator;
+
+/**
+ * @internal
+ */
+class KIO_EXPORT Application {
+public:
+    Application(const QString &path);
+    ~Application();
+
+    QString text() const
+    {
+        return m_description;
+    }
+    QString icon() const
+    {
+        return m_icon;
+    }
+    const EventList &eventList();
+    void reloadEvents(bool revertToDefaults = false);
+    void save();
+
+    QString appName() const
+    {
+        return m_appname;
+    }
+
+private:
+    QString m_icon;
+    QString m_description;
+    QString m_appname;
+    EventList *m_events;
+
+    KConfig *kc;     // The file that defines the events.
+    KConfig *config; // The file that contains the settings for the events
+};
+
+
+class KIO_EXPORT ApplicationList : public QPtrList< Application > {
+    virtual int compareItems(QPtrCollection::Item item1, QPtrCollection::Item item2)
+    {
+        return (static_cast< Application * >(item1)->text() >= static_cast< Application * >(item2)->text()) ? 1 : -1;
+    }
+};
+
+/**
+ * @internal
+ */
+class KIO_EXPORT KNotifyWidget : public KNotifyWidgetBase {
+    Q_OBJECT
+
+public:
+    KNotifyWidget(QWidget *parent = 0, const char *name = 0, bool handleAllApps = false);
+    ~KNotifyWidget();
+
+    KListView *eventsView()
+    {
+        return m_listview;
+    }
+
+    void addVisibleApp(Application *app);
+    ApplicationList &visibleApps()
+    {
+        return m_visibleApps;
+    }
+    ApplicationList &allApps()
+    {
+        return m_allApps;
+    }
 
     /**
-     * @internal
+     * Returns 0L if no application events could be found
+     * The returned pointer must be freed by the caller (easiest done
+     * by putting it into an ApplicationList with setAutoDelete( true )).
      */
-    class KIO_EXPORT Application
-    {
-    public:
-        Application( const QString &path );
-        ~Application();
+    Application *addApplicationEvents(const QString &path);
 
-        QString text() const { return m_description; }
-        QString icon() const { return m_icon; }
-        const EventList& eventList();
-        void reloadEvents( bool revertToDefaults = false );
-        void save();
+    void resetDefaults(bool ask);
+    void sort(bool ascending = true);
 
-        QString appName() const { return m_appname; }
-
-    private:
-        QString m_icon;
-        QString m_description;
-        QString m_appname;
-        EventList *m_events;
-
-        KConfig *kc; // The file that defines the events.
-        KConfig *config; // The file that contains the settings for the events
-    };
-
-
-    class KIO_EXPORT ApplicationList : public QPtrList<Application>
-    {
-        virtual int compareItems ( QPtrCollection::Item item1,
-                                   QPtrCollection::Item item2 )
-        {
-            return (static_cast<Application*>( item1 )->text() >=
-                static_cast<Application*>( item2 )->text()) ? 1 : -1;
-        }
-    };
-
+public slots:
     /**
-     * @internal
+     * Clears the view and all the Application events.
      */
-    class KIO_EXPORT KNotifyWidget : public KNotifyWidgetBase
-    {
-        Q_OBJECT
-
-    public:
-        KNotifyWidget( QWidget* parent = 0, const char* name = 0,
-                       bool handleAllApps = false );
-        ~KNotifyWidget();
-
-        KListView * eventsView() {
-            return m_listview;
-        }
-
-        void addVisibleApp( Application *app );
-        ApplicationList& visibleApps() { return m_visibleApps; }
-        ApplicationList& allApps() { return m_allApps; }
-
-        /**
-         * Returns 0L if no application events could be found
-         * The returned pointer must be freed by the caller (easiest done
-         * by putting it into an ApplicationList with setAutoDelete( true )).
-         */
-        Application * addApplicationEvents( const QString& path );
-
-        void resetDefaults( bool ask );
-        void sort( bool ascending = true );
-
-    public slots:
-        /**
-         * Clears the view and all the Application events.
-         */
-        virtual void clear();
-        /**
-         * Clears only the view and the visible Application events.
-         * E.g. useful if you want to set new visible events with
-         * addVisibleApp()
-         */
-        virtual void clearVisible();
-        virtual void save();
-        virtual void showAdvanced( bool show );
-        void toggleAdvanced();
+    virtual void clear();
+    /**
+     * Clears only the view and the visible Application events.
+     * E.g. useful if you want to set new visible events with
+     * addVisibleApp()
+     */
+    virtual void clearVisible();
+    virtual void save();
+    virtual void showAdvanced(bool show);
+    void toggleAdvanced();
 
 
-    signals:
-        void changed( bool hasChanges );
+signals:
+    void changed(bool hasChanges);
 
-    protected:
-        /**
-         * May return 0L, if there is no current event selected.
-         */
-        Event * currentEvent();
-        virtual void showEvent( QShowEvent * );
-        virtual void enableAll( int what, bool enable );
+protected:
+    /**
+     * May return 0L, if there is no current event selected.
+     */
+    Event *currentEvent();
+    virtual void showEvent(QShowEvent *);
+    virtual void enableAll(int what, bool enable);
 
-        void reload( bool revertToDefaults = false );
+    void reload(bool revertToDefaults = false);
 
-    protected slots:
-        void playSound();
+protected slots:
+    void playSound();
 
-    private slots:
-        void slotItemClicked( QListViewItem *item, const QPoint& point, 
-                              int col );
-        void slotEventChanged( QListViewItem * );
-        void soundToggled( bool on );
-        void loggingToggled( bool on );
-        void executeToggled( bool on );
-        void messageBoxChanged();
-        void stderrToggled( bool on );
-        void taskbarToggled( bool on );
+private slots:
+    void slotItemClicked(QListViewItem *item, const QPoint &point, int col);
+    void slotEventChanged(QListViewItem *);
+    void soundToggled(bool on);
+    void loggingToggled(bool on);
+    void executeToggled(bool on);
+    void messageBoxChanged();
+    void stderrToggled(bool on);
+    void taskbarToggled(bool on);
 
-        void soundFileChanged( const QString& text );
-        void logfileChanged( const QString& text );
-        void commandlineChanged( const QString& text );
+    void soundFileChanged(const QString &text);
+    void logfileChanged(const QString &text);
+    void commandlineChanged(const QString &text);
 
-        void openSoundDialog( KURLRequester * );
-        void openLogDialog( KURLRequester * );
-        void openExecDialog( KURLRequester * );
+    void openSoundDialog(KURLRequester *);
+    void openLogDialog(KURLRequester *);
+    void openExecDialog(KURLRequester *);
 
-        void enableAll();
+    void enableAll();
 
-    private:
-        void updateWidgets( ListViewItem *item );
-        void updatePixmaps( ListViewItem *item );
+private:
+    void updateWidgets(ListViewItem *item);
+    void updatePixmaps(ListViewItem *item);
 
-        static QString makeRelative( const QString& );
-        void addToView( const EventList& events );
-        void widgetChanged( QListViewItem *item,
-                            int what, bool on, QWidget *buddy = 0L );
-        void selectItem( QListViewItem *item );
+    static QString makeRelative(const QString &);
+    void addToView(const EventList &events);
+    void widgetChanged(QListViewItem *item, int what, bool on, QWidget *buddy = 0L);
+    void selectItem(QListViewItem *item);
 
-        ApplicationList m_visibleApps;
-        ApplicationList m_allApps;
+    ApplicationList m_visibleApps;
+    ApplicationList m_allApps;
 
-        class Private;
-        Private *d;
-
-    };
+    class Private;
+    Private *d;
+};
 
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
 
 
-    /**
-     * @internal
-     */
-    class Event
+/**
+ * @internal
+ */
+class Event {
+    friend class Application;
+
+public:
+    QString text() const
     {
-        friend class Application;
+        return description;
+    }
 
-    public:
-        QString text() const { return description; }
+    int presentation;
+    int dontShow;
+    QString logfile;
+    QString soundfile;
+    QString commandline;
 
-        int presentation;
-        int dontShow;
-        QString logfile;
-        QString soundfile;
-        QString commandline;
-
-        const Application *application() const { return m_app; }
-
-    private:
-        Event( const Application *app ) {
-            presentation = 0;
-            dontShow = 0;
-            m_app = app;
-        }
-        QString name;
-        QString description;
-        QString configGroup;
-
-        const Application *m_app;
-    };
-
-    /**
-     * @internal
-     */
-    class ListViewItem : public QListViewItem
+    const Application *application() const
     {
-    public:
-        ListViewItem( QListView *view, Event *event );
+        return m_app;
+    }
 
-        Event& event() { return *m_event; }
-        virtual int compare (QListViewItem * i, int col, bool ascending) const;
+private:
+    Event(const Application *app)
+    {
+        presentation = 0;
+        dontShow = 0;
+        m_app = app;
+    }
+    QString name;
+    QString description;
+    QString configGroup;
 
-    private:
-        Event * m_event;
-    };
+    const Application *m_app;
+};
 
+/**
+ * @internal
+ */
+class ListViewItem : public QListViewItem {
+public:
+    ListViewItem(QListView *view, Event *event);
+
+    Event &event()
+    {
+        return *m_event;
+    }
+    virtual int compare(QListViewItem *i, int col, bool ascending) const;
+
+private:
+    Event *m_event;
+};
 }
 
 

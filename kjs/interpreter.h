@@ -31,50 +31,56 @@
 
 namespace KJS {
 
-  class ContextImp;
-  class InterpreterImp;
+class ContextImp;
+class InterpreterImp;
 
-  /**
-   * The three different types of code that can be executed in a Context.
-   * These are:
-   * <ul>
-   *   <li>GlobalCode - code executed as a result of a call to
-   *   Interpreter::evaluate().</li>
-   *   <li>EvalCode - executed by a call to the builtin eval() function</li>
-   *   <li>FunctionCode - inside a function call (ECMAScript functions only;
-   *   does not include builtin native functions or funcitons supplied by the
-   *   host environment</li>
-   * </ul>
-   */
-  enum CodeType {
-    GlobalCode   = 0,
-    EvalCode     = 1,
+/**
+ * The three different types of code that can be executed in a Context.
+ * These are:
+ * <ul>
+ *   <li>GlobalCode - code executed as a result of a call to
+ *   Interpreter::evaluate().</li>
+ *   <li>EvalCode - executed by a call to the builtin eval() function</li>
+ *   <li>FunctionCode - inside a function call (ECMAScript functions only;
+ *   does not include builtin native functions or funcitons supplied by the
+ *   host environment</li>
+ * </ul>
+ */
+enum CodeType
+{
+    GlobalCode = 0,
+    EvalCode = 1,
     FunctionCode = 2
-  };
+};
 
-  /**
-   * Represents an execution context, as specified by section 10 of the ECMA
-   * spec.
-   *
-   * An execution context contains information about the current state of the
-   * script - the scope for variable lookup, the value of "this", etc. A new
-   * execution context is entered whenever global code is executed (e.g. with
-   * Interpreter::evaluate()), a function is called (see
-   * Object::call()), or the builtin "eval" function is executed.
-   *
-   * Most inheritable functions in the KJS api take a ExecState pointer as
-   * their first parameter. This can be used to obtain a handle to the current
-   * execution context.
-   *
-   * Note: Context objects are wrapper classes/smart pointers for the internal
-   * KJS ContextImp type. When one context variable is assigned to another, it
-   * is still referencing the same internal object.
-   */
-  class KJS_EXPORT Context {
-  public:
-    Context(ContextImp *i) : rep(i) { }
+/**
+ * Represents an execution context, as specified by section 10 of the ECMA
+ * spec.
+ *
+ * An execution context contains information about the current state of the
+ * script - the scope for variable lookup, the value of "this", etc. A new
+ * execution context is entered whenever global code is executed (e.g. with
+ * Interpreter::evaluate()), a function is called (see
+ * Object::call()), or the builtin "eval" function is executed.
+ *
+ * Most inheritable functions in the KJS api take a ExecState pointer as
+ * their first parameter. This can be used to obtain a handle to the current
+ * execution context.
+ *
+ * Note: Context objects are wrapper classes/smart pointers for the internal
+ * KJS ContextImp type. When one context variable is assigned to another, it
+ * is still referencing the same internal object.
+ */
+class KJS_EXPORT Context {
+public:
+    Context(ContextImp *i) : rep(i)
+    {
+    }
 
-    ContextImp *imp() const { return rep; }
+    ContextImp *imp() const
+    {
+        return rep;
+    }
 
     /**
      * Returns the scope chain for this execution context. This is used for
@@ -157,21 +163,21 @@ namespace KJS {
      */
     List args() const;
 
-  private:
+private:
     ContextImp *rep;
-  };
+};
 
-  bool operator==(const Context &c1, const Context &c2);
-  bool operator!=(const Context &c1, const Context &c2);
+bool operator==(const Context &c1, const Context &c2);
+bool operator!=(const Context &c1, const Context &c2);
 
-  /**
-   * Interpreter objects can be used to evaluate ECMAScript code. Each
-   * interpreter has a global object which is used for the purposes of code
-   * evaluation, and also provides access to built-in properties such as
-   * " Object" and "Number".
-   */
-  class KJS_EXPORT Interpreter {
-  public:
+/**
+ * Interpreter objects can be used to evaluate ECMAScript code. Each
+ * interpreter has a global object which is used for the purposes of code
+ * evaluation, and also provides access to built-in properties such as
+ * " Object" and "Number".
+ */
+class KJS_EXPORT Interpreter {
+public:
     /**
      * Creates a new interpreter. The supplied object will be used as the global
      * object for all scripts executed with this interpreter. During
@@ -375,7 +381,12 @@ namespace KJS {
     Object builtinTypeErrorPrototype() const;
     Object builtinURIErrorPrototype() const;
 
-    enum CompatMode { NativeMode, IECompat, NetscapeCompat };
+    enum CompatMode
+    {
+        NativeMode,
+        IECompat,
+        NetscapeCompat
+    };
     /**
      * Call this to enable a compatibility mode with another browser.
      * (by default konqueror is in "native mode").
@@ -395,7 +406,9 @@ namespace KJS {
      * Called by InterpreterImp during the mark phase of the garbage collector
      * Default implementation does nothing, this exist for classes that reimplement Interpreter.
      */
-    virtual void mark() {}
+    virtual void mark()
+    {
+    }
 
     /**
      * Provides a way to distinguish derived classes.
@@ -403,7 +416,10 @@ namespace KJS {
      * interpreters are created in the same process.
      * The base class returns 0, the ECMA-bindings interpreter returns 1.
      */
-    virtual int rtti() { return 0; }
+    virtual int rtti()
+    {
+        return 0;
+    }
 
 #ifdef KJS_DEBUG_MEM
     /**
@@ -411,7 +427,7 @@ namespace KJS {
      */
     static void finalCheck();
 #endif
-  private:
+private:
     InterpreterImp *rep;
 
     /**
@@ -419,41 +435,49 @@ namespace KJS {
      * copy-construction of Interpreter objects. You should always pass around
      * pointers to an interpreter instance instead.
      */
-    Interpreter(const Interpreter&);
+    Interpreter(const Interpreter &);
 
     /**
      * This constructor is not implemented, in order to prevent assignment of
      * Interpreter objects. You should always pass around pointers to an
      * interpreter instance instead.
      */
-    Interpreter operator=(const Interpreter&);
-  protected:
-    virtual void virtual_hook( int id, void* data );
-  };
+    Interpreter operator=(const Interpreter &);
 
-  /**
-   * Represents the current state of script execution. This object allows you
-   * obtain a handle the interpreter that is currently executing the script,
-   * and also the current execution state context.
-   */
-  class KJS_EXPORT ExecState {
+protected:
+    virtual void virtual_hook(int id, void *data);
+};
+
+/**
+ * Represents the current state of script execution. This object allows you
+ * obtain a handle the interpreter that is currently executing the script,
+ * and also the current execution state context.
+ */
+class KJS_EXPORT ExecState {
     friend class InterpreterImp;
     friend class FunctionImp;
     friend class GlobalFuncImp;
     friend class TryNode;
     friend class VarDeclNode;
     friend class FuncDeclNode;
-  public:
+
+public:
     /**
      * Returns the interpreter associated with this execution state
      *
      * @return The interpreter executing the script
      */
     // ### make non-const or provide an overload pair
-    Interpreter *dynamicInterpreter() const { return _interpreter; }
+    Interpreter *dynamicInterpreter() const
+    {
+        return _interpreter;
+    }
 
     // for compatibility
-    Interpreter *interpreter() const { return dynamicInterpreter(); }
+    Interpreter *interpreter() const
+    {
+        return dynamicInterpreter();
+    }
 
     /**
      * Returns the interpreter associated with the current scope's
@@ -468,30 +492,41 @@ namespace KJS {
      *
      * @return The current execution state context
      */
-    Context context() const { return _context; }
+    Context context() const
+    {
+        return _context;
+    }
 
     void setException(const Value &e);
     void clearException();
-    Value exception() const { return _exception; }
+    Value exception() const
+    {
+        return _exception;
+    }
     // ### make const
     bool hadException();
 
     /*
      * request for ending execution with an exception
      */
-    static void requestTerminate() { terminate_request = true; }
+    static void requestTerminate()
+    {
+        terminate_request = true;
+    }
     /*
      * optional confirmation for ending execution after requestTerminate()
      */
     static bool (*confirmTerminate)();
-  private:
-    ExecState(Interpreter *interp, ContextImp *con)
-        : _interpreter(interp), _context(con) { }
+
+private:
+    ExecState(Interpreter *interp, ContextImp *con) : _interpreter(interp), _context(con)
+    {
+    }
     Interpreter *_interpreter;
     ContextImp *_context;
     Value _exception;
     static bool terminate_request;
-  };
+};
 
 } // namespace
 

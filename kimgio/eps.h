@@ -3,9 +3,8 @@
 #define _EPS_H
 
 extern "C" {
-void kimgio_eps_read (QImageIO *image);
-void kimgio_eps_write (QImageIO *image);
+void kimgio_eps_read(QImageIO *image);
+void kimgio_eps_write(QImageIO *image);
 }
 
 #endif
-

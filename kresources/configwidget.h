@@ -30,29 +30,27 @@
 
 namespace KRES {
 
-class KRESOURCES_EXPORT ConfigWidget : public QWidget
-{
+class KRESOURCES_EXPORT ConfigWidget : public QWidget {
     Q_OBJECT
-  public:
-    ConfigWidget( QWidget *parent = 0, const char *name = 0 );
+public:
+    ConfigWidget(QWidget *parent = 0, const char *name = 0);
 
     /**
       Sets the widget to 'edit' mode. Reimplement this method if you are
       interested in the mode change (to disable some GUI element for
       example). By default the widget is in 'create new' mode.
     */
-    virtual void setInEditMode( bool value );
+    virtual void setInEditMode(bool value);
 
-  public slots:
-    virtual void loadSettings( Resource *resource ) = 0;
-    virtual void saveSettings( Resource *resource ) = 0;
+public slots:
+    virtual void loadSettings(Resource *resource) = 0;
+    virtual void saveSettings(Resource *resource) = 0;
 
-  signals:
-    void setReadOnly( bool value );
+signals:
+    void setReadOnly(bool value);
 
-  protected:
+protected:
     Resource *mResource;
 };
-
 }
 #endif

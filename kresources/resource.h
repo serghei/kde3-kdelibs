@@ -36,12 +36,12 @@ class ConfigWidget;
 
 /**
   \mainpage The KDE Resource library
- 
+
   The KDE Resource framework can be used to manage resources of
   different types, organized in families. The Resource framework
   is for example used for addressbook resources in libkabc and for
   calendar resources in libkcal.
- 
+
   When you want to use the framework for a new family, you need to
   <ul><li>Define a name for your resource family</li>
   <li>subclass Resource and add the fields and method that are needed
@@ -51,7 +51,7 @@ class ConfigWidget;
   of the resources in your family, and you can use ResourceSelectDialog
   to let the user select a single resource.</li>
   </ul>
- 
+
   When you want to add a new resource type to an existing resource family,
   you need to
   <ul><li>Further subclass the family-specific Resource to implement
@@ -61,9 +61,9 @@ class ConfigWidget;
   <li>Provide a .desktop file so that the new resource type can be found
   automatically by the ResourceManager</li>
   </ul>
- 
+
   Example:
- 
+
   <B>resourceexample.h</B>:
 \code
 #include <kconfig.h>
@@ -218,7 +218,7 @@ service_DATA = resourceexample.desktop
 
 /**
   This class provides a resource which is managed in a general way.
-  
+
   A Resource represents the concept of an object with the following attributes:
 
   - Applications operate on sets of one or more Resource objects.
@@ -243,7 +243,7 @@ service_DATA = resourceexample.desktop
   Concrete functionality of Resources is specified per family by a subclass of
   Resource. This classes in turn have subclasses which implement the different
   flavours of the functionality represented by the family.
- 
+
   A subclass should reimplement at least the constructor and the
   writeConfig method.
 
@@ -252,21 +252,20 @@ service_DATA = resourceexample.desktop
   data. Subclasses of ResourceCalendar would implement this API for local files,
   remote files, specific calendar servers etc.
 */
-class KRESOURCES_EXPORT Resource : public QObject
-{
+class KRESOURCES_EXPORT Resource : public QObject {
     friend class Factory;
     friend class ManagerImpl;
 
     Q_OBJECT
-  public:
-    typedef QValueList<Resource *> List;
+public:
+    typedef QValueList< Resource * > List;
 
     /**
      * Constructor. Construct resource from config.
      * @param config Configuration to read persistence information from.
      *               If config is 0, create object using default settings.
      */
-    Resource( const KConfig *config );
+    Resource(const KConfig *config);
 
     /**
      * Destructor.
@@ -279,7 +278,7 @@ class KRESOURCES_EXPORT Resource : public QObject
      * or Terrible Things(TM) will happen.
      * @param config Configuration to write persistence information to.
      */
-    virtual void writeConfig( KConfig *config );
+    virtual void writeConfig(KConfig *config);
 
     /**
      * Open this resource, if it not already open. Increase the open
@@ -322,7 +321,7 @@ class KRESOURCES_EXPORT Resource : public QObject
      * Mark the resource as read-only. You can override this method,
      * but also remember to call Resource::setReadOnly().
      */
-    virtual void setReadOnly( bool value );
+    virtual void setReadOnly(bool value);
 
     /**
      * Returns, if the resource is read-only.
@@ -333,7 +332,7 @@ class KRESOURCES_EXPORT Resource : public QObject
      * Set the name of resource. You can override this method,
      * but also remember to call Resource::setResourceName().
      */
-    virtual void setResourceName( const QString &name );
+    virtual void setResourceName(const QString &name);
 
     /**
      * Returns the name of resource.
@@ -343,7 +342,7 @@ class KRESOURCES_EXPORT Resource : public QObject
     /**
       Sets, if the resource is active.
     */
-    void setActive( bool active );
+    void setActive(bool active);
 
     /**
       Return true, if the resource is active.
@@ -355,7 +354,7 @@ class KRESOURCES_EXPORT Resource : public QObject
     */
     virtual void dump() const;
 
-  protected:
+protected:
     /**
      * Open this resource. When called, the resource must be in
      * a closed state.
@@ -365,56 +364,56 @@ class KRESOURCES_EXPORT Resource : public QObject
      *
      * The result of this call can be accessed later by isOpen()
      */
-    virtual bool doOpen() { return true; }
+    virtual bool doOpen()
+    {
+        return true;
+    }
 
     /**
      * Close this resource. Pre-condition: resource is open.
      * Post-condition: resource is closed.
      */
-    virtual void doClose() {}
+    virtual void doClose()
+    {
+    }
 
-    void setIdentifier( const QString &identifier );
-    void setType( const QString &type );
+    void setIdentifier(const QString &identifier);
+    void setType(const QString &type);
 
-  private:
+private:
     class ResourcePrivate;
     ResourcePrivate *d;
 };
 
-class KRESOURCES_EXPORT PluginFactoryBase : public KLibFactory
-{
-  public:
-    virtual Resource *resource( const KConfig *config ) = 0;
+class KRESOURCES_EXPORT PluginFactoryBase : public KLibFactory {
+public:
+    virtual Resource *resource(const KConfig *config) = 0;
 
-    virtual ConfigWidget *configWidget( QWidget *parent ) = 0;
+    virtual ConfigWidget *configWidget(QWidget *parent) = 0;
 
-  protected:
-    virtual QObject* createObject( QObject *parent, const char *name, const char *className,
-                                   const QStringList & args)
+protected:
+    virtual QObject *createObject(QObject *parent, const char *name, const char *className, const QStringList &args)
     {
-      Q_UNUSED(parent);
-      Q_UNUSED(name);
-      Q_UNUSED(className);
-      Q_UNUSED(args);
-      return 0;
+        Q_UNUSED(parent);
+        Q_UNUSED(name);
+        Q_UNUSED(className);
+        Q_UNUSED(args);
+        return 0;
     }
 };
 
-template<class TR,class TC>
-class PluginFactory : public PluginFactoryBase
-{
-  public:
-    Resource *resource( const KConfig *config )
+template < class TR, class TC > class PluginFactory : public PluginFactoryBase {
+public:
+    Resource *resource(const KConfig *config)
     {
-      return new TR( config );
+        return new TR(config);
     }
 
-    ConfigWidget *configWidget( QWidget *parent )
+    ConfigWidget *configWidget(QWidget *parent)
     {
-      return new TC( parent );
+        return new TC(parent);
     }
 };
-
 }
 
 #endif

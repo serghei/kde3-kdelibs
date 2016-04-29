@@ -26,8 +26,8 @@ unsigned int VariableInterface::globalVariableInterfaceNumber = 0;
 
 VariableInterface::VariableInterface()
 {
-  globalVariableInterfaceNumber++;
-  myVariableInterfaceNumber = globalVariableInterfaceNumber++;
+    globalVariableInterfaceNumber++;
+    myVariableInterfaceNumber = globalVariableInterfaceNumber++;
 }
 
 VariableInterface::~VariableInterface()
@@ -36,13 +36,13 @@ VariableInterface::~VariableInterface()
 
 unsigned int VariableInterface::variableInterfaceNumber()
 {
-  return myVariableInterfaceNumber;
+    return myVariableInterfaceNumber;
 }
 
-VariableInterface *KTextEditor::variableInterface( Document *doc )
+VariableInterface *KTextEditor::variableInterface(Document *doc)
 {
-  if ( ! doc )
-    return 0;
+    if(!doc)
+        return 0;
 
-  return static_cast<VariableInterface*>(doc->qt_cast("KTextEditor::VariableInterface"));
+    return static_cast< VariableInterface * >(doc->qt_cast("KTextEditor::VariableInterface"));
 }

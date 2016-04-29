@@ -24,133 +24,129 @@
 #include <kglobal.h>
 
 
-KStatusBarLabel::KStatusBarLabel( const QString& text, int _id,
-                                 KStatusBar *parent, const char *name) :
-  QLabel( parent, name)
+KStatusBarLabel::KStatusBarLabel(const QString &text, int _id, KStatusBar *parent, const char *name) : QLabel(parent, name)
 {
-  id = _id;
+    id = _id;
 
-  setText( text );
+    setText(text);
 
-  // umm... Mosfet? Can you help here?
+    // umm... Mosfet? Can you help here?
 
-  // Warning: QStatusBar draws shaded rectangle around every item - which
-  // IMHO is stupid.
-  // So NoFrame|Plain is the best you get. the problem is that only in case of
-  // StyledPanel|Something you get QFrame to call QStyle::drawPanel().
+    // Warning: QStatusBar draws shaded rectangle around every item - which
+    // IMHO is stupid.
+    // So NoFrame|Plain is the best you get. the problem is that only in case of
+    // StyledPanel|Something you get QFrame to call QStyle::drawPanel().
 
-  setLineWidth  (0);
-  setFrameStyle (QFrame::NoFrame);
+    setLineWidth(0);
+    setFrameStyle(QFrame::NoFrame);
 
-  setAlignment( AlignHCenter | AlignVCenter | SingleLine );
+    setAlignment(AlignHCenter | AlignVCenter | SingleLine);
 
-  connect (this, SIGNAL(itemPressed(int)), parent, SIGNAL(pressed(int)));
-  connect (this, SIGNAL(itemReleased(int)), parent, SIGNAL(released(int)));
+    connect(this, SIGNAL(itemPressed(int)), parent, SIGNAL(pressed(int)));
+    connect(this, SIGNAL(itemReleased(int)), parent, SIGNAL(released(int)));
 }
 
-void KStatusBarLabel::mousePressEvent (QMouseEvent *)
+void KStatusBarLabel::mousePressEvent(QMouseEvent *)
 {
-  emit itemPressed (id);
+    emit itemPressed(id);
 }
 
-void KStatusBarLabel::mouseReleaseEvent (QMouseEvent *)
+void KStatusBarLabel::mouseReleaseEvent(QMouseEvent *)
 {
-  emit itemReleased (id);
+    emit itemReleased(id);
 }
 
-KStatusBar::KStatusBar( QWidget *parent, const char *name )
-  : QStatusBar( parent, name )
+KStatusBar::KStatusBar(QWidget *parent, const char *name) : QStatusBar(parent, name)
 {
-  // make the size grip stuff configurable
-  // ...but off by default (sven)
-  KConfig *config = KGlobal::config();
-  QString group(config->group());
-  config->setGroup(QString::fromLatin1("StatusBar style"));
-  bool grip_enabled = config->readBoolEntry(QString::fromLatin1("SizeGripEnabled"), false);
-  setSizeGripEnabled(grip_enabled);
-  config->setGroup(group);
+    // make the size grip stuff configurable
+    // ...but off by default (sven)
+    KConfig *config = KGlobal::config();
+    QString group(config->group());
+    config->setGroup(QString::fromLatin1("StatusBar style"));
+    bool grip_enabled = config->readBoolEntry(QString::fromLatin1("SizeGripEnabled"), false);
+    setSizeGripEnabled(grip_enabled);
+    config->setGroup(group);
 }
 
-KStatusBar::~KStatusBar ()
+KStatusBar::~KStatusBar()
 {
 }
 
-void KStatusBar::insertItem( const QString& text, int id, int stretch, bool permanent)
+void KStatusBar::insertItem(const QString &text, int id, int stretch, bool permanent)
 {
-  if (items[id])
-    kdDebug() << "KStatusBar::insertItem: item id " << id << " already exists." << endl;
+    if(items[id])
+        kdDebug() << "KStatusBar::insertItem: item id " << id << " already exists." << endl;
 
-  KStatusBarLabel *l = new KStatusBarLabel (text, id, this);
-  l->setFixedHeight(fontMetrics().height()+2);
-  items.insert(id, l);
-  addWidget (l, stretch, permanent);
-  l->show();
+    KStatusBarLabel *l = new KStatusBarLabel(text, id, this);
+    l->setFixedHeight(fontMetrics().height() + 2);
+    items.insert(id, l);
+    addWidget(l, stretch, permanent);
+    l->show();
 }
 
-void KStatusBar::removeItem (int id)
+void KStatusBar::removeItem(int id)
 {
-  KStatusBarLabel *l = items[id];
-  if (l)
-  {
-    removeWidget (l);
-    items.remove(id);
-    delete l;
-  }
-  else
-    kdDebug() << "KStatusBar::removeItem: bad item id: " << id << endl;
-}
-
-bool KStatusBar::hasItem( int id ) const
-{
-  KStatusBarLabel *l = items[id];
-  if (l)
-    return true;
-  else
-    return false;
-}
-
-void KStatusBar::changeItem( const QString& text, int id )
-{
-  KStatusBarLabel *l = items[id];
-  if (l)
-  {
-    l->setText(text);
-    if(l->minimumWidth () != l->maximumWidth ())
+    KStatusBarLabel *l = items[id];
+    if(l)
     {
-      reformat();
+        removeWidget(l);
+        items.remove(id);
+        delete l;
     }
-  }
-  else
-    kdDebug() << "KStatusBar::changeItem: bad item id: " << id << endl;
+    else
+        kdDebug() << "KStatusBar::removeItem: bad item id: " << id << endl;
 }
 
-void KStatusBar::setItemAlignment (int id, int align)
+bool KStatusBar::hasItem(int id) const
 {
-  KStatusBarLabel *l = items[id];
-  if (l)
-  {
-    l->setAlignment(align);
-  }
-  else
-    kdDebug() << "KStatusBar::setItemAlignment: bad item id: " << id << endl;
+    KStatusBarLabel *l = items[id];
+    if(l)
+        return true;
+    else
+        return false;
+}
+
+void KStatusBar::changeItem(const QString &text, int id)
+{
+    KStatusBarLabel *l = items[id];
+    if(l)
+    {
+        l->setText(text);
+        if(l->minimumWidth() != l->maximumWidth())
+        {
+            reformat();
+        }
+    }
+    else
+        kdDebug() << "KStatusBar::changeItem: bad item id: " << id << endl;
+}
+
+void KStatusBar::setItemAlignment(int id, int align)
+{
+    KStatusBarLabel *l = items[id];
+    if(l)
+    {
+        l->setAlignment(align);
+    }
+    else
+        kdDebug() << "KStatusBar::setItemAlignment: bad item id: " << id << endl;
 }
 
 void KStatusBar::setItemFixed(int id, int w)
 {
-  KStatusBarLabel *l = items[id];
-  if (l)
-  {
-    if (w==-1)
-      w=fontMetrics().boundingRect(l->text()).width()+3;
+    KStatusBarLabel *l = items[id];
+    if(l)
+    {
+        if(w == -1)
+            w = fontMetrics().boundingRect(l->text()).width() + 3;
 
-    l->setFixedWidth(w);
-  }
-  else
-    kdDebug() << "KStatusBar::setItemFixed: bad item id: " << id << endl;
+        l->setFixedWidth(w);
+    }
+    else
+        kdDebug() << "KStatusBar::setItemFixed: bad item id: " << id << endl;
 }
 
 #include "kstatusbar.moc"
 
-//Eh!!!
-//Eh what ? :)
-
+// Eh!!!
+// Eh what ? :)

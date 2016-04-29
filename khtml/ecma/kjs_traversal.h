@@ -26,82 +26,129 @@
 
 namespace KJS {
 
-  class DOMNodeIterator : public DOMObject {
-  public:
+class DOMNodeIterator : public DOMObject {
+public:
     DOMNodeIterator(ExecState *exec, DOM::NodeIterator ni);
     ~DOMNodeIterator();
-    virtual Value tryGet(ExecState *exec,const Identifier &p) const;
+    virtual Value tryGet(ExecState *exec, const Identifier &p) const;
     Value getValueProperty(ExecState *exec, int token) const;
     // no put - all read-only
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    enum { Filter, Root, WhatToShow, ExpandEntityReferences,
-           NextNode, PreviousNode, Detach };
-    DOM::NodeIterator toNodeIterator() const { return nodeIterator; }
-  protected:
+    enum
+    {
+        Filter,
+        Root,
+        WhatToShow,
+        ExpandEntityReferences,
+        NextNode,
+        PreviousNode,
+        Detach
+    };
+    DOM::NodeIterator toNodeIterator() const
+    {
+        return nodeIterator;
+    }
+
+protected:
     DOM::NodeIterator nodeIterator;
-  };
+};
 
-  // Constructor object NodeFilter
-  class NodeFilterConstructor : public DOMObject {
-  public:
+// Constructor object NodeFilter
+class NodeFilterConstructor : public DOMObject {
+public:
     NodeFilterConstructor(ExecState *);
-    virtual Value tryGet(ExecState *exec,const Identifier &p) const;
+    virtual Value tryGet(ExecState *exec, const Identifier &p) const;
     Value getValueProperty(ExecState *exec, int token) const;
     // no put - all read-only
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-  };
+};
 
-  class DOMNodeFilter : public DOMObject {
-  public:
+class DOMNodeFilter : public DOMObject {
+public:
     DOMNodeFilter(ExecState *exec, DOM::NodeFilter nf);
     ~DOMNodeFilter();
     // no put - all read-only
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    virtual DOM::NodeFilter toNodeFilter() const { return nodeFilter; }
-    enum { AcceptNode };
-  protected:
-    DOM::NodeFilter nodeFilter;
-  };
+    virtual DOM::NodeFilter toNodeFilter() const
+    {
+        return nodeFilter;
+    }
+    enum
+    {
+        AcceptNode
+    };
 
-  class DOMTreeWalker : public DOMObject {
-  public:
+protected:
+    DOM::NodeFilter nodeFilter;
+};
+
+class DOMTreeWalker : public DOMObject {
+public:
     DOMTreeWalker(ExecState *exec, DOM::TreeWalker tw);
     ~DOMTreeWalker();
-    virtual Value tryGet(ExecState *exec,const Identifier &p) const;
+    virtual Value tryGet(ExecState *exec, const Identifier &p) const;
     Value getValueProperty(ExecState *exec, int token) const;
-    virtual void tryPut(ExecState *exec, const Identifier &propertyName,
-                        const Value& value, int attr = None);
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual void tryPut(ExecState *exec, const Identifier &propertyName, const Value &value, int attr = None);
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    enum { Root, WhatToShow, Filter, ExpandEntityReferences, CurrentNode,
-           ParentNode, FirstChild, LastChild, PreviousSibling, NextSibling,
-           PreviousNode, NextNode };
-    DOM::TreeWalker toTreeWalker() const { return treeWalker; }
-  protected:
+    enum
+    {
+        Root,
+        WhatToShow,
+        Filter,
+        ExpandEntityReferences,
+        CurrentNode,
+        ParentNode,
+        FirstChild,
+        LastChild,
+        PreviousSibling,
+        NextSibling,
+        PreviousNode,
+        NextNode
+    };
+    DOM::TreeWalker toTreeWalker() const
+    {
+        return treeWalker;
+    }
+
+protected:
     DOM::TreeWalker treeWalker;
-  };
+};
 
-  Value getDOMNodeIterator(ExecState *exec, DOM::NodeIterator ni);
-  Value getNodeFilterConstructor(ExecState *exec);
-  Value getDOMNodeFilter(ExecState *exec, DOM::NodeFilter nf);
-  Value getDOMTreeWalker(ExecState *exec, DOM::TreeWalker tw);
+Value getDOMNodeIterator(ExecState *exec, DOM::NodeIterator ni);
+Value getNodeFilterConstructor(ExecState *exec);
+Value getDOMNodeFilter(ExecState *exec, DOM::NodeFilter nf);
+Value getDOMTreeWalker(ExecState *exec, DOM::TreeWalker tw);
 
-  /**
-   * Convert an object to a NodeFilter. Returns a null Node if not possible.
-   */
-  DOM::NodeFilter toNodeFilter(const Value&);
+/**
+ * Convert an object to a NodeFilter. Returns a null Node if not possible.
+ */
+DOM::NodeFilter toNodeFilter(const Value &);
 
-  class JSNodeFilter : public DOM::CustomNodeFilter {
-  public:
-    JSNodeFilter(Object & _filter);
+class JSNodeFilter : public DOM::CustomNodeFilter {
+public:
+    JSNodeFilter(Object &_filter);
     virtual ~JSNodeFilter();
-    virtual short acceptNode (const DOM::Node &n);
-  protected:
+    virtual short acceptNode(const DOM::Node &n);
+
+protected:
     Object filter;
-  };
+};
 
 } // namespace
 

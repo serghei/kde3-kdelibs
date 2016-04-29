@@ -24,61 +24,68 @@
 #include "document.h"
 #include "plugin.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateConfigInterfaceExtension
-{
-  public:
-    PrivateConfigInterfaceExtension() {}
-     ~PrivateConfigInterfaceExtension() {}
+class PrivateConfigInterfaceExtension {
+public:
+    PrivateConfigInterfaceExtension()
+    {
+    }
+    ~PrivateConfigInterfaceExtension()
+    {
+    }
 };
-
 }
 
 using namespace KTextEditor;
 
-ConfigPage::ConfigPage ( QWidget *parent, const char *name ) : QWidget (parent, name) { ; }
- 
-ConfigPage::~ConfigPage () { ; }
+ConfigPage::ConfigPage(QWidget *parent, const char *name) : QWidget(parent, name)
+{
+    ;
+}
+
+ConfigPage::~ConfigPage()
+{
+    ;
+}
 
 unsigned int ConfigInterfaceExtension::globalConfigInterfaceExtensionNumber = 0;
 
 ConfigInterfaceExtension::ConfigInterfaceExtension()
 {
-  globalConfigInterfaceExtensionNumber++;
-  myConfigInterfaceExtensionNumber = globalConfigInterfaceExtensionNumber++;
+    globalConfigInterfaceExtensionNumber++;
+    myConfigInterfaceExtensionNumber = globalConfigInterfaceExtensionNumber++;
 
-  d = new PrivateConfigInterfaceExtension();
+    d = new PrivateConfigInterfaceExtension();
 }
 
 ConfigInterfaceExtension::~ConfigInterfaceExtension()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int ConfigInterfaceExtension::configInterfaceExtensionNumber () const
+unsigned int ConfigInterfaceExtension::configInterfaceExtensionNumber() const
 {
-  return myConfigInterfaceExtensionNumber;
+    return myConfigInterfaceExtensionNumber;
 }
 
-void ConfigInterfaceExtension::setConfigInterfaceExtensionDCOPSuffix (const QCString &/*suffix*/)
+void ConfigInterfaceExtension::setConfigInterfaceExtensionDCOPSuffix(const QCString & /*suffix*/)
 {
-  //d->interface->setObjId ("ConfigInterfaceExtension#"+suffix);
+    // d->interface->setObjId ("ConfigInterfaceExtension#"+suffix);
 }
 
-ConfigInterfaceExtension *KTextEditor::configInterfaceExtension (Document *doc)
-{           
-  if (!doc)
-    return 0;
+ConfigInterfaceExtension *KTextEditor::configInterfaceExtension(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<ConfigInterfaceExtension*>(doc->qt_cast("KTextEditor::ConfigInterfaceExtension"));
+    return static_cast< ConfigInterfaceExtension * >(doc->qt_cast("KTextEditor::ConfigInterfaceExtension"));
 }
-                      
-ConfigInterfaceExtension *KTextEditor::configInterfaceExtension (Plugin *plugin)
-{                       
-  if (!plugin)
-    return 0;
 
-  return static_cast<ConfigInterfaceExtension*>(plugin->qt_cast("KTextEditor::ConfigInterfaceExtension"));
+ConfigInterfaceExtension *KTextEditor::configInterfaceExtension(Plugin *plugin)
+{
+    if(!plugin)
+        return 0;
+
+    return static_cast< ConfigInterfaceExtension * >(plugin->qt_cast("KTextEditor::ConfigInterfaceExtension"));
 }

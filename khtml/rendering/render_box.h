@@ -28,68 +28,107 @@
 
 namespace khtml {
 
-enum WidthType { Width, MinWidth, MaxWidth };
-enum HeightType { Height, MinHeight, MaxHeight };
+enum WidthType
+{
+    Width,
+    MinWidth,
+    MaxWidth
+};
+enum HeightType
+{
+    Height,
+    MinHeight,
+    MaxHeight
+};
 
 class RenderBlock;
 
-class RenderBox : public RenderContainer
-{
+class RenderBox : public RenderContainer {
 
 
-// combines ElemImpl & PosElImpl (all rendering objects are positioned)
-// should contain all border and padding handling
+    // combines ElemImpl & PosElImpl (all rendering objects are positioned)
+    // should contain all border and padding handling
 
 public:
-    RenderBox(DOM::NodeImpl* node);
+    RenderBox(DOM::NodeImpl *node);
     virtual ~RenderBox();
 
-    virtual const char *renderName() const { return "RenderBox"; }
-    virtual bool isBox() const { return true; }
+    virtual const char *renderName() const
+    {
+        return "RenderBox";
+    }
+    virtual bool isBox() const
+    {
+        return true;
+    }
 
     virtual void setStyle(RenderStyle *style);
-    virtual void paint(PaintInfo& i, int _tx, int _ty);
+    virtual void paint(PaintInfo &i, int _tx, int _ty);
 
     virtual void close();
 
-    virtual InlineBox* createInlineBox(bool makePlaceHolderBox, bool isRootLineBox);
-    virtual void deleteInlineBoxes(RenderArena* arena=0);
+    virtual InlineBox *createInlineBox(bool makePlaceHolderBox, bool isRootLineBox);
+    virtual void deleteInlineBoxes(RenderArena *arena = 0);
 
     virtual void detach();
 
-    virtual short minWidth() const { return m_minWidth; }
-    virtual int maxWidth() const { return m_maxWidth; }
+    virtual short minWidth() const
+    {
+        return m_minWidth;
+    }
+    virtual int maxWidth() const
+    {
+        return m_maxWidth;
+    }
 
     virtual short contentWidth() const;
     virtual int contentHeight() const;
 
     virtual bool absolutePosition(int &xPos, int &yPos, bool f = false) const;
 
-    virtual void setPos( int xPos, int yPos );
+    virtual void setPos(int xPos, int yPos);
 
-    virtual int xPos() const { return m_x; }
-    virtual int yPos() const { return m_y; }
+    virtual int xPos() const
+    {
+        return m_x;
+    }
+    virtual int yPos() const
+    {
+        return m_y;
+    }
     virtual short width() const;
     virtual int height() const;
 
-    virtual short marginTop() const { return m_marginTop; }
-    virtual short marginBottom() const { return m_marginBottom; }
-    virtual short marginLeft() const { return m_marginLeft; }
-    virtual short marginRight() const { return m_marginRight; }
+    virtual short marginTop() const
+    {
+        return m_marginTop;
+    }
+    virtual short marginBottom() const
+    {
+        return m_marginBottom;
+    }
+    virtual short marginLeft() const
+    {
+        return m_marginLeft;
+    }
+    virtual short marginRight() const
+    {
+        return m_marginRight;
+    }
 
-    virtual void setWidth( int width );
-    virtual void setHeight( int height );
+    virtual void setWidth(int width);
+    virtual void setHeight(int height);
 
-    virtual void position(InlineBox* box, int from, int len, bool reverse);
+    virtual void position(InlineBox *box, int from, int len, bool reverse);
 
-    virtual int highestPosition(bool includeOverflowInterior=true, bool includeSelf=true) const;
-    virtual int lowestPosition(bool includeOverflowInterior=true, bool includeSelf=true) const;
-    virtual int rightmostPosition(bool includeOverflowInterior=true, bool includeSelf=true) const;
-    virtual int leftmostPosition(bool includeOverflowInterior=true, bool includeSelf=true) const;
+    virtual int highestPosition(bool includeOverflowInterior = true, bool includeSelf = true) const;
+    virtual int lowestPosition(bool includeOverflowInterior = true, bool includeSelf = true) const;
+    virtual int rightmostPosition(bool includeOverflowInterior = true, bool includeSelf = true) const;
+    virtual int leftmostPosition(bool includeOverflowInterior = true, bool includeSelf = true) const;
 
-    virtual void repaint(Priority p=NormalPriority);
+    virtual void repaint(Priority p = NormalPriority);
 
-    virtual void repaintRectangle(int x, int y, int w, int h, Priority p=NormalPriority, bool f=false);
+    virtual void repaintRectangle(int x, int y, int w, int h, Priority p = NormalPriority, bool f = false);
 
     virtual short containingBlockWidth() const;
     void relativePositionOffset(int &tx, int &ty) const;
@@ -98,24 +137,33 @@ public:
     virtual void calcHeight();
 
     virtual short calcReplacedWidth() const;
-    virtual int   calcReplacedHeight() const;
+    virtual int calcReplacedHeight() const;
 
     virtual int availableHeight() const;
     virtual int availableWidth() const;
 
     void calcVerticalMargins();
 
-    virtual RenderLayer* layer() const { return m_layer; }
+    virtual RenderLayer *layer() const
+    {
+        return m_layer;
+    }
 
     void setStaticX(short staticX);
     void setStaticY(int staticY);
-    int staticX() const { return m_staticX; }
-    int staticY() const { return m_staticY; }
+    int staticX() const
+    {
+        return m_staticX;
+    }
+    int staticY() const
+    {
+        return m_staticY;
+    }
 
     virtual void caretPos(int offset, int flags, int &_x, int &_y, int &width, int &height);
 
-    void calcHorizontalMargins(const Length& ml, const Length& mr, int cw);
-    RenderBlock* createAnonymousBlock();
+    void calcHorizontalMargins(const Length &ml, const Length &mr, int cw);
+    RenderBlock *createAnonymousBlock();
 
     virtual int pageTopAfter(int y) const;
     virtual int crossesPageBreak(int t, int b) const;
@@ -126,41 +174,40 @@ public:
     int calcContentHeight(int h) const;
 
 protected:
-    int calcWidthUsing(WidthType widthType, int cw, LengthType& lengthType);
-    int calcHeightUsing(const Length& height);
+    int calcWidthUsing(WidthType widthType, int cw, LengthType &lengthType);
+    int calcHeightUsing(const Length &height);
     int calcReplacedWidthUsing(WidthType widthType) const;
     int calcReplacedHeightUsing(HeightType heightType) const;
-    int calcPercentageHeight(const Length& height, bool treatAsReplaced = false) const;
-    int availableHeightUsing(const Length& h) const;
-    int availableWidthUsing(const Length& w) const;
+    int calcPercentageHeight(const Length &height, bool treatAsReplaced = false) const;
+    int availableHeightUsing(const Length &h) const;
+    int availableWidthUsing(const Length &w) const;
     int calcImplicitHeight() const;
-    bool hasImplicitHeight() const {
+    bool hasImplicitHeight() const
+    {
         return isPositioned() && !style()->top().isVariable() && !style()->bottom().isVariable();
     }
 
 protected:
-    virtual void paintBoxDecorations(PaintInfo& paintInfo, int _tx, int _ty);
-    void paintRootBoxDecorations( PaintInfo& paintInfo, int _tx, int _ty);
+    virtual void paintBoxDecorations(PaintInfo &paintInfo, int _tx, int _ty);
+    void paintRootBoxDecorations(PaintInfo &paintInfo, int _tx, int _ty);
 
-    void paintBackgrounds(QPainter *p, const QColor& c, const BackgroundLayer* bgLayer, int clipy, int cliph, int _tx, int _ty, int w, int h);
-    void paintBackground(QPainter *p, const QColor& c, const BackgroundLayer* bgLayer, int clipy, int cliph, int _tx, int _ty, int w, int h);
+    void paintBackgrounds(QPainter *p, const QColor &c, const BackgroundLayer *bgLayer, int clipy, int cliph, int _tx, int _ty, int w, int h);
+    void paintBackground(QPainter *p, const QColor &c, const BackgroundLayer *bgLayer, int clipy, int cliph, int _tx, int _ty, int w, int h);
 
-    virtual void paintBackgroundExtended(QPainter* /*p*/, const QColor& /*c*/, const BackgroundLayer* /*bgLayer*/,
-                                         int /*clipy*/, int /*cliph*/, int /*_tx*/, int /*_ty*/,
-                                         int /*w*/, int /*height*/, int /*bleft*/, int /*bright*/, int /*pleft*/, int /*pright*/ );
+    virtual void paintBackgroundExtended(QPainter * /*p*/, const QColor & /*c*/, const BackgroundLayer * /*bgLayer*/, int /*clipy*/, int /*cliph*/,
+                                         int /*_tx*/, int /*_ty*/, int /*w*/, int /*height*/, int /*bleft*/, int /*bright*/, int /*pleft*/,
+                                         int /*pright*/);
 
     void outlineBox(QPainter *p, int _tx, int _ty, const char *color = "red");
 
     void calcAbsoluteHorizontal();
     void calcAbsoluteVertical();
-    void calcAbsoluteHorizontalValues(Length width, const RenderObject* cb, EDirection containerDirection,
-                                      const int containerWidth, const int bordersPlusPadding,
-                                      const Length left, const Length right, const Length marginLeft, const Length marginRight,
-                                      short& widthValue, short& marginLeftValue, short& marginRightValue, short& xPos);
-    void calcAbsoluteVerticalValues(Length height, const RenderObject* cb,
-                                    const int containerHeight, const int bordersPlusPadding,
-                                    const Length top, const Length bottom, const Length marginTop, const Length marginBottom,
-                                    int& heightValue, short& marginTopValue, short& marginBottomValue, int& yPos);
+    void calcAbsoluteHorizontalValues(Length width, const RenderObject *cb, EDirection containerDirection, const int containerWidth,
+                                      const int bordersPlusPadding, const Length left, const Length right, const Length marginLeft,
+                                      const Length marginRight, short &widthValue, short &marginLeftValue, short &marginRightValue, short &xPos);
+    void calcAbsoluteVerticalValues(Length height, const RenderObject *cb, const int containerHeight, const int bordersPlusPadding, const Length top,
+                                    const Length bottom, const Length marginTop, const Length marginBottom, int &heightValue, short &marginTopValue,
+                                    short &marginBottomValue, int &yPos);
 
     void calcAbsoluteVerticalReplaced();
     void calcAbsoluteHorizontalReplaced();
@@ -208,6 +255,6 @@ protected:
 };
 
 
-} //namespace
+} // namespace
 
 #endif

@@ -27,20 +27,19 @@ class QSpinBox;
 class QCheckBox;
 struct CupsdConf;
 
-class PortDialog : public KDialogBase
-{
+class PortDialog : public KDialogBase {
 public:
-	PortDialog(QWidget *parent = 0, const char *name = 0);
+    PortDialog(QWidget *parent = 0, const char *name = 0);
 
-	QString listenString();
-	void setInfos(CupsdConf*);
-	static QString newListen(QWidget *parent = 0, CupsdConf *conf = 0);
-	static QString editListen(const QString& s, QWidget *parent = 0, CupsdConf *conf = 0);
+    QString listenString();
+    void setInfos(CupsdConf *);
+    static QString newListen(QWidget *parent = 0, CupsdConf *conf = 0);
+    static QString editListen(const QString &s, QWidget *parent = 0, CupsdConf *conf = 0);
 
 private:
-	QLineEdit	*address_;
-	QSpinBox	*port_;
-	QCheckBox	*usessl_;
+    QLineEdit *address_;
+    QSpinBox *port_;
+    QCheckBox *usessl_;
 };
 
 #endif

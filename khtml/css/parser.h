@@ -25,57 +25,58 @@
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     UNIMPORTANT_TOK = 258,
-     S = 259,
-     SGML_CD = 260,
-     INCLUDES = 261,
-     DASHMATCH = 262,
-     BEGINSWITH = 263,
-     ENDSWITH = 264,
-     CONTAINS = 265,
-     STRING = 266,
-     IDENT = 267,
-     NTH = 268,
-     HASH = 269,
-     IMPORT_SYM = 270,
-     PAGE_SYM = 271,
-     MEDIA_SYM = 272,
-     FONT_FACE_SYM = 273,
-     CHARSET_SYM = 274,
-     NAMESPACE_SYM = 275,
-     KHTML_RULE_SYM = 276,
-     KHTML_DECLS_SYM = 277,
-     KHTML_VALUE_SYM = 278,
-     IMPORTANT_SYM = 279,
-     QEMS = 280,
-     EMS = 281,
-     EXS = 282,
-     PXS = 283,
-     CMS = 284,
-     MMS = 285,
-     INS = 286,
-     PTS = 287,
-     PCS = 288,
-     DEGS = 289,
-     RADS = 290,
-     GRADS = 291,
-     MSECS = 292,
-     SECS = 293,
-     HERZ = 294,
-     KHERZ = 295,
-     DIMEN = 296,
-     PERCENTAGE = 297,
-     FLOAT = 298,
-     INTEGER = 299,
-     URI = 300,
-     FUNCTION = 301,
-     NOTFUNCTION = 302,
-     UNICODERANGE = 303
-   };
+#define YYTOKENTYPE
+/* Put the tokens into the symbol table, so that GDB and other debuggers
+   know about them.  */
+enum yytokentype
+{
+    UNIMPORTANT_TOK = 258,
+    S = 259,
+    SGML_CD = 260,
+    INCLUDES = 261,
+    DASHMATCH = 262,
+    BEGINSWITH = 263,
+    ENDSWITH = 264,
+    CONTAINS = 265,
+    STRING = 266,
+    IDENT = 267,
+    NTH = 268,
+    HASH = 269,
+    IMPORT_SYM = 270,
+    PAGE_SYM = 271,
+    MEDIA_SYM = 272,
+    FONT_FACE_SYM = 273,
+    CHARSET_SYM = 274,
+    NAMESPACE_SYM = 275,
+    KHTML_RULE_SYM = 276,
+    KHTML_DECLS_SYM = 277,
+    KHTML_VALUE_SYM = 278,
+    IMPORTANT_SYM = 279,
+    QEMS = 280,
+    EMS = 281,
+    EXS = 282,
+    PXS = 283,
+    CMS = 284,
+    MMS = 285,
+    INS = 286,
+    PTS = 287,
+    PCS = 288,
+    DEGS = 289,
+    RADS = 290,
+    GRADS = 291,
+    MSECS = 292,
+    SECS = 293,
+    HERZ = 294,
+    KHERZ = 295,
+    DIMEN = 296,
+    PERCENTAGE = 297,
+    FLOAT = 298,
+    INTEGER = 299,
+    URI = 300,
+    FUNCTION = 301,
+    NOTFUNCTION = 302,
+    UNICODERANGE = 303
+};
 #endif
 #define UNIMPORTANT_TOK 258
 #define S 259
@@ -125,14 +126,12 @@
 #define UNICODERANGE 303
 
 
-
-
-#if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
+#if !defined(YYSTYPE) && !defined(YYSTYPE_IS_DECLARED)
 
 typedef union YYSTYPE {
     CSSRuleImpl *rule;
     CSSSelector *selector;
-    QPtrList<CSSSelector> *selectorList;
+    QPtrList< CSSSelector > *selectorList;
     bool ok;
     MediaListImpl *mediaList;
     CSSMediaRuleImpl *mediaRule;
@@ -152,12 +151,7 @@ typedef union YYSTYPE {
 } YYSTYPE;
 /* Line 1285 of yacc.c.  */
 
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
-# define YYSTYPE_IS_DECLARED 1
-# define YYSTYPE_IS_TRIVIAL 1
+#define yystype YYSTYPE /* obsolescent; will be withdrawn */
+#define YYSTYPE_IS_DECLARED 1
+#define YYSTYPE_IS_TRIVIAL 1
 #endif
-
-
-
-
-

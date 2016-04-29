@@ -50,7 +50,9 @@ class KBookmarkOwner;
 class KBookmarkMenu;
 class KPopupMenu;
 
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
 /**
  * This class provides a bookmark menu.  It is typically used in
@@ -76,190 +78,190 @@ namespace KIO { class Job; }
  * 1a) Reimplement your own KBookmarkOwner
  * 1b) Reimplement and instantiate your own KBookmarkManager
  */
-class KIO_EXPORT KBookmarkMenu : public QObject
-{
-  Q_OBJECT
-  friend class KBookmarkMenuNSImporter;
-  friend class RMB;
+class KIO_EXPORT KBookmarkMenu : public QObject {
+    Q_OBJECT
+    friend class KBookmarkMenuNSImporter;
+    friend class RMB;
+
 public:
-  /**
-   * Fills a bookmark menu
-   * (one instance of KBookmarkMenu is created for the toplevel menu,
-   *  but also one per submenu).
-   *
-   * @param mgr The bookmark manager to use (i.e. for reading and writing)
-   * @param owner implementation of the KBookmarkOwner callback interface.
-   * @param parentMenu menu to be filled
-   * @param collec parent collection for the KActions. 
-   *  Only used for other menus than the toplevel one.
-   * @param root true for the toplevel menu
-   * @param add true to show the "Add Bookmark" and "New Folder" entries
-   * @param parentAddress the address of the group containing the items
-   *  that we want to show.
-   * @see KBookmark::address.
-   * Be careful :
-   * A _null_ parentAddress denotes a NS-bookmark menu.
-   * An _empty_ parentAddress denotes the toplevel bookmark menu
-   */
-  KBookmarkMenu( KBookmarkManager* mgr,
-                 KBookmarkOwner * owner, KPopupMenu * parentMenu,
-                 KActionCollection * collec, bool root, bool add = true,
-                 const QString & parentAddress = "" );
+    /**
+     * Fills a bookmark menu
+     * (one instance of KBookmarkMenu is created for the toplevel menu,
+     *  but also one per submenu).
+     *
+     * @param mgr The bookmark manager to use (i.e. for reading and writing)
+     * @param owner implementation of the KBookmarkOwner callback interface.
+     * @param parentMenu menu to be filled
+     * @param collec parent collection for the KActions.
+     *  Only used for other menus than the toplevel one.
+     * @param root true for the toplevel menu
+     * @param add true to show the "Add Bookmark" and "New Folder" entries
+     * @param parentAddress the address of the group containing the items
+     *  that we want to show.
+     * @see KBookmark::address.
+     * Be careful :
+     * A _null_ parentAddress denotes a NS-bookmark menu.
+     * An _empty_ parentAddress denotes the toplevel bookmark menu
+     */
+    KBookmarkMenu(KBookmarkManager *mgr, KBookmarkOwner *owner, KPopupMenu *parentMenu, KActionCollection *collec, bool root, bool add = true,
+                  const QString &parentAddress = "");
 
-  ~KBookmarkMenu();
+    ~KBookmarkMenu();
 
-  /**
-   * Even if you think you need to use this, you are probably wrong.
-   * It fills a bookmark menu starting a given KBookmark.
-   * This is public for KBookmarkBar.
-   */
-  void fillBookmarkMenu();
+    /**
+     * Even if you think you need to use this, you are probably wrong.
+     * It fills a bookmark menu starting a given KBookmark.
+     * This is public for KBookmarkBar.
+     */
+    void fillBookmarkMenu();
 
-  /**
-   * Call ensureUpToDate() if you need KBookmarkMenu to adjust to its 
-   * final size before it is executed.
-   **/
-  void ensureUpToDate();
+    /**
+     * Call ensureUpToDate() if you need KBookmarkMenu to adjust to its
+     * final size before it is executed.
+     **/
+    void ensureUpToDate();
 
-  /**
-   * Structure used for storing information about 
-   * the dynamic menu setting
-   * @since 3.2
-   */
-  // TODO - transform into class
-  struct DynMenuInfo {
-     bool show;
-     QString location;
-     QString type;
-     QString name;
-     class DynMenuInfoPrivate *d;
-  };
+    /**
+     * Structure used for storing information about
+     * the dynamic menu setting
+     * @since 3.2
+     */
+    // TODO - transform into class
+    struct DynMenuInfo
+    {
+        bool show;
+        QString location;
+        QString type;
+        QString name;
+        class DynMenuInfoPrivate *d;
+    };
 
-  /**
-   * @return dynmenu info block for the given dynmenu name
-   * @since 3.2
-   */
-  static DynMenuInfo showDynamicBookmarks( const QString &id );
+    /**
+     * @return dynmenu info block for the given dynmenu name
+     * @since 3.2
+     */
+    static DynMenuInfo showDynamicBookmarks(const QString &id);
 
-  /**
-   * Shows an extra menu for the given bookmarks file and type. 
-   * Upgrades from option inside XBEL to option in rc file
-   * on first call of this function.
-   * @param id the unique identification for the dynamic menu
-   * @param info a DynMenuInfo struct containing the to be added/modified data
-   * @since 3.2
-   */
-  static void setDynamicBookmarks( const QString &id, const DynMenuInfo &info );
+    /**
+     * Shows an extra menu for the given bookmarks file and type.
+     * Upgrades from option inside XBEL to option in rc file
+     * on first call of this function.
+     * @param id the unique identification for the dynamic menu
+     * @param info a DynMenuInfo struct containing the to be added/modified data
+     * @since 3.2
+     */
+    static void setDynamicBookmarks(const QString &id, const DynMenuInfo &info);
 
-  /**
-   * @return list of dynamic menu ids
-   * @since 3.2
-   */
-  static QStringList dynamicBookmarksList();
+    /**
+     * @return list of dynamic menu ids
+     * @since 3.2
+     */
+    static QStringList dynamicBookmarksList();
 
 signals:
-  void aboutToShowContextMenu( const KBookmark &, QPopupMenu * );
-  /**
-   * @since 3.4
-   */
-  void openBookmark( const QString& url, Qt::ButtonState state );
+    void aboutToShowContextMenu(const KBookmark &, QPopupMenu *);
+    /**
+     * @since 3.4
+     */
+    void openBookmark(const QString &url, Qt::ButtonState state);
 
 public slots: // public for bookmark bar
-  void slotBookmarksChanged( const QString & );
+    void slotBookmarksChanged(const QString &);
 
 protected slots:
-  void slotAboutToShow();
-  void slotAboutToShowContextMenu( KPopupMenu *, int, QPopupMenu * );
-  void slotActionHighlighted( KAction * );
+    void slotAboutToShow();
+    void slotAboutToShowContextMenu(KPopupMenu *, int, QPopupMenu *);
+    void slotActionHighlighted(KAction *);
 
-  void slotRMBActionRemove( int );
-  void slotRMBActionInsert( int );
-  void slotRMBActionCopyLocation( int );
-  void slotRMBActionEditAt( int );
-  void slotRMBActionProperties( int );
+    void slotRMBActionRemove(int);
+    void slotRMBActionInsert(int);
+    void slotRMBActionCopyLocation(int);
+    void slotRMBActionEditAt(int);
+    void slotRMBActionProperties(int);
 
-  void slotBookmarkSelected();
-  /**
-   * @ since 3.4
-   */
-  void slotBookmarkSelected( KAction::ActivationReason reason, Qt::ButtonState state );
-  void slotAddBookmarksList();
-  void slotAddBookmark();
-  void slotNewFolder();
+    void slotBookmarkSelected();
+    /**
+     * @ since 3.4
+     */
+    void slotBookmarkSelected(KAction::ActivationReason reason, Qt::ButtonState state);
+    void slotAddBookmarksList();
+    void slotAddBookmark();
+    void slotNewFolder();
 
-  /**
-   * load Netscape's bookmarks
-   */
-  void slotNSLoad();
+    /**
+     * load Netscape's bookmarks
+     */
+    void slotNSLoad();
 
 protected:
-  KExtendedBookmarkOwner* extOwner();
-  void refill();
-  void addAddBookmark();
-  void addAddBookmarksList();
-  void addEditBookmarks();
-  void addNewFolder();
+    KExtendedBookmarkOwner *extOwner();
+    void refill();
+    void addAddBookmark();
+    void addAddBookmarksList();
+    void addEditBookmarks();
+    void addNewFolder();
 
-  void fillContextMenu( QPopupMenu *, const QString &, int );
+    void fillContextMenu(QPopupMenu *, const QString &, int);
 
-  bool m_bIsRoot:1;
-  bool m_bAddBookmark:1;
-  bool m_bDirty:1;
-  bool m_bNSBookmark:1;
-  bool m_bAddShortcuts:1;
+    bool m_bIsRoot : 1;
+    bool m_bAddBookmark : 1;
+    bool m_bDirty : 1;
+    bool m_bNSBookmark : 1;
+    bool m_bAddShortcuts : 1;
 
-  KBookmarkManager * m_pManager;
-  KBookmarkOwner *m_pOwner;
-  /**
-   * The menu in which we plug our actions.
-   * Supplied in the constructor.
-   */
-  KPopupMenu * m_parentMenu;
-  /**
-   * List of our sub menus
-   */
-  QPtrList<KBookmarkMenu> m_lstSubMenus;
-  KActionCollection * m_actionCollection;
-  /**
-   * List of our actions.
-   */
-  QPtrList<KAction> m_actions;
-  /**
-   * Parent bookmark for this menu.
-   */
-  QString m_parentAddress;
+    KBookmarkManager *m_pManager;
+    KBookmarkOwner *m_pOwner;
+    /**
+     * The menu in which we plug our actions.
+     * Supplied in the constructor.
+     */
+    KPopupMenu *m_parentMenu;
+    /**
+     * List of our sub menus
+     */
+    QPtrList< KBookmarkMenu > m_lstSubMenus;
+    KActionCollection *m_actionCollection;
+    /**
+     * List of our actions.
+     */
+    QPtrList< KAction > m_actions;
+    /**
+     * Parent bookmark for this menu.
+     */
+    QString m_parentAddress;
 
-  // TODO make non static!
-  static QString s_highlightedAddress;
-  static QString s_highlightedImportLocation;
-  static QString s_highlightedImportType;
+    // TODO make non static!
+    static QString s_highlightedAddress;
+    static QString s_highlightedImportLocation;
+    static QString s_highlightedImportType;
 };
 
 /**
  * A class connected to KNSBookmarkImporter, to fill KActionMenus.
  */
-class KIO_EXPORT KBookmarkMenuNSImporter : public QObject
-{
-  Q_OBJECT
+class KIO_EXPORT KBookmarkMenuNSImporter : public QObject {
+    Q_OBJECT
 public:
-  KBookmarkMenuNSImporter( KBookmarkManager* mgr, KBookmarkMenu * menu, KActionCollection * act ) :
-     m_menu(menu), m_actionCollection(act), m_pManager(mgr) {}
+    KBookmarkMenuNSImporter(KBookmarkManager *mgr, KBookmarkMenu *menu, KActionCollection *act)
+        : m_menu(menu), m_actionCollection(act), m_pManager(mgr)
+    {
+    }
 
-  void openNSBookmarks();
-  void openBookmarks( const QString &location, const QString &type );
-  void connectToImporter( const QObject &importer );
+    void openNSBookmarks();
+    void openBookmarks(const QString &location, const QString &type);
+    void connectToImporter(const QObject &importer);
 
 protected slots:
-  void newBookmark( const QString & text, const QCString & url, const QString & );
-  void newFolder( const QString & text, bool, const QString & );
-  void newSeparator();
-  void endFolder();
+    void newBookmark(const QString &text, const QCString &url, const QString &);
+    void newFolder(const QString &text, bool, const QString &);
+    void newSeparator();
+    void endFolder();
 
 protected:
-  QPtrStack<KBookmarkMenu> mstack;
-  KBookmarkMenu * m_menu;
-  KActionCollection * m_actionCollection;
-  KBookmarkManager* m_pManager;
+    QPtrStack< KBookmarkMenu > mstack;
+    KBookmarkMenu *m_menu;
+    KActionCollection *m_actionCollection;
+    KBookmarkManager *m_pManager;
 };
 
 #endif

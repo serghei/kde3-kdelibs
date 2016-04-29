@@ -143,7 +143,8 @@
  * Changed C++-style comments to C-style comments in C code.
  *
  * Revision 1.6  1999/10/20 03:19:35  paul
- * Hacked ispell code to ignore any characters that don't fit in the lookup tables loaded from the dictionary.  It ain't pretty, but at least we don't crash there any more.
+ * Hacked ispell code to ignore any characters that don't fit in the lookup tables loaded from the dictionary.  It ain't pretty, but at least we don't
+ * crash there any more.
  *
  * Revision 1.5  1999/04/13 17:12:51  jeff
  * Applied "Darren O. Benham" <gecko@benham.net> spell check changes.
@@ -240,41 +241,36 @@
  * \param pfxopts Options to apply to prefixes
  * \param sfxopts Options to apply to suffixes
  */
-void ISpellChecker::chk_aff (ichar_t *word, ichar_t *ucword, 
-			  int len, int ignoreflagbits, int allhits, int pfxopts, int sfxopts)
+void ISpellChecker::chk_aff(ichar_t *word, ichar_t *ucword, int len, int ignoreflagbits, int allhits, int pfxopts, int sfxopts)
 {
-    register ichar_t *	cp;		/* Pointer to char to index on */
-    struct flagptr *	ind;		/* Flag index table to test */
+    register ichar_t *cp; /* Pointer to char to index on */
+    struct flagptr *ind;  /* Flag index table to test */
 
-    pfx_list_chk (word, ucword, len, pfxopts, sfxopts, &m_pflagindex[0],
-      ignoreflagbits, allhits);
+    pfx_list_chk(word, ucword, len, pfxopts, sfxopts, &m_pflagindex[0], ignoreflagbits, allhits);
     cp = ucword;
-	/* HACK: bail on unrecognized chars */
-	if (*cp >= (SET_SIZE + MAXSTRINGCHARS))
-		return;
+    /* HACK: bail on unrecognized chars */
+    if(*cp >= (SET_SIZE + MAXSTRINGCHARS))
+        return;
     ind = &m_pflagindex[*cp++];
-    while (ind->numents == 0  &&  ind->pu.fp != NULL)
-	{
-		if (*cp == 0)
-			return;
-		if (ind->pu.fp[0].numents)
-		{
-			pfx_list_chk (word, ucword, len, pfxopts, sfxopts, &ind->pu.fp[0],
-			  ignoreflagbits, allhits);
-			if (m_numhits  &&  !allhits  &&  /* !cflag  && */  !ignoreflagbits)
-				return;
-		}
-		/* HACK: bail on unrecognized chars */
-		if (*cp >= (SET_SIZE + MAXSTRINGCHARS))
-			return;
-		ind = &ind->pu.fp[*cp++];
-	}
-    pfx_list_chk (word, ucword, len, pfxopts, sfxopts, ind, ignoreflagbits,
-      allhits);
-    if (m_numhits  &&  !allhits  &&  /* !cflag  &&*/  !ignoreflagbits)
-		return;
-    chk_suf (word, ucword, len, sfxopts, static_cast<struct flagent *>(NULL),
-      ignoreflagbits, allhits);
+    while(ind->numents == 0 && ind->pu.fp != NULL)
+    {
+        if(*cp == 0)
+            return;
+        if(ind->pu.fp[0].numents)
+        {
+            pfx_list_chk(word, ucword, len, pfxopts, sfxopts, &ind->pu.fp[0], ignoreflagbits, allhits);
+            if(m_numhits && !allhits && /* !cflag  && */ !ignoreflagbits)
+                return;
+        }
+        /* HACK: bail on unrecognized chars */
+        if(*cp >= (SET_SIZE + MAXSTRINGCHARS))
+            return;
+        ind = &ind->pu.fp[*cp++];
+    }
+    pfx_list_chk(word, ucword, len, pfxopts, sfxopts, ind, ignoreflagbits, allhits);
+    if(m_numhits && !allhits && /* !cflag  &&*/ !ignoreflagbits)
+        return;
+    chk_suf(word, ucword, len, sfxopts, static_cast< struct flagent * >(NULL), ignoreflagbits, allhits);
 }
 
 /*!
@@ -289,113 +285,104 @@ void ISpellChecker::chk_aff (ichar_t *word, ichar_t *ucword,
  * \param ignoreflagbits Ignore whether affix is legal
  * \param allhits Keep going after first hit
  * */
-void ISpellChecker::pfx_list_chk (ichar_t *word, ichar_t *ucword, int len, int optflags, 
-					int sfxopts, struct flagptr * ind, int ignoreflagbits, int allhits)
+void ISpellChecker::pfx_list_chk(ichar_t *word, ichar_t *ucword, int len, int optflags, int sfxopts, struct flagptr *ind, int ignoreflagbits,
+                                 int allhits)
 {
-    int			cond;		/* Condition number */
-    register ichar_t *	cp;		/* Pointer into end of ucword */
-    struct dent *	dent;		/* Dictionary entry we found */
-    int			entcount;	/* Number of entries to process */
-    register struct flagent *
-			flent;		/* Current table entry */
-    int			preadd;		/* Length added to tword2 as prefix */
-    register int	tlen;		/* Length of tword */
-    ichar_t		tword[INPUTWORDLEN + 4 * MAXAFFIXLEN + 4]; /* Tmp cpy */
-    ichar_t		tword2[sizeof tword]; /* 2nd copy for ins_root_cap */
+    int cond;                                          /* Condition number */
+    register ichar_t *cp;                              /* Pointer into end of ucword */
+    struct dent *dent;                                 /* Dictionary entry we found */
+    int entcount;                                      /* Number of entries to process */
+    register struct flagent *flent;                    /* Current table entry */
+    int preadd;                                        /* Length added to tword2 as prefix */
+    register int tlen;                                 /* Length of tword */
+    ichar_t tword[INPUTWORDLEN + 4 * MAXAFFIXLEN + 4]; /* Tmp cpy */
+    ichar_t tword2[sizeof tword];                      /* 2nd copy for ins_root_cap */
 
-    for (flent = ind->pu.ent, entcount = ind->numents;
-      entcount > 0;
-      flent++, entcount--)
-	{
-		/*
-		 * If this is a compound-only affix, ignore it unless we're
-		 * looking for that specific thing.
-		 */
-		if ((flent->flagflags & FF_COMPOUNDONLY) != 0
-		  &&  (optflags & FF_COMPOUNDONLY) == 0)
-			continue;
+    for(flent = ind->pu.ent, entcount = ind->numents; entcount > 0; flent++, entcount--)
+    {
+        /*
+         * If this is a compound-only affix, ignore it unless we're
+         * looking for that specific thing.
+         */
+        if((flent->flagflags & FF_COMPOUNDONLY) != 0 && (optflags & FF_COMPOUNDONLY) == 0)
+            continue;
 
-		/*
-		 * See if the prefix matches.
-		 */
-		tlen = len - flent->affl;
-		if (tlen > 0
-		  &&  (flent->affl == 0
-			||  icharncmp (flent->affix, ucword, flent->affl) == 0)
-		  &&  tlen + flent->stripl >= flent->numconds)
-		{
-			/*
-			 * The prefix matches.  Remove it, replace it by the "strip"
-			 * string (if any), and check the original conditions.
-			 */
-			if (flent->stripl)
-				icharcpy (tword, flent->strip);
-			icharcpy (tword + flent->stripl, ucword + flent->affl);
-			cp = tword;
-			for (cond = 0;  cond < flent->numconds;  cond++)
-			{
-				if ((flent->conds[*cp++] & (1 << cond)) == 0)
-					break;
-			}
-			if (cond >= flent->numconds)
-			{
-				/*
-				 * The conditions match.  See if the word is in the
-				 * dictionary.
-				 */
-				tlen += flent->stripl;
+        /*
+         * See if the prefix matches.
+         */
+        tlen = len - flent->affl;
+        if(tlen > 0 && (flent->affl == 0 || icharncmp(flent->affix, ucword, flent->affl) == 0) && tlen + flent->stripl >= flent->numconds)
+        {
+            /*
+             * The prefix matches.  Remove it, replace it by the "strip"
+             * string (if any), and check the original conditions.
+             */
+            if(flent->stripl)
+                icharcpy(tword, flent->strip);
+            icharcpy(tword + flent->stripl, ucword + flent->affl);
+            cp = tword;
+            for(cond = 0; cond < flent->numconds; cond++)
+            {
+                if((flent->conds[*cp++] & (1 << cond)) == 0)
+                    break;
+            }
+            if(cond >= flent->numconds)
+            {
+                /*
+                 * The conditions match.  See if the word is in the
+                 * dictionary.
+                 */
+                tlen += flent->stripl;
 
-				if (ignoreflagbits)
-				{
-					if ((dent = ispell_lookup (tword, 1)) != NULL)
-					{
-						cp = tword2;
-						if (flent->affl)
-						{
-							icharcpy (cp, flent->affix);
-							cp += flent->affl;
-							*cp++ = '+';
-						}
-						preadd = cp - tword2;
-						icharcpy (cp, tword);
-						cp += tlen;
-						if (flent->stripl)
-						{
-							*cp++ = '-';
-							icharcpy (cp, flent->strip);
-						}
-					}
-				}
-				else if ((dent = ispell_lookup (tword, 1)) != NULL
-				  &&  TSTMASKBIT (dent->mask, flent->flagbit))
-				{
-					if (m_numhits < MAX_HITS)
-					{
-						m_hits[m_numhits].dictent = dent;
-						m_hits[m_numhits].prefix = flent;
-						m_hits[m_numhits].suffix = NULL;
-						m_numhits++;
-					}
-					if (!allhits)
-					{
+                if(ignoreflagbits)
+                {
+                    if((dent = ispell_lookup(tword, 1)) != NULL)
+                    {
+                        cp = tword2;
+                        if(flent->affl)
+                        {
+                            icharcpy(cp, flent->affix);
+                            cp += flent->affl;
+                            *cp++ = '+';
+                        }
+                        preadd = cp - tword2;
+                        icharcpy(cp, tword);
+                        cp += tlen;
+                        if(flent->stripl)
+                        {
+                            *cp++ = '-';
+                            icharcpy(cp, flent->strip);
+                        }
+                    }
+                }
+                else if((dent = ispell_lookup(tword, 1)) != NULL && TSTMASKBIT(dent->mask, flent->flagbit))
+                {
+                    if(m_numhits < MAX_HITS)
+                    {
+                        m_hits[m_numhits].dictent = dent;
+                        m_hits[m_numhits].prefix = flent;
+                        m_hits[m_numhits].suffix = NULL;
+                        m_numhits++;
+                    }
+                    if(!allhits)
+                    {
 #ifndef NO_CAPITALIZATION_SUPPORT
-						if (cap_ok (word, &m_hits[0], len))
-							return;
-						m_numhits = 0;
-#else /* NO_CAPITALIZATION_SUPPORT */
-						return;
+                        if(cap_ok(word, &m_hits[0], len))
+                            return;
+                        m_numhits = 0;
+#else  /* NO_CAPITALIZATION_SUPPORT */
+                        return;
 #endif /* NO_CAPITALIZATION_SUPPORT */
-					}
-				}
-				/*
-				 * Handle cross-products.
-				 */
-				if (flent->flagflags & FF_CROSSPRODUCT)
-						chk_suf (word, tword, tlen, sfxopts | FF_CROSSPRODUCT,
-					flent, ignoreflagbits, allhits);
-			}
-	    }
-	}
+                    }
+                }
+                /*
+                 * Handle cross-products.
+                 */
+                if(flent->flagflags & FF_CROSSPRODUCT)
+                    chk_suf(word, tword, tlen, sfxopts | FF_CROSSPRODUCT, flent, ignoreflagbits, allhits);
+            }
+        }
+    }
 }
 
 /*!
@@ -409,41 +396,35 @@ void ISpellChecker::pfx_list_chk (ichar_t *word, ichar_t *ucword, int len, int o
  * \param ignoreflagbits Ignore whether affix is legal
  * \param allhits Keep going after first hit
  */
-void
-ISpellChecker::chk_suf (ichar_t *word, ichar_t *ucword, 
-					int len, int optflags, struct flagent *pfxent, 
-					int ignoreflagbits, int allhits)
+void ISpellChecker::chk_suf(ichar_t *word, ichar_t *ucword, int len, int optflags, struct flagent *pfxent, int ignoreflagbits, int allhits)
 {
-    register ichar_t *	cp;		/* Pointer to char to index on */
-    struct flagptr *	ind;		/* Flag index table to test */
+    register ichar_t *cp; /* Pointer to char to index on */
+    struct flagptr *ind;  /* Flag index table to test */
 
-    suf_list_chk (word, ucword, len, &m_sflagindex[0], optflags, pfxent,
-      ignoreflagbits, allhits);
+    suf_list_chk(word, ucword, len, &m_sflagindex[0], optflags, pfxent, ignoreflagbits, allhits);
     cp = ucword + len - 1;
-	/* HACK: bail on unrecognized chars */
-	if (*cp >= (SET_SIZE + MAXSTRINGCHARS))
-		return;
+    /* HACK: bail on unrecognized chars */
+    if(*cp >= (SET_SIZE + MAXSTRINGCHARS))
+        return;
     ind = &m_sflagindex[*cp];
-    while (ind->numents == 0  &&  ind->pu.fp != NULL)
-	{
-		if (cp == ucword)
-			return;
-		if (ind->pu.fp[0].numents)
-		{
-			suf_list_chk (word, ucword, len, &ind->pu.fp[0],
-			  optflags, pfxent, ignoreflagbits, allhits);
-			if (m_numhits != 0  &&  !allhits  &&  /* !cflag  && */  !ignoreflagbits)
-				return;
-		}
-		/* HACK: bail on unrecognized chars */
-		if (*(cp-1) >= (SET_SIZE + MAXSTRINGCHARS))
-			return;
-		ind = &ind->pu.fp[*--cp];
-	}
-    suf_list_chk (word, ucword, len, ind, optflags, pfxent,
-      ignoreflagbits, allhits);
+    while(ind->numents == 0 && ind->pu.fp != NULL)
+    {
+        if(cp == ucword)
+            return;
+        if(ind->pu.fp[0].numents)
+        {
+            suf_list_chk(word, ucword, len, &ind->pu.fp[0], optflags, pfxent, ignoreflagbits, allhits);
+            if(m_numhits != 0 && !allhits && /* !cflag  && */ !ignoreflagbits)
+                return;
+        }
+        /* HACK: bail on unrecognized chars */
+        if(*(cp - 1) >= (SET_SIZE + MAXSTRINGCHARS))
+            return;
+        ind = &ind->pu.fp[*--cp];
+    }
+    suf_list_chk(word, ucword, len, ind, optflags, pfxent, ignoreflagbits, allhits);
 }
-    
+
 /*!
  * \param word Word to be checked
  * \param ucword Upper-case-only word
@@ -454,133 +435,120 @@ ISpellChecker::chk_suf (ichar_t *word, ichar_t *ucword,
  * \param ignoreflagbits Ignore whether affix is legal
  * \pram allhits Keep going after first hit
  */
-void ISpellChecker::suf_list_chk (ichar_t *word, ichar_t *ucword, 
-						  int len, struct flagptr *ind, int optflags, 
-						  struct flagent *pfxent, int ignoreflagbits, int allhits)
+void ISpellChecker::suf_list_chk(ichar_t *word, ichar_t *ucword, int len, struct flagptr *ind, int optflags, struct flagent *pfxent,
+                                 int ignoreflagbits, int allhits)
 {
-    register ichar_t *	cp;		/* Pointer into end of ucword */
-    int			cond;		/* Condition number */
-    struct dent *	dent;		/* Dictionary entry we found */
-    int			entcount;	/* Number of entries to process */
-    register struct flagent *
-			flent;		/* Current table entry */
-    int			preadd;		/* Length added to tword2 as prefix */
-    register int	tlen;		/* Length of tword */
-    ichar_t		tword[INPUTWORDLEN + 4 * MAXAFFIXLEN + 4]; /* Tmp cpy */
-    ichar_t		tword2[sizeof tword]; /* 2nd copy for ins_root_cap */
+    register ichar_t *cp;                              /* Pointer into end of ucword */
+    int cond;                                          /* Condition number */
+    struct dent *dent;                                 /* Dictionary entry we found */
+    int entcount;                                      /* Number of entries to process */
+    register struct flagent *flent;                    /* Current table entry */
+    int preadd;                                        /* Length added to tword2 as prefix */
+    register int tlen;                                 /* Length of tword */
+    ichar_t tword[INPUTWORDLEN + 4 * MAXAFFIXLEN + 4]; /* Tmp cpy */
+    ichar_t tword2[sizeof tword];                      /* 2nd copy for ins_root_cap */
 
-    icharcpy (tword, ucword);
-    for (flent = ind->pu.ent, entcount = ind->numents;
-      entcount > 0;
-      flent++, entcount--)
-	{
-		if ((optflags & FF_CROSSPRODUCT) != 0
-		  &&  (flent->flagflags & FF_CROSSPRODUCT) == 0)
-			continue;
-		/*
-		 * If this is a compound-only affix, ignore it unless we're
-		 * looking for that specific thing.
-		 */
-		if ((flent->flagflags & FF_COMPOUNDONLY) != 0
-		  &&  (optflags & FF_COMPOUNDONLY) == 0)
-			continue;
+    icharcpy(tword, ucword);
+    for(flent = ind->pu.ent, entcount = ind->numents; entcount > 0; flent++, entcount--)
+    {
+        if((optflags & FF_CROSSPRODUCT) != 0 && (flent->flagflags & FF_CROSSPRODUCT) == 0)
+            continue;
+        /*
+         * If this is a compound-only affix, ignore it unless we're
+         * looking for that specific thing.
+         */
+        if((flent->flagflags & FF_COMPOUNDONLY) != 0 && (optflags & FF_COMPOUNDONLY) == 0)
+            continue;
 
-		/*
-		 * See if the suffix matches.
-		 */
-		tlen = len - flent->affl;
-		if (tlen > 0
-		  &&  (flent->affl == 0
-			||  icharcmp (flent->affix, ucword + tlen) == 0)
-		  &&  tlen + flent->stripl >= flent->numconds)
-		{
-			/*
-			 * The suffix matches.  Remove it, replace it by the "strip"
-			 * string (if any), and check the original conditions.
-			 */
-			icharcpy (tword, ucword);
-			cp = tword + tlen;
-			if (flent->stripl)
-			{
-				icharcpy (cp, flent->strip);
-				tlen += flent->stripl;
-				cp = tword + tlen;
-			}
-			else
-				*cp = '\0';
-			for (cond = flent->numconds;  --cond >= 0;  )
-			{
-				if ((flent->conds[*--cp] & (1 << cond)) == 0)
-					break;
-			}
-			if (cond < 0)
-			{
-				/*
-				 * The conditions match.  See if the word is in the
-				 * dictionary.
-				 */
-				if (ignoreflagbits)
-				{
-					if ((dent = ispell_lookup (tword, 1)) != NULL)
-					{
-						cp = tword2;
-						if ((optflags & FF_CROSSPRODUCT)
-						  &&  pfxent->affl != 0)
-						{
-							icharcpy (cp, pfxent->affix);
-							cp += pfxent->affl;
-							*cp++ = '+';
-						}
-						preadd = cp - tword2;
-						icharcpy (cp, tword);
-						cp += tlen;
-						if ((optflags & FF_CROSSPRODUCT)
-						  &&  pfxent->stripl != 0)
-						{
-							*cp++ = '-';
-							icharcpy (cp, pfxent->strip);
-							cp += pfxent->stripl;
-						}
-						if (flent->stripl)
-						{
-							*cp++ = '-';
-							icharcpy (cp, flent->strip);
-							cp += flent->stripl;
-						}
-						if (flent->affl)
-						{
-							*cp++ = '+';
-							icharcpy (cp, flent->affix);
-							cp += flent->affl;
-						}
-					}
-				}
-				else if ((dent = ispell_lookup (tword, 1)) != NULL
-				  &&  TSTMASKBIT (dent->mask, flent->flagbit)
-				  &&  ((optflags & FF_CROSSPRODUCT) == 0
-					|| TSTMASKBIT (dent->mask, pfxent->flagbit)))
-				{
-					if (m_numhits < MAX_HITS)
-					{
-						m_hits[m_numhits].dictent = dent;
-						m_hits[m_numhits].prefix = pfxent;
-						m_hits[m_numhits].suffix = flent;
-						m_numhits++;
-					}
-					if (!allhits)
-					{
+        /*
+         * See if the suffix matches.
+         */
+        tlen = len - flent->affl;
+        if(tlen > 0 && (flent->affl == 0 || icharcmp(flent->affix, ucword + tlen) == 0) && tlen + flent->stripl >= flent->numconds)
+        {
+            /*
+             * The suffix matches.  Remove it, replace it by the "strip"
+             * string (if any), and check the original conditions.
+             */
+            icharcpy(tword, ucword);
+            cp = tword + tlen;
+            if(flent->stripl)
+            {
+                icharcpy(cp, flent->strip);
+                tlen += flent->stripl;
+                cp = tword + tlen;
+            }
+            else
+                *cp = '\0';
+            for(cond = flent->numconds; --cond >= 0;)
+            {
+                if((flent->conds[*--cp] & (1 << cond)) == 0)
+                    break;
+            }
+            if(cond < 0)
+            {
+                /*
+                 * The conditions match.  See if the word is in the
+                 * dictionary.
+                 */
+                if(ignoreflagbits)
+                {
+                    if((dent = ispell_lookup(tword, 1)) != NULL)
+                    {
+                        cp = tword2;
+                        if((optflags & FF_CROSSPRODUCT) && pfxent->affl != 0)
+                        {
+                            icharcpy(cp, pfxent->affix);
+                            cp += pfxent->affl;
+                            *cp++ = '+';
+                        }
+                        preadd = cp - tword2;
+                        icharcpy(cp, tword);
+                        cp += tlen;
+                        if((optflags & FF_CROSSPRODUCT) && pfxent->stripl != 0)
+                        {
+                            *cp++ = '-';
+                            icharcpy(cp, pfxent->strip);
+                            cp += pfxent->stripl;
+                        }
+                        if(flent->stripl)
+                        {
+                            *cp++ = '-';
+                            icharcpy(cp, flent->strip);
+                            cp += flent->stripl;
+                        }
+                        if(flent->affl)
+                        {
+                            *cp++ = '+';
+                            icharcpy(cp, flent->affix);
+                            cp += flent->affl;
+                        }
+                    }
+                }
+                else if((dent = ispell_lookup(tword, 1)) != NULL && TSTMASKBIT(dent->mask, flent->flagbit)
+                        && ((optflags & FF_CROSSPRODUCT) == 0 || TSTMASKBIT(dent->mask, pfxent->flagbit)))
+                {
+                    if(m_numhits < MAX_HITS)
+                    {
+                        m_hits[m_numhits].dictent = dent;
+                        m_hits[m_numhits].prefix = pfxent;
+                        m_hits[m_numhits].suffix = flent;
+                        m_numhits++;
+                    }
+                    if(!allhits)
+                    {
 #ifndef NO_CAPITALIZATION_SUPPORT
-						if (cap_ok (word, &m_hits[0], len))
-							return;
-						m_numhits = 0;
-#else /* NO_CAPITALIZATION_SUPPORT */
-						return;
+                        if(cap_ok(word, &m_hits[0], len))
+                            return;
+                        m_numhits = 0;
+#else  /* NO_CAPITALIZATION_SUPPORT */
+                        return;
 #endif /* NO_CAPITALIZATION_SUPPORT */
-					}
-				}
-			}
-		}
-	}
+                    }
+                }
+            }
+        }
+    }
 }
 
 /*!
@@ -594,22 +562,17 @@ void ISpellChecker::suf_list_chk (ichar_t *word, ichar_t *ucword,
  *
  * \return
  */
-int ISpellChecker::expand_pre (char *croot, ichar_t *rootword, MASKTYPE mask[], 
-				int option, char *extra)
+int ISpellChecker::expand_pre(char *croot, ichar_t *rootword, MASKTYPE mask[], int option, char *extra)
 {
-    int				entcount;	/* No. of entries to process */
-    int				explength;	/* Length of expansions */
-    register struct flagent *
-				flent;		/* Current table entry */
+    int entcount;                   /* No. of entries to process */
+    int explength;                  /* Length of expansions */
+    register struct flagent *flent; /* Current table entry */
 
-    for (flent = m_pflaglist, entcount = m_numpflags, explength = 0;
-      entcount > 0;
-      flent++, entcount--)
-	{
-		if (TSTMASKBIT (mask, flent->flagbit))
-			explength +=
-			  pr_pre_expansion (croot, rootword, flent, mask, option, extra);
-	}
+    for(flent = m_pflaglist, entcount = m_numpflags, explength = 0; entcount > 0; flent++, entcount--)
+    {
+        if(TSTMASKBIT(mask, flent->flagbit))
+            explength += pr_pre_expansion(croot, rootword, flent, mask, option, extra);
+    }
     return explength;
 }
 
@@ -625,27 +588,25 @@ int ISpellChecker::expand_pre (char *croot, ichar_t *rootword, MASKTYPE mask[],
  *
  * \return
  */
-int ISpellChecker::pr_pre_expansion ( char *croot, ichar_t *rootword, 
-							struct flagent *flent, MASKTYPE mask[], int option, 
-							char *extra)
+int ISpellChecker::pr_pre_expansion(char *croot, ichar_t *rootword, struct flagent *flent, MASKTYPE mask[], int option, char *extra)
 {
-    int				cond;		/* Current condition number */
-    register ichar_t *		nextc;		/* Next case choice */
-    int				tlen;		/* Length of tword */
-    ichar_t			tword[INPUTWORDLEN + MAXAFFIXLEN]; /* Temp */
+    int cond;                                  /* Current condition number */
+    register ichar_t *nextc;                   /* Next case choice */
+    int tlen;                                  /* Length of tword */
+    ichar_t tword[INPUTWORDLEN + MAXAFFIXLEN]; /* Temp */
 
-    tlen = icharlen (rootword);
-    if (flent->numconds > tlen)
-		return 0;
+    tlen = icharlen(rootword);
+    if(flent->numconds > tlen)
+        return 0;
     tlen -= flent->stripl;
-    if (tlen <= 0)
-		return 0;
+    if(tlen <= 0)
+        return 0;
     tlen += flent->affl;
-    for (cond = 0, nextc = rootword;  cond < flent->numconds;  cond++)
-	{
-		if ((flent->conds[mytoupper (*nextc++)] & (1 << cond)) == 0)
-			return 0;
-	}
+    for(cond = 0, nextc = rootword; cond < flent->numconds; cond++)
+    {
+        if((flent->conds[mytoupper(*nextc++)] & (1 << cond)) == 0)
+            return 0;
+    }
     /*
      * The conditions are satisfied.  Copy the word, add the prefix,
      * and make it the proper case.   This code is carefully written
@@ -659,63 +620,62 @@ int ISpellChecker::pr_pre_expansion ( char *croot, ichar_t *rootword,
      * but "LOved/U" should generate "UNLOved" and "lOved/U" should
      * produce "unlOved".
      */
-    if (flent->affl)
-	{
-		icharcpy (tword, flent->affix);
-		nextc = tword + flent->affl;
-	}
-    icharcpy (nextc, rootword + flent->stripl);
-    if (myupper (rootword[0]))
-	{
-		/* We must distinguish followcase from capitalized and all-upper */
-		for (nextc = rootword + 1;  *nextc;  nextc++)
-		{
-			if (!myupper (*nextc))
-				break;
-		}
-		if (*nextc)
-		{
-			/* It's a followcase or capitalized word.  Figure out which. */
-			for (  ;  *nextc;  nextc++)
-			{
-				if (myupper (*nextc))
-					break;
-			}
-			if (*nextc)
-			{
-				/* It's followcase. */
-				if (!myupper (tword[flent->affl]))
-					forcelc (tword, flent->affl);
-			}
-			else
-			{
-				/* It's capitalized */
-				forcelc (tword + 1, tlen - 1);
-			}
-		}
-	}
+    if(flent->affl)
+    {
+        icharcpy(tword, flent->affix);
+        nextc = tword + flent->affl;
+    }
+    icharcpy(nextc, rootword + flent->stripl);
+    if(myupper(rootword[0]))
+    {
+        /* We must distinguish followcase from capitalized and all-upper */
+        for(nextc = rootword + 1; *nextc; nextc++)
+        {
+            if(!myupper(*nextc))
+                break;
+        }
+        if(*nextc)
+        {
+            /* It's a followcase or capitalized word.  Figure out which. */
+            for(; *nextc; nextc++)
+            {
+                if(myupper(*nextc))
+                    break;
+            }
+            if(*nextc)
+            {
+                /* It's followcase. */
+                if(!myupper(tword[flent->affl]))
+                    forcelc(tword, flent->affl);
+            }
+            else
+            {
+                /* It's capitalized */
+                forcelc(tword + 1, tlen - 1);
+            }
+        }
+    }
     else
-	{
-		/* Followcase or all-lower, we don't care which */
-		if (!myupper (*nextc))
-			forcelc (tword, flent->affl);
-	}
-    if (option == 3)
-		printf ("\n%s", croot);
-    if (option != 4)
-		printf (" %s%s", ichartosstr (tword, 1), extra);
-    if (flent->flagflags & FF_CROSSPRODUCT)
-		return tlen
-		  + expand_suf (croot, tword, mask, FF_CROSSPRODUCT, option, extra);
+    {
+        /* Followcase or all-lower, we don't care which */
+        if(!myupper(*nextc))
+            forcelc(tword, flent->affl);
+    }
+    if(option == 3)
+        printf("\n%s", croot);
+    if(option != 4)
+        printf(" %s%s", ichartosstr(tword, 1), extra);
+    if(flent->flagflags & FF_CROSSPRODUCT)
+        return tlen + expand_suf(croot, tword, mask, FF_CROSSPRODUCT, option, extra);
     else
-		return tlen;
+        return tlen;
 }
 
 /*!
  * Expand a dictionary suffix entry
  *
  * \param croot Char version of rootword
- * \param rootword Root word to expand 
+ * \param rootword Root word to expand
  * \param mask Mask bits to expand on
  * \param optflags Affix option flags
  * \param option Option, see expandmode
@@ -723,26 +683,20 @@ int ISpellChecker::pr_pre_expansion ( char *croot, ichar_t *rootword,
  *
  * \return
  */
-int ISpellChecker::expand_suf (char *croot, ichar_t *rootword, MASKTYPE mask[], 
-				int optflags, int option, char *extra)
+int ISpellChecker::expand_suf(char *croot, ichar_t *rootword, MASKTYPE mask[], int optflags, int option, char *extra)
 {
-    int				entcount;	/* No. of entries to process */
-    int				explength;	/* Length of expansions */
-    register struct flagent *
-				flent;		/* Current table entry */
+    int entcount;                   /* No. of entries to process */
+    int explength;                  /* Length of expansions */
+    register struct flagent *flent; /* Current table entry */
 
-    for (flent = m_sflaglist, entcount = m_numsflags, explength = 0;
-      entcount > 0;
-      flent++, entcount--)
-	{
-		if (TSTMASKBIT (mask, flent->flagbit))
-		{
-			if ((optflags & FF_CROSSPRODUCT) == 0
-			  ||  (flent->flagflags & FF_CROSSPRODUCT))
-			explength +=
-			  pr_suf_expansion (croot, rootword, flent, option, extra);
-		}
-	}
+    for(flent = m_sflaglist, entcount = m_numsflags, explength = 0; entcount > 0; flent++, entcount--)
+    {
+        if(TSTMASKBIT(mask, flent->flagbit))
+        {
+            if((optflags & FF_CROSSPRODUCT) == 0 || (flent->flagflags & FF_CROSSPRODUCT))
+                explength += pr_suf_expansion(croot, rootword, flent, option, extra);
+        }
+    }
     return explength;
 }
 
@@ -757,44 +711,43 @@ int ISpellChecker::expand_suf (char *croot, ichar_t *rootword, MASKTYPE mask[],
  *
  * \return
  */
-int ISpellChecker::pr_suf_expansion (char *croot, ichar_t *rootword, 
-							struct flagent *flent, int option, char *extra)
+int ISpellChecker::pr_suf_expansion(char *croot, ichar_t *rootword, struct flagent *flent, int option, char *extra)
 {
-    int				cond;		/* Current condition number */
-    register ichar_t *		nextc;		/* Next case choice */
-    int				tlen;		/* Length of tword */
-    ichar_t			tword[INPUTWORDLEN + MAXAFFIXLEN]; /* Temp */
+    int cond;                                  /* Current condition number */
+    register ichar_t *nextc;                   /* Next case choice */
+    int tlen;                                  /* Length of tword */
+    ichar_t tword[INPUTWORDLEN + MAXAFFIXLEN]; /* Temp */
 
-    tlen = icharlen (rootword);
+    tlen = icharlen(rootword);
     cond = flent->numconds;
-    if (cond > tlen)
-		return 0;
-    if (tlen - flent->stripl <= 0)
-		return 0;
-    for (nextc = rootword + tlen;  --cond >= 0;  )
-	{
-		if ((flent->conds[mytoupper (*--nextc)] & (1 << cond)) == 0)
-			return 0;
-	}
+    if(cond > tlen)
+        return 0;
+    if(tlen - flent->stripl <= 0)
+        return 0;
+    for(nextc = rootword + tlen; --cond >= 0;)
+    {
+        if((flent->conds[mytoupper(*--nextc)] & (1 << cond)) == 0)
+            return 0;
+    }
     /*
      * The conditions are satisfied.  Copy the word, add the suffix,
      * and make it match the case of the last remaining character of the
      * root.  Again, this code carefully matches ins_cap and cap_ok.
      */
-    icharcpy (tword, rootword);
+    icharcpy(tword, rootword);
     nextc = tword + tlen - flent->stripl;
-    if (flent->affl)
-	{
-		icharcpy (nextc, flent->affix);
-		if (!myupper (nextc[-1]))
-			forcelc (nextc, flent->affl);
-	}
+    if(flent->affl)
+    {
+        icharcpy(nextc, flent->affix);
+        if(!myupper(nextc[-1]))
+            forcelc(nextc, flent->affl);
+    }
     else
-		*nextc = 0;
-    if (option == 3)
-		printf ("\n%s", croot);
-    if (option != 4)
-		printf (" %s%s", ichartosstr (tword, 1), extra);
+        *nextc = 0;
+    if(option == 3)
+        printf("\n%s", croot);
+    if(option != 4)
+        printf(" %s%s", ichartosstr(tword, 1), extra);
     return tlen + flent->affl - flent->stripl;
 }
 
@@ -802,9 +755,9 @@ int ISpellChecker::pr_suf_expansion (char *croot, ichar_t *rootword,
  * \param dst Destination to modify
  * \param len Length to copy
  */
-void ISpellChecker::forcelc (ichar_t *dst, int len)			/* Force to lowercase */
+void ISpellChecker::forcelc(ichar_t *dst, int len) /* Force to lowercase */
 {
 
-    for (  ;  --len >= 0;  dst++)
-		*dst = mytolower (*dst);
+    for(; --len >= 0; dst++)
+        *dst = mytolower(*dst);
 }

@@ -24,41 +24,38 @@
 
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
  * This is an interface for accessing dynamic word wrapping functionality
  * of the View class.
  */
-class KTEXTEDITOR_EXPORT DynWordWrapInterface
-{
-  friend class PrivateDynWordWrapInterface;
-  
-  public:
-    DynWordWrapInterface ();
-    virtual ~DynWordWrapInterface ();
+class KTEXTEDITOR_EXPORT DynWordWrapInterface {
+    friend class PrivateDynWordWrapInterface;
 
-    unsigned int dynWordWrapInterfaceNumber () const;
-    
-  protected:  
-    void setDynWordWrapInterfaceDCOPSuffix (const QCString &suffix);  
+public:
+    DynWordWrapInterface();
+    virtual ~DynWordWrapInterface();
 
-  //
-  // slots !!!
-  //
-  public:
-    virtual void setDynWordWrap (bool) = 0;
-    virtual bool dynWordWrap () const = 0;
+    unsigned int dynWordWrapInterfaceNumber() const;
 
-  private:
+protected:
+    void setDynWordWrapInterfaceDCOPSuffix(const QCString &suffix);
+
+    //
+    // slots !!!
+    //
+public:
+    virtual void setDynWordWrap(bool) = 0;
+    virtual bool dynWordWrap() const = 0;
+
+private:
     class PrivateDynWordWrapInterface *d;
     static unsigned int globalDynWordWrapInterfaceNumber;
     unsigned int myDynWordWrapInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT DynWordWrapInterface *dynWordWrapInterface (class View *view);
-
+KTEXTEDITOR_EXPORT DynWordWrapInterface *dynWordWrapInterface(class View *view);
 }
 
 #endif

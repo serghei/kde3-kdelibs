@@ -35,8 +35,13 @@ class KLibFactoryPrivate;
 class KLibLoaderPrivate;
 class KLibraryPrivate;
 
-# define K_EXPORT_COMPONENT_FACTORY( libname, factory ) \
-    extern "C" { KDE_EXPORT void *init_##libname() { return new factory; } }
+#define K_EXPORT_COMPONENT_FACTORY(libname, factory)                                                                                                 \
+    extern "C" {                                                                                                                                     \
+    KDE_EXPORT void *init_##libname()                                                                                                                \
+    {                                                                                                                                                \
+        return new factory;                                                                                                                          \
+    }                                                                                                                                                \
+    }
 
 /**
  * @short Represents a dynamically loaded library.
@@ -47,17 +52,16 @@ class KLibraryPrivate;
  * @see KLibLoader
  * @author Torben Weis <weis@kde.org>
  */
-class KDECORE_EXPORT KLibrary : public QObject
-{
+class KDECORE_EXPORT KLibrary : public QObject {
     friend class KLibLoader;
-    friend class QAsciiDict<KLibrary>;
+    friend class QAsciiDict< KLibrary >;
 
     Q_OBJECT
 public:
     /**
      * Don't create KLibrary objects on your own. Instead use KLibLoader.
      */
-    KLibrary( const QString& libname, const QString& filename, void * handle );
+    KLibrary(const QString &libname, const QString &filename, void *handle);
 
     /**
      * Returns the name of the library.
@@ -75,7 +79,7 @@ public:
      * Returns the factory of the library.
      * @return The factory of the library if there is any, otherwise 0
      */
-    KLibFactory* factory();
+    KLibFactory *factory();
 
     /**
      * Looks up a symbol from the library. This is a very low level
@@ -86,7 +90,7 @@ public:
      * @return the address of the symbol, or 0 if it does not exist
      * @see hasSymbol
      */
-    void* symbol( const char* name ) const;
+    void *symbol(const char *name) const;
 
     /**
      * Looks up a symbol from the library. This is a very low level
@@ -97,7 +101,7 @@ public:
      * @return true if the symbol exists
      * @since 3.1
      */
-    bool hasSymbol( const char* name ) const;
+    bool hasSymbol(const char *name) const;
 
     /**
      * Unloads the library.
@@ -107,7 +111,7 @@ public:
     void unload() const;
 
 private slots:
-    void slotObjectCreated( QObject *obj );
+    void slotObjectCreated(QObject *obj);
     void slotObjectDestroyed();
     void slotTimeout();
 
@@ -120,9 +124,9 @@ private:
 
     QString m_libname;
     QString m_filename;
-    KLibFactory* m_factory;
-    void * m_handle;
-    QPtrList<QObject> m_objs;
+    KLibFactory *m_factory;
+    void *m_handle;
+    QPtrList< QObject > m_objs;
     QTimer *m_timer;
     KLibraryPrivate *d;
 };
@@ -139,8 +143,7 @@ class KLibWrapPrivate;
  * @see KLibrary
  * @author Torben Weis <weis@kde.org>
  */
-class KDECORE_EXPORT KLibLoader : public QObject
-{
+class KDECORE_EXPORT KLibLoader : public QObject {
     friend class KLibrary;
 
     Q_OBJECT
@@ -172,7 +175,7 @@ public:
      *         not have a factory
      * @see library
      */
-    KLibFactory* factory( const char* libname );
+    KLibFactory *factory(const char *libname);
 
     /**
      * Loads and initializes a library. Loading a library multiple times is
@@ -194,7 +197,7 @@ public:
      *
      * @see factory
      */
-    virtual KLibrary* library( const char* libname );
+    virtual KLibrary *library(const char *libname);
 
     /**
      * Loads and initializes a library. Loading a library multiple times is
@@ -218,7 +221,7 @@ public:
      *
      * @see factory
      */
-    KLibrary* globalLibrary( const char *name );
+    KLibrary *globalLibrary(const char *name);
 
     /**
      * Returns an error message that can be useful to debug the problem.
@@ -243,7 +246,7 @@ public:
      *                 (or whatever is used on your platform), and the library
      *                 will be loaded without resolving dependencies. Use with caution.
      */
-    virtual void unloadLibrary( const char *libname );
+    virtual void unloadLibrary(const char *libname);
 
     /**
      * Returns a pointer to the factory. Use this function to get an instance
@@ -251,7 +254,7 @@ public:
      * @return a pointer to the loader. If no loader exists until now
      *         then one is created.
      */
-    static KLibLoader* self();
+    static KLibLoader *self();
 
     /**
      * @internal
@@ -273,21 +276,23 @@ public:
      *             ".la" will be appended.
      * @param instance a KInstance used to get the standard paths
      */
-    static QString findLibrary( const char * name, const KInstance * instance = KGlobal::instance() );
+    static QString findLibrary(const char *name, const KInstance *instance = KGlobal::instance());
 
 protected:
-    KLibLoader( QObject* parent = 0, const char* name = 0 );
+    KLibLoader(QObject *parent = 0, const char *name = 0);
 
 private slots:
     void slotLibraryDestroyed();
-private:
-    void close_pending( KLibWrapPrivate * );
-    QAsciiDict<KLibWrapPrivate> m_libs;
 
-    static KLibLoader* s_self;
+private:
+    void close_pending(KLibWrapPrivate *);
+    QAsciiDict< KLibWrapPrivate > m_libs;
+
+    static KLibLoader *s_self;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     KLibLoaderPrivate *d;
 };
@@ -330,8 +335,7 @@ private:
  *
  * @author Torben Weis <weis@kde.org>
  */
-class KDECORE_EXPORT KLibFactory : public QObject
-{
+class KDECORE_EXPORT KLibFactory : public QObject {
     Q_OBJECT
 public:
     /**
@@ -339,7 +343,7 @@ public:
      * @param parent the parent of the QObject, 0 for no parent
      * @param name the name of the QObject, 0 for no name
      */
-    KLibFactory( QObject* parent = 0, const char* name = 0 );
+    KLibFactory(QObject *parent = 0, const char *name = 0);
     virtual ~KLibFactory();
 
     /**
@@ -363,18 +367,17 @@ public:
      * @param args a list of arguments
      */
 
-     QObject* create( QObject* parent = 0, const char* name = 0, const char* classname = "QObject", const QStringList &args = QStringList() );
+    QObject *create(QObject *parent = 0, const char *name = 0, const char *classname = "QObject", const QStringList &args = QStringList());
 
 signals:
     /**
      * Emitted in #create
      * @param obj the new object
      */
-    void objectCreated( QObject *obj );
+    void objectCreated(QObject *obj);
 
 
 protected:
-
     /**
      * Creates a new object. The returned object has to be derived from
      * the requested classname.
@@ -391,13 +394,13 @@ protected:
      * @param className the name of the class
      * @param args a list of arguments
      */
-    virtual QObject* createObject( QObject* parent = 0, const char* name = 0,
-                                   const char* className = "QObject",
-                                   const QStringList &args = QStringList() ) = 0;
+    virtual QObject *createObject(QObject *parent = 0, const char *name = 0, const char *className = "QObject",
+                                  const QStringList &args = QStringList()) = 0;
 
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     KLibFactoryPrivate *d;
 };

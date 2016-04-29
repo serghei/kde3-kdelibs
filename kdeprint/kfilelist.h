@@ -28,35 +28,34 @@ class KListView;
 class QToolButton;
 class QListViewItem;
 
-class KFileList : public QWidget
-{
-	Q_OBJECT
+class KFileList : public QWidget {
+    Q_OBJECT
 public:
-	KFileList(QWidget *parent = 0, const char *name = 0);
-	virtual ~KFileList();
+    KFileList(QWidget *parent = 0, const char *name = 0);
+    virtual ~KFileList();
 
-	void setFileList(const QStringList&);
-	QStringList fileList() const;
-	QSize sizeHint() const;
+    void setFileList(const QStringList &);
+    QStringList fileList() const;
+    QSize sizeHint() const;
 
 protected slots:
-	void slotAddFile();
-	void slotRemoveFile();
-	void slotOpenFile();
-	void slotSelectionChanged();
-	void slotUp();
-	void slotDown();
+    void slotAddFile();
+    void slotRemoveFile();
+    void slotOpenFile();
+    void slotSelectionChanged();
+    void slotUp();
+    void slotDown();
 
 protected:
-	void dragEnterEvent(QDragEnterEvent*);
-	void dropEvent(QDropEvent*);
-	void addFiles(const KURL::List&);
-	void selection(QPtrList<QListViewItem>&);
+    void dragEnterEvent(QDragEnterEvent *);
+    void dropEvent(QDropEvent *);
+    void addFiles(const KURL::List &);
+    void selection(QPtrList< QListViewItem > &);
 
 private:
-	KListView	*m_files;
-	QToolButton	*m_add, *m_remove, *m_open, *m_up, *m_down;
-	bool		m_block;
+    KListView *m_files;
+    QToolButton *m_add, *m_remove, *m_open, *m_up, *m_down;
+    bool m_block;
 };
 
 #endif

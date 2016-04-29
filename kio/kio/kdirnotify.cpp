@@ -22,19 +22,19 @@
 // Needed since DCOP enforces object id uniqueness.
 int KDirNotify::s_serial = 0;
 
-KDirNotify::KDirNotify()
-  :  DCOPObject( QCString().sprintf("KDirNotify-%d", ++s_serial) )
+KDirNotify::KDirNotify() : DCOPObject(QCString().sprintf("KDirNotify-%d", ++s_serial))
 {
-   connectDCOPSignal(0, "KDirNotify", "FilesAdded(KURL)", "FilesAdded(KURL)", false);
-   connectDCOPSignal(0, "KDirNotify", "FilesRemoved(KURL::List)", "FilesRemoved(KURL::List)", false);
-   connectDCOPSignal(0, "KDirNotify", "FilesChanged(KURL::List)", "FilesChanged(KURL::List)", false);
-   connectDCOPSignal(0, "KDirNotify", "FileRenamed(KURL,KURL)", "FileRenamed(KURL,KURL)", false);
+    connectDCOPSignal(0, "KDirNotify", "FilesAdded(KURL)", "FilesAdded(KURL)", false);
+    connectDCOPSignal(0, "KDirNotify", "FilesRemoved(KURL::List)", "FilesRemoved(KURL::List)", false);
+    connectDCOPSignal(0, "KDirNotify", "FilesChanged(KURL::List)", "FilesChanged(KURL::List)", false);
+    connectDCOPSignal(0, "KDirNotify", "FileRenamed(KURL,KURL)", "FileRenamed(KURL,KURL)", false);
 }
 
-void KDirNotify::FileRenamed( const KURL &, const KURL & )
+void KDirNotify::FileRenamed(const KURL &, const KURL &)
 {
 }
 
-void KDirNotify::virtual_hook( int id, void* data )
-{ DCOPObject::virtual_hook( id, data ); }
-
+void KDirNotify::virtual_hook(int id, void *data)
+{
+    DCOPObject::virtual_hook(id, data);
+}

@@ -30,40 +30,53 @@
 
 namespace khtml {
 
-class RenderInline : public RenderFlow
-{
+class RenderInline : public RenderFlow {
 public:
-    RenderInline(DOM::NodeImpl* node) : RenderFlow( node ), m_isContinuation( false ) {}
+    RenderInline(DOM::NodeImpl *node) : RenderFlow(node), m_isContinuation(false)
+    {
+    }
 
     virtual const char *renderName() const;
 
-    virtual bool isRenderInline() const { return true; }
-    virtual bool isInlineFlow() const { return true; }
-    virtual bool childrenInline() const { return true; }
+    virtual bool isRenderInline() const
+    {
+        return true;
+    }
+    virtual bool isInlineFlow() const
+    {
+        return true;
+    }
+    virtual bool childrenInline() const
+    {
+        return true;
+    }
 
     virtual bool isInlineContinuation() const;
 
-    virtual void addChildToFlow(RenderObject* newChild, RenderObject* beforeChild);
+    virtual void addChildToFlow(RenderObject *newChild, RenderObject *beforeChild);
 
-    void splitInlines(RenderBlock* fromBlock, RenderBlock* toBlock, RenderBlock* middleBlock,
-                      RenderObject* beforeChild, RenderFlow* oldCont);
+    void splitInlines(RenderBlock *fromBlock, RenderBlock *toBlock, RenderBlock *middleBlock, RenderObject *beforeChild, RenderFlow *oldCont);
 
-    void splitFlow(RenderObject* beforeChild, RenderBlock* newBlockBox,
-                   RenderObject* newChild, RenderFlow* oldCont);
+    void splitFlow(RenderObject *beforeChild, RenderBlock *newBlockBox, RenderObject *newChild, RenderFlow *oldCont);
 
-    virtual void setStyle(RenderStyle* _style);
+    virtual void setStyle(RenderStyle *_style);
     virtual void attach();
 
-    virtual void layout() {} // Do nothing for layout()
+    virtual void layout()
+    {
+    } // Do nothing for layout()
 
-    virtual void paint(PaintInfo&, int tx, int ty);
+    virtual void paint(PaintInfo &, int tx, int ty);
 
-    virtual bool nodeAtPoint(NodeInfo& info, int _x, int _y, int _tx, int _ty, HitTestAction hitTestAction, bool inside);
+    virtual bool nodeAtPoint(NodeInfo &info, int _x, int _y, int _tx, int _ty, HitTestAction hitTestAction, bool inside);
 
     virtual void calcMinMaxWidth();
 
     // overrides RenderObject
-    virtual bool requiresLayer() const { return isRelPositioned(); }
+    virtual bool requiresLayer() const
+    {
+        return isRelPositioned();
+    }
 
     virtual short width() const;
     virtual int height() const;
@@ -77,18 +90,17 @@ public:
     virtual int offsetTop() const;
 
     virtual void caretPos(int offset, int flags, int &_x, int &_y, int &width, int &height);
-    void paintOutlines(QPainter *p, int tx, int ty);    
+    void paintOutlines(QPainter *p, int tx, int ty);
 
 protected:
-    static RenderInline* cloneInline(RenderFlow* src);
-    void paintOutlinePath(QPainter *p, int tx, int ty, const QPoint *begin, const QPoint *end, BorderSide startingBS, int initialDirection, BorderSide endingBS);
+    static RenderInline *cloneInline(RenderFlow *src);
+    void paintOutlinePath(QPainter *p, int tx, int ty, const QPoint *begin, const QPoint *end, BorderSide startingBS, int initialDirection,
+                          BorderSide endingBS);
 
 private:
     bool m_isContinuation : 1; // Whether or not we're a continuation of an inline.
-
 };
 
 } // namespace
 
 #endif // RENDER_BLOCK_H
-

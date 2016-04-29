@@ -30,48 +30,46 @@
 /**
  * @internal
  */
-class KGlobalAccelPrivate : public QWidget, public KAccelBase
-{
-	friend class KGlobalAccel;
-	Q_OBJECT
- public:
-	KGlobalAccelPrivate();
-	virtual ~KGlobalAccelPrivate();
+class KGlobalAccelPrivate : public QWidget, public KAccelBase {
+    friend class KGlobalAccel;
+    Q_OBJECT
+public:
+    KGlobalAccelPrivate();
+    virtual ~KGlobalAccelPrivate();
 
-	virtual void setEnabled( bool bEnabled );
+    virtual void setEnabled(bool bEnabled);
 
-	virtual bool emitSignal( Signal signal );
-	virtual bool connectKey( KAccelAction& action, const KKeyServer::Key& key );
-	virtual bool connectKey( const KKeyServer::Key& key );
-	virtual bool disconnectKey( KAccelAction& action, const KKeyServer::Key& key );
-	virtual bool disconnectKey( const KKeyServer::Key& key );
+    virtual bool emitSignal(Signal signal);
+    virtual bool connectKey(KAccelAction &action, const KKeyServer::Key &key);
+    virtual bool connectKey(const KKeyServer::Key &key);
+    virtual bool disconnectKey(KAccelAction &action, const KKeyServer::Key &key);
+    virtual bool disconnectKey(const KKeyServer::Key &key);
 
- protected:
+protected:
+    /**
+     * @param bGrab Set to true to grab key, false to ungrab key.
+     */
+    bool grabKey(const KKeyServer::Key &, bool bGrab, KAccelAction *);
 
-	/**
-	 * @param bGrab Set to true to grab key, false to ungrab key.
-	 */
-	bool grabKey( const KKeyServer::Key&, bool bGrab, KAccelAction* );
+    /**
+     * Filters X11 events ev for key bindings in the accelerator dictionary.
+     * If a match is found the activated activated is emitted and the function
+     * returns true. Return false if the event is not processed.
+     *
+     * This is public for compatibility only. You do not need to call it.
+     */
+    //	virtual bool x11Event( XEvent* );
+    //	void x11MappingNotify();
+    //	bool x11KeyPress( const XEvent *pEvent );
+    void activate(KAccelAction *pAction, const KKeySequence &seq);
+    virtual bool isEnabledInternal() const;
+    static void blockShortcuts(bool block);
+    void disableBlocking(bool disable);
 
-	/**
-	 * Filters X11 events ev for key bindings in the accelerator dictionary.
-	 * If a match is found the activated activated is emitted and the function
-	 * returns true. Return false if the event is not processed.
-	 *
-	 * This is public for compatibility only. You do not need to call it.
-	 */
-//	virtual bool x11Event( XEvent* );
-//	void x11MappingNotify();
-//	bool x11KeyPress( const XEvent *pEvent );
-	void activate( KAccelAction* pAction, const KKeySequence& seq );
-	virtual bool isEnabledInternal() const;
-	static void blockShortcuts( bool block );
-	void disableBlocking( bool disable );
-
- protected slots:
-	void slotActivated( int iAction );
-	bool m_blocked;
-	bool m_blockingDisabled;
+protected slots:
+    void slotActivated(int iAction);
+    bool m_blocked;
+    bool m_blockingDisabled;
 };
 
 #endif // _KGLOBALACCEL_WIN_H

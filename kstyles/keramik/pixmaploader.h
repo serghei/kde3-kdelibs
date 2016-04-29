@@ -31,334 +31,346 @@ class QImage;
 
 #include "keramikrc.h"
 
-namespace Keramik
-{
-	class PixmapLoader
-	{
-	public:
-		PixmapLoader();
+namespace Keramik {
+class PixmapLoader {
+public:
+    PixmapLoader();
 
-		QPixmap pixmap( int name, const QColor& color,  const QColor& bg,
-										 bool disabled = false, bool blend = true );
+    QPixmap pixmap(int name, const QColor &color, const QColor &bg, bool disabled = false, bool blend = true);
 
-		QPixmap scale( int name, int width, int height, const QColor& color,  const QColor& bg,
-										bool disabled = false, bool blend = true );
-		QSize size( int id );
+    QPixmap scale(int name, int width, int height, const QColor &color, const QColor &bg, bool disabled = false, bool blend = true);
+    QSize size(int id);
 
-		void clear();
+    void clear();
 
-		static PixmapLoader& the()
-		{
-			 if (!s_instance)
-			 	s_instance = new PixmapLoader;
-			return *s_instance;
-		}
+    static PixmapLoader &the()
+    {
+        if(!s_instance)
+            s_instance = new PixmapLoader;
+        return *s_instance;
+    }
 
-		static void release()
-		{
-			delete s_instance;
-			s_instance = 0;
-		}
+    static void release()
+    {
+        delete s_instance;
+        s_instance = 0;
+    }
 
-	private:
+private:
+    struct KeramikCacheEntry
+    {
+        int m_id;
+        int m_width;
+        int m_height;
+        QRgb m_colorCode;
+        QRgb m_bgCode;
+        bool m_disabled;
+        bool m_blended;
 
-		struct KeramikCacheEntry
-		{
-			int m_id;
-			int m_width;
-			int m_height;
-			QRgb m_colorCode;
-			QRgb m_bgCode;
-			bool    m_disabled;
-			bool    m_blended;
+        QPixmap *m_pixmap;
 
-			QPixmap* m_pixmap;
+        KeramikCacheEntry(int id, const QColor &color, const QColor &bg, bool disabled, bool blended, int width, int height, QPixmap *pixmap = 0)
+            : m_id(id)
+            , m_width(width)
+            , m_height(height)
+            , m_colorCode(color.rgb())
+            , m_bgCode(bg.rgb())
+            , m_disabled(disabled)
+            , m_blended(blended)
+            , m_pixmap(pixmap)
+        {
+        }
 
-			KeramikCacheEntry(int id, const QColor& color, const QColor& bg, bool disabled,
-											bool blended, int width, int height, QPixmap* pixmap = 0 ):
-				m_id(id), m_width(width), m_height(height), m_colorCode(color.rgb()),m_bgCode(bg.rgb()),
-				m_disabled(disabled),  m_blended(blended), m_pixmap(pixmap)
-			{}
+        int key()
+        {
+            return (int)m_disabled ^ (m_blended << 1) ^ (m_id << 2) ^ (m_width << 14) ^ (m_height << 24) ^ m_colorCode ^ (m_bgCode << 8);
+        }
 
-			int key()
-			{
-				return (int)m_disabled ^ (m_blended << 1) ^ (m_id<<2) ^ (m_width<<14) ^ (m_height<<24) ^ m_colorCode ^ (m_bgCode<<8);
-			}
+        bool operator==(const KeramikCacheEntry &other)
+        {
+            return (m_id == other.m_id) && (m_width == other.m_width) && (m_height == other.m_height) && (m_blended == other.m_blended)
+                   && (m_bgCode == other.m_bgCode) && (m_colorCode == other.m_colorCode) && (m_disabled == other.m_disabled);
+        }
 
-			bool operator == (const KeramikCacheEntry& other)
-			{
-				return (m_id        == other.m_id) &&
-							(m_width   == other.m_width) &&
-							(m_height == other.m_height) &&
-							(m_blended == other.m_blended) &&
-							(m_bgCode == other.m_bgCode) &&
-							(m_colorCode == other.m_colorCode) &&
-							(m_disabled == other.m_disabled);
-			}
-
-			~KeramikCacheEntry()
-			{
-				delete m_pixmap;
-			}
-		};
+        ~KeramikCacheEntry()
+        {
+            delete m_pixmap;
+        }
+    };
 
 
-
-		QImage* getColored(int id, const QColor& color, const QColor& bg, bool blended);
-		QImage* getDisabled(int id, const QColor& color, const QColor& bg, bool blended);
-		QIntCache <KeramikCacheEntry>  m_pixmapCache;
-
-
-		unsigned char clamp[540];
-
-		static PixmapLoader* s_instance;
-	};
-
-	class TilePainter
-	{
-	public:
-		TilePainter( int name ) : m_columns(1),m_rows(1),m_name( name ) {};
-		virtual ~TilePainter() {};
-
-		enum PaintMode
-		{
-			PaintNormal,
-			PaintMask,
-			PaintFullBlend,
-			PaintTrivialMask
-		};
-
-		void draw( QPainter *p, int x, int y, int width, int height, const QColor& color, const QColor& bg,
-		                 bool disabled = false, PaintMode mode = PaintNormal );
-		void draw( QPainter *p, const QRect& rect, const QColor& color, const QColor& bg, bool disabled = false, PaintMode mode = PaintNormal )
-		{
-			draw( p, rect.x(), rect.y(), rect.width(), rect.height(), color, bg, disabled, mode );
-		}
-
-	protected:
-		enum TileMode { Fixed, Scaled, Tiled };
-
-		unsigned int columns() const { return m_columns; }
-		unsigned int rows() const { return m_rows; }
-
-		/**
-		The idea behind all this stuff is that for performance reasons, we want to
-		use only integers to refer to widgets. So we give each widget a base ID
-		that's divisible by 256, and have all the various tiles be referred to as that ID +
-		some small number.
-
-		genembed generates and assigns the base widget IDs, and maps various pixmaps suffixes
-		into the adjustment numbers; using that info it writes out the tables mapping
-		the IDs to pixmaps, and keramikrc.h, which provides nice symbolic constants for base IDs.
-
-		When painting, however, we essentially represent the widget as a table, providing
-		fixed/tiled/stretched modes for each column and row. So to draw the widget knowing its
-		base ID, we need to know how many rows and columns there, what the scaling modes
-		are, and how to get to each of the tiles -- i.e. the tiles' offset from the base ID.
-
-		The various painter subclasses simply fill in most of that info into the members
-		here during their construction, and implement the virtual tileName to get the offsets.
-
-		Note that the IDs and offsets are separated since we can reuse the same code in many
-		cases by splitting the widget identify from tile identity (as there are many
-		different widgets that have the same or similar tile layout)
-		*/
-		virtual int tileName( unsigned int, unsigned int ) const { return 0; }
-
-		TileMode columnMode( unsigned int col) const
-		{
-			return colMde[col];
-		}
-
-		TileMode rowMode( unsigned int row) const
-		{
-			return rowMde[row];
-		}
-
-	protected:
-		TileMode colMde[5], rowMde[5];
-		unsigned int m_columns;
-		unsigned int m_rows;
-	private:
-
-		int absTileName( unsigned int column, unsigned int row ) const
-		{
-			int name = tileName( column, row );
-			return m_name + name;
-		}
+    QImage *getColored(int id, const QColor &color, const QColor &bg, bool blended);
+    QImage *getDisabled(int id, const QColor &color, const QColor &bg, bool blended);
+    QIntCache< KeramikCacheEntry > m_pixmapCache;
 
 
-		QPixmap tile( unsigned int column, unsigned int row, const QColor& color, const QColor& bg, bool disabled, bool blend)
-			{ return PixmapLoader::the().pixmap( absTileName( column, row ), color, bg, disabled, blend ); }
-		QPixmap scale( unsigned int column, unsigned int row, int width, int height, const QColor& color, const QColor& bg,
-							bool disabled, bool blend )
-			{ return PixmapLoader::the().scale( absTileName( column, row ), width, height, color,
-							bg, disabled, blend ); }
+    unsigned char clamp[540];
 
-		int m_name;
+    static PixmapLoader *s_instance;
+};
 
-	};
+class TilePainter {
+public:
+    TilePainter(int name) : m_columns(1), m_rows(1), m_name(name){};
+    virtual ~TilePainter(){};
 
-	class ScaledPainter : public TilePainter
-	{
-	public:
-		enum Direction { Horizontal = 1, Vertical = 2, Both = Horizontal | Vertical };
-		ScaledPainter( int name, Direction direction = Both )
-			: TilePainter( name ), m_direction( direction )
-		{
-			colMde[0] =  ( m_direction & Horizontal ) ? Scaled : Tiled;
-			rowMde[0] =  ( m_direction & Vertical ) ? Scaled : Tiled;
-		}
+    enum PaintMode
+    {
+        PaintNormal,
+        PaintMask,
+        PaintFullBlend,
+        PaintTrivialMask
+    };
 
-		virtual ~ScaledPainter() {};
+    void draw(QPainter *p, int x, int y, int width, int height, const QColor &color, const QColor &bg, bool disabled = false,
+              PaintMode mode = PaintNormal);
+    void draw(QPainter *p, const QRect &rect, const QColor &color, const QColor &bg, bool disabled = false, PaintMode mode = PaintNormal)
+    {
+        draw(p, rect.x(), rect.y(), rect.width(), rect.height(), color, bg, disabled, mode);
+    }
 
-	private:
-		Direction m_direction;
-	};
+protected:
+    enum TileMode
+    {
+        Fixed,
+        Scaled,
+        Tiled
+    };
 
-	class CenteredPainter : public TilePainter
-	{
-	public:
-		CenteredPainter( int name ) : TilePainter( name ) {
-			colMde[0] = colMde[1] = colMde[2] = colMde[3] =  Fixed;
-			rowMde[0] = rowMde[1] = rowMde[2] = rowMde[3] = Fixed;
-		};
-		virtual ~CenteredPainter() {};
+    unsigned int columns() const
+    {
+        return m_columns;
+    }
+    unsigned int rows() const
+    {
+        return m_rows;
+    }
 
-	protected:
-	};
+    /**
+    The idea behind all this stuff is that for performance reasons, we want to
+    use only integers to refer to widgets. So we give each widget a base ID
+    that's divisible by 256, and have all the various tiles be referred to as that ID +
+    some small number.
 
-	class RectTilePainter : public TilePainter
-	{
-	public:
-		RectTilePainter( int name,
-		                 bool scaleH = true, bool scaleV = true,
-		                 unsigned int columns = 3, unsigned int rows = 3 );
+    genembed generates and assigns the base widget IDs, and maps various pixmaps suffixes
+    into the adjustment numbers; using that info it writes out the tables mapping
+    the IDs to pixmaps, and keramikrc.h, which provides nice symbolic constants for base IDs.
 
-		virtual ~RectTilePainter() {};
+    When painting, however, we essentially represent the widget as a table, providing
+    fixed/tiled/stretched modes for each column and row. So to draw the widget knowing its
+    base ID, we need to know how many rows and columns there, what the scaling modes
+    are, and how to get to each of the tiles -- i.e. the tiles' offset from the base ID.
 
-	protected:
-		virtual int tileName( unsigned int column, unsigned int row ) const;
-	private:
-		bool m_scaleH;
-		bool m_scaleV;
-	};
+    The various painter subclasses simply fill in most of that info into the members
+    here during their construction, and implement the virtual tileName to get the offsets.
 
-	class RowPainter: public TilePainter
-	{
-	public:
-		RowPainter(int name): TilePainter(name)
-		{
-			colMde[0] = colMde[2] = Fixed;
-			colMde[1] = Tiled;
-			rowMde[0] = Scaled;
-			m_columns = 3;
-		}
+    Note that the IDs and offsets are separated since we can reuse the same code in many
+    cases by splitting the widget identify from tile identity (as there are many
+    different widgets that have the same or similar tile layout)
+    */
+    virtual int tileName(unsigned int, unsigned int) const
+    {
+        return 0;
+    }
 
-		virtual ~RowPainter() {};
-	protected:
-		virtual int tileName( unsigned int column, unsigned int /*row*/) const
-		{
-			return column + 3; //So can use cl, cc, cr
-		}
-	};
+    TileMode columnMode(unsigned int col) const
+    {
+        return colMde[col];
+    }
 
-	class ProgressBarPainter: public TilePainter
-	{
-	public:
-		ProgressBarPainter(int name, bool reverse): TilePainter(name), m_reverse(reverse)
-		{
-			//We use only of the tip bitmaps..
-			if (reverse)
-			{
-				colMde[0] = Fixed;
-				colMde[1] = Tiled;
-			}
-			else
-			{
-				colMde[0] = Tiled;
-				colMde[1] = Fixed;
-			}
-			rowMde[0] = Scaled;
+    TileMode rowMode(unsigned int row) const
+    {
+        return rowMde[row];
+    }
 
-			m_columns = 2;
-		}
+protected:
+    TileMode colMde[5], rowMde[5];
+    unsigned int m_columns;
+    unsigned int m_rows;
 
-		virtual ~ProgressBarPainter() {};
-	protected:
-		virtual int tileName( unsigned int column, unsigned int /*row*/ ) const
-		{
-			if (m_reverse)
-			{
-				return column + 3; //So can use cl, cc, cr
-			}
-			else
-				return column + 4; //So can use cl, cc, cr + we start from cc.
-
-		}
-
-		bool m_reverse;
-	};
+private:
+    int absTileName(unsigned int column, unsigned int row) const
+    {
+        int name = tileName(column, row);
+        return m_name + name;
+    }
 
 
-	class ActiveTabPainter : public RectTilePainter
-	{
-	public:
-		ActiveTabPainter( bool bottom );
-		virtual ~ActiveTabPainter() {};
+    QPixmap tile(unsigned int column, unsigned int row, const QColor &color, const QColor &bg, bool disabled, bool blend)
+    {
+        return PixmapLoader::the().pixmap(absTileName(column, row), color, bg, disabled, blend);
+    }
+    QPixmap scale(unsigned int column, unsigned int row, int width, int height, const QColor &color, const QColor &bg, bool disabled, bool blend)
+    {
+        return PixmapLoader::the().scale(absTileName(column, row), width, height, color, bg, disabled, blend);
+    }
 
-	protected:
-		virtual int tileName( unsigned int column, unsigned int row ) const;
+    int m_name;
+};
 
-	private:
-		bool m_bottom;
-	};
+class ScaledPainter : public TilePainter {
+public:
+    enum Direction
+    {
+        Horizontal = 1,
+        Vertical = 2,
+        Both = Horizontal | Vertical
+    };
+    ScaledPainter(int name, Direction direction = Both) : TilePainter(name), m_direction(direction)
+    {
+        colMde[0] = (m_direction & Horizontal) ? Scaled : Tiled;
+        rowMde[0] = (m_direction & Vertical) ? Scaled : Tiled;
+    }
 
-	class InactiveTabPainter : public RectTilePainter
-	{
-	public:
-		enum Mode { First, Middle, Last };
-		InactiveTabPainter( Mode mode, bool bottom );
-		virtual ~InactiveTabPainter() {};
+    virtual ~ScaledPainter(){};
 
-	protected:
-		virtual int tileName( unsigned int column, unsigned int row ) const;
+private:
+    Direction m_direction;
+};
 
-	private:
-		Mode m_mode;
-		bool m_bottom;
-	};
+class CenteredPainter : public TilePainter {
+public:
+    CenteredPainter(int name) : TilePainter(name)
+    {
+        colMde[0] = colMde[1] = colMde[2] = colMde[3] = Fixed;
+        rowMde[0] = rowMde[1] = rowMde[2] = rowMde[3] = Fixed;
+    };
+    virtual ~CenteredPainter(){};
 
-	class ScrollBarPainter : public TilePainter
-	{
-	public:
-		ScrollBarPainter( int type, int count, bool horizontal );
-		virtual ~ScrollBarPainter() {};
+protected:
+};
 
-		static int name( bool horizontal );
+class RectTilePainter : public TilePainter {
+public:
+    RectTilePainter(int name, bool scaleH = true, bool scaleV = true, unsigned int columns = 3, unsigned int rows = 3);
 
-	protected:
-		virtual int tileName( unsigned int column, unsigned int row ) const;
-	private:
-		int m_type;
-		int m_count;
-		bool m_horizontal;
-	};
+    virtual ~RectTilePainter(){};
 
-	class SpinBoxPainter : public TilePainter
-	{
-	public:
-		SpinBoxPainter() : TilePainter( keramik_spinbox ) {
-			colMde[0] = colMde[2] = Fixed;
-			colMde[1] = Scaled;
-			rowMde[0]=rowMde[1]=rowMde[2] = Scaled;
-			m_columns = 3;
-		};
-		virtual ~SpinBoxPainter() {};
+protected:
+    virtual int tileName(unsigned int column, unsigned int row) const;
 
-	protected:
-		virtual int tileName( unsigned int column, unsigned int row ) const;
-	};
+private:
+    bool m_scaleH;
+    bool m_scaleV;
+};
+
+class RowPainter : public TilePainter {
+public:
+    RowPainter(int name) : TilePainter(name)
+    {
+        colMde[0] = colMde[2] = Fixed;
+        colMde[1] = Tiled;
+        rowMde[0] = Scaled;
+        m_columns = 3;
+    }
+
+    virtual ~RowPainter(){};
+
+protected:
+    virtual int tileName(unsigned int column, unsigned int /*row*/) const
+    {
+        return column + 3; // So can use cl, cc, cr
+    }
+};
+
+class ProgressBarPainter : public TilePainter {
+public:
+    ProgressBarPainter(int name, bool reverse) : TilePainter(name), m_reverse(reverse)
+    {
+        // We use only of the tip bitmaps..
+        if(reverse)
+        {
+            colMde[0] = Fixed;
+            colMde[1] = Tiled;
+        }
+        else
+        {
+            colMde[0] = Tiled;
+            colMde[1] = Fixed;
+        }
+        rowMde[0] = Scaled;
+
+        m_columns = 2;
+    }
+
+    virtual ~ProgressBarPainter(){};
+
+protected:
+    virtual int tileName(unsigned int column, unsigned int /*row*/) const
+    {
+        if(m_reverse)
+        {
+            return column + 3; // So can use cl, cc, cr
+        }
+        else
+            return column + 4; // So can use cl, cc, cr + we start from cc.
+    }
+
+    bool m_reverse;
+};
+
+
+class ActiveTabPainter : public RectTilePainter {
+public:
+    ActiveTabPainter(bool bottom);
+    virtual ~ActiveTabPainter(){};
+
+protected:
+    virtual int tileName(unsigned int column, unsigned int row) const;
+
+private:
+    bool m_bottom;
+};
+
+class InactiveTabPainter : public RectTilePainter {
+public:
+    enum Mode
+    {
+        First,
+        Middle,
+        Last
+    };
+    InactiveTabPainter(Mode mode, bool bottom);
+    virtual ~InactiveTabPainter(){};
+
+protected:
+    virtual int tileName(unsigned int column, unsigned int row) const;
+
+private:
+    Mode m_mode;
+    bool m_bottom;
+};
+
+class ScrollBarPainter : public TilePainter {
+public:
+    ScrollBarPainter(int type, int count, bool horizontal);
+    virtual ~ScrollBarPainter(){};
+
+    static int name(bool horizontal);
+
+protected:
+    virtual int tileName(unsigned int column, unsigned int row) const;
+
+private:
+    int m_type;
+    int m_count;
+    bool m_horizontal;
+};
+
+class SpinBoxPainter : public TilePainter {
+public:
+    SpinBoxPainter() : TilePainter(keramik_spinbox)
+    {
+        colMde[0] = colMde[2] = Fixed;
+        colMde[1] = Scaled;
+        rowMde[0] = rowMde[1] = rowMde[2] = Scaled;
+        m_columns = 3;
+    };
+    virtual ~SpinBoxPainter(){};
+
+protected:
+    virtual int tileName(unsigned int column, unsigned int row) const;
+};
 }
 
 #endif

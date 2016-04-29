@@ -26,8 +26,7 @@
 
 class QString;
 class QDataStream;
-namespace DNSSD
-{
+namespace DNSSD {
 class ServiceBasePrivate;
 
 /**
@@ -37,85 +36,82 @@ services of given type are present in given domain.
 @short Describes any type of service.
 @author Jakub Stachowski
  */
-class KDNSSD_EXPORT ServiceBase : public KShared
-{
+class KDNSSD_EXPORT ServiceBase : public KShared {
 public:
-	typedef KSharedPtr<ServiceBase> Ptr;
+    typedef KSharedPtr< ServiceBase > Ptr;
 
-	/**
-	@param name Service name - empty for metaservices
-	@param type Service type - empty for domains
-	@param domain Domain name
-	@param host Host name
-	@param port Port number
-	 */
-	ServiceBase(const QString& name=QString::null,const QString& type=QString::null,
-		    const QString& domain=QString::null, const QString& host=QString::null,
-		    unsigned short port=0);
+    /**
+    @param name Service name - empty for metaservices
+    @param type Service type - empty for domains
+    @param domain Domain name
+    @param host Host name
+    @param port Port number
+     */
+    ServiceBase(const QString &name = QString::null, const QString &type = QString::null, const QString &domain = QString::null,
+                const QString &host = QString::null, unsigned short port = 0);
 
-	virtual  ~ServiceBase();
+    virtual ~ServiceBase();
 
-	/**
-	Returns name of service. This is empty for metaservices
-	 */
-	const QString& serviceName() const;
+    /**
+    Returns name of service. This is empty for metaservices
+     */
+    const QString &serviceName() const;
 
-	/**
-	Returns type of service. It always in format _sometype._udp or _sometype._tcp and
-	it is empty for domains.
-	 */
-	const QString& type() const;
+    /**
+    Returns type of service. It always in format _sometype._udp or _sometype._tcp and
+    it is empty for domains.
+     */
+    const QString &type() const;
 
-	/**
-	Returns domain that given service belongs to. It is "local." for link-local services.
-	 */
-	const QString& domain() const;
+    /**
+    Returns domain that given service belongs to. It is "local." for link-local services.
+     */
+    const QString &domain() const;
 
-	/**
-	Returns hostname. It is only valid for local and resolved remote services.
-	 */
-	const QString& hostName() const;
+    /**
+    Returns hostname. It is only valid for local and resolved remote services.
+     */
+    const QString &hostName() const;
 
-	/**
-	Returns port number. It is only valid for local and resolved remote services.
-	 */
-	unsigned short port() const;
+    /**
+    Returns port number. It is only valid for local and resolved remote services.
+     */
+    unsigned short port() const;
 
-	/**
-	Returns read only map of text properties.  It is only valid for local and resolved remote services.
-	 */
-	const QMap<QString,QString>& textData() const;
+    /**
+    Returns read only map of text properties.  It is only valid for local and resolved remote services.
+     */
+    const QMap< QString, QString > &textData() const;
 
 protected:
-	QString m_serviceName;
-	QString m_type;
-	QString m_domain;
-	QString m_hostName;
-	unsigned short m_port;
+    QString m_serviceName;
+    QString m_type;
+    QString m_domain;
+    QString m_hostName;
+    unsigned short m_port;
 
-	/**
-	Map of TXT properties
-	 */
-	QMap<QString,QString> m_textData;
-	/**
-	Encode service name, type and domain into string that can be used as DNS-SD PTR label
-	 */
-	QString encode();
-	/**
-	Decode PTR label returned by DNS resolver into service name, type and domain. It also
-	handles special cases - metaservices and domains.
-	 */
-	void decode(const QString& name);
+    /**
+    Map of TXT properties
+     */
+    QMap< QString, QString > m_textData;
+    /**
+    Encode service name, type and domain into string that can be used as DNS-SD PTR label
+     */
+    QString encode();
+    /**
+    Decode PTR label returned by DNS resolver into service name, type and domain. It also
+    handles special cases - metaservices and domains.
+     */
+    void decode(const QString &name);
 
-	friend KDNSSD_EXPORT QDataStream & operator<< (QDataStream & s, const ServiceBase & a);
-	friend KDNSSD_EXPORT QDataStream & operator>> (QDataStream & s, ServiceBase & a);
+    friend KDNSSD_EXPORT QDataStream &operator<<(QDataStream &s, const ServiceBase &a);
+    friend KDNSSD_EXPORT QDataStream &operator>>(QDataStream &s, ServiceBase &a);
 
-	virtual void virtual_hook(int, void*);
+    virtual void virtual_hook(int, void *);
+
 private:
-	ServiceBasePrivate* d;
-
+    ServiceBasePrivate *d;
 };
-
 }
 
 #endif

@@ -25,68 +25,65 @@
 class QString;
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 *  This is an interface for syntax highlighting of a Document.
 */
-class KTEXTEDITOR_EXPORT HighlightingInterface
-{
-  friend class PrivateHighlightingInterface;
+class KTEXTEDITOR_EXPORT HighlightingInterface {
+    friend class PrivateHighlightingInterface;
 
-  public:
-    HighlightingInterface ();
-    virtual ~HighlightingInterface ();
+public:
+    HighlightingInterface();
+    virtual ~HighlightingInterface();
 
-    unsigned int highlightingInterfaceNumber () const;
-    
-  protected:  
-    void setHighlightingInterfaceDCOPSuffix (const QCString &suffix);  
+    unsigned int highlightingInterfaceNumber() const;
 
-  //
-	// slots !!!
-	//
-  public:
-	/**
+protected:
+    void setHighlightingInterfaceDCOPSuffix(const QCString &suffix);
+
+    //
+    // slots !!!
+    //
+public:
+    /**
   * returns the current active highlighting mode
   */
-	virtual unsigned int hlMode () = 0;
+    virtual unsigned int hlMode() = 0;
 
-  /**
-	* set the current active highlighting mode
-	*/
-	virtual bool setHlMode (unsigned int mode) = 0;
-  
-	/**
-	* returns the number of available highlightings
-	*/
-  virtual unsigned int hlModeCount () = 0;
-	
-	/**
-	* returns the name of the highlighting with number "mode"
-	*/
-	virtual QString hlModeName (unsigned int mode) = 0;
-	
-	/**
-	* returns the sectionname of the highlighting with number "mode"
-	*/
-  virtual QString hlModeSectionName (unsigned int mode) = 0;
+    /**
+      * set the current active highlighting mode
+      */
+    virtual bool setHlMode(unsigned int mode) = 0;
 
-	//
-	// signals !!!
-	//
-	public:
-	  virtual void hlChanged () = 0;
+    /**
+    * returns the number of available highlightings
+    */
+    virtual unsigned int hlModeCount() = 0;
 
-  private:
+    /**
+    * returns the name of the highlighting with number "mode"
+    */
+    virtual QString hlModeName(unsigned int mode) = 0;
+
+    /**
+    * returns the sectionname of the highlighting with number "mode"
+    */
+    virtual QString hlModeSectionName(unsigned int mode) = 0;
+
+    //
+    // signals !!!
+    //
+public:
+    virtual void hlChanged() = 0;
+
+private:
     class PrivateHighlightingInterface *d;
     static unsigned int globalHighlightingInterfaceNumber;
     unsigned int myHighlightingInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT HighlightingInterface *highlightingInterface (class Document *doc);
-
+KTEXTEDITOR_EXPORT HighlightingInterface *highlightingInterface(class Document *doc);
 }
 
 #endif

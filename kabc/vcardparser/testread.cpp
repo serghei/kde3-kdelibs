@@ -33,57 +33,57 @@
 #include "vcardconverter.h"
 #include "vcard.h"
 
-static const KCmdLineOptions options[] =
+static const KCmdLineOptions options[] = {{"vcard21", I18N_NOOP("vCard 2.1"), 0}, {"+inputfile", I18N_NOOP("Input file"), 0}, KCmdLineLastOption};
+
+int main(int argc, char **argv)
 {
-  {"vcard21", I18N_NOOP("vCard 2.1"), 0},
-  {"+inputfile", I18N_NOOP("Input file"), 0},
-  KCmdLineLastOption
-};
+    KApplication::disableAutoDcopRegistration();
 
-int main( int argc, char **argv )
-{
-  KApplication::disableAutoDcopRegistration();
+    KAboutData aboutData("testread", "vCard test reader", "0.1");
+    aboutData.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
 
-  KAboutData aboutData( "testread", "vCard test reader", "0.1" );
-  aboutData.addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
+    KApplication app(false, false);
 
-  KApplication app( false, false );
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    if(args->count() != 1)
+    {
+        std::cerr << "Missing argument" << std::endl;
+        return 1;
+    }
 
-  if ( args->count() != 1 ) {
-    std::cerr << "Missing argument" << std::endl;
-    return 1;
-  }
+    QString inputFile(args->arg(0));
 
-  QString inputFile( args->arg( 0 ) );
+    QFile file(inputFile);
+    if(!file.open(IO_ReadOnly))
+    {
+        qDebug("Unable to open file '%s' for reading!", file.name().latin1());
+        return 1;
+    }
 
-  QFile file( inputFile );
-  if ( !file.open( IO_ReadOnly ) ) {
-    qDebug( "Unable to open file '%s' for reading!", file.name().latin1() );
-    return 1;
-  }
+    QString text;
 
-  QString text;
+    QTextStream s(&file);
+    s.setEncoding(QTextStream::Latin1);
+    text = s.read();
+    file.close();
 
-  QTextStream s( &file );
-  s.setEncoding( QTextStream::Latin1 );
-  text = s.read();
-  file.close();
+    KABC::VCardConverter converter;
+    KABC::Addressee::List list = converter.parseVCards(text);
 
-  KABC::VCardConverter converter;
-  KABC::Addressee::List list = converter.parseVCards( text );
+    if(args->isSet("vcard21"))
+    {
+        text = converter.createVCards(list, KABC::VCardConverter::v2_1); // uses version 2.1
+    }
+    else
+    {
+        text = converter.createVCards(list); // uses version 3.0
+    }
 
-  if ( args->isSet( "vcard21" ) ) {
-    text = converter.createVCards( list, KABC::VCardConverter::v2_1 ); // uses version 2.1
-  } else {
-    text = converter.createVCards( list ); // uses version 3.0
-  }
+    std::cout << text.utf8();
 
-  std::cout << text.utf8();
-
-  return 0;
+    return 0;
 }

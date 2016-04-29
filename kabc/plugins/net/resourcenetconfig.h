@@ -28,26 +28,24 @@
 
 namespace KABC {
 
-class KABC_EXPORT ResourceNetConfig : public KRES::ConfigWidget
-{ 
-  Q_OBJECT
+class KABC_EXPORT ResourceNetConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
-  public:
-    ResourceNetConfig( QWidget* parent = 0, const char* name = 0 );
+public:
+    ResourceNetConfig(QWidget *parent = 0, const char *name = 0);
 
-    void setEditMode( bool value );
+    void setEditMode(bool value);
 
-  public slots:
-    void loadSettings( KRES::Resource *resource );
-    void saveSettings( KRES::Resource *resource );
+public slots:
+    void loadSettings(KRES::Resource *resource);
+    void saveSettings(KRES::Resource *resource);
 
-  private:
-    KComboBox* mFormatBox;
-    KURLRequester* mUrlEdit;
+private:
+    KComboBox *mFormatBox;
+    KURLRequester *mUrlEdit;
 
     QStringList mFormatTypes;
     bool mInEditMode;
 };
-
 }
 #endif

@@ -20,46 +20,46 @@
 #include "kprociotest.h"
 
 
-
 //
 // A nice input for "sort"... ;- )
 //
-static const char txt[] = "hat\nder\nalte\nhexenmeister\nsich\ndoch\neinmal\nwegbegeben\n\
+static const char txt[] =
+    "hat\nder\nalte\nhexenmeister\nsich\ndoch\neinmal\nwegbegeben\n\
 und\nnun\nsollen\nseine\ngeister\nsich\nnach\nmeinem\nwillen\nregen\nseine\nwort\nund\n\
 werke\nmerkt\nich\nund\nden\nbrauch\nund\nmit\ngeistesstaerke\ntu\nich\nwunder\nauch\n";
 
 
 int main(int argc, char *argv[])
 {
- Dummy dummy; 
- KApplication app(argc, argv, "kprociotest");
+    Dummy dummy;
+    KApplication app(argc, argv, "kprociotest");
 
- printf("Welcome to the KProcIO Demo Application!\n");
+    printf("Welcome to the KProcIO Demo Application!\n");
 
 
- KProcIO p;
- 
- p << "rev";
- 
- p.connect(&p, SIGNAL(processExited(KProcess*)), &dummy, SLOT(printMessage(KProcess*)));
- p.connect(&p, SIGNAL(readReady(KProcIO*)), &dummy, SLOT(gotOutput(KProcIO*)));
+    KProcIO p;
 
- bool b;
+    p << "rev";
 
- b = p.start();
- printf("Start returns %s\n", b ? "true" : "false");
+    p.connect(&p, SIGNAL(processExited(KProcess *)), &dummy, SLOT(printMessage(KProcess *)));
+    p.connect(&p, SIGNAL(readReady(KProcIO *)), &dummy, SLOT(gotOutput(KProcIO *)));
 
- b = p.fputs("Hello World!");
- printf("fputs returns %s\n", b ? "true" : "false");
+    bool b;
 
- b = p.fputs("This is a test. It should come out in reverse (esrever)");
- printf("fputs returns %s\n", b ? "true" : "false");
- 
- p.closeWhenDone();
+    b = p.start();
+    printf("Start returns %s\n", b ? "true" : "false");
 
- printf("Entering man Qt event loop -- press <CTRL><C> to abort\n");
- app.exec();
+    b = p.fputs("Hello World!");
+    printf("fputs returns %s\n", b ? "true" : "false");
 
- return 0;
+    b = p.fputs("This is a test. It should come out in reverse (esrever)");
+    printf("fputs returns %s\n", b ? "true" : "false");
+
+    p.closeWhenDone();
+
+    printf("Entering man Qt event loop -- press <CTRL><C> to abort\n");
+    app.exec();
+
+    return 0;
 }
 #include "kprociotest.moc"

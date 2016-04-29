@@ -91,12 +91,12 @@ class DCOPObject;
  *  widget flag in the constructor.
  *
  * @see KApplication
- * @author Reginald Stadlbauer (reggie@kde.org) Stephan Kulow (coolo@kde.org), Matthias Ettrich (ettrich@kde.org), Chris Schlaeger (cs@kde.org), Sven Radej (radej@kde.org). Maintained by Sven Radej (radej@kde.org)
+ * @author Reginald Stadlbauer (reggie@kde.org) Stephan Kulow (coolo@kde.org), Matthias Ettrich (ettrich@kde.org), Chris Schlaeger (cs@kde.org), Sven
+Radej (radej@kde.org). Maintained by Sven Radej (radej@kde.org)
 
  */
 
-class KDEUI_EXPORT KMainWindow : public QMainWindow, public KXMLGUIBuilder, virtual public KXMLGUIClient
-{
+class KDEUI_EXPORT KMainWindow : public QMainWindow, public KXMLGUIBuilder, virtual public KXMLGUIClient {
     friend class KMWSessionManaged;
     Q_OBJECT
 
@@ -133,7 +133,7 @@ public:
      * KMainWindow *kmw = new KMainWindow (...);
      * \endcode
      **/
-    KMainWindow( QWidget* parent = 0, const char *name = 0, WFlags f = WType_TopLevel | WDestructiveClose );
+    KMainWindow(QWidget *parent = 0, const char *name = 0, WFlags f = WType_TopLevel | WDestructiveClose);
 
     /**
      * Flags that can be passed in an argument to the constructor to
@@ -155,7 +155,7 @@ public:
      *
      * @since 3.2
      */
-    KMainWindow( int cflags, QWidget* parent = 0, const char *name = 0, WFlags f = WType_TopLevel | WDestructiveClose );
+    KMainWindow(int cflags, QWidget *parent = 0, const char *name = 0, WFlags f = WType_TopLevel | WDestructiveClose);
 
     /**
      * \brief Destructor.
@@ -189,8 +189,7 @@ public:
      *
      * @return A standard help menu.
      */
-    KPopupMenu* helpMenu( const QString &aboutAppText = QString::null,
-			  bool showWhatsThis = true );
+    KPopupMenu *helpMenu(const QString &aboutAppText = QString::null, bool showWhatsThis = true);
 
     /**
      * Returns the help menu. Creates a standard help menu if none exists yet.
@@ -214,7 +213,7 @@ public:
      *
      * @return A standard help menu.
      */
-    KPopupMenu* customHelpMenu( bool showWhatsThis = true );
+    KPopupMenu *customHelpMenu(bool showWhatsThis = true);
 
     /**
      * <b>Session Management</b>
@@ -282,7 +281,7 @@ public:
      * @see classNameOfToplevel()
      *
      **/
-    static bool canBeRestored( int number );
+    static bool canBeRestored(int number);
 
     /**
      * Returns the className() of the @p number of the toplevel window which
@@ -292,7 +291,7 @@ public:
      * different kinds of toplevel windows.
      */
     // KDE 4 return QCString - QObject::className() returns const char*
-    static const QString classNameOfToplevel( int number );
+    static const QString classNameOfToplevel(int number);
 
     /**
      * Reimplementation of QMainWindow::show()
@@ -314,7 +313,7 @@ public:
      * You should call canBeRestored() first.
      * If @p show is true (default), this widget will be shown automatically.
      */
-    bool restore( int number, bool show = true );
+    bool restore(int number, bool show = true);
 
     virtual KXMLGUIFactory *guiFactory();
 
@@ -337,7 +336,7 @@ public:
      * KXMLGUIClient::conserveMemory() to free all memory
      *     allocated by the QDomDocument and by the KXMLGUIFactory.
      */
-    void createGUI( const QString &xmlfile = QString::null, bool _conserveMemory = true );
+    void createGUI(const QString &xmlfile = QString::null, bool _conserveMemory = true);
 
     /**
      * Enables the build of a standard help menu when calling createGUI().
@@ -357,7 +356,7 @@ public:
      * Returns true, if there is a menubar
      * @since 3.1
      */
-     bool hasMenuBar();
+    bool hasMenuBar();
 
     /**
      * Returns a pointer to the menu bar.
@@ -382,14 +381,14 @@ public:
     /**
      * List of members of KMainWindow class.
      */
-    static QPtrList<KMainWindow>* memberList;
+    static QPtrList< KMainWindow > *memberList;
 
-    //KDE4: replace with memberList() and make memberList member private
+    // KDE4: replace with memberList() and make memberList member private
     /**
      * List of members of KMainWindow class.
      * @since 3.4
      */
-    static QPtrList<KMainWindow>* getMemberList();
+    static QPtrList< KMainWindow > *getMemberList();
 
     /**
      * Returns a pointer to the toolbar with the specified name.
@@ -401,12 +400,12 @@ public:
      *
      * @return A pointer to the toolbar
      **/
-    KToolBar *toolBar( const char *name=0 );
+    KToolBar *toolBar(const char *name = 0);
 
     /**
      * @return An iterator over the list of all toolbars for this window.
      */
-    QPtrListIterator<KToolBar> toolBarIterator();
+    QPtrListIterator< KToolBar > toolBarIterator();
 
     /**
      * @return A KAccel instance bound to this mainwindow. Used automatically
@@ -414,7 +413,9 @@ public:
      */
     KAccel *accel();
 
-    void setFrameBorderWidth( int ) {}
+    void setFrameBorderWidth(int)
+    {
+    }
 
     /**
      * Call this to enable "auto-save" of toolbar/menubar/statusbar settings
@@ -447,8 +448,7 @@ public:
      *   "virtual QSize sizeHint() const;" to specify a default size rather
      *   than letting QWidget::adjust use the default size of 0x0.
      */
-    void setAutoSaveSettings( const QString & groupName = QString::fromLatin1("MainWindow"),
-                              bool saveWindowSize = true );
+    void setAutoSaveSettings(const QString &groupName = QString::fromLatin1("MainWindow"), bool saveWindowSize = true);
 
     /**
      * Disable the auto-save-settings feature.
@@ -513,7 +513,7 @@ public:
      * You enable/disable it anytime if you pass false to the conserveMemory argument of createGUI.
      * @since 3.1
      */
-    void setStandardToolBarMenuEnabled( bool enable );
+    void setStandardToolBarMenuEnabled(bool enable);
     /// @since 3.1
     bool isStandardToolBarMenuEnabled() const;
 
@@ -593,7 +593,7 @@ public:
      *
      * @since 3.3
      */
-    void setupGUI( int options = ToolBar | Keys | StatusBar | Save | Create, const QString& xmlfile = QString::null );
+    void setupGUI(int options = ToolBar | Keys | StatusBar | Save | Create, const QString &xmlfile = QString::null);
 
     /**
      * Configures the current windows and its actions in the typical KDE
@@ -608,7 +608,7 @@ public:
      *
      * @since 3.5
      */
-    void setupGUI( QSize defaultSize, int options = ToolBar | Keys | StatusBar | Save | Create, const QString& xmlfile = QString::null );
+    void setupGUI(QSize defaultSize, int options = ToolBar | Keys | StatusBar | Save | Create, const QString &xmlfile = QString::null);
 
     /**
      * Returns a pointer to the mainwindows action responsible for the toolbars menu
@@ -624,12 +624,12 @@ public:
 
     // why do we support old gcc versions? using KXMLGUIBuilder::finalizeGUI;
     /// @since 3.1
-    virtual void finalizeGUI( KXMLGUIClient *client );
+    virtual void finalizeGUI(KXMLGUIClient *client);
 
     /**
      * @internal
      */
-    void finalizeGUI( bool force );
+    void finalizeGUI(bool force);
 
     /**
      * @return true if a -geometry argument was given on the command line,
@@ -665,7 +665,7 @@ public:
      * @internal
      */
     // KDE4 remove
-    virtual void setIcon( const QPixmap & );
+    virtual void setIcon(const QPixmap &);
 
 public slots:
     /**
@@ -680,7 +680,7 @@ public slots:
      *
      * @since 3.3
      */
-   int configureToolbars(); // TODO KDE4: make virtual and reimplement in KParts::MainWindow
+    int configureToolbars(); // TODO KDE4: make virtual and reimplement in KParts::MainWindow
 
     /**
      * Makes a KDE compliant caption.
@@ -689,7 +689,7 @@ public slots:
      * in this string. It will be added automatically according to the KDE
      * standard.
      */
-    virtual void setCaption( const QString &caption );
+    virtual void setCaption(const QString &caption);
     /**
      * Makes a KDE compliant caption.
      *
@@ -699,7 +699,7 @@ public slots:
      * @param modified Specify whether the document is modified. This displays
      * an additional sign in the title bar, usually "**".
      */
-    virtual void setCaption( const QString &caption, bool modified );
+    virtual void setCaption(const QString &caption, bool modified);
 
     /**
      * Make a plain caption without any modifications.
@@ -707,7 +707,7 @@ public slots:
      * @param caption Your caption. This is the string that will be
      * displayed in the window title.
      */
-    virtual void setPlainCaption( const QString &caption );
+    virtual void setPlainCaption(const QString &caption);
 
     /**
      * Open the help page for the application.
@@ -730,7 +730,7 @@ public slots:
      * \endcode
      *
      */
-    void appHelpActivated( void );
+    void appHelpActivated(void);
 
     /**
      * Apply a state change
@@ -748,8 +748,7 @@ public slots:
      * enabled, and vice-versa) if specified.
      * @since 3.1
      */
-    void slotStateChanged(const QString &newstate,
-                          KXMLGUIClient::ReverseStateChange); // KDE 4.0: remove this
+    void slotStateChanged(const QString &newstate, KXMLGUIClient::ReverseStateChange); // KDE 4.0: remove this
 
 
     /**
@@ -759,8 +758,8 @@ public slots:
      * can "reverse" the state (disable the actions which should be
      * enabled, and vice-versa) if specified.
      */
-//     void slotStateChanged(const QString &newstate,
-//                           bool reverse); // KDE 4.0: enable this
+    //     void slotStateChanged(const QString &newstate,
+    //                           bool reverse); // KDE 4.0: enable this
 
     /**
      * Tell the main window that it should save its settings when being closed.
@@ -772,9 +771,9 @@ public slots:
     void setSettingsDirty();
 
 protected:
-    void paintEvent( QPaintEvent* e );
-    void childEvent( QChildEvent* e);
-    void resizeEvent( QResizeEvent* e);
+    void paintEvent(QPaintEvent *e);
+    void childEvent(QChildEvent *e);
+    void resizeEvent(QResizeEvent *e);
     /**
      * Reimplemented to call the queryClose() and queryExit() handlers.
      *
@@ -782,7 +781,7 @@ protected:
      * If you do it anyway, ensure to call the base implementation to keep
      * queryExit() running.
      */
-    virtual void closeEvent ( QCloseEvent *);
+    virtual void closeEvent(QCloseEvent *);
 
     // KDE4 This seems to be flawed to me. Either the app has only one
     // mainwindow, so queryClose() is enough, or if it can have more of them,
@@ -873,39 +872,43 @@ protected:
      * in this function!
      *
      */
-    virtual void saveProperties( KConfig* ) {}
+    virtual void saveProperties(KConfig *)
+    {
+    }
 
-   /**
-    * Read your instance-specific properties.
-    */
-    virtual void readProperties( KConfig* ) {}
-
-   /**
-     * Save your application-wide properties. The function is
-     * invoked when the session manager requests your application
-     * to save its state.
-     *
-     * This function is similar to saveProperties() but is only called for
-     * the very first main window, regardless how many main window are open.
-
-     * Override it if you need to save other data about your documents on
-     * session end. sessionConfig is a config to which that data should be
-     * saved. Normally, you don't need this function. But if you want to save
-     * data about your documents that are not in opened windows you might need
-     * it.
-     *
-     * Default implementation does nothing.
+    /**
+     * Read your instance-specific properties.
      */
-    virtual void saveGlobalProperties( KConfig* sessionConfig );
+    virtual void readProperties(KConfig *)
+    {
+    }
+
+    /**
+      * Save your application-wide properties. The function is
+      * invoked when the session manager requests your application
+      * to save its state.
+      *
+      * This function is similar to saveProperties() but is only called for
+      * the very first main window, regardless how many main window are open.
+
+      * Override it if you need to save other data about your documents on
+      * session end. sessionConfig is a config to which that data should be
+      * saved. Normally, you don't need this function. But if you want to save
+      * data about your documents that are not in opened windows you might need
+      * it.
+      *
+      * Default implementation does nothing.
+      */
+    virtual void saveGlobalProperties(KConfig *sessionConfig);
 
     /**
      * The counterpart of saveGlobalProperties().
      *
      * Read the application-specific properties in again.
      */
-    virtual void readGlobalProperties( KConfig* sessionConfig );
-    void savePropertiesInternal( KConfig*, int );
-    bool readPropertiesInternal( KConfig*, int );
+    virtual void readGlobalProperties(KConfig *sessionConfig);
+    void savePropertiesInternal(KConfig *, int);
+    bool readPropertiesInternal(KConfig *, int);
 
     /**
      * For inherited classes
@@ -919,23 +922,23 @@ protected:
      * For inherited classes
      * Note that the group must be set before calling
      */
-    void saveWindowSize( KConfig * config ) const;
+    void saveWindowSize(KConfig *config) const;
     /**
      * For inherited classes
      * Note that the group must be set before calling, and that
      * a -geometry on the command line has priority.
      */
-    void restoreWindowSize( KConfig * config );
+    void restoreWindowSize(KConfig *config);
 
     /// parse the geometry from the geometry command line argument
     void parseGeometry(bool parsewidth);
 
 protected slots:
-   /**
-    * Rebuilds the GUI after KEditToolbar changed the toolbar layout.
-    * @see configureToolbars()
-    */
-   void saveNewToolbarConfig(); // TODO KDE4: make virtual and reimplement in KParts::MainWindow
+    /**
+     * Rebuilds the GUI after KEditToolbar changed the toolbar layout.
+     * @see configureToolbars()
+     */
+    void saveNewToolbarConfig(); // TODO KDE4: make virtual and reimplement in KParts::MainWindow
 
     /**
     * This slot does nothing.
@@ -963,35 +966,35 @@ protected slots:
     */
     virtual void showAboutApplication();
 
-   /**
-    * This slot should only be called in case you reimplement closeEvent() and
-    * if you are using the "auto-save" feature. In all other cases,
-    * setSettingsDirty() should be called instead to benefit from the delayed
-    * saving.
-    *
-    * @see setAutoSaveSettings
-    * @see setSettingsDirty
-    *
-    * @since 3.2
-    *
-    * Example:
-    * \code
-    *
-    * void MyMainWindow::closeEvent( QCloseEvent *e )
-    * {
-    *   // Save settings if auto-save is enabled, and settings have changed
-    *   if ( settingsDirty() && autoSaveSettings() )
-    *     saveAutoSaveSettings();
-    *   ..
-    * }
-    * \endcode
-    */
+    /**
+     * This slot should only be called in case you reimplement closeEvent() and
+     * if you are using the "auto-save" feature. In all other cases,
+     * setSettingsDirty() should be called instead to benefit from the delayed
+     * saving.
+     *
+     * @see setAutoSaveSettings
+     * @see setSettingsDirty
+     *
+     * @since 3.2
+     *
+     * Example:
+     * \code
+     *
+     * void MyMainWindow::closeEvent( QCloseEvent *e )
+     * {
+     *   // Save settings if auto-save is enabled, and settings have changed
+     *   if ( settingsDirty() && autoSaveSettings() )
+     *     saveAutoSaveSettings();
+     *   ..
+     * }
+     * \endcode
+     */
     void saveAutoSaveSettings();
 
 private slots:
-   /**
-    * Called when the app is shutting down.
-    */
+    /**
+     * Called when the app is shutting down.
+     */
     void shuttingDown();
 
 private:
@@ -999,18 +1002,25 @@ private:
     KStatusBar *internalStatusBar();
     KHelpMenu *mHelpMenu, *helpMenu2;
     KXMLGUIFactory *factory_;
-    QPtrList<KToolBar> toolbarList;
+    QPtrList< KToolBar > toolbarList;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     KMainWindowPrivate *d;
     void initKMainWindow(const char *name, int cflags);
 };
 
-#define RESTORE(type) { int n = 1;\
-    while (KMainWindow::canBeRestored(n)){\
-      (new type)->restore(n);\
-      n++;}}
+#define RESTORE(type)                                                                                                                                \
+    {                                                                                                                                                \
+        int n = 1;                                                                                                                                   \
+        while(KMainWindow::canBeRestored(n))                                                                                                         \
+        {                                                                                                                                            \
+            (new type)->restore(n);                                                                                                                  \
+            n++;                                                                                                                                     \
+        }                                                                                                                                            \
+    }
 
 #define KDE_RESTORE_MAIN_WINDOWS_NUM_TEMPLATE_ARGS 3
 
@@ -1024,44 +1034,47 @@ private:
  * \since KDE 3.2
  *
  **/
-template <typename T>
-inline void kRestoreMainWindows() {
-  for ( int n = 1 ; KMainWindow::canBeRestored( n ) ; ++n ) {
-    const QString className = KMainWindow::classNameOfToplevel( n );
-    if ( className == QString::fromLatin1( T::staticMetaObject()->className() ) )
-      (new T)->restore( n );
-  }
+template < typename T > inline void kRestoreMainWindows()
+{
+    for(int n = 1; KMainWindow::canBeRestored(n); ++n)
+    {
+        const QString className = KMainWindow::classNameOfToplevel(n);
+        if(className == QString::fromLatin1(T::staticMetaObject()->className()))
+            (new T)->restore(n);
+    }
 }
 
-template <typename T0, typename T1>
-inline void kRestoreMainWindows() {
-  const char * classNames[2];
-  classNames[0] = T0::staticMetaObject()->className();
-  classNames[1] = T1::staticMetaObject()->className();
-  for ( int n = 1 ; KMainWindow::canBeRestored( n ) ; ++n ) {
-    const QString className = KMainWindow::classNameOfToplevel( n );
-    if ( className == QString::fromLatin1( classNames[0] ) )
-      (new T0)->restore( n );
-    else if ( className == QString::fromLatin1( classNames[1] ) )
-      (new T1)->restore( n );
-  }
+template < typename T0, typename T1 > inline void kRestoreMainWindows()
+{
+    const char *classNames[2];
+    classNames[0] = T0::staticMetaObject()->className();
+    classNames[1] = T1::staticMetaObject()->className();
+    for(int n = 1; KMainWindow::canBeRestored(n); ++n)
+    {
+        const QString className = KMainWindow::classNameOfToplevel(n);
+        if(className == QString::fromLatin1(classNames[0]))
+            (new T0)->restore(n);
+        else if(className == QString::fromLatin1(classNames[1]))
+            (new T1)->restore(n);
+    }
 }
 
-template <typename T0, typename T1, typename T2>
-inline void kRestoreMainWindows() {
-  const char * classNames[3];
-  classNames[0] = T0::staticMetaObject()->className();
-  classNames[1] = T1::staticMetaObject()->className();
-  classNames[2] = T2::staticMetaObject()->className();
-  for ( int n = 1 ; KMainWindow::canBeRestored( n ) ; ++n ) {
-    const QString className = KMainWindow::classNameOfToplevel( n );
-    if ( className == QString::fromLatin1( classNames[0] ) )
-      (new T0)->restore( n );
-    else if ( className == QString::fromLatin1( classNames[1] ) )
-      (new T1)->restore( n );
-    else if ( className == QString::fromLatin1( classNames[2] ) )
-      (new T2)->restore( n );
-  }
+template < typename T0, typename T1, typename T2 > inline void kRestoreMainWindows()
+{
+    const char *classNames[3];
+    classNames[0] = T0::staticMetaObject()->className();
+    classNames[1] = T1::staticMetaObject()->className();
+    classNames[2] = T2::staticMetaObject()->className();
+    for(int n = 1; KMainWindow::canBeRestored(n); ++n)
+    {
+        const QString className = KMainWindow::classNameOfToplevel(n);
+        if(className == QString::fromLatin1(classNames[0]))
+            (new T0)->restore(n);
+        else if(className == QString::fromLatin1(classNames[1]))
+            (new T1)->restore(n);
+        else if(className == QString::fromLatin1(classNames[2]))
+            (new T2)->restore(n);
+    }
 }
 
 #endif

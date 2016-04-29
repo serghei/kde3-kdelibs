@@ -28,18 +28,17 @@ class KNotifyPrivate;
 class KProcess;
 class KConfig;
 
-class KNotify : public QObject, public DCOPObject
-{
-Q_OBJECT
-K_DCOP
+class KNotify : public QObject, public DCOPObject {
+    Q_OBJECT
+    K_DCOP
 
 public:
-	KNotify( bool useArts );
-	~KNotify();
+    KNotify(bool useArts);
+    ~KNotify();
 
     enum PlayingFinishedStatus
     {
-        PlayedOK = 0,        // success, all following mean failure
+        PlayedOK = 0, // success, all following mean failure
         NoSoundFile,
         FileAlreadyPlaying,
         NoSoundSupport,
@@ -49,63 +48,52 @@ public:
     };
 
 protected:
-k_dcop:
-	// deprecated
-	void notify(const QString &event, const QString &fromApp,
-                         const QString &text, QString sound, QString file,
-                         int present, int level);
+    k_dcop :
+        // deprecated
+        void
+        notify(const QString &event, const QString &fromApp, const QString &text, QString sound, QString file, int present, int level);
 
-	// deprecated
-	void notify(const QString &event, const QString &fromApp,
-                         const QString &text, QString sound, QString file,
-                         int present, int level, int winId);
+    // deprecated
+    void notify(const QString &event, const QString &fromApp, const QString &text, QString sound, QString file, int present, int level, int winId);
 
-	void notify(const QString &event, const QString &fromApp,
-                         const QString &text, QString sound, QString file,
-                         int present, int level, int winId, int eventId);
+    void notify(const QString &event, const QString &fromApp, const QString &text, QString sound, QString file, int present, int level, int winId,
+                int eventId);
 
 
-	void reconfigure();
-	void setVolume( int volume );
-        void sessionReady(); // from ksmserver
+    void reconfigure();
+    void setVolume(int volume);
+    void sessionReady(); // from ksmserver
 
 private:
-	bool notifyBySound(const QString &sound, const QString &appname, int eventId);
-	bool notifyByMessagebox(const QString &text, int level, WId winId);
-	bool notifyByLogfile(const QString &text, const QString &file);
-	bool notifyByStderr(const QString &text);
-	bool notifyByPassivePopup(const QString &text, const QString &appName,
-                                  KConfig* eventsFile, WId winId );
-	bool notifyByExecute(const QString &command, 
-                             const QString& event, 
-                             const QString& fromApp, 
-                             const QString& text,
-                             int winId,
-                             int eventId );
-    bool notifyByTaskbar( WId winId );
-	
-	bool isPlaying( const QString& soundFile ) const;
+    bool notifyBySound(const QString &sound, const QString &appname, int eventId);
+    bool notifyByMessagebox(const QString &text, int level, WId winId);
+    bool notifyByLogfile(const QString &text, const QString &file);
+    bool notifyByStderr(const QString &text);
+    bool notifyByPassivePopup(const QString &text, const QString &appName, KConfig *eventsFile, WId winId);
+    bool notifyByExecute(const QString &command, const QString &event, const QString &fromApp, const QString &text, int winId, int eventId);
+    bool notifyByTaskbar(WId winId);
 
-    void soundFinished( int eventId, PlayingFinishedStatus reason );
+    bool isPlaying(const QString &soundFile) const;
+
+    void soundFinished(int eventId, PlayingFinishedStatus reason);
     void abortFirstPlayObject();
-	
-        WId checkWinId( const QString& appName, WId senderWinId );
 
-	/**
-	 * checks if eventname is a global event (exists in config/eventsrc)
-	 **/
-	bool isGlobal(const QString &eventname);
+    WId checkWinId(const QString &appName, WId senderWinId);
+
+    /**
+     * checks if eventname is a global event (exists in config/eventsrc)
+     **/
+    bool isGlobal(const QString &eventname);
 
 private slots:
     void playTimeout();
-    void slotPlayerProcessExited( KProcess *proc );
+    void slotPlayerProcessExited(KProcess *proc);
     void restartedArtsd();
 
 private:
-    KNotifyPrivate* d;
+    KNotifyPrivate *d;
     void loadConfig();
 };
 
 
 #endif
-

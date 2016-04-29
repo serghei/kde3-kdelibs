@@ -29,37 +29,32 @@
 #include <kdebug.h>
 using namespace KSpell2;
 
-TestDialog::TestDialog()
-    : QObject( 0, "testdialog" )
+TestDialog::TestDialog() : QObject(0, "testdialog")
 {
-
 }
 
-void TestDialog::check( const QString& buffer )
+void TestDialog::check(const QString &buffer)
 {
-    KSpell2::Dialog *dlg = new KSpell2::Dialog(
-        new BackgroundChecker( Broker::openBroker(), this, "checker" ),
-        0, "my dialog" );
-    connect( dlg, SIGNAL(done(const QString&)),
-             SLOT(doneChecking(const QString&)) );
-    dlg->setBuffer( buffer );
+    KSpell2::Dialog *dlg = new KSpell2::Dialog(new BackgroundChecker(Broker::openBroker(), this, "checker"), 0, "my dialog");
+    connect(dlg, SIGNAL(done(const QString &)), SLOT(doneChecking(const QString &)));
+    dlg->setBuffer(buffer);
     dlg->show();
 }
 
-void TestDialog::doneChecking( const QString& buf )
+void TestDialog::doneChecking(const QString &buf)
 {
-    kdDebug()<<"Done with :"<<buf<<endl;
+    kdDebug() << "Done with :" << buf << endl;
     qApp->quit();
 }
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
     KApplication app(argc, argv, "KSpell2Test");
 
     TestDialog test;
-    test.check( "This is a sample buffer. Whih this thingg will "
-                "be checkin for misstakes. Whih, Enviroment, govermant. Whih."
-        );
+    test.check(
+        "This is a sample buffer. Whih this thingg will "
+        "be checkin for misstakes. Whih, Enviroment, govermant. Whih.");
 
     return app.exec();
 }

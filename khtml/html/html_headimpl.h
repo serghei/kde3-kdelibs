@@ -31,8 +31,8 @@
 class KHTMLView;
 
 namespace khtml {
-    class CachedCSSStyleSheet;
-    class CachedObject;
+class CachedCSSStyleSheet;
+class CachedObject;
 }
 
 
@@ -43,14 +43,20 @@ class HTMLFormElementImpl;
 class StyleSheetImpl;
 class CSSStyleSheetImpl;
 
-class HTMLBaseElementImpl : public HTMLElementImpl
-{
+class HTMLBaseElementImpl : public HTMLElementImpl {
 public:
-    HTMLBaseElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc) {}
+    HTMLBaseElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
-    DOMString href() const { return m_href; }
-    DOMString target() const { return m_target; }
+    DOMString href() const
+    {
+        return m_href;
+    }
+    DOMString target() const
+    {
+        return m_target;
+    }
 
     virtual Id id() const;
     virtual void parseAttribute(AttributeImpl *attr);
@@ -65,22 +71,27 @@ protected:
 };
 
 
-
 // -------------------------------------------------------------------------
 
-class HTMLLinkElementImpl : public khtml::CachedObjectClient, public HTMLElementImpl
-{
+class HTMLLinkElementImpl : public khtml::CachedObjectClient, public HTMLElementImpl {
 public:
     HTMLLinkElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc), m_cachedSheet(0), m_sheet(0), m_isDisabled(false),
-	m_loading(false), m_alternate(false), m_isCSSSheet(false) {}
+        : HTMLElementImpl(doc), m_cachedSheet(0), m_sheet(0), m_isDisabled(false), m_loading(false), m_alternate(false), m_isCSSSheet(false)
+    {
+    }
 
     ~HTMLLinkElementImpl();
 
     virtual Id id() const;
 
-    const StyleSheetImpl* sheet() const { return m_sheet; }
-    StyleSheetImpl* sheet() { return m_sheet; }
+    const StyleSheetImpl *sheet() const
+    {
+        return m_sheet;
+    }
+    StyleSheetImpl *sheet()
+    {
+        return m_sheet;
+    }
 
     // overload from HTMLElementImpl
     virtual void parseAttribute(AttributeImpl *attr);
@@ -96,10 +107,22 @@ public:
     bool isLoading() const;
     void sheetLoaded();
 
-    bool isAlternate() const { return m_alternate; }
-    bool isCSSStyleSheet() const { return m_isCSSSheet; }
-    bool isDisabled() const { return m_isDisabled; }
-    void setDisabled(bool disabled) { m_isDisabled = disabled; }
+    bool isAlternate() const
+    {
+        return m_alternate;
+    }
+    bool isCSSStyleSheet() const
+    {
+        return m_isCSSSheet;
+    }
+    bool isDisabled() const
+    {
+        return m_isDisabled;
+    }
+    void setDisabled(bool disabled)
+    {
+        m_isDisabled = disabled;
+    }
 
 protected:
     void finished();
@@ -109,18 +132,18 @@ protected:
     DOMString m_url;
     QString m_media;
     bool m_isDisabled : 1;
-    bool m_loading    : 1;
-    bool m_alternate  : 1;
+    bool m_loading : 1;
+    bool m_alternate : 1;
     bool m_isCSSSheet : 1;
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLMetaElementImpl : public HTMLElementImpl
-{
+class HTMLMetaElementImpl : public HTMLElementImpl {
 public:
-    HTMLMetaElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc) {}
+    HTMLMetaElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
     virtual Id id() const;
     virtual void parseAttribute(AttributeImpl *attr);
@@ -135,8 +158,7 @@ protected:
 
 // -------------------------------------------------------------------------
 
-class HTMLScriptElementImpl : public HTMLElementImpl, public khtml::CachedObjectClient
-{
+class HTMLScriptElementImpl : public HTMLElementImpl, public khtml::CachedObjectClient {
 public:
     HTMLScriptElementImpl(DocumentImpl *doc);
     ~HTMLScriptElementImpl();
@@ -149,12 +171,15 @@ public:
     virtual Id id() const;
     virtual bool isURLAttribute(AttributeImpl *attr) const;
 
-    void setCreatedByParser(bool createdByParser) { m_createdByParser = createdByParser; }
+    void setCreatedByParser(bool createdByParser)
+    {
+        m_createdByParser = createdByParser;
+    }
 
     void evaluateScript(const QString &, const DOMString &);
 
     DOMString text() const;
-    void setText( const DOMString& str );
+    void setText(const DOMString &str);
 
     DOMString htmlFor() const;
     void setHtmlFor(const DOMString &);
@@ -182,16 +207,19 @@ private:
 
 // -------------------------------------------------------------------------
 
-class HTMLStyleElementImpl : public HTMLElementImpl
-{
+class HTMLStyleElementImpl : public HTMLElementImpl {
 public:
-    HTMLStyleElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc), m_sheet(0), m_loading(false) {}
+    HTMLStyleElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc), m_sheet(0), m_loading(false)
+    {
+    }
     ~HTMLStyleElementImpl();
 
     virtual Id id() const;
 
-    CSSStyleSheetImpl *sheet() { return m_sheet; }
+    CSSStyleSheetImpl *sheet()
+    {
+        return m_sheet;
+    }
 
     // overload from HTMLElementImpl
     virtual void parseAttribute(AttributeImpl *attr);
@@ -211,14 +239,14 @@ protected:
 
 // -------------------------------------------------------------------------
 
-class HTMLTitleElementImpl : public HTMLElementImpl
-{
+class HTMLTitleElementImpl : public HTMLElementImpl {
 public:
-    HTMLTitleElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc) {}
+    HTMLTitleElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
     DOMString text();
-    void setText( const DOMString& str );
+    void setText(const DOMString &str);
 
     virtual Id id() const;
 
@@ -228,6 +256,6 @@ protected:
     DOMString m_title;
 };
 
-} //namespace
+} // namespace
 
 #endif

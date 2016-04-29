@@ -29,10 +29,8 @@ extern "C" {
 
 /* linear-read handle. needs buffering handle wrapper
  */
-GslDataHandle*	gsl_data_handle_new_mad		(const gchar *file_name);
-GslErrorType	gsl_data_handle_mad_testopen	(const gchar *file_name,
-						 guint       *n_channels,
-						 gfloat      *mix_freq);
+GslDataHandle *gsl_data_handle_new_mad(const gchar *file_name);
+GslErrorType gsl_data_handle_mad_testopen(const gchar *file_name, guint *n_channels, gfloat *mix_freq);
 
 
 #ifdef __cplusplus

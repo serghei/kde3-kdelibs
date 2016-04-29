@@ -3,7 +3,7 @@
               (C) 1997, 1998 Mark Donohoe (donohoe@kde.org)
               (C) 1997, 1998 Sven Radej (radej@kde.org)
               (C) 1997, 1998 Matthias Ettrich (ettrich@kde.org)
-			  (C) 1999 Chris Schlaeger (cs@kde.org)
+              (C) 1999 Chris Schlaeger (cs@kde.org)
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -31,47 +31,45 @@
  *************************************************************************/
 
 
-KToolBarRadioGroup::KToolBarRadioGroup (KToolBar *_parent, const char *_name)
-: QObject(_parent, _name)
+KToolBarRadioGroup::KToolBarRadioGroup(KToolBar *_parent, const char *_name) : QObject(_parent, _name)
 {
-  buttons = new KToolBarButtonList();
-  tb = _parent;
-  connect (tb, SIGNAL(toggled(int)), this, SLOT(slotToggled(int)));
+    buttons = new KToolBarButtonList();
+    tb = _parent;
+    connect(tb, SIGNAL(toggled(int)), this, SLOT(slotToggled(int)));
 }
 
 KToolBarRadioGroup::~KToolBarRadioGroup()
 {
-  delete buttons;
+    delete buttons;
 }
 
-void KToolBarRadioGroup::addButton (int id)
+void KToolBarRadioGroup::addButton(int id)
 {
-    KToolBarButton *b = tb->getButton( id );
-    b->setRadio( true );
-    buttons->insert( id, b );
+    KToolBarButton *b = tb->getButton(id);
+    b->setRadio(true);
+    buttons->insert(id, b);
 }
 
-void KToolBarRadioGroup::removeButton (int id)
+void KToolBarRadioGroup::removeButton(int id)
 {
-  if (!buttons->find(id))
-     return;
-  buttons->find(id)->setRadio(false);
-  buttons->remove(id);
+    if(!buttons->find(id))
+        return;
+    buttons->find(id)->setRadio(false);
+    buttons->remove(id);
 }
 
 void KToolBarRadioGroup::slotToggled(int id)
 {
-  if (buttons->find(id) && buttons->find(id)->isOn())
-  {
-    QIntDictIterator<KToolBarButton> it(*buttons);
-    while (it.current())
+    if(buttons->find(id) && buttons->find(id)->isOn())
     {
-      if (it.currentKey() != id)
-        it.current()->on(false);
-      ++it;
+        QIntDictIterator< KToolBarButton > it(*buttons);
+        while(it.current())
+        {
+            if(it.currentKey() != id)
+                it.current()->on(false);
+            ++it;
+        }
     }
-  }
 }
 
 #include "ktoolbarradiogroup.moc"
-

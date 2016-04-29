@@ -54,8 +54,7 @@ using namespace khtml;
 
 #define TABLECELLMARGIN -0x4000
 
-RenderBox::RenderBox(DOM::NodeImpl* node)
-    : RenderContainer(node)
+RenderBox::RenderBox(DOM::NodeImpl *node) : RenderContainer(node)
 {
     m_minWidth = -1;
     m_maxWidth = -1;
@@ -73,160 +72,167 @@ RenderBox::RenderBox(DOM::NodeImpl* node)
     m_layer = 0;
 }
 
-RenderBlock* RenderBox::createAnonymousBlock()
+RenderBlock *RenderBox::createAnonymousBlock()
 {
     RenderStyle *newStyle = new RenderStyle();
     newStyle->inheritFrom(style());
     newStyle->setDisplay(BLOCK);
 
-    RenderBlock *newBox = new (renderArena()) RenderBlock(document() /* anonymous*/);
+    RenderBlock *newBox = new(renderArena()) RenderBlock(document() /* anonymous*/);
     newBox->setStyle(newStyle);
     return newBox;
 }
 
-void RenderBox::restructureParentFlow() {
-    if (!parent() || parent()->childrenInline() == isInline())
+void RenderBox::restructureParentFlow()
+{
+    if(!parent() || parent()->childrenInline() == isInline())
         return;
     // We have gone from not affecting the inline status of the parent flow to suddenly
     // having an impact.  See if there is a mismatch between the parent flow's
     // childrenInline() state and our state.
-    if (!isInline()) {
-        if (parent()->isRenderInline()) {
+    if(!isInline())
+    {
+        if(parent()->isRenderInline())
+        {
             // We have to split the parent flow.
-            RenderInline* parentInline = static_cast<RenderInline*>(parent());
-            RenderBlock* newBox = parentInline->createAnonymousBlock();
+            RenderInline *parentInline = static_cast< RenderInline * >(parent());
+            RenderBlock *newBox = parentInline->createAnonymousBlock();
 
-            RenderFlow* oldContinuation = parent()->continuation();
+            RenderFlow *oldContinuation = parent()->continuation();
             parentInline->setContinuation(newBox);
 
-            RenderObject* beforeChild = nextSibling();
+            RenderObject *beforeChild = nextSibling();
             parent()->removeChildNode(this);
             parentInline->splitFlow(beforeChild, newBox, this, oldContinuation);
         }
-        else if (parent()->isRenderBlock())
-            static_cast<RenderBlock*>(parent())->makeChildrenNonInline();
+        else if(parent()->isRenderBlock())
+            static_cast< RenderBlock * >(parent())->makeChildrenNonInline();
     }
-    else {
+    else
+    {
         // An anonymous block must be made to wrap this inline.
-        RenderBlock* box = createAnonymousBlock();
+        RenderBlock *box = createAnonymousBlock();
         parent()->insertChildNode(box, this);
         box->appendChildNode(parent()->removeChildNode(this));
     }
 }
 
-static inline bool overflowAppliesTo(RenderObject* o) 
+static inline bool overflowAppliesTo(RenderObject *o)
 {
-     // css 2.1-11.1.1
-     // 1) overflow only applies to non-replaced block-level elements, table cells, and inline-block elements
-     if (o->isRenderBlock() || o->isTableRow() || o->isTableSection())
-         // 2) overflow on root applies to the viewport (cf. KHTMLView::layout)
-         if (!o->isRoot())
-             // 3) overflow on body may apply to the viewport...
-             if (!o->isBody()
-                   // ...but only for HTML documents...
-                   || !o->document()->isHTMLDocument()
-                   // ...and only when the root has a visible overflow   
-                   || !o->document()->documentElement()->renderer()
-                   || !o->document()->documentElement()->renderer()->style()
-                   ||  o->document()->documentElement()->renderer()->style()->hidesOverflow())
-                 return true;
+    // css 2.1-11.1.1
+    // 1) overflow only applies to non-replaced block-level elements, table cells, and inline-block elements
+    if(o->isRenderBlock() || o->isTableRow() || o->isTableSection())
+        // 2) overflow on root applies to the viewport (cf. KHTMLView::layout)
+        if(!o->isRoot())
+            // 3) overflow on body may apply to the viewport...
+            if(!o->isBody()
+               // ...but only for HTML documents...
+               || !o->document()->isHTMLDocument()
+               // ...and only when the root has a visible overflow
+               || !o->document()->documentElement()->renderer() || !o->document()->documentElement()->renderer()->style()
+               || o->document()->documentElement()->renderer()->style()->hidesOverflow())
+                return true;
 
-     return false; 
-} 
+    return false;
+}
 
 void RenderBox::setStyle(RenderStyle *_style)
 {
-    bool affectsParent = style() && isFloatingOrPositioned() &&
-         (!_style->isFloating() && _style->position() != ABSOLUTE && _style->position() != FIXED) &&
-         parent() && (parent()->isBlockFlow() || parent()->isInlineFlow());
+    bool affectsParent = style() && isFloatingOrPositioned()
+                         && (!_style->isFloating() && _style->position() != ABSOLUTE && _style->position() != FIXED) && parent()
+                         && (parent()->isBlockFlow() || parent()->isInlineFlow());
 
     RenderContainer::setStyle(_style);
 
     // The root always paints its background/border.
-    if (isRoot())
+    if(isRoot())
         setShouldPaintBackgroundOrBorder(true);
 
     switch(_style->display())
     {
-    case INLINE:
-    case INLINE_BLOCK:
-    case INLINE_TABLE:
-        setInline(true);
-        break;
-    case RUN_IN:
-        if (isInline() && parent() && parent()->childrenInline())
+        case INLINE:
+        case INLINE_BLOCK:
+        case INLINE_TABLE:
+            setInline(true);
             break;
-    default:
-        setInline(false);
+        case RUN_IN:
+            if(isInline() && parent() && parent()->childrenInline())
+                break;
+        default:
+            setInline(false);
     }
 
     switch(_style->position())
     {
-    case ABSOLUTE:
-    case FIXED:
-        setPositioned(true);
-        break;
-    default:
-        setPositioned(false);
-        if( !isTableCell() && _style->isFloating() )
-            setFloating(true);
+        case ABSOLUTE:
+        case FIXED:
+            setPositioned(true);
+            break;
+        default:
+            setPositioned(false);
+            if(!isTableCell() && _style->isFloating())
+                setFloating(true);
 
-        if( _style->position() == RELATIVE )
-            setRelPositioned(true);
+            if(_style->position() == RELATIVE)
+                setRelPositioned(true);
     }
 
-    if (overflowAppliesTo(this) && _style->hidesOverflow())
+    if(overflowAppliesTo(this) && _style->hidesOverflow())
         setHasOverflowClip();
-        
-    if (requiresLayer()) {
-        if (!m_layer) {
-            m_layer = new (renderArena()) RenderLayer(this);
+
+    if(requiresLayer())
+    {
+        if(!m_layer)
+        {
+            m_layer = new(renderArena()) RenderLayer(this);
             m_layer->insertOnlyThisLayer();
-            if (parent() && containingBlock())
+            if(parent() && containingBlock())
                 m_layer->updateLayerPosition();
         }
     }
-    else if (m_layer && !isCanvas()) {
+    else if(m_layer && !isCanvas())
+    {
         m_layer->removeOnlyThisLayer();
         m_layer = 0;
     }
 
-    if (m_layer)
+    if(m_layer)
         m_layer->styleChanged();
 
-    if (style()->outlineWidth() > 0 && style()->outlineSize() > maximalOutlineSize(PaintActionOutline))
-        static_cast<RenderCanvas*>(document()->renderer())->setMaximalOutlineSize(style()->outlineSize());
-    if (affectsParent)
+    if(style()->outlineWidth() > 0 && style()->outlineSize() > maximalOutlineSize(PaintActionOutline))
+        static_cast< RenderCanvas * >(document()->renderer())->setMaximalOutlineSize(style()->outlineSize());
+    if(affectsParent)
         restructureParentFlow();
 }
 
 RenderBox::~RenderBox()
 {
-    //kdDebug( 6040 ) << "Element destructor: this=" << nodeName().string() << endl;
+    // kdDebug( 6040 ) << "Element destructor: this=" << nodeName().string() << endl;
 }
 
 void RenderBox::detach()
 {
-    RenderLayer* layer = m_layer;
-    RenderArena* arena = renderArena();
+    RenderLayer *layer = m_layer;
+    RenderArena *arena = renderArena();
 
     RenderContainer::detach();
 
-    if (layer)
+    if(layer)
         layer->detach(arena);
 }
 
-InlineBox* RenderBox::createInlineBox(bool /*makePlaceHolderBox*/, bool /*isRootLineBox*/)
+InlineBox *RenderBox::createInlineBox(bool /*makePlaceHolderBox*/, bool /*isRootLineBox*/)
 {
-    if (m_placeHolderBox)
+    if(m_placeHolderBox)
         m_placeHolderBox->detach(renderArena());
-    return (m_placeHolderBox = new (renderArena()) InlineBox(this));
+    return (m_placeHolderBox = new(renderArena()) InlineBox(this));
 }
 
-void RenderBox::deleteInlineBoxes(RenderArena* arena)
+void RenderBox::deleteInlineBoxes(RenderArena *arena)
 {
-    if (m_placeHolderBox) {
-        m_placeHolderBox->detach( arena ? arena : renderArena() );
+    if(m_placeHolderBox)
+    {
+        m_placeHolderBox->detach(arena ? arena : renderArena());
         m_placeHolderBox = 0;
     }
 }
@@ -236,10 +242,10 @@ short RenderBox::contentWidth() const
     short w = m_width - style()->borderLeftWidth() - style()->borderRightWidth();
     w -= paddingLeft() + paddingRight();
 
-    if (m_layer && scrollsOverflowY())
+    if(m_layer && scrollsOverflowY())
         w -= m_layer->verticalScrollbarWidth();
 
-    //kdDebug( 6040 ) << "RenderBox::contentWidth(2) = " << w << endl;
+    // kdDebug( 6040 ) << "RenderBox::contentWidth(2) = " << w << endl;
     return w;
 }
 
@@ -248,15 +254,16 @@ int RenderBox::contentHeight() const
     int h = m_height - style()->borderTopWidth() - style()->borderBottomWidth();
     h -= paddingTop() + paddingBottom();
 
-    if (m_layer && scrollsOverflowX())
+    if(m_layer && scrollsOverflowX())
         h -= m_layer->horizontalScrollbarHeight();
 
     return h;
 }
 
-void RenderBox::setPos( int xPos, int yPos )
+void RenderBox::setPos(int xPos, int yPos)
 {
-    m_x = xPos; m_y = yPos;
+    m_x = xPos;
+    m_y = yPos;
 }
 
 short RenderBox::width() const
@@ -269,19 +276,19 @@ int RenderBox::height() const
     return m_height;
 }
 
-void RenderBox::setWidth( int width )
+void RenderBox::setWidth(int width)
 {
     m_width = width;
 }
 
-void RenderBox::setHeight( int height )
+void RenderBox::setHeight(int height)
 {
     m_height = height;
 }
 
 int RenderBox::calcBoxHeight(int h) const
 {
-    if (style()->boxSizing() == CONTENT_BOX)
+    if(style()->boxSizing() == CONTENT_BOX)
         h += borderTop() + borderBottom() + paddingTop() + paddingBottom();
 
     return h;
@@ -289,7 +296,7 @@ int RenderBox::calcBoxHeight(int h) const
 
 int RenderBox::calcBoxWidth(int w) const
 {
-    if (style()->boxSizing() == CONTENT_BOX)
+    if(style()->boxSizing() == CONTENT_BOX)
         w += borderLeft() + borderRight() + paddingLeft() + paddingRight();
 
     return w;
@@ -297,7 +304,7 @@ int RenderBox::calcBoxWidth(int w) const
 
 int RenderBox::calcContentHeight(int h) const
 {
-    if (style()->boxSizing() == BORDER_BOX)
+    if(style()->boxSizing() == BORDER_BOX)
         h -= borderTop() + borderBottom() + paddingTop() + paddingBottom();
 
     return kMax(0, h);
@@ -305,7 +312,7 @@ int RenderBox::calcContentHeight(int h) const
 
 int RenderBox::calcContentWidth(int w) const
 {
-    if (style()->boxSizing() == BORDER_BOX)
+    if(style()->boxSizing() == BORDER_BOX)
         w -= borderLeft() + borderRight() + paddingLeft() + paddingRight();
 
     return kMax(0, w);
@@ -313,39 +320,41 @@ int RenderBox::calcContentWidth(int w) const
 
 // --------------------- painting stuff -------------------------------
 
-void RenderBox::paint(PaintInfo& i, int _tx, int _ty)
+void RenderBox::paint(PaintInfo &i, int _tx, int _ty)
 {
     _tx += m_x;
     _ty += m_y;
 
-    if (hasOverflowClip() && m_layer)
+    if(hasOverflowClip() && m_layer)
         m_layer->subtractScrollOffset(_tx, _ty);
 
     // default implementation. Just pass things through to the children
-    for(RenderObject* child = firstChild(); child; child = child->nextSibling())
+    for(RenderObject *child = firstChild(); child; child = child->nextSibling())
         child->paint(i, _tx, _ty);
 }
 
-void RenderBox::paintRootBoxDecorations(PaintInfo& paintInfo, int _tx, int _ty)
+void RenderBox::paintRootBoxDecorations(PaintInfo &paintInfo, int _tx, int _ty)
 {
-    //kdDebug( 6040 ) << renderName() << "::paintRootBoxDecorations()" << _tx << "/" << _ty << endl;
-    const BackgroundLayer* bgLayer = style()->backgroundLayers();
+    // kdDebug( 6040 ) << renderName() << "::paintRootBoxDecorations()" << _tx << "/" << _ty << endl;
+    const BackgroundLayer *bgLayer = style()->backgroundLayers();
     QColor bgColor = style()->backgroundColor();
-    if (document()->isHTMLDocument() && !style()->hasBackground()) {
+    if(document()->isHTMLDocument() && !style()->hasBackground())
+    {
         // Locate the <body> element using the DOM.  This is easier than trying
         // to crawl around a render tree with potential :before/:after content and
         // anonymous blocks created by inline <body> tags etc.  We can locate the <body>
         // render object very easily via the DOM.
-        HTMLElementImpl* body = document()->body();
-        RenderObject* bodyObject = (body && body->id() == ID_BODY) ? body->renderer() : 0;
+        HTMLElementImpl *body = document()->body();
+        RenderObject *bodyObject = (body && body->id() == ID_BODY) ? body->renderer() : 0;
 
-        if (bodyObject) {
+        if(bodyObject)
+        {
             bgLayer = bodyObject->style()->backgroundLayers();
             bgColor = bodyObject->style()->backgroundColor();
         }
     }
 
-    if( !bgColor.isValid() && canvas()->view())
+    if(!bgColor.isValid() && canvas()->view())
         bgColor = canvas()->view()->palette().active().color(QColorGroup::Base);
 
     int w = width();
@@ -354,10 +363,13 @@ void RenderBox::paintRootBoxDecorations(PaintInfo& paintInfo, int _tx, int _ty)
     //    kdDebug(0) << "width = " << w <<endl;
 
     int rw, rh;
-    if (canvas()->view()) {
+    if(canvas()->view())
+    {
         rw = canvas()->view()->contentsWidth();
         rh = canvas()->view()->contentsHeight();
-    } else {
+    }
+    else
+    {
         rw = canvas()->docWidth();
         rh = canvas()->docHeight();
     }
@@ -378,12 +390,12 @@ void RenderBox::paintRootBoxDecorations(PaintInfo& paintInfo, int _tx, int _ty)
     paintBackgrounds(paintInfo.p, bgColor, bgLayer, my, paintInfo.r.height(), bx, by, bw, bh);
 
     if(style()->hasBorder())
-        paintBorder( paintInfo.p, _tx, _ty, w, h, style() );
+        paintBorder(paintInfo.p, _tx, _ty, w, h, style());
 }
 
-void RenderBox::paintBoxDecorations(PaintInfo& paintInfo, int _tx, int _ty)
+void RenderBox::paintBoxDecorations(PaintInfo &paintInfo, int _tx, int _ty)
 {
-    //kdDebug( 6040 ) << renderName() << "::paintDecorations()" << endl;
+    // kdDebug( 6040 ) << renderName() << "::paintDecorations()" << endl;
 
     if(isRoot())
         return paintRootBoxDecorations(paintInfo, _tx, _ty);
@@ -392,89 +404,100 @@ void RenderBox::paintBoxDecorations(PaintInfo& paintInfo, int _tx, int _ty)
     int h = height() + borderTopExtra() + borderBottomExtra();
     _ty -= borderTopExtra();
 
-    int my = kMax(_ty,paintInfo.r.y());
-    int end = kMin( paintInfo.r.y() + paintInfo.r.height(), _ty + h );
+    int my = kMax(_ty, paintInfo.r.y());
+    int end = kMin(paintInfo.r.y() + paintInfo.r.height(), _ty + h);
     int mh = end - my;
 
-   // The <body> only paints its background if the root element has defined a background
-   // independent of the body.  Go through the DOM to get to the root element's render object,
-   // since the root could be inline and wrapped in an anonymous block.
+    // The <body> only paints its background if the root element has defined a background
+    // independent of the body.  Go through the DOM to get to the root element's render object,
+    // since the root could be inline and wrapped in an anonymous block.
 
-   if (!isBody() || !document()->isHTMLDocument() || document()->documentElement()->renderer()->style()->hasBackground())
+    if(!isBody() || !document()->isHTMLDocument() || document()->documentElement()->renderer()->style()->hasBackground())
         paintBackgrounds(paintInfo.p, style()->backgroundColor(), style()->backgroundLayers(), my, mh, _tx, _ty, w, h);
 
-   if(style()->hasBorder()) {
+    if(style()->hasBorder())
+    {
         paintBorder(paintInfo.p, _tx, _ty, w, h, style());
     }
 }
 
-void RenderBox::paintBackgrounds(QPainter *p, const QColor& c, const BackgroundLayer* bgLayer, int clipy, int cliph, int _tx, int _ty, int w, int height)
- {
-    if (!bgLayer) return;
+void RenderBox::paintBackgrounds(QPainter *p, const QColor &c, const BackgroundLayer *bgLayer, int clipy, int cliph, int _tx, int _ty, int w,
+                                 int height)
+{
+    if(!bgLayer)
+        return;
     paintBackgrounds(p, c, bgLayer->next(), clipy, cliph, _tx, _ty, w, height);
     paintBackground(p, c, bgLayer, clipy, cliph, _tx, _ty, w, height);
 }
 
-void RenderBox::paintBackground(QPainter *p, const QColor& c, const BackgroundLayer* bgLayer, int clipy, int cliph, int _tx, int _ty, int w, int height)
+void RenderBox::paintBackground(QPainter *p, const QColor &c, const BackgroundLayer *bgLayer, int clipy, int cliph, int _tx, int _ty, int w,
+                                int height)
 {
-    paintBackgroundExtended(p, c, bgLayer, clipy, cliph, _tx, _ty, w, height,
-                            borderLeft(), borderRight(), paddingLeft(), paddingRight());
+    paintBackgroundExtended(p, c, bgLayer, clipy, cliph, _tx, _ty, w, height, borderLeft(), borderRight(), paddingLeft(), paddingRight());
 }
 
-static void calculateBackgroundSize(const BackgroundLayer* bgLayer, int& scaledWidth, int& scaledHeight)
+static void calculateBackgroundSize(const BackgroundLayer *bgLayer, int &scaledWidth, int &scaledHeight)
 {
-    CachedImage* bg = bgLayer->backgroundImage();
+    CachedImage *bg = bgLayer->backgroundImage();
 
-    if (bgLayer->isBackgroundSizeSet()) {
+    if(bgLayer->isBackgroundSizeSet())
+    {
         Length bgWidth = bgLayer->backgroundSize().width;
         Length bgHeight = bgLayer->backgroundSize().height;
 
-        if (bgWidth.isPercent())
+        if(bgWidth.isPercent())
             scaledWidth = scaledWidth * bgWidth.value() / 100;
-        else if (bgWidth.isFixed())
+        else if(bgWidth.isFixed())
             scaledWidth = bgWidth.value();
-        else if (bgWidth.isVariable()) {
+        else if(bgWidth.isVariable())
+        {
             // If the width is auto and the height is not, we have to use the appropriate
             // scale to maintain our aspect ratio.
-            if (bgHeight.isPercent()) {
+            if(bgHeight.isPercent())
+            {
                 int scaledH = scaledHeight * bgHeight.value() / 100;
                 scaledWidth = bg->pixmap_size().width() * scaledH / bg->pixmap_size().height();
-            } else if (bgHeight.isFixed())
+            }
+            else if(bgHeight.isFixed())
                 scaledWidth = bg->pixmap_size().width() * bgHeight.value() / bg->pixmap_size().height();
         }
 
-        if (bgHeight.isPercent())
+        if(bgHeight.isPercent())
             scaledHeight = scaledHeight * bgHeight.value() / 100;
-        else if (bgHeight.isFixed())
+        else if(bgHeight.isFixed())
             scaledHeight = bgHeight.value();
-        else if (bgHeight.isVariable()) {
+        else if(bgHeight.isVariable())
+        {
             // If the height is auto and the width is not, we have to use the appropriate
             // scale to maintain our aspect ratio.
-            if (bgWidth.isPercent())
+            if(bgWidth.isPercent())
                 scaledHeight = bg->pixmap_size().height() * scaledWidth / bg->pixmap_size().width();
-            else if (bgWidth.isFixed())
+            else if(bgWidth.isFixed())
                 scaledHeight = bg->pixmap_size().height() * bgWidth.value() / bg->pixmap_size().width();
-            else if (bgWidth.isVariable()) {
+            else if(bgWidth.isVariable())
+            {
                 // If both width and height are auto, we just want to use the image's
                 // intrinsic size.
                 scaledWidth = bg->pixmap_size().width();
                 scaledHeight = bg->pixmap_size().height();
             }
         }
-    } else {
+    }
+    else
+    {
         scaledWidth = bg->pixmap_size().width();
         scaledHeight = bg->pixmap_size().height();
     }
 }
 
-void RenderBox::paintBackgroundExtended(QPainter *p, const QColor &c, const BackgroundLayer* bgLayer, int clipy, int cliph,
-                                        int _tx, int _ty, int w, int h,
-                                        int bleft, int bright, int pleft, int pright)
+void RenderBox::paintBackgroundExtended(QPainter *p, const QColor &c, const BackgroundLayer *bgLayer, int clipy, int cliph, int _tx, int _ty, int w,
+                                        int h, int bleft, int bright, int pleft, int pright)
 {
-    if ( cliph < 0 )
-	return;
+    if(cliph < 0)
+        return;
 
-    if (bgLayer->backgroundClip() != BGBORDER) {
+    if(bgLayer->backgroundClip() != BGBORDER)
+    {
         // Clip to the padding or content boxes as necessary.
         bool includePadding = bgLayer->backgroundClip() == BGCONTENT;
         int x = _tx + bleft + (includePadding ? pleft : 0);
@@ -485,33 +508,37 @@ void RenderBox::paintBackgroundExtended(QPainter *p, const QColor &c, const Back
         p->setClipRect(QRect(x, y, width, height), QPainter::CoordPainter);
     }
 
-    CachedImage* bg = bgLayer->backgroundImage();
+    CachedImage *bg = bgLayer->backgroundImage();
     bool shouldPaintBackgroundImage = bg && bg->pixmap_size() == bg->valid_rect().size() && !bg->isTransparent() && !bg->isErrorImage();
     QColor bgColor = c;
 
     // Paint the color first underneath all images.
-    if (!bgLayer->next() && bgColor.isValid() && qAlpha(bgColor.rgb()) > 0)
+    if(!bgLayer->next() && bgColor.isValid() && qAlpha(bgColor.rgb()) > 0)
         p->fillRect(_tx, clipy, w, cliph, bgColor);
 
     // no progressive loading of the background image
-    if (shouldPaintBackgroundImage) {
+    if(shouldPaintBackgroundImage)
+    {
         int sx = 0;
         int sy = 0;
-        int cw,ch;
-        int cx,cy;
+        int cw, ch;
+        int cx, cy;
         int scaledImageWidth, scaledImageHeight;
 
         // CSS2 chapter 14.2.1
 
-        if (bgLayer->backgroundAttachment()) {
-            //scroll
+        if(bgLayer->backgroundAttachment())
+        {
+            // scroll
             int hpab = 0, vpab = 0, left = 0, top = 0; // Init to 0 for background-origin of 'border'
-            if (bgLayer->backgroundOrigin() != BGBORDER) {
+            if(bgLayer->backgroundOrigin() != BGBORDER)
+            {
                 hpab += bleft + bright;
                 vpab += borderTop() + borderBottom();
                 left += bleft;
                 top += borderTop();
-                if (bgLayer->backgroundOrigin() == BGCONTENT) {
+                if(bgLayer->backgroundOrigin() == BGCONTENT)
+                {
                     hpab += pleft + pright;
                     vpab += paddingTop() + paddingBottom();
                     left += pleft;
@@ -526,63 +553,77 @@ void RenderBox::paintBackgroundExtended(QPainter *p, const QColor &c, const Back
             calculateBackgroundSize(bgLayer, scaledImageWidth, scaledImageHeight);
 
             EBackgroundRepeat bgr = bgLayer->backgroundRepeat();
-            if (bgr == NO_REPEAT || bgr == REPEAT_Y) {
+            if(bgr == NO_REPEAT || bgr == REPEAT_Y)
+            {
                 cw = scaledImageWidth;
-                int xPosition = bgLayer->backgroundXPosition().minWidth(pw-scaledImageWidth);
-                if ( xPosition >= 0 ) {
+                int xPosition = bgLayer->backgroundXPosition().minWidth(pw - scaledImageWidth);
+                if(xPosition >= 0)
+                {
                     cx = _tx + xPosition;
                     cw = kMin(scaledImageWidth, pw - xPosition);
                 }
-                else {
+                else
+                {
                     cx = _tx;
-                    if (scaledImageWidth > 0) {
+                    if(scaledImageWidth > 0)
+                    {
                         sx = -xPosition;
-                        cw = kMin(scaledImageWidth+xPosition, pw);
+                        cw = kMin(scaledImageWidth + xPosition, pw);
                     }
                 }
                 cx += left;
-            } else {
+            }
+            else
+            {
                 // repeat over x
                 cw = w;
                 cx = _tx;
-                if (scaledImageWidth > 0) {
-                    int xPosition = bgLayer->backgroundXPosition().minWidth(pw-scaledImageWidth);
+                if(scaledImageWidth > 0)
+                {
+                    int xPosition = bgLayer->backgroundXPosition().minWidth(pw - scaledImageWidth);
                     sx = scaledImageWidth - (xPosition % scaledImageWidth);
                     sx -= left % scaledImageWidth;
                 }
             }
-            if (bgr == NO_REPEAT || bgr == REPEAT_X) {
+            if(bgr == NO_REPEAT || bgr == REPEAT_X)
+            {
                 ch = scaledImageHeight;
                 int yPosition = bgLayer->backgroundYPosition().minWidth(ph - scaledImageHeight);
-                if ( yPosition >= 0 ) {
+                if(yPosition >= 0)
+                {
                     cy = _ty + yPosition;
                     ch = kMin(ch, ph - yPosition);
                 }
-                else {
+                else
+                {
                     cy = _ty;
-                    if (scaledImageHeight > 0) {
+                    if(scaledImageHeight > 0)
+                    {
                         sy = -yPosition;
-                        ch = kMin(scaledImageHeight+yPosition, ph);
+                        ch = kMin(scaledImageHeight + yPosition, ph);
                     }
                 }
 
                 cy += top;
-            } else {
+            }
+            else
+            {
                 // repeat over y
                 ch = h;
                 cy = _ty;
-                if (scaledImageHeight > 0) {
+                if(scaledImageHeight > 0)
+                {
                     int yPosition = bgLayer->backgroundYPosition().minWidth(ph - scaledImageHeight);
                     sy = scaledImageHeight - (yPosition % scaledImageHeight);
                     sy -= top % scaledImageHeight;
                 }
             }
-	    if (layer())
-		layer()->scrollOffset(sx, sy);
+            if(layer())
+                layer()->scrollOffset(sx, sy);
         }
         else
         {
-            //fixed
+            // fixed
             QRect vr = viewRect();
             int pw = vr.width();
             int ph = vr.height();
@@ -591,25 +632,31 @@ void RenderBox::paintBackgroundExtended(QPainter *p, const QColor &c, const Back
             calculateBackgroundSize(bgLayer, scaledImageWidth, scaledImageHeight);
             EBackgroundRepeat bgr = bgLayer->backgroundRepeat();
 
-            int xPosition = bgLayer->backgroundXPosition().minWidth(pw-scaledImageWidth);
-            if (bgr == NO_REPEAT || bgr == REPEAT_Y) {
+            int xPosition = bgLayer->backgroundXPosition().minWidth(pw - scaledImageWidth);
+            if(bgr == NO_REPEAT || bgr == REPEAT_Y)
+            {
                 cw = kMin(scaledImageWidth, pw - xPosition);
                 cx = vr.x() + xPosition;
-            } else {
+            }
+            else
+            {
                 cw = pw;
                 cx = vr.x();
-                if (scaledImageWidth > 0)
+                if(scaledImageWidth > 0)
                     sx = scaledImageWidth - xPosition % scaledImageWidth;
             }
 
-            int yPosition = bgLayer->backgroundYPosition().minWidth(ph-scaledImageHeight);
-            if (bgr == NO_REPEAT || bgr == REPEAT_X) {
+            int yPosition = bgLayer->backgroundYPosition().minWidth(ph - scaledImageHeight);
+            if(bgr == NO_REPEAT || bgr == REPEAT_X)
+            {
                 ch = kMin(scaledImageHeight, ph - yPosition);
                 cy = vr.y() + yPosition;
-            } else {
+            }
+            else
+            {
                 ch = ph;
                 cy = vr.y();
-                if (scaledImageHeight > 0)
+                if(scaledImageHeight > 0)
                     sy = scaledImageHeight - yPosition % scaledImageHeight;
             }
 
@@ -617,35 +664,37 @@ void RenderBox::paintBackgroundExtended(QPainter *p, const QColor &c, const Back
             QRect ele(_tx, _ty, w, h);
             QRect b = fix.intersect(ele);
 
-            //kdDebug() <<" ele is " << ele << " b is " << b << " fix is " << fix << endl;
-            sx+=b.x()-cx;
-            sy+=b.y()-cy;
-            cx=b.x();cy=b.y();cw=b.width();ch=b.height();
+            // kdDebug() <<" ele is " << ele << " b is " << b << " fix is " << fix << endl;
+            sx += b.x() - cx;
+            sy += b.y() - cy;
+            cx = b.x();
+            cy = b.y();
+            cw = b.width();
+            ch = b.height();
         }
         // restrict painting to repaint-clip
-        if (cy < clipy) {
+        if(cy < clipy)
+        {
             ch -= (clipy - cy);
             sy += (clipy - cy);
             cy = clipy;
         }
         ch = kMin(ch, cliph);
 
-//         kdDebug() << " clipy, cliph: " << clipy << ", " << cliph << endl;
-//         kdDebug() << " drawTiledPixmap(" << cx << ", " << cy << ", " << cw << ", " << ch << ", " << sx << ", " << sy << ")" << endl;
-        if (cw>0 && ch>0)
+        //         kdDebug() << " clipy, cliph: " << clipy << ", " << cliph << endl;
+        //         kdDebug() << " drawTiledPixmap(" << cx << ", " << cy << ", " << cw << ", " << ch << ", " << sx << ", " << sy << ")" << endl;
+        if(cw > 0 && ch > 0)
             p->drawTiledPixmap(cx, cy, cw, ch, bg->tiled_pixmap(c, scaledImageWidth, scaledImageHeight), sx, sy);
-
     }
 
-    if (bgLayer->backgroundClip() != BGBORDER)
+    if(bgLayer->backgroundClip() != BGBORDER)
         p->restore(); // Undo the background clip
-
 }
 
 void RenderBox::outlineBox(QPainter *p, int _tx, int _ty, const char *color)
 {
     p->setPen(QPen(QColor(color), 1, Qt::DotLine));
-    p->setBrush( Qt::NoBrush );
+    p->setBrush(Qt::NoBrush);
     p->drawRect(_tx, _ty, m_width, m_height);
 }
 
@@ -653,27 +702,28 @@ QRect RenderBox::getOverflowClipRect(int tx, int ty)
 {
     // XXX When overflow-clip (CSS3) is implemented, we'll obtain the property
     // here.
-    int bl=borderLeft(),bt=borderTop(),bb=borderBottom(),br=borderRight();
-    int clipx = tx+bl;
-    int clipy = ty+bt;
-    int clipw = m_width-bl-br;
-    int cliph = m_height-bt-bb+borderTopExtra()+borderBottomExtra();
+    int bl = borderLeft(), bt = borderTop(), bb = borderBottom(), br = borderRight();
+    int clipx = tx + bl;
+    int clipy = ty + bt;
+    int clipw = m_width - bl - br;
+    int cliph = m_height - bt - bb + borderTopExtra() + borderBottomExtra();
 
     // Substract out scrollbars if we have them.
-    if (m_layer) {
+    if(m_layer)
+    {
         clipw -= m_layer->verticalScrollbarWidth();
         cliph -= m_layer->horizontalScrollbarHeight();
     }
 
-    return QRect(clipx,clipy,clipw,cliph);
+    return QRect(clipx, clipy, clipw, cliph);
 }
 
 QRect RenderBox::getClipRect(int tx, int ty)
 {
-    int bl=borderLeft(),bt=borderTop(),bb=borderBottom(),br=borderRight();
+    int bl = borderLeft(), bt = borderTop(), bb = borderBottom(), br = borderRight();
     // ### what about paddings?
-    int clipw = m_width-bl-br;
-    int cliph = m_height-bt-bb;
+    int clipw = m_width - bl - br;
+    int cliph = m_height - bt - bb;
 
     bool rtl = (style()->direction() == RTL);
 
@@ -682,36 +732,42 @@ QRect RenderBox::getClipRect(int tx, int ty)
     int cliptop = 0;
     int clipbottom = cliph;
 
-    if ( style()->hasClip() && style()->position() == ABSOLUTE ) {
-	// the only case we use the clip property according to CSS 2.1
-	if (!style()->clipLeft().isVariable()) {
-	    int c = style()->clipLeft().width(clipw);
-	    if ( rtl )
-		clipleft = clipw - c;
-	    else
-		clipleft = c;
-	}
-	if (!style()->clipRight().isVariable()) {
-	    int w = style()->clipRight().width(clipw);
-	    if ( rtl ) {
-		clipright = clipw - w;
-	    } else {
-		clipright = w;
-	    }
-	}
-	if (!style()->clipTop().isVariable())
-	    cliptop = style()->clipTop().width(cliph);
-	if (!style()->clipBottom().isVariable())
-	    clipbottom = style()->clipBottom().width(cliph);
+    if(style()->hasClip() && style()->position() == ABSOLUTE)
+    {
+        // the only case we use the clip property according to CSS 2.1
+        if(!style()->clipLeft().isVariable())
+        {
+            int c = style()->clipLeft().width(clipw);
+            if(rtl)
+                clipleft = clipw - c;
+            else
+                clipleft = c;
+        }
+        if(!style()->clipRight().isVariable())
+        {
+            int w = style()->clipRight().width(clipw);
+            if(rtl)
+            {
+                clipright = clipw - w;
+            }
+            else
+            {
+                clipright = w;
+            }
+        }
+        if(!style()->clipTop().isVariable())
+            cliptop = style()->clipTop().width(cliph);
+        if(!style()->clipBottom().isVariable())
+            clipbottom = style()->clipBottom().width(cliph);
     }
     int clipx = tx + clipleft;
     int clipy = ty + cliptop;
-    clipw = clipright-clipleft;
-    cliph = clipbottom-cliptop;
+    clipw = clipright - clipleft;
+    cliph = clipbottom - cliptop;
 
-    //kdDebug( 6040 ) << "setting clip("<<clipx<<","<<clipy<<","<<clipw<<","<<cliph<<")"<<endl;
+    // kdDebug( 6040 ) << "setting clip("<<clipx<<","<<clipy<<","<<clipw<<","<<cliph<<")"<<endl;
 
-    return QRect(clipx,clipy,clipw,cliph);
+    return QRect(clipx, clipy, clipw, cliph);
 }
 
 void RenderBox::close()
@@ -721,20 +777,21 @@ void RenderBox::close()
 
 short RenderBox::containingBlockWidth() const
 {
-    if (isCanvas() && canvas()->view())
+    if(isCanvas() && canvas()->view())
     {
-        if (canvas()->pagedMode())
+        if(canvas()->pagedMode())
             return canvas()->width();
         else
             return canvas()->view()->visibleWidth();
     }
 
-    RenderBlock* cb = containingBlock();
-    if (isRenderBlock() && cb->isTable() && static_cast<RenderTable*>(cb)->caption() == this) {
-        //captions are not affected by table border or padding
+    RenderBlock *cb = containingBlock();
+    if(isRenderBlock() && cb->isTable() && static_cast< RenderTable * >(cb)->caption() == this)
+    {
+        // captions are not affected by table border or padding
         return cb->width();
     }
-    if (usesLineWidth())
+    if(usesLineWidth())
         return cb->lineWidth(m_y);
     else
         return cb->contentWidth();
@@ -742,21 +799,22 @@ short RenderBox::containingBlockWidth() const
 
 bool RenderBox::absolutePosition(int &_xPos, int &_yPos, bool f) const
 {
-    if ( style()->position() == FIXED )
-	f = true;
+    if(style()->position() == FIXED)
+        f = true;
     RenderObject *o = container();
-    if( o && o->absolutePosition(_xPos, _yPos, f))
+    if(o && o->absolutePosition(_xPos, _yPos, f))
     {
-        if ( o->layer() ) {
-            if (o->hasOverflowClip())
-                o->layer()->subtractScrollOffset( _xPos, _yPos );
-            if (isPositioned())
+        if(o->layer())
+        {
+            if(o->hasOverflowClip())
+                o->layer()->subtractScrollOffset(_xPos, _yPos);
+            if(isPositioned())
                 o->layer()->checkInlineRelOffset(this, _xPos, _yPos);
         }
 
-        if(!isInline() || isReplaced()) {
-            _xPos += xPos(),
-            _yPos += yPos();
+        if(!isInline() || isReplaced())
+        {
+            _xPos += xPos(), _yPos += yPos();
         }
 
         if(isRelPositioned())
@@ -771,19 +829,22 @@ bool RenderBox::absolutePosition(int &_xPos, int &_yPos, bool f) const
     }
 }
 
-void RenderBox::position(InlineBox* box, int /*from*/, int /*len*/, bool /*reverse*/)
+void RenderBox::position(InlineBox *box, int /*from*/, int /*len*/, bool /*reverse*/)
 {
-    if (isPositioned()) {
+    if(isPositioned())
+    {
         // Cache the x position only if we were an INLINE type originally.
         bool wasInline = style()->isOriginalDisplayInlineType();
 
-        if (wasInline && hasStaticX()) {
+        if(wasInline && hasStaticX())
+        {
             // The value is cached in the xPos of the box.  We only need this value if
             // our object was inline originally, since otherwise it would have ended up underneath
             // the inlines.
             m_staticX = box->xPos();
         }
-        else if (!wasInline && hasStaticY()) {
+        else if(!wasInline && hasStaticY())
+        {
             // Our object was a block originally, so we make our normal flow position be
             // just below the line box (as though all the inlines that came before us got
             // wrapped in an anonymous block, which is what would have happened had we been
@@ -791,28 +852,28 @@ void RenderBox::position(InlineBox* box, int /*from*/, int /*len*/, bool /*rever
             m_staticY = box->yPos();
         }
     }
-    else if (isReplaced())
-        setPos( box->xPos(), box->yPos() );
+    else if(isReplaced())
+        setPos(box->xPos(), box->yPos());
 }
 
 void RenderBox::repaint(Priority prior)
 {
     int ow = style() ? style()->outlineSize() : 0;
-    if( isInline() && !isReplaced() )
+    if(isInline() && !isReplaced())
     {
-        RenderObject* p = parent();
+        RenderObject *p = parent();
         Q_ASSERT(p);
-        while( p->isInline() && !p->isReplaced() )
+        while(p->isInline() && !p->isReplaced())
             p = p->parent();
         int xoff = p->hasOverflowClip() ? 0 : p->overflowLeft();
         int yoff = p->hasOverflowClip() ? 0 : p->overflowTop();
-        p->repaintRectangle( -ow + xoff, -ow + yoff, p->effectiveWidth()+ow*2, p->effectiveHeight()+ow*2, prior);
+        p->repaintRectangle(-ow + xoff, -ow + yoff, p->effectiveWidth() + ow * 2, p->effectiveHeight() + ow * 2, prior);
     }
     else
     {
         int xoff = hasOverflowClip() ? 0 : overflowLeft();
         int yoff = hasOverflowClip() ? 0 : overflowTop();
-        repaintRectangle( -ow + xoff, -ow + yoff, effectiveWidth()+ow*2, effectiveHeight()+ow*2, prior);
+        repaintRectangle(-ow + xoff, -ow + yoff, effectiveWidth() + ow * 2, effectiveHeight() + ow * 2, prior);
     }
 }
 
@@ -825,19 +886,23 @@ void RenderBox::repaintRectangle(int x, int y, int w, int h, Priority p, bool f)
     // is translated, but the render box isn't, so we need to do this to get the
     // right dirty rect.  Since this is called from RenderObject::setStyle, the relative position
     // flag on the RenderObject has been cleared, so use the one on the style().
-    if (style()->position() == RELATIVE && m_layer)
-        relativePositionOffset(x,y);
+    if(style()->position() == RELATIVE && m_layer)
+        relativePositionOffset(x, y);
 
-    if (style()->position() == FIXED) f=true;
+    if(style()->position() == FIXED)
+        f = true;
 
-    // kdDebug( 6040 ) << "RenderBox(" <<this << ", " << renderName() << ")::repaintRectangle (" << x << "/" << y << ") (" << w << "/" << h << ")" << endl;
+    // kdDebug( 6040 ) << "RenderBox(" <<this << ", " << renderName() << ")::repaintRectangle (" << x << "/" << y << ") (" << w << "/" << h << ")" <<
+    // endl;
     RenderObject *o = container();
-    if( o ) {
-         if (o->layer()) {
-             if (o->style()->hidesOverflow() && o->layer() && !o->isInlineFlow())
-                 o->layer()->subtractScrollOffset(x,y); // For overflow:auto/scroll/hidden.
-             if (style()->position() == ABSOLUTE)
-                 o->layer()->checkInlineRelOffset(this,x,y);
+    if(o)
+    {
+        if(o->layer())
+        {
+            if(o->style()->hidesOverflow() && o->layer() && !o->isInlineFlow())
+                o->layer()->subtractScrollOffset(x, y); // For overflow:auto/scroll/hidden.
+            if(style()->position() == ABSOLUTE)
+                o->layer()->checkInlineRelOffset(this, x, y);
         }
         o->repaintRectangle(x, y, w, h, p, f);
     }
@@ -851,14 +916,12 @@ void RenderBox::relativePositionOffset(int &tx, int &ty) const
         tx -= style()->right().width(containingBlockWidth());
     if(!style()->top().isVariable())
     {
-        if (!style()->top().isPercent()
-                || containingBlock()->style()->height().isFixed())
+        if(!style()->top().isPercent() || containingBlock()->style()->height().isFixed())
             ty += style()->top().width(containingBlockHeight());
     }
     else if(!style()->bottom().isVariable())
     {
-        if (!style()->bottom().isPercent()
-                || containingBlock()->style()->height().isFixed())
+        if(!style()->bottom().isPercent() || containingBlock()->style()->height().isFixed())
             ty -= style()->bottom().width(containingBlockHeight());
     }
 }
@@ -866,9 +929,9 @@ void RenderBox::relativePositionOffset(int &tx, int &ty) const
 void RenderBox::calcWidth()
 {
 #ifdef DEBUG_LAYOUT
-    kdDebug( 6040 ) << "RenderBox("<<renderName()<<")::calcWidth()" << endl;
+    kdDebug(6040) << "RenderBox(" << renderName() << ")::calcWidth()" << endl;
 #endif
-    if (isPositioned())
+    if(isPositioned())
     {
         calcAbsoluteHorizontal();
     }
@@ -876,26 +939,27 @@ void RenderBox::calcWidth()
     {
         bool treatAsReplaced = isReplaced() && !isInlineBlockOrInlineTable();
         Length w;
-        if (treatAsReplaced)
-            w = Length( calcReplacedWidth(), Fixed );
+        if(treatAsReplaced)
+            w = Length(calcReplacedWidth(), Fixed);
         else
             w = style()->width();
 
         Length ml = style()->marginLeft();
         Length mr = style()->marginRight();
 
-	int cw = containingBlockWidth();
-        if (cw<0) cw = 0;
+        int cw = containingBlockWidth();
+        if(cw < 0)
+            cw = 0;
 
         m_marginLeft = 0;
         m_marginRight = 0;
 
-        if (isInline() && !isInlineBlockOrInlineTable())
+        if(isInline() && !isInlineBlockOrInlineTable())
         {
             // just calculate margins
             m_marginLeft = ml.minWidth(cw);
             m_marginRight = mr.minWidth(cw);
-            if (treatAsReplaced)
+            if(treatAsReplaced)
             {
                 m_width = calcBoxWidth(w.width(cw));
                 m_width = KMAX(m_width, m_minWidth);
@@ -906,40 +970,45 @@ void RenderBox::calcWidth()
         else
         {
             LengthType widthType, minWidthType, maxWidthType;
-            if (treatAsReplaced) {
+            if(treatAsReplaced)
+            {
                 m_width = calcBoxWidth(w.width(cw));
                 widthType = w.type();
-            } else {
+            }
+            else
+            {
                 m_width = calcWidthUsing(Width, cw, widthType);
                 int minW = calcWidthUsing(MinWidth, cw, minWidthType);
-                int maxW = style()->maxWidth().value() == UNDEFINED ?
-                             m_width : calcWidthUsing(MaxWidth, cw, maxWidthType);
+                int maxW = style()->maxWidth().value() == UNDEFINED ? m_width : calcWidthUsing(MaxWidth, cw, maxWidthType);
 
-                if (m_width > maxW) {
+                if(m_width > maxW)
+                {
                     m_width = maxW;
                     widthType = maxWidthType;
                 }
-                if (m_width < minW) {
+                if(m_width < minW)
+                {
                     m_width = minW;
                     widthType = minWidthType;
                 }
             }
 
-            if (widthType == Variable) {
-    //          kdDebug( 6040 ) << "variable" << endl;
+            if(widthType == Variable)
+            {
+                //          kdDebug( 6040 ) << "variable" << endl;
                 m_marginLeft = ml.minWidth(cw);
                 m_marginRight = mr.minWidth(cw);
             }
             else
             {
-//              kdDebug( 6040 ) << "non-variable " << w.type << ","<< w.value << endl;
-                calcHorizontalMargins(ml,mr,cw);
+                //              kdDebug( 6040 ) << "non-variable " << w.type << ","<< w.value << endl;
+                calcHorizontalMargins(ml, mr, cw);
             }
         }
 
-        if (cw && cw != m_width + m_marginLeft + m_marginRight && !isFloating() && !isInline())
+        if(cw && cw != m_width + m_marginLeft + m_marginRight && !isFloating() && !isInline())
         {
-            if (containingBlock()->style()->direction()==LTR)
+            if(containingBlock()->style()->direction() == LTR)
                 m_marginRight = cw - m_width - m_marginLeft;
             else
                 m_marginLeft = cw - m_width - m_marginRight;
@@ -947,31 +1016,34 @@ void RenderBox::calcWidth()
     }
 
 #ifdef DEBUG_LAYOUT
-    kdDebug( 6040 ) << "RenderBox::calcWidth(): m_width=" << m_width << " containingBlockWidth()=" << containingBlockWidth() << endl;
-    kdDebug( 6040 ) << "m_marginLeft=" << m_marginLeft << " m_marginRight=" << m_marginRight << endl;
+    kdDebug(6040) << "RenderBox::calcWidth(): m_width=" << m_width << " containingBlockWidth()=" << containingBlockWidth() << endl;
+    kdDebug(6040) << "m_marginLeft=" << m_marginLeft << " m_marginRight=" << m_marginRight << endl;
 #endif
 }
 
-int RenderBox::calcWidthUsing(WidthType widthType, int cw, LengthType& lengthType)
+int RenderBox::calcWidthUsing(WidthType widthType, int cw, LengthType &lengthType)
 {
     int width = m_width;
     Length w;
-    if (widthType == Width)
+    if(widthType == Width)
         w = style()->width();
-    else if (widthType == MinWidth)
+    else if(widthType == MinWidth)
         w = style()->minWidth();
     else
         w = style()->maxWidth();
 
     lengthType = w.type();
 
-    if (lengthType == Variable) {
+    if(lengthType == Variable)
+    {
         int marginLeft = style()->marginLeft().minWidth(cw);
         int marginRight = style()->marginRight().minWidth(cw);
-        if (cw) width = cw - marginLeft - marginRight;
+        if(cw)
+            width = cw - marginLeft - marginRight;
 
         // size to max width?
-        if (sizesToMaxWidth()) {
+        if(sizesToMaxWidth())
+        {
             width = KMAX(width, (int)m_minWidth);
             width = KMIN(width, (int)m_maxWidth);
         }
@@ -984,40 +1056,38 @@ int RenderBox::calcWidthUsing(WidthType widthType, int cw, LengthType& lengthTyp
     return width;
 }
 
-void RenderBox::calcHorizontalMargins(const Length& ml, const Length& mr, int cw)
+void RenderBox::calcHorizontalMargins(const Length &ml, const Length &mr, int cw)
 {
-    if (isFloating() || isInline()) // Inline blocks/tables and floats don't have their margins increased.
+    if(isFloating() || isInline()) // Inline blocks/tables and floats don't have their margins increased.
     {
         m_marginLeft = ml.minWidth(cw);
         m_marginRight = mr.minWidth(cw);
     }
     else
     {
-        if ( (ml.isVariable() && mr.isVariable() && m_width<cw) ||
-             (!ml.isVariable() && !mr.isVariable() &&
-                containingBlock()->style()->textAlign() == KHTML_CENTER) )
+        if((ml.isVariable() && mr.isVariable() && m_width < cw)
+           || (!ml.isVariable() && !mr.isVariable() && containingBlock()->style()->textAlign() == KHTML_CENTER))
         {
-            m_marginLeft = (cw - m_width)/2;
-            if (m_marginLeft<0) m_marginLeft=0;
+            m_marginLeft = (cw - m_width) / 2;
+            if(m_marginLeft < 0)
+                m_marginLeft = 0;
             m_marginRight = cw - m_width - m_marginLeft;
         }
-        else if ( (mr.isVariable() && m_width<cw) ||
-                 (!ml.isVariable() && containingBlock()->style()->direction() == RTL &&
-                  containingBlock()->style()->textAlign() == KHTML_LEFT))
+        else if((mr.isVariable() && m_width < cw)
+                || (!ml.isVariable() && containingBlock()->style()->direction() == RTL && containingBlock()->style()->textAlign() == KHTML_LEFT))
         {
             m_marginLeft = ml.width(cw);
             m_marginRight = cw - m_width - m_marginLeft;
         }
-        else if ( (ml.isVariable() && m_width<cw) ||
-                 (!mr.isVariable() && containingBlock()->style()->direction() == LTR &&
-                  containingBlock()->style()->textAlign() == KHTML_RIGHT))
+        else if((ml.isVariable() && m_width < cw)
+                || (!mr.isVariable() && containingBlock()->style()->direction() == LTR && containingBlock()->style()->textAlign() == KHTML_RIGHT))
         {
             m_marginRight = mr.width(cw);
             m_marginLeft = cw - m_width - m_marginRight;
         }
         else
         {
-           // this makes auto margins 0 if we failed a m_width<cw test above (css2.1, 10.3.3)
+            // this makes auto margins 0 if we failed a m_width<cw test above (css2.1, 10.3.3)
             m_marginLeft = ml.minWidth(cw);
             m_marginRight = mr.minWidth(cw);
         }
@@ -1028,76 +1098,81 @@ void RenderBox::calcHeight()
 {
 
 #ifdef DEBUG_LAYOUT
-    kdDebug( 6040 ) << "RenderBox::calcHeight()" << endl;
+    kdDebug(6040) << "RenderBox::calcHeight()" << endl;
 #endif
 
-    //cell height is managed by table, inline elements do not have a height property.
-    if ( isTableCell() || (isInline() && !isReplaced()) )
+    // cell height is managed by table, inline elements do not have a height property.
+    if(isTableCell() || (isInline() && !isReplaced()))
         return;
 
-    if (isPositioned())
+    if(isPositioned())
         calcAbsoluteVertical();
     else
     {
         calcVerticalMargins();
 
         // For tables, calculate margins only
-        if (isTable())
+        if(isTable())
             return;
 
         Length h;
         bool treatAsReplaced = isReplaced() && !isInlineBlockOrInlineTable();
         bool checkMinMaxHeight = false;
 
-        if ( treatAsReplaced )
-            h = Length( calcReplacedHeight(), Fixed );
-        else {
+        if(treatAsReplaced)
+            h = Length(calcReplacedHeight(), Fixed);
+        else
+        {
             h = style()->height();
             checkMinMaxHeight = true;
         }
 
         int height;
-        if (checkMinMaxHeight) {
+        if(checkMinMaxHeight)
+        {
             height = calcHeightUsing(style()->height());
-            if (height == -1)
+            if(height == -1)
                 height = m_height;
             int minH = calcHeightUsing(style()->minHeight()); // Leave as -1 if unset.
             int maxH = style()->maxHeight().value() == UNDEFINED ? height : calcHeightUsing(style()->maxHeight());
-            if (maxH == -1)
+            if(maxH == -1)
                 maxH = height;
             height = kMin(maxH, height);
             height = kMax(minH, height);
         }
-        else {
+        else
+        {
             // The only times we don't check min/max height are when a fixed length has
             // been given as an override.  Just use that.
             height = calcBoxHeight(h.value());
         }
 
-        if (height<m_height && !overhangingContents() && !hasOverflowClip())
+        if(height < m_height && !overhangingContents() && !hasOverflowClip())
             setOverhangingContents();
 
         m_height = height;
     }
 
     // Unfurling marquees override with the furled height.
-    if (style()->overflowX() == OMARQUEE && m_layer && m_layer->marquee() &&
-        m_layer->marquee()->isUnfurlMarquee() && !m_layer->marquee()->isHorizontal()) {
+    if(style()->overflowX() == OMARQUEE && m_layer && m_layer->marquee() && m_layer->marquee()->isUnfurlMarquee()
+       && !m_layer->marquee()->isHorizontal())
+    {
         m_layer->marquee()->setEnd(m_height);
         m_height = kMin(m_height, m_layer->marquee()->unfurlPos());
     }
-
 }
 
-int RenderBox::calcHeightUsing(const Length& h)
+int RenderBox::calcHeightUsing(const Length &h)
 {
     int height = -1;
-    if (!h.isVariable()) {
-        if (h.isFixed())
+    if(!h.isVariable())
+    {
+        if(h.isFixed())
             height = h.value();
-        else if (h.isPercent())
+        else if(h.isPercent())
             height = calcPercentageHeight(h);
-        if (height != -1) {
+        if(height != -1)
+        {
             height = calcBoxHeight(height);
             return height;
         }
@@ -1105,10 +1180,11 @@ int RenderBox::calcHeightUsing(const Length& h)
     return height;
 }
 
-int RenderBox::calcImplicitHeight() const {
+int RenderBox::calcImplicitHeight() const
+{
     assert(hasImplicitHeight());
 
-    RenderBlock* cb = containingBlock();
+    RenderBlock *cb = containingBlock();
     // padding-box height
     int ch = cb->height() - cb->borderTop() + cb->borderBottom();
     int top = style()->top().width(ch);
@@ -1117,59 +1193,64 @@ int RenderBox::calcImplicitHeight() const {
     return ch - top - bottom;
 }
 
-int RenderBox::calcPercentageHeight(const Length& height, bool treatAsReplaced) const
+int RenderBox::calcPercentageHeight(const Length &height, bool treatAsReplaced) const
 {
     int result = -1;
-    RenderBlock* cb = containingBlock();
+    RenderBlock *cb = containingBlock();
     // In quirk mode, table cells violate what the CSS spec says to do with heights.
-    if (cb->isTableCell() && style()->htmlHacks()) {
-        result = static_cast<RenderTableCell*>(cb)->cellPercentageHeight();
+    if(cb->isTableCell() && style()->htmlHacks())
+    {
+        result = static_cast< RenderTableCell * >(cb)->cellPercentageHeight();
     }
 
     // Otherwise we only use our percentage height if our containing block had a specified
     // height.
-    else if (cb->style()->height().isFixed())
+    else if(cb->style()->height().isFixed())
         result = cb->calcContentHeight(cb->style()->height().value());
-    else if (cb->style()->height().isPercent()) {
+    else if(cb->style()->height().isPercent())
+    {
         // We need to recur and compute the percentage height for our containing block.
         result = cb->calcPercentageHeight(cb->style()->height(), treatAsReplaced);
-        if (result != -1)
+        if(result != -1)
             result = cb->calcContentHeight(result);
     }
-    else if (cb->isCanvas()) {
-        if (!canvas()->pagedMode())
-            result = static_cast<RenderCanvas*>(cb)->viewportHeight();
+    else if(cb->isCanvas())
+    {
+        if(!canvas()->pagedMode())
+            result = static_cast< RenderCanvas * >(cb)->viewportHeight();
         else
-            result = static_cast<RenderCanvas*>(cb)->height();
+            result = static_cast< RenderCanvas * >(cb)->height();
         result -= cb->style()->borderTopWidth() - cb->style()->borderBottomWidth();
         result -= cb->paddingTop() + cb->paddingBottom();
     }
-    else if (cb->isBody() && style()->htmlHacks() &&
-                             cb->style()->height().isVariable() && !cb->isFloatingOrPositioned()) {
+    else if(cb->isBody() && style()->htmlHacks() && cb->style()->height().isVariable() && !cb->isFloatingOrPositioned())
+    {
         int margins = cb->collapsedMarginTop() + cb->collapsedMarginBottom();
         int visHeight = canvas()->viewportHeight();
-        RenderObject* p = cb->parent();
-        result = visHeight - (margins + p->marginTop() + p->marginBottom() +
-                              p->borderTop() + p->borderBottom() +
-                              p->paddingTop() + p->paddingBottom());
+        RenderObject *p = cb->parent();
+        result =
+            visHeight - (margins + p->marginTop() + p->marginBottom() + p->borderTop() + p->borderBottom() + p->paddingTop() + p->paddingBottom());
     }
-    else if (cb->isRoot() && style()->htmlHacks() && cb->style()->height().isVariable()) {
+    else if(cb->isRoot() && style()->htmlHacks() && cb->style()->height().isVariable())
+    {
         int visHeight = canvas()->viewportHeight();
-        result = visHeight - (marginTop() + marginBottom() +
-                              borderTop() + borderBottom() +
-                              paddingTop() + paddingBottom());
+        result = visHeight - (marginTop() + marginBottom() + borderTop() + borderBottom() + paddingTop() + paddingBottom());
     }
-    else if (cb->isAnonymousBlock() || treatAsReplaced && style()->htmlHacks()) {
+    else if(cb->isAnonymousBlock() || treatAsReplaced && style()->htmlHacks())
+    {
         // IE quirk.
         result = cb->calcPercentageHeight(cb->style()->height(), treatAsReplaced);
     }
-    else if (cb->hasImplicitHeight()) {
+    else if(cb->hasImplicitHeight())
+    {
         result = cb->calcImplicitHeight();
     }
 
-    if (result != -1) {
+    if(result != -1)
+    {
         result = height.width(result);
-        if (cb->isTableCell() && style()->boxSizing() != BORDER_BOX) {
+        if(cb->isTableCell() && style()->boxSizing() != BORDER_BOX)
+        {
             result -= (borderTop() + paddingTop() + borderBottom() + paddingBottom());
             result = kMax(0, result);
         }
@@ -1183,10 +1264,10 @@ short RenderBox::calcReplacedWidth() const
     int minW = calcReplacedWidthUsing(MinWidth);
     int maxW = style()->maxWidth().value() == UNDEFINED ? width : calcReplacedWidthUsing(MaxWidth);
 
-    if (width > maxW)
+    if(width > maxW)
         width = maxW;
 
-    if (width < minW)
+    if(width < minW)
         width = minW;
 
     return width;
@@ -1195,27 +1276,29 @@ short RenderBox::calcReplacedWidth() const
 int RenderBox::calcReplacedWidthUsing(WidthType widthType) const
 {
     Length w;
-    if (widthType == Width)
+    if(widthType == Width)
         w = style()->width();
-    else if (widthType == MinWidth)
+    else if(widthType == MinWidth)
         w = style()->minWidth();
     else
         w = style()->maxWidth();
 
-    switch (w.type()) {
-    case Fixed:
-        return w.value();
-    case Percent:
+    switch(w.type())
     {
-        const int cw = containingBlockWidth();
-        if (cw > 0) {
-            int result = w.minWidth(cw);
-            return result;
+        case Fixed:
+            return w.value();
+        case Percent:
+        {
+            const int cw = containingBlockWidth();
+            if(cw > 0)
+            {
+                int result = w.minWidth(cw);
+                return result;
+            }
         }
-    }
-    // fall through
-    default:
-        return intrinsicWidth();
+        // fall through
+        default:
+            return intrinsicWidth();
     }
 }
 
@@ -1225,10 +1308,10 @@ int RenderBox::calcReplacedHeight() const
     int minH = calcReplacedHeightUsing(MinHeight);
     int maxH = style()->maxHeight().value() == UNDEFINED ? height : calcReplacedHeightUsing(MaxHeight);
 
-    if (height > maxH)
+    if(height > maxH)
         height = maxH;
 
-    if (height < minH)
+    if(height < minH)
         height = minH;
 
     return height;
@@ -1237,24 +1320,25 @@ int RenderBox::calcReplacedHeight() const
 int RenderBox::calcReplacedHeightUsing(HeightType heightType) const
 {
     Length h;
-    if (heightType == Height)
+    if(heightType == Height)
         h = style()->height();
-    else if (heightType == MinHeight)
+    else if(heightType == MinHeight)
         h = style()->minHeight();
     else
         h = style()->maxHeight();
-    switch( h.type() ) {
-    case Fixed:
-        return h.value();
-    case Percent:
-      {
-        int th = calcPercentageHeight(h, true);
-        if (th != -1)
-            return th;
-        // fall through
-      }
-    default:
-        return intrinsicHeight();
+    switch(h.type())
+    {
+        case Fixed:
+            return h.value();
+        case Percent:
+        {
+            int th = calcPercentageHeight(h, true);
+            if(th != -1)
+                return th;
+            // fall through
+        }
+        default:
+            return intrinsicHeight();
     };
 }
 
@@ -1263,31 +1347,31 @@ int RenderBox::availableHeight() const
     return availableHeightUsing(style()->height());
 }
 
-int RenderBox::availableHeightUsing(const Length& h) const
+int RenderBox::availableHeightUsing(const Length &h) const
 {
-    if (h.isFixed())
+    if(h.isFixed())
         return calcContentHeight(h.value());
 
-    if (isCanvas())
-        if (static_cast<const RenderCanvas*>(this)->pagedMode())
-            return static_cast<const RenderCanvas*>(this)->pageHeight();
+    if(isCanvas())
+        if(static_cast< const RenderCanvas * >(this)->pagedMode())
+            return static_cast< const RenderCanvas * >(this)->pageHeight();
         else
-            return static_cast<const RenderCanvas*>(this)->viewportHeight();
+            return static_cast< const RenderCanvas * >(this)->viewportHeight();
 
     // We need to stop here, since we don't want to increase the height of the table
     // artificially.  We're going to rely on this cell getting expanded to some new
     // height, and then when we lay out again we'll use the calculation below.
-    if (isTableCell() && (h.isVariable() || h.isPercent())) {
-        const RenderTableCell* tableCell = static_cast<const RenderTableCell*>(this);
-        return tableCell->cellPercentageHeight() -
-	    (borderTop()+borderBottom()+paddingTop()+paddingBottom());
+    if(isTableCell() && (h.isVariable() || h.isPercent()))
+    {
+        const RenderTableCell *tableCell = static_cast< const RenderTableCell * >(this);
+        return tableCell->cellPercentageHeight() - (borderTop() + borderBottom() + paddingTop() + paddingBottom());
     }
 
-    if (h.isPercent())
-       return calcContentHeight(h.width(containingBlock()->availableHeight()));
+    if(h.isPercent())
+        return calcContentHeight(h.width(containingBlock()->availableHeight()));
 
     // Check for implicit height
-    if (hasImplicitHeight())
+    if(hasImplicitHeight())
         return calcImplicitHeight();
 
     return containingBlock()->availableHeight();
@@ -1298,27 +1382,28 @@ int RenderBox::availableWidth() const
     return availableWidthUsing(style()->width());
 }
 
-int RenderBox::availableWidthUsing(const Length& w) const
+int RenderBox::availableWidthUsing(const Length &w) const
 {
-    if (w.isFixed())
+    if(w.isFixed())
         return calcContentWidth(w.value());
 
-    if (isCanvas())
-        return static_cast<const RenderCanvas*>(this)->viewportWidth();
+    if(isCanvas())
+        return static_cast< const RenderCanvas * >(this)->viewportWidth();
 
-    if (w.isPercent())
-       return calcContentWidth(w.width(containingBlock()->availableWidth()));
+    if(w.isPercent())
+        return calcContentWidth(w.width(containingBlock()->availableWidth()));
 
     return containingBlock()->availableWidth();
 }
 
 void RenderBox::calcVerticalMargins()
 {
-    if( isTableCell() ) {
-	// table margins are basically infinite
-	m_marginTop = TABLECELLMARGIN;
-	m_marginBottom = TABLECELLMARGIN;
-	return;
+    if(isTableCell())
+    {
+        // table margins are basically infinite
+        m_marginTop = TABLECELLMARGIN;
+        m_marginBottom = TABLECELLMARGIN;
+        return;
     }
 
     Length tm = style()->marginTop();
@@ -1344,7 +1429,8 @@ void RenderBox::setStaticY(int staticY)
 
 void RenderBox::calcAbsoluteHorizontal()
 {
-   if (isReplaced()) {
+    if(isReplaced())
+    {
         calcAbsoluteHorizontalReplaced();
         return;
     }
@@ -1372,7 +1458,7 @@ void RenderBox::calcAbsoluteHorizontal()
 
     // We don't use containingBlock(), since we may be positioned by an enclosing
     // relative positioned inline.
-    const RenderObject* containerBlock = container();
+    const RenderObject *containerBlock = container();
 
     // FIXME: This is incorrect for cases where the container block is a relatively
     // positioned inline.
@@ -1413,41 +1499,43 @@ void RenderBox::calcAbsoluteHorizontal()
     \*---------------------------------------------------------------------------*/
 
     // Calculate the static distance if needed.
-    if (left.isVariable() && right.isVariable()) {
-        if (containerDirection == LTR) {
+    if(left.isVariable() && right.isVariable())
+    {
+        if(containerDirection == LTR)
+        {
             // 'm_staticX' should already have been set through layout of the parent.
             int staticPosition = m_staticX - containerBlock->borderLeft();
-            for (RenderObject* po = parent(); po && po != containerBlock; po = po->parent())
+            for(RenderObject *po = parent(); po && po != containerBlock; po = po->parent())
                 staticPosition += po->xPos();
             left = Length(staticPosition, Fixed);
-        } else {
-            RenderObject* po = parent();
+        }
+        else
+        {
+            RenderObject *po = parent();
             // 'm_staticX' should already have been set through layout of the parent.
             int staticPosition = m_staticX + containerWidth + containerBlock->borderRight() - po->width();
-            for (; po && po != containerBlock; po = po->parent())
+            for(; po && po != containerBlock; po = po->parent())
                 staticPosition -= po->xPos();
             right = Length(staticPosition, Fixed);
         }
     }
 
     // Calculate constraint equation values for 'width' case.
-    calcAbsoluteHorizontalValues(style()->width(), containerBlock, containerDirection,
-                                 containerWidth, bordersPlusPadding,
-                                 left, right, marginLeft, marginRight,
-                                 m_width, m_marginLeft, m_marginRight, m_x);
+    calcAbsoluteHorizontalValues(style()->width(), containerBlock, containerDirection, containerWidth, bordersPlusPadding, left, right, marginLeft,
+                                 marginRight, m_width, m_marginLeft, m_marginRight, m_x);
     // Calculate constraint equation values for 'max-width' case.calcContentWidth(width.width(containerWidth));
-    if (style()->maxWidth().value() != UNDEFINED) {
+    if(style()->maxWidth().value() != UNDEFINED)
+    {
         short maxWidth;
         short maxMarginLeft;
         short maxMarginRight;
         short maxXPos;
 
-        calcAbsoluteHorizontalValues(style()->maxWidth(), containerBlock, containerDirection,
-                                     containerWidth, bordersPlusPadding,
-                                     left, right, marginLeft, marginRight,
-                                     maxWidth, maxMarginLeft, maxMarginRight, maxXPos);
+        calcAbsoluteHorizontalValues(style()->maxWidth(), containerBlock, containerDirection, containerWidth, bordersPlusPadding, left, right,
+                                     marginLeft, marginRight, maxWidth, maxMarginLeft, maxMarginRight, maxXPos);
 
-        if (m_width > maxWidth) {
+        if(m_width > maxWidth)
+        {
             m_width = maxWidth;
             m_marginLeft = maxMarginLeft;
             m_marginRight = maxMarginRight;
@@ -1456,18 +1544,18 @@ void RenderBox::calcAbsoluteHorizontal()
     }
 
     // Calculate constraint equation values for 'min-width' case.
-    if (style()->minWidth().value()) {
+    if(style()->minWidth().value())
+    {
         short minWidth;
         short minMarginLeft;
         short minMarginRight;
         short minXPos;
 
-        calcAbsoluteHorizontalValues(style()->minWidth(), containerBlock, containerDirection,
-                                     containerWidth, bordersPlusPadding,
-                                     left, right, marginLeft, marginRight,
-                                     minWidth, minMarginLeft, minMarginRight, minXPos);
+        calcAbsoluteHorizontalValues(style()->minWidth(), containerBlock, containerDirection, containerWidth, bordersPlusPadding, left, right,
+                                     marginLeft, marginRight, minWidth, minMarginLeft, minMarginRight, minXPos);
 
-        if (m_width < minWidth) {
+        if(m_width < minWidth)
+        {
             m_width = minWidth;
             m_marginLeft = minMarginLeft;
             m_marginRight = minMarginRight;
@@ -1479,10 +1567,10 @@ void RenderBox::calcAbsoluteHorizontal()
     m_width += bordersPlusPadding;
 }
 
-void RenderBox::calcAbsoluteHorizontalValues(Length width, const RenderObject* containerBlock, EDirection containerDirection,
-                                             const int containerWidth, const int bordersPlusPadding,
-                                             const Length left, const Length right, const Length marginLeft, const Length marginRight,
-                                             short& widthValue, short& marginLeftValue, short& marginRightValue, short& xPos)
+void RenderBox::calcAbsoluteHorizontalValues(Length width, const RenderObject *containerBlock, EDirection containerDirection,
+                                             const int containerWidth, const int bordersPlusPadding, const Length left, const Length right,
+                                             const Length marginLeft, const Length marginRight, short &widthValue, short &marginLeftValue,
+                                             short &marginRightValue, short &xPos)
 {
     // 'left' and 'right' cannot both be 'auto' because one would of been
     // converted to the static postion already
@@ -1494,7 +1582,8 @@ void RenderBox::calcAbsoluteHorizontalValues(Length width, const RenderObject* c
     bool leftIsAuto = left.isVariable();
     bool rightIsAuto = right.isVariable();
 
-    if (!leftIsAuto && !widthIsAuto && !rightIsAuto) {
+    if(!leftIsAuto && !widthIsAuto && !rightIsAuto)
+    {
         /*-----------------------------------------------------------------------*\
          * If none of the three is 'auto': If both 'margin-left' and 'margin-
          * right' are 'auto', solve the equation under the extra constraint that
@@ -1516,39 +1605,54 @@ void RenderBox::calcAbsoluteHorizontalValues(Length width, const RenderObject* c
         const int availableSpace = containerWidth - (leftValue + widthValue + right.width(containerWidth) + bordersPlusPadding);
 
         // Margins are now the only unknown
-        if (marginLeft.isVariable() && marginRight.isVariable()) {
+        if(marginLeft.isVariable() && marginRight.isVariable())
+        {
             // Both margins auto, solve for equality
-            if (availableSpace >= 0) {
-                marginLeftValue = availableSpace / 2; // split the diference
-                marginRightValue = availableSpace - marginLeftValue;  // account for odd valued differences
-            } else {
+            if(availableSpace >= 0)
+            {
+                marginLeftValue = availableSpace / 2;                // split the diference
+                marginRightValue = availableSpace - marginLeftValue; // account for odd valued differences
+            }
+            else
+            {
                 // see FIXME 1
-                if (containerDirection == LTR) {
+                if(containerDirection == LTR)
+                {
                     marginLeftValue = 0;
                     marginRightValue = availableSpace; // will be negative
-                } else {
+                }
+                else
+                {
                     marginLeftValue = availableSpace; // will be negative
                     marginRightValue = 0;
                 }
             }
-        } else if (marginLeft.isVariable()) {
+        }
+        else if(marginLeft.isVariable())
+        {
             // Solve for left margin
             marginRightValue = marginRight.width(containerWidth);
             marginLeftValue = availableSpace - marginRightValue;
-        } else if (marginRight.isVariable()) {
+        }
+        else if(marginRight.isVariable())
+        {
             // Solve for right margin
             marginLeftValue = marginLeft.width(containerWidth);
             marginRightValue = availableSpace - marginLeftValue;
-        } else {
+        }
+        else
+        {
             // Over-constrained, solve for left if direction is RTL
             marginLeftValue = marginLeft.width(containerWidth);
             marginRightValue = marginRight.width(containerWidth);
 
             // see FIXME 1 -- used to be "this->style()->direction()"
-            if (containerDirection == RTL)
+            if(containerDirection == RTL)
                 leftValue = (availableSpace + leftValue) - marginLeftValue - marginRightValue;
         }
-    } else {
+    }
+    else
+    {
         /*--------------------------------------------------------------------*\
          * Otherwise, set 'auto' values for 'margin-left' and 'margin-right'
          * to 0, and pick the one of the following six rules that applies.
@@ -1598,7 +1702,8 @@ void RenderBox::calcAbsoluteHorizontalValues(Length width, const RenderObject* c
 
         // FIXME: Is there a faster way to find the correct case?
         // Use rule/case that applies.
-        if (leftIsAuto && widthIsAuto && !rightIsAuto) {
+        if(leftIsAuto && widthIsAuto && !rightIsAuto)
+        {
             // RULE 1: (use shrink-to-fit for width, and solve of left)
             int rightValue = right.width(containerWidth);
 
@@ -1608,7 +1713,9 @@ void RenderBox::calcAbsoluteHorizontalValues(Length width, const RenderObject* c
             int availableWidth = availableSpace - rightValue;
             widthValue = kMin(kMax(preferredMinWidth, availableWidth), preferredWidth);
             leftValue = availableSpace - (widthValue + rightValue);
-        } else if (!leftIsAuto && widthIsAuto && rightIsAuto) {
+        }
+        else if(!leftIsAuto && widthIsAuto && rightIsAuto)
+        {
             // RULE 3: (use shrink-to-fit for width, and no need solve of right)
             leftValue = left.width(containerWidth);
 
@@ -1617,15 +1724,21 @@ void RenderBox::calcAbsoluteHorizontalValues(Length width, const RenderObject* c
             int preferredMinWidth = m_minWidth - bordersPlusPadding;
             int availableWidth = availableSpace - leftValue;
             widthValue = kMin(kMax(preferredMinWidth, availableWidth), preferredWidth);
-        } else if (leftIsAuto && !width.isVariable() && !rightIsAuto) {
+        }
+        else if(leftIsAuto && !width.isVariable() && !rightIsAuto)
+        {
             // RULE 4: (solve for left)
             widthValue = calcContentWidth(width.width(containerWidth));
             leftValue = availableSpace - (widthValue + right.width(containerWidth));
-        } else if (!leftIsAuto && widthIsAuto && !rightIsAuto) {
+        }
+        else if(!leftIsAuto && widthIsAuto && !rightIsAuto)
+        {
             // RULE 5: (solve for width)
             leftValue = left.width(containerWidth);
             widthValue = availableSpace - (leftValue + right.width(containerWidth));
-        } else if (!leftIsAuto&& !widthIsAuto && rightIsAuto) {
+        }
+        else if(!leftIsAuto && !widthIsAuto && rightIsAuto)
+        {
             // RULE 6: (no need solve for right)
             leftValue = left.width(containerWidth);
             widthValue = calcContentWidth(width.width(containerWidth));
@@ -1639,7 +1752,8 @@ void RenderBox::calcAbsoluteHorizontalValues(Length width, const RenderObject* c
 
 void RenderBox::calcAbsoluteVertical()
 {
-    if (isReplaced()) {
+    if(isReplaced())
+    {
         calcAbsoluteVerticalReplaced();
         return;
     }
@@ -1652,7 +1766,7 @@ void RenderBox::calcAbsoluteVertical()
 
 
     // We don't use containingBlock(), since we may be positioned by an enclosing relpositioned inline.
-    const RenderObject* containerBlock = container();
+    const RenderObject *containerBlock = container();
     const int containerHeight = containerBlock->height() - containerBlock->borderTop() - containerBlock->borderBottom();
 
     const int bordersPlusPadding = borderTop() + borderBottom() + paddingTop() + paddingBottom();
@@ -1679,10 +1793,12 @@ void RenderBox::calcAbsoluteVertical()
     \*---------------------------------------------------------------------------*/
 
     // Calculate the static distance if needed.
-    if (top.isVariable() && bottom.isVariable()) {
+    if(top.isVariable() && bottom.isVariable())
+    {
         // m_staticY should already have been set through layout of the parent()
         int staticTop = m_staticY - containerBlock->borderTop();
-        for (RenderObject* po = parent(); po && po != containerBlock; po = po->parent()) {
+        for(RenderObject *po = parent(); po && po != containerBlock; po = po->parent())
+        {
             staticTop += po->yPos();
         }
         top.setValue(Fixed, staticTop);
@@ -1692,25 +1808,25 @@ void RenderBox::calcAbsoluteVertical()
     int height; // Needed to compute overflow.
 
     // Calculate constraint equation values for 'height' case.
-    calcAbsoluteVerticalValues(style()->height(), containerBlock, containerHeight, bordersPlusPadding,
-                               top, bottom, marginTop, marginBottom,
-                               height, m_marginTop, m_marginBottom, m_y);
+    calcAbsoluteVerticalValues(style()->height(), containerBlock, containerHeight, bordersPlusPadding, top, bottom, marginTop, marginBottom, height,
+                               m_marginTop, m_marginBottom, m_y);
 
     // Avoid doing any work in the common case (where the values of min-height and max-height are their defaults).
     // see FIXME 2
 
     // Calculate constraint equation values for 'max-height' case.
-    if (style()->maxHeight().value() != UNDEFINED) {
+    if(style()->maxHeight().value() != UNDEFINED)
+    {
         int maxHeight;
         short maxMarginTop;
         short maxMarginBottom;
         int maxYPos;
 
-        calcAbsoluteVerticalValues(style()->maxHeight(), containerBlock, containerHeight, bordersPlusPadding,
-                                   top, bottom, marginTop, marginBottom,
+        calcAbsoluteVerticalValues(style()->maxHeight(), containerBlock, containerHeight, bordersPlusPadding, top, bottom, marginTop, marginBottom,
                                    maxHeight, maxMarginTop, maxMarginBottom, maxYPos);
 
-        if (height > maxHeight) {
+        if(height > maxHeight)
+        {
             height = maxHeight;
             m_marginTop = maxMarginTop;
             m_marginBottom = maxMarginBottom;
@@ -1719,17 +1835,18 @@ void RenderBox::calcAbsoluteVertical()
     }
 
     // Calculate constraint equation values for 'min-height' case.
-    if (style()->minHeight().value()) {
+    if(style()->minHeight().value())
+    {
         int minHeight;
         short minMarginTop;
         short minMarginBottom;
         int minYPos;
 
-        calcAbsoluteVerticalValues(style()->minHeight(), containerBlock, containerHeight, bordersPlusPadding,
-                                   top, bottom, marginTop, marginBottom,
+        calcAbsoluteVerticalValues(style()->minHeight(), containerBlock, containerHeight, bordersPlusPadding, top, bottom, marginTop, marginBottom,
                                    minHeight, minMarginTop, minMarginBottom, minYPos);
 
-        if (height < minHeight) {
+        if(height < minHeight)
+        {
             height = minHeight;
             m_marginTop = minMarginTop;
             m_marginBottom = minMarginBottom;
@@ -1743,10 +1860,9 @@ void RenderBox::calcAbsoluteVertical()
     m_height = height;
 }
 
-void RenderBox::calcAbsoluteVerticalValues(Length height, const RenderObject* containerBlock,
-                                           const int containerHeight, const int bordersPlusPadding,
-                                           const Length top, const Length bottom, const Length marginTop, const Length marginBottom,
-                                           int& heightValue, short& marginTopValue, short& marginBottomValue, int& yPos)
+void RenderBox::calcAbsoluteVerticalValues(Length height, const RenderObject *containerBlock, const int containerHeight, const int bordersPlusPadding,
+                                           const Length top, const Length bottom, const Length marginTop, const Length marginBottom, int &heightValue,
+                                           short &marginTopValue, short &marginBottomValue, int &yPos)
 {
     // 'top' and 'bottom' cannot both be 'auto' because 'top would of been
     // converted to the static position in calcAbsoluteVertical()
@@ -1760,15 +1876,19 @@ void RenderBox::calcAbsoluteVerticalValues(Length height, const RenderObject* co
     bool topIsAuto = top.isVariable();
     bool bottomIsAuto = bottom.isVariable();
 
-    if (isTable() && heightIsAuto) {
-         // Height is never unsolved for tables. "auto" means shrink to fit.
-         // Use our height instead.
+    if(isTable() && heightIsAuto)
+    {
+        // Height is never unsolved for tables. "auto" means shrink to fit.
+        // Use our height instead.
         heightValue = contentHeight;
         heightIsAuto = false;
-    } else if (!heightIsAuto) {
+    }
+    else if(!heightIsAuto)
+    {
         heightValue = calcContentHeight(height.width(containerHeight));
-        if (contentHeight > heightValue) {
-            if (!isTable())
+        if(contentHeight > heightValue)
+        {
+            if(!isTable())
                 contentHeight = heightValue;
             else
                 heightValue = contentHeight;
@@ -1776,7 +1896,8 @@ void RenderBox::calcAbsoluteVerticalValues(Length height, const RenderObject* co
     }
 
 
-    if (!topIsAuto && !heightIsAuto && !bottomIsAuto) {
+    if(!topIsAuto && !heightIsAuto && !bottomIsAuto)
+    {
         /*-----------------------------------------------------------------------*\
          * If none of the three are 'auto': If both 'margin-top' and 'margin-
          * bottom' are 'auto', solve the equation under the extra constraint that
@@ -1793,25 +1914,34 @@ void RenderBox::calcAbsoluteVerticalValues(Length height, const RenderObject* co
         const int availableSpace = containerHeight - (topValue + heightValue + bottom.width(containerHeight) + bordersPlusPadding);
 
         // Margins are now the only unknown
-        if (marginTop.isVariable() && marginBottom.isVariable()) {
+        if(marginTop.isVariable() && marginBottom.isVariable())
+        {
             // Both margins auto, solve for equality
             // NOTE: This may result in negative values.
-            marginTopValue = availableSpace / 2; // split the diference
+            marginTopValue = availableSpace / 2;                 // split the diference
             marginBottomValue = availableSpace - marginTopValue; // account for odd valued differences
-        } else if (marginTop.isVariable()) {
+        }
+        else if(marginTop.isVariable())
+        {
             // Solve for top margin
             marginBottomValue = marginBottom.width(containerHeight);
             marginTopValue = availableSpace - marginBottomValue;
-        } else if (marginBottom.isVariable()) {
+        }
+        else if(marginBottom.isVariable())
+        {
             // Solve for bottom margin
             marginTopValue = marginTop.width(containerHeight);
             marginBottomValue = availableSpace - marginTopValue;
-        } else {
+        }
+        else
+        {
             // Over-constrained, (no need solve for bottom)
             marginTopValue = marginTop.width(containerHeight);
             marginBottomValue = marginBottom.width(containerHeight);
         }
-    } else {
+    }
+    else
+    {
         /*--------------------------------------------------------------------*\
          * Otherwise, set 'auto' values for 'margin-top' and 'margin-bottom'
          * to 0, and pick the one of the following six rules that applies.
@@ -1844,26 +1974,35 @@ void RenderBox::calcAbsoluteVerticalValues(Length height, const RenderObject* co
         const int availableSpace = containerHeight - (marginTopValue + marginBottomValue + bordersPlusPadding);
 
         // Use rule/case that applies.
-        if (topIsAuto && heightIsAuto && !bottomIsAuto) {
+        if(topIsAuto && heightIsAuto && !bottomIsAuto)
+        {
             // RULE 1: (height is content based, solve of top)
             heightValue = contentHeight;
             topValue = availableSpace - (heightValue + bottom.width(containerHeight));
         }
-        else if (topIsAuto && !heightIsAuto && bottomIsAuto) {
+        else if(topIsAuto && !heightIsAuto && bottomIsAuto)
+        {
             // RULE 2: (shouldn't happen)
         }
-        else if (!topIsAuto && heightIsAuto && bottomIsAuto) {
+        else if(!topIsAuto && heightIsAuto && bottomIsAuto)
+        {
             // RULE 3: (height is content based, no need solve of bottom)
             heightValue = contentHeight;
             topValue = top.width(containerHeight);
-        } else if (topIsAuto && !heightIsAuto && !bottomIsAuto) {
+        }
+        else if(topIsAuto && !heightIsAuto && !bottomIsAuto)
+        {
             // RULE 4: (solve of top)
             topValue = availableSpace - (heightValue + bottom.width(containerHeight));
-        } else if (!topIsAuto && heightIsAuto && !bottomIsAuto) {
+        }
+        else if(!topIsAuto && heightIsAuto && !bottomIsAuto)
+        {
             // RULE 5: (solve of height)
             topValue = top.width(containerHeight);
             heightValue = kMax(0, availableSpace - (topValue + bottom.width(containerHeight)));
-        } else if (!topIsAuto && !heightIsAuto && bottomIsAuto) {
+        }
+        else if(!topIsAuto && !heightIsAuto && bottomIsAuto)
+        {
             // RULE 6: (no need solve of bottom)
             topValue = top.width(containerHeight);
         }
@@ -1882,7 +2021,7 @@ void RenderBox::calcAbsoluteHorizontalReplaced()
     // the numbers correspond to numbers in spec)
 
     // We don't use containingBlock(), since we may be positioned by an enclosing relpositioned inline.
-    const RenderObject* containerBlock = container();
+    const RenderObject *containerBlock = container();
 
     // FIXME: This is incorrect for cases where the container block is a relatively
     // positioned inline.
@@ -1914,19 +2053,23 @@ void RenderBox::calcAbsoluteHorizontalReplaced()
      *    of the containing block is 'ltr', set 'left' to the static position;
      *    else if 'direction' is 'rtl', set 'right' to the static position.
     \*-----------------------------------------------------------------------*/
-    if (left.isVariable() && right.isVariable()) {
+    if(left.isVariable() && right.isVariable())
+    {
         // see FIXME 1
-        if (containerDirection == LTR) {
+        if(containerDirection == LTR)
+        {
             // 'm_staticX' should already have been set through layout of the parent.
             int staticPosition = m_staticX - containerBlock->borderLeft();
-            for (RenderObject* po = parent(); po && po != containerBlock; po = po->parent())
+            for(RenderObject *po = parent(); po && po != containerBlock; po = po->parent())
                 staticPosition += po->xPos();
             left.setValue(Fixed, staticPosition);
-        } else {
-            RenderObject* po = parent();
+        }
+        else
+        {
+            RenderObject *po = parent();
             // 'm_staticX' should already have been set through layout of the parent.
             int staticPosition = m_staticX + containerWidth + containerBlock->borderRight() - po->width();
-            for (; po && po != containerBlock; po = po->parent())
+            for(; po && po != containerBlock; po = po->parent())
                 staticPosition -= po->xPos();
             right.setValue(Fixed, staticPosition);
         }
@@ -1936,10 +2079,11 @@ void RenderBox::calcAbsoluteHorizontalReplaced()
      * 3. If 'left' or 'right' are 'auto', replace any 'auto' on 'margin-left'
      *    or 'margin-right' with '0'.
     \*-----------------------------------------------------------------------*/
-    if (left.isVariable() || right.isVariable()) {
-        if (marginLeft.isVariable())
+    if(left.isVariable() || right.isVariable())
+    {
+        if(marginLeft.isVariable())
             marginLeft.setValue(Fixed, 0);
-        if (marginRight.isVariable())
+        if(marginRight.isVariable())
             marginRight.setValue(Fixed, 0);
     }
 
@@ -1954,7 +2098,8 @@ void RenderBox::calcAbsoluteHorizontalReplaced()
     int leftValue = 0;
     int rightValue = 0;
 
-    if (marginLeft.isVariable() && marginRight.isVariable()) {
+    if(marginLeft.isVariable() && marginRight.isVariable())
+    {
         // 'left' and 'right' cannot be 'auto' due to step 3
         assert(!(left.isVariable() && right.isVariable()));
 
@@ -1962,46 +2107,60 @@ void RenderBox::calcAbsoluteHorizontalReplaced()
         rightValue = right.width(containerWidth);
 
         int difference = availableSpace - (leftValue + rightValue);
-        if (difference > 0) {
-            m_marginLeft = difference / 2; // split the diference
+        if(difference > 0)
+        {
+            m_marginLeft = difference / 2;             // split the diference
             m_marginRight = difference - m_marginLeft; // account for odd valued differences
-        } else {
+        }
+        else
+        {
             // see FIXME 1
-            if (containerDirection == LTR) {
+            if(containerDirection == LTR)
+            {
                 m_marginLeft = 0;
-                m_marginRight = difference;  // will be negative
-            } else {
-                m_marginLeft = difference;  // will be negative
+                m_marginRight = difference; // will be negative
+            }
+            else
+            {
+                m_marginLeft = difference; // will be negative
                 m_marginRight = 0;
             }
         }
 
-    /*-----------------------------------------------------------------------*\
-     * 5. If at this point there is an 'auto' left, solve the equation for
-     *    that value.
-    \*-----------------------------------------------------------------------*/
-    } else if (left.isVariable()) {
+        /*-----------------------------------------------------------------------*\
+         * 5. If at this point there is an 'auto' left, solve the equation for
+         *    that value.
+        \*-----------------------------------------------------------------------*/
+    }
+    else if(left.isVariable())
+    {
         m_marginLeft = marginLeft.width(containerWidth);
         m_marginRight = marginRight.width(containerWidth);
         rightValue = right.width(containerWidth);
 
         // Solve for 'left'
         leftValue = availableSpace - (rightValue + m_marginLeft + m_marginRight);
-    } else if (right.isVariable()) {
+    }
+    else if(right.isVariable())
+    {
         m_marginLeft = marginLeft.width(containerWidth);
         m_marginRight = marginRight.width(containerWidth);
         leftValue = left.width(containerWidth);
 
         // Solve for 'right'
         rightValue = availableSpace - (leftValue + m_marginLeft + m_marginRight);
-    } else if (marginLeft.isVariable()) {
+    }
+    else if(marginLeft.isVariable())
+    {
         m_marginRight = marginRight.width(containerWidth);
         leftValue = left.width(containerWidth);
         rightValue = right.width(containerWidth);
 
         // Solve for 'margin-left'
         m_marginLeft = availableSpace - (leftValue + rightValue + m_marginRight);
-    } else if (marginRight.isVariable()) {
+    }
+    else if(marginRight.isVariable())
+    {
         m_marginLeft = marginLeft.width(containerWidth);
         leftValue = left.width(containerWidth);
         rightValue = right.width(containerWidth);
@@ -2016,21 +2175,24 @@ void RenderBox::calcAbsoluteHorizontalReplaced()
      *    containing block is 'rtl') or 'right' (in case 'direction' is
      *    'ltr') and solve for that value.
     \*-----------------------------------------------------------------------*/
-    else  {
+    else
+    {
         m_marginLeft = marginLeft.width(containerWidth);
         m_marginRight = marginRight.width(containerWidth);
-        if (containerDirection  == LTR) {
+        if(containerDirection == LTR)
+        {
             leftValue = left.width(containerWidth);
             rightValue = availableSpace - (leftValue + m_marginLeft + m_marginRight);
         }
-        else {
+        else
+        {
             rightValue = right.width(containerWidth);
             leftValue = availableSpace - (rightValue + m_marginLeft + m_marginRight);
         }
     }
 
-    int totalWidth = m_width + leftValue + rightValue +  m_marginLeft + m_marginRight;
-    if (totalWidth > containerWidth && (containerDirection == RTL))
+    int totalWidth = m_width + leftValue + rightValue + m_marginLeft + m_marginRight;
+    if(totalWidth > containerWidth && (containerDirection == RTL))
         leftValue = containerWidth - (totalWidth - leftValue);
 
     // Use computed values to calculate the horizontal position.
@@ -2046,7 +2208,7 @@ void RenderBox::calcAbsoluteVerticalReplaced()
     // the numbers correspond to numbers in spec)
 
     // We don't use containingBlock(), since we may be positioned by an enclosing relpositioned inline.
-    const RenderObject* containerBlock = container();
+    const RenderObject *containerBlock = container();
     const int containerHeight = containerBlock->height() - containerBlock->borderTop() - containerBlock->borderBottom();
 
     // Variables to solve.
@@ -2070,10 +2232,12 @@ void RenderBox::calcAbsoluteVerticalReplaced()
      * 2. If both 'top' and 'bottom' have the value 'auto', replace 'top'
      *    with the element's static position.
     \*-----------------------------------------------------------------------*/
-    if (top.isVariable() && bottom.isVariable()) {
+    if(top.isVariable() && bottom.isVariable())
+    {
         // m_staticY should already have been set through layout of the parent().
         int staticTop = m_staticY - containerBlock->borderTop();
-        for (RenderObject* po = parent(); po && po != containerBlock; po = po->parent()) {
+        for(RenderObject *po = parent(); po && po != containerBlock; po = po->parent())
+        {
             staticTop += po->yPos();
         }
         top.setValue(Fixed, staticTop);
@@ -2085,10 +2249,11 @@ void RenderBox::calcAbsoluteVerticalReplaced()
     \*-----------------------------------------------------------------------*/
     // FIXME: The spec. says that this step should only be taken when bottom is
     // auto, but if only top is auto, this makes step 4 impossible.
-    if (top.isVariable() || bottom.isVariable()) {
-        if (marginTop.isVariable())
+    if(top.isVariable() || bottom.isVariable())
+    {
+        if(marginTop.isVariable())
             marginTop.setValue(Fixed, 0);
-        if (marginBottom.isVariable())
+        if(marginBottom.isVariable())
             marginBottom.setValue(Fixed, 0);
     }
 
@@ -2100,7 +2265,8 @@ void RenderBox::calcAbsoluteVerticalReplaced()
     int topValue = 0;
     int bottomValue = 0;
 
-    if (marginTop.isVariable() && marginBottom.isVariable()) {
+    if(marginTop.isVariable() && marginBottom.isVariable())
+    {
         // 'top' and 'bottom' cannot be 'auto' due to step 2 and 3 combinded.
         assert(!(top.isVariable() || bottom.isVariable()));
 
@@ -2109,21 +2275,25 @@ void RenderBox::calcAbsoluteVerticalReplaced()
 
         int difference = availableSpace - (topValue + bottomValue);
         // NOTE: This may result in negative values.
-        m_marginTop =  difference / 2; // split the difference
+        m_marginTop = difference / 2;              // split the difference
         m_marginBottom = difference - m_marginTop; // account for odd valued differences
 
-    /*-----------------------------------------------------------------------*\
-     * 5. If at this point there is only one 'auto' left, solve the equation
-     *    for that value.
-    \*-----------------------------------------------------------------------*/
-    } else if (top.isVariable()) {
+        /*-----------------------------------------------------------------------*\
+         * 5. If at this point there is only one 'auto' left, solve the equation
+         *    for that value.
+        \*-----------------------------------------------------------------------*/
+    }
+    else if(top.isVariable())
+    {
         m_marginTop = marginTop.width(containerHeight);
         m_marginBottom = marginBottom.width(containerHeight);
         bottomValue = bottom.width(containerHeight);
 
         // Solve for 'top'
         topValue = availableSpace - (bottomValue + m_marginTop + m_marginBottom);
-    } else if (bottom.isVariable()) {
+    }
+    else if(bottom.isVariable())
+    {
         m_marginTop = marginTop.width(containerHeight);
         m_marginBottom = marginBottom.width(containerHeight);
         topValue = top.width(containerHeight);
@@ -2131,14 +2301,18 @@ void RenderBox::calcAbsoluteVerticalReplaced()
         // Solve for 'bottom'
         // NOTE: It is not necessary to solve for 'bottom' because we don't ever
         // use the value.
-    } else if (marginTop.isVariable()) {
+    }
+    else if(marginTop.isVariable())
+    {
         m_marginBottom = marginBottom.width(containerHeight);
         topValue = top.width(containerHeight);
         bottomValue = bottom.width(containerHeight);
 
         // Solve for 'margin-top'
         m_marginTop = availableSpace - (topValue + bottomValue + m_marginBottom);
-    } else if (marginBottom.isVariable()) {
+    }
+    else if(marginBottom.isVariable())
+    {
         m_marginTop = marginTop.width(containerHeight);
         topValue = top.width(containerHeight);
         bottomValue = bottom.width(containerHeight);
@@ -2151,7 +2325,8 @@ void RenderBox::calcAbsoluteVerticalReplaced()
      * 6. If at this point the values are over-constrained, ignore the value
      *    for 'bottom' and solve for that value.
     \*-----------------------------------------------------------------------*/
-    else {
+    else
+    {
         m_marginTop = marginTop.width(containerHeight);
         m_marginBottom = marginBottom.width(containerHeight);
         topValue = top.width(containerHeight);
@@ -2187,18 +2362,18 @@ int RenderBox::leftmostPosition(bool /*includeOverflowInterior*/, bool includeSe
 
 int RenderBox::pageTopAfter(int y) const
 {
-    RenderObject* cb = container();
-    if (cb)
-        return cb->pageTopAfter(y+yPos()) - yPos();
+    RenderObject *cb = container();
+    if(cb)
+        return cb->pageTopAfter(y + yPos()) - yPos();
     else
         return 0;
 }
 
 int RenderBox::crossesPageBreak(int t, int b) const
 {
-    RenderObject* cb = container();
-    if (cb)
-        return cb->crossesPageBreak(yPos()+t, yPos()+b);
+    RenderObject *cb = container();
+    if(cb)
+        return cb->crossesPageBreak(yPos() + t, yPos() + b);
     else
         return false;
 }
@@ -2247,43 +2422,49 @@ void RenderBox::caretPos(int /*offset*/, int flags, int &_x, int &_y, int &width
 
     _x = xPos();
     _y = yPos();
-//     kdDebug(6040) << "_x " << _x << " _y " << _y << endl;
-    width = 1;		// no override is indicated in boxes
+    //     kdDebug(6040) << "_x " << _x << " _y " << _y << endl;
+    width = 1; // no override is indicated in boxes
 
     RenderBlock *cb = containingBlock();
 
     // Place caret outside the border
-    if (flags & CFOutside) {
+    if(flags & CFOutside)
+    {
 
-        RenderStyle *s = element() && element()->parent()
-			&& element()->parent()->renderer()
-			? element()->parent()->renderer()->style()
-			: cb->style();
+        RenderStyle *s = element() && element()->parent() && element()->parent()->renderer() ? element()->parent()->renderer()->style() : cb->style();
 
         const QFontMetrics &fm = s->fontMetrics();
         height = fm.height();
 
-	bool rtl = s->direction() == RTL;
-	bool outsideEnd = flags & CFOutsideEnd;
+        bool rtl = s->direction() == RTL;
+        bool outsideEnd = flags & CFOutsideEnd;
 
-	if (outsideEnd) {
-	    _x += this->width();
-	} else {
-	    _x--;
-	}
+        if(outsideEnd)
+        {
+            _x += this->width();
+        }
+        else
+        {
+            _x--;
+        }
 
-	int hl = fm.leading() / 2;
-	if (!isReplaced() || style()->display() == BLOCK) {
-	    if (!outsideEnd ^ rtl)
-	        _y -= hl;
-	    else
-	        _y += kMax(this->height() - fm.ascent() - hl, 0);
-	} else {
-	    _y += baselinePosition(false) - fm.ascent() - hl;
-	}
+        int hl = fm.leading() / 2;
+        if(!isReplaced() || style()->display() == BLOCK)
+        {
+            if(!outsideEnd ^ rtl)
+                _y -= hl;
+            else
+                _y += kMax(this->height() - fm.ascent() - hl, 0);
+        }
+        else
+        {
+            _y += baselinePosition(false) - fm.ascent() - hl;
+        }
 
-    // Place caret inside the element
-    } else {
+        // Place caret inside the element
+    }
+    else
+    {
         const QFontMetrics &fm = style()->fontMetrics();
         height = fm.height();
 
@@ -2293,29 +2474,33 @@ void RenderBox::caretPos(int /*offset*/, int flags, int &_x, int &_y, int &width
         _y += borderTop() + paddingTop();
 
         // ### regard direction
-	switch (s->textAlign()) {
-	case LEFT:
-	case KHTML_LEFT:
-	case TAAUTO:	// ### find out what this does
-	case JUSTIFY:
-	    break;
-	case CENTER:
-	case KHTML_CENTER:
-	    _x += contentWidth() / 2;
-	    break;
-	case KHTML_RIGHT:
-	case RIGHT:
-	    _x += contentWidth();
-	    break;
-	}
+        switch(s->textAlign())
+        {
+            case LEFT:
+            case KHTML_LEFT:
+            case TAAUTO: // ### find out what this does
+            case JUSTIFY:
+                break;
+            case CENTER:
+            case KHTML_CENTER:
+                _x += contentWidth() / 2;
+                break;
+            case KHTML_RIGHT:
+            case RIGHT:
+                _x += contentWidth();
+                break;
+        }
     }
 
     int absx, absy;
-    if (cb && cb != this && cb->absolutePosition(absx,absy)) {
-//         kdDebug(6040) << "absx=" << absx << " absy=" << absy << endl;
+    if(cb && cb != this && cb->absolutePosition(absx, absy))
+    {
+        //         kdDebug(6040) << "absx=" << absx << " absy=" << absy << endl;
         _x += absx;
         _y += absy;
-    } else {
+    }
+    else
+    {
         // we don't know our absolute position, and there is no point returning
         // just a relative one
         _x = _y = -1;

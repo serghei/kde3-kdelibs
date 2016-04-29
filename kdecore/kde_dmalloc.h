@@ -25,4 +25,3 @@
 #warning dmalloc support has been removed from KDE. use valgrind :)
 
 #endif
-

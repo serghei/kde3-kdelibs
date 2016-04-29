@@ -39,7 +39,7 @@ class RegressionTest;
 class QTimer;
 
 namespace KParts {
-  class URLArgs;
+class URLArgs;
 }
 
 class OutputObject;
@@ -48,40 +48,53 @@ class OutputObject;
  * @internal
  * The backbone of Kate's automatic regression tests.
  */
-class TestJScriptEnv : public KateJScript
-{
-  public:
+class TestJScriptEnv : public KateJScript {
+public:
     TestJScriptEnv(KateDocument *part);
     virtual ~TestJScriptEnv();
 
     /** returns the global scope */
-    KJS::Object global() const { return *m_global; }
+    KJS::Object global() const
+    {
+        return *m_global;
+    }
     /** returns the script interpreter */
-    KJS::Interpreter &interpreter() { return *m_interpreter; }
+    KJS::Interpreter &interpreter()
+    {
+        return *m_interpreter;
+    }
     /** returns the document scope */
-    KJS::Object document() const { return *m_document; }
+    KJS::Object document() const
+    {
+        return *m_document;
+    }
     /** returns the view scope */
-    KJS::Object view() const { return *m_view; }
+    KJS::Object view() const
+    {
+        return *m_view;
+    }
     /** returns the output object */
-    OutputObject *output() const { return m_output; }
+    OutputObject *output() const
+    {
+        return m_output;
+    }
 
-  protected:
+protected:
     OutputObject *m_output;
 };
 
 /**
  * @internal
  */
-class KateViewObject : public KJS::ObjectImp
-{
-  public:
+class KateViewObject : public KJS::ObjectImp {
+public:
     KateViewObject(KJS::ExecState *exec, KateView *v, KJS::ObjectImp *fallback);
     virtual ~KateViewObject();
 
     virtual const KJS::ClassInfo *classInfo() const;
     virtual KJS::Value get(KJS::ExecState *exec, const KJS::Identifier &propertyName) const;
 
-  private:
+private:
     // evil hack I: class layout of katejscript/KateJSView must be duplicated
     // here, structurally as well as functionally
     KateView *view;
@@ -92,22 +105,57 @@ class KateViewObject : public KJS::ObjectImp
 /**
  * @internal
  */
-class KateViewFunction : public KJS::ObjectImp
-{
-  public:
+class KateViewFunction : public KJS::ObjectImp {
+public:
     KateViewFunction(KJS::ExecState *exec, KateView *v, int _id, int length);
 
     bool implementsCall() const;
     KJS::Value call(KJS::ExecState *exec, KJS::Object &thisObj, const KJS::List &args);
 
-    enum { KeyReturn, Type, Backspace, DeleteWordLeft, KeyDelete,
-      DeleteWordRight, Transpose, CursorLeft, ShiftCursorLeft, CursorRight,
-      ShiftCursorRight, WordLeft, ShiftWordLeft, WordRight, ShiftWordRight,
-      Home, ShiftHome, End, ShiftEnd, Up, ShiftUp, Down, ShiftDown, ScrollUp,
-      ScrollDown, TopOfView, ShiftTopOfView, BottomOfView, ShiftBottomOfView,
-      PageUp, ShiftPageUp, PageDown, ShiftPageDown, Top, ShiftTop, Bottom,
-      ShiftBottom, ToMatchingBracket, ShiftToMatchingBracket };
-  private:
+    enum
+    {
+        KeyReturn,
+        Type,
+        Backspace,
+        DeleteWordLeft,
+        KeyDelete,
+        DeleteWordRight,
+        Transpose,
+        CursorLeft,
+        ShiftCursorLeft,
+        CursorRight,
+        ShiftCursorRight,
+        WordLeft,
+        ShiftWordLeft,
+        WordRight,
+        ShiftWordRight,
+        Home,
+        ShiftHome,
+        End,
+        ShiftEnd,
+        Up,
+        ShiftUp,
+        Down,
+        ShiftDown,
+        ScrollUp,
+        ScrollDown,
+        TopOfView,
+        ShiftTopOfView,
+        BottomOfView,
+        ShiftBottomOfView,
+        PageUp,
+        ShiftPageUp,
+        PageDown,
+        ShiftPageDown,
+        Top,
+        ShiftTop,
+        Bottom,
+        ShiftBottom,
+        ToMatchingBracket,
+        ShiftToMatchingBracket
+    };
+
+private:
     KateView *m_view;
     int id;
 };
@@ -119,18 +167,23 @@ class OutputFunction;
  * inhibits outputting the content of the katepart after script execution, enabling one to check for coordinates and the like.
  * @internal
  */
-class OutputObject : public KJS::ObjectImp
-{
-  public:
+class OutputObject : public KJS::ObjectImp {
+public:
     OutputObject(KJS::ExecState *exec, KateDocument *d, KateView *v);
     virtual ~OutputObject();
 
     virtual KJS::UString className() const;
 
-    void setChangedFlag(bool *flag) { changed = flag; }
-    void setOutputString(QString *s) { outstr = s; }
+    void setChangedFlag(bool *flag)
+    {
+        changed = flag;
+    }
+    void setOutputString(QString *s)
+    {
+        outstr = s;
+    }
 
-  private:
+private:
     KateDocument *doc;
     KateView *view;
     bool *changed;
@@ -143,16 +196,22 @@ class OutputObject : public KJS::ObjectImp
  * Customizing output to result-files.
  * @internal
  */
-class OutputFunction : public KJS::ObjectImp
-{
-  public:
+class OutputFunction : public KJS::ObjectImp {
+public:
     OutputFunction(KJS::ExecState *exec, OutputObject *obj, int _id, int length);
 
     bool implementsCall() const;
     virtual KJS::Value call(KJS::ExecState *exec, KJS::Object &thisObj, const KJS::List &args);
 
-    enum { Write, Writeln, WriteCursorPosition, WriteCursorPositionln };
-  private:
+    enum
+    {
+        Write,
+        Writeln,
+        WriteCursorPosition,
+        WriteCursorPositionln
+    };
+
+private:
     OutputObject *o;
     int id;
 };
@@ -160,32 +219,42 @@ class OutputFunction : public KJS::ObjectImp
 /**
  * @internal
  */
-class RegressionTest : public QObject
-{
-  Q_OBJECT
+class RegressionTest : public QObject {
+    Q_OBJECT
 public:
-
-    RegressionTest(KateDocument *part, KConfig *baseConfig,
-                   const QString &baseDir, const QString &outputDir,
-                   bool _genOutput);
+    RegressionTest(KateDocument *part, KConfig *baseConfig, const QString &baseDir, const QString &outputDir, bool _genOutput);
     ~RegressionTest();
 
-    enum OutputType { ResultDocument };
-    void testStaticFile(const QString& filename, const QStringList &commands);
-    enum CheckResult { Failure = 0, Success = 1, Ignored = 2 };
-    CheckResult checkOutput(const QString& againstFilename);
-    enum FailureType { NoFailure = 0, AllFailure = 1, ResultFailure = 4, NewFailure = 65536 };
+    enum OutputType
+    {
+        ResultDocument
+    };
+    void testStaticFile(const QString &filename, const QStringList &commands);
+    enum CheckResult
+    {
+        Failure = 0,
+        Success = 1,
+        Ignored = 2
+    };
+    CheckResult checkOutput(const QString &againstFilename);
+    enum FailureType
+    {
+        NoFailure = 0,
+        AllFailure = 1,
+        ResultFailure = 4,
+        NewFailure = 65536
+    };
     bool runTests(QString relPath = QString::null, bool mustExist = false, int known_failure = NoFailure);
-    bool reportResult( bool passed, const QString & description = QString::null, bool *newfailure = 0 );
-    bool reportResult(CheckResult result, const QString & description = QString::null, bool *newfailure = 0 );
+    bool reportResult(bool passed, const QString &description = QString::null, bool *newfailure = 0);
+    bool reportResult(CheckResult result, const QString &description = QString::null, bool *newfailure = 0);
     void rereadConfig();
     static void createMissingDirs(const QString &path);
 
     void setFailureSnapshotConfig(KConfig *cfg, const QString &snapshotname);
     void setFailureSnapshotSaver(KConfig *cfg, const QString &snapshotname);
 
-    void createLink( const QString& test, int failures );
-    void doFailureReport( const QString& test, int failures );
+    void createLink(const QString &test, int failures);
+    void doFailureReport(const QString &test, int failures);
 
     KateDocument *m_part;
     KateView *m_view;
@@ -220,9 +289,9 @@ public:
     static RegressionTest *curr;
 
 private:
-    void printDescription(const QString& description);
+    void printDescription(const QString &description);
 
-    static bool svnIgnored( const QString &filename );
+    static bool svnIgnored(const QString &filename);
 
 private:
     /**
@@ -231,7 +300,7 @@ private:
      * return true nonetheless.
      * @return true if script was valid, false otherwise
      */
-    bool evalJS( KJS::Interpreter &interp, const QString &filename, bool ignore = false);
+    bool evalJS(KJS::Interpreter &interp, const QString &filename, bool ignore = false);
     /**
      * concatenate contents of all list files down to but not including the
      * tests directory.
@@ -242,8 +311,7 @@ private:
 
 private slots:
     void slotOpenURL(const KURL &url, const KParts::URLArgs &args);
-    void resizeTopLevelWidget( int, int );
-
+    void resizeTopLevelWidget(int, int);
 };
 
 #endif

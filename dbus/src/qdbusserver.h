@@ -33,8 +33,7 @@ class QDBusConnectionPrivate;
 class QDBusError;
 
 
-class QDBUS_EXPORT QDBusServer: public QObject
-{
+class QDBUS_EXPORT QDBusServer : public QObject {
     Q_OBJECT
 public:
     QDBusServer(const QString &address, QObject *parent = 0);
@@ -44,8 +43,8 @@ public:
     QString address() const;
 
 private:
-    QDBusServer(const QDBusServer&);
-    QDBusServer& operator=(const QDBusServer&);
+    QDBusServer(const QDBusServer &);
+    QDBusServer &operator=(const QDBusServer &);
     QDBusConnectionPrivate *d;
 };
 

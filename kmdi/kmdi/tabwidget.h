@@ -45,69 +45,65 @@
 #include <ktabwidget.h>
 #include <kmdi/global.h>
 
-namespace KMDIPrivate
-{
-  class TabWidgetPrivate;
+namespace KMDIPrivate {
+class TabWidgetPrivate;
 }
 
-namespace KMDI
-{
+namespace KMDI {
 
-class KMDI_EXPORT TabWidget : public KTabWidget
-{
-  Q_OBJECT
+class KMDI_EXPORT TabWidget : public KTabWidget {
+    Q_OBJECT
 
-  public:
-    TabWidget(QWidget* parent, const char* name=0);
+public:
+    TabWidget(QWidget *parent, const char *name = 0);
     virtual ~TabWidget();
 
-    virtual void addTab ( QWidget * child, const QString & label );
+    virtual void addTab(QWidget *child, const QString &label);
 
-    virtual void addTab ( QWidget * child, const QIconSet & iconset, const QString & label );
+    virtual void addTab(QWidget *child, const QIconSet &iconset, const QString &label);
 
-    virtual void addTab ( QWidget * child, QTab * tab );
+    virtual void addTab(QWidget *child, QTab *tab);
 
-    virtual void insertTab ( QWidget * child, const QString & label, int index = -1 );
+    virtual void insertTab(QWidget *child, const QString &label, int index = -1);
 
-    virtual void insertTab ( QWidget * child, const QIconSet & iconset, const QString & label, int index = -1 );
+    virtual void insertTab(QWidget *child, const QIconSet &iconset, const QString &label, int index = -1);
 
-    virtual void insertTab ( QWidget * child, QTab * tab, int index = -1 );
+    virtual void insertTab(QWidget *child, QTab *tab, int index = -1);
 
-    virtual void removePage ( QWidget * w );
+    virtual void removePage(QWidget *w);
 
     KMDI::TabWidgetVisibility tabWidgetVisibility() const;
 
-    void setTabWidgetVisibility( KMDI::TabWidgetVisibility );
+    void setTabWidgetVisibility(KMDI::TabWidgetVisibility);
 
-    bool eventFilter(QObject *obj, QEvent *e );
+    bool eventFilter(QObject *obj, QEvent *e);
 
-  private slots:
-    void closeTab(QWidget* w);
+private slots:
+    void closeTab(QWidget *w);
 
-  public slots:
-    void updateIconInView(QWidget*,QPixmap);
-    void updateCaptionInView(QWidget*,const QString&);
+public slots:
+    void updateIconInView(QWidget *, QPixmap);
+    void updateCaptionInView(QWidget *, const QString &);
 
-  signals:
-    void focusInEvent ();
+signals:
+    void focusInEvent();
 
-  protected slots:
-   void childDestroyed ();
+protected slots:
+    void childDestroyed();
 
-  private:
+private:
     void maybeShow();
     void setCornerWidgetVisibility(bool visible);
 
-  private:
+private:
     KMDI::TabWidgetVisibility m_visibility;
 
-  private:
+private:
     /**
      * private d-pointer for BC
      */
     KMDIPrivate::TabWidgetPrivate *d;
 };
-
 }
 
 #endif

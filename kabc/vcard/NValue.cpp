@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -30,99 +30,93 @@
 
 using namespace VCARD;
 
-NValue::NValue()
-	:	Value()
+NValue::NValue() : Value()
 {
-	vDebug("ctor");
+    vDebug("ctor");
 }
 
-NValue::NValue(const NValue & x)
-	:	Value(x),
-		family_	(x.family_),
-		given_	(x.given_),
-		middle_	(x.middle_),
-		prefix_	(x.prefix_),
-		suffix_	(x.suffix_)
+NValue::NValue(const NValue &x) : Value(x), family_(x.family_), given_(x.given_), middle_(x.middle_), prefix_(x.prefix_), suffix_(x.suffix_)
 {
 }
 
-NValue::NValue(const QCString & s)
-	:	Value(s)
+NValue::NValue(const QCString &s) : Value(s)
 {
-	vDebug("ctor");
+    vDebug("ctor");
 }
 
-	NValue &
-NValue::operator = (NValue & x)
+NValue &NValue::operator=(NValue &x)
 {
-	if (*this == x) return *this;
-	
-	family_	= x.family_;
-	given_	= x.given_;
-	middle_	= x.middle_;
-	prefix_	= x.prefix_;
-	suffix_	= x.suffix_;
+    if(*this == x)
+        return *this;
 
-	Value::operator = (x);
-	return *this;
+    family_ = x.family_;
+    given_ = x.given_;
+    middle_ = x.middle_;
+    prefix_ = x.prefix_;
+    suffix_ = x.suffix_;
+
+    Value::operator=(x);
+    return *this;
 }
 
-	NValue &
-NValue::operator = (const QCString & s)
+NValue &NValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-NValue::operator == (NValue & x)
+bool NValue::operator==(NValue &x)
 {
-	x.parse();
+    x.parse();
 
-	return (
-		family_	== x.family_	&&
-		given_	== x.given_	&&
-		middle_	== x.middle_	&&
-		prefix_	== x.prefix_	&&
-		suffix_ == x.suffix_);
+    return (family_ == x.family_ && given_ == x.given_ && middle_ == x.middle_ && prefix_ == x.prefix_ && suffix_ == x.suffix_);
 }
 
 NValue::~NValue()
 {
 }
 
-	NValue *
-NValue::clone()
+NValue *NValue::clone()
 {
-	return new NValue( *this );
+    return new NValue(*this);
 }
 
-	void
-NValue::_parse()
+void NValue::_parse()
 {
-	QStrList l;
-	RTokenise(strRep_, ";", l);
-	
-	for (unsigned int i = 0; i < l.count(); i++) {
+    QStrList l;
+    RTokenise(strRep_, ";", l);
 
-		switch (i) {
-			case 0: family_	= l.at(0);	break;
-			case 1: given_	= l.at(1);	break;
-			case 2: middle_	= l.at(2);	break;
-			case 3: prefix_	= l.at(3);	break;
-			case 4: suffix_	= l.at(4);	break;
-			default:			break;
-		}
-	}
+    for(unsigned int i = 0; i < l.count(); i++)
+    {
+
+        switch(i)
+        {
+            case 0:
+                family_ = l.at(0);
+                break;
+            case 1:
+                given_ = l.at(1);
+                break;
+            case 2:
+                middle_ = l.at(2);
+                break;
+            case 3:
+                prefix_ = l.at(3);
+                break;
+            case 4:
+                suffix_ = l.at(4);
+                break;
+            default:
+                break;
+        }
+    }
 }
 
-	void
-NValue::_assemble()
+void NValue::_assemble()
 {
-	strRep_ =		family_;
-	strRep_ += ";" +	given_;
-	strRep_ += ";" +	middle_;
-	strRep_ += ";" +	prefix_;
-	strRep_ += ";" +	suffix_;
+    strRep_ = family_;
+    strRep_ += ";" + given_;
+    strRep_ += ";" + middle_;
+    strRep_ += ";" + prefix_;
+    strRep_ += ";" + suffix_;
 }
-

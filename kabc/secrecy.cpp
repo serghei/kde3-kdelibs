@@ -24,75 +24,75 @@
 
 using namespace KABC;
 
-Secrecy::Secrecy( int type )
-  : mType( type )
+Secrecy::Secrecy(int type) : mType(type)
 {
 }
 
-bool Secrecy::operator==( const Secrecy &s ) const
+bool Secrecy::operator==(const Secrecy &s) const
 {
-  return ( mType == s.mType );
+    return (mType == s.mType);
 }
 
-bool Secrecy::operator!=( const Secrecy &s ) const
+bool Secrecy::operator!=(const Secrecy &s) const
 {
-  return !( *this == s );
+    return !(*this == s);
 }
 
 bool Secrecy::isValid() const
 {
-  return mType != Invalid;
+    return mType != Invalid;
 }
 
-void Secrecy::setType( int type )
+void Secrecy::setType(int type)
 {
-  mType = type;
+    mType = type;
 }
 
 int Secrecy::type() const
 {
-  return mType;
+    return mType;
 }
 
 Secrecy::TypeList Secrecy::typeList()
 {
-  static TypeList list;
+    static TypeList list;
 
-  if ( list.isEmpty() )
-    list << Public << Private << Confidential;
+    if(list.isEmpty())
+        list << Public << Private << Confidential;
 
-  return list;
+    return list;
 }
 
-QString Secrecy::typeLabel( int type )
+QString Secrecy::typeLabel(int type)
 {
-  switch ( type ) {
-    case Public:
-      return i18n( "Public" );
-      break;
-    case Private:
-      return i18n( "Private" );
-      break;
-    case Confidential:
-      return i18n( "Confidential" );
-      break;
-    default:
-      return i18n( "Unknown type" );
-      break;
-  }
+    switch(type)
+    {
+        case Public:
+            return i18n("Public");
+            break;
+        case Private:
+            return i18n("Private");
+            break;
+        case Confidential:
+            return i18n("Confidential");
+            break;
+        default:
+            return i18n("Unknown type");
+            break;
+    }
 }
 
 QString Secrecy::asString() const
 {
-  return typeLabel( mType );
+    return typeLabel(mType);
 }
 
-QDataStream &KABC::operator<<( QDataStream &s, const Secrecy &secrecy )
+QDataStream &KABC::operator<<(QDataStream &s, const Secrecy &secrecy)
 {
     return s << secrecy.mType;
 }
 
-QDataStream &KABC::operator>>( QDataStream &s, Secrecy &secrecy )
+QDataStream &KABC::operator>>(QDataStream &s, Secrecy &secrecy)
 {
     s >> secrecy.mType;
 

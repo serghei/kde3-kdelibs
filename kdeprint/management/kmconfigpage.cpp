@@ -19,18 +19,17 @@
 
 #include "kmconfigpage.h"
 
-KMConfigPage::KMConfigPage(QWidget *parent, const char *name)
-: QWidget(parent,name)
+KMConfigPage::KMConfigPage(QWidget *parent, const char *name) : QWidget(parent, name)
 {
-	m_name = "Name";
-	m_header = "Header";
+    m_name = "Name";
+    m_header = "Header";
 }
 
-void KMConfigPage::loadConfig(KConfig*)
+void KMConfigPage::loadConfig(KConfig *)
 {
 }
 
-void KMConfigPage::saveConfig(KConfig*)
+void KMConfigPage::saveConfig(KConfig *)
 {
 }
 #include "kmconfigpage.moc"

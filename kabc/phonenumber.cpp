@@ -25,18 +25,16 @@
 
 using namespace KABC;
 
-PhoneNumber::PhoneNumber() :
-  mType( Home )
+PhoneNumber::PhoneNumber() : mType(Home)
 {
-  init();
+    init();
 }
 
-PhoneNumber::PhoneNumber( const QString &number, int type ) :
-  mType( type )
+PhoneNumber::PhoneNumber(const QString &number, int type) : mType(type)
 {
-  init();
+    init();
 
-  validateNumber( number );
+    validateNumber(number);
 }
 
 PhoneNumber::~PhoneNumber()
@@ -45,167 +43,172 @@ PhoneNumber::~PhoneNumber()
 
 void PhoneNumber::init()
 {
-  mId = KApplication::randomString( 8 );
+    mId = KApplication::randomString(8);
 }
 
-void PhoneNumber::validateNumber( const QString &number )
+void PhoneNumber::validateNumber(const QString &number)
 {
-  mNumber = number;
+    mNumber = number;
 
-  // remove line breaks
-  mNumber = mNumber.replace( '\n', "" );
-  mNumber = mNumber.replace( '\r', "" );
+    // remove line breaks
+    mNumber = mNumber.replace('\n', "");
+    mNumber = mNumber.replace('\r', "");
 }
 
-bool PhoneNumber::operator==( const PhoneNumber &p ) const
+bool PhoneNumber::operator==(const PhoneNumber &p) const
 {
-  if ( mNumber != p.mNumber ) return false;
-  if ( mType != p.mType ) return false;
+    if(mNumber != p.mNumber)
+        return false;
+    if(mType != p.mType)
+        return false;
 
-  return true;
+    return true;
 }
 
-bool PhoneNumber::operator!=( const PhoneNumber &p ) const
+bool PhoneNumber::operator!=(const PhoneNumber &p) const
 {
-  return !( p == *this );
+    return !(p == *this);
 }
 
-void PhoneNumber::setId( const QString &id )
+void PhoneNumber::setId(const QString &id)
 {
-  mId = id;
+    mId = id;
 }
 
 QString PhoneNumber::id() const
 {
-  return mId;
+    return mId;
 }
 
-void PhoneNumber::setNumber( const QString &number )
+void PhoneNumber::setNumber(const QString &number)
 {
-  validateNumber( number );
+    validateNumber(number);
 }
 
 QString PhoneNumber::number() const
 {
-  return mNumber;
+    return mNumber;
 }
 
-void PhoneNumber::setType( int type )
+void PhoneNumber::setType(int type)
 {
-  mType = type;
+    mType = type;
 }
 
 int PhoneNumber::type() const
 {
-  return mType;
+    return mType;
 }
 
 QString PhoneNumber::typeLabel() const
 {
-  QString label;
-  bool first = true;
+    QString label;
+    bool first = true;
 
-  const TypeList list = typeList();
+    const TypeList list = typeList();
 
-  TypeList::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    if ( ( type() & (*it) ) && ( (*it) != Pref ) ) {
-      label.append( ( first ? "" : "/" ) + typeLabel( *it ) );
-      if ( first )
-        first = false;
+    TypeList::ConstIterator it;
+    for(it = list.begin(); it != list.end(); ++it)
+    {
+        if((type() & (*it)) && ((*it) != Pref))
+        {
+            label.append((first ? "" : "/") + typeLabel(*it));
+            if(first)
+                first = false;
+        }
     }
-  }
 
-  return label;
+    return label;
 }
 
 QString PhoneNumber::label() const
 {
-  return typeLabel( type() );
+    return typeLabel(type());
 }
 
 PhoneNumber::TypeList PhoneNumber::typeList()
 {
-  static TypeList list;
+    static TypeList list;
 
-  if ( list.isEmpty() ) {
-    list << Home << Work << Msg << Pref << Voice << Fax << Cell << Video
-         << Bbs << Modem << Car << Isdn << Pcs << Pager;
-  }
+    if(list.isEmpty())
+    {
+        list << Home << Work << Msg << Pref << Voice << Fax << Cell << Video << Bbs << Modem << Car << Isdn << Pcs << Pager;
+    }
 
-  return list;
+    return list;
 }
 
-QString PhoneNumber::label( int type )
+QString PhoneNumber::label(int type)
 {
-  return typeLabel( type );
+    return typeLabel(type);
 }
 
-QString PhoneNumber::typeLabel( int type )
+QString PhoneNumber::typeLabel(int type)
 {
-  if ( type & Pref )
-    return i18n( "Preferred phone", "Preferred" );
+    if(type & Pref)
+        return i18n("Preferred phone", "Preferred");
 
-  switch ( type ) {
-    case Home:
-      return i18n("Home phone", "Home");
-      break;
-    case Work:
-      return i18n("Work phone", "Work");
-      break;
-    case Msg:
-      return i18n("Messenger");
-      break;  
-    case Pref:
-      return i18n("Preferred Number");
-      break;
-    case Voice:
-      return i18n("Voice");
-      break;  
-    case Fax:
-      return i18n("Fax");
-      break;  
-    case Cell:
-      return i18n("Mobile Phone", "Mobile" );
-      break;  
-    case Video:
-      return i18n("Video");
-      break;
-    case Bbs:
-      return i18n("Mailbox");
-      break;
-    case Modem:
-      return i18n("Modem");
-      break;
-    case Car:
-      return i18n("Car Phone", "Car" );
-      break;
-    case Isdn:
-      return i18n("ISDN");
-      break;
-    case Pcs:
-      return i18n("PCS");
-      break;
-    case Pager:
-      return i18n("Pager");
-      break;
-    case Home | Fax:
-      return i18n("Home Fax");
-      break;
-    case Work | Fax:
-      return i18n("Work Fax");
-      break;
-    default:
-      return i18n("Other");
-  }
+    switch(type)
+    {
+        case Home:
+            return i18n("Home phone", "Home");
+            break;
+        case Work:
+            return i18n("Work phone", "Work");
+            break;
+        case Msg:
+            return i18n("Messenger");
+            break;
+        case Pref:
+            return i18n("Preferred Number");
+            break;
+        case Voice:
+            return i18n("Voice");
+            break;
+        case Fax:
+            return i18n("Fax");
+            break;
+        case Cell:
+            return i18n("Mobile Phone", "Mobile");
+            break;
+        case Video:
+            return i18n("Video");
+            break;
+        case Bbs:
+            return i18n("Mailbox");
+            break;
+        case Modem:
+            return i18n("Modem");
+            break;
+        case Car:
+            return i18n("Car Phone", "Car");
+            break;
+        case Isdn:
+            return i18n("ISDN");
+            break;
+        case Pcs:
+            return i18n("PCS");
+            break;
+        case Pager:
+            return i18n("Pager");
+            break;
+        case Home | Fax:
+            return i18n("Home Fax");
+            break;
+        case Work | Fax:
+            return i18n("Work Fax");
+            break;
+        default:
+            return i18n("Other");
+    }
 }
 
-QDataStream &KABC::operator<<( QDataStream &s, const PhoneNumber &phone )
+QDataStream &KABC::operator<<(QDataStream &s, const PhoneNumber &phone)
 {
     return s << phone.mId << phone.mType << phone.mNumber;
 }
 
-QDataStream &KABC::operator>>( QDataStream &s, PhoneNumber &phone )
+QDataStream &KABC::operator>>(QDataStream &s, PhoneNumber &phone)
 {
     s >> phone.mId >> phone.mType >> phone.mNumber;
 

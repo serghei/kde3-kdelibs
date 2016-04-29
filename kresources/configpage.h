@@ -37,74 +37,71 @@ class QPushButton;
 
 namespace KRES {
 
-class KRESOURCES_EXPORT ResourcePageInfo : public KShared
-{
-  public:
+class KRESOURCES_EXPORT ResourcePageInfo : public KShared {
+public:
     ResourcePageInfo();
     ~ResourcePageInfo();
-    Manager<Resource> *mManager;
+    Manager< Resource > *mManager;
     KConfig *mConfig;
 };
 
 class Resource;
 class ConfigViewItem;
 
-class KRESOURCES_EXPORT ConfigPage : public QWidget, public ManagerObserver<Resource>
-{
-  Q_OBJECT
+class KRESOURCES_EXPORT ConfigPage : public QWidget, public ManagerObserver< Resource > {
+    Q_OBJECT
 
-  public:
-    ConfigPage( QWidget *parent = 0, const char *name = 0 );
+public:
+    ConfigPage(QWidget *parent = 0, const char *name = 0);
     virtual ~ConfigPage();
 
     void load();
     void save();
     virtual void defaults();
 
-  public slots:
-    void slotFamilyChanged( int );
+public slots:
+    void slotFamilyChanged(int);
     void slotAdd();
     void slotRemove();
     void slotEdit();
     void slotStandard();
     void slotSelectionChanged();
 
-  public:
+public:
     // From ManagerObserver<Resource>
-    virtual void resourceAdded( Resource *resource );
-    virtual void resourceModified( Resource *resource );
-    virtual void resourceDeleted( Resource *resource );
+    virtual void resourceAdded(Resource *resource);
+    virtual void resourceModified(Resource *resource);
+    virtual void resourceDeleted(Resource *resource);
 
-  protected:
-    ConfigViewItem *findItem( Resource *resource );
+protected:
+    ConfigViewItem *findItem(Resource *resource);
 
-  protected slots:
-    void slotItemClicked( QListViewItem * );
+protected slots:
+    void slotItemClicked(QListViewItem *);
 
-  signals:
-    void changed( bool );
+signals:
+    void changed(bool);
 
-  private:
-    void loadManager( const QString& family );
+private:
+    void loadManager(const QString &family);
     void saveResourceSettings();
 
-    Manager<Resource>* mCurrentManager;
-    KConfig* mCurrentConfig;
-    KConfig* mConfig;
+    Manager< Resource > *mCurrentManager;
+    KConfig *mCurrentConfig;
+    KConfig *mConfig;
     QString mFamily;
     QStringList mFamilyMap;
-    QValueList<KSharedPtr<ResourcePageInfo> > mInfoMap;
+    QValueList< KSharedPtr< ResourcePageInfo > > mInfoMap;
 
-    KComboBox* mFamilyCombo;
-    KListView* mListView;
-    QPushButton* mAddButton;
-    QPushButton* mRemoveButton;
-    QPushButton* mEditButton;
-    QPushButton* mStandardButton;
+    KComboBox *mFamilyCombo;
+    KListView *mListView;
+    QPushButton *mAddButton;
+    QPushButton *mRemoveButton;
+    QPushButton *mEditButton;
+    QPushButton *mStandardButton;
 
-    QListViewItem* mLastItem;
+    QListViewItem *mLastItem;
 };
-
 }
 
 #endif

@@ -37,25 +37,25 @@ class KPopupMenu;
 * @version $Id: kdatetbl.h 565029 2006-07-22 07:30:24Z kling $
 * @author Stephan Binner
 */
-class KDEUI_EXPORT KDateInternalWeekSelector : public QLineEdit
-{
-  Q_OBJECT
+class KDEUI_EXPORT KDateInternalWeekSelector : public QLineEdit {
+    Q_OBJECT
 protected:
-  QIntValidator *val;
-  int result;
+    QIntValidator *val;
+    int result;
 public slots:
-  void weekEnteredSlot();
-  void setMaxWeek(int max);
+    void weekEnteredSlot();
+    void setMaxWeek(int max);
 signals:
-  void closeMe(int);
+    void closeMe(int);
+
 public:
-  KDateInternalWeekSelector( QWidget* parent=0, const char* name=0);
-  int getWeek();
-  void setWeek(int week);
+    KDateInternalWeekSelector(QWidget *parent = 0, const char *name = 0);
+    int getWeek();
+    void setWeek(int week);
 
 private:
-  class KDateInternalWeekPrivate;
-  KDateInternalWeekPrivate *d;
+    class KDateInternalWeekPrivate;
+    KDateInternalWeekPrivate *d;
 };
 
 /**
@@ -64,72 +64,73 @@ private:
 * @version $Id: kdatetbl.h 565029 2006-07-22 07:30:24Z kling $
 * @author Tim Gilman, Mirko Boehm
 */
-class KDEUI_EXPORT KDateInternalMonthPicker : public QGridView
-{
-  Q_OBJECT
+class KDEUI_EXPORT KDateInternalMonthPicker : public QGridView {
+    Q_OBJECT
 protected:
-  /**
-   * Store the month that has been clicked [1..12].
-   */
-  int result;
-  /**
-   * the cell under mouse cursor when LBM is pressed
-   */
-  short int activeCol;
-  short int activeRow;
-  /**
-   * Contains the largest rectangle needed by the month names.
-   */
-  QRect max;
+    /**
+     * Store the month that has been clicked [1..12].
+     */
+    int result;
+    /**
+     * the cell under mouse cursor when LBM is pressed
+     */
+    short int activeCol;
+    short int activeRow;
+    /**
+     * Contains the largest rectangle needed by the month names.
+     */
+    QRect max;
 signals:
-  /**
-   * This is send from the mouse click event handler.
-   */
-  void closeMe(int);
+    /**
+     * This is send from the mouse click event handler.
+     */
+    void closeMe(int);
+
 public:
-  /**
-   * The constructor.
-   */
-  KDateInternalMonthPicker(const QDate& date, QWidget* parent, const char* name=0);
-  /**
-   * The destructor.
-   */
-  ~KDateInternalMonthPicker();
-  /**
-   * The size hint.
-   */
-  QSize sizeHint() const;
-  /**
-   * Return the result. 0 means no selection (reject()), 1..12 are the
-   * months.
-   */
-  int getResult() const;
+    /**
+     * The constructor.
+     */
+    KDateInternalMonthPicker(const QDate &date, QWidget *parent, const char *name = 0);
+    /**
+     * The destructor.
+     */
+    ~KDateInternalMonthPicker();
+    /**
+     * The size hint.
+     */
+    QSize sizeHint() const;
+    /**
+     * Return the result. 0 means no selection (reject()), 1..12 are the
+     * months.
+     */
+    int getResult() const;
+
 protected:
-  /**
-   * Set up the painter.
-   */
-  void setupPainter(QPainter *p);
-  /**
-   * The resize event.
-   */
-  virtual void viewportResizeEvent(QResizeEvent*);
-  /**
-   * Paint a cell. This simply draws the month names in it.
-   */
-  virtual void paintCell(QPainter* painter, int row, int col);
-  /**
-   * Catch mouse click and move events to paint a rectangle around the item.
-   */
-  virtual void contentsMousePressEvent(QMouseEvent *e);
-  virtual void contentsMouseMoveEvent(QMouseEvent *e);
-  /**
-   * Emit monthSelected(int) when a cell has been released.
-   */
-  virtual void contentsMouseReleaseEvent(QMouseEvent *e);
+    /**
+     * Set up the painter.
+     */
+    void setupPainter(QPainter *p);
+    /**
+     * The resize event.
+     */
+    virtual void viewportResizeEvent(QResizeEvent *);
+    /**
+     * Paint a cell. This simply draws the month names in it.
+     */
+    virtual void paintCell(QPainter *painter, int row, int col);
+    /**
+     * Catch mouse click and move events to paint a rectangle around the item.
+     */
+    virtual void contentsMousePressEvent(QMouseEvent *e);
+    virtual void contentsMouseMoveEvent(QMouseEvent *e);
+    /**
+     * Emit monthSelected(int) when a cell has been released.
+     */
+    virtual void contentsMouseReleaseEvent(QMouseEvent *e);
 
 private:
-  class KDateInternalMonthPrivate;
-  KDateInternalMonthPrivate *d;
+    class KDateInternalMonthPrivate;
+    KDateInternalMonthPrivate *d;
 };
 
 /** Year selection widget.
@@ -137,25 +138,24 @@ private:
 * @version $Id: kdatetbl.h 565029 2006-07-22 07:30:24Z kling $
 * @author Tim Gilman, Mirko Boehm
 */
-class KDEUI_EXPORT KDateInternalYearSelector : public QLineEdit
-{
-  Q_OBJECT
+class KDEUI_EXPORT KDateInternalYearSelector : public QLineEdit {
+    Q_OBJECT
 protected:
-  QIntValidator *val;
-  int result;
+    QIntValidator *val;
+    int result;
 public slots:
-  void yearEnteredSlot();
+    void yearEnteredSlot();
 signals:
-  void closeMe(int);
+    void closeMe(int);
+
 public:
-  KDateInternalYearSelector( QWidget* parent=0, const char* name=0);
-  int getYear();
-  void setYear(int year);
+    KDateInternalYearSelector(QWidget *parent = 0, const char *name = 0);
+    int getYear();
+    void setYear(int year);
 
 private:
-  class KDateInternalYearPrivate;
-  KDateInternalYearPrivate *d;
-
+    class KDateInternalYearPrivate;
+    KDateInternalYearPrivate *d;
 };
 
 /**
@@ -163,88 +163,90 @@ private:
  * @author Tim Gilman, Mirko Boehm
  * @version $Id: kdatetbl.h 565029 2006-07-22 07:30:24Z kling $
  */
-class KDEUI_EXPORT KPopupFrame : public QFrame
-{
-  Q_OBJECT
+class KDEUI_EXPORT KPopupFrame : public QFrame {
+    Q_OBJECT
 protected:
-  /**
-   * The result. It is returned from exec() when the popup window closes.
-   */
-  int result;
-  /**
-   * Catch key press events.
-   */
-  virtual void keyPressEvent(QKeyEvent* e);
-  /**
-   * The only subwidget that uses the whole dialog window.
-   */
-  QWidget *main;
+    /**
+     * The result. It is returned from exec() when the popup window closes.
+     */
+    int result;
+    /**
+     * Catch key press events.
+     */
+    virtual void keyPressEvent(QKeyEvent *e);
+    /**
+     * The only subwidget that uses the whole dialog window.
+     */
+    QWidget *main;
 public slots:
-  /**
-   * Close the popup window. This is called from the main widget, usually.
-   * @p r is the result returned from exec().
-   */
-  void close(int r);
-  /**
-   * Hides the widget. Reimplemented from QWidget
-   */
-  void hide();
+    /**
+     * Close the popup window. This is called from the main widget, usually.
+     * @p r is the result returned from exec().
+     */
+    void close(int r);
+    /**
+     * Hides the widget. Reimplemented from QWidget
+     */
+    void hide();
 
 public:
-  /**
-   * The contructor. Creates a dialog without buttons.
-   */
-  KPopupFrame(QWidget* parent=0, const char*  name=0);
-  /**
-   * The destructor.
-   */
-  ~KPopupFrame();
-  /**
-   * Set the main widget. You cannot set the main widget from the constructor,
-   * since it must be a child of the frame itselfes.
-   * Be careful: the size is set to the main widgets size. It is up to you to
-   * set the main widgets correct size before setting it as the main
-   * widget.
-   */
-  void setMainWidget(QWidget* m);
-  /**
-   * The resize event. Simply resizes the main widget to the whole
-   * widgets client size.
-   */
-  virtual void resizeEvent(QResizeEvent*);
-  /**
-   * Open the popup window at position pos.
-   */
-  void popup(const QPoint &pos);
-  /**
-   * Execute the popup window.
-   */
-  int exec(QPoint p); // KDE4: const QPoint&
-  /**
-   * Execute the popup window.
-   */
-  int exec(int x, int y);
+    /**
+     * The contructor. Creates a dialog without buttons.
+     */
+    KPopupFrame(QWidget *parent = 0, const char *name = 0);
+    /**
+     * The destructor.
+     */
+    ~KPopupFrame();
+    /**
+     * Set the main widget. You cannot set the main widget from the constructor,
+     * since it must be a child of the frame itselfes.
+     * Be careful: the size is set to the main widgets size. It is up to you to
+     * set the main widgets correct size before setting it as the main
+     * widget.
+     */
+    void setMainWidget(QWidget *m);
+    /**
+     * The resize event. Simply resizes the main widget to the whole
+     * widgets client size.
+     */
+    virtual void resizeEvent(QResizeEvent *);
+    /**
+     * Open the popup window at position pos.
+     */
+    void popup(const QPoint &pos);
+    /**
+     * Execute the popup window.
+     */
+    int exec(QPoint p); // KDE4: const QPoint&
+                        /**
+                         * Execute the popup window.
+                         */
+    int exec(int x, int y);
 
 private:
+    virtual bool close(bool alsoDelete)
+    {
+        return QFrame::close(alsoDelete);
+    }
 
-  virtual bool close(bool alsoDelete) { return QFrame::close(alsoDelete); }
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KPopupFramePrivate;
-  KPopupFramePrivate *d;
+    class KPopupFramePrivate;
+    KPopupFramePrivate *d;
 };
 
 /**
 * Validates user-entered dates.
 */
-class KDEUI_EXPORT KDateValidator : public QValidator
-{
+class KDEUI_EXPORT KDateValidator : public QValidator {
 public:
-    KDateValidator(QWidget* parent=0, const char* name=0);
-    virtual State validate(QString&, int&) const;
-    virtual void fixup ( QString & input ) const;
-    State date(const QString&, QDate&) const;
+    KDateValidator(QWidget *parent = 0, const char *name = 0);
+    virtual State validate(QString &, int &) const;
+    virtual void fixup(QString &input) const;
+    State date(const QString &, QDate &) const;
 };
 
 /**
@@ -260,24 +262,22 @@ public:
  * @version $Id: kdatetbl.h 565029 2006-07-22 07:30:24Z kling $
  * @author Tim Gilman, Mirko Boehm
  */
-class KDEUI_EXPORT KDateTable : public QGridView
-{
+class KDEUI_EXPORT KDateTable : public QGridView {
     Q_OBJECT
-    Q_PROPERTY( QDate date READ getDate WRITE setDate )
-    Q_PROPERTY( bool popupMenu READ popupMenuEnabled WRITE setPopupMenuEnabled )
+    Q_PROPERTY(QDate date READ getDate WRITE setDate)
+    Q_PROPERTY(bool popupMenu READ popupMenuEnabled WRITE setPopupMenuEnabled)
 
 public:
     /**
      * The constructor.
      */
-    KDateTable(QWidget *parent=0, QDate date=QDate::currentDate(),
-	       const char* name=0, WFlags f=0);
+    KDateTable(QWidget *parent = 0, QDate date = QDate::currentDate(), const char *name = 0, WFlags f = 0);
 
     /**
      * The constructor.
      * @since 3.4
      */
-    KDateTable(QWidget *parent, const char* name, WFlags f=0);
+    KDateTable(QWidget *parent, const char *name, WFlags f = 0);
 
     /**
      * The destructor.
@@ -299,9 +299,9 @@ public:
     /**
      * Select and display this date.
      */
-    bool setDate(const QDate&);
+    bool setDate(const QDate &);
     // ### KDE 4.0 rename to date()
-    const QDate& getDate() const;
+    const QDate &getDate() const;
 
     /**
      * Enables a popup menu when right clicking on a date.
@@ -311,14 +311,19 @@ public:
      *
      * @since 3.2
      */
-    void setPopupMenuEnabled( bool enable );
+    void setPopupMenuEnabled(bool enable);
 
     /**
      * Returns if the popup menu is enabled or not
      */
     bool popupMenuEnabled() const;
 
-    enum BackgroundMode { NoBgMode=0, RectangleMode, CircleMode };
+    enum BackgroundMode
+    {
+        NoBgMode = 0,
+        RectangleMode,
+        CircleMode
+    };
 
     /**
      * Makes a given date be painted with a given foregroundColor, and background
@@ -326,35 +331,36 @@ public:
      *
      * @since 3.2
      */
-    void setCustomDatePainting( const QDate &date, const QColor &fgColor, BackgroundMode bgMode=NoBgMode, const QColor &bgColor=QColor());
+    void setCustomDatePainting(const QDate &date, const QColor &fgColor, BackgroundMode bgMode = NoBgMode, const QColor &bgColor = QColor());
 
     /**
      * Unsets the custom painting of a date so that the date is painted as usual.
      *
      * @since 3.2
      */
-    void unsetCustomDatePainting( const QDate &date );
+    void unsetCustomDatePainting(const QDate &date);
 
 protected:
     /**
      * calculate the position of the cell in the matrix for the given date. The result is the 0-based index.
      */
-    int posFromDate( const QDate &date ); // KDE4: make this virtual, so subclasses can reimplement this and use a different default for the start of the matrix
-    /**
-     * calculate the date that is displayed at a given cell in the matrix. pos is the
-     * 0-based index in the matrix. Inverse function to posForDate().
-     */
-    QDate dateFromPos( int pos ); // KDE4: make this virtual
+    int posFromDate(
+        const QDate &date);     // KDE4: make this virtual, so subclasses can reimplement this and use a different default for the start of the matrix
+                                /**
+                                 * calculate the date that is displayed at a given cell in the matrix. pos is the
+                                 * 0-based index in the matrix. Inverse function to posForDate().
+                                 */
+    QDate dateFromPos(int pos); // KDE4: make this virtual
 
     /**
      * Paint a cell.
      */
-    virtual void paintCell(QPainter*, int, int);
+    virtual void paintCell(QPainter *, int, int);
 
     /**
      * Paint the empty area (background).
      */
-    virtual void paintEmptyArea(QPainter*, int, int, int, int);
+    virtual void paintEmptyArea(QPainter *, int, int, int, int);
 
     /**
      * Handle the resize events.
@@ -364,10 +370,10 @@ protected:
      * React on mouse clicks that select a date.
      */
     virtual void contentsMousePressEvent(QMouseEvent *);
-    virtual void wheelEvent( QWheelEvent * e );
-    virtual void keyPressEvent( QKeyEvent *e );
-    virtual void focusInEvent( QFocusEvent *e );
-    virtual void focusOutEvent( QFocusEvent *e );
+    virtual void wheelEvent(QWheelEvent *e);
+    virtual void keyPressEvent(QKeyEvent *e);
+    virtual void focusInEvent(QFocusEvent *e);
+    virtual void focusOutEvent(QFocusEvent *e);
 
     // ### KDE 4.0 make the following private and mark as members
 
@@ -412,7 +418,7 @@ signals:
      * @param cur The current date
      * @param old The date before the date was changed
      */
-    void dateChanged(const QDate& cur, const QDate& old);
+    void dateChanged(const QDate &cur, const QDate &old);
     /**
      * A date has been selected by clicking on the table.
      */
@@ -425,23 +431,24 @@ signals:
      *
      * @since 3.2
      */
-    void aboutToShowContextMenu( KPopupMenu * menu, const QDate &date);
+    void aboutToShowContextMenu(KPopupMenu *menu, const QDate &date);
 
 private slots:
-  void nextMonth();
-  void previousMonth();
-  void beginningOfMonth();
-  void endOfMonth();
-  void beginningOfWeek();
-  void endOfWeek();
+    void nextMonth();
+    void previousMonth();
+    void beginningOfMonth();
+    void endOfMonth();
+    void beginningOfWeek();
+    void endOfWeek();
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KDateTablePrivate;
     KDateTablePrivate *d;
-  
-  void initAccels();
+
+    void initAccels();
 };
 
 #endif // KDATETBL_H

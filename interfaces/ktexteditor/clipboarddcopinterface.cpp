@@ -4,37 +4,35 @@
 #include <dcopclient.h>
 using namespace KTextEditor;
 
-ClipboardDCOPInterface::ClipboardDCOPInterface( ClipboardInterface *Parent, const char *name)
-	: DCOPObject(name)
+ClipboardDCOPInterface::ClipboardDCOPInterface(ClipboardInterface *Parent, const char *name) : DCOPObject(name)
 {
-	m_parent = Parent;
+    m_parent = Parent;
 }
 
 ClipboardDCOPInterface::~ClipboardDCOPInterface()
 {
-
 }
 
-    /**
-    * Copies selected text.
-    */
-    void ClipboardDCOPInterface::copy ( )
-    {
-	m_parent->copy();
-    }
+/**
+* Copies selected text.
+*/
+void ClipboardDCOPInterface::copy()
+{
+    m_parent->copy();
+}
 
-    /**
-    * Cuts selected text.
-    */
-    void ClipboardDCOPInterface::cut ( )
-    {
-	m_parent->cut();
-    }
+/**
+* Cuts selected text.
+*/
+void ClipboardDCOPInterface::cut()
+{
+    m_parent->cut();
+}
 
-    /**
-    * Pastes text from clipboard.
-    */
-    void ClipboardDCOPInterface::paste ( )
-    {
-	m_parent->paste();
-    }
+/**
+* Pastes text from clipboard.
+*/
+void ClipboardDCOPInterface::paste()
+{
+    m_parent->paste();
+}

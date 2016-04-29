@@ -32,57 +32,68 @@ CSSRule::CSSRule()
 CSSRule::CSSRule(const CSSRule &other)
 {
     impl = other.impl;
-    if(impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
 CSSRule::CSSRule(CSSRuleImpl *i)
 {
     impl = i;
-    if(impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
-CSSRule &CSSRule::operator = (const CSSRule &other)
+CSSRule &CSSRule::operator=(const CSSRule &other)
 {
-    if ( impl != other.impl ) {
-        if(impl) impl->deref();
+    if(impl != other.impl)
+    {
+        if(impl)
+            impl->deref();
         impl = other.impl;
-        if(impl) impl->ref();
+        if(impl)
+            impl->ref();
     }
     return *this;
 }
 
 CSSRule::~CSSRule()
 {
-    if(impl) impl->deref();
+    if(impl)
+        impl->deref();
 }
 
 unsigned short CSSRule::type() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((CSSRuleImpl *)impl)->type();
 }
 
 DOMString CSSRule::cssText() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return impl->cssText();
 }
 
-void CSSRule::setCssText( const DOMString &value )
+void CSSRule::setCssText(const DOMString &value)
 {
-    if(!impl) return;
+    if(!impl)
+        return;
     impl->setCssText(value);
 }
 
 CSSStyleSheet CSSRule::parentStyleSheet() const
 {
-    if(!impl) return CSSStyleSheet();
+    if(!impl)
+        return CSSStyleSheet();
     return ((CSSRuleImpl *)impl)->parentStyleSheet();
 }
 
 CSSRule CSSRule::parentRule() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((CSSRuleImpl *)impl)->parentRule();
 }
 
@@ -96,20 +107,22 @@ bool CSSRule::isNull() const
     return (impl == 0);
 }
 
-void CSSRule::assignOther( const CSSRule &other, RuleType thisType )
+void CSSRule::assignOther(const CSSRule &other, RuleType thisType)
 {
-    if (other.type() != thisType ) {
-	if ( impl ) impl->deref();
-	impl = 0;
-    } else
-	CSSRule::operator = ( other );
+    if(other.type() != thisType)
+    {
+        if(impl)
+            impl->deref();
+        impl = 0;
+    }
+    else
+        CSSRule::operator=(other);
 }
 
 // ----------------------------------------------------------
 
 
-CSSCharsetRule::CSSCharsetRule()
-    : CSSRule()
+CSSCharsetRule::CSSCharsetRule() : CSSRule()
 {
 }
 
@@ -127,15 +140,15 @@ CSSCharsetRule::CSSCharsetRule(CSSCharsetRuleImpl *impl) : CSSRule(impl)
 {
 }
 
-CSSCharsetRule &CSSCharsetRule::operator = (const CSSCharsetRule &other)
+CSSCharsetRule &CSSCharsetRule::operator=(const CSSCharsetRule &other)
 {
-    CSSRule::operator = (other);
+    CSSRule::operator=(other);
     return *this;
 }
 
-CSSCharsetRule &CSSCharsetRule::operator = (const CSSRule &other)
+CSSCharsetRule &CSSCharsetRule::operator=(const CSSRule &other)
 {
-    assignOther( other, CSSRule::CHARSET_RULE);
+    assignOther(other, CSSRule::CHARSET_RULE);
     return *this;
 }
 
@@ -145,13 +158,14 @@ CSSCharsetRule::~CSSCharsetRule()
 
 DOMString CSSCharsetRule::encoding() const
 {
-    if(!impl) return DOMString();
-    return ((CSSCharsetRuleImpl*)impl)->encoding();
+    if(!impl)
+        return DOMString();
+    return ((CSSCharsetRuleImpl *)impl)->encoding();
 }
 
-void CSSCharsetRule::setEncoding( const DOMString &value )
+void CSSCharsetRule::setEncoding(const DOMString &value)
 {
-    ((CSSCharsetRuleImpl*)impl)->setEncoding(value);
+    ((CSSCharsetRuleImpl *)impl)->setEncoding(value);
 }
 
 
@@ -176,15 +190,15 @@ CSSFontFaceRule::CSSFontFaceRule(CSSFontFaceRuleImpl *impl) : CSSRule(impl)
 {
 }
 
-CSSFontFaceRule &CSSFontFaceRule::operator = (const CSSFontFaceRule &other)
+CSSFontFaceRule &CSSFontFaceRule::operator=(const CSSFontFaceRule &other)
 {
-    CSSRule::operator = (other);
+    CSSRule::operator=(other);
     return *this;
 }
 
-CSSFontFaceRule &CSSFontFaceRule::operator = (const CSSRule &other)
+CSSFontFaceRule &CSSFontFaceRule::operator=(const CSSRule &other)
 {
-    assignOther( other, CSSRule::FONT_FACE_RULE );
+    assignOther(other, CSSRule::FONT_FACE_RULE);
     return *this;
 }
 
@@ -194,7 +208,8 @@ CSSFontFaceRule::~CSSFontFaceRule()
 
 CSSStyleDeclaration CSSFontFaceRule::style() const
 {
-    if(!impl) return CSSStyleDeclaration();
+    if(!impl)
+        return CSSStyleDeclaration();
     return ((CSSFontFaceRuleImpl *)impl)->style();
 }
 
@@ -220,15 +235,15 @@ CSSImportRule::CSSImportRule(CSSImportRuleImpl *impl) : CSSRule(impl)
 {
 }
 
-CSSImportRule &CSSImportRule::operator = (const CSSImportRule &other)
+CSSImportRule &CSSImportRule::operator=(const CSSImportRule &other)
 {
-    CSSRule::operator = (other);
+    CSSRule::operator=(other);
     return *this;
 }
 
-CSSImportRule &CSSImportRule::operator = (const CSSRule &other)
+CSSImportRule &CSSImportRule::operator=(const CSSRule &other)
 {
-    assignOther( other, CSSRule::IMPORT_RULE );
+    assignOther(other, CSSRule::IMPORT_RULE);
     return *this;
 }
 
@@ -238,19 +253,22 @@ CSSImportRule::~CSSImportRule()
 
 DOMString CSSImportRule::href() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((CSSImportRuleImpl *)impl)->href();
 }
 
 MediaList CSSImportRule::media() const
 {
-    if(!impl) return MediaList();
+    if(!impl)
+        return MediaList();
     return ((CSSImportRuleImpl *)impl)->media();
 }
 
 CSSStyleSheet CSSImportRule::styleSheet() const
 {
-    if(!impl) return CSSStyleSheet();
+    if(!impl)
+        return CSSStyleSheet();
     return ((CSSImportRuleImpl *)impl)->styleSheet();
 }
 
@@ -276,15 +294,15 @@ CSSMediaRule::CSSMediaRule(CSSMediaRuleImpl *impl) : CSSRule(impl)
 {
 }
 
-CSSMediaRule &CSSMediaRule::operator = (const CSSMediaRule &other)
+CSSMediaRule &CSSMediaRule::operator=(const CSSMediaRule &other)
 {
-    CSSRule::operator = (other);
+    CSSRule::operator=(other);
     return *this;
 }
 
-CSSMediaRule &CSSMediaRule::operator = (const CSSRule &other)
+CSSMediaRule &CSSMediaRule::operator=(const CSSRule &other)
 {
-    assignOther( other, CSSRule::MEDIA_RULE );
+    assignOther(other, CSSRule::MEDIA_RULE);
     return *this;
 }
 
@@ -294,26 +312,29 @@ CSSMediaRule::~CSSMediaRule()
 
 MediaList CSSMediaRule::media() const
 {
-    if(!impl) return MediaList();
+    if(!impl)
+        return MediaList();
     return ((CSSMediaRuleImpl *)impl)->media();
 }
 
 CSSRuleList CSSMediaRule::cssRules() const
 {
-    if(!impl) return CSSRuleList();
+    if(!impl)
+        return CSSRuleList();
     return ((CSSMediaRuleImpl *)impl)->cssRules();
 }
 
-unsigned long CSSMediaRule::insertRule( const DOMString &rule, unsigned long index )
+unsigned long CSSMediaRule::insertRule(const DOMString &rule, unsigned long index)
 {
-    if(!impl) return 0;
-    return ((CSSMediaRuleImpl *)impl)->insertRule( rule, index );
+    if(!impl)
+        return 0;
+    return ((CSSMediaRuleImpl *)impl)->insertRule(rule, index);
 }
 
-void CSSMediaRule::deleteRule( unsigned long index )
+void CSSMediaRule::deleteRule(unsigned long index)
 {
     if(impl)
-        ((CSSMediaRuleImpl *)impl)->deleteRule( index );
+        ((CSSMediaRuleImpl *)impl)->deleteRule(index);
 }
 
 
@@ -338,15 +359,15 @@ CSSPageRule::CSSPageRule(CSSPageRuleImpl *impl) : CSSRule(impl)
 {
 }
 
-CSSPageRule &CSSPageRule::operator = (const CSSPageRule &other)
+CSSPageRule &CSSPageRule::operator=(const CSSPageRule &other)
 {
-    CSSRule::operator = (other);
+    CSSRule::operator=(other);
     return *this;
 }
 
-CSSPageRule &CSSPageRule::operator = (const CSSRule &other)
+CSSPageRule &CSSPageRule::operator=(const CSSRule &other)
 {
-    assignOther( other, CSSRule::PAGE_RULE );
+    assignOther(other, CSSRule::PAGE_RULE);
     return *this;
 }
 
@@ -356,18 +377,20 @@ CSSPageRule::~CSSPageRule()
 
 DOMString CSSPageRule::selectorText() const
 {
-    if(!impl) return DOMString();
-    return ((CSSPageRuleImpl*)impl)->selectorText();
+    if(!impl)
+        return DOMString();
+    return ((CSSPageRuleImpl *)impl)->selectorText();
 }
 
-void CSSPageRule::setSelectorText( const DOMString &value )
+void CSSPageRule::setSelectorText(const DOMString &value)
 {
-    ((CSSPageRuleImpl*)impl)->setSelectorText(value);
+    ((CSSPageRuleImpl *)impl)->setSelectorText(value);
 }
 
 CSSStyleDeclaration CSSPageRule::style() const
 {
-    if(!impl) return CSSStyleDeclaration();
+    if(!impl)
+        return CSSStyleDeclaration();
     return ((CSSPageRuleImpl *)impl)->style();
 }
 
@@ -378,8 +401,7 @@ CSSStyleRule::CSSStyleRule() : CSSRule()
 {
 }
 
-CSSStyleRule::CSSStyleRule(const CSSStyleRule &other)
-    : CSSRule(other)
+CSSStyleRule::CSSStyleRule(const CSSStyleRule &other) : CSSRule(other)
 {
 }
 
@@ -390,20 +412,19 @@ CSSStyleRule::CSSStyleRule(const CSSRule &other)
 }
 
 
-CSSStyleRule::CSSStyleRule(CSSStyleRuleImpl *impl)
-    : CSSRule(impl)
+CSSStyleRule::CSSStyleRule(CSSStyleRuleImpl *impl) : CSSRule(impl)
 {
 }
 
-CSSStyleRule &CSSStyleRule::operator = (const CSSStyleRule &other)
+CSSStyleRule &CSSStyleRule::operator=(const CSSStyleRule &other)
 {
-    CSSRule::operator = (other);
+    CSSRule::operator=(other);
     return *this;
 }
 
-CSSStyleRule &CSSStyleRule::operator = (const CSSRule &other)
+CSSStyleRule &CSSStyleRule::operator=(const CSSRule &other)
 {
-    assignOther( other, CSSRule::STYLE_RULE );
+    assignOther(other, CSSRule::STYLE_RULE);
     return *this;
 }
 
@@ -413,18 +434,20 @@ CSSStyleRule::~CSSStyleRule()
 
 DOMString CSSStyleRule::selectorText() const
 {
-    if(!impl) return DOMString();
-    return ((CSSStyleRuleImpl*)impl)->selectorText();
+    if(!impl)
+        return DOMString();
+    return ((CSSStyleRuleImpl *)impl)->selectorText();
 }
 
-void CSSStyleRule::setSelectorText( const DOMString &value )
+void CSSStyleRule::setSelectorText(const DOMString &value)
 {
-    ((CSSStyleRuleImpl*)impl)->setSelectorText(value);
+    ((CSSStyleRuleImpl *)impl)->setSelectorText(value);
 }
 
 CSSStyleDeclaration CSSStyleRule::style() const
 {
-    if(!impl) return CSSStyleDeclaration();
+    if(!impl)
+        return CSSStyleDeclaration();
     return ((CSSStyleRuleImpl *)impl)->style();
 }
 
@@ -436,8 +459,7 @@ CSSUnknownRule::CSSUnknownRule() : CSSRule()
 {
 }
 
-CSSUnknownRule::CSSUnknownRule(const CSSUnknownRule &other)
-    : CSSRule(other)
+CSSUnknownRule::CSSUnknownRule(const CSSUnknownRule &other) : CSSRule(other)
 {
 }
 
@@ -447,20 +469,19 @@ CSSUnknownRule::CSSUnknownRule(const CSSRule &other)
     operator=(other);
 }
 
-CSSUnknownRule::CSSUnknownRule(CSSUnknownRuleImpl *impl)
-    : CSSRule(impl)
+CSSUnknownRule::CSSUnknownRule(CSSUnknownRuleImpl *impl) : CSSRule(impl)
 {
 }
 
-CSSUnknownRule &CSSUnknownRule::operator = (const CSSUnknownRule &other)
+CSSUnknownRule &CSSUnknownRule::operator=(const CSSUnknownRule &other)
 {
-    CSSRule::operator = (other);
+    CSSRule::operator=(other);
     return *this;
 }
 
-CSSUnknownRule &CSSUnknownRule::operator = (const CSSRule &other)
+CSSUnknownRule &CSSUnknownRule::operator=(const CSSRule &other)
 {
-    assignOther( other, CSSRule::UNKNOWN_RULE );
+    assignOther(other, CSSRule::UNKNOWN_RULE);
     return *this;
 }
 
@@ -479,56 +500,64 @@ CSSRuleList::CSSRuleList()
 CSSRuleList::CSSRuleList(const CSSRuleList &other)
 {
     impl = other.impl;
-    if(impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
 CSSRuleList::CSSRuleList(CSSRuleListImpl *i)
 {
     impl = i;
-    if(impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
 CSSRuleList::CSSRuleList(StyleListImpl *lst)
 {
     impl = new CSSRuleListImpl;
     impl->ref();
-    if (lst)
+    if(lst)
     {
-        for( unsigned long i = 0; i < lst->length() ; ++i )
+        for(unsigned long i = 0; i < lst->length(); ++i)
         {
-            StyleBaseImpl* style = lst->item( i );
-            if ( style->isRule() )
-                impl->insertRule( static_cast<CSSRuleImpl *>(style), impl->length() );
+            StyleBaseImpl *style = lst->item(i);
+            if(style->isRule())
+                impl->insertRule(static_cast< CSSRuleImpl * >(style), impl->length());
         }
     }
 }
 
-CSSRuleList &CSSRuleList::operator = (const CSSRuleList &other)
+CSSRuleList &CSSRuleList::operator=(const CSSRuleList &other)
 {
-    if ( impl != other.impl ) {
-        if(impl) impl->deref();
+    if(impl != other.impl)
+    {
+        if(impl)
+            impl->deref();
         impl = other.impl;
-        if(impl) impl->ref();
+        if(impl)
+            impl->ref();
     }
     return *this;
 }
 
 CSSRuleList::~CSSRuleList()
 {
-    if(impl) impl->deref();
+    if(impl)
+        impl->deref();
 }
 
 unsigned long CSSRuleList::length() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((CSSRuleListImpl *)impl)->length();
     return 0;
 }
 
-CSSRule CSSRuleList::item( unsigned long index )
+CSSRule CSSRuleList::item(unsigned long index)
 {
-    if(!impl) return CSSRule();
-    return ((CSSRuleListImpl *)impl)->item( index );
+    if(!impl)
+        return CSSRule();
+    return ((CSSRuleListImpl *)impl)->item(index);
 }
 
 CSSRuleListImpl *CSSRuleList::handle() const
@@ -540,7 +569,3 @@ bool CSSRuleList::isNull() const
 {
     return (impl == 0);
 }
-
-
-
-

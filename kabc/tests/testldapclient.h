@@ -24,12 +24,13 @@
 #include "../ldapclient.h"
 typedef KABC::LdapClient LdapClient;
 
-class TestLDAPClient : public QObject
-{
+class TestLDAPClient : public QObject {
     Q_OBJECT
 
 public:
-    TestLDAPClient() {}
+    TestLDAPClient()
+    {
+    }
     void setup();
     void runAll();
     void cleanup();
@@ -38,14 +39,14 @@ public:
     void testIntevation();
 
 private slots:
-    void slotLDAPResult( const KABC::LdapObject& );
-    void slotLDAPError( const QString& );
+    void slotLDAPResult(const KABC::LdapObject &);
+    void slotLDAPError(const QString &);
     void slotLDAPDone();
 
 private:
-    bool check(const QString& txt, QString a, QString b);
+    bool check(const QString &txt, QString a, QString b);
 
-    LdapClient* mClient;
+    LdapClient *mClient;
 };
 
 #endif

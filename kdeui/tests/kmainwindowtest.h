@@ -3,8 +3,7 @@
 
 #include <kmainwindow.h>
 
-class MainWindow : public KMainWindow
-{
+class MainWindow : public KMainWindow {
     Q_OBJECT
 public:
     MainWindow();
@@ -14,5 +13,5 @@ private slots:
 };
 
 #endif // KMAINWINDOWTEST_H
-/* vim: et sw=4 ts=4
- */
+       /* vim: et sw=4 ts=4
+        */

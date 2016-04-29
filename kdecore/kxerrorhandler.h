@@ -54,51 +54,51 @@
  * @author Lubos Lunak <l.lunak@kde.org>
  * @short Handler for X errors
  */
-class KDECORE_EXPORT KXErrorHandler
-    {
-    public:
-        /**
-         * Creates error handler that will set error flag after encountering
-         * any X error.
-         */
-        KXErrorHandler( Display* dpy = qt_xdisplay());
-        /**
-         * This constructor takes pointer to a function that will get request number,
-         * error code number and resource id of the failed request, as provided
-         * by XErrorEvent. If the function returns true, the error flag will be set.
-         */
-        KXErrorHandler( bool (*handler)( int request, int error_code, unsigned long resource_id ), Display* dpy = qt_xdisplay());
-        /**
-         * This constructor takes pointer to a function whose prototype matches
-         * the one that's used with the XSetErrorHandler() Xlib function.
-         * NOTE: For the error flag to be set, the function must return non-zero
-         * value.
-         */
-        KXErrorHandler( int (*handler)( Display*, XErrorEvent* ), Display* dpy = qt_xdisplay());
-        /**
-         * This function returns true if the error flag is set (i.e. no custom handler
-         * function was used and there was any error, or the custom handler indicated
-         * an error by its return value).
-         *
-         * @param sync if true, and explicit XSync() will be done. Not necessary
-         *             when the last X request required a roundtrip.
-         */
-        bool error( bool sync ) const;
-        ~KXErrorHandler();
-    private:
-        void addHandler();
-        int handle( Display* dpy, XErrorEvent* e );
-        bool (*user_handler1)( int request, int error_code, unsigned long resource_id );
-        int (*user_handler2)( Display*, XErrorEvent* );
-        int (*old_handler)( Display*, XErrorEvent* );
-        unsigned long first_request;
-        Display* display;
-        bool was_error;
-        static int handler_wrapper( Display*, XErrorEvent* );
-        static KXErrorHandler** handlers;
-        static int pos;
-        static int size;
-        class KXErrorHandlerPrivate* d;
-    };
+class KDECORE_EXPORT KXErrorHandler {
+public:
+    /**
+     * Creates error handler that will set error flag after encountering
+     * any X error.
+     */
+    KXErrorHandler(Display *dpy = qt_xdisplay());
+    /**
+     * This constructor takes pointer to a function that will get request number,
+     * error code number and resource id of the failed request, as provided
+     * by XErrorEvent. If the function returns true, the error flag will be set.
+     */
+    KXErrorHandler(bool (*handler)(int request, int error_code, unsigned long resource_id), Display *dpy = qt_xdisplay());
+    /**
+     * This constructor takes pointer to a function whose prototype matches
+     * the one that's used with the XSetErrorHandler() Xlib function.
+     * NOTE: For the error flag to be set, the function must return non-zero
+     * value.
+     */
+    KXErrorHandler(int (*handler)(Display *, XErrorEvent *), Display *dpy = qt_xdisplay());
+    /**
+     * This function returns true if the error flag is set (i.e. no custom handler
+     * function was used and there was any error, or the custom handler indicated
+     * an error by its return value).
+     *
+     * @param sync if true, and explicit XSync() will be done. Not necessary
+     *             when the last X request required a roundtrip.
+     */
+    bool error(bool sync) const;
+    ~KXErrorHandler();
+
+private:
+    void addHandler();
+    int handle(Display *dpy, XErrorEvent *e);
+    bool (*user_handler1)(int request, int error_code, unsigned long resource_id);
+    int (*user_handler2)(Display *, XErrorEvent *);
+    int (*old_handler)(Display *, XErrorEvent *);
+    unsigned long first_request;
+    Display *display;
+    bool was_error;
+    static int handler_wrapper(Display *, XErrorEvent *);
+    static KXErrorHandler **handlers;
+    static int pos;
+    static int size;
+    class KXErrorHandlerPrivate *d;
+};
 
 #endif

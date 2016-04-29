@@ -2,11 +2,10 @@
 #define MAIN_H
 
 
-class Win
-    : public KMainWindow
-{
+class Win : public KMainWindow {
     Q_OBJECT
-    KParts::Part* p;
+    KParts::Part *p;
+
 public:
     Win();
 public slots:

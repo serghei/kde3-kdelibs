@@ -24,12 +24,13 @@
 #include <qobject.h>
 #include <kio/job.h>
 
-class JobTest : public QObject
-{
+class JobTest : public QObject {
     Q_OBJECT
 
 public:
-    JobTest() {}
+    JobTest()
+    {
+    }
     void setup();
     void runAll();
     void cleanup();
@@ -54,21 +55,24 @@ public:
     void copyFileToSystem();
 
 private slots:
-    void slotEntries( KIO::Job*, const KIO::UDSEntryList& lst );
-    void slotGetResult( KIO::Job* );
-    void slotMimetype(KIO::Job*,const QString&);
+    void slotEntries(KIO::Job *, const KIO::UDSEntryList &lst);
+    void slotGetResult(KIO::Job *);
+    void slotMimetype(KIO::Job *, const QString &);
 
 private:
     QString homeTmpDir() const;
     QString otherTmpDir() const;
     QString realSystemPath() const;
     KURL systemTmpDir() const;
-    enum { AlreadyExists = 1 };
-    void copyLocalFile( const QString& src, const QString& dest );
-    void copyLocalDirectory( const QString& src, const QString& dest, int flags = 0 );
-    void moveLocalFile( const QString& src, const QString& dest );
-    void moveLocalDirectory( const QString& src, const QString& dest );
-    void copyFileToSystem( bool resolve_local_urls );
+    enum
+    {
+        AlreadyExists = 1
+    };
+    void copyLocalFile(const QString &src, const QString &dest);
+    void copyLocalDirectory(const QString &src, const QString &dest, int flags = 0);
+    void moveLocalFile(const QString &src, const QString &dest);
+    void moveLocalDirectory(const QString &src, const QString &dest);
+    void copyFileToSystem(bool resolve_local_urls);
 
     int m_result;
     QByteArray m_data;

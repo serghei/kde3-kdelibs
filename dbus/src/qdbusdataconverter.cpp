@@ -29,115 +29,118 @@
 #include <qsize.h>
 #include <qvaluelist.h>
 
-template <>
-QDBusDataConverter::Result QDBusDataConverter::convertFromQDBusData<QRect>(const QDBusData& dbusData, QRect& typeData)
+template <> QDBusDataConverter::Result QDBusDataConverter::convertFromQDBusData< QRect >(const QDBusData &dbusData, QRect &typeData)
 {
-    if (dbusData.type() != QDBusData::Struct) return InvalidSignature;
-    
-    QValueList<QDBusData> members = dbusData.toStruct();
-    if (members.count() != 4) return InvalidSignature;
-    
+    if(dbusData.type() != QDBusData::Struct)
+        return InvalidSignature;
+
+    QValueList< QDBusData > members = dbusData.toStruct();
+    if(members.count() != 4)
+        return InvalidSignature;
+
     Q_INT32 values[4];
-    
-    QValueList<QDBusData>::const_iterator it    = members.begin();
-    QValueList<QDBusData>::const_iterator endIt = members.end();
-    for (uint i = 0; it != endIt; ++it, ++i)
+
+    QValueList< QDBusData >::const_iterator it = members.begin();
+    QValueList< QDBusData >::const_iterator endIt = members.end();
+    for(uint i = 0; it != endIt; ++it, ++i)
     {
         bool ok = false;
         values[i] = (*it).toInt32(&ok);
-        if (!ok) return InvalidSignature;
+        if(!ok)
+            return InvalidSignature;
     }
-    
+
     typeData = QRect(values[0], values[1], values[2], values[3]);
-    
+
     return Success;
 }
 
-template <>
-QDBusDataConverter::Result QDBusDataConverter::convertToQDBusData<QRect>(const QRect& typeData, QDBusData& dbusData)
+template <> QDBusDataConverter::Result QDBusDataConverter::convertToQDBusData< QRect >(const QRect &typeData, QDBusData &dbusData)
 {
-    QValueList<QDBusData> members;
-    
+    QValueList< QDBusData > members;
+
     members << QDBusData::fromInt32(typeData.x());
     members << QDBusData::fromInt32(typeData.y());
     members << QDBusData::fromInt32(typeData.width());
     members << QDBusData::fromInt32(typeData.height());
-    
+
     dbusData = QDBusData::fromStruct(members);
-    
+
     return Success;
 }
 
-template <>
-QDBusDataConverter::Result QDBusDataConverter::convertFromQDBusData<QPoint>(const QDBusData& dbusData, QPoint& typeData)
+template <> QDBusDataConverter::Result QDBusDataConverter::convertFromQDBusData< QPoint >(const QDBusData &dbusData, QPoint &typeData)
 {
-    if (dbusData.type() != QDBusData::Struct) return InvalidSignature;
-    
-    QValueList<QDBusData> members = dbusData.toStruct();
-    if (members.count() != 2) return InvalidSignature;
-    
+    if(dbusData.type() != QDBusData::Struct)
+        return InvalidSignature;
+
+    QValueList< QDBusData > members = dbusData.toStruct();
+    if(members.count() != 2)
+        return InvalidSignature;
+
     Q_INT32 values[2];
-    
-    QValueList<QDBusData>::const_iterator it    = members.begin();
-    QValueList<QDBusData>::const_iterator endIt = members.end();
-    for (uint i = 0; it != endIt; ++it, ++i)
+
+    QValueList< QDBusData >::const_iterator it = members.begin();
+    QValueList< QDBusData >::const_iterator endIt = members.end();
+    for(uint i = 0; it != endIt; ++it, ++i)
     {
         bool ok = false;
         values[i] = (*it).toInt32(&ok);
-        if (!ok) return InvalidSignature;
+        if(!ok)
+            return InvalidSignature;
     }
-    
+
     typeData = QPoint(values[0], values[1]);
-    
+
     return Success;
 }
 
-template <>
-QDBusDataConverter::Result QDBusDataConverter::convertToQDBusData<QPoint>(const QPoint& typeData, QDBusData& dbusData)
+template <> QDBusDataConverter::Result QDBusDataConverter::convertToQDBusData< QPoint >(const QPoint &typeData, QDBusData &dbusData)
 {
-    QValueList<QDBusData> members;
-    
+    QValueList< QDBusData > members;
+
     members << QDBusData::fromInt32(typeData.x());
     members << QDBusData::fromInt32(typeData.y());
-    
+
     dbusData = QDBusData::fromStruct(members);
-    
+
     return Success;
 }
 
-template <>
-QDBusDataConverter::Result QDBusDataConverter::convertFromQDBusData<QSize>(const QDBusData& dbusData, QSize& typeData)
+template <> QDBusDataConverter::Result QDBusDataConverter::convertFromQDBusData< QSize >(const QDBusData &dbusData, QSize &typeData)
 {
-    if (dbusData.type() != QDBusData::Struct) return InvalidSignature;
-    
-    QValueList<QDBusData> members = dbusData.toStruct();
-    if (members.count() != 2) return InvalidSignature;
-    
+    if(dbusData.type() != QDBusData::Struct)
+        return InvalidSignature;
+
+    QValueList< QDBusData > members = dbusData.toStruct();
+    if(members.count() != 2)
+        return InvalidSignature;
+
     Q_INT32 values[2];
-    
-    QValueList<QDBusData>::const_iterator it    = members.begin();
-    QValueList<QDBusData>::const_iterator endIt = members.end();
-    for (uint i = 0; it != endIt; ++it, ++i)
+
+    QValueList< QDBusData >::const_iterator it = members.begin();
+    QValueList< QDBusData >::const_iterator endIt = members.end();
+    for(uint i = 0; it != endIt; ++it, ++i)
     {
         bool ok = false;
         values[i] = (*it).toInt32(&ok);
-        if (!ok) return InvalidSignature;
+        if(!ok)
+            return InvalidSignature;
     }
-    
+
     typeData = QSize(values[0], values[1]);
-    
+
     return Success;
 }
 
-template <>
-QDBusDataConverter::Result QDBusDataConverter::convertToQDBusData<QSize>(const QSize& typeData, QDBusData& dbusData)
+template <> QDBusDataConverter::Result QDBusDataConverter::convertToQDBusData< QSize >(const QSize &typeData, QDBusData &dbusData)
 {
-    QValueList<QDBusData> members;
-    
+    QValueList< QDBusData > members;
+
     members << QDBusData::fromInt32(typeData.width());
     members << QDBusData::fromInt32(typeData.height());
-    
+
     dbusData = QDBusData::fromStruct(members);
-    
+
     return Success;
 }

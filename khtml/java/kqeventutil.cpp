@@ -22,11 +22,11 @@
 #include <qevent.h>
 #include "kqeventutil.h"
 
-QString KQEventUtil::getQtEventName( QEvent* e )
+QString KQEventUtil::getQtEventName(QEvent *e)
 {
     QString s;
 
-    switch( e->type() )
+    switch(e->type())
     {
         case QEvent::None:
             s = "None";
@@ -192,7 +192,7 @@ QString KQEventUtil::getQtEventName( QEvent* e )
             break;
 
         default:
-            s = "Undefined Event, value = " + QString::number( e->type() );
+            s = "Undefined Event, value = " + QString::number(e->type());
             break;
     }
 

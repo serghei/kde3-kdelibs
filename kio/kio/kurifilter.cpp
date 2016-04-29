@@ -30,34 +30,32 @@
 
 #include "kurifilter.h"
 
-template class QPtrList<KURIFilterPlugin>;
+template class QPtrList< KURIFilterPlugin >;
 
-KURIFilterPlugin::KURIFilterPlugin( QObject *parent, const char *name, double pri )
-                 :QObject( parent, name )
+KURIFilterPlugin::KURIFilterPlugin(QObject *parent, const char *name, double pri) : QObject(parent, name)
 {
-    m_strName = QString::fromLatin1( name );
+    m_strName = QString::fromLatin1(name);
     m_dblPriority = pri;
 }
 
-void KURIFilterPlugin::setFilteredURI( KURIFilterData& data, const KURL& uri ) const
+void KURIFilterPlugin::setFilteredURI(KURIFilterData &data, const KURL &uri) const
 {
-    if ( data.uri() != uri )
+    if(data.uri() != uri)
     {
         data.m_pURI = uri;
         data.m_bChanged = true;
     }
 }
 
-class KURIFilterDataPrivate
-{
+class KURIFilterDataPrivate {
 public:
-    KURIFilterDataPrivate() {};
+    KURIFilterDataPrivate(){};
     QString abs_path;
     QString args;
     QString typedString;
 };
 
-KURIFilterData::KURIFilterData( const KURIFilterData& data )
+KURIFilterData::KURIFilterData(const KURIFilterData &data)
 {
     m_iType = data.m_iType;
     m_pURI = data.m_pURI;
@@ -77,7 +75,7 @@ KURIFilterData::~KURIFilterData()
     d = 0;
 }
 
-void KURIFilterData::init( const KURL& url )
+void KURIFilterData::init(const KURL &url)
 {
     m_iType = KURIFilterData::UNKNOWN;
     m_pURI = url;
@@ -89,7 +87,7 @@ void KURIFilterData::init( const KURL& url )
     d->typedString = url.url();
 }
 
-void KURIFilterData::init( const QString& url )
+void KURIFilterData::init(const QString &url)
 {
     m_iType = KURIFilterData::UNKNOWN;
     m_pURI = url;
@@ -118,7 +116,7 @@ QString KURIFilterData::typedString() const
     return d->typedString;
 }
 
-void KURIFilterData::setCheckForExecutables( bool check )
+void KURIFilterData::setCheckForExecutables(bool check)
 {
     m_bCheckForExecutables = check;
 }
@@ -133,11 +131,11 @@ bool KURIFilterData::hasAbsolutePath() const
     return !d->abs_path.isEmpty();
 }
 
-bool KURIFilterData::setAbsolutePath( const QString& absPath )
+bool KURIFilterData::setAbsolutePath(const QString &absPath)
 {
     // Since a malformed URL could possibly be a relative
     // URL we tag it as a possible local resource...
-    if( (!m_pURI.isValid() || m_pURI.isLocalFile()) )
+    if((!m_pURI.isValid() || m_pURI.isLocalFile()))
     {
         d->abs_path = absPath;
         return true;
@@ -157,26 +155,26 @@ QString KURIFilterData::argsAndOptions() const
 
 QString KURIFilterData::iconName()
 {
-    if( m_bChanged )
+    if(m_bChanged)
     {
-        switch ( m_iType )
+        switch(m_iType)
         {
             case KURIFilterData::LOCAL_FILE:
             case KURIFilterData::LOCAL_DIR:
             case KURIFilterData::NET_PROTOCOL:
             {
-                m_strIconName = KMimeType::iconForURL( m_pURI );
+                m_strIconName = KMimeType::iconForURL(m_pURI);
                 break;
             }
             case KURIFilterData::EXECUTABLE:
             {
                 QString exeName = m_pURI.url();
-                exeName = exeName.mid( exeName.findRev( '/' ) + 1 ); // strip path if given
-                KService::Ptr service = KService::serviceByDesktopName( exeName );
-                if (service && service->icon() != QString::fromLatin1( "unknown" ))
+                exeName = exeName.mid(exeName.findRev('/') + 1); // strip path if given
+                KService::Ptr service = KService::serviceByDesktopName(exeName);
+                if(service && service->icon() != QString::fromLatin1("unknown"))
                     m_strIconName = service->icon();
                 // Try to find an icon with the same name as the binary (useful for non-kde apps)
-                else if ( !KGlobal::iconLoader()->loadIcon( exeName, KIcon::NoGroup, 16, KIcon::DefaultState, 0, true ).isNull() )
+                else if(!KGlobal::iconLoader()->loadIcon(exeName, KIcon::NoGroup, 16, KIcon::DefaultState, 0, true).isNull())
                     m_strIconName = exeName;
                 else
                     // not found, use default
@@ -209,18 +207,18 @@ QString KURIFilterData::iconName()
 }
 
 //********************************************  KURIFilterPlugin **********************************************
-void KURIFilterPlugin::setArguments( KURIFilterData& data, const QString& args ) const
+void KURIFilterPlugin::setArguments(KURIFilterData &data, const QString &args) const
 {
     data.d->args = args;
 }
 
 //********************************************  KURIFilter **********************************************
 KURIFilter *KURIFilter::s_self;
-static KStaticDeleter<KURIFilter> kurifiltersd;
+static KStaticDeleter< KURIFilter > kurifiltersd;
 
 KURIFilter *KURIFilter::self()
 {
-    if (!s_self)
+    if(!s_self)
         s_self = kurifiltersd.setObject(s_self, new KURIFilter);
     return s_self;
 }
@@ -235,100 +233,102 @@ KURIFilter::~KURIFilter()
 {
 }
 
-bool KURIFilter::filterURI( KURIFilterData& data, const QStringList& filters )
+bool KURIFilter::filterURI(KURIFilterData &data, const QStringList &filters)
 {
     bool filtered = false;
     KURIFilterPluginList use_plugins;
 
     // If we have a filter list, only include the once
     // explicitly specified by it. Otherwise, use all available filters...
-    if( filters.isEmpty() )
-        use_plugins = m_lstPlugins;  // Use everything that is loaded...
+    if(filters.isEmpty())
+        use_plugins = m_lstPlugins; // Use everything that is loaded...
     else
     {
-        //kdDebug() << "Named plugins requested..."  << endl;
-        for( QStringList::ConstIterator lst = filters.begin(); lst != filters.end(); ++lst )
+        // kdDebug() << "Named plugins requested..."  << endl;
+        for(QStringList::ConstIterator lst = filters.begin(); lst != filters.end(); ++lst)
         {
-            QPtrListIterator<KURIFilterPlugin> it( m_lstPlugins );
-            for( ; it.current() ; ++it )
+            QPtrListIterator< KURIFilterPlugin > it(m_lstPlugins);
+            for(; it.current(); ++it)
             {
-                if( (*lst) == it.current()->name() )
+                if((*lst) == it.current()->name())
                 {
-                    //kdDebug() << "Will use filter plugin named: " << it.current()->name() << endl;
-                    use_plugins.append( it.current() );
-                    break;  // We already found it ; so lets test the next named filter...
+                    // kdDebug() << "Will use filter plugin named: " << it.current()->name() << endl;
+                    use_plugins.append(it.current());
+                    break; // We already found it ; so lets test the next named filter...
                 }
             }
         }
     }
 
-    QPtrListIterator<KURIFilterPlugin> it( use_plugins );
-    //kdDebug() << "Using " << use_plugins.count() << " out of the "
+    QPtrListIterator< KURIFilterPlugin > it(use_plugins);
+    // kdDebug() << "Using " << use_plugins.count() << " out of the "
     //          << m_lstPlugins.count() << " available plugins" << endl;
-    for (; it.current() && !filtered; ++it)
+    for(; it.current() && !filtered; ++it)
     {
-        //kdDebug() << "Using a filter plugin named: " << it.current()->name() << endl;
-        filtered |= it.current()->filterURI( data );
+        // kdDebug() << "Using a filter plugin named: " << it.current()->name() << endl;
+        filtered |= it.current()->filterURI(data);
     }
     return filtered;
 }
 
-bool KURIFilter::filterURI( KURL& uri, const QStringList& filters )
+bool KURIFilter::filterURI(KURL &uri, const QStringList &filters)
 {
     KURIFilterData data = uri;
-    bool filtered = filterURI( data, filters );
-    if( filtered ) uri = data.uri();
+    bool filtered = filterURI(data, filters);
+    if(filtered)
+        uri = data.uri();
     return filtered;
 }
 
-bool KURIFilter::filterURI( QString& uri, const QStringList& filters )
+bool KURIFilter::filterURI(QString &uri, const QStringList &filters)
 {
     KURIFilterData data = uri;
-    bool filtered = filterURI( data, filters );
-    if( filtered )  uri = data.uri().url();
+    bool filtered = filterURI(data, filters);
+    if(filtered)
+        uri = data.uri().url();
     return filtered;
-
 }
 
-KURL KURIFilter::filteredURI( const KURL &uri, const QStringList& filters )
+KURL KURIFilter::filteredURI(const KURL &uri, const QStringList &filters)
 {
     KURIFilterData data = uri;
-    filterURI( data, filters );
+    filterURI(data, filters);
     return data.uri();
 }
 
-QString KURIFilter::filteredURI( const QString &uri, const QStringList& filters )
+QString KURIFilter::filteredURI(const QString &uri, const QStringList &filters)
 {
     KURIFilterData data = uri;
-    filterURI( data, filters );
+    filterURI(data, filters);
     return data.uri().url();
 }
 
-QPtrListIterator<KURIFilterPlugin> KURIFilter::pluginsIterator() const
+QPtrListIterator< KURIFilterPlugin > KURIFilter::pluginsIterator() const
 {
-    return QPtrListIterator<KURIFilterPlugin>(m_lstPlugins);
+    return QPtrListIterator< KURIFilterPlugin >(m_lstPlugins);
 }
 
 QStringList KURIFilter::pluginNames() const
 {
     QStringList list;
-    for(QPtrListIterator<KURIFilterPlugin> i = pluginsIterator(); *i; ++i)
+    for(QPtrListIterator< KURIFilterPlugin > i = pluginsIterator(); *i; ++i)
         list.append((*i)->name());
     return list;
 }
 
 void KURIFilter::loadPlugins()
 {
-    KTrader::OfferList offers = KTrader::self()->query( "KURIFilter/Plugin" );
+    KTrader::OfferList offers = KTrader::self()->query("KURIFilter/Plugin");
 
     KTrader::OfferList::ConstIterator it = offers.begin();
     KTrader::OfferList::ConstIterator end = offers.end();
 
-    for (; it != end; ++it )
+    for(; it != end; ++it)
     {
-      KURIFilterPlugin *plugin = KParts::ComponentFactory::createInstanceFromService<KURIFilterPlugin>( *it, 0, (*it)->desktopEntryName().latin1() );
-      if ( plugin )
-        m_lstPlugins.append( plugin );
+        KURIFilterPlugin *plugin =
+            KParts::ComponentFactory::createInstanceFromService< KURIFilterPlugin >(*it, 0, (*it)->desktopEntryName().latin1());
+        if(plugin)
+            m_lstPlugins.append(plugin);
     }
 
     // NOTE: Plugin priority is now determined by
@@ -338,7 +338,8 @@ void KURIFilter::loadPlugins()
     // m_lstPlugins.sort();
 }
 
-void KURIFilterPlugin::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KURIFilterPlugin::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kurifilter.moc"

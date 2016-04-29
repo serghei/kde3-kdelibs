@@ -2,7 +2,7 @@
     This file is part of the KDE libraries
 
     Copyright (C) 2000 Waldo Bastian (bastian@kde.org)
-              
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
@@ -33,16 +33,15 @@ class KVMAllocatorPrivate;
 /**
  * KVMAllocator is a virtual memory allocator.
  * Memory is allocated block-wise in a tmp file.
- * 
+ *
  * @author Waldo Bastian <bastian@kde.org>
  */
-class KDECORE_EXPORT KVMAllocator
-{
+class KDECORE_EXPORT KVMAllocator {
 public:
     struct Block;
 
     /**
-     * Create a KVMAllocator 
+     * Create a KVMAllocator
      */
     KVMAllocator();
 
@@ -57,15 +56,15 @@ public:
      * @return the allocated memory block
      */
     Block *allocate(size_t _size);
-    
+
     /**
      * Free a virtual memory block.
      * @param block the block to free
      */
     void free(Block *block);
-    
+
     /**
-     * Copy @p length bytes from @p _offset in the virtual memory block 
+     * Copy @p length bytes from @p _offset in the virtual memory block
      * @p src to normal memory at address *dest.
      * @param dest the destination of the data
      * @param src the source block
@@ -81,9 +80,9 @@ public:
      * @see copyBlock
      */
     void copy(void *dest, Block *src, int _offset = 0, size_t length = 0) KDE_DEPRECATED;
-     
+
     /**
-     * Copy @p length bytes from normal memory at address @p src to 
+     * Copy @p length bytes from normal memory at address @p src to
      * @p _offset in the virtual memory block @p dest.
      * @param dest the block to copy the data to
      * @param src the source location of the data
@@ -98,20 +97,20 @@ public:
      * @deprecated
      * @see copyBlock
      */
-    void copy(Block *dest, void *src, int _offset = 0, size_t length = 0) KDE_DEPRECATED;  
+    void copy(Block *dest, void *src, int _offset = 0, size_t length = 0) KDE_DEPRECATED;
 
     /**
      * Map a virtual memory block in memory
      * @param block the block to map
      */
     void *map(Block *block);
-    
+
     /**
      * Unmap a virtual memory block
      * @param block the block to unmap
      */
     void unmap(Block *block);
-    
+
 private:
     KVMAllocatorPrivate *d;
 };

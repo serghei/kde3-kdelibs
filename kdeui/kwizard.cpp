@@ -28,30 +28,29 @@
 
 #include "kwizard.h"
 
-KWizard::KWizard( QWidget *parent, const char *name, bool modal, WFlags f )
-            : QWizard( parent, name, modal, f )
+KWizard::KWizard(QWidget *parent, const char *name, bool modal, WFlags f) : QWizard(parent, name, modal, f)
 {
-  bool useIcons = KGlobalSettings::showIconsOnPushButtons();
+    bool useIcons = KGlobalSettings::showIconsOnPushButtons();
 
-  if ( useIcons )
-  {
-    KGuiItem back = KStdGuiItem::back( KStdGuiItem::UseRTL );
-    KGuiItem forward = KStdGuiItem::forward( KStdGuiItem::UseRTL );
+    if(useIcons)
+    {
+        KGuiItem back = KStdGuiItem::back(KStdGuiItem::UseRTL);
+        KGuiItem forward = KStdGuiItem::forward(KStdGuiItem::UseRTL);
 
-    backButton()->setIconSet( back.iconSet() );
-    nextButton()->setIconSet( forward.iconSet() );
+        backButton()->setIconSet(back.iconSet());
+        nextButton()->setIconSet(forward.iconSet());
 
-    finishButton()->setIconSet( SmallIconSet( "apply" ) );
-    cancelButton()->setIconSet( SmallIconSet( "button_cancel" ) );
-    helpButton()->setIconSet( SmallIconSet( "help" ) );
+        finishButton()->setIconSet(SmallIconSet("apply"));
+        cancelButton()->setIconSet(SmallIconSet("button_cancel"));
+        helpButton()->setIconSet(SmallIconSet("help"));
 
-    backButton()->setText( i18n( "&Back" ) );
-    nextButton()->setText( i18n( "Opposite to Back","&Next" ) );
-  }
+        backButton()->setText(i18n("&Back"));
+        nextButton()->setText(i18n("Opposite to Back", "&Next"));
+    }
 
-  QFont font = titleFont();
-  font.setBold( true );
-  setTitleFont( font );
+    QFont font = titleFont();
+    font.setBold(true);
+    setTitleFont(font);
 }
 
 #include "kwizard.moc"

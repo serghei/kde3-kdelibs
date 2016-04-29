@@ -31,13 +31,15 @@
  * A baseclass for KMimeTypeResolver, with the interface,
  * KMimeTypeResolverHelper uses.
  */
-class KIO_EXPORT KMimeTypeResolverBase
-{
+class KIO_EXPORT KMimeTypeResolverBase {
 public:
     virtual void slotViewportAdjusted() = 0;
     virtual void slotProcessMimeIcons() = 0;
+
 protected:
-    virtual void virtual_hook( int, void* ) {}
+    virtual void virtual_hook(int, void *)
+    {
+    }
 };
 
 /**
@@ -46,37 +48,31 @@ protected:
  * itself. So an object of this class is used to handle signals, slots etc.
  * and forwards them to the KMimeTypeResolver instance.
  */
-class KIO_EXPORT KMimeTypeResolverHelper : public QObject
-{
+class KIO_EXPORT KMimeTypeResolverHelper : public QObject {
     Q_OBJECT
 
 public:
-    KMimeTypeResolverHelper( KMimeTypeResolverBase *resolver,
-                             QScrollView *view )
-        : m_resolver( resolver ),
-          m_timer( new QTimer( this ) )
+    KMimeTypeResolverHelper(KMimeTypeResolverBase *resolver, QScrollView *view) : m_resolver(resolver), m_timer(new QTimer(this))
     {
-        connect( m_timer, SIGNAL( timeout() ), SLOT( slotProcessMimeIcons() ));
+        connect(m_timer, SIGNAL(timeout()), SLOT(slotProcessMimeIcons()));
 
-        connect( view->horizontalScrollBar(), SIGNAL( sliderMoved(int) ),
-                 SLOT( slotAdjust() ) );
-        connect( view->verticalScrollBar(), SIGNAL( sliderMoved(int) ),
-                 SLOT( slotAdjust() ) );
+        connect(view->horizontalScrollBar(), SIGNAL(sliderMoved(int)), SLOT(slotAdjust()));
+        connect(view->verticalScrollBar(), SIGNAL(sliderMoved(int)), SLOT(slotAdjust()));
 
-        view->viewport()->installEventFilter( this );
+        view->viewport()->installEventFilter(this);
     }
 
-    void start( int delay, bool singleShot )
+    void start(int delay, bool singleShot)
     {
-        m_timer->start( delay, singleShot );
+        m_timer->start(delay, singleShot);
     }
 
 protected:
-    virtual bool eventFilter( QObject *o, QEvent *e )
+    virtual bool eventFilter(QObject *o, QEvent *e)
     {
-        bool ret = QObject::eventFilter( o, e );
+        bool ret = QObject::eventFilter(o, e);
 
-        if ( e->type() == QEvent::Resize )
+        if(e->type() == QEvent::Resize)
             m_resolver->slotViewportAdjusted();
 
         return ret;
@@ -114,21 +110,21 @@ private:
  * @li void determineIcon( IconItem * item ), which should call
  * @li KFileItem::determineMimeType on the fileItem, and update the icon, etc.
 */
-template<class IconItem, class Parent>
+template < class IconItem, class Parent >
 class KMimeTypeResolver : public KMimeTypeResolverBase // if only this could be a QObject....
 {
 public:
-  /**
-   * Creates a new KMimeTypeResolver with the given parent.
-   * @param parent the parent's resolver
-   */
-    KMimeTypeResolver( Parent * parent )
-        : m_parent(parent),
-          m_helper( new KMimeTypeResolverHelper(this, parent->scrollWidget())),
-          m_delayNonVisibleIcons(10)
-    {}
+    /**
+     * Creates a new KMimeTypeResolver with the given parent.
+     * @param parent the parent's resolver
+     */
+    KMimeTypeResolver(Parent *parent)
+        : m_parent(parent), m_helper(new KMimeTypeResolverHelper(this, parent->scrollWidget())), m_delayNonVisibleIcons(10)
+    {
+    }
 
-    virtual ~KMimeTypeResolver() {
+    virtual ~KMimeTypeResolver()
+    {
         delete m_helper;
     }
 
@@ -138,9 +134,9 @@ public:
      * Usually 10, but should be set to 0 when the image preview feature is
      * activated, because image preview can only start once we know the mimetypes
      */
-    void start( uint delayNonVisibleIcons = 10 )
+    void start(uint delayNonVisibleIcons = 10)
     {
-        m_helper->start( 0, true /* single shot */ );
+        m_helper->start(0, true /* single shot */);
         m_delayNonVisibleIcons = delayNonVisibleIcons;
     }
 
@@ -149,7 +145,7 @@ public:
      * clear it, insert new items into it, remove items, etc.
      * @return the list of items to process
      */
-    QPtrList<IconItem> m_lstPendingMimeIconItems;
+    QPtrList< IconItem > m_lstPendingMimeIconItems;
 
     /**
      * "Connected" to the viewportAdjusted signal of the scrollview
@@ -168,23 +164,22 @@ private:
      * (no more visible icon to process).
      * @return the file item that was just processed.
      */
-    IconItem * findVisibleIcon();
+    IconItem *findVisibleIcon();
 
-    Parent * m_parent;
+    Parent *m_parent;
     KMimeTypeResolverHelper *m_helper;
     uint m_delayNonVisibleIcons;
 };
 
 // The main slot
-template<class IconItem, class Parent>
-inline void KMimeTypeResolver<IconItem, Parent>::slotProcessMimeIcons()
+template < class IconItem, class Parent > inline void KMimeTypeResolver< IconItem, Parent >::slotProcessMimeIcons()
 {
-    //kdDebug(1203) << "KMimeTypeResolver::slotProcessMimeIcons() "
+    // kdDebug(1203) << "KMimeTypeResolver::slotProcessMimeIcons() "
     //              << m_lstPendingMimeIconItems.count() << endl;
-    IconItem * item = 0L;
+    IconItem *item = 0L;
     int nextDelay = 0;
 
-    if ( m_lstPendingMimeIconItems.count() > 0 )
+    if(m_lstPendingMimeIconItems.count() > 0)
     {
         // We only find mimetypes for icons that are visible. When more
         // of our viewport is exposed, we'll get a signal and then get
@@ -193,10 +188,10 @@ inline void KMimeTypeResolver<IconItem, Parent>::slotProcessMimeIcons()
     }
 
     // No more visible items.
-    if (0 == item)
+    if(0 == item)
     {
         // Do the unvisible ones, then, but with a bigger delay, if so configured
-        if ( m_lstPendingMimeIconItems.count() > 0 )
+        if(m_lstPendingMimeIconItems.count() > 0)
         {
             item = m_lstPendingMimeIconItems.first();
             nextDelay = m_delayNonVisibleIcons;
@@ -210,43 +205,35 @@ inline void KMimeTypeResolver<IconItem, Parent>::slotProcessMimeIcons()
 
     m_parent->determineIcon(item);
     m_lstPendingMimeIconItems.remove(item);
-    m_helper->start( nextDelay, true /* single shot */ );
+    m_helper->start(nextDelay, true /* single shot */);
 }
 
-template<class IconItem, class Parent>
-inline void KMimeTypeResolver<IconItem, Parent>::slotViewportAdjusted()
+template < class IconItem, class Parent > inline void KMimeTypeResolver< IconItem, Parent >::slotViewportAdjusted()
 {
-    if (m_lstPendingMimeIconItems.isEmpty()) return;
-    IconItem * item = findVisibleIcon();
-    if (item)
+    if(m_lstPendingMimeIconItems.isEmpty())
+        return;
+    IconItem *item = findVisibleIcon();
+    if(item)
     {
-        m_parent->determineIcon( item );
+        m_parent->determineIcon(item);
         m_lstPendingMimeIconItems.remove(item);
-        m_helper->start( 0, true /* single shot */ );
+        m_helper->start(0, true /* single shot */);
     }
 }
 
-template<class IconItem, class Parent>
-inline IconItem * KMimeTypeResolver<IconItem, Parent>::findVisibleIcon()
+template < class IconItem, class Parent > inline IconItem *KMimeTypeResolver< IconItem, Parent >::findVisibleIcon()
 {
     // Find an icon that's visible and whose mimetype we don't know.
 
-    QPtrListIterator<IconItem> it(m_lstPendingMimeIconItems);
-    if ( m_lstPendingMimeIconItems.count()<20) // for few items, it's faster to not bother
+    QPtrListIterator< IconItem > it(m_lstPendingMimeIconItems);
+    if(m_lstPendingMimeIconItems.count() < 20) // for few items, it's faster to not bother
         return m_lstPendingMimeIconItems.first();
 
-    QScrollView * view = m_parent->scrollWidget();
-    QRect visibleContentsRect
-        (
-            view->viewportToContents(QPoint(0, 0)),
-            view->viewportToContents
-            (
-                QPoint(view->visibleWidth(), view->visibleHeight())
-                )
-            );
+    QScrollView *view = m_parent->scrollWidget();
+    QRect visibleContentsRect(view->viewportToContents(QPoint(0, 0)), view->viewportToContents(QPoint(view->visibleWidth(), view->visibleHeight())));
 
-    for (; it.current(); ++it)
-        if (visibleContentsRect.intersects(it.current()->rect()))
+    for(; it.current(); ++it)
+        if(visibleContentsRect.intersects(it.current()->rect()))
             return it.current();
 
     return 0L;

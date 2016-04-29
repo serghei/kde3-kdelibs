@@ -74,29 +74,32 @@ int SshProcess::checkNeedPassword()
 
 int SshProcess::exec(const char *password, int check)
 {
-    if (check)
-    setTerminal(true);
+    if(check)
+        setTerminal(true);
 
     QCStringList args;
-    args += "-l"; args += m_User;
-    args += "-o"; args += "StrictHostKeyChecking=no";
-    args += m_Host; args += m_Stub;
+    args += "-l";
+    args += m_User;
+    args += "-o";
+    args += "StrictHostKeyChecking=no";
+    args += m_Host;
+    args += m_Stub;
 
-    if (StubProcess::exec("ssh", args) < 0)
+    if(StubProcess::exec("ssh", args) < 0)
     {
         return check ? SshNotFound : -1;
     }
 
     int ret = ConverseSsh(password, check);
-    if (ret < 0)
+    if(ret < 0)
     {
-        if (!check)
+        if(!check)
             kdError(900) << k_lineinfo << "Conversation with ssh failed\n";
         return ret;
     }
-    if (check == 2)
+    if(check == 2)
     {
-        if (ret == 1)
+        if(ret == 1)
         {
             kill(m_Pid, SIGTERM);
             waitForChild();
@@ -104,29 +107,29 @@ int SshProcess::exec(const char *password, int check)
         return ret;
     }
 
-    if (m_bErase && password)
+    if(m_bErase && password)
     {
-        char *ptr = const_cast<char *>(password);
+        char *ptr = const_cast< char * >(password);
         const uint plen = strlen(password);
-        for (unsigned i=0; i < plen; i++)
+        for(unsigned i = 0; i < plen; i++)
             ptr[i] = '\000';
     }
 
     ret = ConverseStub(check);
-    if (ret < 0)
+    if(ret < 0)
     {
-        if (!check)
+        if(!check)
             kdError(900) << k_lineinfo << "Converstation with kdesu_stub failed\n";
         return ret;
     }
-    else if (ret == 1)
+    else if(ret == 1)
     {
         kill(m_Pid, SIGTERM);
         waitForChild();
         ret = SshIncorrectPassword;
     }
 
-    if (check == 1)
+    if(check == 1)
     {
         waitForChild();
         return 0;
@@ -153,24 +156,24 @@ QCString SshProcess::dcopForward()
     setDcopTransport("tcp");
 
     QCString srv = StubProcess::dcopServer();
-    if (srv.isEmpty())
+    if(srv.isEmpty())
         return result;
 
     int i = srv.find('/');
-    if (i == -1)
+    if(i == -1)
         return result;
-    if (srv.left(i) != "tcp")
+    if(srv.left(i) != "tcp")
         return result;
     int j = srv.find(':', ++i);
-    if (j == -1)
+    if(j == -1)
         return result;
-    QCString host = srv.mid(i, j-i);
+    QCString host = srv.mid(i, j - i);
     bool ok;
     int port = srv.mid(++j).toInt(&ok);
-    if (!ok)
+    if(!ok)
         return result;
 
-    m_dcopPort = 10000 + (int) ((40000.0 * rand()) / (1.0 + RAND_MAX));
+    m_dcopPort = 10000 + (int)((40000.0 * rand()) / (1.0 + RAND_MAX));
     result.sprintf("%d:%s:%d", m_dcopPort, host.data(), port);
     return result;
 }
@@ -196,60 +199,63 @@ int SshProcess::ConverseSsh(const char *password, int check)
     QCString line;
     int state = 0;
 
-    while (state < 2)
+    while(state < 2)
     {
         line = readLine();
         const uint len = line.length();
-        if (line.isNull())
+        if(line.isNull())
             return -1;
 
-        switch (state) {
-        case 0:
-            // Check for "kdesu_stub" header.
-            if (line == "kdesu_stub")
-            {
-                unreadLine(line);
-                return 0;
-            }
-    
-            // Match "Password: " with the regex ^[^:]+:[\w]*$.
-            for (i=0,j=0,colon=0; i<len; i++)
-            {
-                if (line[i] == ':')
+        switch(state)
+        {
+            case 0:
+                // Check for "kdesu_stub" header.
+                if(line == "kdesu_stub")
                 {
-                    j = i; colon++;
-                    continue;
+                    unreadLine(line);
+                    return 0;
                 }
-                if (!isspace(line[i]))
-                    j++;
-            }
-            if ((colon == 1) && (line[j] == ':'))
-            {
-                if (check == 2)
+
+                // Match "Password: " with the regex ^[^:]+:[\w]*$.
+                for(i = 0, j = 0, colon = 0; i < len; i++)
                 {
-                    m_Prompt = line;
-                    return SshNeedsPassword;
+                    if(line[i] == ':')
+                    {
+                        j = i;
+                        colon++;
+                        continue;
+                    }
+                    if(!isspace(line[i]))
+                        j++;
                 }
-                WaitSlave();
-                write(m_Fd, password, strlen(password));
-                write(m_Fd, "\n", 1);
-                state++;
+                if((colon == 1) && (line[j] == ':'))
+                {
+                    if(check == 2)
+                    {
+                        m_Prompt = line;
+                        return SshNeedsPassword;
+                    }
+                    WaitSlave();
+                    write(m_Fd, password, strlen(password));
+                    write(m_Fd, "\n", 1);
+                    state++;
+                    break;
+                }
+
+                // Warning/error message.
+                m_Error += line;
+                m_Error += "\n";
+                if(m_bTerminal)
+                    fprintf(stderr, "ssh: %s\n", line.data());
                 break;
-            }
-    
-            // Warning/error message.
-            m_Error += line; m_Error += "\n";
-            if (m_bTerminal)
-                fprintf(stderr, "ssh: %s\n", line.data());
-            break;
-    
-        case 1:
-            if (line.isEmpty())
-            {
-                state++;
-                break;
-            }
-            return -1;
+
+            case 1:
+                if(line.isEmpty())
+                {
+                    state++;
+                    break;
+                }
+                return -1;
         }
     }
     return 0;
@@ -275,5 +281,7 @@ QCString SshProcess::dcopServer()
     return QCString().sprintf("tcp/localhost:%d", m_dcopPort);
 }
 
-void SshProcess::virtual_hook( int id, void* data )
-{ StubProcess::virtual_hook( id, data ); }
+void SshProcess::virtual_hook(int id, void *data)
+{
+    StubProcess::virtual_hook(id, data);
+}

@@ -25,13 +25,11 @@
 class QPainter;
 
 
-namespace Keramik
-{
-	class ColorUtil
-	{
-	public:
-		static QColor lighten(QColor in, int factor);
-	};
+namespace Keramik {
+class ColorUtil {
+public:
+    static QColor lighten(QColor in, int factor);
+};
 }
 
 #endif

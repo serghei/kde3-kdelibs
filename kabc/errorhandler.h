@@ -37,22 +37,20 @@ namespace KABC {
   Use @p ConsoleErrorHandler or @p GuiErrorHandler in your
   application or provide your own ErrorHandler.
 */
-class KABC_EXPORT ErrorHandler
-{
-  public:
+class KABC_EXPORT ErrorHandler {
+public:
     /**
       Show error message.
     */
-    virtual void error( const QString &msg ) = 0;
+    virtual void error(const QString &msg) = 0;
 };
 
 /**
   This class prints the error messages to stderr via kdError().
 */
-class KABC_EXPORT ConsoleErrorHandler : public ErrorHandler
-{
-  public:
-    virtual void error( const QString &msg );
+class KABC_EXPORT ConsoleErrorHandler : public ErrorHandler {
+public:
+    virtual void error(const QString &msg);
 };
 
 /**
@@ -61,35 +59,32 @@ class KABC_EXPORT ConsoleErrorHandler : public ErrorHandler
 
   \deprecated Use GuiErrorHandler instead.
 */
-class KABC_EXPORT GUIErrorHandler : public ErrorHandler
-{
-  public:
-    virtual void error( const QString &msg );
+class KABC_EXPORT GUIErrorHandler : public ErrorHandler {
+public:
+    virtual void error(const QString &msg);
 };
 
 /**
   This class shows messages boxes for every
   error message.
 */
-class KABC_EXPORT GuiErrorHandler : public ErrorHandler
-{
-  public:
+class KABC_EXPORT GuiErrorHandler : public ErrorHandler {
+public:
     /**
       Create error handler.
-      
-      \param parent Widget which is used as parent for the error dialogs.
-    */      
-    GuiErrorHandler( QWidget *parent );
-  
-    virtual void error( const QString &msg );
 
-  private:
+      \param parent Widget which is used as parent for the error dialogs.
+    */
+    GuiErrorHandler(QWidget *parent);
+
+    virtual void error(const QString &msg);
+
+private:
     QWidget *mParent;
-    
+
     class Private;
     Private *d;
 };
-
 }
 
 #endif

@@ -21,33 +21,29 @@
 
 extern int xmlLoadExtDtdDefaultValue;
 
-extern "C"
+extern "C" {
+KDE_EXPORT int kdemain(int argc, char **argv)
 {
-    KDE_EXPORT int kdemain( int argc, char **argv )
+    KInstance instance("kio_ghelp");
+    fillInstance(instance);
+    (void)instance.config(); // we need this one to make sure system globals are read
+
+    kdDebug(7101) << "Starting " << getpid() << endl;
+
+    if(argc != 4)
     {
-        KInstance instance( "kio_ghelp" );
-        fillInstance(instance);
-        (void)instance.config(); // we need this one to make sure system globals are read
-
-        kdDebug(7101) << "Starting " << getpid() << endl;
-
-        if (argc != 4)
-        {
-            fprintf(stderr, "Usage: kio_ghelp protocol domain-socket1 domain-socket2\n");
-            exit(-1);
-        }
-
-        LIBXML_TEST_VERSION
-        xmlSubstituteEntitiesDefault(1);
-        xmlLoadExtDtdDefaultValue = 1;
-
-        HelpProtocol slave( true, argv[2], argv[3] );
-        slave.dispatchLoop();
-
-        kdDebug(7101) << "Done" << endl;
-        return 0;
+        fprintf(stderr, "Usage: kio_ghelp protocol domain-socket1 domain-socket2\n");
+        exit(-1);
     }
+
+    LIBXML_TEST_VERSION
+    xmlSubstituteEntitiesDefault(1);
+    xmlLoadExtDtdDefaultValue = 1;
+
+    HelpProtocol slave(true, argv[2], argv[3]);
+    slave.dispatchLoop();
+
+    kdDebug(7101) << "Done" << endl;
+    return 0;
 }
-
-
-
+}

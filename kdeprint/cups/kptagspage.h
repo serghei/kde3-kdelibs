@@ -24,21 +24,20 @@
 
 class QTable;
 
-class KPTagsPage : public KPrintDialogPage
-{
+class KPTagsPage : public KPrintDialogPage {
 public:
-	KPTagsPage(bool ro = false, QWidget *parent = 0, const char *name = 0);
-	~KPTagsPage();
+    KPTagsPage(bool ro = false, QWidget *parent = 0, const char *name = 0);
+    ~KPTagsPage();
 
-	void getOptions(QMap<QString,QString>& opts, bool incldef = false);
-	void setOptions(const QMap<QString,QString>& opts);
-	bool isValid(QString& msg);
+    void getOptions(QMap< QString, QString > &opts, bool incldef = false);
+    void setOptions(const QMap< QString, QString > &opts);
+    bool isValid(QString &msg);
 
-	QSize sizeHint() const;
-	QSize minimumSizeHint() const;
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
 
 private:
-	QTable	*m_tags;
+    QTable *m_tags;
 };
 
 #endif

@@ -10,12 +10,11 @@
 
 #include <qobject.h>
 
-class KFDTest : public QObject
-{
+class KFDTest : public QObject {
     Q_OBJECT
 
 public:
-    KFDTest( const QString& startDir, QObject *parent = 0, const char *name = 0);
+    KFDTest(const QString &startDir, QObject *parent = 0, const char *name = 0);
 
 public slots:
     void doit();

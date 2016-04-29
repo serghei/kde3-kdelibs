@@ -39,15 +39,15 @@ class KateRendererConfig;
  * (used for the views and printing)
  *
  **/
-class KateRenderer
-{
+class KateRenderer {
 public:
     /**
      * Style of Caret (Insert or Replace mode)
      */
-    enum caretStyles {
-      Insert,
-      Replace
+    enum caretStyles
+    {
+        Insert,
+        Replace
     };
 
     /**
@@ -55,7 +55,7 @@ public:
      * @param doc document to render
      * @param view view which is output (0 for example for rendering to print)
      */
-    KateRenderer(KateDocument* doc, KateView *view = 0);
+    KateRenderer(KateDocument *doc, KateView *view = 0);
 
     /**
      * Destructor
@@ -66,13 +66,16 @@ public:
      * update the highlighting attributes
      * (for example after an hl change or after hl config changed)
      */
-    void updateAttributes ();
+    void updateAttributes();
 
     /**
      * Determine whether the caret (text cursor) will be drawn.
      * @return should it be drawn?
      */
-    inline bool drawCaret() const { return m_drawCaret; }
+    inline bool drawCaret() const
+    {
+        return m_drawCaret;
+    }
 
     /**
      * Set whether the caret (text cursor) will be drawn.
@@ -84,7 +87,10 @@ public:
      * The style of the caret (text cursor) to be painted.
      * @return caretStyle
      */
-    inline KateRenderer::caretStyles caretStyle() const { return m_caretStyle; }
+    inline KateRenderer::caretStyles caretStyle() const
+    {
+        return m_caretStyle;
+    }
 
     /**
      * Set the style of caret to be painted.
@@ -97,7 +103,10 @@ public:
      * drawn to identify a tab)
      * @return tabs should be shown
      */
-    inline bool showTabs() const { return m_showTabs; }
+    inline bool showTabs() const
+    {
+        return m_showTabs;
+    }
 
     /**
      * Set whether a mark should be painted to help identifying tabs.
@@ -112,7 +121,7 @@ public:
     void setTabWidth(int tabWidth);
 
     /**
-     * @returns whether indent lines should be shown 
+     * @returns whether indent lines should be shown
      * @return indent lines should be shown
      */
     bool showIndentLines() const;
@@ -122,18 +131,21 @@ public:
      * @param showLines show the indent lines?
      */
     void setShowIndentLines(bool showLines);
-    
+
     /**
      * Sets the width of the tab. Helps performance.
      * @param indentWidth new indent width
      */
     void setIndentWidth(int indentWidth);
-    
+
     /**
      * Show the view's selection?
      * @return show sels?
      */
-    inline bool showSelections() const { return m_showSelections; }
+    inline bool showSelections() const
+    {
+        return m_showSelections;
+    }
 
     /**
      * Set whether the view's selections should be shown.
@@ -147,8 +159,8 @@ public:
      */
     void increaseFontSizes();
     void decreaseFontSizes();
-    const QFont* currentFont();
-    const QFontMetrics* currentFontMetrics();
+    const QFont *currentFont();
+    const QFontMetrics *currentFontMetrics();
 
     /**
      * @return whether the renderer is configured to paint in a
@@ -185,11 +197,11 @@ public:
      * @p xPos is returned. If @p nearest is false, the index of the character
      * containing @p xPos is returned.
      **/
-    uint textPos(uint line, int xPos, uint startCol = 0, bool nearest=true);
+    uint textPos(uint line, int xPos, uint startCol = 0, bool nearest = true);
     /**
      * @overload
      */
-    uint textPos(const KateTextLine::Ptr &, int xPos, uint startCol = 0, bool nearest=true);
+    uint textPos(const KateTextLine::Ptr &, int xPos, uint startCol = 0, bool nearest = true);
 
     // Font height
     uint fontHeight();
@@ -207,7 +219,8 @@ public:
      * The text line is painted from the upper limit of (0,0).  To move that,
      * apply a transform to your painter.
      */
-    void paintTextLine(QPainter& paint, const KateLineRange* range, int xStart, int xEnd, const KateTextCursor* cursor = 0L, const KateBracketRange* bracketmark = 0L);
+    void paintTextLine(QPainter &paint, const KateLineRange *range, int xStart, int xEnd, const KateTextCursor *cursor = 0L,
+                       const KateBracketRange *bracketmark = 0L);
 
     /**
      * Paint the background of a line
@@ -218,7 +231,7 @@ public:
      *
      * @return whether the selection has been painted or not
      */
-    bool paintTextLineBackground(QPainter& paint, int line, bool isCurrentLine, int xStart, int xEnd);
+    bool paintTextLineBackground(QPainter &paint, int line, bool isCurrentLine, int xStart, int xEnd);
 
     /**
      * This takes an in index, and returns all the attributes for it.
@@ -227,9 +240,9 @@ public:
      *
      *   attribute(myktextline->attribute(position));
      */
-    KateAttribute* attribute(uint pos);
+    KateAttribute *attribute(uint pos);
 
-  private:
+private:
     /**
      * Paint a whitespace marker on position (x, y).
      *
@@ -240,7 +253,7 @@ public:
     /** Paint a SciTE-like indent marker. */
     void paintIndentMarker(QPainter &paint, uint x, uint y);
 
-    KateDocument* m_doc;
+    KateDocument *m_doc;
     KateView *m_view;
 
     // cache of config values
@@ -255,17 +268,20 @@ public:
     bool m_showTabs;
     bool m_printerFriendly;
 
-    QMemArray<KateAttribute> *m_attributes;
+    QMemArray< KateAttribute > *m_attributes;
 
-  /**
-   * Configuration
-   */
-  public:
-    inline KateRendererConfig *config () { return m_config; };
+    /**
+     * Configuration
+     */
+public:
+    inline KateRendererConfig *config()
+    {
+        return m_config;
+    };
 
-    void updateConfig ();
+    void updateConfig();
 
-  private:
+private:
     KateRendererConfig *m_config;
 };
 

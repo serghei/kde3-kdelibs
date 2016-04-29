@@ -20,7 +20,7 @@
 #ifndef KMPRINTERPAGE_H
 #define KMPRINTERPAGE_H
 
-#if !defined( _KDEPRINT_COMPILE ) && defined( __GNUC__ )
+#if !defined(_KDEPRINT_COMPILE) && defined(__GNUC__)
 #warning internal header, do not use except if you are a KDEPrint developer
 #endif
 
@@ -33,10 +33,9 @@ class KMPrinter;
  * if you're a KDEPrint developer. The API might change in the
  * future and binary compatibility might be broken.
  */
-class KMPrinterPage
-{
+class KMPrinterPage {
 public:
-	virtual void setPrinter(KMPrinter*) = 0;
+    virtual void setPrinter(KMPrinter *) = 0;
 };
 
 #endif

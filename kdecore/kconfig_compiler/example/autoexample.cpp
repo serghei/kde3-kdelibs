@@ -36,29 +36,29 @@
 
 #include <qlabel.h>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "example", I18N_NOOP("autoconfig example"), "0.1" );
-  aboutData.addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
+    KAboutData aboutData("example", I18N_NOOP("autoconfig example"), "0.1");
+    aboutData.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  ExamplePrefsBase configSkeleton( "dummy1", "dummy2" );
-  configSkeleton.readConfig();
+    ExamplePrefsBase configSkeleton("dummy1", "dummy2");
+    configSkeleton.readConfig();
 
-  KConfigDialog *dialog = new KConfigDialog( 0, "settings", &configSkeleton );
-  
-  GeneralBase *general = new GeneralBase( 0 );
-  dialog->addPage( general, i18n("General"), "General", "" );
+    KConfigDialog *dialog = new KConfigDialog(0, "settings", &configSkeleton);
 
-  MyOptionsBase *myOptions = new MyOptionsBase( 0 );
-  dialog->addPage( myOptions, i18n("MyOptions"), "MyOptions", "" );
+    GeneralBase *general = new GeneralBase(0);
+    dialog->addPage(general, i18n("General"), "General", "");
 
-  app.setMainWidget( dialog );
+    MyOptionsBase *myOptions = new MyOptionsBase(0);
+    dialog->addPage(myOptions, i18n("MyOptions"), "MyOptions", "");
 
-  dialog->show();
-    
-  return app.exec();
+    app.setMainWidget(dialog);
+
+    dialog->show();
+
+    return app.exec();
 }

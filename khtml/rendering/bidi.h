@@ -26,81 +26,85 @@
 #include <qstring.h>
 
 namespace khtml {
-    class RenderArena;
-    class RenderBlock;
-    class RenderObject;
-    class InlineBox;
+class RenderArena;
+class RenderBlock;
+class RenderObject;
+class InlineBox;
 
-    class BidiContext {
-    public:
-	BidiContext(unsigned char level, QChar::Direction embedding, BidiContext *parent = 0, bool override = false);
-	~BidiContext();
+class BidiContext {
+public:
+    BidiContext(unsigned char level, QChar::Direction embedding, BidiContext *parent = 0, bool override = false);
+    ~BidiContext();
 
-	void ref() const;
-	void deref() const;
+    void ref() const;
+    void deref() const;
 
-	unsigned char level;
-	bool override : 1;
-	QChar::Direction dir : 5;
-	QChar::Direction basicDir : 5;
+    unsigned char level;
+    bool override : 1;
+    QChar::Direction dir : 5;
+    QChar::Direction basicDir : 5;
 
-	BidiContext *parent;
+    BidiContext *parent;
 
 
-	// refcounting....
-	mutable int count;
-    };
+    // refcounting....
+    mutable int count;
+};
 
-    struct BidiRun {
-	BidiRun(int _start, int _stop, RenderObject *_obj, BidiContext *context, QChar::Direction dir)
-	    :  start( _start ), stop( _stop ), obj( _obj ), box(0), nextRun(0)
-	{
-	    if(dir == QChar::DirON) dir = context->dir;
+struct BidiRun
+{
+    BidiRun(int _start, int _stop, RenderObject *_obj, BidiContext *context, QChar::Direction dir)
+        : start(_start), stop(_stop), obj(_obj), box(0), nextRun(0)
+    {
+        if(dir == QChar::DirON)
+            dir = context->dir;
 
-	    level = context->level;
+        level = context->level;
 
-	    // add level of run (cases I1 & I2)
-	    if( level % 2 ) {
-		if(dir == QChar::DirL || dir == QChar::DirAN || dir == QChar::DirEN)
-		    level++;
-	    } else {
-		if( dir == QChar::DirR )
-		    level++;
-		else if( dir == QChar::DirAN || dir == QChar::DirEN)
-		    level += 2;
-	    }
-	}
+        // add level of run (cases I1 & I2)
+        if(level % 2)
+        {
+            if(dir == QChar::DirL || dir == QChar::DirAN || dir == QChar::DirEN)
+                level++;
+        }
+        else
+        {
+            if(dir == QChar::DirR)
+                level++;
+            else if(dir == QChar::DirAN || dir == QChar::DirEN)
+                level += 2;
+        }
+    }
 
-        void detach(RenderArena* renderArena);
+    void detach(RenderArena *renderArena);
 
-        // Overloaded new operator.
-        void* operator new(size_t sz, RenderArena* renderArena) throw();
+    // Overloaded new operator.
+    void *operator new(size_t sz, RenderArena *renderArena) throw();
 
-        // Overridden to prevent the normal delete from being called.
-        void operator delete(void* ptr, size_t sz);
+    // Overridden to prevent the normal delete from being called.
+    void operator delete(void *ptr, size_t sz);
 
 private:
-        // The normal operator new is disallowed.
-        void* operator new(size_t sz) throw();
+    // The normal operator new is disallowed.
+    void *operator new(size_t sz) throw();
 
 public:
-	int start;
-	int stop;
+    int start;
+    int stop;
 
-        RenderObject *obj;
-        InlineBox* box;
+    RenderObject *obj;
+    InlineBox *box;
 
-	// explicit + implicit levels here
-	uchar level;
+    // explicit + implicit levels here
+    uchar level;
 
-        bool compact : 1;
+    bool compact : 1;
 
-        BidiRun* nextRun;
-    };
+    BidiRun *nextRun;
+};
 
-    struct BidiIterator;
-    struct BidiState;
-
+struct BidiIterator;
+struct BidiState;
 }
 
 #endif

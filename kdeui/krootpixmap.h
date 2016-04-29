@@ -15,7 +15,7 @@
 #include <qcolor.h>
 #include <kdelibs_export.h>
 
-#ifndef Q_WS_QWS //FIXME
+#ifndef Q_WS_QWS // FIXME
 
 class QRect;
 class QWidget;
@@ -43,8 +43,7 @@ class KRootPixmapData;
  * @author Geert Jansen <jansen@kde.org>
  * @version $Id: krootpixmap.h 345292 2004-09-09 20:07:27Z staniek $
  */
-class KDEUI_EXPORT KRootPixmap: public QObject
-{
+class KDEUI_EXPORT KRootPixmap : public QObject {
     Q_OBJECT
 
 public:
@@ -57,13 +56,13 @@ public:
      * transparent.
      * @param name The internal name of the pixmap
      */
-    KRootPixmap( QWidget *target, const char *name=0 );
+    KRootPixmap(QWidget *target, const char *name = 0);
 
     /**
      * Constructs a KRootPixmap where the parent QObject and target QWidget are
      * different.
      */
-    KRootPixmap( QWidget *target, QObject *parent, const char *name=0 );
+    KRootPixmap(QWidget *target, QObject *parent, const char *name = 0);
 
     /**
      * Destructs the object.
@@ -79,7 +78,10 @@ public:
     /**
      * Returns true if the KRootPixmap is active.
      */
-    bool isActive() const { return m_bActive; }
+    bool isActive() const
+    {
+        return m_bActive;
+    }
 
     /**
      * Returns the number of the current desktop.
@@ -90,25 +92,37 @@ public:
      * Returns true if custom painting is enabled, false otherwise.
      * @see setCustomPainting(bool)
      */
-    bool customPainting() const { return m_bCustomPaint; }
+    bool customPainting() const
+    {
+        return m_bCustomPaint;
+    }
 
 #ifndef KDE_NO_COMPAT
     /**
      * Deprecated, use isAvailable() instead.
      * @deprecated
      */
-    KDE_DEPRECATED bool checkAvailable(bool) { return isAvailable(); }
+    KDE_DEPRECATED bool checkAvailable(bool)
+    {
+        return isAvailable();
+    }
 #endif
 
     /** @since 3.2
      * @return the fade color.
      */
-    const QColor &color() const { return m_FadeColor; }
+    const QColor &color() const
+    {
+        return m_FadeColor;
+    }
 
     /** @since 3.2
      * @return the color opacity.
      */
-    double opacity() const { return m_Fade; }
+    double opacity() const
+    {
+        return m_Fade;
+    }
 
 public slots:
     /**
@@ -139,7 +153,7 @@ public slots:
      *
      * @param force Force a repaint, even if the contents did not change.
      */
-    void repaint( bool force );
+    void repaint(bool force);
 
     /**
      * Repaints the widget background. Normally, you shouldn't need this
@@ -154,7 +168,10 @@ public slots:
      * backgroundUpdated() signal when the background for the
      * target widget changes, instead of applying the new background.
      */
-    void setCustomPainting( bool enable ) { m_bCustomPaint = enable; }
+    void setCustomPainting(bool enable)
+    {
+        m_bCustomPaint = enable;
+    }
 
     /**
      * Asks KDesktop to export the desktop background as a KSharedPixmap.
@@ -173,7 +190,7 @@ signals:
      *
      * @param pm A pixmap containing the new background.
      */
-    void backgroundUpdated( const QPixmap &pm );
+    void backgroundUpdated(const QPixmap &pm);
 
 protected:
     /**
@@ -187,13 +204,13 @@ protected:
      * applies the fade effect, then sets the target's background, or emits
      * backgroundUpdated(const QPixmap &) depending on the painting mode.
      */
-    virtual void updateBackground( KSharedPixmap * );
+    virtual void updateBackground(KSharedPixmap *);
 
 private slots:
     void slotBackgroundChanged(int);
     void slotDone(bool);
     void desktopChanged(int desktop);
-    void desktopChanged( WId window, unsigned int properties );
+    void desktopChanged(WId window, unsigned int properties);
 
 private:
     bool m_bActive, m_bInit, m_bCustomPaint;
@@ -213,4 +230,3 @@ private:
 
 #endif // ! Q_WS_QWS
 #endif // __KRootPixmap_h_Included__
-

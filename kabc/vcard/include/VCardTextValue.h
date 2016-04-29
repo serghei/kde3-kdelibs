@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,21 +21,18 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  TEXTVALUE_H
-#define  TEXTVALUE_H
+#ifndef TEXTVALUE_H
+#define TEXTVALUE_H
 
 #include <VCardValue.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT TextValue : public Value
-{
+class KVCARD_EXPORT TextValue : public Value {
 #include "TextValue-generated.h"
 
-  TextValue *clone();
+    TextValue *clone();
 };
-
 }
 
 #endif

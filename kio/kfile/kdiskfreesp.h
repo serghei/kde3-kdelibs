@@ -37,51 +37,51 @@ class KProcess;
  * This class parses the output of "df" to find the disk usage
  * information for a given partition (mount point).
  */
-class KIO_EXPORT KDiskFreeSp : public QObject
-{  Q_OBJECT
+class KIO_EXPORT KDiskFreeSp : public QObject {
+    Q_OBJECT
 public:
-   KDiskFreeSp( QObject *parent=0, const char *name=0 );
-   /**
-    * Destructor - this object autodeletes itself when it's done
-    */
-   ~KDiskFreeSp();
-   /**
-    * Call this to fire a search on the disk usage information
-    * for @p mountPoint. foundMountPoint will be emitted
-    * if this mount point is found, with the info requested.
-    * done is emitted in any case.
-    */
-   int readDF( const QString & mountPoint );
+    KDiskFreeSp(QObject *parent = 0, const char *name = 0);
+    /**
+     * Destructor - this object autodeletes itself when it's done
+     */
+    ~KDiskFreeSp();
+    /**
+     * Call this to fire a search on the disk usage information
+     * for @p mountPoint. foundMountPoint will be emitted
+     * if this mount point is found, with the info requested.
+     * done is emitted in any case.
+     */
+    int readDF(const QString &mountPoint);
 
-   /**
-    * Call this to fire a search on the disk usage information
-    * for the mount point containing @p path.
-    * foundMountPoint will be emitted
-    * if this mount point is found, with the info requested.
-    * done is emitted in any case.
-    */
-   static KDiskFreeSp * findUsageInfo( const QString & path );
+    /**
+     * Call this to fire a search on the disk usage information
+     * for the mount point containing @p path.
+     * foundMountPoint will be emitted
+     * if this mount point is found, with the info requested.
+     * done is emitted in any case.
+     */
+    static KDiskFreeSp *findUsageInfo(const QString &path);
 
 signals:
-   void foundMountPoint( const QString & mountPoint, unsigned long kBSize, unsigned long kBUsed, unsigned long kBAvail );
+    void foundMountPoint(const QString &mountPoint, unsigned long kBSize, unsigned long kBUsed, unsigned long kBAvail);
 
-   // This one is a hack around a weird (compiler?) bug. In the former signal,
-   // the slot in KPropsDlg would get 0L, 0L as the last two parameters.
-   // When using const ulong& instead, all is ok.
-   void foundMountPoint( const unsigned long&, const unsigned long&, const unsigned long&, const QString& );
-   void done();
+    // This one is a hack around a weird (compiler?) bug. In the former signal,
+    // the slot in KPropsDlg would get 0L, 0L as the last two parameters.
+    // When using const ulong& instead, all is ok.
+    void foundMountPoint(const unsigned long &, const unsigned long &, const unsigned long &, const QString &);
+    void done();
 
 private slots:
-   void receivedDFStdErrOut(KProcess *, char *data, int len);
-   void dfDone();
+    void receivedDFStdErrOut(KProcess *, char *data, int len);
+    void dfDone();
 
 private:
-  KProcess         *dfProc;
-  QCString          dfStringErrOut;
-  QString           m_mountPoint;
-  bool              readingDFStdErrOut;
-  class KDiskFreeSpPrivate;
-  KDiskFreeSpPrivate * d;
+    KProcess *dfProc;
+    QCString dfStringErrOut;
+    QString m_mountPoint;
+    bool readingDFStdErrOut;
+    class KDiskFreeSpPrivate;
+    KDiskFreeSpPrivate *d;
 };
 /***************************************************************************/
 

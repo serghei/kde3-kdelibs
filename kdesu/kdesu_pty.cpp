@@ -17,7 +17,7 @@
 
 
 #ifndef _GNU_SOURCE
-#define _GNU_SOURCE   /* Needed for getpt, ptsname in glibc 2.1.x systems */
+#define _GNU_SOURCE /* Needed for getpt, ptsname in glibc 2.1.x systems */
 #endif
 
 #include <config.h>
@@ -54,7 +54,7 @@ extern "C" int grantpt(int fd) __THROW;
 #endif
 
 #ifdef HAVE_PTSNAME
-extern "C" char * ptsname(int fd) __THROW;
+extern "C" char *ptsname(int fd) __THROW;
 #endif
 
 #ifdef HAVE_UNLOCKPT
@@ -66,15 +66,15 @@ extern "C" char *_getpty(int *, int, mode_t, int);
 #endif
 
 #ifdef HAVE_PTY_H
-	#include <pty.h>
+#include <pty.h>
 #endif
 
 #include <termios.h>
 
 #ifdef HAVE_LIBUTIL_H
-	#include <libutil.h>
+#include <libutil.h>
 #elif defined(HAVE_UTIL_H)
-	#include <util.h>
+#include <util.h>
 #endif
 
 PTY::PTY()
@@ -84,8 +84,8 @@ PTY::PTY()
 
 PTY::~PTY()
 {
-    if (ptyfd >= 0)
-	close(ptyfd);
+    if(ptyfd >= 0)
+        close(ptyfd);
 }
 
 
@@ -106,13 +106,14 @@ int PTY::getpt()
     // More preferred than the linux hacks
     char name[30];
     int master_fd, slave_fd;
-    if (openpty(&master_fd, &slave_fd, name, 0L, 0L) != -1)  {
-	ttyname = name;
-	name[5]='p';
-	ptyname = name;
+    if(openpty(&master_fd, &slave_fd, name, 0L, 0L) != -1)
+    {
+        ttyname = name;
+        name[5] = 'p';
+        ptyname = name;
         close(slave_fd); // We don't need this yet // Yes, we do.
-	ptyfd = master_fd;
-	return ptyfd;
+        ptyfd = master_fd;
+        return ptyfd;
     }
     ptyfd = -1;
     kdDebug(900) << k_lineinfo << "Opening pty failed.\n";
@@ -121,12 +122,13 @@ int PTY::getpt()
 #elif defined(HAVE__GETPTY)
     // 3: Irix interface
     int master_fd;
-    ttyname = _getpty(&master_fd,O_RDWR,0600,0);
-    if (ttyname)
-	ptyfd = master_fd;
-    else{
-	ptyfd = -1;
-	kdDebug(900) << k_lineinfo << "Opening pty failed.error" << errno << '\n';
+    ttyname = _getpty(&master_fd, O_RDWR, 0600, 0);
+    if(ttyname)
+        ptyfd = master_fd;
+    else
+    {
+        ptyfd = -1;
+        kdDebug(900) << k_lineinfo << "Opening pty failed.error" << errno << '\n';
     }
     return ptyfd;
 
@@ -136,49 +138,51 @@ int PTY::getpt()
     // 4.1: Try /dev/ptmx first. (Linux w/ Unix98 PTYs, Solaris)
 
     ptyfd = open("/dev/ptmx", O_RDWR);
-    if (ptyfd >= 0) {
-	ptyname = "/dev/ptmx";
+    if(ptyfd >= 0)
+    {
+        ptyname = "/dev/ptmx";
 #ifdef HAVE_PTSNAME
-	ttyname = ::ptsname(ptyfd);
-	return ptyfd;
-#elif defined (TIOCGPTN)
-	int ptyno;
-	if (ioctl(ptyfd, TIOCGPTN, &ptyno) == 0) {
-	    ttyname.sprintf("/dev/pts/%d", ptyno);
-	    return ptyfd;
-	}
+        ttyname = ::ptsname(ptyfd);
+        return ptyfd;
+#elif defined(TIOCGPTN)
+        int ptyno;
+        if(ioctl(ptyfd, TIOCGPTN, &ptyno) == 0)
+        {
+            ttyname.sprintf("/dev/pts/%d", ptyno);
+            return ptyfd;
+        }
 #endif
-	close(ptyfd);
+        close(ptyfd);
     }
 
     // 4.2: Try /dev/pty[p-e][0-f] (Linux w/o UNIX98 PTY's)
 
-    for (const char *c1 = "pqrstuvwxyzabcde"; *c1 != '\0'; c1++)
+    for(const char *c1 = "pqrstuvwxyzabcde"; *c1 != '\0'; c1++)
     {
-	for (const char *c2 = "0123456789abcdef"; *c2 != '\0'; c2++)
-	{
-	    ptyname.sprintf("/dev/pty%c%c", *c1, *c2);
-	    ttyname.sprintf("/dev/tty%c%c", *c1, *c2);
-	    if (access(ptyname, F_OK) < 0)
-		goto linux_out;
-	    ptyfd = open(ptyname, O_RDWR);
-	    if (ptyfd >= 0)
-		return ptyfd;
-	}
+        for(const char *c2 = "0123456789abcdef"; *c2 != '\0'; c2++)
+        {
+            ptyname.sprintf("/dev/pty%c%c", *c1, *c2);
+            ttyname.sprintf("/dev/tty%c%c", *c1, *c2);
+            if(access(ptyname, F_OK) < 0)
+                goto linux_out;
+            ptyfd = open(ptyname, O_RDWR);
+            if(ptyfd >= 0)
+                return ptyfd;
+        }
     }
 linux_out:
 
     // 4.3: Try /dev/pty%d (SCO, Unixware)
 
-    for (int i=0; i<256; i++)
+    for(int i = 0; i < 256; i++)
     {
-	ptyname.sprintf("/dev/ptyp%d", i);
-	ttyname.sprintf("/dev/ttyp%d", i);
-	if (access(ptyname, F_OK) < 0)
-	    break;
-	ptyfd = open(ptyname, O_RDWR);
-	if (ptyfd >= 0)
-	    return ptyfd;
+        ptyname.sprintf("/dev/ptyp%d", i);
+        ttyname.sprintf("/dev/ttyp%d", i);
+        if(access(ptyname, F_OK) < 0)
+            break;
+        ptyfd = open(ptyname, O_RDWR);
+        if(ptyfd >= 0)
+            return ptyfd;
     }
 
 
@@ -188,14 +192,13 @@ linux_out:
     return -1;
 
 #endif // HAVE_GETPT && HAVE_PTSNAME
-
 }
 
 
 int PTY::grantpt()
 {
-    if (ptyfd < 0)
-	return -1;
+    if(ptyfd < 0)
+        return -1;
 
 #ifdef HAVE_GRANTPT
 
@@ -210,44 +213,44 @@ int PTY::grantpt()
 #else
 
     // konsole_grantpty only does /dev/pty??
-    if (ptyname.left(8) != "/dev/pty")
-	return 0;
+    if(ptyname.left(8) != "/dev/pty")
+        return 0;
 
     // Use konsole_grantpty:
-    if (KStandardDirs::findExe("konsole_grantpty").isEmpty())
+    if(KStandardDirs::findExe("konsole_grantpty").isEmpty())
     {
-	kdError(900) << k_lineinfo << "konsole_grantpty not found.\n";
-	return -1;
+        kdError(900) << k_lineinfo << "konsole_grantpty not found.\n";
+        return -1;
     }
 
     // As defined in konsole_grantpty.c
     const int pty_fileno = 3;
 
     pid_t pid;
-    if ((pid = fork()) == -1)
+    if((pid = fork()) == -1)
     {
-	kdError(900) << k_lineinfo << "fork(): " << perror << "\n";
-	return -1;
+        kdError(900) << k_lineinfo << "fork(): " << perror << "\n";
+        return -1;
     }
 
-    if (pid)
+    if(pid)
     {
-	// Parent: wait for child
-	int ret;
-	waitpid(pid, &ret, 0);
-    	if (WIFEXITED(ret) && !WEXITSTATUS(ret))
-	    return 0;
-	kdError(900) << k_lineinfo << "konsole_grantpty returned with error: "
-		     << WEXITSTATUS(ret) << "\n";
-	return -1;
-    } else
+        // Parent: wait for child
+        int ret;
+        waitpid(pid, &ret, 0);
+        if(WIFEXITED(ret) && !WEXITSTATUS(ret))
+            return 0;
+        kdError(900) << k_lineinfo << "konsole_grantpty returned with error: " << WEXITSTATUS(ret) << "\n";
+        return -1;
+    }
+    else
     {
-	// Child: exec konsole_grantpty
-	if (ptyfd != pty_fileno && dup2(ptyfd, pty_fileno) < 0)
-	    _exit(1);
-	execlp("konsole_grantpty", "konsole_grantpty", "--grant", (void *)0);
-	kdError(900) << k_lineinfo << "exec(): " << perror << "\n";
-	_exit(1);
+        // Child: exec konsole_grantpty
+        if(ptyfd != pty_fileno && dup2(ptyfd, pty_fileno) < 0)
+            _exit(1);
+        execlp("konsole_grantpty", "konsole_grantpty", "--grant", (void *)0);
+        kdError(900) << k_lineinfo << "exec(): " << perror << "\n";
+        _exit(1);
     }
 
     // shut up, gcc
@@ -263,8 +266,8 @@ int PTY::grantpt()
 
 int PTY::unlockpt()
 {
-    if (ptyfd < 0)
-	return -1;
+    if(ptyfd < 0)
+        return -1;
 
 #ifdef HAVE_UNLOCKPT
 
@@ -284,7 +287,6 @@ int PTY::unlockpt()
     return 0;
 
 #endif
-
 }
 
 
@@ -294,9 +296,8 @@ int PTY::unlockpt()
 
 QCString PTY::ptsname()
 {
-    if (ptyfd < 0)
-	return 0;
+    if(ptyfd < 0)
+        return 0;
 
     return ttyname;
 }
-

@@ -52,97 +52,96 @@ class Kded;
  * @author Waldo Bastian <bastian@kde.org>
  */
 
-class KDE_EXPORT KDEDModule : public QObject, public DCOPObject
-{
-  Q_OBJECT
-// For inclusion in KDE4 (since it's BIC) long-needed fix for allowing
-// DCOP-based kdedmodules -- Gav <gav@kde.org>.
-//  K_DCOP
-  friend class Kded;
+class KDE_EXPORT KDEDModule : public QObject, public DCOPObject {
+    Q_OBJECT
+    // For inclusion in KDE4 (since it's BIC) long-needed fix for allowing
+    // DCOP-based kdedmodules -- Gav <gav@kde.org>.
+    //  K_DCOP
+    friend class Kded;
+
 public:
-  
-  /**
-   * Create a DCOPObject named @p name
-   */
-  KDEDModule(const QCString &name);
-  
-  virtual ~KDEDModule();
-  
-  /**
-   * Specifies the idle timeout in seconds. The default is 0. 
-   *
-   * This will call the idle slot @p secs seconds after the last 
-   * reference was removed.
-   */
-  void setIdleTimeout(int secs);
+    /**
+     * Create a DCOPObject named @p name
+     */
+    KDEDModule(const QCString &name);
 
-  /**
-   * Reset the idle timeout counter. 
-   *
-   * (re)starts the timeout counter if no objects are being referenced.
-   */
-  void resetIdle();
+    virtual ~KDEDModule();
 
-  /**
-   * Insert @p obj indexed with @p app and @p key. The
-   * object will be automatically deleted when the application
-   * @p app unregisters with DCOP.
-   *
-   * Any previous object inserted with the same values for @p app 
-   * and @p key will be removed.
-   */
-  void insert(const QCString &app, const QCString &key, KShared *obj);
+    /**
+     * Specifies the idle timeout in seconds. The default is 0.
+     *
+     * This will call the idle slot @p secs seconds after the last
+     * reference was removed.
+     */
+    void setIdleTimeout(int secs);
 
-  /**
-   * Lookup object indexed with @p app and @p key
-   */
-  KShared *find(const QCString &app, const QCString &key);
-  
-  /**
-   * remove object indexed with @p app and @p key.
-   * The object will be deleted when it is no more referenced.
-   */
-  void remove(const QCString &app, const QCString &key);
+    /**
+     * Reset the idle timeout counter.
+     *
+     * (re)starts the timeout counter if no objects are being referenced.
+     */
+    void resetIdle();
 
-  /**
-   * remove all objects indexed with @p app. 
-   * The objects will be deleted when they are no more referenced.
-   */
-  void removeAll(const QCString &app);
+    /**
+     * Insert @p obj indexed with @p app and @p key. The
+     * object will be automatically deleted when the application
+     * @p app unregisters with DCOP.
+     *
+     * Any previous object inserted with the same values for @p app
+     * and @p key will be removed.
+     */
+    void insert(const QCString &app, const QCString &key, KShared *obj);
 
-  /**
-   * Returns whether a certain mainwindow has registered itself with KDED
-   */
-  bool isWindowRegistered(long windowId);
-  
+    /**
+     * Lookup object indexed with @p app and @p key
+     */
+    KShared *find(const QCString &app, const QCString &key);
+
+    /**
+     * remove object indexed with @p app and @p key.
+     * The object will be deleted when it is no more referenced.
+     */
+    void remove(const QCString &app, const QCString &key);
+
+    /**
+     * remove all objects indexed with @p app.
+     * The objects will be deleted when they are no more referenced.
+     */
+    void removeAll(const QCString &app);
+
+    /**
+     * Returns whether a certain mainwindow has registered itself with KDED
+     */
+    bool isWindowRegistered(long windowId);
+
 public slots:
-  /**
-   * Called whenever the last referenced object gets dereferenced.
-   *
-   * See also setIdleTimeout()
-   *
-   * You may delete the module from this slot.
-   */
-  virtual void idle() { };
+    /**
+     * Called whenever the last referenced object gets dereferenced.
+     *
+     * See also setIdleTimeout()
+     *
+     * You may delete the module from this slot.
+     */
+    virtual void idle(){};
 
 signals:
-  /**
-   * Emitted when the module is being deleted.
-   */
-  void moduleDeleted(KDEDModule *);
+    /**
+     * Emitted when the module is being deleted.
+     */
+    void moduleDeleted(KDEDModule *);
 
-  /**
-   * Emitted when a mainwindow registers itself.
-   */
-  void windowRegistered(long windowId);
+    /**
+     * Emitted when a mainwindow registers itself.
+     */
+    void windowRegistered(long windowId);
 
-  /**
-   * Emitted when a mainwindow unregisters itself.
-   */
-  void windowUnregistered(long windowId);
+    /**
+     * Emitted when a mainwindow unregisters itself.
+     */
+    void windowUnregistered(long windowId);
 
 private:
-  KDEDModulePrivate *d;
+    KDEDModulePrivate *d;
 };
 
 #endif

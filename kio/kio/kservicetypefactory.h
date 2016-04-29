@@ -42,82 +42,86 @@ class KExecMimeType;
  * It loads the service types from parsing directories (e.g. mimelnk/)
  * but can also create service types from data streams or single config files
  */
-class KIO_EXPORT KServiceTypeFactory : public KSycocaFactory
-{
-  K_SYCOCAFACTORY( KST_KServiceTypeFactory )
+class KIO_EXPORT KServiceTypeFactory : public KSycocaFactory {
+    K_SYCOCAFACTORY(KST_KServiceTypeFactory)
 public:
-  /**
-   * Create factory
-   */
-  KServiceTypeFactory();
+    /**
+     * Create factory
+     */
+    KServiceTypeFactory();
 
-  virtual ~KServiceTypeFactory();
+    virtual ~KServiceTypeFactory();
 
-  /**
-   * Not meant to be called at this level
-   */
-  virtual KSycocaEntry *createEntry(const QString &, const char *)
-    { assert(0); return 0; }
+    /**
+     * Not meant to be called at this level
+     */
+    virtual KSycocaEntry *createEntry(const QString &, const char *)
+    {
+        assert(0);
+        return 0;
+    }
 
-  /**
-   * Find a service type in the database file (allocates it)
-   * Overloaded by KBuildServiceTypeFactory to return a memory one.
-   */
-  virtual KServiceType * findServiceTypeByName(const QString &_name);
+    /**
+     * Find a service type in the database file (allocates it)
+     * Overloaded by KBuildServiceTypeFactory to return a memory one.
+     */
+    virtual KServiceType *findServiceTypeByName(const QString &_name);
 
-  /**
-   * Find a the property type of a named property.
-   */
-  QVariant::Type findPropertyTypeByName(const QString &_name);
+    /**
+     * Find a the property type of a named property.
+     */
+    QVariant::Type findPropertyTypeByName(const QString &_name);
 
-  /**
-   * Find a mimetype from a filename (using the pattern list)
-   * @param _filename filename to check.
-   * @param match if provided, returns the pattern that matched.
-   */
-  KMimeType * findFromPattern(const QString &_filename, QString *match = 0);
+    /**
+     * Find a mimetype from a filename (using the pattern list)
+     * @param _filename filename to check.
+     * @param match if provided, returns the pattern that matched.
+     */
+    KMimeType *findFromPattern(const QString &_filename, QString *match = 0);
 
-  /**
-   * @return all mimetypes
-   * Slow and memory consuming, avoid using
-   */
-  KMimeType::List allMimeTypes();
+    /**
+     * @return all mimetypes
+     * Slow and memory consuming, avoid using
+     */
+    KMimeType::List allMimeTypes();
 
-  /**
-   * @return all servicetypes
-   * Slow and memory consuming, avoid using
-   */
-  KServiceType::List allServiceTypes();
+    /**
+     * @return all servicetypes
+     * Slow and memory consuming, avoid using
+     */
+    KServiceType::List allServiceTypes();
 
-  /**
-   * @return true if at least one mimetype is present
-   * Safety test
-   */
-  bool checkMimeTypes();
+    /**
+     * @return true if at least one mimetype is present
+     * Safety test
+     */
+    bool checkMimeTypes();
 
-  /**
-   * @return the unique servicetype factory, creating it if necessary
-   */
-  static KServiceTypeFactory * self();
-
-protected:
-  virtual KServiceType *createEntry(int offset);
-
-private:
-  static KServiceTypeFactory *_self;
+    /**
+     * @return the unique servicetype factory, creating it if necessary
+     */
+    static KServiceTypeFactory *self();
 
 protected:
-  int m_fastPatternOffset;
-  int m_otherPatternOffset;
-  QMap<QString,int> m_propertyTypeDict;
+    virtual KServiceType *createEntry(int offset);
 
 private:
-  QStringList m_patterns;
-  QValueVector<Q_INT32> m_pattern_offsets;
+    static KServiceTypeFactory *_self;
+
 protected:
-  virtual void virtual_hook( int id, void* data );
+    int m_fastPatternOffset;
+    int m_otherPatternOffset;
+    QMap< QString, int > m_propertyTypeDict;
+
 private:
-  class KServiceTypeFactoryPrivate* d;
+    QStringList m_patterns;
+    QValueVector< Q_INT32 > m_pattern_offsets;
+
+protected:
+    virtual void virtual_hook(int id, void *data);
+
+private:
+    class KServiceTypeFactoryPrivate *d;
 };
 
 #endif

@@ -43,20 +43,20 @@ EntityImpl::EntityImpl(DocumentImpl *doc, DOMString _name) : NodeBaseImpl(doc)
     m_systemId = 0;
     m_notationName = 0;
     m_name = _name.implementation();
-    if (m_name)
+    if(m_name)
         m_name->ref();
 }
 
 EntityImpl::EntityImpl(DocumentImpl *doc, DOMString _publicId, DOMString _systemId, DOMString _notationName) : NodeBaseImpl(doc)
 {
     m_publicId = _publicId.implementation();
-    if (m_publicId)
+    if(m_publicId)
         m_publicId->ref();
     m_systemId = _systemId.implementation();
-    if (m_systemId)
+    if(m_systemId)
         m_systemId->ref();
     m_notationName = _notationName.implementation();
-    if (m_notationName)
+    if(m_notationName)
         m_notationName->ref();
     m_name = 0;
 }
@@ -64,13 +64,13 @@ EntityImpl::EntityImpl(DocumentImpl *doc, DOMString _publicId, DOMString _system
 
 EntityImpl::~EntityImpl()
 {
-    if (m_publicId)
+    if(m_publicId)
         m_publicId->deref();
-    if (m_systemId)
+    if(m_systemId)
         m_systemId->deref();
-    if (m_notationName)
+    if(m_notationName)
         m_notationName->deref();
-    if (m_name)
+    if(m_name)
         m_name->deref();
 }
 
@@ -99,7 +99,7 @@ unsigned short EntityImpl::nodeType() const
     return Node::ENTITY_NODE;
 }
 
-NodeImpl *EntityImpl::cloneNode ( bool /*deep*/)
+NodeImpl *EntityImpl::cloneNode(bool /*deep*/)
 {
     // Spec says cloning Document nodes is "implementation dependent"
     // so we do not support it...
@@ -107,9 +107,10 @@ NodeImpl *EntityImpl::cloneNode ( bool /*deep*/)
 }
 
 // DOM Section 1.1.1
-bool EntityImpl::childTypeAllowed( unsigned short type )
+bool EntityImpl::childTypeAllowed(unsigned short type)
 {
-    switch (type) {
+    switch(type)
+    {
         case Node::ELEMENT_NODE:
         case Node::PROCESSING_INSTRUCTION_NODE:
         case Node::COMMENT_NODE:
@@ -127,26 +128,31 @@ DOMString EntityImpl::toString() const
 {
     DOMString result = "<!ENTITY' ";
 
-    if (m_name && m_name->l != 0) {
-	result += " ";
-	result += m_name;
+    if(m_name && m_name->l != 0)
+    {
+        result += " ";
+        result += m_name;
     }
 
-    if (m_publicId && m_publicId->l != 0) {
-	result += " PUBLIC \"";
-	result += m_publicId;
-	result += "\" \"";
-	result += m_systemId;
-	result += "\"";
-    } else if (m_systemId && m_systemId->l != 0) {
-	result += " SYSTEM \"";
-	result += m_systemId;
-	result += "\"";
+    if(m_publicId && m_publicId->l != 0)
+    {
+        result += " PUBLIC \"";
+        result += m_publicId;
+        result += "\" \"";
+        result += m_systemId;
+        result += "\"";
+    }
+    else if(m_systemId && m_systemId->l != 0)
+    {
+        result += " SYSTEM \"";
+        result += m_systemId;
+        result += "\"";
     }
 
-    if (m_notationName && m_notationName->l != 0) {
-	result += " NDATA ";
-	result += m_notationName;
+    if(m_notationName && m_notationName->l != 0)
+    {
+        result += " NDATA ";
+        result += m_notationName;
     }
 
     result += ">";
@@ -164,13 +170,13 @@ EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *doc) : NodeBaseImpl(doc)
 EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *doc, DOMStringImpl *_entityName) : NodeBaseImpl(doc)
 {
     m_entityName = _entityName;
-    if (m_entityName)
+    if(m_entityName)
         m_entityName->ref();
 }
 
 EntityReferenceImpl::~EntityReferenceImpl()
 {
-    if (m_entityName)
+    if(m_entityName)
         m_entityName->deref();
 }
 
@@ -184,20 +190,21 @@ unsigned short EntityReferenceImpl::nodeType() const
     return Node::ENTITY_REFERENCE_NODE;
 }
 
-NodeImpl *EntityReferenceImpl::cloneNode ( bool deep )
+NodeImpl *EntityReferenceImpl::cloneNode(bool deep)
 {
-    EntityReferenceImpl *clone = new EntityReferenceImpl(docPtr(),m_entityName);
+    EntityReferenceImpl *clone = new EntityReferenceImpl(docPtr(), m_entityName);
     // ### make sure children are readonly
     // ### since we are a reference, should we clone children anyway (even if not deep?)
-    if (deep)
+    if(deep)
         cloneChildNodes(clone);
     return clone;
 }
 
 // DOM Section 1.1.1
-bool EntityReferenceImpl::childTypeAllowed( unsigned short type )
+bool EntityReferenceImpl::childTypeAllowed(unsigned short type)
 {
-    switch (type) {
+    switch(type)
+    {
         case Node::ELEMENT_NODE:
         case Node::PROCESSING_INSTRUCTION_NODE:
         case Node::COMMENT_NODE:
@@ -232,23 +239,23 @@ NotationImpl::NotationImpl(DocumentImpl *doc) : NodeBaseImpl(doc)
 NotationImpl::NotationImpl(DocumentImpl *doc, DOMString _name, DOMString _publicId, DOMString _systemId) : NodeBaseImpl(doc)
 {
     m_name = _name.implementation();
-    if (m_name)
+    if(m_name)
         m_name->ref();
     m_publicId = _publicId.implementation();
-    if (m_publicId)
+    if(m_publicId)
         m_publicId->ref();
     m_systemId = _systemId.implementation();
-    if (m_systemId)
+    if(m_systemId)
         m_systemId->ref();
 }
 
 NotationImpl::~NotationImpl()
 {
-    if (m_name)
+    if(m_name)
         m_name->deref();
-    if (m_publicId)
+    if(m_publicId)
         m_publicId->deref();
-    if (m_systemId)
+    if(m_systemId)
         m_systemId->deref();
 }
 
@@ -272,7 +279,7 @@ unsigned short NotationImpl::nodeType() const
     return Node::NOTATION_NODE;
 }
 
-NodeImpl *NotationImpl::cloneNode ( bool /*deep*/)
+NodeImpl *NotationImpl::cloneNode(bool /*deep*/)
 {
     // Spec says cloning Document nodes is "implementation dependent"
     // so we do not support it...
@@ -280,7 +287,7 @@ NodeImpl *NotationImpl::cloneNode ( bool /*deep*/)
 }
 
 // DOM Section 1.1.1
-bool NotationImpl::childTypeAllowed( unsigned short /*type*/ )
+bool NotationImpl::childTypeAllowed(unsigned short /*type*/)
 {
     return false;
 }
@@ -302,10 +309,10 @@ ProcessingInstructionImpl::ProcessingInstructionImpl(DocumentImpl *doc) : NodeBa
 ProcessingInstructionImpl::ProcessingInstructionImpl(DocumentImpl *doc, DOMString _target, DOMString _data) : NodeBaseImpl(doc)
 {
     m_target = _target.implementation();
-    if (m_target)
+    if(m_target)
         m_target->ref();
     m_data = _data.implementation();
-    if (m_data)
+    if(m_data)
         m_data->ref();
     m_sheet = 0;
     m_cachedSheet = 0;
@@ -314,14 +321,14 @@ ProcessingInstructionImpl::ProcessingInstructionImpl(DocumentImpl *doc, DOMStrin
 
 ProcessingInstructionImpl::~ProcessingInstructionImpl()
 {
-    if (m_target)
+    if(m_target)
         m_target->deref();
-    if (m_data)
+    if(m_data)
         m_data->deref();
-    if (m_cachedSheet)
-	m_cachedSheet->deref(this);
-    if (m_sheet)
-	m_sheet->deref();
+    if(m_cachedSheet)
+        m_cachedSheet->deref(this);
+    if(m_sheet)
+        m_sheet->deref();
 }
 
 DOMString ProcessingInstructionImpl::target() const
@@ -329,18 +336,19 @@ DOMString ProcessingInstructionImpl::target() const
     return m_target;
 }
 
-void ProcessingInstructionImpl::setData( const DOMString &_data, int &exceptioncode )
+void ProcessingInstructionImpl::setData(const DOMString &_data, int &exceptioncode)
 {
     // NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
-    if (isReadOnly()) {
+    if(isReadOnly())
+    {
         exceptioncode = DOMException::NO_MODIFICATION_ALLOWED_ERR;
         return;
     }
 
-    if (m_data)
+    if(m_data)
         m_data->deref();
     m_data = _data.implementation();
-    if (m_data)
+    if(m_data)
         m_data->ref();
 }
 
@@ -359,16 +367,16 @@ DOMString ProcessingInstructionImpl::nodeValue() const
     return m_data;
 }
 
-void ProcessingInstructionImpl::setNodeValue( const DOMString &_nodeValue, int &exceptioncode )
+void ProcessingInstructionImpl::setNodeValue(const DOMString &_nodeValue, int &exceptioncode)
 {
     // NO_MODIFICATION_ALLOWED_ERR: taken care of by setData()
     setData(_nodeValue, exceptioncode);
 }
 
-NodeImpl *ProcessingInstructionImpl::cloneNode ( bool /*deep*/)
+NodeImpl *ProcessingInstructionImpl::cloneNode(bool /*deep*/)
 {
     // ### copy m_localHref
-    return new ProcessingInstructionImpl(docPtr(),m_target,m_data);
+    return new ProcessingInstructionImpl(docPtr(), m_target, m_data);
 }
 
 DOMString ProcessingInstructionImpl::localHref() const
@@ -377,14 +385,15 @@ DOMString ProcessingInstructionImpl::localHref() const
 }
 
 // DOM Section 1.1.1
-bool ProcessingInstructionImpl::childTypeAllowed( unsigned short /*type*/ )
+bool ProcessingInstructionImpl::childTypeAllowed(unsigned short /*type*/)
 {
     return false;
 }
 
 void ProcessingInstructionImpl::checkStyleSheet()
 {
-    if (m_target && DOMString(m_target) == "xml-stylesheet") {
+    if(m_target && DOMString(m_target) == "xml-stylesheet")
+    {
         // see http://www.w3.org/TR/xml-stylesheet/
         // ### check that this occurs only in the prolog
         // ### support stylesheet included in a fragment of this (or another) document
@@ -392,35 +401,36 @@ void ProcessingInstructionImpl::checkStyleSheet()
         XMLAttributeReader attrReader(DOMString(m_data).string());
         bool attrsOk;
         QXmlAttributes attrs = attrReader.readAttrs(attrsOk);
-        if (!attrsOk)
+        if(!attrsOk)
             return;
-        if (attrs.value("type") != "text/css" && !attrs.value("type").isEmpty())
+        if(attrs.value("type") != "text/css" && !attrs.value("type").isEmpty())
             return;
 
         DOMString href = attrs.value("href");
 
-        if (href.length()>1)
+        if(href.length() > 1)
         {
-            if (href[0]=='#')
+            if(href[0] == '#')
             {
-                if (m_localHref)
+                if(m_localHref)
                     m_localHref->deref();
-                m_localHref=href.implementation()->split(1);
-                if (m_localHref)
+                m_localHref = href.implementation()->split(1);
+                if(m_localHref)
                     m_localHref->ref();
             }
             else
             {
                 // ### some validation on the URL?
                 // ### FIXME charset
-                if (m_cachedSheet) m_cachedSheet->deref(this);
+                if(m_cachedSheet)
+                    m_cachedSheet->deref(this);
                 m_cachedSheet = getDocument()->docLoader()->requestStyleSheet(getDocument()->completeURL(href.string()), QString::null);
-                if (m_cachedSheet) {
-                    getDocument()->addPendingSheet(); //before ref, because during the ref it might load!
-                    m_cachedSheet->ref( this );
+                if(m_cachedSheet)
+                {
+                    getDocument()->addPendingSheet(); // before ref, because during the ref it might load!
+                    m_cachedSheet->ref(this);
                 }
             }
-
         }
     }
 }
@@ -432,25 +442,25 @@ StyleSheetImpl *ProcessingInstructionImpl::sheet() const
 
 void ProcessingInstructionImpl::setStyleSheet(const DOM::DOMString &url, const DOM::DOMString &sheet, const DOM::DOMString &charset)
 {
-    if (m_sheet)
-	m_sheet->deref();
+    if(m_sheet)
+        m_sheet->deref();
     m_sheet = new CSSStyleSheetImpl(getDocument(), url);
     m_sheet->ref();
     m_sheet->setCharset(charset);
     m_sheet->parseString(sheet);
-    if (m_cachedSheet)
-	m_cachedSheet->deref(this);
+    if(m_cachedSheet)
+        m_cachedSheet->deref(this);
     m_cachedSheet = 0;
 
     getDocument()->styleSheetLoaded();
 }
 
-void ProcessingInstructionImpl::setStyleSheet(CSSStyleSheetImpl* sheet)
+void ProcessingInstructionImpl::setStyleSheet(CSSStyleSheetImpl *sheet)
 {
-    if (m_sheet)
+    if(m_sheet)
         m_sheet->deref();
     m_sheet = sheet;
-    if (m_sheet)
+    if(m_sheet)
         m_sheet->ref();
 }
 
@@ -466,7 +476,7 @@ DOMString ProcessingInstructionImpl::toString() const
 
 // -------------------------------------------------------------------------
 
-XMLAttributeReader::XMLAttributeReader(const QString& _attrString)
+XMLAttributeReader::XMLAttributeReader(const QString &_attrString)
 {
     m_attrString = _attrString;
 }
@@ -479,17 +489,18 @@ QXmlAttributes XMLAttributeReader::readAttrs(bool &ok)
 {
     // parse xml file
     QXmlInputSource source;
-    source.setData("<?xml version=\"1.0\"?><attrs "+m_attrString+" />");
+    source.setData("<?xml version=\"1.0\"?><attrs " + m_attrString + " />");
     QXmlSimpleReader reader;
-    reader.setContentHandler( this );
-    ok = reader.parse( source );
+    reader.setContentHandler(this);
+    ok = reader.parse(source);
     return attrs;
 }
 
-bool XMLAttributeReader::startElement(const QString& /*namespaceURI*/, const QString& localName,
-                                      const QString& /*qName*/, const QXmlAttributes& atts)
+bool XMLAttributeReader::startElement(const QString & /*namespaceURI*/, const QString &localName, const QString & /*qName*/,
+                                      const QXmlAttributes &atts)
 {
-    if (localName == "attrs") {
+    if(localName == "attrs")
+    {
         attrs = atts;
         return true;
     }

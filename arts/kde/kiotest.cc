@@ -12,43 +12,39 @@ using namespace std;
 using namespace Arts;
 
 
-static KCmdLineOptions options[] =
-{
-    { "+[URL]", I18N_NOOP("URL to open"), 0 },
-    KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"+[URL]", I18N_NOOP("URL to open"), 0}, KCmdLineLastOption};
 
 int main(int argc, char **argv)
 {
-	KAboutData aboutData( "kiotest", I18N_NOOP("KIOTest"), I18N_NOOP("0.1"), "", KAboutData::License_GPL, "");
-							  
-	KCmdLineArgs::init(argc,argv,&aboutData);
-	KCmdLineArgs::addCmdLineOptions(options); 	
-	KApplication app;
-	QIOManager qiomanager;
-	Dispatcher dispatcher(&qiomanager);
-	KIOInputStream stream;
-	StdoutWriter writer;
+    KAboutData aboutData("kiotest", I18N_NOOP("KIOTest"), I18N_NOOP("0.1"), "", KAboutData::License_GPL, "");
 
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
+    KApplication app;
+    QIOManager qiomanager;
+    Dispatcher dispatcher(&qiomanager);
+    KIOInputStream stream;
+    StdoutWriter writer;
 
-	if(args->count())
-	{
-	    if(!stream.openURL(args->arg(0)))
-	    {
-		printf("can't open url");
-		exit(1);
-	    }
-	}
-	else
-	    exit(1);
-	    
-	args->clear();
-	
-	connect(stream, writer);
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-	writer.start();
-	stream.start();
-	
-	app.exec();
+    if(args->count())
+    {
+        if(!stream.openURL(args->arg(0)))
+        {
+            printf("can't open url");
+            exit(1);
+        }
+    }
+    else
+        exit(1);
+
+    args->clear();
+
+    connect(stream, writer);
+
+    writer.start();
+    stream.start();
+
+    app.exec();
 }

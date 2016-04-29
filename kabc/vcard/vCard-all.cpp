@@ -34,4 +34,3 @@
 #include "VCard.cpp"
 #include "VCardEntity.cpp"
 #include "Value.cpp"
-

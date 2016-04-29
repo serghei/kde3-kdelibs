@@ -55,11 +55,11 @@ class KAction;
 class KURLRequester;
 
 namespace DOM {
-    class HTMLFormElementImpl;
-    class HTMLInputElementImpl;
-    class HTMLSelectElementImpl;
-    class HTMLGenericFormElementImpl;
-    class HTMLTextAreaElementImpl;
+class HTMLFormElementImpl;
+class HTMLInputElementImpl;
+class HTMLSelectElementImpl;
+class HTMLGenericFormElementImpl;
+class HTMLTextAreaElementImpl;
 }
 
 namespace khtml {
@@ -68,33 +68,58 @@ class DocLoader;
 
 // -------------------------------------------------------------------------
 
-class RenderFormElement : public khtml::RenderWidget
-{
+class RenderFormElement : public khtml::RenderWidget {
 public:
-    RenderFormElement(DOM::HTMLGenericFormElementImpl* node);
+    RenderFormElement(DOM::HTMLGenericFormElementImpl *node);
     virtual ~RenderFormElement();
 
-    virtual const char *renderName() const { return "RenderForm"; }
+    virtual const char *renderName() const
+    {
+        return "RenderForm";
+    }
 
-    virtual bool isFormElement() const { return true; }
+    virtual bool isFormElement() const
+    {
+        return true;
+    }
 
     // form elements never have padding
-    virtual int paddingTop() const { return 0; }
-    virtual int paddingBottom() const { return 0; }
-    virtual int paddingLeft() const { return 0; }
-    virtual int paddingRight() const { return 0; }
+    virtual int paddingTop() const
+    {
+        return 0;
+    }
+    virtual int paddingBottom() const
+    {
+        return 0;
+    }
+    virtual int paddingLeft() const
+    {
+        return 0;
+    }
+    virtual int paddingRight() const
+    {
+        return 0;
+    }
 
     virtual void updateFromElement();
 
     virtual void layout();
-    virtual short baselinePosition( bool ) const;
+    virtual short baselinePosition(bool) const;
 
     DOM::HTMLGenericFormElementImpl *element() const
-    { return static_cast<DOM::HTMLGenericFormElementImpl*>(RenderObject::element()); }
+    {
+        return static_cast< DOM::HTMLGenericFormElementImpl * >(RenderObject::element());
+    }
 
 protected:
-    virtual bool isRenderButton() const { return false; }
-    virtual bool isEditable() const { return false; }
+    virtual bool isRenderButton() const
+    {
+        return false;
+    }
+    virtual bool isEditable() const
+    {
+        return false;
+    }
     AlignmentFlags textAlignment() const;
 
     QPoint m_mousePos;
@@ -104,39 +129,54 @@ protected:
 // -------------------------------------------------------------------------
 
 // generic class for all buttons
-class RenderButton : public RenderFormElement
-{
+class RenderButton : public RenderFormElement {
     Q_OBJECT
 public:
-    RenderButton(DOM::HTMLGenericFormElementImpl* node);
+    RenderButton(DOM::HTMLGenericFormElementImpl *node);
 
-    virtual const char *renderName() const { return "RenderButton"; }
+    virtual const char *renderName() const
+    {
+        return "RenderButton";
+    }
 
-    virtual short baselinePosition( bool ) const;
+    virtual short baselinePosition(bool) const;
 
     // don't even think about making this method virtual!
-    DOM::HTMLInputElementImpl* element() const
-    { return static_cast<DOM::HTMLInputElementImpl*>(RenderObject::element()); }
+    DOM::HTMLInputElementImpl *element() const
+    {
+        return static_cast< DOM::HTMLInputElementImpl * >(RenderObject::element());
+    }
 
 protected:
-    virtual bool isRenderButton() const { return true; }
+    virtual bool isRenderButton() const
+    {
+        return true;
+    }
 };
 
 // -------------------------------------------------------------------------
 
-class RenderCheckBox : public RenderButton
-{
+class RenderCheckBox : public RenderButton {
     Q_OBJECT
 public:
-    RenderCheckBox(DOM::HTMLInputElementImpl* node);
+    RenderCheckBox(DOM::HTMLInputElementImpl *node);
 
-    virtual const char *renderName() const { return "RenderCheckBox"; }
+    virtual const char *renderName() const
+    {
+        return "RenderCheckBox";
+    }
     virtual void updateFromElement();
     virtual void calcMinMaxWidth();
 
-    virtual bool handleEvent(const DOM::EventImpl&) { return false; }
+    virtual bool handleEvent(const DOM::EventImpl &)
+    {
+        return false;
+    }
 
-    QCheckBox *widget() const { return static_cast<QCheckBox*>(m_widget); }
+    QCheckBox *widget() const
+    {
+        return static_cast< QCheckBox * >(m_widget);
+    }
 
 public slots:
     virtual void slotStateChanged(int state);
@@ -144,20 +184,28 @@ public slots:
 
 // -------------------------------------------------------------------------
 
-class RenderRadioButton : public RenderButton
-{
+class RenderRadioButton : public RenderButton {
     Q_OBJECT
 public:
-    RenderRadioButton(DOM::HTMLInputElementImpl* node);
+    RenderRadioButton(DOM::HTMLInputElementImpl *node);
 
-    virtual const char *renderName() const { return "RenderRadioButton"; }
+    virtual const char *renderName() const
+    {
+        return "RenderRadioButton";
+    }
 
     virtual void calcMinMaxWidth();
     virtual void updateFromElement();
 
-    virtual bool handleEvent(const DOM::EventImpl&) { return false; }
+    virtual bool handleEvent(const DOM::EventImpl &)
+    {
+        return false;
+    }
 
-    QRadioButton *widget() const { return static_cast<QRadioButton*>(m_widget); }
+    QRadioButton *widget() const
+    {
+        return static_cast< QRadioButton * >(m_widget);
+    }
 
 public slots:
     virtual void slotToggled(bool);
@@ -165,73 +213,86 @@ public slots:
 
 // -------------------------------------------------------------------------
 
-class RenderSubmitButton : public RenderButton
-{
+class RenderSubmitButton : public RenderButton {
 public:
     RenderSubmitButton(DOM::HTMLInputElementImpl *element);
 
-    virtual const char *renderName() const { return "RenderSubmitButton"; }
+    virtual const char *renderName() const
+    {
+        return "RenderSubmitButton";
+    }
 
     virtual void calcMinMaxWidth();
     virtual void updateFromElement();
-    virtual short baselinePosition( bool ) const;
+    virtual short baselinePosition(bool) const;
+
 private:
     QString rawText();
 };
 
 // -------------------------------------------------------------------------
 
-class RenderImageButton : public RenderImage
-{
+class RenderImageButton : public RenderImage {
 public:
-    RenderImageButton(DOM::HTMLInputElementImpl *element)
-        : RenderImage(element) {}
+    RenderImageButton(DOM::HTMLInputElementImpl *element) : RenderImage(element)
+    {
+    }
 
-    virtual const char *renderName() const { return "RenderImageButton"; }
+    virtual const char *renderName() const
+    {
+        return "RenderImageButton";
+    }
 };
 
 
 // -------------------------------------------------------------------------
 
-class RenderResetButton : public RenderSubmitButton
-{
+class RenderResetButton : public RenderSubmitButton {
 public:
     RenderResetButton(DOM::HTMLInputElementImpl *element);
 
-    virtual const char *renderName() const { return "RenderResetButton"; }
-
+    virtual const char *renderName() const
+    {
+        return "RenderResetButton";
+    }
 };
 
 // -------------------------------------------------------------------------
 
-class RenderPushButton : public RenderSubmitButton
-{
+class RenderPushButton : public RenderSubmitButton {
 public:
-    RenderPushButton(DOM::HTMLInputElementImpl *element)
-        : RenderSubmitButton(element) {}
-
+    RenderPushButton(DOM::HTMLInputElementImpl *element) : RenderSubmitButton(element)
+    {
+    }
 };
 
 // -------------------------------------------------------------------------
 
-class RenderLineEdit : public RenderFormElement
-{
+class RenderLineEdit : public RenderFormElement {
     Q_OBJECT
 public:
     RenderLineEdit(DOM::HTMLInputElementImpl *element);
 
     virtual void calcMinMaxWidth();
 
-    virtual const char *renderName() const { return "RenderLineEdit"; }
+    virtual const char *renderName() const
+    {
+        return "RenderLineEdit";
+    }
     virtual void updateFromElement();
     virtual void setStyle(RenderStyle *style);
 
     void select();
 
-    KLineEdit *widget() const { return static_cast<KLineEdit*>(m_widget); }
-    DOM::HTMLInputElementImpl* element() const
-    { return static_cast<DOM::HTMLInputElementImpl*>(RenderObject::element()); }
-    void highLightWord( unsigned int length, unsigned int pos );
+    KLineEdit *widget() const
+    {
+        return static_cast< KLineEdit * >(m_widget);
+    }
+    DOM::HTMLInputElementImpl *element() const
+    {
+        return static_cast< DOM::HTMLInputElementImpl * >(RenderObject::element());
+    }
+    void highLightWord(unsigned int length, unsigned int pos);
 
     long selectionStart();
     long selectionEnd();
@@ -241,83 +302,97 @@ public:
 public slots:
     void slotReturnPressed();
     void slotTextChanged(const QString &string);
+
 protected:
     virtual void handleFocusOut();
 
 private:
-    virtual bool isEditable() const { return true; }
-    virtual bool canHaveBorder() const { return true; }
+    virtual bool isEditable() const
+    {
+        return true;
+    }
+    virtual bool canHaveBorder() const
+    {
+        return true;
+    }
 };
 
 // -------------------------------------------------------------------------
 
-class LineEditWidget : public KLineEdit
-{
+class LineEditWidget : public KLineEdit {
     Q_OBJECT
 public:
-    LineEditWidget(DOM::HTMLInputElementImpl* input,
-                   KHTMLView* view, QWidget* parent);
+    LineEditWidget(DOM::HTMLInputElementImpl *input, KHTMLView *view, QWidget *parent);
     ~LineEditWidget();
-    void highLightWord( unsigned int length, unsigned int pos );
+    void highLightWord(unsigned int length, unsigned int pos);
 
 protected:
-    virtual bool event( QEvent *e );
+    virtual bool event(QEvent *e);
     virtual void mouseMoveEvent(QMouseEvent *e);
     virtual QPopupMenu *createPopupMenu();
 private slots:
-    void extendedMenuActivated( int id);
+    void extendedMenuActivated(int id);
     void slotCheckSpelling();
-    void slotSpellCheckReady( KSpell *s );
-    void slotSpellCheckDone( const QString &s );
-    void spellCheckerMisspelling( const QString &text, const QStringList &, unsigned int pos);
-    void spellCheckerCorrected( const QString &, const QString &, unsigned int );
+    void slotSpellCheckReady(KSpell *s);
+    void slotSpellCheckDone(const QString &s);
+    void spellCheckerMisspelling(const QString &text, const QStringList &, unsigned int pos);
+    void spellCheckerCorrected(const QString &, const QString &, unsigned int);
     void spellCheckerFinished();
 
 private:
-    enum LineEditMenuID {
+    enum LineEditMenuID
+    {
         ClearHistory
     };
-    DOM::HTMLInputElementImpl* m_input;
-    KHTMLView* m_view;
+    DOM::HTMLInputElementImpl *m_input;
+    KHTMLView *m_view;
     KSpell *m_spell;
     KAction *m_spellAction;
 };
 
 // -------------------------------------------------------------------------
 
-class RenderFieldset : public RenderBlock
-{
+class RenderFieldset : public RenderBlock {
 public:
     RenderFieldset(DOM::HTMLGenericFormElementImpl *element);
 
-    virtual const char *renderName() const { return "RenderFieldSet"; }
-    virtual RenderObject* layoutLegend(bool relayoutChildren);
-    virtual void setStyle(RenderStyle* _style);
+    virtual const char *renderName() const
+    {
+        return "RenderFieldSet";
+    }
+    virtual RenderObject *layoutLegend(bool relayoutChildren);
+    virtual void setStyle(RenderStyle *_style);
 
 protected:
-    virtual void paintBoxDecorations(PaintInfo& pI, int _tx, int _ty);
-    void paintBorderMinusLegend(QPainter *p, int _tx, int _ty, int w,
-                                  int h, const RenderStyle *style, int lx, int lw);
-    RenderObject* findLegend();
+    virtual void paintBoxDecorations(PaintInfo &pI, int _tx, int _ty);
+    void paintBorderMinusLegend(QPainter *p, int _tx, int _ty, int w, int h, const RenderStyle *style, int lx, int lw);
+    RenderObject *findLegend();
 };
 
 // -------------------------------------------------------------------------
 
-class RenderFileButton : public RenderFormElement
-{
+class RenderFileButton : public RenderFormElement {
     Q_OBJECT
 public:
     RenderFileButton(DOM::HTMLInputElementImpl *element);
 
-    virtual const char *renderName() const { return "RenderFileButton"; }
+    virtual const char *renderName() const
+    {
+        return "RenderFileButton";
+    }
     virtual void calcMinMaxWidth();
     virtual void updateFromElement();
     void select();
 
-    KURLRequester *widget() const { return static_cast<KURLRequester*>(m_widget); }
+    KURLRequester *widget() const
+    {
+        return static_cast< KURLRequester * >(m_widget);
+    }
 
     DOM::HTMLInputElementImpl *element() const
-    { return static_cast<DOM::HTMLInputElementImpl*>(RenderObject::element()); }
+    {
+        return static_cast< DOM::HTMLInputElementImpl * >(RenderObject::element());
+    }
 
 public slots:
     void slotReturnPressed();
@@ -327,9 +402,18 @@ public slots:
 protected:
     virtual void handleFocusOut();
 
-    virtual bool isEditable() const { return true; }
-    virtual bool canHaveBorder() const { return true; }
-    virtual bool acceptsSyntheticEvents() const { return false; }
+    virtual bool isEditable() const
+    {
+        return true;
+    }
+    virtual bool canHaveBorder() const
+    {
+        return true;
+    }
+    virtual bool acceptsSyntheticEvents() const
+    {
+        return false;
+    }
 
     bool m_clicked;
     bool m_haveFocus;
@@ -338,32 +422,38 @@ protected:
 
 // -------------------------------------------------------------------------
 
-class RenderLabel : public RenderFormElement
-{
+class RenderLabel : public RenderFormElement {
 public:
     RenderLabel(DOM::HTMLGenericFormElementImpl *element);
 
-    virtual const char *renderName() const { return "RenderLabel"; }
+    virtual const char *renderName() const
+    {
+        return "RenderLabel";
+    }
 
 protected:
-    virtual bool canHaveBorder() const { return true; }
+    virtual bool canHaveBorder() const
+    {
+        return true;
+    }
 };
 
 
 // -------------------------------------------------------------------------
 
-class RenderLegend : public RenderBlock
-{
+class RenderLegend : public RenderBlock {
 public:
     RenderLegend(DOM::HTMLGenericFormElementImpl *element);
 
-    virtual const char *renderName() const { return "RenderLegend"; }
+    virtual const char *renderName() const
+    {
+        return "RenderLegend";
+    }
 };
 
 // -------------------------------------------------------------------------
 
-class ComboBoxWidget : public KComboBox
-{
+class ComboBoxWidget : public KComboBox {
 public:
     ComboBoxWidget(QWidget *parent);
 
@@ -374,33 +464,43 @@ protected:
 
 // -------------------------------------------------------------------------
 
-class RenderSelect : public RenderFormElement
-{
+class RenderSelect : public RenderFormElement {
     Q_OBJECT
 public:
     RenderSelect(DOM::HTMLSelectElementImpl *element);
 
-    virtual const char *renderName() const { return "RenderSelect"; }
+    virtual const char *renderName() const
+    {
+        return "RenderSelect";
+    }
 
     virtual void calcMinMaxWidth();
     virtual void layout();
 
     void setOptionsChanged(bool _optionsChanged);
 
-    bool selectionChanged() { return m_selectionChanged; }
-    void setSelectionChanged(bool _selectionChanged) { m_selectionChanged = _selectionChanged; }
+    bool selectionChanged()
+    {
+        return m_selectionChanged;
+    }
+    void setSelectionChanged(bool _selectionChanged)
+    {
+        m_selectionChanged = _selectionChanged;
+    }
     virtual void updateFromElement();
 
     void updateSelection();
 
     DOM::HTMLSelectElementImpl *element() const
-    { return static_cast<DOM::HTMLSelectElementImpl*>(RenderObject::element()); }
+    {
+        return static_cast< DOM::HTMLSelectElementImpl * >(RenderObject::element());
+    }
 
 protected:
     KListBox *createListBox();
     ComboBoxWidget *createComboBox();
 
-    unsigned  m_size;
+    unsigned m_size;
     bool m_multiple;
     bool m_useListBox;
     bool m_selectionChanged;
@@ -413,17 +513,19 @@ protected slots:
 };
 
 // -------------------------------------------------------------------------
-class TextAreaWidget : public KTextEdit
-{
+class TextAreaWidget : public KTextEdit {
     Q_OBJECT
 public:
-    TextAreaWidget(int wrap, QWidget* parent);
+    TextAreaWidget(int wrap, QWidget *parent);
     virtual ~TextAreaWidget();
 
 protected:
-    virtual bool event (QEvent *e );
-    virtual QPopupMenu *createPopupMenu(const QPoint& pos);
-    virtual QPopupMenu* createPopupMenu() { return KTextEdit::createPopupMenu(); }
+    virtual bool event(QEvent *e);
+    virtual QPopupMenu *createPopupMenu(const QPoint &pos);
+    virtual QPopupMenu *createPopupMenu()
+    {
+        return KTextEdit::createPopupMenu();
+    }
 private slots:
     void slotFind();
     void slotDoFind();
@@ -431,8 +533,9 @@ private slots:
     void slotReplace();
     void slotDoReplace();
     void slotReplaceNext();
-    void slotReplaceText(const QString&, int, int, int);
-    void slotFindHighlight(const QString&, int, int);
+    void slotReplaceText(const QString &, int, int, int);
+    void slotFindHighlight(const QString &, int, int);
+
 private:
     KFindDialog *m_findDlg;
     KFind *m_find;
@@ -448,28 +551,35 @@ private:
 
 // -------------------------------------------------------------------------
 
-class RenderTextArea : public RenderFormElement
-{
+class RenderTextArea : public RenderFormElement {
     Q_OBJECT
 public:
     RenderTextArea(DOM::HTMLTextAreaElementImpl *element);
     ~RenderTextArea();
 
-    virtual const char *renderName() const { return "RenderTextArea"; }
+    virtual const char *renderName() const
+    {
+        return "RenderTextArea";
+    }
     virtual void calcMinMaxWidth();
     virtual void layout();
     virtual void setStyle(RenderStyle *style);
 
-    virtual void close ( );
+    virtual void close();
     virtual void updateFromElement();
 
     // don't even think about making this method virtual!
-    TextAreaWidget *widget() const { return static_cast<TextAreaWidget*>(m_widget); }
-    DOM::HTMLTextAreaElementImpl* element() const
-    { return static_cast<DOM::HTMLTextAreaElementImpl*>(RenderObject::element()); }
+    TextAreaWidget *widget() const
+    {
+        return static_cast< TextAreaWidget * >(m_widget);
+    }
+    DOM::HTMLTextAreaElementImpl *element() const
+    {
+        return static_cast< DOM::HTMLTextAreaElementImpl * >(RenderObject::element());
+    }
 
     QString text();
-    void highLightWord( unsigned int length, unsigned int pos );
+    void highLightWord(unsigned int length, unsigned int pos);
 
     void select();
 
@@ -484,26 +594,36 @@ protected slots:
 protected:
     virtual void handleFocusOut();
 
-    virtual bool isEditable() const { return true; }
-    virtual bool canHaveBorder() const { return true; }
+    virtual bool isEditable() const
+    {
+        return true;
+    }
+    virtual bool canHaveBorder() const
+    {
+        return true;
+    }
 
     bool scrollbarsStyled;
+
 private:
-    //Convert para, index -> offset
+    // Convert para, index -> offset
     long computeCharOffset(int para, int index);
 
-    //Convert offset -> para, index
-    void computeParagraphAndIndex(long offset, int* para, int* index);
+    // Convert offset -> para, index
+    void computeParagraphAndIndex(long offset, int *para, int *index);
 
-    //Helper for doing the conversion..
-    enum Mode { ParaLength,     //Returns the length of the entire paragraph
-           ParaPortionLength,   //Return length of paragraph portion set by threshold
-           ParaPortionOffset }; //Return offset that matches the length threshold.
+    // Helper for doing the conversion..
+    enum Mode
+    {
+        ParaLength,        // Returns the length of the entire paragraph
+        ParaPortionLength, // Return length of paragraph portion set by threshold
+        ParaPortionOffset
+    }; // Return offset that matches the length threshold.
     int queryParagraphInfo(int para, Mode m, int param = -1);
 };
 
 // -------------------------------------------------------------------------
 
-} //namespace
+} // namespace
 
 #endif

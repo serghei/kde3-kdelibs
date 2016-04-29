@@ -31,8 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //#include "kaccelmanager.h"
 
 
-class KPanelMenuPrivate
-{
+class KPanelMenuPrivate {
 public:
     bool init;
     int clearDelay;
@@ -40,23 +39,21 @@ public:
     QTimer t;
 };
 
-KPanelMenu::KPanelMenu(const QString &startDir, QWidget *parent, const char *name)
-  : KPopupMenu(parent, name)
+KPanelMenu::KPanelMenu(const QString &startDir, QWidget *parent, const char *name) : KPopupMenu(parent, name)
 {
     init(startDir);
 }
 
-KPanelMenu::KPanelMenu(QWidget *parent, const char *name)
-  : KPopupMenu(parent, name)
+KPanelMenu::KPanelMenu(QWidget *parent, const char *name) : KPopupMenu(parent, name)
 {
     init();
 }
 
-void KPanelMenu::init(const QString& path)
+void KPanelMenu::init(const QString &path)
 {
     d = new KPanelMenuPrivate;
 
-    setInitialized( false );
+    setInitialized(false);
     d->startPath = path;
 
     connect(this, SIGNAL(activated(int)), SLOT(slotExec(int)));
@@ -67,7 +64,7 @@ void KPanelMenu::init(const QString& path)
     config->setGroup("menus");
     d->clearDelay = config->readNumEntry("MenuCacheTime", 60000); // 1 minute
 
-    //KAcceleratorManager::manage(this);
+    // KAcceleratorManager::manage(this);
     setKeyboardShortcutsEnabled(true);
 }
 
@@ -83,7 +80,7 @@ void KPanelMenu::slotAboutToShow()
         d->t.stop();
 
     // teared off ?
-    if ( isTopLevel() )
+    if(isTopLevel())
         d->clearDelay = 0;
 
     internalInitialize();
@@ -91,14 +88,15 @@ void KPanelMenu::slotAboutToShow()
 
 void KPanelMenu::slotClear()
 {
-    setInitialized( false );
+    setInitialized(false);
     clear();
 }
 
 void KPanelMenu::hideEvent(QHideEvent *ev)
 {
     // start the cache timer
-    if(d->clearDelay) {
+    if(d->clearDelay)
+    {
         disconnect(&(d->t), SIGNAL(timeout()), this, SLOT(slotClear()));
         connect(&(d->t), SIGNAL(timeout()), this, SLOT(slotClear()));
         d->t.start(d->clearDelay, true);
@@ -111,12 +109,12 @@ void KPanelMenu::disableAutoClear()
     d->clearDelay = 0;
 }
 
-const QString& KPanelMenu::path() const
+const QString &KPanelMenu::path() const
 {
     return d->startPath;
 }
 
-void KPanelMenu::setPath(const QString& p)
+void KPanelMenu::setPath(const QString &p)
 {
     d->startPath = p;
 }
@@ -147,12 +145,13 @@ void KPanelMenu::deinitialize()
 
 void KPanelMenu::internalInitialize()
 {
-    if( initialized() )
+    if(initialized())
         return;
     initialize();
-    setInitialized( true );
+    setInitialized(true);
 }
 
-void KPanelMenu::virtual_hook( int id, void* data )
-{ KPopupMenu::virtual_hook( id, data ); }
-
+void KPanelMenu::virtual_hook(int id, void *data)
+{
+    KPopupMenu::virtual_hook(id, data);
+}

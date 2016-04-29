@@ -22,17 +22,19 @@
 #include "viewcursordcopinterface.h"
 #include "view.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateViewCursorInterface
-{
-  public:
-    PrivateViewCursorInterface() {interface=0;}
-    ~PrivateViewCursorInterface() {}
+class PrivateViewCursorInterface {
+public:
+    PrivateViewCursorInterface()
+    {
+        interface = 0;
+    }
+    ~PrivateViewCursorInterface()
+    {
+    }
     ViewCursorDCOPInterface *interface;
 };
-
 }
 
 using namespace KTextEditor;
@@ -41,34 +43,34 @@ unsigned int ViewCursorInterface::globalViewCursorInterfaceNumber = 0;
 
 ViewCursorInterface::ViewCursorInterface()
 {
-  globalViewCursorInterfaceNumber++;
-  myViewCursorInterfaceNumber = globalViewCursorInterfaceNumber++;
+    globalViewCursorInterfaceNumber++;
+    myViewCursorInterfaceNumber = globalViewCursorInterfaceNumber++;
 
-  d = new PrivateViewCursorInterface();
-  QString name = "ViewCursorInterface#" + QString::number(myViewCursorInterfaceNumber);
-  d->interface = new ViewCursorDCOPInterface(this, name.latin1());
+    d = new PrivateViewCursorInterface();
+    QString name = "ViewCursorInterface#" + QString::number(myViewCursorInterfaceNumber);
+    d->interface = new ViewCursorDCOPInterface(this, name.latin1());
 }
 
 ViewCursorInterface::~ViewCursorInterface()
 {
-  delete d->interface;
-  delete d;
+    delete d->interface;
+    delete d;
 }
 
-unsigned int ViewCursorInterface::viewCursorInterfaceNumber () const
+unsigned int ViewCursorInterface::viewCursorInterfaceNumber() const
 {
-  return myViewCursorInterfaceNumber;
+    return myViewCursorInterfaceNumber;
 }
 
-void ViewCursorInterface::setViewCursorInterfaceDCOPSuffix (const QCString &suffix)
+void ViewCursorInterface::setViewCursorInterfaceDCOPSuffix(const QCString &suffix)
 {
-  d->interface->setObjId ("ViewCursorInterface#"+suffix);
+    d->interface->setObjId("ViewCursorInterface#" + suffix);
 }
 
-ViewCursorInterface *KTextEditor::viewCursorInterface (View *view)
-{                   
-  if (!view)
-    return 0;
+ViewCursorInterface *KTextEditor::viewCursorInterface(View *view)
+{
+    if(!view)
+        return 0;
 
-  return static_cast<ViewCursorInterface*>(view->qt_cast("KTextEditor::ViewCursorInterface"));
+    return static_cast< ViewCursorInterface * >(view->qt_cast("KTextEditor::ViewCursorInterface"));
 }

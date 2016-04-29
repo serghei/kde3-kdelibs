@@ -32,8 +32,8 @@ class KMainWindow;
 class KToolBar;
 
 namespace KMDI {
-  class MainWindow;
-  class ToolViewAccessor;
+class MainWindow;
+class ToolViewAccessor;
 }
 
 class KDockWidget;
@@ -42,33 +42,32 @@ namespace KMDIPrivate {
 
 class GUIClientPrivate;
 
-class GUIClient : public QObject, public KXMLGUIClient
-{
-  Q_OBJECT
+class GUIClient : public QObject, public KXMLGUIClient {
+    Q_OBJECT
 
-  public:
-    GUIClient( KMDI::MainWindow *mdiMainFrm, const char *name = 0 );
+public:
+    GUIClient(KMDI::MainWindow *mdiMainFrm, const char *name = 0);
     virtual ~GUIClient();
 
-    void addToolView(KMDI::ToolViewAccessor*);
+    void addToolView(KMDI::ToolViewAccessor *);
 
-  private slots:
-    void clientAdded( KXMLGUIClient *client );
+private slots:
+    void clientAdded(KXMLGUIClient *client);
     void setupActions();
-    void actionDeleted(QObject*);
+    void actionDeleted(QObject *);
 
-  signals:
+signals:
     void toggleTop();
     void toggleLeft();
     void toggleRight();
     void toggleBottom();
 
-  private:
+private:
     GUIClientPrivate *d;
 
-    QGuardedPtr<KMDI::MainWindow> m_mdiMainFrm;
-    QPtrList<KAction> m_toolViewActions;
-    QPtrList<KAction> m_documentViewActions;
+    QGuardedPtr< KMDI::MainWindow > m_mdiMainFrm;
+    QPtrList< KAction > m_toolViewActions;
+    QPtrList< KAction > m_documentViewActions;
 
     KActionMenu *m_docMenu;
     KActionMenu *m_toolMenu;
@@ -76,26 +75,24 @@ class GUIClient : public QObject, public KXMLGUIClient
     KActionMenu *m_gotoToolDockMenu;
 };
 
-class ToggleToolViewAction:public KToggleAction
-{
-  Q_OBJECT
+class ToggleToolViewAction : public KToggleAction {
+    Q_OBJECT
 
-  public:
-    ToggleToolViewAction ( const QString& text, const KShortcut& cut = KShortcut(),
-                           KDockWidget *dw=0,KMDI::MainWindow *mdiMainFrm=0, QObject* parent = 0, const char* name = 0 );
+public:
+    ToggleToolViewAction(const QString &text, const KShortcut &cut = KShortcut(), KDockWidget *dw = 0, KMDI::MainWindow *mdiMainFrm = 0,
+                         QObject *parent = 0, const char *name = 0);
 
     virtual ~ToggleToolViewAction();
 
-  protected slots:
+protected slots:
     void slotToggled(bool);
     void anDWChanged();
     void slotWidgetDestroyed();
 
-  private:
+private:
     KDockWidget *m_dw;
     KMDI::MainWindow *m_mdiMainFrm;
 };
-
 }
 
 #endif

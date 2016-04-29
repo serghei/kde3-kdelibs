@@ -41,127 +41,128 @@ using namespace std;
 #include "runner.h"
 #include "tester.h"
 
-namespace KUnitTest
+namespace KUnitTest {
+Runner *Runner::s_self = 0L;
+bool Runner::s_debugCapturingEnabled = false;
+
+void Runner::registerTester(const char *name, Tester *test)
 {
-    Runner *Runner::s_self = 0L;
-    bool    Runner::s_debugCapturingEnabled = false;
+    Runner::self()->m_registry.insert(name, test);
+}
 
-    void Runner::registerTester(const char *name, Tester *test)
+void Runner::loadModules(const QString &folder, const QString &query)
+{
+    QRegExp reQuery(query);
+    QDir dir(folder, "kunittest_*.so");
+
+    // Add the folder to the "module" resource such that the KLibLoader can
+    // find the modules in this folder.
+    KGlobal::dirs()->addResourceDir("module", folder);
+    kdDebug() << "Looking in folder: " << dir.absPath() << endl;
+
+    // Get a list of all modules.
+    QStringList modules = dir.entryList();
+
+    for(uint i = 0; i < modules.count(); ++i)
     {
-        Runner::self()->m_registry.insert(name, test);
-    }
+        QString module = modules[i];
+        kdDebug() << "Module: " << dir.absPath() + "/" + module << endl;
 
-    void Runner::loadModules(const QString &folder, const QString &query)
-    {
-        QRegExp reQuery(query);
-        QDir dir(folder, "kunittest_*.so");
-
-        // Add the folder to the "module" resource such that the KLibLoader can
-        // find the modules in this folder.
-        KGlobal::dirs()->addResourceDir("module", folder);
-        kdDebug() << "Looking in folder: " << dir.absPath() << endl;
-
-        // Get a list of all modules.
-        QStringList modules = dir.entryList();
-
-        for ( uint i = 0; i < modules.count(); ++i )
+        if(reQuery.search(module) != -1)
         {
-            QString module = modules[i];
-            kdDebug() << "Module: " << dir.absPath() + "/" + module << endl;
-
-            if ( reQuery.search(module) != -1 )
-            {
-                // strip the .la extension
-                module.truncate(module.length()-3);
-                KLibFactory *factory = KLibLoader::self()->factory(module.local8Bit());
-                if ( factory )
-                    factory->create();
-                else {
-                    kdWarning() << "\tError loading " << module << " : " << KLibLoader::self()->lastErrorMessage() << endl;
-                    ::exit( 1 );
-                }
-            }
+            // strip the .la extension
+            module.truncate(module.length() - 3);
+            KLibFactory *factory = KLibLoader::self()->factory(module.local8Bit());
+            if(factory)
+                factory->create();
             else
-                kdDebug() << "\tModule doesn't match." << endl;
+            {
+                kdWarning() << "\tError loading " << module << " : " << KLibLoader::self()->lastErrorMessage() << endl;
+                ::exit(1);
+            }
         }
+        else
+            kdDebug() << "\tModule doesn't match." << endl;
     }
+}
 
-    void Runner::setDebugCapturingEnabled(bool enabled)
-    {
-      s_debugCapturingEnabled = enabled;
-    }
+void Runner::setDebugCapturingEnabled(bool enabled)
+{
+    s_debugCapturingEnabled = enabled;
+}
 
-    RegistryType &Runner::registry()
-    {
-        return m_registry;
-    }
+RegistryType &Runner::registry()
+{
+    return m_registry;
+}
 
-    int Runner::numberOfTestCases()
-    {
-        return m_registry.count();
-    }
+int Runner::numberOfTestCases()
+{
+    return m_registry.count();
+}
 
-    Runner *Runner::self()
-    {
-        if ( s_self == 0L ) s_self = new Runner();
+Runner *Runner::self()
+{
+    if(s_self == 0L)
+        s_self = new Runner();
 
-        return s_self;
-    }
+    return s_self;
+}
 
-    Runner::Runner()
-    {
-        reset();
-    }
+Runner::Runner()
+{
+    reset();
+}
 
-    int Runner::numberOfTests() const
-    {
-        return globalSteps;
-    }
+int Runner::numberOfTests() const
+{
+    return globalSteps;
+}
 
-    int Runner::numberOfPassedTests() const
-    {
-        return globalPasses;
-    }
+int Runner::numberOfPassedTests() const
+{
+    return globalPasses;
+}
 
-    int Runner::numberOfFailedTests() const
-    {
-        return globalFails;
-    }
+int Runner::numberOfFailedTests() const
+{
+    return globalFails;
+}
 
-    int Runner::numberOfExpectedFailures() const
-    {
-        return globalXFails;
-    }
+int Runner::numberOfExpectedFailures() const
+{
+    return globalXFails;
+}
 
-    int Runner::numberOfSkippedTests() const
-    {
-        return globalSkipped;
-    }
+int Runner::numberOfSkippedTests() const
+{
+    return globalSkipped;
+}
 
-    void Runner::reset()
-    {
-        globalSteps = 0;
-        globalPasses = 0;
-        globalFails = 0;
-        globalXFails = 0;
-        globalXPasses = 0;
-        globalSkipped = 0;
-    }
+void Runner::reset()
+{
+    globalSteps = 0;
+    globalPasses = 0;
+    globalFails = 0;
+    globalXFails = 0;
+    globalXPasses = 0;
+    globalSkipped = 0;
+}
 
-    int Runner::runTests()
-    {
-        globalSteps = 0;
-        globalPasses = 0;
-        globalFails = 0;
-        globalXFails = 0;
-        globalXPasses = 0;
-        globalSkipped = 0;
+int Runner::runTests()
+{
+    globalSteps = 0;
+    globalPasses = 0;
+    globalFails = 0;
+    globalXFails = 0;
+    globalXPasses = 0;
+    globalSkipped = 0;
 
-        cout << "# Running normal tests... #" << endl << endl;
-        RegistryIteratorType it(m_registry);
+    cout << "# Running normal tests... #" << endl << endl;
+    RegistryIteratorType it(m_registry);
 
-        for( ; it.current(); ++it )
-            runTest(it.currentKey());
+    for(; it.current(); ++it)
+        runTest(it.currentKey());
 
 #if 0 // very thorough, but not very readable
         cout << "# Done with normal tests:" << endl;
@@ -173,150 +174,160 @@ namespace KUnitTest
         cout << "      Total expected failed test steps             :  " << globalXFails << endl;
         cout << "    Total skipped test steps                       :  " << globalSkipped << endl;
 #else
-        unsigned int numTests = m_registry.count(); // should this be globalSteps instead?
-        QString str;
-        if ( globalFails == 0 )
-            if ( globalXFails == 0 )
-                str = QString( "All %1 tests passed" ).arg( numTests );
-            else
-                str = QString( "All %1 tests behaved as expected (%2 expected failures)" ).arg( numTests ).arg( globalXFails );
+    unsigned int numTests = m_registry.count(); // should this be globalSteps instead?
+    QString str;
+    if(globalFails == 0)
+        if(globalXFails == 0)
+            str = QString("All %1 tests passed").arg(numTests);
         else
-            if ( globalXPasses == 0 )
-                str = QString( "%1 of %2 tests failed" ).arg( globalFails ).arg( numTests );
-            else
-                str = QString( "%1 of %2 tests did not behave as expected (%1 unexpected passes)" ).arg( globalFails ).arg( numTests ).arg( globalXPasses );
-        if ( globalSkipped )
-            str += QString( " (%1 tests skipped)" ).arg( globalSkipped );
-        cout << str.local8Bit() << endl;
+            str = QString("All %1 tests behaved as expected (%2 expected failures)").arg(numTests).arg(globalXFails);
+    else if(globalXPasses == 0)
+        str = QString("%1 of %2 tests failed").arg(globalFails).arg(numTests);
+    else
+        str = QString("%1 of %2 tests did not behave as expected (%1 unexpected passes)").arg(globalFails).arg(numTests).arg(globalXPasses);
+    if(globalSkipped)
+        str += QString(" (%1 tests skipped)").arg(globalSkipped);
+    cout << str.local8Bit() << endl;
 #endif
 
-        return m_registry.count();
+    return m_registry.count();
+}
+
+void Runner::runMatchingTests(const QString &prefix)
+{
+    RegistryIteratorType it(m_registry);
+    for(; it.current(); ++it)
+        if(QString(it.currentKey()).startsWith(prefix))
+            runTest(it.currentKey());
+}
+
+void Runner::runTest(const char *name)
+{
+    Tester *test = m_registry.find(name);
+    if(test == 0L)
+        return;
+
+    if(s_debugCapturingEnabled)
+    {
+        cout << "KUnitTest_Debug_Start[" << name << "]" << endl;
     }
 
-    void Runner::runMatchingTests(const QString &prefix)
+    test->results()->clear();
+    test->allTests();
+
+    if(s_debugCapturingEnabled)
     {
-        RegistryIteratorType it(m_registry);
-        for( ; it.current(); ++it )
-            if ( QString(it.currentKey()).startsWith(prefix) )
-                runTest(it.currentKey());
+        cout << "KUnitTest_Debug_End[" << name << "]" << endl << endl << flush;
     }
 
-    void Runner::runTest(const char *name)
+    int numPass = 0;
+    int numFail = 0;
+    int numXFail = 0;
+    int numXPass = 0;
+    int numSkip = 0;
+    QStringList xpassList;
+    QStringList errorList;
+    QStringList xfailList;
+    QStringList skipList;
+
+    if(test->inherits("KUnitTest::SlotTester"))
     {
-        Tester *test = m_registry.find(name);
-        if ( test == 0L ) return;
-
-        if ( s_debugCapturingEnabled )
+        SlotTester *sltest = static_cast< SlotTester * >(test);
+        TestResultsListIteratorType it(sltest->resultsList());
+        for(; it.current(); ++it)
         {
-          cout << "KUnitTest_Debug_Start[" << name << "]" << endl;
+            numPass += it.current()->passed() + it.current()->xpasses();
+            numFail += it.current()->errors() + it.current()->xfails();
+            numXFail += it.current()->xfails();
+            numXPass += it.current()->xpasses();
+            numSkip += it.current()->skipped();
+            globalSteps += it.current()->testsFinished();
+
+            xpassList += it.current()->xpassList();
+            errorList += it.current()->errorList();
+            xfailList += it.current()->xfailList();
+            skipList += it.current()->skipList();
         }
+    }
+    else
+    {
+        numPass = test->results()->passed() + test->results()->xpasses();
+        numFail = test->results()->errors() + test->results()->xfails();
+        numXFail = test->results()->xfails();
+        numXPass = test->results()->xpasses();
+        numSkip = test->results()->skipped();
+        globalSteps += test->results()->testsFinished();
 
-        test->results()->clear();
-        test->allTests();
-
-        if ( s_debugCapturingEnabled )
-        {
-          cout << "KUnitTest_Debug_End[" << name << "]" << endl << endl << flush;
-        }
-
-        int numPass = 0;
-        int numFail = 0;
-        int numXFail = 0;
-        int numXPass = 0;
-        int numSkip = 0;
-        QStringList xpassList;
-        QStringList errorList;
-        QStringList xfailList;
-        QStringList skipList;
-
-        if ( test->inherits("KUnitTest::SlotTester") )
-        {
-            SlotTester *sltest = static_cast<SlotTester*>(test);
-            TestResultsListIteratorType it(sltest->resultsList());
-            for ( ; it.current(); ++it)
-            {
-                numPass += it.current()->passed() + it.current()->xpasses();
-                numFail += it.current()->errors() + it.current()->xfails();
-                numXFail += it.current()->xfails();
-                numXPass += it.current()->xpasses();
-                numSkip += it.current()->skipped();
-                globalSteps += it.current()->testsFinished();
-
-                xpassList += it.current()->xpassList();
-                errorList += it.current()->errorList();
-                xfailList += it.current()->xfailList();
-                skipList += it.current()->skipList();
-            }
-        }
-        else
-        {
-            numPass= test->results()->passed() + test->results()->xpasses();
-            numFail= test->results()->errors() + test->results()->xfails();
-            numXFail = test->results()->xfails();
-            numXPass = test->results()->xpasses();
-            numSkip= test->results()->skipped();
-            globalSteps += test->results()->testsFinished();
-
-            xpassList += test->results()->xpassList();
-            errorList += test->results()->errorList();
-            xfailList += test->results()->xfailList();
-            skipList += test->results()->skipList();
-        }
+        xpassList += test->results()->xpassList();
+        errorList += test->results()->errorList();
+        xfailList += test->results()->xfailList();
+        skipList += test->results()->skipList();
+    }
 
 
-        globalPasses += numPass;
-        globalFails += numFail;
-        globalXFails += numXFail;
-        globalXPasses += numXPass;
-        globalSkipped += numSkip;
+    globalPasses += numPass;
+    globalFails += numFail;
+    globalXFails += numXFail;
+    globalXPasses += numXPass;
+    globalSkipped += numSkip;
 
-        cout << name << " - ";
-        cout << numPass << " test" << ( ( 1 == numPass )?"":"s") << " passed";
-        if ( 0 < xpassList.count() ) {
-            cout << " (" << numXPass << " unexpected pass" << ( ( 1 == numXPass )?"":"es") << ")";
-        }
-        cout << ", " << numFail << " test" << ( ( 1 == numFail )?"":"s") << " failed";
-        if ( 0 < numXFail  ) {
-            cout << " (" << numXFail << " expected failure" << ( ( 1 == numXFail )?"":"s") << ")";
-        }
-        if ( 0 < numSkip ) {
-            cout << "; also " << numSkip << " skipped";
-        }
-        cout  << endl;
+    cout << name << " - ";
+    cout << numPass << " test" << ((1 == numPass) ? "" : "s") << " passed";
+    if(0 < xpassList.count())
+    {
+        cout << " (" << numXPass << " unexpected pass" << ((1 == numXPass) ? "" : "es") << ")";
+    }
+    cout << ", " << numFail << " test" << ((1 == numFail) ? "" : "s") << " failed";
+    if(0 < numXFail)
+    {
+        cout << " (" << numXFail << " expected failure" << ((1 == numXFail) ? "" : "s") << ")";
+    }
+    if(0 < numSkip)
+    {
+        cout << "; also " << numSkip << " skipped";
+    }
+    cout << endl;
 
-        if ( 0 < numXPass  ) {
-        cout << "    Unexpected pass" << ( ( 1 == numXPass )?"":"es") << ":" << endl;
+    if(0 < numXPass)
+    {
+        cout << "    Unexpected pass" << ((1 == numXPass) ? "" : "es") << ":" << endl;
         QStringList list = xpassList;
-        for ( QStringList::Iterator itr = list.begin(); itr != list.end(); ++itr ) {
+        for(QStringList::Iterator itr = list.begin(); itr != list.end(); ++itr)
+        {
             cout << "\t" << (*itr).latin1() << endl;
         }
-        }
-        if ( 0 < (numFail - numXFail) ) {
-        cout << "    Unexpected failure" << ( ( 1 == numFail )?"":"s") << ":" << endl;
-        QStringList list = errorList;
-        for ( QStringList::Iterator itr = list.begin(); itr != list.end(); ++itr ) {
-            cout << "\t" << (*itr).latin1() << endl;
-        }
-        }
-        if ( 0 < numXFail ) {
-        cout << "    Expected failure" << ( ( 1 == numXFail)?"":"s") << ":" << endl;
-        QStringList list = xfailList;
-        for ( QStringList::Iterator itr = list.begin(); itr != list.end(); ++itr ) {
-            cout << "\t" << (*itr).latin1() << endl;
-        }
-        }
-        if ( 0 < numSkip ) {
-            cout << "    Skipped test" << ( ( 1 == numSkip )?"":"s") << ":" << endl;
-            QStringList list = skipList;
-            for ( QStringList::Iterator itr = list.begin(); itr != list.end(); ++itr ) {
-            cout << "\t" << (*itr).latin1() << endl;
-            }
-        }
-        cout << endl;
-
-        emit finished(name, test);
     }
+    if(0 < (numFail - numXFail))
+    {
+        cout << "    Unexpected failure" << ((1 == numFail) ? "" : "s") << ":" << endl;
+        QStringList list = errorList;
+        for(QStringList::Iterator itr = list.begin(); itr != list.end(); ++itr)
+        {
+            cout << "\t" << (*itr).latin1() << endl;
+        }
+    }
+    if(0 < numXFail)
+    {
+        cout << "    Expected failure" << ((1 == numXFail) ? "" : "s") << ":" << endl;
+        QStringList list = xfailList;
+        for(QStringList::Iterator itr = list.begin(); itr != list.end(); ++itr)
+        {
+            cout << "\t" << (*itr).latin1() << endl;
+        }
+    }
+    if(0 < numSkip)
+    {
+        cout << "    Skipped test" << ((1 == numSkip) ? "" : "s") << ":" << endl;
+        QStringList list = skipList;
+        for(QStringList::Iterator itr = list.begin(); itr != list.end(); ++itr)
+        {
+            cout << "\t" << (*itr).latin1() << endl;
+        }
+    }
+    cout << endl;
+
+    emit finished(name, test);
+}
 }
 
 #include "runner.moc"
-

@@ -30,70 +30,74 @@ using namespace std;
 
 #include "tester.h"
 
-namespace KUnitTest
+namespace KUnitTest {
+SlotTester::SlotTester(const char *name) : Tester(name)
 {
-    SlotTester::SlotTester(const char *name) : Tester(name)
-    {
-        m_resultsList.setAutoDelete(true);
-        m_total = m_results;
-    }
-
-    void SlotTester::invokeMember(const QString &str)
-    {
-        QString slotname = QString::number(QSLOT_CODE) + str;
-        connect(this, SIGNAL(invoke()), this, slotname.ascii());
-        emit invoke();
-        disconnect(this, SIGNAL(invoke()), this, slotname.ascii());
-    }
-    
-    void SlotTester::allTests()
-    {
-        QStrList allSlots = metaObject()->slotNames();
-        
-        if ( allSlots.contains("setUp()") > 0 ) invokeMember("setUp()");
-
-        for ( char *sl = allSlots.first(); sl; sl = allSlots.next() ) 
-        {
-            QString str = sl;
-           
-            if ( str.startsWith("test") )
-            {
-                m_results = results(sl);
-                m_results->clear();
-
-                cout << "KUnitTest_Debug_BeginSlot[" << sl << "]" << endl;
-                invokeMember(str);
-                cout << "KUnitTest_Debug_EndSlot[" << sl << "]" << endl;
-            }
-        }
-
-        if ( allSlots.contains("tearDown()") > 0 ) invokeMember("tearDown()");
-    
-        m_total->clear();        
-    }
-    
-    TestResults *SlotTester::results(const char *sl) 
-    {
-        if ( m_resultsList.find(sl) == 0L ) m_resultsList.insert(sl, new TestResults());
-    
-        return m_resultsList[sl]; 
-    }
+    m_resultsList.setAutoDelete(true);
+    m_total = m_results;
 }
 
-QTextStream& operator<<( QTextStream& str, const QRect& r ) {
+void SlotTester::invokeMember(const QString &str)
+{
+    QString slotname = QString::number(QSLOT_CODE) + str;
+    connect(this, SIGNAL(invoke()), this, slotname.ascii());
+    emit invoke();
+    disconnect(this, SIGNAL(invoke()), this, slotname.ascii());
+}
+
+void SlotTester::allTests()
+{
+    QStrList allSlots = metaObject()->slotNames();
+
+    if(allSlots.contains("setUp()") > 0)
+        invokeMember("setUp()");
+
+    for(char *sl = allSlots.first(); sl; sl = allSlots.next())
+    {
+        QString str = sl;
+
+        if(str.startsWith("test"))
+        {
+            m_results = results(sl);
+            m_results->clear();
+
+            cout << "KUnitTest_Debug_BeginSlot[" << sl << "]" << endl;
+            invokeMember(str);
+            cout << "KUnitTest_Debug_EndSlot[" << sl << "]" << endl;
+        }
+    }
+
+    if(allSlots.contains("tearDown()") > 0)
+        invokeMember("tearDown()");
+
+    m_total->clear();
+}
+
+TestResults *SlotTester::results(const char *sl)
+{
+    if(m_resultsList.find(sl) == 0L)
+        m_resultsList.insert(sl, new TestResults());
+
+    return m_resultsList[sl];
+}
+}
+
+QTextStream &operator<<(QTextStream &str, const QRect &r)
+{
     str << "[" << r.x() << "," << r.y() << " - " << r.width() << "x" << r.height() << "]";
     return str;
 }
 
-QTextStream& operator<<( QTextStream& str, const QPoint& r ) {
+QTextStream &operator<<(QTextStream &str, const QPoint &r)
+{
     str << "(" << r.x() << "," << r.y() << ")";
     return str;
 }
 
-QTextStream& operator<<( QTextStream& str, const QSize& r ) {
+QTextStream &operator<<(QTextStream &str, const QSize &r)
+{
     str << "[" << r.width() << "x" << r.height() << "]";
     return str;
 }
 
 #include "tester.moc"
-

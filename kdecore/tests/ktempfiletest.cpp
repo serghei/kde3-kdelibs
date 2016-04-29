@@ -25,24 +25,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-   KApplication a(argc, argv, "ktempfiletest");
-   printf("Making tempfile after KApplication constructor.\n");
-   KTempFile f4;
-   printf("Filename = %s\n", f4.name().ascii());
+    KApplication a(argc, argv, "ktempfiletest");
+    printf("Making tempfile after KApplication constructor.\n");
+    KTempFile f4;
+    printf("Filename = %s\n", f4.name().ascii());
 
-   printf("Making tempfile with \".ps\" extension.\n");
-   KTempFile f2(QString::null, ".ps");
-   printf("Filename = %s\n", f2.name().ascii());
+    printf("Making tempfile with \".ps\" extension.\n");
+    KTempFile f2(QString::null, ".ps");
+    printf("Filename = %s\n", f2.name().ascii());
 
-   printf("Making tempfile in home directory.\n");
-   KTempFile f3(QString((const char *)getenv("HOME"))+"/testXXX", ".myEXT", 0666);
-   printf("Filename = %s\n", f3.name().ascii());
+    printf("Making tempfile in home directory.\n");
+    KTempFile f3(QString((const char *)getenv("HOME")) + "/testXXX", ".myEXT", 0666);
+    printf("Filename = %s\n", f3.name().ascii());
 
-   QString name = locateLocal("socket", "test");
-   printf("Socket Filename = %s\n", name.ascii());
+    QString name = locateLocal("socket", "test");
+    printf("Socket Filename = %s\n", name.ascii());
 
-   printf("Done.\n");
+    printf("Done.\n");
 }

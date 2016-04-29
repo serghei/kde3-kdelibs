@@ -26,25 +26,24 @@ class KListView;
 class QLineEdit;
 class QListViewItem;
 
-class KMWRlpr : public KMWizardPage
-{
-	Q_OBJECT
+class KMWRlpr : public KMWizardPage {
+    Q_OBJECT
 public:
-	KMWRlpr(QWidget *parent = 0, const char *name = 0);
+    KMWRlpr(QWidget *parent = 0, const char *name = 0);
 
-	bool isValid(QString&);
-	void initPrinter(KMPrinter*);
-	void updatePrinter(KMPrinter*);
+    bool isValid(QString &);
+    void initPrinter(KMPrinter *);
+    void updatePrinter(KMPrinter *);
 
 protected slots:
-	void slotPrinterSelected(QListViewItem*);
+    void slotPrinterSelected(QListViewItem *);
 
 protected:
-	void initialize();
+    void initialize();
 
 private:
-	KListView	*m_view;
-	QLineEdit	*m_host, *m_queue;
+    KListView *m_view;
+    QLineEdit *m_host, *m_queue;
 };
 
 #endif

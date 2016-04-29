@@ -28,49 +28,54 @@ class KMLpdManager;
 class DrMain;
 class KMPrinter;
 
-class PrintcapEntry
-{
-friend class KMLpdManager;
+class PrintcapEntry {
+    friend class KMLpdManager;
+
 public:
-	bool readLine(const QString& line);
-	void writeEntry(QTextStream&);
-	KMPrinter* createPrinter();
-	QString arg(const QString& key) const 	{ return m_args[key]; }
-	QString comment(int i);
+    bool readLine(const QString &line);
+    void writeEntry(QTextStream &);
+    KMPrinter *createPrinter();
+    QString arg(const QString &key) const
+    {
+        return m_args[key];
+    }
+    QString comment(int i);
+
 private:
-	QString			m_name;
-	QString			m_comment;
-	QMap<QString,QString>	m_args;
+    QString m_name;
+    QString m_comment;
+    QMap< QString, QString > m_args;
 };
 
 //*****************************************************************************************************
 
 struct Resolution
 {
-	int 	xdpi, ydpi;
-	QString	comment;
+    int xdpi, ydpi;
+    QString comment;
 };
 
 struct BitsPerPixel
 {
-	QString	bpp;
-	QString	comment;
+    QString bpp;
+    QString comment;
 };
 
-class PrinttoolEntry
-{
-friend class KMLpdManager;
+class PrinttoolEntry {
+    friend class KMLpdManager;
+
 public:
-	bool readEntry(QTextStream& t);
-	DrMain* createDriver();
+    bool readEntry(QTextStream &t);
+    DrMain *createDriver();
+
 private:
-	QString			m_name, m_gsdriver, m_description, m_about;
-	QPtrList<Resolution>	m_resolutions;
-	QPtrList<BitsPerPixel>	m_depths;
+    QString m_name, m_gsdriver, m_description, m_about;
+    QPtrList< Resolution > m_resolutions;
+    QPtrList< BitsPerPixel > m_depths;
 };
 
 //*****************************************************************************************************
 
-QString getPrintcapLine(QTextStream& t, QString *lastcomment = NULL);
+QString getPrintcapLine(QTextStream &t, QString *lastcomment = NULL);
 
 #endif // LPDTOOLS_H

@@ -16,7 +16,7 @@
  *  Boston, MA 02110-1301, USA.
  **/
 #ifndef __kresourcelist_h__
-#define __kresourcelist_h__ 
+#define __kresourcelist_h__
 
 #include <qvaluelist.h>
 #include <qstring.h>
@@ -27,21 +27,20 @@ class KSycocaEntry;
 
 struct KSycocaResource
 {
-   QString resource;
-   QString extension; 
+    QString resource;
+    QString extension;
 };
 
-class KSycocaResourceList : public QValueList<KSycocaResource>
-{
+class KSycocaResourceList : public QValueList< KSycocaResource > {
 public:
-   KSycocaResourceList() { };
-   void add(const QString &resource, const QString &filter)
-   { 
-     KSycocaResource res;
-     res.resource = resource;
-     res.extension = filter.mid(1);
-     append(res);
-   }
+    KSycocaResourceList(){};
+    void add(const QString &resource, const QString &filter)
+    {
+        KSycocaResource res;
+        res.resource = resource;
+        res.extension = filter.mid(1);
+        append(res);
+    }
 };
 
 #endif

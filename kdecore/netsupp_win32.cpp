@@ -25,41 +25,34 @@
 
 KDECORE_EXPORT void kde_freeaddrinfo(struct kde_addrinfo *ai)
 {
-	//TODO
+    // TODO
 }
 
-KDECORE_EXPORT int kde_getaddrinfo(const char *name, const char *service,
-		    const struct addrinfo* hint,
-		    struct kde_addrinfo** result)
+KDECORE_EXPORT int kde_getaddrinfo(const char *name, const char *service, const struct addrinfo *hint, struct kde_addrinfo **result)
 {
-	//TODO
-	int err = EAI_SERVICE;
-	return err;
+    // TODO
+    int err = EAI_SERVICE;
+    return err;
 }
 
 KDECORE_EXPORT char *gai_strerror(int errorcode)
 {
-  return 0;
+    return 0;
 }
-int getnameinfo(const struct sockaddr *sa,
-			 unsigned int salen,
-			 char *host, size_t hostlen,
-			 char *serv, size_t servlen,
-			 int flags)
+int getnameinfo(const struct sockaddr *sa, unsigned int salen, char *host, size_t hostlen, char *serv, size_t servlen, int flags)
 {
-	//TODO
-	return -1;
+    // TODO
+    return -1;
 }
 
-KDECORE_EXPORT const char* inet_ntop(int af, const void *cp, char *buf, size_t len)
+KDECORE_EXPORT const char *inet_ntop(int af, const void *cp, char *buf, size_t len)
 {
-	//TODO
-	return 0;
+    // TODO
+    return 0;
 }
 
 KDECORE_EXPORT int inet_pton(int af, const char *cp, void *buf)
 {
-	//TODO
-	return -1;
+    // TODO
+    return -1;
 }
-

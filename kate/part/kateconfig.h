@@ -40,41 +40,40 @@ class QTextCodec;
 /**
  * Base Class for the Kate Config Classes
  */
-class KateConfig
-{
-  public:
+class KateConfig {
+public:
     /**
      * Default Constructor
      */
-    KateConfig ();
+    KateConfig();
 
     /**
      * Virtual Destructor
      */
-    virtual ~KateConfig ();
+    virtual ~KateConfig();
 
-  public:
-     /**
-      * start some config changes
-      * this method is needed to init some kind of transaction
-      * for config changes, update will only be done once, at
-      * configEnd() call
-      */
-     void configStart ();
+public:
+    /**
+     * start some config changes
+     * this method is needed to init some kind of transaction
+     * for config changes, update will only be done once, at
+     * configEnd() call
+     */
+    void configStart();
 
-     /**
-      * end a config change transaction, update the concerned
-      * documents/views/renderers
-      */
-     void configEnd ();
+    /**
+     * end a config change transaction, update the concerned
+     * documents/views/renderers
+     */
+    void configEnd();
 
-  protected:
+protected:
     /**
      * do the real update
      */
-    virtual void updateConfig () = 0;
+    virtual void updateConfig() = 0;
 
-  private:
+private:
     /**
      * recursion depth
      */
@@ -86,156 +85,161 @@ class KateConfig
     bool configIsRunning;
 };
 
-class KateDocumentConfig : public KateConfig
-{
-  private:
+class KateDocumentConfig : public KateConfig {
+private:
     friend class KateFactory;
 
     /**
      * only used in KateFactory for the static global fallback !!!
      */
-    KateDocumentConfig ();
+    KateDocumentConfig();
 
-  public:
+public:
     /**
      * Construct a DocumentConfig
      */
-    KateDocumentConfig (KateDocument *doc);
+    KateDocumentConfig(KateDocument *doc);
 
     /**
      * Cu DocumentConfig
      */
-    ~KateDocumentConfig ();
+    ~KateDocumentConfig();
 
-    inline static KateDocumentConfig *global () { return s_global; }
+    inline static KateDocumentConfig *global()
+    {
+        return s_global;
+    }
 
-    inline bool isGlobal () const { return (this == global()); }
+    inline bool isGlobal() const
+    {
+        return (this == global());
+    }
 
-  public:
+public:
     /**
      * Read config from object
      */
-    void readConfig (KConfig *config);
+    void readConfig(KConfig *config);
 
     /**
      * Write config to object
      */
-    void writeConfig (KConfig *config);
+    void writeConfig(KConfig *config);
 
-  protected:
-    void updateConfig ();
+protected:
+    void updateConfig();
 
-  public:
-    int tabWidth () const;
-    void setTabWidth (int tabWidth);
+public:
+    int tabWidth() const;
+    void setTabWidth(int tabWidth);
 
-    int indentationWidth () const;
-    void setIndentationWidth (int indentationWidth);
+    int indentationWidth() const;
+    void setIndentationWidth(int indentationWidth);
 
     enum IndentationMode
     {
-      imNone = 0,
-      imNormal = 1,
-      imCStyle = 2,
-      imPythonStyle = 3,
-      imXmlStyle = 4,
-      imCSAndS = 5,
-      imVarIndent = 6,
-      imScriptIndent = 7
+        imNone = 0,
+        imNormal = 1,
+        imCStyle = 2,
+        imPythonStyle = 3,
+        imXmlStyle = 4,
+        imCSAndS = 5,
+        imVarIndent = 6,
+        imScriptIndent = 7
     };
 
-    uint indentationMode () const;
-    void setIndentationMode (uint identationMode);
+    uint indentationMode() const;
+    void setIndentationMode(uint identationMode);
 
-    bool wordWrap () const;
-    void setWordWrap (bool on);
+    bool wordWrap() const;
+    void setWordWrap(bool on);
 
-    unsigned int wordWrapAt () const;
-    void setWordWrapAt (unsigned int col);
+    unsigned int wordWrapAt() const;
+    void setWordWrapAt(unsigned int col);
 
-    uint undoSteps () const;
-    void setUndoSteps ( uint undoSteps );
+    uint undoSteps() const;
+    void setUndoSteps(uint undoSteps);
 
-    bool pageUpDownMovesCursor () const;
-    void setPageUpDownMovesCursor (bool on);
+    bool pageUpDownMovesCursor() const;
+    void setPageUpDownMovesCursor(bool on);
 
     enum ConfigFlags
     {
-      cfBackspaceIndents= 0x2,
-      cfWordWrap= 0x4,
-      cfRemoveSpaces = 0x10,
-      cfWrapCursor= 0x20,
-      cfAutoBrackets= 0x40,
-      cfTabIndentsMode = 0x200,
-      cfOvr= 0x1000,
-      cfKeepIndentProfile= 0x8000,
-      cfKeepExtraSpaces= 0x10000,
-      cfTabIndents= 0x80000,
-      cfShowTabs= 0x200000,
-      cfSpaceIndent= 0x400000,
-      cfSmartHome = 0x800000,
-      cfTabInsertsTab = 0x1000000,
-      cfReplaceTabsDyn=   0x2000000,
-      cfRemoveTrailingDyn=0x4000000,
-      cfDoxygenAutoTyping=0x8000000 ,    // Remove for KDE 4.0 (put in indenters)
-      cfMixedIndent = 0x10000000,
-      cfIndentPastedText = 0x20000000
+        cfBackspaceIndents = 0x2,
+        cfWordWrap = 0x4,
+        cfRemoveSpaces = 0x10,
+        cfWrapCursor = 0x20,
+        cfAutoBrackets = 0x40,
+        cfTabIndentsMode = 0x200,
+        cfOvr = 0x1000,
+        cfKeepIndentProfile = 0x8000,
+        cfKeepExtraSpaces = 0x10000,
+        cfTabIndents = 0x80000,
+        cfShowTabs = 0x200000,
+        cfSpaceIndent = 0x400000,
+        cfSmartHome = 0x800000,
+        cfTabInsertsTab = 0x1000000,
+        cfReplaceTabsDyn = 0x2000000,
+        cfRemoveTrailingDyn = 0x4000000,
+        cfDoxygenAutoTyping = 0x8000000, // Remove for KDE 4.0 (put in indenters)
+        cfMixedIndent = 0x10000000,
+        cfIndentPastedText = 0x20000000
     };
 
-    uint configFlags () const;
-    void setConfigFlags (KateDocumentConfig::ConfigFlags flag, bool enable);
-    void setConfigFlags (uint fullFlags);
+    uint configFlags() const;
+    void setConfigFlags(KateDocumentConfig::ConfigFlags flag, bool enable);
+    void setConfigFlags(uint fullFlags);
 
-    const QString &encoding () const;
-    QTextCodec *codec ();
+    const QString &encoding() const;
+    QTextCodec *codec();
 
-    void setEncoding (const QString &encoding);
+    void setEncoding(const QString &encoding);
 
-    bool isSetEncoding () const;
+    bool isSetEncoding() const;
 
     enum Eol
     {
-      eolUnix = 0,
-      eolDos = 1,
-      eolMac = 2
+        eolUnix = 0,
+        eolDos = 1,
+        eolMac = 2
     };
 
-    int eol () const;
-    QString eolString ();
+    int eol() const;
+    QString eolString();
 
-    void setEol (int mode);
+    void setEol(int mode);
 
-    bool allowEolDetection () const;
-    void setAllowEolDetection (bool on);
+    bool allowEolDetection() const;
+    void setAllowEolDetection(bool on);
 
     enum BackupFlags
     {
-      LocalFiles=1,
-      RemoteFiles=2
+        LocalFiles = 1,
+        RemoteFiles = 2
     };
 
-    uint backupFlags () const;
-    void setBackupFlags (uint flags);
+    uint backupFlags() const;
+    void setBackupFlags(uint flags);
 
-    const QString &backupPrefix () const;
-    void setBackupPrefix (const QString &prefix);
+    const QString &backupPrefix() const;
+    void setBackupPrefix(const QString &prefix);
 
-    const QString &backupSuffix () const;
-    void setBackupSuffix (const QString &suffix);
+    const QString &backupSuffix() const;
+    void setBackupSuffix(const QString &suffix);
 
-    bool plugin (uint index) const;
-    void setPlugin (uint index, bool load);
+    bool plugin(uint index) const;
+    void setPlugin(uint index, bool load);
 
     /**
      * Should Kate Part search for dir wide config file
      * and if, how depth?
      * @return search depth (< 0 no search)
      */
-    int searchDirConfigDepth () const;
+    int searchDirConfigDepth() const;
 
-    void setSearchDirConfigDepth (int depth);
+    void setSearchDirConfigDepth(int depth);
 
-  private:
+private:
     int m_tabWidth;
     int m_indentationWidth;
     uint m_indentationMode;
@@ -270,103 +274,108 @@ class KateDocumentConfig : public KateConfig
     bool m_backupSuffixSet : 1;
     QBitArray m_pluginsSet;
 
-  private:
+private:
     static KateDocumentConfig *s_global;
     KateDocument *m_doc;
 };
 
-class KateViewConfig : public KateConfig
-{
-  private:
+class KateViewConfig : public KateConfig {
+private:
     friend class KateFactory;
 
     /**
      * only used in KateFactory for the static global fallback !!!
      */
-    KateViewConfig ();
+    KateViewConfig();
 
-  public:
+public:
     /**
      * Construct a DocumentConfig
      */
-    KateViewConfig (KateView *view);
+    KateViewConfig(KateView *view);
 
     /**
      * Cu DocumentConfig
      */
-    ~KateViewConfig ();
+    ~KateViewConfig();
 
-    inline static KateViewConfig *global () { return s_global; }
+    inline static KateViewConfig *global()
+    {
+        return s_global;
+    }
 
-    inline bool isGlobal () const { return (this == global()); }
+    inline bool isGlobal() const
+    {
+        return (this == global());
+    }
 
-  public:
+public:
     /**
      * Read config from object
      */
-    void readConfig (KConfig *config);
+    void readConfig(KConfig *config);
 
     /**
      * Write config to object
      */
-    void writeConfig (KConfig *config);
+    void writeConfig(KConfig *config);
 
-  protected:
-    void updateConfig ();
+protected:
+    void updateConfig();
 
-  public:
-    bool dynWordWrap () const;
-    void setDynWordWrap (bool wrap);
+public:
+    bool dynWordWrap() const;
+    void setDynWordWrap(bool wrap);
 
-    int dynWordWrapIndicators () const;
-    void setDynWordWrapIndicators (int mode);
+    int dynWordWrapIndicators() const;
+    void setDynWordWrapIndicators(int mode);
 
-    int dynWordWrapAlignIndent () const;
-    void setDynWordWrapAlignIndent (int indent);
+    int dynWordWrapAlignIndent() const;
+    void setDynWordWrapAlignIndent(int indent);
 
-    bool lineNumbers () const;
-    void setLineNumbers (bool on);
+    bool lineNumbers() const;
+    void setLineNumbers(bool on);
 
-    bool scrollBarMarks () const;
-    void setScrollBarMarks (bool on);
+    bool scrollBarMarks() const;
+    void setScrollBarMarks(bool on);
 
-    bool iconBar () const;
-    void setIconBar (bool on);
+    bool iconBar() const;
+    void setIconBar(bool on);
 
-    bool foldingBar () const;
-    void setFoldingBar (bool on);
+    bool foldingBar() const;
+    void setFoldingBar(bool on);
 
-    int bookmarkSort () const;
-    void setBookmarkSort (int mode);
+    int bookmarkSort() const;
+    void setBookmarkSort(int mode);
 
     int autoCenterLines() const;
-    void setAutoCenterLines (int lines);
+    void setAutoCenterLines(int lines);
 
-    long searchFlags () const;
-    void setSearchFlags (long flags);
+    long searchFlags() const;
+    void setSearchFlags(long flags);
 
-    bool cmdLine () const;
-    void setCmdLine (bool on);
+    bool cmdLine() const;
+    void setCmdLine(bool on);
 
-    uint defaultMarkType () const;
-    void setDefaultMarkType (uint type);
+    uint defaultMarkType() const;
+    void setDefaultMarkType(uint type);
 
-    bool persistentSelection () const;
-    void setPersistentSelection (bool on);
+    bool persistentSelection() const;
+    void setPersistentSelection(bool on);
 
     enum TextToSearch
     {
-      Nowhere = 0,
-      SelectionOnly = 1,
-      SelectionWord = 2,
-      WordOnly = 3,
-      WordSelection = 4
+        Nowhere = 0,
+        SelectionOnly = 1,
+        SelectionWord = 2,
+        WordOnly = 3,
+        WordSelection = 4
     };
 
-    int textToSearchMode () const;
-    void setTextToSearchMode (int mode);
+    int textToSearchMode() const;
+    void setTextToSearchMode(int mode);
 
-  private:
+private:
     bool m_dynWordWrap;
     int m_dynWordWrapIndicators;
     int m_dynWordWrapAlignIndent;
@@ -397,54 +406,59 @@ class KateViewConfig : public KateConfig
     bool m_persistentSelectionSet : 1;
     bool m_textToSearchModeSet : 1;
 
-  private:
+private:
     static KateViewConfig *s_global;
     KateView *m_view;
 };
 
-class KateRendererConfig : public KateConfig
-{
-  private:
+class KateRendererConfig : public KateConfig {
+private:
     friend class KateFactory;
 
     /**
      * only used in KateFactory for the static global fallback !!!
      */
-    KateRendererConfig ();
+    KateRendererConfig();
 
 
-  public:
+public:
     /**
      * Construct a DocumentConfig
      */
-    KateRendererConfig (KateRenderer *renderer);
+    KateRendererConfig(KateRenderer *renderer);
 
     /**
      * Cu DocumentConfig
      */
-    ~KateRendererConfig ();
+    ~KateRendererConfig();
 
-    inline static KateRendererConfig *global () { return s_global; }
+    inline static KateRendererConfig *global()
+    {
+        return s_global;
+    }
 
-    inline bool isGlobal () const { return (this == global()); }
+    inline bool isGlobal() const
+    {
+        return (this == global());
+    }
 
-  public:
+public:
     /**
      * Read config from object
      */
-    void readConfig (KConfig *config);
+    void readConfig(KConfig *config);
 
     /**
      * Write config to object
      */
-    void writeConfig (KConfig *config);
+    void writeConfig(KConfig *config);
 
-  protected:
-    void updateConfig ();
+protected:
+    void updateConfig();
 
-  public:
-    uint schema () const;
-    void setSchema (uint schema);
+public:
+    uint schema() const;
+    void setSchema(uint schema);
     /**
      * Reload the schema from the schema manager.
      * For the global instance, have all other instances reload.
@@ -452,48 +466,49 @@ class KateRendererConfig : public KateConfig
      */
     void reloadSchema();
 
-    KateFontStruct *fontStruct ();
+    KateFontStruct *fontStruct();
     QFont *font();
     KateFontMetrics *fontMetrics();
 
     void setFont(const QFont &font);
 
-    bool wordWrapMarker () const;
-    void setWordWrapMarker (bool on);
+    bool wordWrapMarker() const;
+    void setWordWrapMarker(bool on);
 
-    const QColor& backgroundColor() const;
-    void setBackgroundColor (const QColor &col);
+    const QColor &backgroundColor() const;
+    void setBackgroundColor(const QColor &col);
 
-    const QColor& selectionColor() const;
-    void setSelectionColor (const QColor &col);
+    const QColor &selectionColor() const;
+    void setSelectionColor(const QColor &col);
 
-    const QColor& highlightedLineColor() const;
-    void setHighlightedLineColor (const QColor &col);
+    const QColor &highlightedLineColor() const;
+    void setHighlightedLineColor(const QColor &col);
 
-    const QColor& lineMarkerColor(KTextEditor::MarkInterface::MarkTypes type = KTextEditor::MarkInterface::markType01) const; // markType01 == Bookmark
-    void setLineMarkerColor (const QColor &col, KTextEditor::MarkInterface::MarkTypes type = KTextEditor::MarkInterface::markType01);
+    const QColor &
+    lineMarkerColor(KTextEditor::MarkInterface::MarkTypes type = KTextEditor::MarkInterface::markType01) const; // markType01 == Bookmark
+    void setLineMarkerColor(const QColor &col, KTextEditor::MarkInterface::MarkTypes type = KTextEditor::MarkInterface::markType01);
 
-    const QColor& highlightedBracketColor() const;
-    void setHighlightedBracketColor (const QColor &col);
+    const QColor &highlightedBracketColor() const;
+    void setHighlightedBracketColor(const QColor &col);
 
-    const QColor& wordWrapMarkerColor() const;
-    void setWordWrapMarkerColor (const QColor &col);
+    const QColor &wordWrapMarkerColor() const;
+    void setWordWrapMarkerColor(const QColor &col);
 
-    const QColor& tabMarkerColor() const;
-    void setTabMarkerColor (const QColor &col);
+    const QColor &tabMarkerColor() const;
+    void setTabMarkerColor(const QColor &col);
 
-    const QColor& iconBarColor() const;
-    void setIconBarColor (const QColor &col);
+    const QColor &iconBarColor() const;
+    void setIconBarColor(const QColor &col);
 
     // the line number color is used for the line numbers on the left bar and
     // for vertical separator lines and for code folding lines.
-    const QColor& lineNumberColor() const;
-    void setLineNumberColor (const QColor &col);
+    const QColor &lineNumberColor() const;
+    void setLineNumberColor(const QColor &col);
 
-    bool showIndentationLines () const;
-    void setShowIndentationLines (bool on);
+    bool showIndentationLines() const;
+    void setShowIndentationLines(bool on);
 
-  private:
+private:
     /**
      * Read the schema properties from the config file.
      */
@@ -502,7 +517,7 @@ class KateRendererConfig : public KateConfig
     uint m_schema;
     KateFontStruct *m_font;
     bool m_wordWrapMarker;
-    bool m_showIndentationLines;    
+    bool m_showIndentationLines;
     QColor m_backgroundColor;
     QColor m_selectionColor;
     QColor m_highlightedLineColor;
@@ -511,12 +526,12 @@ class KateRendererConfig : public KateConfig
     QColor m_tabMarkerColor;
     QColor m_iconBarColor;
     QColor m_lineNumberColor;
-    QValueVector<QColor> m_lineMarkerColor;
+    QValueVector< QColor > m_lineMarkerColor;
 
     bool m_schemaSet : 1;
     bool m_fontSet : 1;
     bool m_wordWrapMarkerSet : 1;
-    bool m_showIndentationLinesSet : 1;    
+    bool m_showIndentationLinesSet : 1;
     bool m_backgroundColorSet : 1;
     bool m_selectionColorSet : 1;
     bool m_highlightedLineColorSet : 1;
@@ -527,7 +542,7 @@ class KateRendererConfig : public KateConfig
     bool m_lineNumberColorSet : 1;
     QBitArray m_lineMarkerColorSet;
 
-  private:
+private:
     static KateRendererConfig *s_global;
     KateRenderer *m_renderer;
 };

@@ -28,20 +28,19 @@
 class QLabel;
 class QListView;
 
-class KABC_EXPORT LockWidget : public QWidget
-{
+class KABC_EXPORT LockWidget : public QWidget {
     Q_OBJECT
-  public:
-    LockWidget( const QString &identifier );
+public:
+    LockWidget(const QString &identifier);
     ~LockWidget();
 
-  protected slots:
+protected slots:
     void lock();
     void unlock();
 
     void updateLockView();
-    
-  private:
+
+private:
     KABC::Lock *mLock;
 
     QLabel *mStatus;

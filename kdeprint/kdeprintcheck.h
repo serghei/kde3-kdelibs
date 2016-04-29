@@ -25,17 +25,16 @@
 #include <kconfig.h>
 #include <kurl.h>
 
-class KDEPRINT_EXPORT KdeprintChecker
-{
+class KDEPRINT_EXPORT KdeprintChecker {
 public:
-	static bool check(KConfig *conf, const QString& group = QString::null);
-	static bool check(const QStringList& uris);
+    static bool check(KConfig *conf, const QString &group = QString::null);
+    static bool check(const QStringList &uris);
 
 private:
-	static bool checkURL(const KURL&);
-	static bool checkConfig(const KURL&);
-	static bool checkExec(const KURL&);
-	static bool checkService(const KURL&);
+    static bool checkURL(const KURL &);
+    static bool checkConfig(const KURL &);
+    static bool checkExec(const KURL &);
+    static bool checkService(const KURL &);
 };
 
 #endif

@@ -1,24 +1,24 @@
-    /*
+/*
 
-    Copyright (C) 2000 Stefan Westerfeld
-                       stefan@space.twc.de
+Copyright (C) 2000 Stefan Westerfeld
+                   stefan@space.twc.de
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-  
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-   
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-    */
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
+
+*/
 
 #ifndef OBJECTMANAGER_H
 #define OBJECTMANAGER_H
@@ -43,33 +43,32 @@ class ObjectManagerPrivate;
 
 class ARTS_EXPORT ObjectManager {
 private:
-	ObjectManagerPrivate *d;
+    ObjectManagerPrivate *d;
 
 protected:
-	static ObjectManager *_instance;
-	std::list<Factory *> factories;
-	std::list<std::string> referenceNames;
+    static ObjectManager *_instance;
+    std::list< Factory * > factories;
+    std::list< std::string > referenceNames;
 
 public:
-	ObjectManager();
-	~ObjectManager();
+    ObjectManager();
+    ~ObjectManager();
 
-	static ObjectManager *the();
-	Object_skel *create(const std::string& name);
+    static ObjectManager *the();
+    Object_skel *create(const std::string &name);
 
-	bool addGlobalReference(Object object, const std::string& name);
-	std::string getGlobalReference(const std::string& name);
-	void removeGlobalReferences();
-	void removeExtensions();
-	void shutdownExtensions();
+    bool addGlobalReference(Object object, const std::string &name);
+    std::string getGlobalReference(const std::string &name);
+    void removeGlobalReferences();
+    void removeExtensions();
+    void shutdownExtensions();
 
-	void registerFactory(Factory *factory);
-	void removeFactory(Factory *factory);
+    void registerFactory(Factory *factory);
+    void removeFactory(Factory *factory);
 
-	void provideCapability(const std::string& capability);
-	void removeCapability(const std::string& capability);
+    void provideCapability(const std::string &capability);
+    void removeCapability(const std::string &capability);
 };
-
 }
 
 #endif /* OBJECTMANAGER_H */

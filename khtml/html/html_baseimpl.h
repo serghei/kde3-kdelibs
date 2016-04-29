@@ -37,9 +37,9 @@ class KHTMLView;
 class KHTMLPart;
 
 namespace khtml {
-    class RenderFrameSet;
-    class RenderFrame;
-    class RenderPartObject;
+class RenderFrameSet;
+class RenderFrame;
+class RenderPartObject;
 }
 
 namespace DOM {
@@ -50,8 +50,7 @@ class HTMLFrameElement;
 
 // -------------------------------------------------------------------------
 
-class HTMLBodyElementImpl : public HTMLElementImpl
-{
+class HTMLBodyElementImpl : public HTMLElementImpl {
 public:
     HTMLBodyElementImpl(DocumentImpl *doc);
     ~HTMLBodyElementImpl();
@@ -64,7 +63,10 @@ public:
     virtual void insertedIntoDocument();
     virtual void removedFromDocument();
 
-    CSSStyleSheetImpl *sheet() const { return m_styleSheet; }
+    CSSStyleSheetImpl *sheet() const
+    {
+        return m_styleSheet;
+    }
 
 protected:
     CSSStyleSheetImpl *m_styleSheet;
@@ -74,8 +76,7 @@ protected:
 
 // -------------------------------------------------------------------------
 
-class HTMLFrameElementImpl : public HTMLElementImpl
-{
+class HTMLFrameElementImpl : public HTMLElementImpl {
     friend class khtml::RenderFrame;
     friend class khtml::RenderPartObject;
 
@@ -89,14 +90,17 @@ public:
     virtual void parseAttribute(AttributeImpl *);
     virtual void attach();
 
-    bool noResize() { return noresize; }
-    void setLocation( const DOMString& str );
+    bool noResize()
+    {
+        return noresize;
+    }
+    void setLocation(const DOMString &str);
 
     virtual bool isFocusable() const;
     virtual void setFocus(bool);
 
-    DocumentImpl* contentDocument() const;
-    KHTMLPart*    contentPart() const;
+    DocumentImpl *contentDocument() const;
+    KHTMLPart *contentPart() const;
 
     DOMString url;
     DOMString name;
@@ -112,9 +116,9 @@ public:
 
 // -------------------------------------------------------------------------
 
-class HTMLFrameSetElementImpl : public HTMLElementImpl
-{
+class HTMLFrameSetElementImpl : public HTMLElementImpl {
     friend class khtml::RenderFrameSet;
+
 public:
     HTMLFrameSetElementImpl(DocumentImpl *doc);
 
@@ -127,19 +131,34 @@ public:
 
     virtual void defaultEventHandler(EventImpl *evt);
 
-    bool frameBorder() { return frameborder; }
-    bool noResize() { return noresize; }
+    bool frameBorder()
+    {
+        return frameborder;
+    }
+    bool noResize()
+    {
+        return noresize;
+    }
 
-    int totalRows() const { return m_totalRows; }
-    int totalCols() const { return m_totalCols; }
-    int border() const { return m_border; }
+    int totalRows() const
+    {
+        return m_totalRows;
+    }
+    int totalCols() const
+    {
+        return m_totalCols;
+    }
+    int border() const
+    {
+        return m_border;
+    }
     virtual void detach();
 
-    virtual void recalcStyle( StyleChange ch );
+    virtual void recalcStyle(StyleChange ch);
 
 protected:
-    khtml::Length* m_rows;
-    khtml::Length* m_cols;
+    khtml::Length *m_rows;
+    khtml::Length *m_cols;
 
     int m_totalRows;
     int m_totalCols;
@@ -148,30 +167,30 @@ protected:
     bool frameborder : 1;
     bool frameBorderSet : 1;
     bool noresize : 1;
-    bool m_resizing : 1;  // is the user resizing currently
-    
-    EventListener* m_onLoad;
-    EventListener* m_onUnLoad;
+    bool m_resizing : 1; // is the user resizing currently
+
+    EventListener *m_onLoad;
+    EventListener *m_onUnLoad;
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLHeadElementImpl : public HTMLElementImpl
-{
+class HTMLHeadElementImpl : public HTMLElementImpl {
 public:
-    HTMLHeadElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc) {}
+    HTMLHeadElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
     virtual Id id() const;
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLHtmlElementImpl : public HTMLElementImpl
-{
+class HTMLHtmlElementImpl : public HTMLElementImpl {
 public:
-    HTMLHtmlElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc) {}
+    HTMLHtmlElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
     virtual Id id() const;
 };
@@ -179,8 +198,7 @@ public:
 
 // -------------------------------------------------------------------------
 
-class HTMLIFrameElementImpl : public HTMLFrameElementImpl
-{
+class HTMLIFrameElementImpl : public HTMLFrameElementImpl {
 public:
     HTMLIFrameElementImpl(DocumentImpl *doc);
 
@@ -190,10 +208,9 @@ public:
 
     virtual void parseAttribute(AttributeImpl *attr);
     virtual void attach();
-    virtual void recalcStyle( StyleChange ch );
+    virtual void recalcStyle(StyleChange ch);
 
 protected:
-
     void updateFrame();
 
     bool needWidgetUpdate;
@@ -201,7 +218,6 @@ protected:
 };
 
 
-} //namespace
+} // namespace
 
 #endif
-

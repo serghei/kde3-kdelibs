@@ -27,80 +27,95 @@
  * Computes a directory size (similar to "du", but doesn't give the same results
  * since we simply sum up the dir and file sizes, whereas du speaks disk blocks)
  */
-class KIO_EXPORT KDirSize : public KIO::Job
-{
-  Q_OBJECT
+class KIO_EXPORT KDirSize : public KIO::Job {
+    Q_OBJECT
 protected:
-  KDirSize( const KURL & directory );
-  KDirSize( const KFileItemList & lstItems );
-  ~KDirSize() {}
+    KDirSize(const KURL &directory);
+    KDirSize(const KFileItemList &lstItems);
+    ~KDirSize()
+    {
+    }
 
 public:
-  /**
-   * @return the size we found
-   */
-  KIO::filesize_t totalSize() const { return m_totalSize; }
+    /**
+     * @return the size we found
+     */
+    KIO::filesize_t totalSize() const
+    {
+        return m_totalSize;
+    }
 
-  /**
-   * @return the total number of files (counting symlinks to files, sockets
-   * and character devices as files) in this directory and all sub-directories
-   * @since 3.3
-   */
-  KIO::filesize_t totalFiles() const { return m_totalFiles; }
+    /**
+     * @return the total number of files (counting symlinks to files, sockets
+     * and character devices as files) in this directory and all sub-directories
+     * @since 3.3
+     */
+    KIO::filesize_t totalFiles() const
+    {
+        return m_totalFiles;
+    }
 
-  /**
-   * @return the total number of sub-directories found (not including the
-   * directory the search started from and treating symlinks to directories
-   * as directories)
-   * @since 3.3
-   */
-  KIO::filesize_t totalSubdirs() const { return m_totalSubdirs; }
+    /**
+     * @return the total number of sub-directories found (not including the
+     * directory the search started from and treating symlinks to directories
+     * as directories)
+     * @since 3.3
+     */
+    KIO::filesize_t totalSubdirs() const
+    {
+        return m_totalSubdirs;
+    }
 
-  /**
-   * Asynchronous method. Connect to the result signal.
-   * This one lists a single directory.
-   */
-  static KDirSize * dirSizeJob( const KURL & directory );
+    /**
+     * Asynchronous method. Connect to the result signal.
+     * This one lists a single directory.
+     */
+    static KDirSize *dirSizeJob(const KURL &directory);
 
-  /**
-   * Asynchronous method. Connect to the result signal.
-   * This one lists the items from @p lstItems.
-   * The reason we asks for items instead of just urls, is so that
-   * we directly know if the item is a file or a directory,
-   * and in case of a file, we already have its size.
-   */
-  static KDirSize * dirSizeJob( const KFileItemList & lstItems );
+    /**
+     * Asynchronous method. Connect to the result signal.
+     * This one lists the items from @p lstItems.
+     * The reason we asks for items instead of just urls, is so that
+     * we directly know if the item is a file or a directory,
+     * and in case of a file, we already have its size.
+     */
+    static KDirSize *dirSizeJob(const KFileItemList &lstItems);
 
-  /**
-   * Synchronous method - you get the result as soon as
-   * the call returns.
-   */
-  static KIO::filesize_t dirSize( const KURL & directory );
+    /**
+     * Synchronous method - you get the result as soon as
+     * the call returns.
+     */
+    static KIO::filesize_t dirSize(const KURL &directory);
 
 protected:
-  /**
-   * @internal
-   */
-  void setSync() { m_bAsync = false; }
+    /**
+     * @internal
+     */
+    void setSync()
+    {
+        m_bAsync = false;
+    }
 
-  void startNextJob( const KURL & url );
+    void startNextJob(const KURL &url);
 
 protected slots:
 
-  virtual void slotResult( KIO::Job *job );
-  void slotEntries( KIO::Job * , const KIO::UDSEntryList &);
-  void processList();
+    virtual void slotResult(KIO::Job *job);
+    void slotEntries(KIO::Job *, const KIO::UDSEntryList &);
+    void processList();
 
 private:
-  bool m_bAsync;
-  KIO::filesize_t m_totalSize;
-  KIO::filesize_t m_totalFiles;
-  KIO::filesize_t m_totalSubdirs;
-  KFileItemList m_lstItems;
+    bool m_bAsync;
+    KIO::filesize_t m_totalSize;
+    KIO::filesize_t m_totalFiles;
+    KIO::filesize_t m_totalSubdirs;
+    KFileItemList m_lstItems;
+
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KDirSize* d;
+    class KDirSize *d;
 };
 
 #endif

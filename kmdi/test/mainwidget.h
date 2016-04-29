@@ -27,20 +27,19 @@
 /**
   *@author Falk Brettschneider
   */
-class MainWidget : public KMdiMainFrm
-{
+class MainWidget : public KMdiMainFrm {
     Q_OBJECT
 public:
-    MainWidget(QDomElement& dockConfig,KMdi::MdiMode mode);
+    MainWidget(QDomElement &dockConfig, KMdi::MdiMode mode);
     virtual ~MainWidget();
     void initMenu();
 
 protected: // Protected methods
-    virtual void resizeEvent( QResizeEvent *pRSE);
+    virtual void resizeEvent(QResizeEvent *pRSE);
+
 private:
     QDomElement m_dockConfig;
 };
-
 
 
 /**
@@ -48,10 +47,9 @@ private:
   * This allows me to test KMdiMainFrm::read/writeDockConfig by
   * closing and restarting the MainWidget via checkbox click.
   */
-class RestartWidget : public KMainWindow
-{
+class RestartWidget : public KMainWindow {
     Q_OBJECT
-// methods
+    // methods
 public:
     RestartWidget();
     void setWindow(MainWidget *w);
@@ -59,11 +57,12 @@ public:
 private slots:
     void onStateChanged(int on);
 
-// attributes
+    // attributes
 public:
     QDomDocument domDoc;
     QDomElement dockConfig;
     KMdi::MdiMode mdimode;
+
 private:
     MainWidget *m_w;
 };

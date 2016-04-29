@@ -73,18 +73,16 @@ If the popup menu is invoked with the keyboard shortcut, it's shown at
 the position of the micro focus hint of the widget ( QWidget::microFocusHint() ).
 */
 
-class KDEUI_EXPORT KContextMenuManager : public QObject
-{
+class KDEUI_EXPORT KContextMenuManager : public QObject {
     Q_OBJECT
 public:
-
     /**
        Makes @p popup a context popup menu for widget @p widget.
 
        Ownership of the popup menu is not transferred to the context
        menu manager.
     */
-    static void insert( QWidget* widget, QPopupMenu* popup );
+    static void insert(QWidget *widget, QPopupMenu *popup);
 
     /**
      * Use this method to get information about when a popup menu
@@ -94,18 +92,19 @@ public:
      * @return true if the menu should be made visible on a button press
      *         or false after a button press-release sequence.
      */
-     static bool showOnButtonPress( void );
+    static bool showOnButtonPress(void);
 
 private slots:
     void widgetDestroyed();
+
 private:
-    KContextMenuManager( QObject* parent = 0, const char* name  = 0);
+    KContextMenuManager(QObject *parent = 0, const char *name = 0);
     ~KContextMenuManager();
-    bool eventFilter( QObject *, QEvent * );
-    QPtrDict<QPopupMenu> menus;
+    bool eventFilter(QObject *, QEvent *);
+    QPtrDict< QPopupMenu > menus;
     bool showOnPress;
     QKeySequence menuKey;
-    static KContextMenuManager* manager;
+    static KContextMenuManager *manager;
     friend class I_really_like_this_class; // avoid warning
 
     KContextMenuManagerPrivate *d;

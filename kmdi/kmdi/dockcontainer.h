@@ -25,7 +25,7 @@
 #include <kdockwidget.h>
 #include <qmap.h>
 
-# include <kdockwidget_p.h>
+#include <kdockwidget_p.h>
 
 #include <qpushbutton.h>
 
@@ -33,14 +33,12 @@ class QWidgetStack;
 class KMultiTabBar;
 class KDockButton_Private;
 
-namespace KMDI
-{
+namespace KMDI {
 
-class DockContainer: public QWidget, public KDockContainer
-{
-  Q_OBJECT
+class DockContainer : public QWidget, public KDockContainer {
+    Q_OBJECT
 
-  public:
+public:
     DockContainer(QWidget *parent, QWidget *win, int position, int flags);
     virtual ~DockContainer();
 
@@ -52,13 +50,13 @@ class DockContainer: public QWidget, public KDockContainer
      * \param w the KDockWidget object to add
      * \todo Remove the extra parameters that we don't use?
      */
-    virtual void insertWidget (KDockWidget *w, QPixmap, const QString &, int &);
+    virtual void insertWidget(KDockWidget *w, QPixmap, const QString &, int &);
 
     /**
      * Show a KDockWidget in our DockContainer
      * \param w the KDockWidget to show
      */
-    virtual void showWidget (KDockWidget *w);
+    virtual void showWidget(KDockWidget *w);
 
     /**
      * Set a tooltip for a widget
@@ -66,49 +64,51 @@ class DockContainer: public QWidget, public KDockContainer
      * \todo Actually implement it? Right now, it looks just it
      * does exactly nothing
      */
-    virtual void setToolTip (KDockWidget *, QString &);
+    virtual void setToolTip(KDockWidget *, QString &);
 
     /**
      * Set a pixmap for one of our dock widgets
      * \param widget the KDockWidget to set the pixmap for
      * \param pixmap the pixmap you want to give the widget
      */
-    virtual void setPixmap(KDockWidget* widget, const QPixmap& pixmap);
+    virtual void setPixmap(KDockWidget *widget, const QPixmap &pixmap);
 
     /**
      * Undock a widget from the container. This function is called
-     * when you've dragged a tab off the dock it's attached to. 
+     * when you've dragged a tab off the dock it's attached to.
      * \param dwdg the KDockWidget to undock
      */
-    virtual void undockWidget(KDockWidget* dwdg);
+    virtual void undockWidget(KDockWidget *dwdg);
 
     /**
      * Remove a widget from the container. The caller
      * of this function is responsible for deleting the widget after calling
      * this function.
      */
-    virtual void removeWidget(KDockWidget*);
+    virtual void removeWidget(KDockWidget *);
 
     void hideIfNeeded();
 
-    virtual void save(KConfig *,const QString& group_or_prefix);
-    virtual void load(KConfig *,const QString& group_or_prefix);
+    virtual void save(KConfig *, const QString &group_or_prefix);
+    virtual void load(KConfig *, const QString &group_or_prefix);
 
     void setStyle(int);
-  protected:
-    bool eventFilter(QObject*,QEvent*);
 
-  public slots:
+protected:
+    bool eventFilter(QObject *, QEvent *);
+
+public slots:
     void init();
     void collapseOverlapped();
     void toggle();
     void nextToolView();
     void prevToolView();
-  protected slots:
+protected slots:
     void tabClicked(int);
     void delayedRaise();
     void changeOverlapMode();
-  private:
+
+private:
     QWidget *m_mainWin;
     QWidgetStack *m_ws;
     KMultiTabBar *m_tb;
@@ -117,12 +117,12 @@ class DockContainer: public QWidget, public KDockContainer
     int m_previousTab;
     int m_position;
     int m_separatorPos;
-    QMap<KDockWidget*,int> m_map;
-    QMap<int,KDockWidget*> m_revMap;
-    QMap<KDockWidget*,KDockButton_Private*> m_overlapButtons;
+    QMap< KDockWidget *, int > m_map;
+    QMap< int, KDockWidget * > m_revMap;
+    QMap< KDockWidget *, KDockButton_Private * > m_overlapButtons;
     QStringList itemNames;
-    QMap<QString,QString> tabCaptions;
-    QMap<QString,QString> tabTooltips;
+    QMap< QString, QString > tabCaptions;
+    QMap< QString, QString > tabTooltips;
     int m_inserted;
     int m_delayedRaise;
     bool m_vertical;
@@ -131,12 +131,17 @@ class DockContainer: public QWidget, public KDockContainer
     QObject *m_dragPanel;
     KDockManager *m_dockManager;
     QMouseEvent *m_startEvent;
-    enum MovingState {NotMoving=0,WaitingForMoveStart,MovingInternal,Moving} m_movingState;
-  signals:
-        void activated(DockContainer*);
-        void deactivated(DockContainer*);
+    enum MovingState
+    {
+        NotMoving = 0,
+        WaitingForMoveStart,
+        MovingInternal,
+        Moving
+    } m_movingState;
+signals:
+    void activated(DockContainer *);
+    void deactivated(DockContainer *);
 };
-
 }
 
 #endif

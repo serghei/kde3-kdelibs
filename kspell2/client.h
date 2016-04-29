@@ -28,30 +28,28 @@
 
 #include <kdelibs_export.h>
 
-namespace KSpell2
-{
-    class Dictionary;
+namespace KSpell2 {
+class Dictionary;
 
-    /**
-     * The fact that this class inherits from QObject makes me
-     * hugely unhappy. The reason for as of writting is that
-     * I don't really feel like writting my own KLibFactory
-     * that would load anything else then QObject derivatives.
-     */
-    class KDE_EXPORT Client : public QObject
-    {
-        Q_OBJECT
-    public:
-        Client( QObject *parent = 0, const char *name=0 );
+/**
+ * The fact that this class inherits from QObject makes me
+ * hugely unhappy. The reason for as of writting is that
+ * I don't really feel like writting my own KLibFactory
+ * that would load anything else then QObject derivatives.
+ */
+class KDE_EXPORT Client : public QObject {
+    Q_OBJECT
+public:
+    Client(QObject *parent = 0, const char *name = 0);
 
-        virtual int reliability() const = 0;
+    virtual int reliability() const = 0;
 
-        virtual Dictionary* dictionary( const QString& language ) =0;
+    virtual Dictionary *dictionary(const QString &language) = 0;
 
-        virtual QStringList languages() const =0;
+    virtual QStringList languages() const = 0;
 
-        virtual QString name() const =0;
-    };
+    virtual QString name() const = 0;
+};
 }
 
 #endif

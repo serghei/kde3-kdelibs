@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,77 +27,70 @@
 
 using namespace VCARD;
 
-AgentParam::AgentParam()
-	:	Param()
+AgentParam::AgentParam() : Param()
 {
 }
 
-AgentParam::AgentParam(const AgentParam & x)
-	:	Param(x),
-		refer_	(x.refer_),
-		uri_	(x.uri_)
+AgentParam::AgentParam(const AgentParam &x) : Param(x), refer_(x.refer_), uri_(x.uri_)
 {
 }
 
-AgentParam::AgentParam(const QCString & s)
-	:	Param(s)
+AgentParam::AgentParam(const QCString &s) : Param(s)
 {
 }
 
-	AgentParam &
-AgentParam::operator = (AgentParam & x)
+AgentParam &AgentParam::operator=(AgentParam &x)
 {
-	if (*this == x) return *this;
-	
-	refer_	= x.refer_;
-	uri_	= x.uri_;
+    if(*this == x)
+        return *this;
 
-	Param::operator = (x);
-	return *this;
+    refer_ = x.refer_;
+    uri_ = x.uri_;
+
+    Param::operator=(x);
+    return *this;
 }
 
-	AgentParam &
-AgentParam::operator = (const QCString & s)
+AgentParam &AgentParam::operator=(const QCString &s)
 {
-	Param::operator = (s);
-	return *this;
+    Param::operator=(s);
+    return *this;
 }
 
-	bool
-AgentParam::operator == (AgentParam & x)
+bool AgentParam::operator==(AgentParam &x)
 {
-	parse();
+    parse();
 
-	if (refer_)
-		return (x.refer() && uri_ == x.uri_);
-	
-	return !x.refer();
+    if(refer_)
+        return (x.refer() && uri_ == x.uri_);
+
+    return !x.refer();
 }
 
 AgentParam::~AgentParam()
 {
 }
 
-	void
-AgentParam::_parse()
+void AgentParam::_parse()
 {
-	if (strRep_.isEmpty()) {
-		refer_ = false;
-		return;
-	}
-	
-	refer_	= true;
-	uri_	= strRep_;
+    if(strRep_.isEmpty())
+    {
+        refer_ = false;
+        return;
+    }
+
+    refer_ = true;
+    uri_ = strRep_;
 }
 
-	void
-AgentParam::_assemble()
+void AgentParam::_assemble()
 {
-	if (!refer_) {
-		strRep_.truncate(0);
-		return;
-	}
-	
-	strRep_ = uri_.asString();
-	return;
+    if(!refer_)
+    {
+        strRep_.truncate(0);
+        return;
+    }
+
+    strRep_ = uri_.asString();
+    return;
 }

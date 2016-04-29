@@ -45,25 +45,26 @@
 /**
  * @short A namespace for the KMDI library
  */
-namespace KMDI
+namespace KMDI {
+enum TabWidgetVisibility
 {
-  enum TabWidgetVisibility {
-    AlwaysShowTabs         = 0,
+    AlwaysShowTabs = 0,
     ShowWhenMoreThanOneTab = 1,
-    NeverShowTabs          = 2
-  };
+    NeverShowTabs = 2
+};
 
-  /**
-   * The style of the toolview tabs
-   */
-  enum ToolviewStyle {
-   /** Show only icons on the toolview tabs. The visible toolviews contain both the icon and text. */
-    IconOnly	= 0,
-   /** Show only the text description on the toolview tabs. */
-    TextOnly	= 1,
-   /** Show both the icon and description on the toolview tabs. */
+/**
+ * The style of the toolview tabs
+ */
+enum ToolviewStyle
+{
+    /** Show only icons on the toolview tabs. The visible toolviews contain both the icon and text. */
+    IconOnly = 0,
+    /** Show only the text description on the toolview tabs. */
+    TextOnly = 1,
+    /** Show both the icon and description on the toolview tabs. */
     TextAndIcon = 3
-  };
+};
 }
 
 #endif

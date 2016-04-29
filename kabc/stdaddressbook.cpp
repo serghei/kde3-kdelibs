@@ -38,16 +38,16 @@ using namespace KABC;
 StdAddressBook *StdAddressBook::mSelf = 0;
 bool StdAddressBook::mAutomaticSave = true;
 
-static KStaticDeleter<StdAddressBook> addressBookDeleter;
+static KStaticDeleter< StdAddressBook > addressBookDeleter;
 
 QString StdAddressBook::fileName()
 {
-  return locateLocal( "data", "kabc/std.vcf" );
+    return locateLocal("data", "kabc/std.vcf");
 }
 
 QString StdAddressBook::directoryName()
 {
-  return locateLocal( "data", "kabc/stdvcf" );
+    return locateLocal("data", "kabc/stdvcf");
 }
 
 void StdAddressBook::handleCrash()
@@ -56,148 +56,148 @@ void StdAddressBook::handleCrash()
 
 StdAddressBook *StdAddressBook::self()
 {
-  if ( !mSelf )
-    addressBookDeleter.setObject( mSelf, new StdAddressBook );
+    if(!mSelf)
+        addressBookDeleter.setObject(mSelf, new StdAddressBook);
 
-  return mSelf;
+    return mSelf;
 }
 
-StdAddressBook *StdAddressBook::self( bool asynchronous )
+StdAddressBook *StdAddressBook::self(bool asynchronous)
 {
-  if ( !mSelf )
-    addressBookDeleter.setObject( mSelf, new StdAddressBook( asynchronous ) );
+    if(!mSelf)
+        addressBookDeleter.setObject(mSelf, new StdAddressBook(asynchronous));
 
-  return mSelf;
+    return mSelf;
 }
 
-StdAddressBook::StdAddressBook()
-  : AddressBook( "" )
+StdAddressBook::StdAddressBook() : AddressBook("")
 {
-  kdDebug(5700) << "StdAddressBook::StdAddressBook()" << endl;
+    kdDebug(5700) << "StdAddressBook::StdAddressBook()" << endl;
 
-  init( false );
+    init(false);
 }
 
-StdAddressBook::StdAddressBook( bool asynchronous )
-  : AddressBook( "" )
+StdAddressBook::StdAddressBook(bool asynchronous) : AddressBook("")
 {
-  kdDebug(5700) << "StdAddressBook::StdAddressBook( bool )" << endl;
+    kdDebug(5700) << "StdAddressBook::StdAddressBook( bool )" << endl;
 
-  init( asynchronous );
+    init(asynchronous);
 }
 
 StdAddressBook::~StdAddressBook()
 {
-  if ( mAutomaticSave )
-    saveAll();
+    if(mAutomaticSave)
+        saveAll();
 }
 
-void StdAddressBook::init( bool asynchronous )
+void StdAddressBook::init(bool asynchronous)
 {
-  KRES::Manager<Resource> *manager = resourceManager();
+    KRES::Manager< Resource > *manager = resourceManager();
 
-  KRES::Manager<Resource>::ActiveIterator it;
-  for ( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
-    (*it)->setAddressBook( this );
-    if ( !(*it)->open() ) {
-      error( QString( "Unable to open resource '%1'!" ).arg( (*it)->resourceName() ) );
-      continue;
+    KRES::Manager< Resource >::ActiveIterator it;
+    for(it = manager->activeBegin(); it != manager->activeEnd(); ++it)
+    {
+        (*it)->setAddressBook(this);
+        if(!(*it)->open())
+        {
+            error(QString("Unable to open resource '%1'!").arg((*it)->resourceName()));
+            continue;
+        }
+        connect(*it, SIGNAL(loadingFinished(Resource *)), this, SLOT(resourceLoadingFinished(Resource *)));
+        connect(*it, SIGNAL(savingFinished(Resource *)), this, SLOT(resourceSavingFinished(Resource *)));
+
+        connect(*it, SIGNAL(loadingError(Resource *, const QString &)), this, SLOT(resourceLoadingError(Resource *, const QString &)));
+        connect(*it, SIGNAL(savingError(Resource *, const QString &)), this, SLOT(resourceSavingError(Resource *, const QString &)));
     }
-    connect( *it, SIGNAL( loadingFinished( Resource* ) ),
-             this, SLOT( resourceLoadingFinished( Resource* ) ) );
-    connect( *it, SIGNAL( savingFinished( Resource* ) ),
-             this, SLOT( resourceSavingFinished( Resource* ) ) );
 
-    connect( *it, SIGNAL( loadingError( Resource*, const QString& ) ),
-             this, SLOT( resourceLoadingError( Resource*, const QString& ) ) );
-    connect( *it, SIGNAL( savingError( Resource*, const QString& ) ),
-             this, SLOT( resourceSavingError( Resource*, const QString& ) ) );
-  }
+    Resource *res = standardResource();
+    if(!res)
+    {
+        res = manager->createResource("file");
+        if(res)
+            addResource(res);
+        else
+            kdDebug(5700) << "No resource available!!!" << endl;
+    }
 
-  Resource *res = standardResource();
-  if ( !res ) {
-    res = manager->createResource( "file" );
-    if ( res )
-      addResource( res );
+    setStandardResource(res);
+    manager->writeConfig();
+
+    if(asynchronous)
+        asyncLoad();
     else
-      kdDebug(5700) << "No resource available!!!" << endl;
-  }
-
-  setStandardResource( res );
-  manager->writeConfig();
-
-  if ( asynchronous )
-    asyncLoad();
-  else
-    load();
+        load();
 }
 
 bool StdAddressBook::saveAll()
 {
-  kdDebug(5700) << "StdAddressBook::saveAll()" << endl;
-  bool ok = true;
+    kdDebug(5700) << "StdAddressBook::saveAll()" << endl;
+    bool ok = true;
 
-  deleteRemovedAddressees();
+    deleteRemovedAddressees();
 
-  KRES::Manager<Resource>::ActiveIterator it;
-  KRES::Manager<Resource> *manager = resourceManager();
-  for ( it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
-    if ( !(*it)->readOnly() && (*it)->isOpen() ) {
-      Ticket *ticket = requestSaveTicket( *it );
-      if ( !ticket ) {
-        error( i18n( "Unable to save to resource '%1'. It is locked." )
-                   .arg( (*it)->resourceName() ) );
-        return false;
-      }
+    KRES::Manager< Resource >::ActiveIterator it;
+    KRES::Manager< Resource > *manager = resourceManager();
+    for(it = manager->activeBegin(); it != manager->activeEnd(); ++it)
+    {
+        if(!(*it)->readOnly() && (*it)->isOpen())
+        {
+            Ticket *ticket = requestSaveTicket(*it);
+            if(!ticket)
+            {
+                error(i18n("Unable to save to resource '%1'. It is locked.").arg((*it)->resourceName()));
+                return false;
+            }
 
-      if ( !AddressBook::save( ticket ) ) {
-        ok = false;
-        releaseSaveTicket( ticket );
-      }
+            if(!AddressBook::save(ticket))
+            {
+                ok = false;
+                releaseSaveTicket(ticket);
+            }
+        }
     }
-  }
 
-  return ok;
+    return ok;
 }
 
 bool StdAddressBook::save()
 {
-  kdDebug(5700) << "StdAddressBook::save()" << endl;
+    kdDebug(5700) << "StdAddressBook::save()" << endl;
 
-  if ( mSelf ) 
-    return mSelf->saveAll();
-  else
-    return true;  
+    if(mSelf)
+        return mSelf->saveAll();
+    else
+        return true;
 }
 
 void StdAddressBook::close()
 {
-  addressBookDeleter.destructObject();
+    addressBookDeleter.destructObject();
 }
 
-void StdAddressBook::setAutomaticSave( bool enable )
+void StdAddressBook::setAutomaticSave(bool enable)
 {
-  mAutomaticSave = enable;
+    mAutomaticSave = enable;
 }
 
 bool StdAddressBook::automaticSave()
 {
-  return mAutomaticSave;
+    return mAutomaticSave;
 }
 
 // should get const for 4.X
 Addressee StdAddressBook::whoAmI()
 {
-  KConfig config( "kabcrc" );
-  config.setGroup( "General" );
+    KConfig config("kabcrc");
+    config.setGroup("General");
 
-  return findByUid( config.readEntry( "WhoAmI" ) );
+    return findByUid(config.readEntry("WhoAmI"));
 }
 
-void StdAddressBook::setWhoAmI( const Addressee &addr )
+void StdAddressBook::setWhoAmI(const Addressee &addr)
 {
-  KConfig config( "kabcrc" );
-  config.setGroup( "General" );
+    KConfig config("kabcrc");
+    config.setGroup("General");
 
-  config.writeEntry( "WhoAmI", addr.uid() );
+    config.writeEntry("WhoAmI", addr.uid());
 }

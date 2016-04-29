@@ -1,24 +1,24 @@
-    /*
+/*
 
-    Copyright (C) 2000-2002 Stefan Westerfeld
-                            stefan@space.twc.de
+Copyright (C) 2000-2002 Stefan Westerfeld
+                        stefan@space.twc.de
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-  
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-   
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-    */
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
+
+*/
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -43,190 +43,186 @@
 
 namespace Arts {
 
-class AudioIOCSL : public AudioIO,
-				   public IONotify
-{
+class AudioIOCSL : public AudioIO, public IONotify {
 protected:
-	CslPcmStream *inputStream, *outputStream;
-	CslDriver *cslDriver;
-	int requestedFragmentSize;
-	int requestedFragmentCount;
-	const char *cslDriverName;
+    CslPcmStream *inputStream, *outputStream;
+    CslDriver *cslDriver;
+    int requestedFragmentSize;
+    int requestedFragmentCount;
+    const char *cslDriverName;
 
-	std::vector<CslPollFD> cslFds, cslOldFds;
-	int csl2iomanager(int cslTypes);
-	void updateFds();
+    std::vector< CslPollFD > cslFds, cslOldFds;
+    int csl2iomanager(int cslTypes);
+    void updateFds();
 
-	void notifyIO(int fd, int types);
-	static void handleRead(void *user_data, CslPcmStream *stream);
-	static void handleWrite(void *user_data, CslPcmStream *stream);
+    void notifyIO(int fd, int types);
+    static void handleRead(void *user_data, CslPcmStream *stream);
+    static void handleWrite(void *user_data, CslPcmStream *stream);
 
 public:
-	AudioIOCSL(const char *driverName = 0);
+    AudioIOCSL(const char *driverName = 0);
 
-	void setParam(AudioParam param, int& value);
-	int getParam(AudioParam param);
+    void setParam(AudioParam param, int &value);
+    int getParam(AudioParam param);
 
-	bool open();
-	void close();
-	int read(void *buffer, int size);
-	int write(void *buffer, int size);
+    bool open();
+    void close();
+    int read(void *buffer, int size);
+    int write(void *buffer, int size);
 };
 
-REGISTER_AUDIO_IO(AudioIOCSL,"csl","Common Sound Layer");
+REGISTER_AUDIO_IO(AudioIOCSL, "csl", "Common Sound Layer");
 
 class AudioIOCSLFactory : public AudioIOFactory {
 protected:
-	const char *driverName;
-	std::string _name;
-	std::string _fullName;
+    const char *driverName;
+    std::string _name;
+    std::string _fullName;
 
 public:
-	AudioIOCSLFactory(const char *driverName)
-		: driverName(driverName)
-	{
-		_name = "csl-";
-		_name += driverName;
+    AudioIOCSLFactory(const char *driverName) : driverName(driverName)
+    {
+        _name = "csl-";
+        _name += driverName;
 
-		_fullName = "Common Sound Layer (";
-		_fullName += driverName;
-		_fullName += ")";
-	}
-	virtual ~AudioIOCSLFactory()
-	{
-	}
-	AudioIO *createAudioIO() { return new AudioIOCSL(driverName); }
-	virtual const char *name() { return _name.c_str(); }
-	virtual const char *fullName() { return _fullName.c_str(); }
+        _fullName = "Common Sound Layer (";
+        _fullName += driverName;
+        _fullName += ")";
+    }
+    virtual ~AudioIOCSLFactory()
+    {
+    }
+    AudioIO *createAudioIO()
+    {
+        return new AudioIOCSL(driverName);
+    }
+    virtual const char *name()
+    {
+        return _name.c_str();
+    }
+    virtual const char *fullName()
+    {
+        return _fullName.c_str();
+    }
 };
 
 static class AudioIOCSLInit {
 protected:
-	std::list<AudioIOCSLFactory *> factories;
+    std::list< AudioIOCSLFactory * > factories;
 
 public:
     AudioIOCSLInit()
     {
-		unsigned int i,n;
-		const char **drivers = csl_list_drivers(&n);
+        unsigned int i, n;
+        const char **drivers = csl_list_drivers(&n);
 
-		for(i = 0; i < n; i++)
-			factories.push_back(new AudioIOCSLFactory(drivers[i]));
+        for(i = 0; i < n; i++)
+            factories.push_back(new AudioIOCSLFactory(drivers[i]));
     }
-	~AudioIOCSLInit()
-	{
-		std::list<AudioIOCSLFactory *>::iterator i;
-		for(i = factories.begin(); i != factories.end(); i++)
-			delete (*i);
+    ~AudioIOCSLInit()
+    {
+        std::list< AudioIOCSLFactory * >::iterator i;
+        for(i = factories.begin(); i != factories.end(); i++)
+            delete(*i);
 
-		factories.clear();
-	}
+        factories.clear();
+    }
 } aci;
-
 };
 
 using namespace std;
 using namespace Arts;
 
-AudioIOCSL::AudioIOCSL(const char *driverName)
-	: cslDriverName(driverName)
+AudioIOCSL::AudioIOCSL(const char *driverName) : cslDriverName(driverName)
 {
-	/*
-	 * default parameters
-	 */
-	param(samplingRate) = 44100;
-	paramStr(deviceName) = "todo";
-	requestedFragmentSize = param(fragmentSize) = 1024;
-	requestedFragmentCount = param(fragmentCount) = 7;
-	param(channels) = 2;
-	param(direction) = 2;
+    /*
+     * default parameters
+     */
+    param(samplingRate) = 44100;
+    paramStr(deviceName) = "todo";
+    requestedFragmentSize = param(fragmentSize) = 1024;
+    requestedFragmentCount = param(fragmentCount) = 7;
+    param(channels) = 2;
+    param(direction) = 2;
 
 #ifdef WORDS_BIGENDIAN
-	param(format) = 17;
+    param(format) = 17;
 #else
-	param(format) = 16;
+    param(format) = 16;
 #endif
 }
 
 bool AudioIOCSL::open()
 {
-	string& errorMsg = paramStr(lastError);
-	string& _deviceName = paramStr(deviceName);
-	int& _channels = param(channels);
-	int& _fragmentSize = param(fragmentSize);
-	int& _fragmentCount = param(fragmentCount);
-	int& _samplingRate = param(samplingRate);
-	int& _format = param(format);
-	int fmt = 0;
-	char *env = 0;
+    string &errorMsg = paramStr(lastError);
+    string &_deviceName = paramStr(deviceName);
+    int &_channels = param(channels);
+    int &_fragmentSize = param(fragmentSize);
+    int &_fragmentCount = param(fragmentCount);
+    int &_samplingRate = param(samplingRate);
+    int &_format = param(format);
+    int fmt = 0;
+    char *env = 0;
 
-	if(cslDriverName && strcmp(cslDriverName, "arts") == 0)
-		env = arts_strdup_printf("ARTS_SERVER=%s",_deviceName.c_str());
+    if(cslDriverName && strcmp(cslDriverName, "arts") == 0)
+        env = arts_strdup_printf("ARTS_SERVER=%s", _deviceName.c_str());
 
-	if(env)
-	{
-		putenv(env);
-		arts_debug("AudioIOCsl: set %s\n",env);
-	}
+    if(env)
+    {
+        putenv(env);
+        arts_debug("AudioIOCsl: set %s\n", env);
+    }
 
-	CslErrorType error;
-	error = csl_driver_init(cslDriverName, &cslDriver);    /* choose backend */
+    CslErrorType error;
+    error = csl_driver_init(cslDriverName, &cslDriver); /* choose backend */
 
-	if(env)
-	{
-		putenv("ARTS_SERVER");
-		free(env);
-	}
+    if(env)
+    {
+        putenv("ARTS_SERVER");
+        free(env);
+    }
 
-    if (error)
-	{
-    	errorMsg = "unable to initialize CSL driver: ";
-		errorMsg += csl_strerror(error);
-		return false;
-	}
+    if(error)
+    {
+        errorMsg = "unable to initialize CSL driver: ";
+        errorMsg += csl_strerror(error);
+        return false;
+    }
 
-	if(_format == 8)
-		fmt = CSL_PCM_FORMAT_U8;
-	else if(_format == 16)
-		fmt = CSL_PCM_FORMAT_S16_LE;
-	else if(_format == 17)
-		fmt = CSL_PCM_FORMAT_S16_BE;
+    if(_format == 8)
+        fmt = CSL_PCM_FORMAT_U8;
+    else if(_format == 16)
+        fmt = CSL_PCM_FORMAT_S16_LE;
+    else if(_format == 17)
+        fmt = CSL_PCM_FORMAT_S16_BE;
 
-	inputStream = outputStream = 0;
-	if(param(direction) & directionRead)
-	{
-   	    /* open PCM output stream */
-        error = csl_pcm_open_output(cslDriver,
-                                    "artsd output",
-                                    _samplingRate,
-									_channels,
-									fmt, &inputStream);
-		if (error)
-		{
-			errorMsg = "failed to open CSL input stream: ";
-			errorMsg += csl_strerror(error);
-			return false;
-		}
-		csl_pcm_set_callback(inputStream, handleRead, 0, 0);
-	}
-	if(param(direction) & directionWrite)
-	{
-	    /* open PCM output stream */
-        error = csl_pcm_open_output(cslDriver,
-                                    "artsd output",
-                                    _samplingRate,
-									_channels,
-									fmt, &outputStream);
-		if (error)
-		{
-			close();
+    inputStream = outputStream = 0;
+    if(param(direction) & directionRead)
+    {
+        /* open PCM output stream */
+        error = csl_pcm_open_output(cslDriver, "artsd output", _samplingRate, _channels, fmt, &inputStream);
+        if(error)
+        {
+            errorMsg = "failed to open CSL input stream: ";
+            errorMsg += csl_strerror(error);
+            return false;
+        }
+        csl_pcm_set_callback(inputStream, handleRead, 0, 0);
+    }
+    if(param(direction) & directionWrite)
+    {
+        /* open PCM output stream */
+        error = csl_pcm_open_output(cslDriver, "artsd output", _samplingRate, _channels, fmt, &outputStream);
+        if(error)
+        {
+            close();
 
-			errorMsg = "failed to open CSL output stream: ";
-			errorMsg += csl_strerror(error);
-			return false;
-		}
-		csl_pcm_set_callback(outputStream, handleWrite, 0, 0);
-	}
+            errorMsg = "failed to open CSL output stream: ";
+            errorMsg += csl_strerror(error);
+            return false;
+        }
+        csl_pcm_set_callback(outputStream, handleWrite, 0, 0);
+    }
 #if 0
 	if (_format && (ossBits(gotFormat) != ossBits(requestedFormat)))
 	{  
@@ -432,209 +428,207 @@ bool AudioIOCSL::open()
 		}
 	}
 #endif
-	updateFds();
-	return true;
+    updateFds();
+    return true;
 }
 
 void AudioIOCSL::close()
 {
-	if(inputStream)
-	{
-		csl_pcm_close(inputStream);
-		inputStream = 0;
-	}
-	if(outputStream)
-	{
-		csl_pcm_close(outputStream);
-		outputStream = 0;
-	}
-	updateFds();
+    if(inputStream)
+    {
+        csl_pcm_close(inputStream);
+        inputStream = 0;
+    }
+    if(outputStream)
+    {
+        csl_pcm_close(outputStream);
+        outputStream = 0;
+    }
+    updateFds();
 }
 
-void AudioIOCSL::setParam(AudioParam p, int& value)
+void AudioIOCSL::setParam(AudioParam p, int &value)
 {
-	switch(p)
-	{
-		case fragmentSize:
-				param(p) = requestedFragmentSize = value;
-			break;
-		case fragmentCount:
-				param(p) = requestedFragmentCount = value;
-			break;
-		default:
-				param(p) = value;
-			break;
-	}
+    switch(p)
+    {
+        case fragmentSize:
+            param(p) = requestedFragmentSize = value;
+            break;
+        case fragmentCount:
+            param(p) = requestedFragmentCount = value;
+            break;
+        default:
+            param(p) = value;
+            break;
+    }
 }
 
 int AudioIOCSL::getParam(AudioParam p)
 {
     CslErrorType error;
-	CslPcmStatus status;
+    CslPcmStatus status;
 
-	switch(p)
-	{
-		case canRead:
-				error = csl_pcm_get_status (inputStream, &status);
-				if (error) /* FIXME */
-					arts_fatal("unable to obtain csl stream status: %s",
-							   csl_strerror (error));
+    switch(p)
+    {
+        case canRead:
+            error = csl_pcm_get_status(inputStream, &status);
+            if(error) /* FIXME */
+                arts_fatal("unable to obtain csl stream status: %s", csl_strerror(error));
 
-				updateFds();
-				return status.n_bytes_available;
-			break;
+            updateFds();
+            return status.n_bytes_available;
+            break;
 
-		case canWrite:
-				error = csl_pcm_get_status(outputStream, &status);
-				if (error) /* FIXME */
-					arts_fatal("unable to obtain csl stream status: %s",
-							   csl_strerror (error));
+        case canWrite:
+            error = csl_pcm_get_status(outputStream, &status);
+            if(error) /* FIXME */
+                arts_fatal("unable to obtain csl stream status: %s", csl_strerror(error));
 
-				updateFds();
-				return status.n_bytes_available;
-			break;
+            updateFds();
+            return status.n_bytes_available;
+            break;
 
-		case autoDetect:
-				/* CSL is pretty experimental currently */
-				return 1;	
-			break;
+        case autoDetect:
+            /* CSL is pretty experimental currently */
+            return 1;
+            break;
 
-		default:
-				return param(p);
-			break;
-	}
+        default:
+            return param(p);
+            break;
+    }
 }
 
 int AudioIOCSL::read(void *buffer, int size)
 {
-	arts_assert(inputStream != 0);
+    arts_assert(inputStream != 0);
 
-	int result = csl_pcm_read(inputStream, size, buffer);
-	updateFds();
+    int result = csl_pcm_read(inputStream, size, buffer);
+    updateFds();
 
-	return result;
+    return result;
 }
 
 void AudioIOCSL::handleRead(void *, CslPcmStream *)
 {
-	AudioSubSystem::the()->handleIO(AudioSubSystem::ioRead);
+    AudioSubSystem::the()->handleIO(AudioSubSystem::ioRead);
 }
 
 int AudioIOCSL::write(void *buffer, int size)
 {
-	arts_assert(outputStream != 0);
+    arts_assert(outputStream != 0);
 
-	int result = csl_pcm_write(outputStream, size, buffer);
-	updateFds();
+    int result = csl_pcm_write(outputStream, size, buffer);
+    updateFds();
 
-	return result;
+    return result;
 }
 
 void AudioIOCSL::handleWrite(void *, CslPcmStream *)
 {
-	AudioSubSystem::the()->handleIO(AudioSubSystem::ioWrite);
+    AudioSubSystem::the()->handleIO(AudioSubSystem::ioWrite);
 }
 
 /* mainloop integration: make CSL callbacks work inside the aRts mainloop */
 
 int AudioIOCSL::csl2iomanager(int cslTypes)
 {
-	/* FIXME: doublecheck this list */
-	int types = 0;
+    /* FIXME: doublecheck this list */
+    int types = 0;
 
-	if(cslTypes & CSL_POLLIN)
-		types |= IOType::read;
-	if(cslTypes & CSL_POLLOUT)
-		types |= IOType::write;
-	if(cslTypes & CSL_POLLERR)
-		types |= IOType::except;
+    if(cslTypes & CSL_POLLIN)
+        types |= IOType::read;
+    if(cslTypes & CSL_POLLOUT)
+        types |= IOType::write;
+    if(cslTypes & CSL_POLLERR)
+        types |= IOType::except;
 
-	return types;
+    return types;
 }
 
 void AudioIOCSL::updateFds()
 {
-	unsigned int n_fds = csl_poll_count_fds(cslDriver);
-	CslPollFD *newFds = g_newa(CslPollFD, n_fds);
+    unsigned int n_fds = csl_poll_count_fds(cslDriver);
+    CslPollFD *newFds = g_newa(CslPollFD, n_fds);
 
-	unsigned int have_fds = csl_poll_get_fds(cslDriver, n_fds, newFds);
-	arts_assert(have_fds == n_fds);
+    unsigned int have_fds = csl_poll_get_fds(cslDriver, n_fds, newFds);
+    arts_assert(have_fds == n_fds);
 
-	cslFds.clear();
+    cslFds.clear();
 
-	unsigned int i;
-	for(i = 0; i < have_fds; i++)
-		cslFds.push_back(newFds[i]);
+    unsigned int i;
+    for(i = 0; i < have_fds; i++)
+        cslFds.push_back(newFds[i]);
 
-	/* FIXME: if csl provided a flag for this, we could save some work here */
-	bool fdsChanged;
-	if(cslFds.size() == cslOldFds.size())
-	{
-		fdsChanged = false;
-		for(i = 0; i < have_fds; i++)
-		{
-			if(cslFds[i].events != cslOldFds[i].events)
-				fdsChanged = true;
-			if(cslFds[i].fd != cslOldFds[i].fd)
-				fdsChanged = true;
-		}
-	}
-	else
-	{
-		fdsChanged = true;
-	}
-	if(!fdsChanged)
-		return;
+    /* FIXME: if csl provided a flag for this, we could save some work here */
+    bool fdsChanged;
+    if(cslFds.size() == cslOldFds.size())
+    {
+        fdsChanged = false;
+        for(i = 0; i < have_fds; i++)
+        {
+            if(cslFds[i].events != cslOldFds[i].events)
+                fdsChanged = true;
+            if(cslFds[i].fd != cslOldFds[i].fd)
+                fdsChanged = true;
+        }
+    }
+    else
+    {
+        fdsChanged = true;
+    }
+    if(!fdsChanged)
+        return;
 
-	vector<CslPollFD>::iterator ci;
+    vector< CslPollFD >::iterator ci;
 
-	/* remove old watches */
-	/*
-	 * UGLY! due to broken API, we can only remove all watches here, and not
-	 * do anything selectively - its not a problem for the code here, but it
-	 * might be a problem elsewhere. Unfortunately, it can't be fixed without
-	 * breaking BC.
-	 */
-	Dispatcher::the()->ioManager()->remove(this, IOType::all);
-	arts_debug("AudioIOCSL::updateFds(): removing watches");
+    /* remove old watches */
+    /*
+     * UGLY! due to broken API, we can only remove all watches here, and not
+     * do anything selectively - its not a problem for the code here, but it
+     * might be a problem elsewhere. Unfortunately, it can't be fixed without
+     * breaking BC.
+     */
+    Dispatcher::the()->ioManager()->remove(this, IOType::all);
+    arts_debug("AudioIOCSL::updateFds(): removing watches");
 
-	/* add new watches */
-	for(ci = cslFds.begin(); ci < cslFds.end(); ci++)
-	{
-		int types = csl2iomanager(ci->events);
-		if(types)
-		{
-			Dispatcher::the()->ioManager()->watchFD(ci->fd, types, this);
-			arts_debug("AudioIOCSL::updateFds(): adding watch on %d", ci->fd);
-		}
-	}
+    /* add new watches */
+    for(ci = cslFds.begin(); ci < cslFds.end(); ci++)
+    {
+        int types = csl2iomanager(ci->events);
+        if(types)
+        {
+            Dispatcher::the()->ioManager()->watchFD(ci->fd, types, this);
+            arts_debug("AudioIOCSL::updateFds(): adding watch on %d", ci->fd);
+        }
+    }
 
-	cslOldFds = cslFds;
+    cslOldFds = cslFds;
 }
 
 void AudioIOCSL::notifyIO(int fd, int type)
 {
-	vector<CslPollFD>::iterator fi;
+    vector< CslPollFD >::iterator fi;
 
-	for(fi = cslFds.begin(); fi != cslFds.end(); fi++)
-	{
-		if(fi->fd == fd)
-		{
-			int ftype = csl2iomanager(fi->events);
-			fi->revents = 0;
+    for(fi = cslFds.begin(); fi != cslFds.end(); fi++)
+    {
+        if(fi->fd == fd)
+        {
+            int ftype = csl2iomanager(fi->events);
+            fi->revents = 0;
 
-			if(type & ftype & IOType::read)
-				fi->revents |= CSL_POLLIN;
-			if(type & ftype & IOType::write)
-				fi->revents |= CSL_POLLOUT;
-			if(type & ftype & IOType::except)
-				fi->revents |= CSL_POLLERR;
+            if(type & ftype & IOType::read)
+                fi->revents |= CSL_POLLIN;
+            if(type & ftype & IOType::write)
+                fi->revents |= CSL_POLLOUT;
+            if(type & ftype & IOType::except)
+                fi->revents |= CSL_POLLERR;
 
-			if(fi->revents)
-				csl_poll_handle_fds(cslDriver, 1, &(*fi));
-		}
-	}
-	updateFds();
+            if(fi->revents)
+                csl_poll_handle_fds(cslDriver, 1, &(*fi));
+        }
+    }
+    updateFds();
 }
 
 #endif

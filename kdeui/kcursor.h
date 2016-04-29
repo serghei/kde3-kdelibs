@@ -42,8 +42,7 @@ class QWidget;
  *
  * @author Kurt Granroth <granroth@kde.org>
  */
-class KDEUI_EXPORT KCursor : public Qt
-{
+class KDEUI_EXPORT KCursor : public Qt {
 public:
     /**
      * Constructor.
@@ -156,7 +155,7 @@ public:
      * a QCanvasView, then you have to pass all key-events that should trigger
      * auto-hiding to autoHideEventFilter().
      */
-    static void setAutoHideCursor( QWidget *w, bool enable );
+    static void setAutoHideCursor(QWidget *w, bool enable);
 
     /**
      * Overloaded method for the case where you have an event-filter installed
@@ -167,8 +166,7 @@ public:
      *
      * @see autoHideEventFilter
      */
-    static void setAutoHideCursor( QWidget *w, bool enable,
-				   bool customEventFilter );
+    static void setAutoHideCursor(QWidget *w, bool enable, bool customEventFilter);
 
     /**
      * Sets the delay time in milliseconds for auto-hiding. When no keyboard
@@ -176,7 +174,7 @@ public:
      *
      * Default is 5000, i.e. 5 seconds.
      */
-    static void setHideCursorDelay( int ms );
+    static void setHideCursorDelay(int ms);
 
     /**
      * @returns the current auto-hide delay time.
@@ -214,7 +212,7 @@ public:
      * Note that you must not call KCursor::autoHideEventFilter() when you
      * didn't enable or after disabling auto-hiding.
      */
-    static void autoHideEventFilter( QObject *, QEvent * );
+    static void autoHideEventFilter(QObject *, QEvent *);
 
 private:
     static QCursor *s_handCursor;

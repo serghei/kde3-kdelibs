@@ -30,8 +30,7 @@ extern "C" {
 
 /* linear-read handle! needs linbuffer handle wrapper
  */
-GslDataHandle*	gsl_data_handle_new_ogg_vorbis	(const gchar	*file_name,
-						 guint		 lbitstream);
+GslDataHandle *gsl_data_handle_new_ogg_vorbis(const gchar *file_name, guint lbitstream);
 
 
 #ifdef __cplusplus

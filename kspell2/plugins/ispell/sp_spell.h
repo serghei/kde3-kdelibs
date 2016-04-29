@@ -38,16 +38,16 @@
 */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-typedef struct _sp_suggestions {
-	int count;
-	short *score;
-	unsigned short **word;
+typedef struct _sp_suggestions
+{
+    int count;
+    short *score;
+    unsigned short **word;
 } sp_suggestions;
-   
+
 int SpellCheckInit(char *hashname);
 void SpellCheckCleanup(void);
 int SpellCheckNWord16(const unsigned short *word16, int length);
@@ -56,5 +56,5 @@ int SpellCheckSuggestNWord16(const unsigned short *word16, int length, sp_sugges
 #ifdef __cplusplus
 }
 #endif
-	
+
 #endif /* SPELL_H */

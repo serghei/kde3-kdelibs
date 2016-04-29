@@ -18,20 +18,21 @@
 
 // $Id: wordwrapinterface.cpp 465272 2005-09-29 09:47:40Z mueller $
 
-#include "wordwrapinterface.h"  
+#include "wordwrapinterface.h"
 #include "document.h"
 
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateWordWrapInterface
-{
-  public:
-    PrivateWordWrapInterface() {}
-    ~PrivateWordWrapInterface() {}
+class PrivateWordWrapInterface {
+public:
+    PrivateWordWrapInterface()
+    {
+    }
+    ~PrivateWordWrapInterface()
+    {
+    }
 };
-
 }
 
 using namespace KTextEditor;
@@ -40,31 +41,31 @@ unsigned int WordWrapInterface::globalWordWrapInterfaceNumber = 0;
 
 WordWrapInterface::WordWrapInterface()
 {
-  globalWordWrapInterfaceNumber++;
-  myWordWrapInterfaceNumber = globalWordWrapInterfaceNumber++;
+    globalWordWrapInterfaceNumber++;
+    myWordWrapInterfaceNumber = globalWordWrapInterfaceNumber++;
 
-  d = new PrivateWordWrapInterface();
+    d = new PrivateWordWrapInterface();
 }
 
 WordWrapInterface::~WordWrapInterface()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int WordWrapInterface::wordWrapInterfaceNumber () const
+unsigned int WordWrapInterface::wordWrapInterfaceNumber() const
 {
-  return myWordWrapInterfaceNumber;
+    return myWordWrapInterfaceNumber;
 }
 
-void WordWrapInterface::setWordWrapInterfaceDCOPSuffix (const QCString &/*suffix*/)
+void WordWrapInterface::setWordWrapInterfaceDCOPSuffix(const QCString & /*suffix*/)
 {
-  //d->interface->setObjId ("WordWrapInterface#"+suffix);
+    // d->interface->setObjId ("WordWrapInterface#"+suffix);
 }
-  
-WordWrapInterface *KTextEditor::wordWrapInterface (Document *doc)
-{          
-  if (!doc)
-    return 0;
 
-  return static_cast<WordWrapInterface*>(doc->qt_cast("KTextEditor::WordWrapInterface"));
+WordWrapInterface *KTextEditor::wordWrapInterface(Document *doc)
+{
+    if(!doc)
+        return 0;
+
+    return static_cast< WordWrapInterface * >(doc->qt_cast("KTextEditor::WordWrapInterface"));
 }

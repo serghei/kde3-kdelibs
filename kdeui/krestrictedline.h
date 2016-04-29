@@ -41,55 +41,54 @@
  *
  * @author Michael Wiedmann <mw@miwie.in-berlin.de>
  */
-class KDEUI_EXPORT KRestrictedLine : public KLineEdit
-{
-  Q_OBJECT
-  Q_PROPERTY( QString validChars READ validChars WRITE setValidChars )
+class KDEUI_EXPORT KRestrictedLine : public KLineEdit {
+    Q_OBJECT
+    Q_PROPERTY(QString validChars READ validChars WRITE setValidChars)
 
 public:
+    /**
+     * Constructor: This contructor takes three - optional - arguments.
+     *  The first two parameters are simply passed on to QLineEdit.
+     *  @param parent   pointer to the parent widget
+     *  @param name     pointer to the name of this widget
+     *  @param valid    pointer to set of valid characters
+     */
+    KRestrictedLine(QWidget *parent = 0, const char *name = 0, const QString &valid = QString::null);
 
-  /**
-   * Constructor: This contructor takes three - optional - arguments.
-   *  The first two parameters are simply passed on to QLineEdit.
-   *  @param parent   pointer to the parent widget
-   *  @param name     pointer to the name of this widget
-   *  @param valid    pointer to set of valid characters
-   */
-  KRestrictedLine( QWidget *parent=0, const char *name=0,
-		   const QString& valid = QString::null);
+    /**
+     * Destructs the restricted line editor.
+     */
+    ~KRestrictedLine();
 
-  /**
-   * Destructs the restricted line editor.
-   */
-  ~KRestrictedLine();
-
-  /**
-   * All characters in the string valid are treated as
-   * acceptable characters.
-   */
-  void setValidChars(const QString& valid);
-  /**
-   * @return the string of acceptable characters.
-   */
-  QString validChars() const;
+    /**
+     * All characters in the string valid are treated as
+     * acceptable characters.
+     */
+    void setValidChars(const QString &valid);
+    /**
+     * @return the string of acceptable characters.
+     */
+    QString validChars() const;
 
 signals:
 
-  /**
-   * Emitted when an invalid character was typed.
-   */
-  void	invalidChar(int);
+    /**
+     * Emitted when an invalid character was typed.
+     */
+    void invalidChar(int);
 
 protected:
-  void	keyPressEvent( QKeyEvent *e );
+    void keyPressEvent(QKeyEvent *e);
 
 private:
-  /// QString of valid characters for this line
-  QString	qsValidChars;
+    /// QString of valid characters for this line
+    QString qsValidChars;
+
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KRestrictedLinePrivate* d;
+    class KRestrictedLinePrivate *d;
 };
 
 #endif // KRESTRICTEDLINE_H

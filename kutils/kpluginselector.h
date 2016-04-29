@@ -57,161 +57,151 @@ class KConfigGroup;
  * @author Matthias Kretz <kretz@kde.org>
  * @since 3.2
  */
-class KUTILS_EXPORT KPluginSelector : public QWidget
-{
+class KUTILS_EXPORT KPluginSelector : public QWidget {
     friend class KPluginSelectionWidget;
 
     Q_OBJECT
-    public:
-        /**
-         * Create a new KPluginSelector.
-         */
-        KPluginSelector( QWidget * parent, const char * name = 0 );
-        ~KPluginSelector();
+public:
+    /**
+     * Create a new KPluginSelector.
+     */
+    KPluginSelector(QWidget *parent, const char *name = 0);
+    ~KPluginSelector();
 
-        /**
-         * Add a list of KParts plugins
-         *
-         * If you want to support non-KParts plugins use the following
-         * function.
-         *
-         * The information about the plugins will be loaded from the
-         * share/apps/&lt;instancename&gt;/kpartplugins directory.
-         *
-         * @param instanceName The name of the KInstance of the plugin's parent.
-         * @param catname      The translated name of the category. This is the
-         *                     name that is shown in the TabWidget if there is
-         *                     more than one category.
-         * @param category     When you have different categories of KParts
-         *                     plugins you distinguish between the plugins using
-         *                     the Category key in the .desktop file. Use this
-         *                     parameter to select only those KParts plugins
-         *                     with the Category key == @p category. If @p
-         *                     category is not set the Category key is ignored
-         *                     and all plugins are shown.
-         * @param config       The KConfig object that holds the state of the
-         *                     plugins being enabled or not. By default it should
-         *                     be instance->config(). It is recommended to
-         *                     always pass a KConfig object if you use
-         *                     KSettings::PluginPage since you never know from where the
-         *                     page will be called (think global config app).
-         *                     For example KViewCanvas passes KSimpleConfig(
-         *                     "kviewcanvas" ).
-         */
-        void addPlugins( const QString & instanceName,
-                const QString & catname = QString::null,
-                const QString & category = QString::null,
-                KConfig * config = 0 );
+    /**
+     * Add a list of KParts plugins
+     *
+     * If you want to support non-KParts plugins use the following
+     * function.
+     *
+     * The information about the plugins will be loaded from the
+     * share/apps/&lt;instancename&gt;/kpartplugins directory.
+     *
+     * @param instanceName The name of the KInstance of the plugin's parent.
+     * @param catname      The translated name of the category. This is the
+     *                     name that is shown in the TabWidget if there is
+     *                     more than one category.
+     * @param category     When you have different categories of KParts
+     *                     plugins you distinguish between the plugins using
+     *                     the Category key in the .desktop file. Use this
+     *                     parameter to select only those KParts plugins
+     *                     with the Category key == @p category. If @p
+     *                     category is not set the Category key is ignored
+     *                     and all plugins are shown.
+     * @param config       The KConfig object that holds the state of the
+     *                     plugins being enabled or not. By default it should
+     *                     be instance->config(). It is recommended to
+     *                     always pass a KConfig object if you use
+     *                     KSettings::PluginPage since you never know from where the
+     *                     page will be called (think global config app).
+     *                     For example KViewCanvas passes KSimpleConfig(
+     *                     "kviewcanvas" ).
+     */
+    void addPlugins(const QString &instanceName, const QString &catname = QString::null, const QString &category = QString::null,
+                    KConfig *config = 0);
 
-        /**
-         * Add a list of KParts plugins. Convenience method for the one above.
-         * If not set explicitely, @p config is set to instance->config().
-         */
-        void addPlugins( const KInstance * instance,
-                const QString & catname = QString::null,
-                const QString & category = QString::null,
-                KConfig * config = 0 );
+    /**
+     * Add a list of KParts plugins. Convenience method for the one above.
+     * If not set explicitely, @p config is set to instance->config().
+     */
+    void addPlugins(const KInstance *instance, const QString &catname = QString::null, const QString &category = QString::null, KConfig *config = 0);
 
-        /**
-         * Add a list of non-KParts plugins
-         *
-         * @param plugininfos  A list of KPluginInfo objects containing the
-         *                     necessary information for the plugins you want to
-         *                     add to the list.
-         * @param catname      The translated name of the category. This is the
-         *                     name that is shown in the TabWidget if there is
-         *                     more than one category.
-         * @param category     When you have different categories of KParts
-         *                     plugins you distinguish between the plugins using
-         *                     the Category key in the .desktop file. Use this
-         *                     parameter to select only those KParts plugins
-         *                     with the Category key == @p category. If @p
-         *                     category is not set the Category key is ignored
-         *                     and all plugins are shown.
-         * @param config       The KConfig object that holds the state of the
-         *                     plugins being enabled or not. By default it will
-         *                     use KGlobal::config(). It is recommended to
-         *                     always pass a KConfig object if you use
-         *                     KSettings::PluginPage since you never know from where the
-         *                     page will be called (think global config app).
-         *                     For example KViewCanvas passes KSimpleConfig(
-         *                     "kviewcanvas" ).
-         */
-        void addPlugins( const QValueList<KPluginInfo*> & plugininfos,
-                const QString & catname = QString::null,
-                const QString & category = QString::null,
-                KConfig * config = 0 );
+    /**
+     * Add a list of non-KParts plugins
+     *
+     * @param plugininfos  A list of KPluginInfo objects containing the
+     *                     necessary information for the plugins you want to
+     *                     add to the list.
+     * @param catname      The translated name of the category. This is the
+     *                     name that is shown in the TabWidget if there is
+     *                     more than one category.
+     * @param category     When you have different categories of KParts
+     *                     plugins you distinguish between the plugins using
+     *                     the Category key in the .desktop file. Use this
+     *                     parameter to select only those KParts plugins
+     *                     with the Category key == @p category. If @p
+     *                     category is not set the Category key is ignored
+     *                     and all plugins are shown.
+     * @param config       The KConfig object that holds the state of the
+     *                     plugins being enabled or not. By default it will
+     *                     use KGlobal::config(). It is recommended to
+     *                     always pass a KConfig object if you use
+     *                     KSettings::PluginPage since you never know from where the
+     *                     page will be called (think global config app).
+     *                     For example KViewCanvas passes KSimpleConfig(
+     *                     "kviewcanvas" ).
+     */
+    void addPlugins(const QValueList< KPluginInfo * > &plugininfos, const QString &catname = QString::null, const QString &category = QString::null,
+                    KConfig *config = 0);
 
-        /**
-         * Set whether the area for showing the KCMs of the plugins should be
-         * hidden if the plugin doesn't have a KCM or whether the layout should
-         * rather stay static and only an message should be shown.
-         *
-         * By default the config page is not hidden.
-         */
-        void setShowEmptyConfigPage( bool );
+    /**
+     * Set whether the area for showing the KCMs of the plugins should be
+     * hidden if the plugin doesn't have a KCM or whether the layout should
+     * rather stay static and only an message should be shown.
+     *
+     * By default the config page is not hidden.
+     */
+    void setShowEmptyConfigPage(bool);
 
-        /**
-         * Load the state of the plugins (selected or not) from the KPluginInfo
-         * objects. For KParts plugins everything should work automatically. For
-         * your own type of plugins you might need to reimplement the
-         * KPluginInfo::isPluginEnabled() method. If that doesn't fit your needs
-         * you can also reimplement this method.
-         */
-        void load();
+    /**
+     * Load the state of the plugins (selected or not) from the KPluginInfo
+     * objects. For KParts plugins everything should work automatically. For
+     * your own type of plugins you might need to reimplement the
+     * KPluginInfo::isPluginEnabled() method. If that doesn't fit your needs
+     * you can also reimplement this method.
+     */
+    void load();
 
-        /**
-         * Save the configuration
-         */
-        void save();
+    /**
+     * Save the configuration
+     */
+    void save();
 
-        /**
-         * Change to applications defaults
-         */
-        void defaults();
+    /**
+     * Change to applications defaults
+     */
+    void defaults();
 
-    signals:
-        /**
-         * Tells you whether the configuration is changed or not.
-         */
-        void changed( bool );
+signals:
+    /**
+     * Tells you whether the configuration is changed or not.
+     */
+    void changed(bool);
 
-        /**
-         * Emitted after the config of an embedded KCM has been saved. The
-         * argument is the name of the parent component that needs to reload
-         * its config
-         */
-        void configCommitted( const QCString & instanceName );
+    /**
+     * Emitted after the config of an embedded KCM has been saved. The
+     * argument is the name of the parent component that needs to reload
+     * its config
+     */
+    void configCommitted(const QCString &instanceName);
 
-    private:
-        /**
-         * return the KCM widgetstack
-         *
-         * @internal
-         */
-        QWidgetStack * widgetStack();
+private:
+    /**
+     * return the KCM widgetstack
+     *
+     * @internal
+     */
+    QWidgetStack *widgetStack();
 
-        /**
-         * Show an info page in the widgetstack.
-         *
-         * @internal
-         */
-        void configPage( int id );
+    /**
+     * Show an info page in the widgetstack.
+     *
+     * @internal
+     */
+    void configPage(int id);
 
-        /**
-         * @internal
-         */
-        void checkNeedForTabWidget();
+    /**
+     * @internal
+     */
+    void checkNeedForTabWidget();
 
-        /**
-         * @internal
-         */
-	void addPluginsInternal( const QValueList<KPluginInfo*> plugininfos,
-                                 const QString & catname, const QString & category,
-                                 KConfigGroup* cfgGroup );
+    /**
+     * @internal
+     */
+    void addPluginsInternal(const QValueList< KPluginInfo * > plugininfos, const QString &catname, const QString &category, KConfigGroup *cfgGroup);
 
-	class KPluginSelectorPrivate;
-        KPluginSelectorPrivate * d;
+    class KPluginSelectorPrivate;
+    KPluginSelectorPrivate *d;
 };
 
 // vim: sw=4 sts=4 et tw=80

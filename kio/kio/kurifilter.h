@@ -75,9 +75,8 @@ class KCModule;
 * @author Dawit Alemayehu <adawit at kde.org>
 */
 
-class KIO_EXPORT KURIFilterData
-{
-friend class KURIFilterPlugin;
+class KIO_EXPORT KURIFilterData {
+    friend class KURIFilterPlugin;
 
 public:
     /**
@@ -96,28 +95,48 @@ public:
      * @li UNKNOWN      - A URI that is not identified. Default value when
      *                    a KURIFilterData is first created.
      */
-    enum URITypes { NET_PROTOCOL=0, LOCAL_FILE, LOCAL_DIR, EXECUTABLE, HELP, SHELL, BLOCKED, ERROR, UNKNOWN };
+    enum URITypes
+    {
+        NET_PROTOCOL = 0,
+        LOCAL_FILE,
+        LOCAL_DIR,
+        EXECUTABLE,
+        HELP,
+        SHELL,
+        BLOCKED,
+        ERROR,
+        UNKNOWN
+    };
 
     /**
      * Default constructor.
      *
      * Creates a URIFilterData object.
      */
-    KURIFilterData() { init(); }
+    KURIFilterData()
+    {
+        init();
+    }
 
     /**
      * Creates a URIFilterData object from the given URL.
      *
      * @param url is the URL to be filtered.
      */
-    KURIFilterData( const KURL& url ) { init( url); }
+    KURIFilterData(const KURL &url)
+    {
+        init(url);
+    }
 
     /**
      * Creates a URIFilterData object from the given string.
      *
      * @param url is the string to be filtered.
      */
-    KURIFilterData( const QString& url ) { init( url ); }
+    KURIFilterData(const QString &url)
+    {
+        init(url);
+    }
 
     /**
      * Copy constructor.
@@ -127,7 +146,7 @@ public:
      *
      * @param data the uri filter data to be copied.
      */
-    KURIFilterData( const KURIFilterData& data);
+    KURIFilterData(const KURIFilterData &data);
 
     /**
      * Destructor.
@@ -141,7 +160,10 @@ public:
      *
      * @deprecated
      */
-    KDE_DEPRECATED bool hasBeenFiltered() const { return true; }
+    KDE_DEPRECATED bool hasBeenFiltered() const
+    {
+        return true;
+    }
 
     /**
      * Returns the filtered or the original URL.
@@ -153,7 +175,10 @@ public:
      *
      * @return the filtered or original url.
      */
-    KURL uri() const { return m_pURI; }
+    KURL uri() const
+    {
+        return m_pURI;
+    }
 
     /**
      * Returns an error message.
@@ -165,7 +190,10 @@ public:
      *
      * @return the error message or a NULL when there is none.
      */
-    QString errorMsg() const { return m_strErrMsg; }
+    QString errorMsg() const
+    {
+        return m_strErrMsg;
+    }
 
     /**
      * Returns the URI type.
@@ -174,7 +202,10 @@ public:
      * if the given URL was not filtered.
      * @return the type of the URI
      */
-    URITypes uriType() const { return m_iType; }
+    URITypes uriType() const
+    {
+        return m_iType;
+    }
 
     /**
      * Sets the URL to be filtered.
@@ -185,7 +216,10 @@ public:
      *
      * @param url the string to be filtered.
      */
-    void setData( const QString& url ) { reinit( url ); }
+    void setData(const QString &url)
+    {
+        reinit(url);
+    }
 
     /**
      * Same as above except the argument is a URL.
@@ -196,7 +230,10 @@ public:
      *
      * @param url the URL to be filtered.
      */
-    void setData( const KURL& url ) { reinit( url ); }
+    void setData(const KURL &url)
+    {
+        reinit(url);
+    }
 
     /**
      * Sets the absolute path to be used whenever the supplied
@@ -212,7 +249,7 @@ public:
      * @param abs_path  the abolute path to the local resource.
      * @return true if absolute path is successfully set. Otherwise, false.
      */
-    bool setAbsolutePath( const QString& abs_path );
+    bool setAbsolutePath(const QString &abs_path);
 
     /**
      * Returns the absolute path if one has already been set.
@@ -266,7 +303,7 @@ public:
      *
      * @since 3.2
      */
-    void setCheckForExecutables (bool check);
+    void setCheckForExecutables(bool check);
 
     /**
      * @return true if the filters should attempt to check whether the
@@ -274,7 +311,10 @@ public:
      *
      * @since 3.2
      */
-    bool checkForExecutables() const { return m_bCheckForExecutables; }
+    bool checkForExecutables() const
+    {
+        return m_bCheckForExecutables;
+    }
 
     /**
      * @return the string as typed by the user, before any URL processing is done
@@ -290,7 +330,11 @@ public:
      *
      * @return an instance of a KURIFilterData object.
      */
-    KURIFilterData& operator=( const KURL& url ) { reinit( url ); return *this; }
+    KURIFilterData &operator=(const KURL &url)
+    {
+        reinit(url);
+        return *this;
+    }
 
     /**
      * Overloaded assigenment operator.
@@ -300,28 +344,30 @@ public:
      *
      * @return an instance of a KURIFilterData object.
      */
-    KURIFilterData& operator=( const QString& url ) { reinit( url ); return *this; }
+    KURIFilterData &operator=(const QString &url)
+    {
+        reinit(url);
+        return *this;
+    }
 
 protected:
+    /**
+     * Initializes the KURIFilterData on construction.
+     * @param url the URL to initialize the object with
+     */
+    void init(const KURL &url);
 
     /**
      * Initializes the KURIFilterData on construction.
      * @param url the URL to initialize the object with
      */
-    void init( const KURL& url);
-
-    /**
-     * Initializes the KURIFilterData on construction.
-     * @param url the URL to initialize the object with
-     */
-    void init( const QString& url = QString::null );
+    void init(const QString &url = QString::null);
 
 private:
-
     // BC hack to avoid leaking KURIFilterDataPrivate objects.
     // setData() and operator= used to call init() without deleting `d'
-    void reinit(const KURL& url);
-    void reinit(const QString& url = QString::null);
+    void reinit(const KURL &url);
+    void reinit(const QString &url = QString::null);
 
     bool m_bCheckForExecutables;
     bool m_bChanged;
@@ -347,12 +393,10 @@ private:
  *
  * @short Abstract class for URI filter plugins.
  */
-class KIO_EXPORT KURIFilterPlugin : public QObject
-{
+class KIO_EXPORT KURIFilterPlugin : public QObject {
     Q_OBJECT
 
 public:
-
     /**
      * Constructs a filter plugin with a given name and
      * priority.
@@ -361,14 +405,17 @@ public:
      * @param name the name of the plugin, or 0 for no name
      * @param pri the priority of the plugin.
      */
-    KURIFilterPlugin( QObject *parent = 0, const char *name = 0, double pri = 1.0 );
+    KURIFilterPlugin(QObject *parent = 0, const char *name = 0, double pri = 1.0);
 
     /**
      * Returns the filter's name.
      *
      * @return A string naming the filter.
      */
-    virtual QString name() const { return m_strName; }
+    virtual QString name() const
+    {
+        return m_strName;
+    }
 
     /**
      * Returns the filter's priority.
@@ -378,7 +425,10 @@ public:
      *
      * @return The priority of the filter.
      */
-    virtual double priority() const { return m_dblPriority; }
+    virtual double priority() const
+    {
+        return m_dblPriority;
+    }
 
     /**
      * Filters a URI.
@@ -386,7 +436,7 @@ public:
      * @param data the URI data to be filtered.
      * @return A boolean indicating whether the URI has been changed.
      */
-    virtual bool filterURI( KURIFilterData& data ) const = 0;
+    virtual bool filterURI(KURIFilterData &data) const = 0;
 
     /**
      * Creates a configuration module for the filter.
@@ -396,33 +446,40 @@ public:
      *
      * @return A configuration module, 0 if the filter isn't configurable.
      */
-    virtual KCModule *configModule( QWidget*, const char* ) const { return 0; }
+    virtual KCModule *configModule(QWidget *, const char *) const
+    {
+        return 0;
+    }
 
     /**
      * Returns the name of the configuration module for the filter.
      *
      * @return the name of a configuration module or QString::null if none.
      */
-    virtual QString configName() const { return name(); }
+    virtual QString configName() const
+    {
+        return name();
+    }
 
 protected:
-
     /**
      * Sets the the URL in @p data to @p uri.
      */
-    void setFilteredURI ( KURIFilterData& data, const KURL& uri ) const;
+    void setFilteredURI(KURIFilterData &data, const KURL &uri) const;
 
     /**
      * Sets the error message in @p data to @p errormsg.
      */
-    void setErrorMsg ( KURIFilterData& data, const QString& errmsg ) const {
+    void setErrorMsg(KURIFilterData &data, const QString &errmsg) const
+    {
         data.m_strErrMsg = errmsg;
     }
 
     /**
      * Sets the URI type in @p data to @p type.
      */
-    void setURIType ( KURIFilterData& data, KURIFilterData::URITypes type) const {
+    void setURIType(KURIFilterData &data, KURIFilterData::URITypes type) const
+    {
         data.m_iType = type;
         data.m_bChanged = true;
     }
@@ -431,13 +488,14 @@ protected:
      * Sets the arguments and options string in @p data
      * to @p args if any were found during filterting.
      */
-    void setArguments( KURIFilterData& data, const QString& args ) const;
+    void setArguments(KURIFilterData &data, const QString &args) const;
 
     QString m_strName;
     double m_dblPriority;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KURIFilterPluginPrivate *d;
 };
@@ -446,18 +504,16 @@ private:
 /**
  * A list of filter plugins.
  */
-class KIO_EXPORT KURIFilterPluginList : public QPtrList<KURIFilterPlugin>
-{
+class KIO_EXPORT KURIFilterPluginList : public QPtrList< KURIFilterPlugin > {
 public:
     virtual int compareItems(Item a, Item b)
     {
-      double diff = ((KURIFilterPlugin *) a)->priority() - ((KURIFilterPlugin *) b)->priority();
-      return diff < 0 ? -1 : (diff > 0 ? 1 : 0);
+        double diff = ((KURIFilterPlugin *)a)->priority() - ((KURIFilterPlugin *)b)->priority();
+        return diff < 0 ? -1 : (diff > 0 ? 1 : 0);
     }
 
 private:
     KURIFilterPrivate *d;
-
 };
 
 /**
@@ -531,18 +587,17 @@ private:
  * @short Filters a given URL into its proper format whenever possible.
  */
 
-class KIO_EXPORT KURIFilter
-{
+class KIO_EXPORT KURIFilter {
 public:
     /**
      *  Destructor
      */
-    ~KURIFilter ();
+    ~KURIFilter();
 
     /**
      * Returns an instance of KURIFilter.
      */
-    static KURIFilter* self();
+    static KURIFilter *self();
 
     /**
      * Filters the URI given by the object URIFilterData.
@@ -555,7 +610,7 @@ public:
      *
      * @return a boolean indicating whether the URI has been changed
      */
-    bool filterURI( KURIFilterData& data, const QStringList& filters = QStringList() );
+    bool filterURI(KURIFilterData &data, const QStringList &filters = QStringList());
 
     /**
      * Filters the URI given by the URL.
@@ -568,7 +623,7 @@ public:
      *
      * @return a boolean indicating whether the URI has been changed
      */
-    bool filterURI( KURL &uri, const QStringList& filters = QStringList() );
+    bool filterURI(KURL &uri, const QStringList &filters = QStringList());
 
     /**
      * Filters a string representing a URI.
@@ -581,7 +636,7 @@ public:
      *
      * @return a boolean indicating whether the URI has been changed
      */
-    bool filterURI( QString &uri, const QStringList& filters = QStringList() );
+    bool filterURI(QString &uri, const QStringList &filters = QStringList());
 
     /**
      * Returns the filtered URI.
@@ -594,7 +649,7 @@ public:
      *
      * @return the filtered URI or null if it cannot be filtered
      */
-    KURL filteredURI( const KURL &uri, const QStringList& filters = QStringList() );
+    KURL filteredURI(const KURL &uri, const QStringList &filters = QStringList());
 
     /**
      * Return a filtered string representation of a URI.
@@ -607,7 +662,7 @@ public:
      *
      * @return the filtered URI or null if it cannot be filtered
      */
-    QString filteredURI( const QString &uri, const QStringList& filters = QStringList() );
+    QString filteredURI(const QString &uri, const QStringList &filters = QStringList());
 
     /**
      * Return an iterator to iterate over all loaded
@@ -615,7 +670,7 @@ public:
      *
      * @return a plugin iterator.
      */
-    QPtrListIterator<KURIFilterPlugin> pluginsIterator() const;
+    QPtrListIterator< KURIFilterPlugin > pluginsIterator() const;
 
     /**
      * Return a list of the names of all loaded plugins.
@@ -626,7 +681,6 @@ public:
     QStringList pluginNames() const;
 
 protected:
-
     /**
      * A protected constructor.
      *

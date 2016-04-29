@@ -33,77 +33,77 @@
 #include <qstring.h>
 #include <qvaluelist.h>
 
-class QDBusData::Private : public QShared
-{
+class QDBusData::Private : public QShared {
 public:
-    Private() : QShared(), type(QDBusData::Invalid), keyType(QDBusData::Invalid) {}
+    Private() : QShared(), type(QDBusData::Invalid), keyType(QDBusData::Invalid)
+    {
+    }
 
     ~Private()
     {
-        switch (type)
+        switch(type)
         {
             case QDBusData::String:
-                delete (QString*)value.pointer;
+                delete(QString *)value.pointer;
                 break;
 
             case QDBusData::ObjectPath:
-                delete (QDBusObjectPath*)value.pointer;
+                delete(QDBusObjectPath *)value.pointer;
                 break;
 
             case QDBusData::List:
-                delete (QDBusDataList*)value.pointer;
+                delete(QDBusDataList *)value.pointer;
                 break;
 
             case QDBusData::Struct:
-                delete (QValueList<QDBusData>*)value.pointer;
+                delete(QValueList< QDBusData > *)value.pointer;
                 break;
 
             case QDBusData::Variant:
-                delete (QDBusVariant*)value.pointer;
+                delete(QDBusVariant *)value.pointer;
                 break;
 
             case QDBusData::Map:
-                switch (keyType)
+                switch(keyType)
                 {
                     case QDBusData::Byte:
-                        delete (QDBusDataMap<Q_UINT8>*)value.pointer;
+                        delete(QDBusDataMap< Q_UINT8 > *)value.pointer;
                         break;
 
                     case QDBusData::Int16:
-                        delete (QDBusDataMap<Q_INT16>*)value.pointer;
+                        delete(QDBusDataMap< Q_INT16 > *)value.pointer;
                         break;
 
                     case QDBusData::UInt16:
-                        delete (QDBusDataMap<Q_UINT16>*)value.pointer;
+                        delete(QDBusDataMap< Q_UINT16 > *)value.pointer;
                         break;
 
                     case QDBusData::Int32:
-                        delete (QDBusDataMap<Q_INT32>*)value.pointer;
+                        delete(QDBusDataMap< Q_INT32 > *)value.pointer;
                         break;
 
                     case QDBusData::UInt32:
-                        delete (QDBusDataMap<Q_UINT32>*)value.pointer;
+                        delete(QDBusDataMap< Q_UINT32 > *)value.pointer;
                         break;
 
                     case QDBusData::Int64:
-                        delete (QDBusDataMap<Q_INT64>*)value.pointer;
+                        delete(QDBusDataMap< Q_INT64 > *)value.pointer;
                         break;
 
                     case QDBusData::UInt64:
-                        delete (QDBusDataMap<Q_UINT64>*)value.pointer;
+                        delete(QDBusDataMap< Q_UINT64 > *)value.pointer;
                         break;
 
                     case QDBusData::String:
-                        delete (QDBusDataMap<QString>*)value.pointer;
+                        delete(QDBusDataMap< QString > *)value.pointer;
                         break;
 
                     case QDBusData::ObjectPath:
-                        delete (QDBusDataMap<QDBusObjectPath>*)value.pointer;
+                        delete(QDBusDataMap< QDBusObjectPath > *)value.pointer;
                         break;
 
                     default:
-                        qFatal("QDBusData::Private: unhandled map key type %d(%s)",
-                               keyType, QDBusData::typeName(keyType));
+                        qFatal("QDBusData::Private: unhandled map key type %d(%s)", keyType, QDBusData::typeName(keyType));
                         break;
                 }
                 break;
@@ -117,8 +117,7 @@ public:
     Type type;
     Type keyType;
 
-    union
-    {
+    union {
         bool boolValue;
         Q_UINT8 byteValue;
         Q_INT16 int16Value;
@@ -128,7 +127,7 @@ public:
         Q_INT64 int64Value;
         Q_UINT64 uint64Value;
         double doubleValue;
-        void* pointer;
+        void *pointer;
     } value;
 };
 
@@ -136,7 +135,7 @@ QDBusData::QDBusData() : d(new Private())
 {
 }
 
-QDBusData::QDBusData(const QDBusData& other) : d(0)
+QDBusData::QDBusData(const QDBusData &other) : d(0)
 {
     d = other.d;
 
@@ -145,14 +144,17 @@ QDBusData::QDBusData(const QDBusData& other) : d(0)
 
 QDBusData::~QDBusData()
 {
-    if (d->deref()) delete d;
+    if(d->deref())
+        delete d;
 }
 
-QDBusData& QDBusData::operator=(const QDBusData& other)
+QDBusData &QDBusData::operator=(const QDBusData &other)
 {
-    if (&other == this) return *this;
+    if(&other == this)
+        return *this;
 
-    if (d->deref()) delete d;
+    if(d->deref())
+        delete d;
 
     d = other.d;
 
@@ -161,15 +163,17 @@ QDBusData& QDBusData::operator=(const QDBusData& other)
     return *this;
 }
 
-bool QDBusData::operator==(const QDBusData& other) const
+bool QDBusData::operator==(const QDBusData &other) const
 {
-    if (&other == this) return true;
+    if(&other == this)
+        return true;
 
-    if (d == other.d) return true;
+    if(d == other.d)
+        return true;
 
-    if (d->type == other.d->type)
+    if(d->type == other.d->type)
     {
-        switch (d->type)
+        switch(d->type)
         {
             case QDBusData::Invalid:
                 return true;
@@ -218,9 +222,10 @@ bool QDBusData::operator==(const QDBusData& other) const
                 return toVariant() == other.toVariant();
 
             case QDBusData::Map:
-                if (d->keyType != other.d->keyType) return false;
+                if(d->keyType != other.d->keyType)
+                    return false;
 
-                switch (d->keyType)
+                switch(d->keyType)
                 {
                     case QDBusData::Byte:
                         toByteKeyMap() == other.toByteKeyMap();
@@ -258,8 +263,7 @@ bool QDBusData::operator==(const QDBusData& other) const
                         break;
 
                     default:
-                        qFatal("QDBusData operator== unhandled map key type %d(%s)",
-                               d->keyType, QDBusData::typeName(d->keyType));
+                        qFatal("QDBusData operator== unhandled map key type %d(%s)", d->keyType, QDBusData::typeName(d->keyType));
                         break;
                 }
 
@@ -270,7 +274,7 @@ bool QDBusData::operator==(const QDBusData& other) const
     return false;
 }
 
-bool QDBusData::operator!=(const QDBusData& other) const
+bool QDBusData::operator!=(const QDBusData &other) const
 {
     return !operator==(other);
 }
@@ -282,31 +286,48 @@ QDBusData::Type QDBusData::type() const
 
 QDBusData::Type QDBusData::keyType() const
 {
-    if (d->type != QDBusData::Map) return QDBusData::Invalid;
+    if(d->type != QDBusData::Map)
+        return QDBusData::Invalid;
 
     return d->keyType;
 }
 
-const char* QDBusData::typeName(Type type)
+const char *QDBusData::typeName(Type type)
 {
-    switch (type)
+    switch(type)
     {
-        case QDBusData::Invalid:    return "Invalid";
-        case QDBusData::Bool:       return "Bool";
-        case QDBusData::Byte:       return "Byte";
-        case QDBusData::Int16:      return "Int16";
-        case QDBusData::UInt16:     return "UInt16";
-        case QDBusData::Int32:      return "Int32";
-        case QDBusData::UInt32:     return "UInt32";
-        case QDBusData::Int64:      return "Int64";
-        case QDBusData::UInt64:     return "UInt64";
-        case QDBusData::Double:     return "Double";
-        case QDBusData::String:     return "String";
-        case QDBusData::ObjectPath: return "ObjectPath";
-        case QDBusData::List:       return "List";
-        case QDBusData::Struct:     return "Struct";
-        case QDBusData::Variant:    return "Variant";
-        case QDBusData::Map:        return "Map";
+        case QDBusData::Invalid:
+            return "Invalid";
+        case QDBusData::Bool:
+            return "Bool";
+        case QDBusData::Byte:
+            return "Byte";
+        case QDBusData::Int16:
+            return "Int16";
+        case QDBusData::UInt16:
+            return "UInt16";
+        case QDBusData::Int32:
+            return "Int32";
+        case QDBusData::UInt32:
+            return "UInt32";
+        case QDBusData::Int64:
+            return "Int64";
+        case QDBusData::UInt64:
+            return "UInt64";
+        case QDBusData::Double:
+            return "Double";
+        case QDBusData::String:
+            return "String";
+        case QDBusData::ObjectPath:
+            return "ObjectPath";
+        case QDBusData::List:
+            return "List";
+        case QDBusData::Struct:
+            return "Struct";
+        case QDBusData::Variant:
+            return "Variant";
+        case QDBusData::Map:
+            return "Map";
     }
 
     return 0;
@@ -322,15 +343,17 @@ QDBusData QDBusData::fromBool(bool value)
     return data;
 }
 
-bool QDBusData::toBool(bool* ok) const
+bool QDBusData::toBool(bool *ok) const
 {
-    if (d->type != QDBusData::Bool)
+    if(d->type != QDBusData::Bool)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return false;
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
     return d->value.boolValue;
 }
@@ -345,15 +368,17 @@ QDBusData QDBusData::fromByte(Q_UINT8 value)
     return data;
 }
 
-Q_UINT8 QDBusData::toByte(bool* ok) const
+Q_UINT8 QDBusData::toByte(bool *ok) const
 {
-    if (d->type != QDBusData::Byte)
+    if(d->type != QDBusData::Byte)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return 0;
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
     return d->value.byteValue;
 }
@@ -368,15 +393,17 @@ QDBusData QDBusData::fromInt16(Q_INT16 value)
     return data;
 }
 
-Q_INT16 QDBusData::toInt16(bool* ok) const
+Q_INT16 QDBusData::toInt16(bool *ok) const
 {
-    if (d->type != QDBusData::Int16)
+    if(d->type != QDBusData::Int16)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return 0;
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
     return d->value.int16Value;
 }
@@ -391,15 +418,17 @@ QDBusData QDBusData::fromUInt16(Q_UINT16 value)
     return data;
 }
 
-Q_UINT16 QDBusData::toUInt16(bool* ok) const
+Q_UINT16 QDBusData::toUInt16(bool *ok) const
 {
-    if (d->type != QDBusData::UInt16)
+    if(d->type != QDBusData::UInt16)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return 0;
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
     return d->value.uint16Value;
 }
@@ -414,15 +443,17 @@ QDBusData QDBusData::fromInt32(Q_INT32 value)
     return data;
 }
 
-Q_INT32 QDBusData::toInt32(bool* ok) const
+Q_INT32 QDBusData::toInt32(bool *ok) const
 {
-    if (d->type != QDBusData::Int32)
+    if(d->type != QDBusData::Int32)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return 0;
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
     return d->value.int32Value;
 }
@@ -437,15 +468,17 @@ QDBusData QDBusData::fromUInt32(Q_UINT32 value)
     return data;
 }
 
-Q_UINT32 QDBusData::toUInt32(bool* ok) const
+Q_UINT32 QDBusData::toUInt32(bool *ok) const
 {
-    if (d->type != QDBusData::UInt32)
+    if(d->type != QDBusData::UInt32)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return 0;
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
     return d->value.uint32Value;
 }
@@ -460,15 +493,17 @@ QDBusData QDBusData::fromInt64(Q_INT64 value)
     return data;
 }
 
-Q_INT64 QDBusData::toInt64(bool* ok) const
+Q_INT64 QDBusData::toInt64(bool *ok) const
 {
-    if (d->type != QDBusData::Int64)
+    if(d->type != QDBusData::Int64)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return 0;
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
     return d->value.int64Value;
 }
@@ -483,15 +518,17 @@ QDBusData QDBusData::fromUInt64(Q_UINT64 value)
     return data;
 }
 
-Q_UINT64 QDBusData::toUInt64(bool* ok) const
+Q_UINT64 QDBusData::toUInt64(bool *ok) const
 {
-    if (d->type != QDBusData::UInt64)
+    if(d->type != QDBusData::UInt64)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return 0;
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
     return d->value.uint64Value;
 }
@@ -506,20 +543,22 @@ QDBusData QDBusData::fromDouble(double value)
     return data;
 }
 
-double QDBusData::toDouble(bool* ok) const
+double QDBusData::toDouble(bool *ok) const
 {
-    if (d->type != QDBusData::Double)
+    if(d->type != QDBusData::Double)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return 0.0;
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
     return d->value.doubleValue;
 }
 
-QDBusData QDBusData::fromString(const QString& value)
+QDBusData QDBusData::fromString(const QString &value)
 {
     QDBusData data;
 
@@ -529,24 +568,26 @@ QDBusData QDBusData::fromString(const QString& value)
     return data;
 }
 
-QString QDBusData::toString(bool* ok) const
+QString QDBusData::toString(bool *ok) const
 {
-    if (d->type != QDBusData::String)
+    if(d->type != QDBusData::String)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return QString::null;
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QString*)d->value.pointer);
+    return *((QString *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromObjectPath(const QDBusObjectPath& value)
+QDBusData QDBusData::fromObjectPath(const QDBusObjectPath &value)
 {
     QDBusData data;
 
-    if (value.isValid())
+    if(value.isValid())
     {
         data.d->type = QDBusData::ObjectPath;
         data.d->value.pointer = new QDBusObjectPath(value);
@@ -555,24 +596,27 @@ QDBusData QDBusData::fromObjectPath(const QDBusObjectPath& value)
     return data;
 }
 
-QDBusObjectPath QDBusData::toObjectPath(bool* ok) const
+QDBusObjectPath QDBusData::toObjectPath(bool *ok) const
 {
-    if (d->type != QDBusData::ObjectPath)
+    if(d->type != QDBusData::ObjectPath)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return QDBusObjectPath();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusObjectPath*)d->value.pointer);
+    return *((QDBusObjectPath *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromList(const QDBusDataList& list)
+QDBusData QDBusData::fromList(const QDBusDataList &list)
 {
     QDBusData data;
 
-    if (list.type() == QDBusData::Invalid) return data;
+    if(list.type() == QDBusData::Invalid)
+        return data;
 
     data.d->type = QDBusData::List;
     data.d->value.pointer = new QDBusDataList(list);
@@ -580,69 +624,75 @@ QDBusData QDBusData::fromList(const QDBusDataList& list)
     return data;
 }
 
-QDBusDataList QDBusData::toList(bool* ok) const
+QDBusDataList QDBusData::toList(bool *ok) const
 {
-    if (d->type != QDBusData::List)
+    if(d->type != QDBusData::List)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return QDBusDataList();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusDataList*)d->value.pointer);
+    return *((QDBusDataList *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromQValueList(const QValueList<QDBusData>& list)
+QDBusData QDBusData::fromQValueList(const QValueList< QDBusData > &list)
 {
     return fromList(QDBusDataList(list));
 }
 
-QValueList<QDBusData> QDBusData::toQValueList(bool* ok) const
+QValueList< QDBusData > QDBusData::toQValueList(bool *ok) const
 {
     bool internalOk = false;
     QDBusDataList list = toList(&internalOk);
 
-    if (!internalOk)
+    if(!internalOk)
     {
-        if (ok != 0) *ok = false;
-        return QValueList<QDBusData>();
+        if(ok != 0)
+            *ok = false;
+        return QValueList< QDBusData >();
     }
 
     return list.toQValueList();
 }
 
-QDBusData QDBusData::fromStruct(const QValueList<QDBusData>& memberList)
+QDBusData QDBusData::fromStruct(const QValueList< QDBusData > &memberList)
 {
     QDBusData data;
 
-    QValueList<QDBusData>::const_iterator it    = memberList.begin();
-    QValueList<QDBusData>::const_iterator endIt = memberList.end();
-    for (; it != endIt; ++it)
+    QValueList< QDBusData >::const_iterator it = memberList.begin();
+    QValueList< QDBusData >::const_iterator endIt = memberList.end();
+    for(; it != endIt; ++it)
     {
-        if ((*it).d->type == Invalid) return data;
+        if((*it).d->type == Invalid)
+            return data;
     }
 
     data.d->type = QDBusData::Struct;
-    data.d->value.pointer = new QValueList<QDBusData>(memberList);
+    data.d->value.pointer = new QValueList< QDBusData >(memberList);
 
     return data;
 }
 
-QValueList<QDBusData> QDBusData::toStruct(bool* ok) const
+QValueList< QDBusData > QDBusData::toStruct(bool *ok) const
 {
-    if (d->type != QDBusData::Struct)
+    if(d->type != QDBusData::Struct)
     {
-        if (ok != 0) *ok = false;
-        return QValueList<QDBusData>();
+        if(ok != 0)
+            *ok = false;
+        return QValueList< QDBusData >();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QValueList<QDBusData>*)d->value.pointer);
+    return *((QValueList< QDBusData > *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromVariant(const QDBusVariant& value)
+QDBusData QDBusData::fromVariant(const QDBusVariant &value)
 {
     QDBusData data;
 
@@ -652,242 +702,258 @@ QDBusData QDBusData::fromVariant(const QDBusVariant& value)
     return data;
 }
 
-QDBusVariant QDBusData::toVariant(bool* ok) const
+QDBusVariant QDBusData::toVariant(bool *ok) const
 {
-    if (d->type != QDBusData::Variant)
+    if(d->type != QDBusData::Variant)
     {
-        if (ok != 0) *ok = false;
+        if(ok != 0)
+            *ok = false;
         return QDBusVariant();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusVariant*)d->value.pointer);
+    return *((QDBusVariant *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromByteKeyMap(const QDBusDataMap<Q_UINT8>& map)
+QDBusData QDBusData::fromByteKeyMap(const QDBusDataMap< Q_UINT8 > &map)
 {
     QDBusData data;
 
     data.d->type = QDBusData::Map;
     data.d->keyType = map.keyType();
-    data.d->value.pointer = new QDBusDataMap<Q_UINT8>(map);
+    data.d->value.pointer = new QDBusDataMap< Q_UINT8 >(map);
 
     return data;
 }
 
-QDBusDataMap<Q_UINT8> QDBusData::toByteKeyMap(bool* ok) const
+QDBusDataMap< Q_UINT8 > QDBusData::toByteKeyMap(bool *ok) const
 {
-    if (d->type != QDBusData::Map && d->keyType != QDBusDataMap<Q_UINT8>::m_keyType)
+    if(d->type != QDBusData::Map && d->keyType != QDBusDataMap< Q_UINT8 >::m_keyType)
     {
-        if (ok != 0) *ok = false;
-        return QDBusDataMap<Q_UINT8>();
+        if(ok != 0)
+            *ok = false;
+        return QDBusDataMap< Q_UINT8 >();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusDataMap<Q_UINT8>*)d->value.pointer);
+    return *((QDBusDataMap< Q_UINT8 > *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromInt16KeyMap(const QDBusDataMap<Q_INT16>& map)
+QDBusData QDBusData::fromInt16KeyMap(const QDBusDataMap< Q_INT16 > &map)
 {
     QDBusData data;
 
     data.d->type = QDBusData::Map;
     data.d->keyType = map.keyType();
-    data.d->value.pointer = new QDBusDataMap<Q_INT16>(map);
+    data.d->value.pointer = new QDBusDataMap< Q_INT16 >(map);
 
     return data;
 }
 
-QDBusDataMap<Q_INT16> QDBusData::toInt16KeyMap(bool* ok) const
+QDBusDataMap< Q_INT16 > QDBusData::toInt16KeyMap(bool *ok) const
 {
-    if (d->type != QDBusData::Map && d->keyType != QDBusDataMap<Q_INT16>::m_keyType)
+    if(d->type != QDBusData::Map && d->keyType != QDBusDataMap< Q_INT16 >::m_keyType)
     {
-        if (ok != 0) *ok = false;
-        return QDBusDataMap<Q_INT16>();
+        if(ok != 0)
+            *ok = false;
+        return QDBusDataMap< Q_INT16 >();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusDataMap<Q_INT16>*)d->value.pointer);
+    return *((QDBusDataMap< Q_INT16 > *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromUInt16KeyMap(const QDBusDataMap<Q_UINT16>& map)
+QDBusData QDBusData::fromUInt16KeyMap(const QDBusDataMap< Q_UINT16 > &map)
 {
     QDBusData data;
 
     data.d->type = QDBusData::Map;
     data.d->keyType = map.keyType();
-    data.d->value.pointer = new QDBusDataMap<Q_UINT16>(map);
+    data.d->value.pointer = new QDBusDataMap< Q_UINT16 >(map);
 
     return data;
 }
 
-QDBusDataMap<Q_UINT16> QDBusData::toUInt16KeyMap(bool* ok) const
+QDBusDataMap< Q_UINT16 > QDBusData::toUInt16KeyMap(bool *ok) const
 {
-    if (d->type != QDBusData::Map &&
-        d->keyType != QDBusDataMap<Q_UINT16>::m_keyType)
+    if(d->type != QDBusData::Map && d->keyType != QDBusDataMap< Q_UINT16 >::m_keyType)
     {
-        if (ok != 0) *ok = false;
-        return QDBusDataMap<Q_UINT16>();
+        if(ok != 0)
+            *ok = false;
+        return QDBusDataMap< Q_UINT16 >();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusDataMap<Q_UINT16>*)d->value.pointer);
+    return *((QDBusDataMap< Q_UINT16 > *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromInt32KeyMap(const QDBusDataMap<Q_INT32>& map)
+QDBusData QDBusData::fromInt32KeyMap(const QDBusDataMap< Q_INT32 > &map)
 {
     QDBusData data;
 
     data.d->type = QDBusData::Map;
     data.d->keyType = map.keyType();
-    data.d->value.pointer = new QDBusDataMap<Q_INT32>(map);
+    data.d->value.pointer = new QDBusDataMap< Q_INT32 >(map);
 
     return data;
 }
 
-QDBusDataMap<Q_INT32> QDBusData::toInt32KeyMap(bool* ok) const
+QDBusDataMap< Q_INT32 > QDBusData::toInt32KeyMap(bool *ok) const
 {
-    if (d->type != QDBusData::Map && d->keyType != QDBusDataMap<Q_INT32>::m_keyType)
+    if(d->type != QDBusData::Map && d->keyType != QDBusDataMap< Q_INT32 >::m_keyType)
     {
-        if (ok != 0) *ok = false;
-        return QDBusDataMap<Q_INT32>();
+        if(ok != 0)
+            *ok = false;
+        return QDBusDataMap< Q_INT32 >();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusDataMap<Q_INT32>*)d->value.pointer);
+    return *((QDBusDataMap< Q_INT32 > *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromUInt32KeyMap(const QDBusDataMap<Q_UINT32>& map)
+QDBusData QDBusData::fromUInt32KeyMap(const QDBusDataMap< Q_UINT32 > &map)
 {
     QDBusData data;
 
     data.d->type = QDBusData::Map;
     data.d->keyType = map.keyType();
-    data.d->value.pointer = new QDBusDataMap<Q_UINT32>(map);
+    data.d->value.pointer = new QDBusDataMap< Q_UINT32 >(map);
 
     return data;
 }
 
-QDBusDataMap<Q_UINT32> QDBusData::toUInt32KeyMap(bool* ok) const
+QDBusDataMap< Q_UINT32 > QDBusData::toUInt32KeyMap(bool *ok) const
 {
-    if (d->type != QDBusData::Map &&
-        d->keyType != QDBusDataMap<Q_UINT32>::m_keyType)
+    if(d->type != QDBusData::Map && d->keyType != QDBusDataMap< Q_UINT32 >::m_keyType)
     {
-        if (ok != 0) *ok = false;
-        return QDBusDataMap<Q_UINT32>();
+        if(ok != 0)
+            *ok = false;
+        return QDBusDataMap< Q_UINT32 >();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusDataMap<Q_UINT32>*)d->value.pointer);
+    return *((QDBusDataMap< Q_UINT32 > *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromInt64KeyMap(const QDBusDataMap<Q_INT64>& map)
+QDBusData QDBusData::fromInt64KeyMap(const QDBusDataMap< Q_INT64 > &map)
 {
     QDBusData data;
 
     data.d->type = QDBusData::Map;
     data.d->keyType = map.keyType();
-    data.d->value.pointer = new QDBusDataMap<Q_INT64>(map);
+    data.d->value.pointer = new QDBusDataMap< Q_INT64 >(map);
 
     return data;
 }
 
-QDBusDataMap<Q_INT64> QDBusData::toInt64KeyMap(bool* ok) const
+QDBusDataMap< Q_INT64 > QDBusData::toInt64KeyMap(bool *ok) const
 {
-    if (d->type != QDBusData::Map && d->keyType != QDBusDataMap<Q_INT64>::m_keyType)
+    if(d->type != QDBusData::Map && d->keyType != QDBusDataMap< Q_INT64 >::m_keyType)
     {
-        if (ok != 0) *ok = false;
-        return QDBusDataMap<Q_INT64>();
+        if(ok != 0)
+            *ok = false;
+        return QDBusDataMap< Q_INT64 >();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusDataMap<Q_INT64>*)d->value.pointer);
+    return *((QDBusDataMap< Q_INT64 > *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromUInt64KeyMap(const QDBusDataMap<Q_UINT64>& map)
+QDBusData QDBusData::fromUInt64KeyMap(const QDBusDataMap< Q_UINT64 > &map)
 {
     QDBusData data;
 
     data.d->type = QDBusData::Map;
     data.d->keyType = map.keyType();
-    data.d->value.pointer = new QDBusDataMap<Q_UINT64>(map);
+    data.d->value.pointer = new QDBusDataMap< Q_UINT64 >(map);
 
     return data;
 }
 
-QDBusDataMap<Q_UINT64> QDBusData::toUInt64KeyMap(bool* ok) const
+QDBusDataMap< Q_UINT64 > QDBusData::toUInt64KeyMap(bool *ok) const
 {
-    if (d->type != QDBusData::Map &&
-        d->keyType != QDBusDataMap<Q_UINT64>::m_keyType)
+    if(d->type != QDBusData::Map && d->keyType != QDBusDataMap< Q_UINT64 >::m_keyType)
     {
-        if (ok != 0) *ok = false;
-        return QDBusDataMap<Q_UINT64>();
+        if(ok != 0)
+            *ok = false;
+        return QDBusDataMap< Q_UINT64 >();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusDataMap<Q_UINT64>*)d->value.pointer);
+    return *((QDBusDataMap< Q_UINT64 > *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromStringKeyMap(const QDBusDataMap<QString>& map)
+QDBusData QDBusData::fromStringKeyMap(const QDBusDataMap< QString > &map)
 {
     QDBusData data;
 
     data.d->type = QDBusData::Map;
     data.d->keyType = map.keyType();
-    data.d->value.pointer = new QDBusDataMap<QString>(map);
+    data.d->value.pointer = new QDBusDataMap< QString >(map);
 
     return data;
 }
 
-QDBusDataMap<QString> QDBusData::toStringKeyMap(bool* ok) const
+QDBusDataMap< QString > QDBusData::toStringKeyMap(bool *ok) const
 {
-    if (d->type != QDBusData::Map && d->keyType != QDBusDataMap<QString>::m_keyType)
+    if(d->type != QDBusData::Map && d->keyType != QDBusDataMap< QString >::m_keyType)
     {
-        if (ok != 0) *ok = false;
-        return QDBusDataMap<QString>();
+        if(ok != 0)
+            *ok = false;
+        return QDBusDataMap< QString >();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusDataMap<QString>*)d->value.pointer);
+    return *((QDBusDataMap< QString > *)d->value.pointer);
 }
 
-QDBusData QDBusData::fromObjectPathKeyMap(const QDBusDataMap<QDBusObjectPath>& map)
+QDBusData QDBusData::fromObjectPathKeyMap(const QDBusDataMap< QDBusObjectPath > &map)
 {
     QDBusData data;
 
     data.d->type = QDBusData::Map;
     data.d->keyType = map.keyType();
-    data.d->value.pointer = new QDBusDataMap<QDBusObjectPath>(map);
+    data.d->value.pointer = new QDBusDataMap< QDBusObjectPath >(map);
 
     return data;
 }
 
-QDBusDataMap<QDBusObjectPath> QDBusData::toObjectPathKeyMap(bool* ok) const
+QDBusDataMap< QDBusObjectPath > QDBusData::toObjectPathKeyMap(bool *ok) const
 {
-    if (d->type != QDBusData::Map &&
-        d->keyType != QDBusDataMap<QDBusObjectPath>::m_keyType)
+    if(d->type != QDBusData::Map && d->keyType != QDBusDataMap< QDBusObjectPath >::m_keyType)
     {
-        if (ok != 0) *ok = false;
-        return QDBusDataMap<QDBusObjectPath>();
+        if(ok != 0)
+            *ok = false;
+        return QDBusDataMap< QDBusObjectPath >();
     }
 
-    if (ok != 0) *ok = true;
+    if(ok != 0)
+        *ok = true;
 
-    return *((QDBusDataMap<QDBusObjectPath>*)d->value.pointer);
+    return *((QDBusDataMap< QDBusObjectPath > *)d->value.pointer);
 }
 
-static const char* qDBusTypeForQDBusType(QDBusData::Type type)
+static const char *qDBusTypeForQDBusType(QDBusData::Type type)
 {
-    switch (type)
+    switch(type)
     {
         case QDBusData::Invalid:
             return 0;
@@ -921,10 +987,9 @@ static const char* qDBusTypeForQDBusType(QDBusData::Type type)
     return 0;
 }
 
-template <typename T>
-QCString qDBusSignatureForMapValue(const QDBusDataMap<T>& map)
+template < typename T > QCString qDBusSignatureForMapValue(const QDBusDataMap< T > &map)
 {
-    if (map.hasContainerValueType())
+    if(map.hasContainerValueType())
         return map.containerValueType().buildDBusSignature();
     else
         return qDBusTypeForQDBusType(map.valueType());
@@ -934,13 +999,13 @@ QCString QDBusData::buildDBusSignature() const
 {
     QCString signature;
 
-    switch (d->type)
+    switch(d->type)
     {
         case QDBusData::List:
         {
-            QDBusDataList* list = (QDBusDataList*) d->value.pointer;
+            QDBusDataList *list = (QDBusDataList *)d->value.pointer;
             signature = DBUS_TYPE_ARRAY_AS_STRING;
-            if (list->hasContainerItemType())
+            if(list->hasContainerItemType())
                 signature += list->containerItemType().buildDBusSignature();
             else
                 signature += qDBusTypeForQDBusType(list->type());
@@ -951,12 +1016,11 @@ QCString QDBusData::buildDBusSignature() const
         {
             signature += DBUS_STRUCT_BEGIN_CHAR;
 
-            QValueList<QDBusData>* memberList =
-                (QValueList<QDBusData>*) d->value.pointer;
+            QValueList< QDBusData > *memberList = (QValueList< QDBusData > *)d->value.pointer;
 
-            QValueList<QDBusData>::const_iterator it    = (*memberList).begin();
-            QValueList<QDBusData>::const_iterator endIt = (*memberList).end();
-            for (; it != endIt; ++it)
+            QValueList< QDBusData >::const_iterator it = (*memberList).begin();
+            QValueList< QDBusData >::const_iterator endIt = (*memberList).end();
+            for(; it != endIt; ++it)
             {
                 signature += (*it).buildDBusSignature();
             }
@@ -970,43 +1034,34 @@ QCString QDBusData::buildDBusSignature() const
 
             signature += qDBusTypeForQDBusType(keyType());
 
-            switch (keyType())
+            switch(keyType())
             {
                 case QDBusData::Byte:
-                    signature += qDBusSignatureForMapValue<Q_UINT8>(
-                        *((QDBusDataMap<Q_UINT8>*) d->value.pointer));
+                    signature += qDBusSignatureForMapValue< Q_UINT8 >(*((QDBusDataMap< Q_UINT8 > *)d->value.pointer));
                     break;
                 case QDBusData::Int16:
-                    signature += qDBusSignatureForMapValue<Q_INT16>(
-                        *((QDBusDataMap<Q_INT16>*) d->value.pointer));
+                    signature += qDBusSignatureForMapValue< Q_INT16 >(*((QDBusDataMap< Q_INT16 > *)d->value.pointer));
                     break;
                 case QDBusData::UInt16:
-                    signature += qDBusSignatureForMapValue<Q_UINT16>(
-                        *((QDBusDataMap<Q_UINT16>*) d->value.pointer));
+                    signature += qDBusSignatureForMapValue< Q_UINT16 >(*((QDBusDataMap< Q_UINT16 > *)d->value.pointer));
                     break;
                 case QDBusData::Int32:
-                    signature += qDBusSignatureForMapValue<Q_INT32>(
-                        *((QDBusDataMap<Q_INT32>*) d->value.pointer));
+                    signature += qDBusSignatureForMapValue< Q_INT32 >(*((QDBusDataMap< Q_INT32 > *)d->value.pointer));
                     break;
                 case QDBusData::UInt32:
-                    signature += qDBusSignatureForMapValue<Q_UINT32>(
-                        *((QDBusDataMap<Q_UINT32>*) d->value.pointer));
+                    signature += qDBusSignatureForMapValue< Q_UINT32 >(*((QDBusDataMap< Q_UINT32 > *)d->value.pointer));
                     break;
                 case QDBusData::Int64:
-                    signature += qDBusSignatureForMapValue<Q_INT64>(
-                        *((QDBusDataMap<Q_INT64>*) d->value.pointer));
+                    signature += qDBusSignatureForMapValue< Q_INT64 >(*((QDBusDataMap< Q_INT64 > *)d->value.pointer));
                     break;
                 case QDBusData::UInt64:
-                    signature += qDBusSignatureForMapValue<Q_UINT64>(
-                        *((QDBusDataMap<Q_UINT64>*) d->value.pointer));
+                    signature += qDBusSignatureForMapValue< Q_UINT64 >(*((QDBusDataMap< Q_UINT64 > *)d->value.pointer));
                     break;
                 case QDBusData::String:
-                    signature += qDBusSignatureForMapValue<QString>(
-                        *((QDBusDataMap<QString>*) d->value.pointer));
+                    signature += qDBusSignatureForMapValue< QString >(*((QDBusDataMap< QString > *)d->value.pointer));
                     break;
                 case QDBusData::ObjectPath:
-                    signature += qDBusSignatureForMapValue<QDBusObjectPath>(
-                        *((QDBusDataMap<QDBusObjectPath>*) d->value.pointer));
+                    signature += qDBusSignatureForMapValue< QDBusObjectPath >(*((QDBusDataMap< QDBusObjectPath > *)d->value.pointer));
                     break;
                 default:
                     break;
@@ -1025,30 +1080,20 @@ QCString QDBusData::buildDBusSignature() const
 
 
 // key type definitions for QDBusDataMap
-template <>
-const QDBusData::Type QDBusDataMap<Q_UINT8>::m_keyType = QDBusData::Byte;
+template <> const QDBusData::Type QDBusDataMap< Q_UINT8 >::m_keyType = QDBusData::Byte;
 
-template <>
-const QDBusData::Type QDBusDataMap<Q_INT16>::m_keyType = QDBusData::Int16;
+template <> const QDBusData::Type QDBusDataMap< Q_INT16 >::m_keyType = QDBusData::Int16;
 
-template <>
-const QDBusData::Type QDBusDataMap<Q_UINT16>::m_keyType = QDBusData::UInt16;
+template <> const QDBusData::Type QDBusDataMap< Q_UINT16 >::m_keyType = QDBusData::UInt16;
 
-template <>
-const QDBusData::Type QDBusDataMap<Q_INT32>::m_keyType = QDBusData::Int32;
+template <> const QDBusData::Type QDBusDataMap< Q_INT32 >::m_keyType = QDBusData::Int32;
 
-template <>
-const QDBusData::Type QDBusDataMap<Q_UINT32>::m_keyType = QDBusData::UInt32;
+template <> const QDBusData::Type QDBusDataMap< Q_UINT32 >::m_keyType = QDBusData::UInt32;
 
-template <>
-const QDBusData::Type QDBusDataMap<Q_INT64>::m_keyType = QDBusData::Int64;
+template <> const QDBusData::Type QDBusDataMap< Q_INT64 >::m_keyType = QDBusData::Int64;
 
-template <>
-const QDBusData::Type QDBusDataMap<Q_UINT64>::m_keyType = QDBusData::UInt64;
+template <> const QDBusData::Type QDBusDataMap< Q_UINT64 >::m_keyType = QDBusData::UInt64;
 
-template <>
-const QDBusData::Type QDBusDataMap<QString>::m_keyType = QDBusData::String;
+template <> const QDBusData::Type QDBusDataMap< QString >::m_keyType = QDBusData::String;
 
-template <>
-const QDBusData::Type QDBusDataMap<QDBusObjectPath>::m_keyType =
-        QDBusData::ObjectPath;
+template <> const QDBusData::Type QDBusDataMap< QDBusObjectPath >::m_keyType = QDBusData::ObjectPath;

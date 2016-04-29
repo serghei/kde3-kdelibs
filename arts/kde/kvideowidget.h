@@ -18,17 +18,16 @@
 #include <kxmlguiclient.h>
 
 
-class KDE_ARTS_EXPORT KVideoWidget : public QWidget, virtual public KXMLGUIClient
-{
-Q_OBJECT
+class KDE_ARTS_EXPORT KVideoWidget : public QWidget, virtual public KXMLGUIClient {
+    Q_OBJECT
 
 public:
-    KVideoWidget( KXMLGUIClient *clientParent, QWidget *parent = 0, const char *name = 0, WFlags f = 0 );
-    KVideoWidget( QWidget *parent = 0, const char *name = 0, WFlags f = 0 );
+    KVideoWidget(KXMLGUIClient *clientParent, QWidget *parent = 0, const char *name = 0, WFlags f = 0);
+    KVideoWidget(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
     virtual ~KVideoWidget();
 
-    void embed( Arts::VideoPlayObject vpo );
-    static QImage snapshot( Arts::VideoPlayObject vpo );
+    void embed(Arts::VideoPlayObject vpo);
+    static QImage snapshot(Arts::VideoPlayObject vpo);
 
     bool isEmbedded();
     bool isFullscreen();
@@ -38,13 +37,13 @@ public:
 
     QSize sizeHint() const;
 
-    virtual int heightForWidth ( int w ) const;
+    virtual int heightForWidth(int w) const;
 
 protected:
-    virtual void mousePressEvent( QMouseEvent *event );
-    virtual void mouseDoubleClickEvent( QMouseEvent *event);
-    virtual void resizeEvent( QResizeEvent *event );
-    virtual bool x11Event( XEvent *event );
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseDoubleClickEvent(QMouseEvent *event);
+    virtual void resizeEvent(QResizeEvent *event);
+    virtual bool x11Event(XEvent *event);
 
 public slots:
     void setFullscreen();
@@ -53,7 +52,7 @@ public slots:
     void setNormalSize();
     void setDoubleSize();
 
-    void resizeNotify( int width, int height );
+    void resizeNotify(int width, int height);
 
 protected slots:
     void fullscreenActivated();
@@ -62,14 +61,14 @@ protected slots:
     void doubleSizeActivated();
 
 signals:
-    void adaptSize( int width, int height );
-    void mouseButtonPressed( int type, const QPoint &, int state );
-    void mouseButtonDoubleClick( const QPoint &, int state );
+    void adaptSize(int width, int height);
+    void mouseButtonPressed(int type, const QPoint &, int state);
+    void mouseButtonDoubleClick(const QPoint &, int state);
     /**
      * @deprecated
      * use mouseButtonPressed( int type, const QPoint & ) instead.
      */
-    void rightButtonPressed( const QPoint & );
+    void rightButtonPressed(const QPoint &);
 
 private:
     void init(void);

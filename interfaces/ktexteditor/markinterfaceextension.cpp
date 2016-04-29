@@ -21,16 +21,17 @@
 #include "markinterfaceextension.h"
 #include "document.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateMarkInterfaceExtension
-{
-  public:
-    PrivateMarkInterfaceExtension() {}
-    ~PrivateMarkInterfaceExtension() {}
+class PrivateMarkInterfaceExtension {
+public:
+    PrivateMarkInterfaceExtension()
+    {
+    }
+    ~PrivateMarkInterfaceExtension()
+    {
+    }
 };
-
 }
 
 using namespace KTextEditor;
@@ -39,31 +40,31 @@ unsigned int MarkInterfaceExtension::globalMarkInterfaceExtensionNumber = 0;
 
 MarkInterfaceExtension::MarkInterfaceExtension()
 {
-  globalMarkInterfaceExtensionNumber++;
-  myMarkInterfaceExtensionNumber = globalMarkInterfaceExtensionNumber++;
+    globalMarkInterfaceExtensionNumber++;
+    myMarkInterfaceExtensionNumber = globalMarkInterfaceExtensionNumber++;
 
-  d = new PrivateMarkInterfaceExtension();
+    d = new PrivateMarkInterfaceExtension();
 }
 
 MarkInterfaceExtension::~MarkInterfaceExtension()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int MarkInterfaceExtension::markInterfaceExtensionNumber () const
+unsigned int MarkInterfaceExtension::markInterfaceExtensionNumber() const
 {
-  return myMarkInterfaceExtensionNumber;
+    return myMarkInterfaceExtensionNumber;
 }
 
-void MarkInterfaceExtension::setMarkInterfaceExtensionDCOPSuffix (const QCString &/*suffix*/)
+void MarkInterfaceExtension::setMarkInterfaceExtensionDCOPSuffix(const QCString & /*suffix*/)
 {
-  //d->interface->setObjId ("MarkInterfaceExtension#"+suffix);
+    // d->interface->setObjId ("MarkInterfaceExtension#"+suffix);
 }
 
-MarkInterfaceExtension *KTextEditor::markInterfaceExtension (Document *doc)
-{                   
-  if (!doc)
-    return 0;
+MarkInterfaceExtension *KTextEditor::markInterfaceExtension(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<MarkInterfaceExtension*>(doc->qt_cast("KTextEditor::MarkInterfaceExtension"));
+    return static_cast< MarkInterfaceExtension * >(doc->qt_cast("KTextEditor::MarkInterfaceExtension"));
 }

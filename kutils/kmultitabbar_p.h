@@ -27,41 +27,44 @@
 #include <qscrollview.h>
 #include <kmultitabbar.h>
 
-class KMultiTabBarInternal: public QScrollView
-{
-        Q_OBJECT
+class KMultiTabBarInternal : public QScrollView {
+    Q_OBJECT
 public:
-        KMultiTabBarInternal(QWidget *parent,KMultiTabBar::KMultiTabBarMode bm);
-        int appendTab(const QPixmap &,int=-1,const QString& =QString::null);
-        KMultiTabBarTab *tab(int) const;
-        void removeTab(int);
-        void setPosition(enum KMultiTabBar::KMultiTabBarPosition pos);
-        void setStyle(enum KMultiTabBar::KMultiTabBarStyle style);
-        void showActiveTabTexts(bool show);
-        QPtrList<KMultiTabBarTab>* tabs(){return &m_tabs;}
-private:
-        friend class KMultiTabBar;
-        QWidget *box;
-	QBoxLayout *mainLayout;
-        QPtrList<KMultiTabBarTab> m_tabs;
-        enum KMultiTabBar::KMultiTabBarPosition m_position;
-        bool m_showActiveTabTexts;
-        enum  KMultiTabBar::KMultiTabBarStyle m_style;
-	int m_expandedTabSize;
-	int m_lines;
-	KMultiTabBar::KMultiTabBarMode m_barMode;
-protected:
-	virtual bool eventFilter(QObject *,QEvent*);
-        virtual void drawContents ( QPainter *, int, int, int, int);
+    KMultiTabBarInternal(QWidget *parent, KMultiTabBar::KMultiTabBarMode bm);
+    int appendTab(const QPixmap &, int = -1, const QString & = QString::null);
+    KMultiTabBarTab *tab(int) const;
+    void removeTab(int);
+    void setPosition(enum KMultiTabBar::KMultiTabBarPosition pos);
+    void setStyle(enum KMultiTabBar::KMultiTabBarStyle style);
+    void showActiveTabTexts(bool show);
+    QPtrList< KMultiTabBarTab > *tabs()
+    {
+        return &m_tabs;
+    }
 
-        /**
-         * [contentsM|m]ousePressEvent are reimplemented from QScrollView
-         * in order to ignore all mouseEvents on the viewport, so that the
-         * parent can handle them.
-         */
-        virtual void contentsMousePressEvent(QMouseEvent *);
-        virtual void mousePressEvent(QMouseEvent *);
-	virtual void resizeEvent(QResizeEvent *);
+private:
+    friend class KMultiTabBar;
+    QWidget *box;
+    QBoxLayout *mainLayout;
+    QPtrList< KMultiTabBarTab > m_tabs;
+    enum KMultiTabBar::KMultiTabBarPosition m_position;
+    bool m_showActiveTabTexts;
+    enum KMultiTabBar::KMultiTabBarStyle m_style;
+    int m_expandedTabSize;
+    int m_lines;
+    KMultiTabBar::KMultiTabBarMode m_barMode;
+
+protected:
+    virtual bool eventFilter(QObject *, QEvent *);
+    virtual void drawContents(QPainter *, int, int, int, int);
+
+    /**
+     * [contentsM|m]ousePressEvent are reimplemented from QScrollView
+     * in order to ignore all mouseEvents on the viewport, so that the
+     * parent can handle them.
+     */
+    virtual void contentsMousePressEvent(QMouseEvent *);
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void resizeEvent(QResizeEvent *);
 };
 #endif
-

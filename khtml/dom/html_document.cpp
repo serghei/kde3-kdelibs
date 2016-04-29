@@ -36,11 +36,9 @@ HTMLDocument::HTMLDocument() : Document(false) // create the impl here
 {
     impl = DOMImplementationImpl::instance()->createHTMLDocument();
     impl->ref();
-
 }
 
-HTMLDocument::HTMLDocument(KHTMLView *parent)
-    : Document(false) // create the impl here
+HTMLDocument::HTMLDocument(KHTMLView *parent) : Document(false) // create the impl here
 {
     impl = DOMImplementationImpl::instance()->createHTMLDocument(parent);
     impl->ref();
@@ -54,26 +52,34 @@ HTMLDocument::HTMLDocument(HTMLDocumentImpl *impl) : Document(impl)
 {
 }
 
-HTMLDocument &HTMLDocument::operator = (const Node &other)
+HTMLDocument &HTMLDocument::operator=(const Node &other)
 {
-    if(other.nodeType() != DOCUMENT_NODE) {
-	if ( impl ) impl->deref();
-	impl = 0;
-    } else {
-	DocumentImpl *d = static_cast<DocumentImpl *>(other.handle());
-	if(!d->isHTMLDocument()) {
-	    if ( impl ) impl->deref();
+    if(other.nodeType() != DOCUMENT_NODE)
+    {
+        if(impl)
+            impl->deref();
+        impl = 0;
+    }
+    else
+    {
+        DocumentImpl *d = static_cast< DocumentImpl * >(other.handle());
+        if(!d->isHTMLDocument())
+        {
+            if(impl)
+                impl->deref();
             impl = 0;
-	} else {
-            Node::operator =(other);
-	}
+        }
+        else
+        {
+            Node::operator=(other);
+        }
     }
     return *this;
 }
 
-HTMLDocument &HTMLDocument::operator = (const HTMLDocument &other)
+HTMLDocument &HTMLDocument::operator=(const HTMLDocument &other)
 {
-    Document::operator =(other);
+    Document::operator=(other);
     return *this;
 }
 
@@ -83,151 +89,167 @@ HTMLDocument::~HTMLDocument()
 
 DOMString HTMLDocument::title() const
 {
-    if(!impl) return DOMString();
-    return static_cast<HTMLDocumentImpl *>(impl)->title();
+    if(!impl)
+        return DOMString();
+    return static_cast< HTMLDocumentImpl * >(impl)->title();
 }
 
-void HTMLDocument::setTitle( const DOMString &value )
+void HTMLDocument::setTitle(const DOMString &value)
 {
-    if (impl)
-        static_cast<HTMLDocumentImpl *>(impl)->setTitle(value);
+    if(impl)
+        static_cast< HTMLDocumentImpl * >(impl)->setTitle(value);
 }
 
 DOMString HTMLDocument::referrer() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((HTMLDocumentImpl *)impl)->referrer();
 }
 
-DOMString HTMLDocument::completeURL(const DOMString& str) const
+DOMString HTMLDocument::completeURL(const DOMString &str) const
 {
-    if(!impl) return str;
+    if(!impl)
+        return str;
     DOMString parsed = khtml::parseURL(str);
     return ((HTMLDocumentImpl *)impl)->completeURL(parsed.string());
 }
 
 DOMString HTMLDocument::domain() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((HTMLDocumentImpl *)impl)->domain();
 }
 
 DOMString HTMLDocument::lastModified() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((HTMLDocumentImpl *)impl)->lastModified();
 }
 
 DOMString HTMLDocument::URL() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((HTMLDocumentImpl *)impl)->URL().url();
 }
 
 HTMLElement HTMLDocument::body() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((HTMLDocumentImpl *)impl)->body();
 }
 
 void HTMLDocument::setBody(const HTMLElement &_body)
 {
-    if (!impl) return;
+    if(!impl)
+        return;
     int exceptioncode = 0;
-    ((HTMLDocumentImpl *)impl)->setBody(static_cast<HTMLElementImpl *>(_body.handle()), exceptioncode);
-    if ( exceptioncode )
-        throw DOMException( exceptioncode );
+    ((HTMLDocumentImpl *)impl)->setBody(static_cast< HTMLElementImpl * >(_body.handle()), exceptioncode);
+    if(exceptioncode)
+        throw DOMException(exceptioncode);
     return;
 }
 
 HTMLCollection HTMLDocument::images() const
 {
-    if(!impl) return HTMLCollection();
+    if(!impl)
+        return HTMLCollection();
     return HTMLCollection(impl, HTMLCollectionImpl::DOC_IMAGES);
 }
 
 HTMLCollection HTMLDocument::applets() const
 {
-    if(!impl) return HTMLCollection();
+    if(!impl)
+        return HTMLCollection();
     return HTMLCollection(impl, HTMLCollectionImpl::DOC_APPLETS);
 }
 
 HTMLCollection HTMLDocument::scripts() const
 {
-    if(!impl) return HTMLCollection();
+    if(!impl)
+        return HTMLCollection();
     return HTMLCollection(impl, HTMLCollectionImpl::DOC_SCRIPTS);
 }
 
 HTMLCollection HTMLDocument::links() const
 {
-    if(!impl) return HTMLCollection();
+    if(!impl)
+        return HTMLCollection();
     return HTMLCollection(impl, HTMLCollectionImpl::DOC_LINKS);
 }
 
 HTMLCollection HTMLDocument::forms() const
 {
-    if(!impl) return HTMLCollection();
+    if(!impl)
+        return HTMLCollection();
     return HTMLCollection(impl, HTMLCollectionImpl::DOC_FORMS);
 }
 
 HTMLCollection HTMLDocument::layers() const
 {
-    if(!impl) return HTMLCollection();
+    if(!impl)
+        return HTMLCollection();
     return HTMLCollection(impl, HTMLCollectionImpl::DOC_LAYERS);
 }
 
 HTMLCollection HTMLDocument::anchors() const
 {
-    if(!impl) return HTMLCollection();
+    if(!impl)
+        return HTMLCollection();
     return HTMLCollection(impl, HTMLCollectionImpl::DOC_ANCHORS);
 }
 
 HTMLCollection HTMLDocument::all() const
 {
-    if(!impl) return HTMLCollection();
+    if(!impl)
+        return HTMLCollection();
     return HTMLCollection(impl, HTMLCollectionImpl::DOC_ALL);
 }
 
 DOMString HTMLDocument::cookie() const
 {
-   if (!impl) return DOMString();
-   return ((HTMLDocumentImpl *)impl)->cookie();
+    if(!impl)
+        return DOMString();
+    return ((HTMLDocumentImpl *)impl)->cookie();
 }
 
-void HTMLDocument::setCookie( const DOMString & value )
+void HTMLDocument::setCookie(const DOMString &value)
 {
-   if (impl)
+    if(impl)
         ((HTMLDocumentImpl *)impl)->setCookie(value);
-
 }
 
-void HTMLDocument::open(  )
+void HTMLDocument::open()
 {
     if(impl)
-        ((HTMLDocumentImpl *)impl)->open(  );
+        ((HTMLDocumentImpl *)impl)->open();
 }
 
-void HTMLDocument::close(  )
+void HTMLDocument::close()
 {
     if(impl)
-        ((HTMLDocumentImpl *)impl)->close(  );
+        ((HTMLDocumentImpl *)impl)->close();
 }
 
-void HTMLDocument::write( const DOMString &text )
+void HTMLDocument::write(const DOMString &text)
 {
     if(impl)
-        ((HTMLDocumentImpl *)impl)->write( text );
+        ((HTMLDocumentImpl *)impl)->write(text);
 }
 
-void HTMLDocument::writeln( const DOMString &text )
+void HTMLDocument::writeln(const DOMString &text)
 {
     if(impl)
-        ((HTMLDocumentImpl *)impl)->writeln( text );
+        ((HTMLDocumentImpl *)impl)->writeln(text);
 }
 
-NodeList HTMLDocument::getElementsByName( const DOMString &elementName )
+NodeList HTMLDocument::getElementsByName(const DOMString &elementName)
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return new NameNodeListImpl(impl, elementName);
 }
-

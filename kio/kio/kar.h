@@ -35,22 +35,21 @@
  * @author Laurence Anderson <l.d.anderson@warwick.ac.uk>
  * @since 3.1
  */
-class KIO_EXPORT KAr : public KArchive
-{
+class KIO_EXPORT KAr : public KArchive {
 public:
     /**
      * Creates an instance that operates on the given filename.
      *
      * @param filename is a local path (e.g. "/home/holger/myfile.ar")
      */
-    KAr( const QString& filename );
+    KAr(const QString &filename);
 
     /**
      * Creates an instance that operates on the given device.
      * The device can be compressed (KFilterDev) or not (QFile, etc.).
      * @param dev the device to read from
      */
-    KAr( QIODevice * dev );
+    KAr(QIODevice *dev);
 
     /**
      * If the ar file is still opened, then it will be
@@ -62,25 +61,45 @@ public:
      * The name of the ar file, as passed to the constructor.
      * @return the filename. Null if you used the QIODevice constructor
      */
-    QString fileName() { return m_filename; }
+    QString fileName()
+    {
+        return m_filename;
+    }
 
     /*
      * Writing not supported by this class, will always fail.
      * @return always false
      */
-    virtual bool prepareWriting( const QString& name, const QString& user, const QString& group, uint size ) { Q_UNUSED(name); Q_UNUSED(user); Q_UNUSED(group); Q_UNUSED(size); return false; }
+    virtual bool prepareWriting(const QString &name, const QString &user, const QString &group, uint size)
+    {
+        Q_UNUSED(name);
+        Q_UNUSED(user);
+        Q_UNUSED(group);
+        Q_UNUSED(size);
+        return false;
+    }
 
     /*
      * Writing not supported by this class, will always fail.
      * @return always false
      */
-    virtual bool doneWriting( uint size ) { Q_UNUSED(size); return false; }
+    virtual bool doneWriting(uint size)
+    {
+        Q_UNUSED(size);
+        return false;
+    }
 
     /*
      * Writing not supported by this class, will always fail.
      * @return always false
      */
-    virtual bool writeDir( const QString& name, const QString& user, const QString& group )  { Q_UNUSED(name); Q_UNUSED(user); Q_UNUSED(group); return false; }
+    virtual bool writeDir(const QString &name, const QString &user, const QString &group)
+    {
+        Q_UNUSED(name);
+        Q_UNUSED(user);
+        Q_UNUSED(group);
+        return false;
+    }
 
 protected:
     /**
@@ -89,15 +108,16 @@ protected:
      * and creates the KArchiveDirectory/KArchiveFile entries.
      *
      */
-    virtual bool openArchive( int mode );
+    virtual bool openArchive(int mode);
     virtual bool closeArchive();
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     QString m_filename;
     class KArPrivate;
-    KArPrivate * d;
+    KArPrivate *d;
 };
 
 #endif

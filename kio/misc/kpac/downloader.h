@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (c) 2003 Malte Starostik <malte@kde.org>
 
    This library is free software; you can redistribute it and/or
@@ -25,38 +25,47 @@
 
 #include <kurl.h>
 
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
-namespace KPAC
-{
-    class Downloader : public QObject
+namespace KPAC {
+class Downloader : public QObject {
+    Q_OBJECT
+public:
+    Downloader(QObject *);
+
+    void download(const KURL &);
+    const KURL &scriptURL()
     {
-        Q_OBJECT
-    public:
-        Downloader( QObject* );
+        return m_scriptURL;
+    }
+    const QString &script()
+    {
+        return m_script;
+    }
+    const QString &error()
+    {
+        return m_error;
+    }
 
-        void download( const KURL& );
-        const KURL& scriptURL() { return m_scriptURL; }
-        const QString& script() { return m_script; }
-        const QString& error() { return m_error; }
+signals:
+    void result(bool);
 
-    signals:
-        void result( bool );
+protected:
+    virtual void failed();
+    void setError(const QString &);
 
-    protected:
-        virtual void failed();
-        void setError( const QString& );
+private slots:
+    void data(KIO::Job *, const QByteArray &);
+    void result(KIO::Job *);
 
-    private slots:
-        void data( KIO::Job*, const QByteArray& );
-        void result( KIO::Job* );
-
-    private:
-        QByteArray m_data;
-        KURL m_scriptURL;
-        QString m_script;
-        QString m_error;
-    };
+private:
+    QByteArray m_data;
+    KURL m_scriptURL;
+    QString m_script;
+    QString m_error;
+};
 }
 
 #endif // KPAC_DOWNLOADER_H

@@ -29,78 +29,69 @@
 #include <kconfig.h>
 #include <kseparator.h>
 
-namespace KSettings
-{
+namespace KSettings {
 
-class ComponentsDialog::ComponentsDialogPrivate
-{
-    public:
-        KListView * listview;
-        QFrame * infowidget;
-        QLabel * iconwidget;
-        QLabel * commentwidget;
-        QLabel * descriptionwidget;
-        QMap<QCheckListItem*, KPluginInfo*> plugininfomap;
-        QValueList<KPluginInfo*> plugininfolist;
+class ComponentsDialog::ComponentsDialogPrivate {
+public:
+    KListView *listview;
+    QFrame *infowidget;
+    QLabel *iconwidget;
+    QLabel *commentwidget;
+    QLabel *descriptionwidget;
+    QMap< QCheckListItem *, KPluginInfo * > plugininfomap;
+    QValueList< KPluginInfo * > plugininfolist;
 };
 
-ComponentsDialog::ComponentsDialog( QWidget * parent, const char * name )
-    : KDialogBase( parent, name, false, i18n( "Select Components" ) )
-, d( new ComponentsDialogPrivate )
+ComponentsDialog::ComponentsDialog(QWidget *parent, const char *name)
+    : KDialogBase(parent, name, false, i18n("Select Components")), d(new ComponentsDialogPrivate)
 {
-    QWidget * page = new QWidget( this );
-    setMainWidget( page );
-    ( new QHBoxLayout( page, 0, KDialog::spacingHint() ) )->setAutoAdd( true );
-    d->listview = new KListView( page );
-    d->listview->setMinimumSize( 200, 200 );
-    d->infowidget = new QFrame( page );
-    d->infowidget->setMinimumSize( 200, 200 );
-    ( new QVBoxLayout( d->infowidget, 0, KDialog::spacingHint() ) )->setAutoAdd( true );
-    d->iconwidget = new QLabel( d->infowidget );
-    ( void )new KSeparator( d->infowidget );
-    d->commentwidget = new QLabel( d->infowidget );
-    d->commentwidget->setAlignment( Qt::WordBreak );
-    d->descriptionwidget = new QLabel( d->infowidget );
-    d->descriptionwidget->setAlignment( Qt::WordBreak );
+    QWidget *page = new QWidget(this);
+    setMainWidget(page);
+    (new QHBoxLayout(page, 0, KDialog::spacingHint()))->setAutoAdd(true);
+    d->listview = new KListView(page);
+    d->listview->setMinimumSize(200, 200);
+    d->infowidget = new QFrame(page);
+    d->infowidget->setMinimumSize(200, 200);
+    (new QVBoxLayout(d->infowidget, 0, KDialog::spacingHint()))->setAutoAdd(true);
+    d->iconwidget = new QLabel(d->infowidget);
+    (void)new KSeparator(d->infowidget);
+    d->commentwidget = new QLabel(d->infowidget);
+    d->commentwidget->setAlignment(Qt::WordBreak);
+    d->descriptionwidget = new QLabel(d->infowidget);
+    d->descriptionwidget->setAlignment(Qt::WordBreak);
 
-    d->listview->addColumn( QString::null );
+    d->listview->addColumn(QString::null);
     d->listview->header()->hide();
-    d->listview->setRootIsDecorated( true );
-    d->listview->setSorting( -1 );
-    d->listview->setAcceptDrops( false );
-    d->listview->setSelectionModeExt( KListView::Single );
-    d->listview->setAllColumnsShowFocus( true );
+    d->listview->setRootIsDecorated(true);
+    d->listview->setSorting(-1);
+    d->listview->setAcceptDrops(false);
+    d->listview->setSelectionModeExt(KListView::Single);
+    d->listview->setAllColumnsShowFocus(true);
 
-    connect( d->listview, SIGNAL( pressed( QListViewItem * ) ), this,
-            SLOT( executed( QListViewItem * ) ) );
-    connect( d->listview, SIGNAL( spacePressed( QListViewItem * ) ), this,
-            SLOT( executed( QListViewItem * ) ) );
-    connect( d->listview, SIGNAL( returnPressed( QListViewItem * ) ), this,
-            SLOT( executed( QListViewItem * ) ) );
-    connect( d->listview, SIGNAL( selectionChanged( QListViewItem * ) ), this,
-            SLOT( executed( QListViewItem * ) ) );
+    connect(d->listview, SIGNAL(pressed(QListViewItem *)), this, SLOT(executed(QListViewItem *)));
+    connect(d->listview, SIGNAL(spacePressed(QListViewItem *)), this, SLOT(executed(QListViewItem *)));
+    connect(d->listview, SIGNAL(returnPressed(QListViewItem *)), this, SLOT(executed(QListViewItem *)));
+    connect(d->listview, SIGNAL(selectionChanged(QListViewItem *)), this, SLOT(executed(QListViewItem *)));
 }
 
 ComponentsDialog::~ComponentsDialog()
 {
 }
 
-void ComponentsDialog::addPluginInfo( KPluginInfo * info )
+void ComponentsDialog::addPluginInfo(KPluginInfo *info)
 {
-    d->plugininfolist.append( info );
+    d->plugininfolist.append(info);
 }
 
-void ComponentsDialog::setPluginInfos( const QMap<QString, KPluginInfo*> &
-        plugininfos )
+void ComponentsDialog::setPluginInfos(const QMap< QString, KPluginInfo * > &plugininfos)
 {
-    for( QMap<QString, KPluginInfo*>::ConstIterator it = plugininfos.begin();
-            it != plugininfos.end(); ++it )
+    for(QMap< QString, KPluginInfo * >::ConstIterator it = plugininfos.begin(); it != plugininfos.end(); ++it)
     {
-        d->plugininfolist.append( it.data() );
+        d->plugininfolist.append(it.data());
     }
 }
 
-void ComponentsDialog::setPluginInfos( const QValueList<KPluginInfo *> &plugins )
+void ComponentsDialog::setPluginInfos(const QValueList< KPluginInfo * > &plugins)
 {
     d->plugininfolist = plugins;
 }
@@ -112,52 +103,48 @@ void ComponentsDialog::show()
     d->plugininfomap.clear();
 
     // construct the treelist
-    for( QValueList<KPluginInfo*>::ConstIterator it = d->plugininfolist.begin();
-            it != d->plugininfolist.end(); ++it )
+    for(QValueList< KPluginInfo * >::ConstIterator it = d->plugininfolist.begin(); it != d->plugininfolist.end(); ++it)
     {
-        ( *it )->load();
-        QCheckListItem * item = new QCheckListItem( d->listview, ( *it )->name(),
-                QCheckListItem::CheckBox );
-        if( ! ( *it )->icon().isEmpty() )
-            item->setPixmap( 0, SmallIcon( ( *it )->icon(), IconSize( KIcon::Small ) ) );
-        item->setOn( ( *it )->isPluginEnabled() );
-        d->plugininfomap[ item ] = ( *it );
+        (*it)->load();
+        QCheckListItem *item = new QCheckListItem(d->listview, (*it)->name(), QCheckListItem::CheckBox);
+        if(!(*it)->icon().isEmpty())
+            item->setPixmap(0, SmallIcon((*it)->icon(), IconSize(KIcon::Small)));
+        item->setOn((*it)->isPluginEnabled());
+        d->plugininfomap[item] = (*it);
     }
     KDialogBase::show();
 }
 
-void ComponentsDialog::executed( QListViewItem * item )
+void ComponentsDialog::executed(QListViewItem *item)
 {
-    kdDebug( 704 ) << k_funcinfo << endl;
-    if( item == 0 )
+    kdDebug(704) << k_funcinfo << endl;
+    if(item == 0)
         return;
-    if( item->rtti() != 1 ) // check for QCheckListItem
+    if(item->rtti() != 1) // check for QCheckListItem
         return;
 
-    QCheckListItem * citem = static_cast<QCheckListItem *>( item );
+    QCheckListItem *citem = static_cast< QCheckListItem * >(item);
     bool checked = citem->isOn();
 
-    kdDebug( 704 ) << "it's a " << ( checked ? "checked" : "unchecked" )
-        << " QCheckListItem" << endl;
+    kdDebug(704) << "it's a " << (checked ? "checked" : "unchecked") << " QCheckListItem" << endl;
 
-    KPluginInfo * info = d->plugininfomap[ citem ];
-    info->setPluginEnabled( checked );
-    //checkDependencies( info );
+    KPluginInfo *info = d->plugininfomap[citem];
+    info->setPluginEnabled(checked);
+    // checkDependencies( info );
     // show info about the component on the right
-    d->iconwidget->setPixmap( SmallIcon( info->icon(), KIcon::SizeLarge ) );
-    d->commentwidget->setText( info->comment() );
-    //d->descriptionwidget->setText( info->description() );
+    d->iconwidget->setPixmap(SmallIcon(info->icon(), KIcon::SizeLarge));
+    d->commentwidget->setText(info->comment());
+    // d->descriptionwidget->setText( info->description() );
 }
 
 void ComponentsDialog::savePluginInfos()
 {
-    for( QValueList<KPluginInfo*>::ConstIterator it = d->plugininfolist.begin();
-            it != d->plugininfolist.end(); ++it )
+    for(QValueList< KPluginInfo * >::ConstIterator it = d->plugininfolist.begin(); it != d->plugininfolist.end(); ++it)
     {
-        if( ( *it )->config() )
+        if((*it)->config())
         {
-            ( *it )->save();
-            ( *it )->config()->sync();
+            (*it)->save();
+            (*it)->config()->sync();
         }
     }
 }
@@ -174,7 +161,7 @@ void ComponentsDialog::slotApply()
     KDialogBase::slotApply();
 }
 
-} //namespace
+} // namespace
 
 #include "componentsdialog.moc"
 // vim: sw=4 sts=4 et

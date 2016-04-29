@@ -60,11 +60,9 @@ class KSystemTrayPrivate;
  *
  * @author Matthias Ettrich <ettrich@kde.org>
  **/
-class KDEUI_EXPORT KSystemTray : public QLabel
-{
+class KDEUI_EXPORT KSystemTray : public QLabel {
     Q_OBJECT
 public:
-
     /**
      * Construct a KSystemTray widget just like any other widget.
      *
@@ -78,7 +76,7 @@ public:
      * when the user clicks on the trray window with the left mouse
      * button.
      **/
-    KSystemTray( QWidget* parent = 0, const char* name  = 0 );
+    KSystemTray(QWidget *parent = 0, const char *name = 0);
 
     /*
       Destructor
@@ -89,26 +87,26 @@ public:
        Access to the context menu. This makes it easy to add new items
        to it.
      */
-    KPopupMenu* contextMenu() const;
+    KPopupMenu *contextMenu() const;
 
     /**
        Easy access to the actions in the context menu
        Currently includes KStdAction::Quit and minimizeRestore
        @since 3.1
     */
-    KActionCollection* actionCollection();
+    KActionCollection *actionCollection();
 
     /**
      * Changes the tray's icon.
      */
-    virtual void setPixmap( const QPixmap& icon );
+    virtual void setPixmap(const QPixmap &icon);
 
     /**
      * Changes the tray's text description (which can be seen e.g. in the systray
      * configuration dialog). The default value is KAboutData::programName().
      */
-    virtual void setCaption( const QString& title );
-    
+    virtual void setCaption(const QString &title);
+
     /**
      * Loads an icon @p icon using the icon loader class of the given instance @p instance.
      * The icon is applied the panel effect as it should only be used to be shown in the
@@ -117,7 +115,7 @@ public:
      *
      * @since 3.2
      */
-    static QPixmap loadIcon( const QString &icon, KInstance *instance=KGlobal::instance() );
+    static QPixmap loadIcon(const QString &icon, KInstance *instance = KGlobal::instance());
 
 signals:
     /**
@@ -149,6 +147,13 @@ public slots:
     void setInactive();
 
 protected:
+    /**
+       Reimplemented to provide the standard show/raise behavior
+       for the parentWidget() and the context menu.
+
+       Feel free to reimplement this if you need something special.
+     */
+    void mousePressEvent(QMouseEvent *);
 
     /**
        Reimplemented to provide the standard show/raise behavior
@@ -156,33 +161,24 @@ protected:
 
        Feel free to reimplement this if you need something special.
      */
-    void mousePressEvent( QMouseEvent * );
-
-    /**
-       Reimplemented to provide the standard show/raise behavior
-       for the parentWidget() and the context menu.
-
-       Feel free to reimplement this if you need something special.
-     */
-    void mouseReleaseEvent( QMouseEvent * );
-
+    void mouseReleaseEvent(QMouseEvent *);
 
 
     /**
        Makes it easy to adjust some menu items right before the
        context menu becomes visible.
      */
-    virtual void contextMenuAboutToShow( KPopupMenu* menu );
+    virtual void contextMenuAboutToShow(KPopupMenu *menu);
 
     /**
        Reimplemented for internal reasons.
      */
-    void showEvent( QShowEvent * );
+    void showEvent(QShowEvent *);
 
     /**
        Reimplemented for internal reasons.
      */
-    void enterEvent( QEvent* );
+    void enterEvent(QEvent *);
 
 private slots:
     void minimizeRestoreAction();
@@ -190,15 +186,17 @@ private slots:
 
 private:
     void activateOrHide();
-    void minimizeRestore( bool restore );
-    KPopupMenu* menu;
+    void minimizeRestore(bool restore);
+    KPopupMenu *menu;
     // minimizeRestoreId is no longer needed. remove in KDE 4.0
     int minimizeRestoreId;
-    uint hasQuit :1;
+    uint hasQuit : 1;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-    KSystemTrayPrivate* d;
+    KSystemTrayPrivate *d;
 };
 
 

@@ -27,40 +27,53 @@
 
 namespace KJS {
 
- class ArrayPrototypeImp : public ArrayInstanceImp {
-  public:
-    ArrayPrototypeImp(ExecState *exec,
-                      ObjectPrototypeImp *objProto);
+class ArrayPrototypeImp : public ArrayInstanceImp {
+public:
+    ArrayPrototypeImp(ExecState *exec, ObjectPrototypeImp *objProto);
     Value get(ExecState *exec, const Identifier &p) const;
-    virtual const ClassInfo *classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-  };
+};
 
-  class ArrayProtoFuncImp : public InternalFunctionImp {
-  public:
+class ArrayProtoFuncImp : public InternalFunctionImp {
+public:
     ArrayProtoFuncImp(ExecState *exec, int i, int len);
 
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
 
-    enum { ToString, ToLocaleString, Concat, Join, Pop, Push,
-	   Reverse, Shift, Slice, Sort, Splice, UnShift };
-  private:
-    int id;
-  };
+    enum
+    {
+        ToString,
+        ToLocaleString,
+        Concat,
+        Join,
+        Pop,
+        Push,
+        Reverse,
+        Shift,
+        Slice,
+        Sort,
+        Splice,
+        UnShift
+    };
 
-  class ArrayObjectImp : public InternalFunctionImp {
-  public:
-    ArrayObjectImp(ExecState *exec,
-                   FunctionPrototypeImp *funcProto,
-                   ArrayPrototypeImp *arrayProto);
+private:
+    int id;
+};
+
+class ArrayObjectImp : public InternalFunctionImp {
+public:
+    ArrayObjectImp(ExecState *exec, FunctionPrototypeImp *funcProto, ArrayPrototypeImp *arrayProto);
 
     virtual bool implementsConstruct() const;
     virtual Object construct(ExecState *exec, const List &args);
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
-
-  };
+};
 
 } // namespace
 

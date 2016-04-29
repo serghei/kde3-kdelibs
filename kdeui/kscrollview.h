@@ -27,21 +27,20 @@
  *
  *
  **/
-class KDEUI_EXPORT KScrollView : public QScrollView
-{
-  Q_OBJECT
+class KDEUI_EXPORT KScrollView : public QScrollView {
+    Q_OBJECT
 
 public:
-    KScrollView( QWidget *parent = 0, const char *name = 0, Qt::WFlags f = 0 );
+    KScrollView(QWidget *parent = 0, const char *name = 0, Qt::WFlags f = 0);
 
     ~KScrollView();
 
 public slots:
     void scrollBy(int dx, int dy);
-//    virtual void setContentsPos(int x, int y);
+    //    virtual void setContentsPos(int x, int y);
 
 protected:
-    virtual void wheelEvent( QWheelEvent *e );
+    virtual void wheelEvent(QWheelEvent *e);
 
     void startScrolling();
     void stopScrolling();

@@ -46,18 +46,25 @@
  * @see KApplication::kipcMessage()
  * @author Geert Jansen <jansen@kde.org>
  */
-class KDECORE_EXPORT KIPC
-{
+class KDECORE_EXPORT KIPC {
 public:
     /**
      * A identifier for messages. Messages below UserMessage are system
      * messages, messages above can be defined by the user.
      */
-    enum Message { PaletteChanged=0, FontChanged, StyleChanged,
-                   BackgroundChanged, SettingsChanged, IconChanged, ToolbarStyleChanged,
-                   ClipboardConfigChanged, /// @since 3.1
-                   BlockShortcuts, /// @since 3.5
-                   UserMessage=32 };
+    enum Message
+    {
+        PaletteChanged = 0,
+        FontChanged,
+        StyleChanged,
+        BackgroundChanged,
+        SettingsChanged,
+        IconChanged,
+        ToolbarStyleChanged,
+        ClipboardConfigChanged, /// @since 3.1
+        BlockShortcuts,         /// @since 3.5
+        UserMessage = 32
+    };
 
     /**
      * Send a message to a specific application.
@@ -66,7 +73,7 @@ public:
      * @param w The window id of a toplevel window of the target application.
      * @param data An optional integer of data.
      */
-    static void sendMessage(Message msg, WId w, int data=0);
+    static void sendMessage(Message msg, WId w, int data = 0);
 
     /**
      * Send a message to all KDE application on the current display.
@@ -74,6 +81,6 @@ public:
      * @param msg The message to send.
      * @param data An optional integer of data.
      */
-    static void sendMessageAll(Message msg, int data=0);
+    static void sendMessageAll(Message msg, int data = 0);
 };
 #endif

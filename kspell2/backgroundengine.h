@@ -26,48 +26,53 @@
 #include <qobject.h>
 #include <qstringlist.h>
 
-namespace KSpell2
-{
-    class Filter;
-    class Broker;
-    class Dictionary;
-    class BackgroundEngine : public QObject
+namespace KSpell2 {
+class Filter;
+class Broker;
+class Dictionary;
+class BackgroundEngine : public QObject {
+    Q_OBJECT
+public:
+    BackgroundEngine(QObject *parent);
+    ~BackgroundEngine();
+
+    void setBroker(const Broker::Ptr &broker);
+    Broker *broker() const
     {
-        Q_OBJECT
-    public:
-        BackgroundEngine( QObject *parent );
-        ~BackgroundEngine();
+        return m_broker;
+    }
 
-        void setBroker( const Broker::Ptr& broker );
-        Broker *broker() const { return m_broker; }
+    void setText(const QString &);
+    QString text() const;
 
-        void setText( const QString& );
-        QString text() const;
+    void changeLanguage(const QString &);
+    QString language() const;
 
-        void changeLanguage( const QString& );
-        QString language() const;
+    void setFilter(Filter *filter);
+    Filter *filter() const
+    {
+        return m_filter;
+    }
 
-        void setFilter( Filter *filter );
-        Filter *filter() const { return m_filter; }
+    void start();
+    void continueChecking();
+    void stop();
 
-        void start();
-        void continueChecking();
-        void stop();
+    bool checkWord(const QString &word);
+    QStringList suggest(const QString &word);
+    bool addWord(const QString &word);
+signals:
+    void misspelling(const QString &, int);
+    void done();
+protected slots:
+    void checkNext();
 
-        bool        checkWord( const QString& word );
-        QStringList suggest( const QString& word );
-        bool        addWord( const QString& word );
-    signals:
-        void misspelling( const QString&, int );
-        void done();
-    protected slots:
-        void checkNext();
-    private:
-        Filter            *m_filter;
-        Broker::Ptr        m_broker;
-        Dictionary        *m_dict;
-        DefaultDictionary *m_defaultDict;
-    };
+private:
+    Filter *m_filter;
+    Broker::Ptr m_broker;
+    Dictionary *m_dict;
+    DefaultDictionary *m_defaultDict;
+};
 }
 
 #endif

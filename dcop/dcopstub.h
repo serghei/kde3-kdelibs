@@ -38,30 +38,29 @@ class DCOPStubPrivate;
 *
 */
 
-class DCOP_EXPORT DCOPStub
-{
+class DCOP_EXPORT DCOPStub {
 public:
     /**
        Creates a DCOPStub for application @p app and object @p obj
        @param app the application id
        @param obj the object id
      */
-    DCOPStub( const QCString& app, const QCString& obj );
+    DCOPStub(const QCString &app, const QCString &obj);
 
-    /** 
+    /**
       Creates a DCOPStub for application @p app and object @p obj
        that operates on the DCOPClient @p client
        @param client the DCOPClient
        @param app the application id
        @param obj the object id
      */
-    DCOPStub( DCOPClient* client, const QCString& app, const QCString& obj );
-    
+    DCOPStub(DCOPClient *client, const QCString &app, const QCString &obj);
+
     /**
        Creates a DCOPStub for application ref.app() and object ref.obj()
        @param ref the DCOP reference
      */
-    explicit DCOPStub( const DCOPRef& ref );
+    explicit DCOPStub(const DCOPRef &ref);
     virtual ~DCOPStub();
 
     /**
@@ -75,7 +74,11 @@ public:
      */
     QCString obj() const;
 
-    enum Status{ CallSucceeded, CallFailed };
+    enum Status
+    {
+        CallSucceeded,
+        CallFailed
+    };
     /**
      * Return the status of the last call, either @p CallSucceeded or
      * @p CallFailed.
@@ -92,29 +95,28 @@ public:
      * @return true if the last call was successful, false otherwise
      * @see status();
      */
-    bool ok()  const;
+    bool ok() const;
 
 protected:
-
     /**
        Sets the status to status. Possible values are 'CallSucceeded' and 'CallFailed'
        @param _status the new status
        @see status()
      */
-    void setStatus( Status _status );
+    void setStatus(Status _status);
 
     /**
       Invoked whenever a call fails.  The default implementation
       sets the status to CallFailed.
      */
     virtual void callFailed();
-    
-    /** 
+
+    /**
       The dcopClient this stub operates on. Either the specific one
        specified in the constructor or DCOPClient::mainClient.
        @return the stub's DCOPClient
     */
-    DCOPClient* dcopClient();
+    DCOPClient *dcopClient();
 
     /**
      * @internal
@@ -124,20 +126,27 @@ protected:
      * indirect, bases.
      * @since 3.1
      */
-    enum never_use_t { never_use };
+    enum never_use_t
+    {
+        never_use
+    };
     /**
      * @internal
      * @since 3.1
      */
-    DCOPStub( never_use_t ) { abort(); }
-    
+    DCOPStub(never_use_t)
+    {
+        abort();
+    }
+
 private:
     QCString m_app;
     QCString m_obj;
     Status m_status;
 
 protected:
-    virtual	void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     DCOPStubPrivate *d;
 };

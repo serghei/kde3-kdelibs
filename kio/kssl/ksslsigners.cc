@@ -29,223 +29,220 @@
 #include <kdatastream.h>
 
 
-KSSLSigners::KSSLSigners() {
-	dcc = new DCOPClient;
-	dcc->attach();
+KSSLSigners::KSSLSigners()
+{
+    dcc = new DCOPClient;
+    dcc->attach();
 }
 
 
-KSSLSigners::~KSSLSigners() {
-	delete dcc;
+KSSLSigners::~KSSLSigners()
+{
+    delete dcc;
 }
 
-bool KSSLSigners::addCA(KSSLCertificate& cert,
-                        bool ssl,
-                        bool email,
-                        bool code) {
-	return addCA(cert.toString(), ssl, email, code);
+bool KSSLSigners::addCA(KSSLCertificate &cert, bool ssl, bool email, bool code)
+{
+    return addCA(cert.toString(), ssl, email, code);
 }
 
 
-bool KSSLSigners::addCA(QString cert,
-                        bool ssl,
-                        bool email,
-                        bool code) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cert;
-     arg << ssl << email << code;
-     bool rc = dcc->call("kded", "kssld",
-                         "caAdd(QString,bool,bool,bool)",
-                         data, rettype, retval);
+bool KSSLSigners::addCA(QString cert, bool ssl, bool email, bool code)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cert;
+    arg << ssl << email << code;
+    bool rc = dcc->call("kded", "kssld", "caAdd(QString,bool,bool,bool)", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
 }
 
 
-bool KSSLSigners::regenerate() {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     bool rc = dcc->call("kded", "kssld",
-                         "caRegenerate()",
-                         data, rettype, retval);
+bool KSSLSigners::regenerate()
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    bool rc = dcc->call("kded", "kssld", "caRegenerate()", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
 }
 
 
-bool KSSLSigners::useForSSL(KSSLCertificate& cert) {
-	return useForSSL(cert.getSubject());
+bool KSSLSigners::useForSSL(KSSLCertificate &cert)
+{
+    return useForSSL(cert.getSubject());
 }
 
 
-bool KSSLSigners::useForSSL(QString subject) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << subject;
-     bool rc = dcc->call("kded", "kssld",
-                         "caUseForSSL(QString)",
-                         data, rettype, retval);
+bool KSSLSigners::useForSSL(QString subject)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << subject;
+    bool rc = dcc->call("kded", "kssld", "caUseForSSL(QString)", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
 }
 
 
-bool KSSLSigners::useForEmail(KSSLCertificate& cert) {
-	return useForEmail(cert.getSubject());
+bool KSSLSigners::useForEmail(KSSLCertificate &cert)
+{
+    return useForEmail(cert.getSubject());
 }
 
 
-bool KSSLSigners::useForEmail(QString subject) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << subject;
-     bool rc = dcc->call("kded", "kssld",
-                         "caUseForEmail(QString)",
-                         data, rettype, retval);
+bool KSSLSigners::useForEmail(QString subject)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << subject;
+    bool rc = dcc->call("kded", "kssld", "caUseForEmail(QString)", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
 }
 
 
-bool KSSLSigners::useForCode(KSSLCertificate& cert) {
-	return useForCode(cert.getSubject());
+bool KSSLSigners::useForCode(KSSLCertificate &cert)
+{
+    return useForCode(cert.getSubject());
 }
 
 
-bool KSSLSigners::useForCode(QString subject) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << subject;
-     bool rc = dcc->call("kded", "kssld",
-                         "caUseForCode(QString)",
-                         data, rettype, retval);
+bool KSSLSigners::useForCode(QString subject)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << subject;
+    bool rc = dcc->call("kded", "kssld", "caUseForCode(QString)", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
 }
 
 
-bool KSSLSigners::remove(KSSLCertificate& cert) {
-	return remove(cert.getSubject());
+bool KSSLSigners::remove(KSSLCertificate &cert)
+{
+    return remove(cert.getSubject());
 }
 
 
-bool KSSLSigners::remove(QString subject) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << subject;
-     bool rc = dcc->call("kded", "kssld",
-                         "caRemove(QString)",
-                         data, rettype, retval);
+bool KSSLSigners::remove(QString subject)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << subject;
+    bool rc = dcc->call("kded", "kssld", "caRemove(QString)", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
 }
 
 
-QStringList KSSLSigners::list() {
-     QStringList drc;
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     bool rc = dcc->call("kded", "kssld",
-                         "caList()",
-                         data, rettype, retval);
+QStringList KSSLSigners::list()
+{
+    QStringList drc;
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    bool rc = dcc->call("kded", "kssld", "caList()", data, rettype, retval);
 
-     if (rc && rettype == "QStringList") {
+    if(rc && rettype == "QStringList")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         retStream >> drc;
-     }
+    }
 
-return drc;
+    return drc;
 }
 
 
-QString KSSLSigners::getCert(QString subject) {
-     QString drc;
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << subject;
-     bool rc = dcc->call("kded", "kssld",
-                         "caGetCert(QString)",
-                         data, rettype, retval);
+QString KSSLSigners::getCert(QString subject)
+{
+    QString drc;
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << subject;
+    bool rc = dcc->call("kded", "kssld", "caGetCert(QString)", data, rettype, retval);
 
-     if (rc && rettype == "QString") {
+    if(rc && rettype == "QString")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         retStream >> drc;
-     }
+    }
 
-return drc;
+    return drc;
 }
 
 
-bool KSSLSigners::setUse(QString subject, bool ssl, bool email, bool code) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << subject << ssl << email << code;
-     bool rc = dcc->call("kded", "kssld",
-                         "caSetUse(QString,bool,bool,bool)",
-                         data, rettype, retval);
+bool KSSLSigners::setUse(QString subject, bool ssl, bool email, bool code)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << subject << ssl << email << code;
+    bool rc = dcc->call("kded", "kssld", "caSetUse(QString,bool,bool,bool)", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
 }
-
-
-
-

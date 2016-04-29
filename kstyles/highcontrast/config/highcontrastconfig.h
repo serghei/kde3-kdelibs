@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2005 Luciano Montanaro <mikelima@cirulla.net>
 
-based on the Keramick configuration dialog 
+based on the Keramick configuration dialog
 Copyright (c) 2003 Maksim Orlovich <maksim.orlovich@kdemail.net>
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -29,33 +29,32 @@ DEALINGS IN THE SOFTWARE.
 
 class QCheckBox;
 
-class HighContrastStyleConfig: public QWidget
-{
-	Q_OBJECT
+class HighContrastStyleConfig : public QWidget {
+    Q_OBJECT
 public:
-	HighContrastStyleConfig(QWidget* parent);
-	~HighContrastStyleConfig();
+    HighContrastStyleConfig(QWidget *parent);
+    ~HighContrastStyleConfig();
 
-	// This signal and the next two slots are the plugin
-	// page interface
+    // This signal and the next two slots are the plugin
+    // page interface
 signals:
-	void changed(bool);
+    void changed(bool);
 
 public slots:
-	void save();
-	void defaults();
+    void save();
+    void defaults();
 
-	// Everything below this is internal.
+    // Everything below this is internal.
 protected slots:
-	void updateChanged();
+    void updateChanged();
 
 protected:
-	// We store settings directly in widgets to
-	// avoid the hassle of sync'ing things
-	QCheckBox* wideLinesBox;
+    // We store settings directly in widgets to
+    // avoid the hassle of sync'ing things
+    QCheckBox *wideLinesBox;
 
-	// Original settings, for accurate dirtiness tracking
-	bool       originalWideLinesState;
+    // Original settings, for accurate dirtiness tracking
+    bool originalWideLinesState;
 };
 
 #endif // HIGHCONTRAST_CONF_H

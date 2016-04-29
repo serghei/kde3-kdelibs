@@ -39,9 +39,9 @@
  */
 
 class KJavaProcessPrivate;
-class KJavaProcess : public KProcess //QObject
+class KJavaProcess : public KProcess // QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     /**
@@ -71,7 +71,7 @@ public:
     /**
      * Used to specify the path to the Java executable to be run.
      */
-    void setJVMPath( const QString& path );
+    void setJVMPath(const QString &path);
 
     /**
      * This will set the classpath the Java process will use.  It's used as a the
@@ -80,42 +80,42 @@ public:
      * users to simply drop the JSSE (Java Secure Sockets Extension classes into that directory
      * without having to modify the jvm configuration files.
      */
-    void setClasspath( const QString& classpath );
+    void setClasspath(const QString &classpath);
 
     /**
      * Set a property on the java command line as -Dname=value, or -Dname if value is QString::null.
      * For example, you could call setSystemProperty( "kjas.debug", "" ) to set the kjas.debug property.
      */
-    void setSystemProperty( const QString& name, const QString& value );
+    void setSystemProperty(const QString &name, const QString &value);
 
     /**
      * The class to be called when startJava() is called.
      */
-    void setMainClass( const QString& clazzName );
+    void setMainClass(const QString &clazzName);
 
     /**
      * Extra flags passed to the JVM.
      */
-    void setExtraArgs( const QString& args );
+    void setExtraArgs(const QString &args);
 
     /**
      * Arguments passed to the main class.  They will be very last in the java
      * command line, after the main class.
      */
-    void setClassArgs( const QString& classArgs );
+    void setClassArgs(const QString &classArgs);
 
     /**
      * Sends a command to the KJAS Applet Server by building a QByteArray
      * out of the data, and then writes it standard out.
      */
-    void send( char cmd_code, const QStringList& args );
+    void send(char cmd_code, const QStringList &args);
 
     /**
      * Sends a command to the KJAS Applet Server by building a QByteArray
      * out of the data, and then writes it standard out.  It adds each QString
      * in the arg list, and then adds the data array.
      */
-    void send( char cmd_code, const QStringList& args, const QByteArray& data );
+    void send(char cmd_code, const QStringList &args, const QByteArray &data);
 
     /**
      * Writes all pending data to JVM
@@ -135,30 +135,29 @@ protected slots:
      * process the data from the file descriptor that is passed to us and send the
      * command to the AppletServer
      */
-    void slotReceivedData( int, int& );
+    void slotReceivedData(int, int &);
     /**
      * This slot is called when the Java Process exited.
      */
-    void slotExited( KProcess *process );
+    void slotExited(KProcess *process);
 
 protected:
     virtual bool invokeJVM();
     virtual void killJVM();
 
-    QByteArray* addArgs( char cmd_code, const QStringList& args );
-    void        popBuffer();
-    void        sendBuffer( QByteArray* buff );
-    void        storeSize( QByteArray* buff );
+    QByteArray *addArgs(char cmd_code, const QStringList &args);
+    void popBuffer();
+    void sendBuffer(QByteArray *buff);
+    void storeSize(QByteArray *buff);
 
-    KProcess* javaProcess;
+    KProcess *javaProcess;
 
 signals:
-    void received( const QByteArray& );
-    void exited( int status );
+    void received(const QByteArray &);
+    void exited(int status);
 
 private:
     KJavaProcessPrivate *d;
-
 };
 
 #endif // KJAVAPROCESS_H

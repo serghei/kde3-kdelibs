@@ -27,30 +27,28 @@
  * Allows KIO classes to display dialog boxes with the correct
  * theme/style even in non-GUI apps like kded and kfmclient
  */
-class KIO_EXPORT KMessageBoxWrapper : public KMessageBox
-{
+class KIO_EXPORT KMessageBoxWrapper : public KMessageBox {
 public:
-  static void error(QWidget *parent, 
-                    const QString &text, 
-                    const QString &caption = QString::null)
+    static void error(QWidget *parent, const QString &text, const QString &caption = QString::null)
     {
-	if (KApplication::guiEnabled()) {
-     	  kapp->enableStyles();
-      	  KMessageBox::error( parent, text, caption );
-	} else 
-	  kdWarning() << text << endl;
+        if(KApplication::guiEnabled())
+        {
+            kapp->enableStyles();
+            KMessageBox::error(parent, text, caption);
+        }
+        else
+            kdWarning() << text << endl;
     }
 
-  static void sorry(QWidget *parent, 
-                    const QString &text,
-                    const QString &caption = QString::null)
+    static void sorry(QWidget *parent, const QString &text, const QString &caption = QString::null)
     {
-      if (KApplication::guiEnabled()) {
-	 kapp->enableStyles();
-         KMessageBox::sorry( parent, text, caption );
-      } else
-	kdWarning() << text << endl;
+        if(KApplication::guiEnabled())
+        {
+            kapp->enableStyles();
+            KMessageBox::sorry(parent, text, caption);
+        }
+        else
+            kdWarning() << text << endl;
     }
-  
 };
 #endif

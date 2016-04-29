@@ -44,17 +44,16 @@ class Entry;
  * \par Maintainer:
  * Josef Spillner (spillner@kde.org)
  */
-class UploadDialog : public KDialogBase
-{
+class UploadDialog : public KDialogBase {
     Q_OBJECT
-  public:
+public:
     /**
       Constructor.
 
       @param engine a KNewStuff engine object to be used for uploads
       @param parent the parent window
     */
-    UploadDialog( Engine *engine, QWidget *parent );
+    UploadDialog(Engine *engine, QWidget *parent);
 
     /**
       Destructor.
@@ -67,7 +66,7 @@ class UploadDialog : public KDialogBase
 
       @param previewFile the preview image file
     */
-    void setPreviewFile( const QString &previewFile );
+    void setPreviewFile(const QString &previewFile);
 
     /**
       Sets the payload filename.
@@ -76,12 +75,12 @@ class UploadDialog : public KDialogBase
 
       @param payloadFile the payload data file
     */
-    void setPayloadFile( const QString &payloadFile );
+    void setPayloadFile(const QString &payloadFile);
 
-  protected slots:
+protected slots:
     void slotOk();
 
-  private:
+private:
     Engine *mEngine;
 
     QLineEdit *mNameEdit;
@@ -94,10 +93,9 @@ class UploadDialog : public KDialogBase
     QComboBox *mLanguageCombo;
     QComboBox *mLicenceCombo;
 
-    QPtrList<Entry> mEntryList;
+    QPtrList< Entry > mEntryList;
     KURL mPayloadUrl;
 };
-
 }
 
 #endif

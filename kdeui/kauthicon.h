@@ -44,53 +44,53 @@ class KAuthIconPrivate;
  * @see KRootPermsIcon, KWritePermsIcon
  * @author Preston Brown <pbrown@kde.org>
  */
-class KDEUI_EXPORT KAuthIcon : public QWidget
-{
-  Q_OBJECT
+class KDEUI_EXPORT KAuthIcon : public QWidget {
+    Q_OBJECT
 
 public:
-  /**
-   * Constructor.
-   */
-  KAuthIcon(QWidget *parent = 0, const char *name = 0);
-  ~KAuthIcon();
+    /**
+     * Constructor.
+     */
+    KAuthIcon(QWidget *parent = 0, const char *name = 0);
+    ~KAuthIcon();
 
-  virtual QSize sizeHint() const;
-  /**
-   * return the status of whatever is being monitored.
-   */
-  virtual bool status() const = 0;
+    virtual QSize sizeHint() const;
+    /**
+     * return the status of whatever is being monitored.
+     */
+    virtual bool status() const = 0;
 
 public slots:
-  /**
-   * Re-implement this method if you want the icon to update itself
-   * when something external has changed (i.e. a file on disk, uid/gid).
-   */
-  virtual void updateStatus() = 0;
+    /**
+     * Re-implement this method if you want the icon to update itself
+     * when something external has changed (i.e. a file on disk, uid/gid).
+     */
+    virtual void updateStatus() = 0;
 
 signals:
-  /**
-   * this signal is emitted when authorization has changed from
-   * its previous state.
-   * @param authorized will be true if the type of authorization
-   * described by the icon is true, otherwise it will be false.
-   */
-  void authChanged(bool authorized);
+    /**
+     * this signal is emitted when authorization has changed from
+     * its previous state.
+     * @param authorized will be true if the type of authorization
+     * described by the icon is true, otherwise it will be false.
+     */
+    void authChanged(bool authorized);
 
 protected:
-  QHBoxLayout *layout;
+    QHBoxLayout *layout;
 
-  QLabel *lockBox;
-  QLabel *lockLabel;
-  QPixmap lockPM;
-  QPixmap openLockPM;
-  QString lockText;
-  QString openLockText;
+    QLabel *lockBox;
+    QLabel *lockLabel;
+    QPixmap lockPM;
+    QPixmap openLockPM;
+    QString lockText;
+    QString openLockText;
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  KAuthIconPrivate *d;
+    KAuthIconPrivate *d;
 };
 
 class KRootPermsIconPrivate;
@@ -100,29 +100,32 @@ class KRootPermsIconPrivate;
  * @see KAuthIcon
  * @author Preston Brown <pbrown@kde.org>
  */
-class KDEUI_EXPORT KRootPermsIcon : public KAuthIcon
-{
-  Q_OBJECT
+class KDEUI_EXPORT KRootPermsIcon : public KAuthIcon {
+    Q_OBJECT
 
 public:
-  KRootPermsIcon(QWidget *parent = 0, const char *name = 0);
-  ~KRootPermsIcon();
+    KRootPermsIcon(QWidget *parent = 0, const char *name = 0);
+    ~KRootPermsIcon();
 
-  /**
-   * return whether or not the current user has root permissions.
-   */
-  bool status() const { return root; }
+    /**
+     * return whether or not the current user has root permissions.
+     */
+    bool status() const
+    {
+        return root;
+    }
 
 public slots:
-  void updateStatus();
+    void updateStatus();
 
 protected:
-  bool root;
+    bool root;
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  KRootPermsIconPrivate *d;
+    KRootPermsIconPrivate *d;
 };
 
 class KWritePermsIconPrivate;
@@ -132,42 +135,52 @@ class KWritePermsIconPrivate;
  * @see KAuthIcon
  * @author Preston Brown <pbrown@kde.org>
  */
-class KDEUI_EXPORT KWritePermsIcon : public KAuthIcon
-{
-  Q_OBJECT
-  Q_PROPERTY( QString fileName READ fileName WRITE setFileName )
+class KDEUI_EXPORT KWritePermsIcon : public KAuthIcon {
+    Q_OBJECT
+    Q_PROPERTY(QString fileName READ fileName WRITE setFileName)
 
 public:
-  KWritePermsIcon(const QString & fileName, QWidget *parent = 0, const char *name = 0);
-  ~KWritePermsIcon();
-  /**
-   * @return whether or not the monitored file is writable.
-   */
-  bool status() const { return writable; }
+    KWritePermsIcon(const QString &fileName, QWidget *parent = 0, const char *name = 0);
+    ~KWritePermsIcon();
+    /**
+     * @return whether or not the monitored file is writable.
+     */
+    bool status() const
+    {
+        return writable;
+    }
 
-  /**
-   * make the icon watch a new filename.
-   * @param fileName the new file to monitor / display status for.
-   */
-  void setFileName(const QString & fileName) { fi.setFile(fileName); updateStatus(); }
+    /**
+     * make the icon watch a new filename.
+     * @param fileName the new file to monitor / display status for.
+     */
+    void setFileName(const QString &fileName)
+    {
+        fi.setFile(fileName);
+        updateStatus();
+    }
 
-  /**
-  * return the filename of the currently watched file.
-  * @since 3.4
-  */
-  QString fileName() const { return fi.fileName(); }
+    /**
+    * return the filename of the currently watched file.
+    * @since 3.4
+    */
+    QString fileName() const
+    {
+        return fi.fileName();
+    }
 
 public slots:
-  void updateStatus();
+    void updateStatus();
 
 protected:
-  bool writable;
-  QFileInfo fi;
+    bool writable;
+    QFileInfo fi;
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  KWritePermsIconPrivate *d;
+    KWritePermsIconPrivate *d;
 };
 
 #endif

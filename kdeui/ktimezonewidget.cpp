@@ -33,13 +33,11 @@
 #define COLUMN_COMMENT 2
 #define COLUMN_ZONE 3
 
-KTimezoneWidget::KTimezoneWidget(QWidget *parent, const char *name, KTimezones *db) :
-    KListView(parent, name),
-    d(0)
+KTimezoneWidget::KTimezoneWidget(QWidget *parent, const char *name, KTimezones *db) : KListView(parent, name), d(0)
 {
     // If the user did not provide a timezone database, we'll use the system default.
     bool userDb = (db != 0);
-    if (!userDb)
+    if(!userDb)
         db = new KTimezones();
 
     addColumn(i18n("Area"));
@@ -47,12 +45,12 @@ KTimezoneWidget::KTimezoneWidget(QWidget *parent, const char *name, KTimezones *
     addColumn(i18n("Comment"));
 
     const KTimezones::ZoneMap zones = db->allZones();
-    for (KTimezones::ZoneMap::ConstIterator it = zones.begin(); it != zones.end(); ++it)
+    for(KTimezones::ZoneMap::ConstIterator it = zones.begin(); it != zones.end(); ++it)
     {
         const KTimezone *zone = it.data();
         QString tzName = zone->name();
         QString comment = zone->comment();
-        if (!comment.isEmpty())
+        if(!comment.isEmpty())
             comment = i18n(comment.utf8());
 
         // Convert:
@@ -68,13 +66,12 @@ KTimezoneWidget::KTimezoneWidget(QWidget *parent, const char *name, KTimezones *
 
         // Locate the flag from /l10n/%1/flag.png.
         QString flag = locate("locale", QString("l10n/%1/flag.png").arg(zone->countryCode().lower()));
-        if (QFile::exists(flag))
+        if(QFile::exists(flag))
             listItem->setPixmap(COLUMN_REGION, QPixmap(flag));
     }
 
-    if (!userDb)
+    if(!userDb)
         delete db;
-
 }
 
 KTimezoneWidget::~KTimezoneWidget()
@@ -94,9 +91,9 @@ QStringList KTimezoneWidget::selection() const
 
     // Loop through all entries.
     QListViewItem *listItem = firstChild();
-    while (listItem)
+    while(listItem)
     {
-        if (listItem->isSelected())
+        if(listItem->isSelected())
         {
             selection.append(listItem->text(COLUMN_ZONE));
         }
@@ -111,22 +108,22 @@ void KTimezoneWidget::setSelected(const QString &zone, bool selected)
 
     // Loop through all entries.
     QListViewItem *listItem = firstChild();
-    while (listItem)
+    while(listItem)
     {
-        if (listItem->text(COLUMN_ZONE) == zone)
+        if(listItem->text(COLUMN_ZONE) == zone)
         {
             KListView::setSelected(listItem, selected);
 
             // Ensure the selected item is visible as appropriate.
             listItem = selectedItem();
-            if (listItem)
+            if(listItem)
                 ensureItemVisible(listItem);
             found = true;
             break;
         }
         listItem = listItem->nextSibling();
     }
-    if (!found)
+    if(!found)
         kdDebug() << "No such zone: " << zone << endl;
 }
 

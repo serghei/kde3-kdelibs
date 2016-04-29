@@ -24,65 +24,61 @@
 
 #include <kdialogbase.h>
 
-namespace KSpell2
-{
-    class Filter;
-    class BackgroundChecker;
-    class KDE_EXPORT Dialog : public KDialogBase
-    {
-        Q_OBJECT
-    public:
-        Dialog( BackgroundChecker *checker,
-                QWidget *parent, const char *name=0 );
-        ~Dialog();
+namespace KSpell2 {
+class Filter;
+class BackgroundChecker;
+class KDE_EXPORT Dialog : public KDialogBase {
+    Q_OBJECT
+public:
+    Dialog(BackgroundChecker *checker, QWidget *parent, const char *name = 0);
+    ~Dialog();
 
-        QString originalBuffer() const;
-        QString buffer() const;
+    QString originalBuffer() const;
+    QString buffer() const;
 
-        void show();
-        void activeAutoCorrect( bool _active );
+    void show();
+    void activeAutoCorrect(bool _active);
 
-    public slots:
-        void setBuffer( const QString& );
-        void setFilter( Filter* filter );
+public slots:
+    void setBuffer(const QString &);
+    void setFilter(Filter *filter);
 
-    signals:
-        void done( const QString& newBuffer );
-        void misspelling( const QString& word, int start );
-        void replace( const QString& oldWord, int start,
-                      const QString& newWord );
+signals:
+    void done(const QString &newBuffer);
+    void misspelling(const QString &word, int start);
+    void replace(const QString &oldWord, int start, const QString &newWord);
 
-        void stop();
-        void cancel();
-        void autoCorrect( const QString & currentWord, const QString & replaceWord );
-    private slots:
-        void slotMisspelling(const QString& word, int start );
-        void slotDone();
+    void stop();
+    void cancel();
+    void autoCorrect(const QString &currentWord, const QString &replaceWord);
+private slots:
+    void slotMisspelling(const QString &word, int start);
+    void slotDone();
 
-        void slotFinished();
-        void slotCancel();
+    void slotFinished();
+    void slotCancel();
 
-        void slotAddWord();
-        void slotReplaceWord();
-        void slotReplaceAll();
-        void slotSkip();
-        void slotSkipAll();
-        void slotSuggest();
-        void slotChangeLanguage( const QString& );
-        void slotSelectionChanged( QListViewItem * );
-        void slotAutocorrect();
+    void slotAddWord();
+    void slotReplaceWord();
+    void slotReplaceAll();
+    void slotSkip();
+    void slotSkipAll();
+    void slotSuggest();
+    void slotChangeLanguage(const QString &);
+    void slotSelectionChanged(QListViewItem *);
+    void slotAutocorrect();
 
-    private:
-        void updateDialog( const QString& word );
-        void fillSuggestions( const QStringList& suggs );
-        void initConnections();
-        void initGui();
-        void continueChecking();
+private:
+    void updateDialog(const QString &word);
+    void fillSuggestions(const QStringList &suggs);
+    void initConnections();
+    void initGui();
+    void continueChecking();
 
-    private:
-        class Private;
-        Private *d;
-    };
+private:
+    class Private;
+    Private *d;
+};
 }
 
 #endif

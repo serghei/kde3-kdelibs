@@ -72,6 +72,4 @@ KDE_EXPORT QString ASN1_INTEGER_QString(ASN1_INTEGER *aint);
 #endif
 
 
-
-
 #endif

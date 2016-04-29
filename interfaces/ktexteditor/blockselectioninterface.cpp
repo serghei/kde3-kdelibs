@@ -22,17 +22,19 @@
 #include "blockselectiondcopinterface.h"
 #include "document.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateBlockSelectionInterface
-{
-  public:
-    PrivateBlockSelectionInterface() {interface = 0;}
-    ~PrivateBlockSelectionInterface() {}
+class PrivateBlockSelectionInterface {
+public:
+    PrivateBlockSelectionInterface()
+    {
+        interface = 0;
+    }
+    ~PrivateBlockSelectionInterface()
+    {
+    }
     BlockSelectionDCOPInterface *interface;
 };
-
 }
 
 using namespace KTextEditor;
@@ -41,34 +43,34 @@ unsigned int BlockSelectionInterface::globalBlockSelectionInterfaceNumber = 0;
 
 BlockSelectionInterface::BlockSelectionInterface()
 {
-  globalBlockSelectionInterfaceNumber++;
-  myBlockSelectionInterfaceNumber = globalBlockSelectionInterfaceNumber++;
-  QString name = "BlockSelectionInterface#" + QString::number(myBlockSelectionInterfaceNumber);
+    globalBlockSelectionInterfaceNumber++;
+    myBlockSelectionInterfaceNumber = globalBlockSelectionInterfaceNumber++;
+    QString name = "BlockSelectionInterface#" + QString::number(myBlockSelectionInterfaceNumber);
 
-  d = new PrivateBlockSelectionInterface();
-  d->interface = new BlockSelectionDCOPInterface(this, name.latin1());
+    d = new PrivateBlockSelectionInterface();
+    d->interface = new BlockSelectionDCOPInterface(this, name.latin1());
 }
 
 BlockSelectionInterface::~BlockSelectionInterface()
 {
-  delete d->interface;
-  delete d;
+    delete d->interface;
+    delete d;
 }
 
-unsigned int BlockSelectionInterface::blockSelectionInterfaceNumber () const
+unsigned int BlockSelectionInterface::blockSelectionInterfaceNumber() const
 {
-  return myBlockSelectionInterfaceNumber;
+    return myBlockSelectionInterfaceNumber;
 }
 
-void BlockSelectionInterface::setBlockSelectionInterfaceDCOPSuffix (const QCString &suffix)
+void BlockSelectionInterface::setBlockSelectionInterfaceDCOPSuffix(const QCString &suffix)
 {
-  d->interface->setObjId ("BlockSelectionInterface#"+suffix);
+    d->interface->setObjId("BlockSelectionInterface#" + suffix);
 }
 
-BlockSelectionInterface *KTextEditor::blockSelectionInterface (Document *doc)
+BlockSelectionInterface *KTextEditor::blockSelectionInterface(Document *doc)
 {
-  if (!doc)
-    return 0;
+    if(!doc)
+        return 0;
 
-  return static_cast<BlockSelectionInterface*>(doc->qt_cast("KTextEditor::BlockSelectionInterface"));
+    return static_cast< BlockSelectionInterface * >(doc->qt_cast("KTextEditor::BlockSelectionInterface"));
 }

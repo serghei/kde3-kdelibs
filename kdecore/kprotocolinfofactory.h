@@ -1,7 +1,7 @@
 /* This file is part of the KDE libraries
    Copyright (C) 1999 Torben Weis <weis@kde.org>
    Copyright (C) 2000,2003 Waldo Bastian <bastian@kde.org>
-   
+
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -31,61 +31,68 @@
 class KProtocolInfoPrivate;
 
 /**
- * KProtocolInfoFactory is a factory for getting 
- * KProtocolInfo. The factory is a singleton 
+ * KProtocolInfoFactory is a factory for getting
+ * KProtocolInfo. The factory is a singleton
  * (only one instance can exist).
  *
  * @short Factory for KProtocolInfo
  */
-class KDECORE_EXPORT KProtocolInfoFactory : public KSycocaFactory
-{ 
-  K_SYCOCAFACTORY( KST_KProtocolInfoFactory )
+class KDECORE_EXPORT KProtocolInfoFactory : public KSycocaFactory {
+    K_SYCOCAFACTORY(KST_KProtocolInfoFactory)
 public:
-  /**
-   * The instance of the KProtocolInfoFactory.
-   * @return the factory instance
-   */
-  static KProtocolInfoFactory* self() 
-  { if ( !_self) new KProtocolInfoFactory(); return _self; }
-  /** \internal */
-  KProtocolInfoFactory();
-  virtual ~KProtocolInfoFactory();
+    /**
+     * The instance of the KProtocolInfoFactory.
+     * @return the factory instance
+     */
+    static KProtocolInfoFactory *self()
+    {
+        if(!_self)
+            new KProtocolInfoFactory();
+        return _self;
+    }
+    /** \internal */
+    KProtocolInfoFactory();
+    virtual ~KProtocolInfoFactory();
 
-  /*
-   * Returns protocol info for @p protocol.
-   *
-   * Does not take proxy settings into account.
-   * @param protocol the protocol to search for
-   * @return the pointer to the KProtocolInfo, or 0 if not found
-   */
-  KProtocolInfo *findProtocol(const QString &protocol);
+    /*
+     * Returns protocol info for @p protocol.
+     *
+     * Does not take proxy settings into account.
+     * @param protocol the protocol to search for
+     * @return the pointer to the KProtocolInfo, or 0 if not found
+     */
+    KProtocolInfo *findProtocol(const QString &protocol);
 
-  /**
-   * Returns list of all known protocols.
-   * @return a list of all protocols
-   */
-  QStringList protocols();
-protected:
-
-  /**
-   * @internal Not used.
-   */
-  virtual KSycocaEntry *createEntry(const QString &, const char *)
-    { return 0; }                                                    
-
-  /**
-   * @internal
-   */
-  virtual KProtocolInfo *createEntry(int offset);
+    /**
+     * Returns list of all known protocols.
+     * @return a list of all protocols
+     */
+    QStringList protocols();
 
 protected:
-  static KProtocolInfoFactory *_self;
-  
-  QMap<QString,KProtocolInfo::Ptr> m_cache;
+    /**
+     * @internal Not used.
+     */
+    virtual KSycocaEntry *createEntry(const QString &, const char *)
+    {
+        return 0;
+    }
+
+    /**
+     * @internal
+     */
+    virtual KProtocolInfo *createEntry(int offset);
+
 protected:
-  virtual void virtual_hook( int id, void* data );
+    static KProtocolInfoFactory *_self;
+
+    QMap< QString, KProtocolInfo::Ptr > m_cache;
+
+protected:
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KProtocolInfoFactoryPrivate* d;
+    class KProtocolInfoFactoryPrivate *d;
 };
 
 #endif

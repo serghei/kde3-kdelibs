@@ -39,45 +39,65 @@
  */
 class KDECORE_EXPORT KShared {
 public:
-   /**
-    * Standard constructor.  This will initialize the reference count
-    * on this object to 0.
-    */
-   KShared() : count(0) { }
+    /**
+     * Standard constructor.  This will initialize the reference count
+     * on this object to 0.
+     */
+    KShared() : count(0)
+    {
+    }
 
-   /**
-    * Copy constructor.  This will @em not actually copy the objects
-    * but it will initialize the reference count on this object to 0.
-    */
-   KShared( const KShared & ) : count(0) { }
+    /**
+     * Copy constructor.  This will @em not actually copy the objects
+     * but it will initialize the reference count on this object to 0.
+     */
+    KShared(const KShared &) : count(0)
+    {
+    }
 
-   /**
-    * Overloaded assignment operator.
-    */
-   KShared &operator=(const KShared & ) { return *this; }
+    /**
+     * Overloaded assignment operator.
+     */
+    KShared &operator=(const KShared &)
+    {
+        return *this;
+    }
 
-   /**
-    * Increases the reference count by one.
-    */
-   void _KShared_ref() const { count++; }
+    /**
+     * Increases the reference count by one.
+     */
+    void _KShared_ref() const
+    {
+        count++;
+    }
 
-   /**
-    * Releases a reference (decreases the reference count by one).  If
-    * the count goes to 0, this object will delete itself.
-    */
-   void _KShared_unref() const { if (!--count) delete this; }
+    /**
+     * Releases a reference (decreases the reference count by one).  If
+     * the count goes to 0, this object will delete itself.
+     */
+    void _KShared_unref() const
+    {
+        if(!--count)
+            delete this;
+    }
 
-   /**
-    * Return the current number of references held.
-    *
-    * @return Number of references
-    */
-   int _KShared_count() const { return count; }
+    /**
+     * Return the current number of references held.
+     *
+     * @return Number of references
+     */
+    int _KShared_count() const
+    {
+        return count;
+    }
 
 protected:
-   virtual ~KShared() { }
+    virtual ~KShared()
+    {
+    }
+
 private:
-   mutable int count;
+    mutable int count;
 };
 
 /**
@@ -96,80 +116,136 @@ private:
  *
  * @author Waldo Bastian <bastian@kde.org>
  */
-template< class T >
-class KSharedPtr
-{
+template < class T > class KSharedPtr {
 public:
-/**
- * Creates a null pointer.
- */
-  KSharedPtr()
-    : ptr(0) { }
-  /**
-   * Creates a new pointer.
-   * @param t the pointer
-   */
-  KSharedPtr( T* t )
-    : ptr(t) { if ( ptr ) ptr->_KShared_ref(); }
+    /**
+     * Creates a null pointer.
+     */
+    KSharedPtr() : ptr(0)
+    {
+    }
+    /**
+     * Creates a new pointer.
+     * @param t the pointer
+     */
+    KSharedPtr(T *t) : ptr(t)
+    {
+        if(ptr)
+            ptr->_KShared_ref();
+    }
 
-  /**
-   * Copies a pointer.
-   * @param p the pointer to copy
-   */
-  KSharedPtr( const KSharedPtr& p )
-    : ptr(p.ptr) { if ( ptr ) ptr->_KShared_ref(); }
+    /**
+     * Copies a pointer.
+     * @param p the pointer to copy
+     */
+    KSharedPtr(const KSharedPtr &p) : ptr(p.ptr)
+    {
+        if(ptr)
+            ptr->_KShared_ref();
+    }
 
-  /**
-   * Unreferences the object that this pointer points to. If it was
-   * the last reference, the object will be deleted.
-   */
-  ~KSharedPtr() { if ( ptr ) ptr->_KShared_unref(); }
+    /**
+     * Unreferences the object that this pointer points to. If it was
+     * the last reference, the object will be deleted.
+     */
+    ~KSharedPtr()
+    {
+        if(ptr)
+            ptr->_KShared_unref();
+    }
 
-  KSharedPtr<T>& operator= ( const KSharedPtr<T>& p ) {
-    if ( ptr == p.ptr ) return *this;
-    if ( ptr ) ptr->_KShared_unref();
-    ptr = p.ptr;
-    if ( ptr ) ptr->_KShared_ref();
-    return *this;
-  }
-  KSharedPtr<T>& operator= ( T* p ) {
-    if ( ptr == p ) return *this;
-    if ( ptr ) ptr->_KShared_unref();
-    ptr = p;
-    if ( ptr ) ptr->_KShared_ref();
-    return *this;
-  }
-  bool operator== ( const KSharedPtr<T>& p ) const { return ( ptr == p.ptr ); }
-  bool operator!= ( const KSharedPtr<T>& p ) const { return ( ptr != p.ptr ); }
-  bool operator== ( const T* p ) const { return ( ptr == p ); }
-  bool operator!= ( const T* p ) const { return ( ptr != p ); }
-  bool operator!() const { return ( ptr == 0 ); }
-  operator T*() const { return ptr; }
+    KSharedPtr< T > &operator=(const KSharedPtr< T > &p)
+    {
+        if(ptr == p.ptr)
+            return *this;
+        if(ptr)
+            ptr->_KShared_unref();
+        ptr = p.ptr;
+        if(ptr)
+            ptr->_KShared_ref();
+        return *this;
+    }
+    KSharedPtr< T > &operator=(T *p)
+    {
+        if(ptr == p)
+            return *this;
+        if(ptr)
+            ptr->_KShared_unref();
+        ptr = p;
+        if(ptr)
+            ptr->_KShared_ref();
+        return *this;
+    }
+    bool operator==(const KSharedPtr< T > &p) const
+    {
+        return (ptr == p.ptr);
+    }
+    bool operator!=(const KSharedPtr< T > &p) const
+    {
+        return (ptr != p.ptr);
+    }
+    bool operator==(const T *p) const
+    {
+        return (ptr == p);
+    }
+    bool operator!=(const T *p) const
+    {
+        return (ptr != p);
+    }
+    bool operator!() const
+    {
+        return (ptr == 0);
+    }
+    operator T *() const
+    {
+        return ptr;
+    }
 
-  /**
-   * Returns the pointer.
-   * @return the pointer
-   */
-  T* data() { return ptr; }
+    /**
+     * Returns the pointer.
+     * @return the pointer
+     */
+    T *data()
+    {
+        return ptr;
+    }
 
-  /**
-   * Returns the pointer.
-   * @return the pointer
-   */
-  const T* data() const { return ptr; }
+    /**
+     * Returns the pointer.
+     * @return the pointer
+     */
+    const T *data() const
+    {
+        return ptr;
+    }
 
-  const T& operator*() const { return *ptr; }
-  T& operator*() { return *ptr; }
-  const T* operator->() const { return ptr; }
-  T* operator->() { return ptr; }
+    const T &operator*() const
+    {
+        return *ptr;
+    }
+    T &operator*()
+    {
+        return *ptr;
+    }
+    const T *operator->() const
+    {
+        return ptr;
+    }
+    T *operator->()
+    {
+        return ptr;
+    }
 
-  /**
-   * Returns the number of references.
-   * @return the number of references
-   */
-  int count() const { return ptr->_KShared_count(); } // for debugging purposes
+    /**
+     * Returns the number of references.
+     * @return the number of references
+     */
+    int count() const
+    {
+        return ptr->_KShared_count();
+    } // for debugging purposes
 private:
-  T* ptr;
+    T *ptr;
 };
 
 #endif

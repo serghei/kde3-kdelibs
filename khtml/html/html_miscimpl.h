@@ -33,8 +33,7 @@ class Node;
 class DOMString;
 class HTMLCollection;
 
-class HTMLBaseFontElementImpl : public HTMLElementImpl
-{
+class HTMLBaseFontElementImpl : public HTMLElementImpl {
 public:
     HTMLBaseFontElementImpl(DocumentImpl *doc);
 
@@ -45,19 +44,20 @@ public:
 
 // -------------------------------------------------------------------------
 
-class HTMLCollectionImpl : public NodeListImpl
-{
+class HTMLCollectionImpl : public NodeListImpl {
     friend class DOM::HTMLCollection;
+
 public:
-    enum Type {
+    enum Type
+    {
         // from HTMLDocument
         DOC_IMAGES = LAST_NODE_LIST + 1, // all IMG elements in the document
-        DOC_APPLETS,   // all OBJECT and APPLET elements
-        DOC_FORMS,     // all FORMS
-        DOC_LAYERS,    // all LAYERS
-        DOC_LINKS,     // all A _and_ AREA elements with a value for href
-        DOC_ANCHORS,      // all A elements with a value for name
-        DOC_SCRIPTS,   // all SCRIPT elements
+        DOC_APPLETS,                     // all OBJECT and APPLET elements
+        DOC_FORMS,                       // all FORMS
+        DOC_LAYERS,                      // all LAYERS
+        DOC_LINKS,                       // all A _and_ AREA elements with a value for href
+        DOC_ANCHORS,                     // all A elements with a value for name
+        DOC_SCRIPTS,                     // all SCRIPT elements
         // from HTMLTable, HTMLTableSection, HTMLTableRow
         TABLE_ROWS,    // all rows in this table
         TABLE_TBODIES, // all TBODY elements in this table
@@ -67,9 +67,9 @@ public:
         SELECT_OPTIONS,
         // from HTMLMap
         MAP_AREAS,
-        DOC_ALL,        // "all" elements (IE)
-        NODE_CHILDREN,   // first-level children (IE)
-        FORM_ELEMENTS,   // input elements in a form
+        DOC_ALL,       // "all" elements (IE)
+        NODE_CHILDREN, // first-level children (IE)
+        FORM_ELEMENTS, // input elements in a form
         WINDOW_NAMED_ITEMS,
         DOCUMENT_NAMED_ITEMS,
         LAST_TYPE
@@ -77,29 +77,31 @@ public:
 
     HTMLCollectionImpl(NodeImpl *_base, int _tagId);
 
-    virtual NodeImpl *item ( unsigned long index ) const;
+    virtual NodeImpl *item(unsigned long index) const;
 
     // obsolete and not domtree changes save
     virtual NodeImpl *firstItem() const;
     virtual NodeImpl *nextItem() const;
 
-    virtual NodeImpl *namedItem ( const DOMString &name ) const;
+    virtual NodeImpl *namedItem(const DOMString &name) const;
     // In case of multiple items named the same way
-    virtual NodeImpl *nextNamedItem( const DOMString &name ) const;
+    virtual NodeImpl *nextNamedItem(const DOMString &name) const;
 
-    QValueList<NodeImpl*> namedItems( const DOMString &name ) const;
+    QValueList< NodeImpl * > namedItems(const DOMString &name) const;
 
-    int getType() const {
+    int getType() const
+    {
         return type;
     }
+
 protected:
     virtual unsigned long calcLength(NodeImpl *start) const;
 
     // The collection list the following elements
-    int type:8;
+    int type : 8;
 
     // Reimplemented from NodeListImpl
-    virtual bool nodeMatches( NodeImpl *testNode, bool& doRecurse ) const;
+    virtual bool nodeMatches(NodeImpl *testNode, bool &doRecurse) const;
 
     // Helper for name iteration: checks whether ID matches,
     // and inserts any name-matching things into namedItemsWithName
@@ -109,20 +111,22 @@ protected:
 // this whole class is just a big hack to find form elements even in
 // malformed HTML elements
 // the famous <table><tr><form><td> problem
-class HTMLFormCollectionImpl : public HTMLCollectionImpl
-{
+class HTMLFormCollectionImpl : public HTMLCollectionImpl {
 public:
     // base must inherit HTMLGenericFormElementImpl or this won't work
-    HTMLFormCollectionImpl(NodeImpl* _base);
-    ~HTMLFormCollectionImpl() { }
+    HTMLFormCollectionImpl(NodeImpl *_base);
+    ~HTMLFormCollectionImpl()
+    {
+    }
 
-    virtual NodeImpl *item ( unsigned long index ) const;
+    virtual NodeImpl *item(unsigned long index) const;
 
-    virtual NodeImpl *namedItem ( const DOMString &name ) const;
+    virtual NodeImpl *namedItem(const DOMString &name) const;
     // In case of multiple items named the same way
-    virtual NodeImpl *nextNamedItem( const DOMString &name ) const;
+    virtual NodeImpl *nextNamedItem(const DOMString &name) const;
+
 protected:
-    virtual unsigned long calcLength( NodeImpl *start ) const;
+    virtual unsigned long calcLength(NodeImpl *start) const;
 
 private:
     mutable unsigned currentNamePos;
@@ -134,17 +138,17 @@ private:
  Special collection for items of given name/id under document. or window.; but using
  iteration interface
 */
-class HTMLMappedNameCollectionImpl : public HTMLCollectionImpl
-{
+class HTMLMappedNameCollectionImpl : public HTMLCollectionImpl {
 public:
-    HTMLMappedNameCollectionImpl(NodeImpl* _base, int type, const DOMString& name);
-    virtual bool nodeMatches( NodeImpl *testNode, bool& doRecurse ) const;
+    HTMLMappedNameCollectionImpl(NodeImpl *_base, int type, const DOMString &name);
+    virtual bool nodeMatches(NodeImpl *testNode, bool &doRecurse) const;
 
-    static bool matchesName( ElementImpl* el, int type, const DOMString& name);
+    static bool matchesName(ElementImpl *el, int type, const DOMString &name);
+
 private:
     DOMString name;
 };
 
-} //namespace
+} // namespace
 
 #endif

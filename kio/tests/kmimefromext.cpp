@@ -23,31 +23,27 @@
 
 #include <stdio.h>
 
-static KCmdLineOptions options[] =
-{
-  { "+filename", "the filename to test", 0 },
-  KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"+filename", "the filename to test", 0}, KCmdLineLastOption};
 
 int main(int argc, char *argv[])
 {
-  KCmdLineArgs::init( argc, argv, "kmimefromext", "A mimetype testing tool, gives the mimetype for a given filename", "0.0" );
+    KCmdLineArgs::init(argc, argv, "kmimefromext", "A mimetype testing tool, gives the mimetype for a given filename", "0.0");
 
-  KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KApplication app;
+    KApplication app;
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  QString fileName = args->arg( 0 );
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    QString fileName = args->arg(0);
 
-  // The "true" here means only the filename will be looked at.
-  // "Mime-magic" will not interfer. The file doesn't exist.
-  // TODO: a cmd line parameter for controlling this bool ;)
-  KMimeType::Ptr mime = KMimeType::findByPath( fileName, 0, true );
-  if ( mime && mime->name() != KMimeType::defaultMimeType() )
-    printf( "%s\n", mime->name().latin1());
-  else
-    return 1; // error
-     
-  return 0;
+    // The "true" here means only the filename will be looked at.
+    // "Mime-magic" will not interfer. The file doesn't exist.
+    // TODO: a cmd line parameter for controlling this bool ;)
+    KMimeType::Ptr mime = KMimeType::findByPath(fileName, 0, true);
+    if(mime && mime->name() != KMimeType::defaultMimeType())
+        printf("%s\n", mime->name().latin1());
+    else
+        return 1; // error
+
+    return 0;
 }

@@ -86,11 +86,10 @@
  */
 
 // constructor
-KBufferedIO::KBufferedIO() :
-  inBufIndex(0), outBufIndex(0)
+KBufferedIO::KBufferedIO() : inBufIndex(0), outBufIndex(0)
 {
-  inBuf.setAutoDelete(true);
-  outBuf.setAutoDelete(true);
+    inBuf.setAutoDelete(true);
+    outBuf.setAutoDelete(true);
 }
 
 // destructor
@@ -103,58 +102,58 @@ KBufferedIO::~KBufferedIO()
 // if any parameter is different than -1 or -2, fail
 bool KBufferedIO::setBufferSize(int rsize, int wsize /* = -2 */)
 {
-  if (wsize != -2 && wsize != -1)
-    return false;
-  if (rsize != -2 && rsize != -1)
-    return false;
+    if(wsize != -2 && wsize != -1)
+        return false;
+    if(rsize != -2 && rsize != -1)
+        return false;
 
-  return true;
+    return true;
 }
 
 int KBufferedIO::bytesAvailable() const
 {
-  return readBufferSize();
+    return readBufferSize();
 }
 
 int KBufferedIO::bytesToWrite() const
 {
-  return writeBufferSize();
+    return writeBufferSize();
 }
 
 // This function will scan the read buffer for a '\n'
 bool KBufferedIO::canReadLine() const
 {
-  if (bytesAvailable() == 0)
-    return false;		// no new line in here
+    if(bytesAvailable() == 0)
+        return false; // no new line in here
 
-  QByteArray* buf;
+    QByteArray *buf;
 
-  // scan each QByteArray for the occurrence of '\n'
-  QPtrList<QByteArray> &buflist = ((KBufferedIO*)this)->inBuf;
-  buf = buflist.first();
-  char *p = buf->data() + inBufIndex;
-  int n = buf->size() - inBufIndex;
-  while (buf != NULL)
+    // scan each QByteArray for the occurrence of '\n'
+    QPtrList< QByteArray > &buflist = ((KBufferedIO *)this)->inBuf;
+    buf = buflist.first();
+    char *p = buf->data() + inBufIndex;
+    int n = buf->size() - inBufIndex;
+    while(buf != NULL)
     {
-      while (n--)
-	if (*p++ == '\n')
-	  return true;
-      buf = buflist.next();
-      if (buf != NULL)
-	{
-	  p = buf->data();
-	  n = buf->size();
-	}
+        while(n--)
+            if(*p++ == '\n')
+                return true;
+        buf = buflist.next();
+        if(buf != NULL)
+        {
+            p = buf->data();
+            n = buf->size();
+        }
     }
 
-  return false;			// no new line found
+    return false; // no new line found
 }
 
 // unreads the current data
 // that is, writes into the read buffer, at the beginning
 int KBufferedIO::unreadBlock(const char *data, uint len)
 {
-  return feedReadBuffer(len, data, true);
+    return feedReadBuffer(len, data, true);
 }
 
 //
@@ -163,137 +162,139 @@ int KBufferedIO::unreadBlock(const char *data, uint len)
 
 unsigned KBufferedIO::consumeReadBuffer(unsigned nbytes, char *destbuffer, bool discard)
 {
-  {
-    register unsigned u = readBufferSize();
-    if (nbytes > u)
-      nbytes = u;		// we can't consume more than there is
-  }
-
-  QByteArray *buf;
-  unsigned copied = 0;
-  unsigned index = inBufIndex;
-
-  buf = inBuf.first();
-  while (nbytes && buf)
     {
-      // should we copy it all?
-      unsigned to_copy = buf->size() - index;
-      if (to_copy > nbytes)
-	to_copy = nbytes;
-
-      if (destbuffer)
-	memcpy(destbuffer + copied, buf->data() + index, to_copy);
-      nbytes -= to_copy;
-      copied += to_copy;
-
-      if (buf->size() - index > to_copy)
-	{
-	  index += to_copy;
-	  break;	// we aren't copying everything, that means that's
-			// all the user wants
-	}
-      else
-	{
-	  index = 0;
-	  if (discard)
-	    {
-	      inBuf.remove();
-	      buf = inBuf.first();
-	    }
-	  else
-	    buf = inBuf.next();
-	}
+        register unsigned u = readBufferSize();
+        if(nbytes > u)
+            nbytes = u; // we can't consume more than there is
     }
 
-  if (discard)
-    inBufIndex = index;
+    QByteArray *buf;
+    unsigned copied = 0;
+    unsigned index = inBufIndex;
 
-  return copied;
+    buf = inBuf.first();
+    while(nbytes && buf)
+    {
+        // should we copy it all?
+        unsigned to_copy = buf->size() - index;
+        if(to_copy > nbytes)
+            to_copy = nbytes;
+
+        if(destbuffer)
+            memcpy(destbuffer + copied, buf->data() + index, to_copy);
+        nbytes -= to_copy;
+        copied += to_copy;
+
+        if(buf->size() - index > to_copy)
+        {
+            index += to_copy;
+            break; // we aren't copying everything, that means that's
+                   // all the user wants
+        }
+        else
+        {
+            index = 0;
+            if(discard)
+            {
+                inBuf.remove();
+                buf = inBuf.first();
+            }
+            else
+                buf = inBuf.next();
+        }
+    }
+
+    if(discard)
+        inBufIndex = index;
+
+    return copied;
 }
 
 void KBufferedIO::consumeWriteBuffer(unsigned nbytes)
 {
-  QByteArray *buf = outBuf.first();
-  if (buf == NULL)
-    return;			// nothing to consume
+    QByteArray *buf = outBuf.first();
+    if(buf == NULL)
+        return; // nothing to consume
 
-  if (nbytes < buf->size() - outBufIndex)
-    // we want to consume less than there is in the first buffer
-    outBufIndex += nbytes;
-  else
+    if(nbytes < buf->size() - outBufIndex)
+        // we want to consume less than there is in the first buffer
+        outBufIndex += nbytes;
+    else
     {
-      nbytes -= buf->size() - outBufIndex;
-      outBufIndex = 0;
-      outBuf.remove();
+        nbytes -= buf->size() - outBufIndex;
+        outBufIndex = 0;
+        outBuf.remove();
 
-      while ((buf = outBuf.current()) != NULL)
-	if (buf->size() <= nbytes)
-	  {
-	    nbytes -= buf->size();
-	    outBuf.remove();
-	  }
-	else
-	  {
-	    outBufIndex = nbytes;
-	    break;
-	  }
+        while((buf = outBuf.current()) != NULL)
+            if(buf->size() <= nbytes)
+            {
+                nbytes -= buf->size();
+                outBuf.remove();
+            }
+            else
+            {
+                outBufIndex = nbytes;
+                break;
+            }
     }
 }
 
 unsigned KBufferedIO::feedReadBuffer(unsigned nbytes, const char *buffer, bool atBeginning)
 {
-  if (nbytes == 0)
-    return 0;
+    if(nbytes == 0)
+        return 0;
 
-  QByteArray *a = new QByteArray(nbytes);
-  a->duplicate(buffer, nbytes);
+    QByteArray *a = new QByteArray(nbytes);
+    a->duplicate(buffer, nbytes);
 
-  if (atBeginning)
-    inBuf.prepend(a);
-  else
-    inBuf.append(a);
+    if(atBeginning)
+        inBuf.prepend(a);
+    else
+        inBuf.append(a);
 
-  return nbytes;
+    return nbytes;
 }
 
 unsigned KBufferedIO::feedWriteBuffer(unsigned nbytes, const char *buffer)
 {
-  if (nbytes == 0)
-    return 0;
+    if(nbytes == 0)
+        return 0;
 
-  QByteArray *a = new QByteArray(nbytes);
-  a->duplicate(buffer, nbytes);
-  outBuf.append(a);
-  return nbytes;
+    QByteArray *a = new QByteArray(nbytes);
+    a->duplicate(buffer, nbytes);
+    outBuf.append(a);
+    return nbytes;
 }
 
 unsigned KBufferedIO::readBufferSize() const
 {
-  unsigned count = 0;
-  QByteArray *buf = ((KBufferedIO*)this)->inBuf.first();
-  while (buf != NULL)
+    unsigned count = 0;
+    QByteArray *buf = ((KBufferedIO *)this)->inBuf.first();
+    while(buf != NULL)
     {
-      count += buf->size();
-      buf = ((KBufferedIO*)this)->inBuf.next();
+        count += buf->size();
+        buf = ((KBufferedIO *)this)->inBuf.next();
     }
 
-  return count - inBufIndex;
+    return count - inBufIndex;
 }
 
 unsigned KBufferedIO::writeBufferSize() const
 {
-  unsigned count = 0;
-  QByteArray *buf = ((KBufferedIO*)this)->outBuf.first();
-  while (buf != NULL)
+    unsigned count = 0;
+    QByteArray *buf = ((KBufferedIO *)this)->outBuf.first();
+    while(buf != NULL)
     {
-      count += buf->size();
-      buf = (const_cast<KBufferedIO*>(this))->outBuf.next();
+        count += buf->size();
+        buf = (const_cast< KBufferedIO * >(this))->outBuf.next();
     }
 
-  return count - outBufIndex;
+    return count - outBufIndex;
 }
 
-void KBufferedIO::virtual_hook( int id, void* data )
-{ KAsyncIO::virtual_hook( id, data ); }
+void KBufferedIO::virtual_hook(int id, void *data)
+{
+    KAsyncIO::virtual_hook(id, data);
+}
 
 #include "kbufferedio.moc"

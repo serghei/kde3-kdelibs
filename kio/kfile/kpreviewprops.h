@@ -29,29 +29,27 @@ class KFileMetaPreview;
  * This plugin displays a preview of the given file
  * @since 3.5
  */
-class KIO_EXPORT KPreviewPropsPlugin : public KPropsDlgPlugin
-{
-  Q_OBJECT
+class KIO_EXPORT KPreviewPropsPlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 
 public:
+    KPreviewPropsPlugin(KPropertiesDialog *_props);
+    virtual ~KPreviewPropsPlugin();
 
-  KPreviewPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KPreviewPropsPlugin();
-
-  /**
-   * Tests whether a preview for the first item should be shown
-   */
-  static bool supports( KFileItemList _items );
+    /**
+     * Tests whether a preview for the first item should be shown
+     */
+    static bool supports(KFileItemList _items);
 
 private slots:
-  void aboutToShowPage( QWidget* );
+    void aboutToShowPage(QWidget *);
 
 private:
-  KFileMetaPreview* preview;
-  void createLayout();
+    KFileMetaPreview *preview;
+    void createLayout();
 
-  class KPreviewPropsPluginPrivate;
-  KPreviewPropsPluginPrivate *d;
+    class KPreviewPropsPluginPrivate;
+    KPreviewPropsPluginPrivate *d;
 };
 
 #endif

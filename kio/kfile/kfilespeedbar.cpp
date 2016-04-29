@@ -29,43 +29,37 @@
 #include <kstandarddirs.h>
 #include <kurl.h>
 
-KFileSpeedBar::KFileSpeedBar( QWidget *parent, const char *name )
-    : KURLBar( true, parent, name )
+KFileSpeedBar::KFileSpeedBar(QWidget *parent, const char *name) : KURLBar(true, parent, name)
 {
     KConfig *config = KGlobal::config();
-    KConfigGroupSaver cs( config, ConfigGroup );
-    m_initializeSpeedbar = config->readBoolEntry( "Set speedbar defaults",
-                                                   true );
+    KConfigGroupSaver cs(config, ConfigGroup);
+    m_initializeSpeedbar = config->readBoolEntry("Set speedbar defaults", true);
     setIconSize(KIcon::SizeSmallMedium);
-    readConfig( KGlobal::config(), "KFileDialog Speedbar" );
+    readConfig(KGlobal::config(), "KFileDialog Speedbar");
 
-    if ( m_initializeSpeedbar )
+    if(m_initializeSpeedbar)
     {
         KURL u;
-        u.setPath( KGlobalSettings::desktopPath() );
-        insertItem( u, i18n("Desktop"), false );
+        u.setPath(KGlobalSettings::desktopPath());
+        insertItem(u, i18n("Desktop"), false);
 
-//TODO: win32
-        if ((KGlobalSettings::documentPath() != (QDir::homeDirPath()+"/")) &&
-            QDir(KGlobalSettings::documentPath()).exists())
+        // TODO: win32
+        if((KGlobalSettings::documentPath() != (QDir::homeDirPath() + "/")) && QDir(KGlobalSettings::documentPath()).exists())
         {
-            u.setPath( KGlobalSettings::documentPath() );
-            insertItem( u, i18n("Documents"), false, "document" );
+            u.setPath(KGlobalSettings::documentPath());
+            insertItem(u, i18n("Documents"), false, "document");
         }
 
-        u.setPath( QDir::homeDirPath() );
-        insertItem( u, i18n("Home Folder"), false,
-                               "folder_home" );
+        u.setPath(QDir::homeDirPath());
+        insertItem(u, i18n("Home Folder"), false, "folder_home");
 
         u = "media:/";
-        if ( KProtocolInfo::isKnownProtocol( u ) )
-            insertItem( u, i18n("Storage Media"), false,
-                                   KProtocolInfo::icon( "media" ) );
+        if(KProtocolInfo::isKnownProtocol(u))
+            insertItem(u, i18n("Storage Media"), false, KProtocolInfo::icon("media"));
 
         u = "remote:/";
-        if ( KProtocolInfo::isKnownProtocol( u ) )
-            insertItem( u, i18n("Network Folders"), false,
-                                   KProtocolInfo::icon( "remote" ) );
+        if(KProtocolInfo::isKnownProtocol(u))
+            insertItem(u, i18n("Network Folders"), false, KProtocolInfo::icon("remote"));
     }
 }
 
@@ -73,23 +67,23 @@ KFileSpeedBar::~KFileSpeedBar()
 {
 }
 
-void KFileSpeedBar::save( KConfig *config )
+void KFileSpeedBar::save(KConfig *config)
 {
-    if ( m_initializeSpeedbar && isModified() )
+    if(m_initializeSpeedbar && isModified())
     {
-        KConfigGroup conf( config, ConfigGroup );
+        KConfigGroup conf(config, ConfigGroup);
         // write to kdeglobals
-        conf.writeEntry( "Set speedbar defaults", false, true, true );
+        conf.writeEntry("Set speedbar defaults", false, true, true);
     }
 
-    writeConfig( config, "KFileDialog Speedbar" );
+    writeConfig(config, "KFileDialog Speedbar");
 }
 
 QSize KFileSpeedBar::sizeHint() const
 {
     QSize sizeHint = KURLBar::sizeHint();
     int ems = fontMetrics().width("mmmmmmmmmmmm");
-    if (sizeHint.width() < ems)
+    if(sizeHint.width() < ems)
     {
         sizeHint.setWidth(ems);
     }

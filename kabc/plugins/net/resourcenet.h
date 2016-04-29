@@ -42,32 +42,31 @@ class FormatPlugin;
 /**
   @internal
 */
-class KABC_EXPORT ResourceNet : public Resource
-{
-  Q_OBJECT
+class KABC_EXPORT ResourceNet : public Resource {
+    Q_OBJECT
 
-  public:
-    ResourceNet( const KConfig* );
-    ResourceNet( const KURL &url, const QString &format );
+public:
+    ResourceNet(const KConfig *);
+    ResourceNet(const KURL &url, const QString &format);
     ~ResourceNet();
 
-    virtual void writeConfig( KConfig* );
+    virtual void writeConfig(KConfig *);
 
     virtual bool doOpen();
     virtual void doClose();
 
     virtual Ticket *requestSaveTicket();
-    virtual void releaseSaveTicket( Ticket* );
+    virtual void releaseSaveTicket(Ticket *);
 
     virtual bool load();
     virtual bool asyncLoad();
-    virtual bool save( Ticket* ticket );
-    virtual bool asyncSave( Ticket* ticket );
+    virtual bool save(Ticket *ticket);
+    virtual bool asyncSave(Ticket *ticket);
 
     /**
       Set url of directory to be used for saving.
      */
-    void setUrl( const KURL & );
+    void setUrl(const KURL &);
 
     /**
       Return url of directory used for loading and saving the address book.
@@ -77,25 +76,28 @@ class KABC_EXPORT ResourceNet : public Resource
     /**
       Sets a new format by name.
      */
-    void setFormat( const QString &name );
+    void setFormat(const QString &name);
 
     /**
       Returns the format name.
      */
     QString format() const;
 
-  protected:
-    void init( const KURL &url, const QString &format );
+protected:
+    void init(const KURL &url, const QString &format);
 
-  private slots:
-    void downloadFinished( KIO::Job* );
-    void uploadFinished( KIO::Job* );
+private slots:
+    void downloadFinished(KIO::Job *);
+    void uploadFinished(KIO::Job *);
     void signalError();
 
-  private:
-    bool clearAndLoad( QFile *file );
-    void saveToFile( QFile *file );
-    bool hasTempFile() const { return mTempFile != 0; }
+private:
+    bool clearAndLoad(QFile *file);
+    void saveToFile(QFile *file);
+    bool hasTempFile() const
+    {
+        return mTempFile != 0;
+    }
     void abortAsyncLoading();
     void abortAsyncSaving();
     bool createLocalTempFile();
@@ -111,7 +113,6 @@ class KABC_EXPORT ResourceNet : public Resource
     class ResourceNetPrivate;
     ResourceNetPrivate *d;
 };
-
 }
 
 #endif

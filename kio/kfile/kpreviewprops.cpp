@@ -25,19 +25,21 @@
 #include <kglobalsettings.h>
 #include <klocale.h>
 
-class KPreviewPropsPlugin::KPreviewPropsPluginPrivate
-{
+class KPreviewPropsPlugin::KPreviewPropsPluginPrivate {
 public:
-    KPreviewPropsPluginPrivate()  {}
-    ~KPreviewPropsPluginPrivate() {}
+    KPreviewPropsPluginPrivate()
+    {
+    }
+    ~KPreviewPropsPluginPrivate()
+    {
+    }
 };
 
-KPreviewPropsPlugin::KPreviewPropsPlugin(KPropertiesDialog* props)
-  : KPropsDlgPlugin(props)
+KPreviewPropsPlugin::KPreviewPropsPlugin(KPropertiesDialog *props) : KPropsDlgPlugin(props)
 {
     d = new KPreviewPropsPluginPrivate;
 
-    if (properties->items().count()>1)
+    if(properties->items().count() > 1)
         return;
 
     createLayout();
@@ -46,15 +48,15 @@ KPreviewPropsPlugin::KPreviewPropsPlugin(KPropertiesDialog* props)
 void KPreviewPropsPlugin::createLayout()
 {
     // let the dialog create the page frame
-    QFrame* topframe = properties->addPage(i18n("P&review"));
+    QFrame *topframe = properties->addPage(i18n("P&review"));
     topframe->setFrameStyle(QFrame::NoFrame);
 
-    QVBoxLayout* tmp = new QVBoxLayout(topframe, 0, 0);
+    QVBoxLayout *tmp = new QVBoxLayout(topframe, 0, 0);
 
     preview = new KFileMetaPreview(topframe);
 
-    tmp->addWidget(preview) ;
-    connect( properties, SIGNAL( aboutToShowPage( QWidget * ) ), SLOT( aboutToShowPage( QWidget* ) ) );
+    tmp->addWidget(preview);
+    connect(properties, SIGNAL(aboutToShowPage(QWidget *)), SLOT(aboutToShowPage(QWidget *)));
 }
 
 KPreviewPropsPlugin::~KPreviewPropsPlugin()
@@ -62,27 +64,27 @@ KPreviewPropsPlugin::~KPreviewPropsPlugin()
     delete d;
 }
 
-bool KPreviewPropsPlugin::supports( KFileItemList _items )
+bool KPreviewPropsPlugin::supports(KFileItemList _items)
 {
-    if ( _items.count() != 1)
+    if(_items.count() != 1)
         return false;
-    if( !KGlobalSettings::showFilePreview(_items.first()->url()))
+    if(!KGlobalSettings::showFilePreview(_items.first()->url()))
         return false;
-    KMimeType::Ptr mt = KMimeType::findByURL( _items.first()->url() );
-    if ( mt->inherits("inode/directory") || mt->name() == "application/octet-stream" )
+    KMimeType::Ptr mt = KMimeType::findByURL(_items.first()->url());
+    if(mt->inherits("inode/directory") || mt->name() == "application/octet-stream")
         return false;
-    
-    //TODO Copy everything of KFileMetaPreview::previewProviderFor() ?
+
+    // TODO Copy everything of KFileMetaPreview::previewProviderFor() ?
 
     return true;
 }
 
-void KPreviewPropsPlugin::aboutToShowPage( QWidget* widget )
+void KPreviewPropsPlugin::aboutToShowPage(QWidget *widget)
 {
-    if ( widget != preview->parent() )
+    if(widget != preview->parent())
         return;
 
-    disconnect( properties, SIGNAL( aboutToShowPage( QWidget * ) ), this, SLOT( aboutToShowPage( QWidget* ) ) );
+    disconnect(properties, SIGNAL(aboutToShowPage(QWidget *)), this, SLOT(aboutToShowPage(QWidget *)));
     preview->showPreview(properties->item()->url());
 }
 

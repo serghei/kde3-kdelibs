@@ -40,69 +40,69 @@ class KInetSocketAddress;
  * @short KDE SSL Peer Data
  */
 class KIO_EXPORT KSSLPeerInfo {
-friend class KSSL;
+    friend class KSSL;
+
 public:
-	/**
-	 *  Destroy this instance
-	 */
-	~KSSLPeerInfo();
+    /**
+     *  Destroy this instance
+     */
+    ~KSSLPeerInfo();
 
-	/**
-	 *  Get a reference to the peer's certificate
-	 *
-	 *  @return a reference to the peer's certificate
-	 *  @see KSSLCertificate
-	 */
-	KSSLCertificate& getPeerCertificate();
+    /**
+     *  Get a reference to the peer's certificate
+     *
+     *  @return a reference to the peer's certificate
+     *  @see KSSLCertificate
+     */
+    KSSLCertificate &getPeerCertificate();
 
-	/**
-	 *  Determine if the peer's certificate matches the address set with
-	 *  setPeerHost().  Note that this is a match in the "https"
-	 *  sense, taking into account, for instance,  wildcards.
-	 * 
-	 *  @return true if it matches
-	 *  @see setPeerHost
-	 */
-	bool certMatchesAddress();
+    /**
+     *  Determine if the peer's certificate matches the address set with
+     *  setPeerHost().  Note that this is a match in the "https"
+     *  sense, taking into account, for instance,  wildcards.
+     *
+     *  @return true if it matches
+     *  @see setPeerHost
+     */
+    bool certMatchesAddress();
 
-	/**
-	 *  Determine if the given "common name" matches the address set with
-	 *  setPeerHost().  Note that this is a match in the "https"
-	 *  sense, taking into account, for instance,  wildcards.
-	 * 
-	 *  @return true if it matches
-	 *  @see setPeerHost
-	 */
-	bool cnMatchesAddress(QString cn);
+    /**
+     *  Determine if the given "common name" matches the address set with
+     *  setPeerHost().  Note that this is a match in the "https"
+     *  sense, taking into account, for instance,  wildcards.
+     *
+     *  @return true if it matches
+     *  @see setPeerHost
+     */
+    bool cnMatchesAddress(QString cn);
 
-	/**
-	 *  Set the host that we are connected to.  This is generally set by
-	 *  KSSL, and should be exactly what the user -thinks- he is connected
-	 *  to.  (for instance, the host name in the url)
-	 *
-	 *  @param host the hostname
-	 */
-	void setPeerHost(QString host = QString::null);
+    /**
+     *  Set the host that we are connected to.  This is generally set by
+     *  KSSL, and should be exactly what the user -thinks- he is connected
+     *  to.  (for instance, the host name in the url)
+     *
+     *  @param host the hostname
+     */
+    void setPeerHost(QString host = QString::null);
 
-	/**
-	 *  Returns the host we are connected to.
-	 */
-	const QString& peerHost() const;
+    /**
+     *  Returns the host we are connected to.
+     */
+    const QString &peerHost() const;
 
-	/**
-	 *  Clear out the host name.
-	 */
-	void reset();
+    /**
+     *  Clear out the host name.
+     */
+    void reset();
 
 protected:
-	KSSLPeerInfo();
+    KSSLPeerInfo();
 
-	KSSLCertificate m_cert;
+    KSSLCertificate m_cert;
 
 private:
-	KSSLPeerInfoPrivate *d;
+    KSSLPeerInfoPrivate *d;
 };
 
 
 #endif
-

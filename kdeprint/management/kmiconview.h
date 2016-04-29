@@ -27,52 +27,57 @@
 
 class KMPrinter;
 
-class KMIconViewItem : public QIconViewItem, public KMObject
-{
+class KMIconViewItem : public QIconViewItem, public KMObject {
 public:
-	KMIconViewItem(QIconView *parent, KMPrinter *p);
-	void updatePrinter(KMPrinter *printer = 0, int mode = QIconView::Bottom);
-	bool isClass() const	{ return m_isclass; }
+    KMIconViewItem(QIconView *parent, KMPrinter *p);
+    void updatePrinter(KMPrinter *printer = 0, int mode = QIconView::Bottom);
+    bool isClass() const
+    {
+        return m_isclass;
+    }
 
 protected:
-	virtual void paintItem(QPainter*, const QColorGroup&);
-	virtual void calcRect(const QString& text_ = QString::null);
+    virtual void paintItem(QPainter *, const QColorGroup &);
+    virtual void calcRect(const QString &text_ = QString::null);
 
 private:
-	int		m_mode;
-	QString		m_pixmap;
-	char		m_state;
-	bool		m_isclass;
+    int m_mode;
+    QString m_pixmap;
+    char m_state;
+    bool m_isclass;
 };
 
-class KMIconView : public KIconView
-{
-	Q_OBJECT
+class KMIconView : public KIconView {
+    Q_OBJECT
 public:
-	enum ViewMode { Big, Small };
+    enum ViewMode
+    {
+        Big,
+        Small
+    };
 
-	KMIconView(QWidget *parent = 0, const char *name = 0);
-	~KMIconView();
+    KMIconView(QWidget *parent = 0, const char *name = 0);
+    ~KMIconView();
 
-	void setPrinterList(QPtrList<KMPrinter> *list);
-	void setPrinter(const QString&);
-	void setPrinter(KMPrinter*);
-	void setViewMode(ViewMode);
+    void setPrinterList(QPtrList< KMPrinter > *list);
+    void setPrinter(const QString &);
+    void setPrinter(KMPrinter *);
+    void setViewMode(ViewMode);
 
 signals:
-	void rightButtonClicked(const QString&, const QPoint&);
-	void printerSelected(const QString&);
+    void rightButtonClicked(const QString &, const QPoint &);
+    void printerSelected(const QString &);
 
 protected slots:
-	void slotRightButtonClicked(QIconViewItem*, const QPoint&);
-	void slotSelectionChanged();
+    void slotRightButtonClicked(QIconViewItem *, const QPoint &);
+    void slotSelectionChanged();
 
 private:
-	KMIconViewItem* findItem(KMPrinter *p);
+    KMIconViewItem *findItem(KMPrinter *p);
 
 private:
-	QPtrList<KMIconViewItem>	m_items;
-	ViewMode		m_mode;
+    QPtrList< KMIconViewItem > m_items;
+    ViewMode m_mode;
 };
 
 #endif

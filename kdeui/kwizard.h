@@ -18,7 +18,7 @@
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
-*/  
+*/
 
 #ifndef __KWIZARD_H
 #define __KWIZARD_H
@@ -33,30 +33,29 @@
 * KWizard is a class for a multi-page dialog. The user can navigate trough
 * the pages with "Next" and "Back" buttons and is optionally offered "Finish",
 * "Cancel" and "Help" buttons. A wizard comes in handy for tutorials or
-* configuration dialogs with sequential steps.  
-* 
+* configuration dialogs with sequential steps.
+*
 * KWizard is just a wrapper for Qt's QWizard class. See the
 * QWizard documentation for a detailed description of available
 * functions. The only added functionality is a KDE conformant translation
 * mechanism for the built-in buttons.
 *
 * @author Harri Porten <porten@kde.org>
-* @version 0.3 
+* @version 0.3
 */
-class KDEUI_EXPORT KWizard : public QWizard
-{
-  Q_OBJECT
+class KDEUI_EXPORT KWizard : public QWizard {
+    Q_OBJECT
 public:
-/**
-* Constructor
-*/
-  KWizard(QWidget *parent = 0, const char *name = 0, bool modal = false, WFlags f = 0);
-/**
-* Destructor
-*/
-  ~KWizard() {}
+    /**
+    * Constructor
+    */
+    KWizard(QWidget *parent = 0, const char *name = 0, bool modal = false, WFlags f = 0);
+    /**
+    * Destructor
+    */
+    ~KWizard()
+    {
+    }
 };
 
 #endif // __KWIZARD_H
-
-

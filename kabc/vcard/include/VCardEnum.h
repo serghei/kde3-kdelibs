@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,89 +21,91 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  ENUM_H
-#define  ENUM_H
+#ifndef ENUM_H
+#define ENUM_H
 
 #include <qcstring.h>
 
 #include <kdelibs_export.h>
 
-namespace VCARD
+namespace VCARD {
+
+extern const QCString paramNames[];
+
+enum EntityType
 {
-
-extern const QCString paramNames [];
-
-enum EntityType {
-	EntityName,
-	EntityProfile,
-	EntitySource,
-	EntityFullName,
-	EntityN,
-	EntityNickname,
-	EntityPhoto,
-	EntityBirthday,
-	EntityAddress,
-	EntityLabel,
-	EntityTelephone,
-	EntityEmail,
-	EntityMailer,
-	EntityTimeZone,
-	EntityGeo,
-	EntityTitle,
-	EntityRole,
-	EntityLogo,
-	EntityAgent,
-	EntityOrganisation,
-	EntityCategories,
-	EntityNote,
-	EntityProductID,
-	EntityRevision,
-	EntitySortString,
-	EntitySound,
-	EntityUID,
-	EntityURL,
-	EntityVersion,
-	EntityClass,
-	EntityKey,
-	EntityExtension,
-	EntityUnknown
+    EntityName,
+    EntityProfile,
+    EntitySource,
+    EntityFullName,
+    EntityN,
+    EntityNickname,
+    EntityPhoto,
+    EntityBirthday,
+    EntityAddress,
+    EntityLabel,
+    EntityTelephone,
+    EntityEmail,
+    EntityMailer,
+    EntityTimeZone,
+    EntityGeo,
+    EntityTitle,
+    EntityRole,
+    EntityLogo,
+    EntityAgent,
+    EntityOrganisation,
+    EntityCategories,
+    EntityNote,
+    EntityProductID,
+    EntityRevision,
+    EntitySortString,
+    EntitySound,
+    EntityUID,
+    EntityURL,
+    EntityVersion,
+    EntityClass,
+    EntityKey,
+    EntityExtension,
+    EntityUnknown
 };
 
-enum ValueType {
-	ValueSound,
-	ValueAgent,
-	ValueAddress,
-	ValueTel,
-	ValueTextBin,
-	ValueOrg,
-	ValueN,
-	ValueUTC,
-	ValueURI,
-	ValueClass,
-	ValueFloat,
-	ValueImage,
-	ValueDate,
-	ValueTextList,
-	ValueText,
-	ValueGeo,
-	ValueUnknown
+enum ValueType
+{
+    ValueSound,
+    ValueAgent,
+    ValueAddress,
+    ValueTel,
+    ValueTextBin,
+    ValueOrg,
+    ValueN,
+    ValueUTC,
+    ValueURI,
+    ValueClass,
+    ValueFloat,
+    ValueImage,
+    ValueDate,
+    ValueTextList,
+    ValueText,
+    ValueGeo,
+    ValueUnknown
 };
 
-enum ParamType {
-	ParamUnknown,
-	ParamNone,
-	ParamSource,
-	ParamText,
-	ParamImage,
-	ParamDate,
-	ParamAddrText,
-	ParamTel,
-	ParamEmail,
-	ParamMailer,
-	ParamAgent,
-	ParamTextBin,
-	ParamTextNS,
-	ParamSound
+enum ParamType
+{
+    ParamUnknown,
+    ParamNone,
+    ParamSource,
+    ParamText,
+    ParamImage,
+    ParamDate,
+    ParamAddrText,
+    ParamTel,
+    ParamEmail,
+    ParamMailer,
+    ParamAgent,
+    ParamTextBin,
+    ParamTextNS,
+    ParamSound
 };
 
 extern const ParamType paramTypesTable[];
@@ -113,10 +115,8 @@ KVCARD_EXPORT ValueType EntityTypeToValueType(EntityType);
 KVCARD_EXPORT QCString EntityTypeToParamName(EntityType);
 KVCARD_EXPORT EntityType EntityNameToEntityType(const QCString &);
 
-KVCARD_EXPORT char * encodeBase64(const char *, unsigned long, unsigned long &);
-KVCARD_EXPORT char * decodeBase64(const char *, unsigned long, unsigned long &);
-
+KVCARD_EXPORT char *encodeBase64(const char *, unsigned long, unsigned long &);
+KVCARD_EXPORT char *decodeBase64(const char *, unsigned long, unsigned long &);
 }
 
 #endif
-

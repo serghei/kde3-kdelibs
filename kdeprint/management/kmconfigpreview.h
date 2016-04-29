@@ -25,17 +25,16 @@
 class QCheckBox;
 class KURLRequester;
 
-class KMConfigPreview : public KMConfigPage
-{
+class KMConfigPreview : public KMConfigPage {
 public:
-	KMConfigPreview(QWidget *parent = 0, const char *name = 0);
+    KMConfigPreview(QWidget *parent = 0, const char *name = 0);
 
-	void loadConfig(KConfig*);
-	void saveConfig(KConfig*);
+    void loadConfig(KConfig *);
+    void saveConfig(KConfig *);
 
 private:
-	QCheckBox	*m_useext;
-	KURLRequester	*m_program;
+    QCheckBox *m_useext;
+    KURLRequester *m_program;
 };
 
 #endif

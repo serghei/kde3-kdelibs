@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -29,79 +29,71 @@
 
 using namespace VCARD;
 
-TextListValue::TextListValue()
-	:	Value()
+TextListValue::TextListValue() : Value()
 {
 }
 
-TextListValue::TextListValue(const TextListValue & x)
-	:	Value(x)
+TextListValue::TextListValue(const TextListValue &x) : Value(x)
 {
 }
 
-TextListValue::TextListValue(const QCString & s)
-	:	Value(s)
+TextListValue::TextListValue(const QCString &s) : Value(s)
 {
 }
 
-	TextListValue &
-TextListValue::operator = (TextListValue & x)
+TextListValue &TextListValue::operator=(TextListValue &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Value::operator = (x);
-	return *this;
+    Value::operator=(x);
+    return *this;
 }
 
-	TextListValue &
-TextListValue::operator = (const QCString & s)
+TextListValue &TextListValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-TextListValue::operator == (TextListValue & x)
+bool TextListValue::operator==(TextListValue &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 TextListValue::~TextListValue()
 {
 }
 
-	void
-TextListValue::_parse()
+void TextListValue::_parse()
 {
-	RTokenise(strRep_, ";", valueList_);
+    RTokenise(strRep_, ";", valueList_);
 }
 
-	void
-TextListValue::_assemble()
+void TextListValue::_assemble()
 {
-	bool first(true);
-	
-	QStrListIterator it(valueList_);
-	
-	for (; it.current(); ++it) {
-		if (!first) strRep_ += ';';
-		strRep_ += it.current();
-		first = false;
-	}
+    bool first(true);
+
+    QStrListIterator it(valueList_);
+
+    for(; it.current(); ++it)
+    {
+        if(!first)
+            strRep_ += ';';
+        strRep_ += it.current();
+        first = false;
+    }
 }
 
-	unsigned int
-TextListValue::numValues()
+unsigned int TextListValue::numValues()
 {
-	parse();
-	return valueList_.count();
+    parse();
+    return valueList_.count();
 }
 
-	QCString
-TextListValue::value(unsigned int i)
+QCString TextListValue::value(unsigned int i)
 {
-	parse();
-	return valueList_.at(i);
+    parse();
+    return valueList_.at(i);
 }
-

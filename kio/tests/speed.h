@@ -6,19 +6,18 @@
 #include <kurl.h>
 
 namespace KIO {
-    class Job;
+class Job;
 }
 
 class SpeedTest : public QObject {
     Q_OBJECT
 
 public:
-    SpeedTest(const KURL & url);
+    SpeedTest(const KURL &url);
 
 private slots:
-    void entries( KIO::Job *, const KIO::UDSEntryList& );
-    void finished( KIO::Job *job );
-
+    void entries(KIO::Job *, const KIO::UDSEntryList &);
+    void finished(KIO::Job *job);
 };
 
 #endif

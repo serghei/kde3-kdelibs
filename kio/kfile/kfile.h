@@ -28,8 +28,7 @@
  * construct a KFile object itself.
  */
 
-class KIO_EXPORT KFile
-{
+class KIO_EXPORT KFile {
 public:
     /**
      * Modes of operation for the dialog.
@@ -39,30 +38,33 @@ public:
      * @li @p ExistingOnly - Never return a filename which does not exist yet
      * @li @p LocalOnly - Don't return remote filenames
      */
-    enum Mode {
-	File         = 1,
-	Directory    = 2,
-	Files        = 4,
-	ExistingOnly = 8,
-	LocalOnly    = 16,
-        ModeMax      = 65536
+    enum Mode
+    {
+        File = 1,
+        Directory = 2,
+        Files = 4,
+        ExistingOnly = 8,
+        LocalOnly = 16,
+        ModeMax = 65536
     };
 
-    enum FileView {
-	Default         = 0,
-	Simple          = 1,
-	Detail          = 2,
-	SeparateDirs    = 4,
-	PreviewContents = 8,
-	PreviewInfo     = 16,
-        FileViewMax     = 65536
+    enum FileView
+    {
+        Default = 0,
+        Simple = 1,
+        Detail = 2,
+        SeparateDirs = 4,
+        PreviewContents = 8,
+        PreviewInfo = 16,
+        FileViewMax = 65536
     };
 
-    enum SelectionMode {
-	Single      = 1,
-	Multi       = 2,
-	Extended    = 4,
-	NoSelection = 8
+    enum SelectionMode
+    {
+        Single = 1,
+        Multi = 2,
+        Extended = 4,
+        NoSelection = 8
     };
 
 
@@ -74,56 +76,65 @@ public:
     // sorting specific
 
     // grr, who had the idea to set QDir::Name to 0x0?
-    static bool isSortByName( const QDir::SortSpec& sort ) {
-	return (sort & QDir::Time) != QDir::Time &&
-	       (sort & QDir::Size) != QDir::Size;
+    static bool isSortByName(const QDir::SortSpec &sort)
+    {
+        return (sort & QDir::Time) != QDir::Time && (sort & QDir::Size) != QDir::Size;
     }
 
-    static bool isSortBySize( const QDir::SortSpec& sort ) {
-	return (sort & QDir::Size) == QDir::Size;
+    static bool isSortBySize(const QDir::SortSpec &sort)
+    {
+        return (sort & QDir::Size) == QDir::Size;
     }
 
-    static bool isSortByDate( const QDir::SortSpec& sort ) {
-	return (sort & QDir::Time) == QDir::Time;
+    static bool isSortByDate(const QDir::SortSpec &sort)
+    {
+        return (sort & QDir::Time) == QDir::Time;
     }
 
-    static bool isSortDirsFirst( const QDir::SortSpec& sort ) {
-	return (sort & QDir::DirsFirst) == QDir::DirsFirst;
+    static bool isSortDirsFirst(const QDir::SortSpec &sort)
+    {
+        return (sort & QDir::DirsFirst) == QDir::DirsFirst;
     }
 
-    static bool isSortCaseInsensitive( const QDir::SortSpec& sort ) {
-	return (sort & QDir::IgnoreCase) == QDir::IgnoreCase;
+    static bool isSortCaseInsensitive(const QDir::SortSpec &sort)
+    {
+        return (sort & QDir::IgnoreCase) == QDir::IgnoreCase;
     }
 
 
     // view specific
-    static bool isDefaultView( const FileView& view ) {
-	return (view & Default) == Default;
+    static bool isDefaultView(const FileView &view)
+    {
+        return (view & Default) == Default;
     }
 
-    static bool isSimpleView( const FileView& view ) {
-	return (view & Simple) == Simple;
+    static bool isSimpleView(const FileView &view)
+    {
+        return (view & Simple) == Simple;
     }
 
-    static bool isDetailView( const FileView& view ) {
-	return (view & Detail) == Detail;
+    static bool isDetailView(const FileView &view)
+    {
+        return (view & Detail) == Detail;
     }
 
-    static bool isSeparateDirs( const FileView& view ) {
-	return (view & SeparateDirs) == SeparateDirs;
+    static bool isSeparateDirs(const FileView &view)
+    {
+        return (view & SeparateDirs) == SeparateDirs;
     }
 
-    static bool isPreviewContents( const FileView& view ) {
-	return (view & PreviewContents) == PreviewContents;
+    static bool isPreviewContents(const FileView &view)
+    {
+        return (view & PreviewContents) == PreviewContents;
     }
 
     /**
      * @since 3.1
      */
-    static bool isPreviewInfo( const FileView& view ) {
+    static bool isPreviewInfo(const FileView &view)
+    {
         return (view & PreviewInfo) == PreviewInfo;
     }
-
 };
 
 #endif // KFILE_H

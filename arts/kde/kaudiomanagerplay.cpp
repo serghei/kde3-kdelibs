@@ -23,68 +23,68 @@
 #include <soundserver.h>
 #include <string>
 
-KAudioManagerPlay::KAudioManagerPlay( KArtsServer * server, const QString & title )
+KAudioManagerPlay::KAudioManagerPlay(KArtsServer *server, const QString &title)
 {
-	d = new PrivateData;
-	d->amanPlay = Arts::DynamicCast( server->server().createObject( "Arts::Synth_AMAN_PLAY" ) );
-	d->started = false;
-	setTitle( title );
+    d = new PrivateData;
+    d->amanPlay = Arts::DynamicCast(server->server().createObject("Arts::Synth_AMAN_PLAY"));
+    d->started = false;
+    setTitle(title);
 }
 
 KAudioManagerPlay::~KAudioManagerPlay()
 {
-	stop();
-	delete d;
+    stop();
+    delete d;
 }
 
 Arts::Synth_AMAN_PLAY KAudioManagerPlay::amanPlay()
 {
-	return d->amanPlay;
+    return d->amanPlay;
 }
 
 bool KAudioManagerPlay::isNull() const
 {
-	if( !this )
-		return true;
-	return d->amanPlay.isNull();
+    if(!this)
+        return true;
+    return d->amanPlay.isNull();
 }
 
-void KAudioManagerPlay::setTitle( const QString & title )
+void KAudioManagerPlay::setTitle(const QString &title)
 {
-	d->amanPlay.title( std::string( title.local8Bit() ) );
+    d->amanPlay.title(std::string(title.local8Bit()));
 }
 
 QString KAudioManagerPlay::title()
 {
-	return QString::fromLocal8Bit( d->amanPlay.title().c_str() );
+    return QString::fromLocal8Bit(d->amanPlay.title().c_str());
 }
 
-void KAudioManagerPlay::setAutoRestoreID( const QString & autoRestoreID )
+void KAudioManagerPlay::setAutoRestoreID(const QString &autoRestoreID)
 {
-	d->amanPlay.autoRestoreID( std::string( autoRestoreID.local8Bit() ) );
+    d->amanPlay.autoRestoreID(std::string(autoRestoreID.local8Bit()));
 }
 
 QString KAudioManagerPlay::autoRestoreID()
 {
-	return QString::fromLocal8Bit( d->amanPlay.autoRestoreID().c_str() );
+    return QString::fromLocal8Bit(d->amanPlay.autoRestoreID().c_str());
 }
 
 void KAudioManagerPlay::start()
 {
-	if( d->started )
-		return;
+    if(d->started)
+        return;
 
-	d->started = true;
-	d->amanPlay.start();
+    d->started = true;
+    d->amanPlay.start();
 }
 
 void KAudioManagerPlay::stop()
 {
-	if( !d->started )
-		return;
+    if(!d->started)
+        return;
 
-	d->started = false;
-	d->amanPlay.stop();
+    d->started = false;
+    d->amanPlay.stop();
 }
 
 // vim: sw=4 ts=4

@@ -41,7 +41,7 @@
  * "Fast Allocation and Deallocation of Memory Based on Object Lifetimes"
  * David R. Hanson, Software -- Practice and Experience, Vol. 20(1).
  */
- 
+
 #include <config.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,12 +50,12 @@
 
 #ifdef HAVE_GETPAGESIZE
 #include <unistd.h>
-#define POOL_SIZE kMax(8192u, 2*( unsigned ) getpagesize())
+#define POOL_SIZE kMax(8192u, 2 * (unsigned)getpagesize())
 #else
 #define POOL_SIZE 8192
 #endif
 
-//#define DEBUG_ARENA_MALLOC 
+//#define DEBUG_ARENA_MALLOC
 #ifdef DEBUG_ARENA_MALLOC
 #include <assert.h>
 #include <stdio.h>
@@ -73,45 +73,44 @@ static int i = 0;
 static Arena *arena_freelist = 0;
 static int freelist_count = 0;
 
-#define ARENA_DEFAULT_ALIGN  sizeof(double)
-#define BIT(n)				 ((unsigned int)1 << (n))
-#define BITMASK(n) 		  	 (BIT(n) - 1)
-#define CEILING_LOG2(_log2,_n)   \
-      unsigned int j_ = (unsigned int)(_n);   \
-      (_log2) = 0;                    \
-      if ((j_) & ((j_)-1))            \
-      (_log2) += 1;               \
-      if ((j_) >> 16)                 \
-      (_log2) += 16, (j_) >>= 16; \
-      if ((j_) >> 8)                  \
-      (_log2) += 8, (j_) >>= 8;   \
-      if ((j_) >> 4)                  \
-      (_log2) += 4, (j_) >>= 4;   \
-      if ((j_) >> 2)                  \
-      (_log2) += 2, (j_) >>= 2;   \
-      if ((j_) >> 1)                  \
-      (_log2) += 1;
+#define ARENA_DEFAULT_ALIGN sizeof(double)
+#define BIT(n) ((unsigned int)1 << (n))
+#define BITMASK(n) (BIT(n) - 1)
+#define CEILING_LOG2(_log2, _n)                                                                                                                      \
+    unsigned int j_ = (unsigned int)(_n);                                                                                                            \
+    (_log2) = 0;                                                                                                                                     \
+    if((j_) & ((j_)-1))                                                                                                                              \
+        (_log2) += 1;                                                                                                                                \
+    if((j_) >> 16)                                                                                                                                   \
+        (_log2) += 16, (j_) >>= 16;                                                                                                                  \
+    if((j_) >> 8)                                                                                                                                    \
+        (_log2) += 8, (j_) >>= 8;                                                                                                                    \
+    if((j_) >> 4)                                                                                                                                    \
+        (_log2) += 4, (j_) >>= 4;                                                                                                                    \
+    if((j_) >> 2)                                                                                                                                    \
+        (_log2) += 2, (j_) >>= 2;                                                                                                                    \
+    if((j_) >> 1)                                                                                                                                    \
+        (_log2) += 1;
 
-int CeilingLog2(unsigned int i) {
+int CeilingLog2(unsigned int i)
+{
     int log2;
-    CEILING_LOG2(log2,i);
+    CEILING_LOG2(log2, i);
     return log2;
 }
 
-void InitArenaPool(ArenaPool *pool, const char* /*name*/,
-                   unsigned int /*size*/, unsigned int align)
+void InitArenaPool(ArenaPool *pool, const char * /*name*/, unsigned int /*size*/, unsigned int align)
 {
-     unsigned int size = POOL_SIZE;
-     if (align == 0)
-         align = ARENA_DEFAULT_ALIGN;
-     pool->mask = BITMASK(CeilingLog2(align));
-     pool->first.next = NULL;
-     pool->first.base = pool->first.avail = pool->first.limit =
-         (uword)ARENA_ALIGN(pool, &pool->first + 1);
-     pool->current = &pool->first;
-     pool->arenasize = size;
-     pool->largealloc = LARGE_ALLOCATION_CEIL(pool);
-     pool->cumul = 0;
+    unsigned int size = POOL_SIZE;
+    if(align == 0)
+        align = ARENA_DEFAULT_ALIGN;
+    pool->mask = BITMASK(CeilingLog2(align));
+    pool->first.next = NULL;
+    pool->first.base = pool->first.avail = pool->first.limit = (uword)ARENA_ALIGN(pool, &pool->first + 1);
+    pool->current = &pool->first;
+    pool->arenasize = size;
+    pool->largealloc = LARGE_ALLOCATION_CEIL(pool);
+    pool->cumul = 0;
 }
 
 
@@ -134,10 +133,10 @@ void InitArenaPool(ArenaPool *pool, const char* /*name*/,
  ** Returns: pointer to allocated space or NULL
  **
  */
-void* ArenaAllocate(ArenaPool *pool, unsigned int nb)
+void *ArenaAllocate(ArenaPool *pool, unsigned int nb)
 {
     Arena *a;
-    char *rp;     /* returned pointer */
+    char *rp; /* returned pointer */
 
 #ifdef DEBUG_ARENA_MALLOC
     assert((nb & pool->mask) == 0);
@@ -148,24 +147,28 @@ void* ArenaAllocate(ArenaPool *pool, unsigned int nb)
     /* attempt to allocate from arenas at pool->current */
     {
         a = pool->current;
-        do {
-            if ( a->avail +nb <= a->limit )  {
+        do
+        {
+            if(a->avail + nb <= a->limit)
+            {
                 pool->current = a;
                 rp = (char *)a->avail;
                 a->avail += nb;
                 VALGRIND_MEMPOOL_ALLOC(a->base, rp, nb);
                 return rp;
             }
-        } while( NULL != (a = a->next) );
+        } while(NULL != (a = a->next));
     }
 
     /* attempt to allocate from arena_freelist */
     {
         Arena *p; /* previous pointer, for unlinking from freelist */
 
-        for ( a = p = arena_freelist; a != NULL ; p = a, a = a->next ) {
-            if ( a->base +nb <= a->limit )  {
-                if ( p == arena_freelist )
+        for(a = p = arena_freelist; a != NULL; p = a, a = a->next)
+        {
+            if(a->base + nb <= a->limit)
+            {
+                if(p == arena_freelist)
                     arena_freelist = a->next;
                 else
                     p->next = a->next;
@@ -178,10 +181,10 @@ void* ArenaAllocate(ArenaPool *pool, unsigned int nb)
                 a->next = pool->current->next;
                 pool->current->next = a;
                 pool->current = a;
-                if ( 0 == pool->first.next )
+                if(0 == pool->first.next)
                     pool->first.next = a;
                 freelist_count--;
-                return(rp);
+                return (rp);
             }
         }
     }
@@ -190,21 +193,24 @@ void* ArenaAllocate(ArenaPool *pool, unsigned int nb)
     {
         unsigned int sz;
 #ifdef HAVE_MMAP
-        if (pool->cumul > pool->largealloc) {
+        if(pool->cumul > pool->largealloc)
+        {
             // High memory pressure. Switch to a fractional allocation strategy
             // so that malloc gets a chance to successfully trim us down when it's over.
-            sz = kMin(pool->cumul/25, MAX_DISCRETE_ALLOCATION(pool));
-        } else
+            sz = kMin(pool->cumul / 25, MAX_DISCRETE_ALLOCATION(pool));
+        }
+        else
 #endif
-           sz = pool->arenasize > nb ? pool->arenasize : nb;
-        sz += sizeof *a + pool->mask;  /* header and alignment slop */
+            sz = pool->arenasize > nb ? pool->arenasize : nb;
+        sz += sizeof *a + pool->mask; /* header and alignment slop */
         pool->cumul += sz;
 #ifdef DEBUG_ARENA_MALLOC
         i++;
         printf("Malloc: %d\n", i);
 #endif
-        a = (Arena*)malloc(sz);
-        if (a)  {
+        a = (Arena *)malloc(sz);
+        if(a)
+        {
             a->limit = (uword)a + sz;
             a->base = a->avail = (uword)ARENA_ALIGN(pool, a + 1);
             VALGRIND_CREATE_MEMPOOL(a->base, 0, 0);
@@ -217,14 +223,14 @@ void* ArenaAllocate(ArenaPool *pool, unsigned int nb)
             a->next = pool->current->next;
             pool->current->next = a;
             pool->current = a;
-            if ( !pool->first.next )
+            if(!pool->first.next)
                 pool->first.next = a;
-            return(rp);
-       }
+            return (rp);
+        }
     }
 
     /* we got to here, and there's no memory to allocate */
-    return(0);
+    return (0);
 } /* --- end ArenaAllocate() --- */
 
 /*
@@ -237,45 +243,55 @@ static void FreeArenaList(ArenaPool *pool, Arena *head, bool reallyFree)
 
     ap = &head->next;
     a = *ap;
-    if (!a)
+    if(!a)
         return;
 
 #ifdef DEBUG_ARENA_MALLOC
-    do {
+    do
+    {
         assert(a->base <= a->avail && a->avail <= a->limit);
         a->avail = a->base;
         CLEAR_UNUSED(a);
-    } while ((a = a->next) != 0);
+    } while((a = a->next) != 0);
     a = *ap;
 #endif
 
-    if (freelist_count >= FREELIST_MAX)
+    if(freelist_count >= FREELIST_MAX)
         reallyFree = true;
 
-    if (reallyFree) {
-        do {
+    if(reallyFree)
+    {
+        do
+        {
             *ap = a->next;
             VALGRIND_DESTROY_MEMPOOL(a->base);
             CLEAR_ARENA(a);
 #ifdef DEBUG_ARENA_MALLOC
-            if (a) {
+            if(a)
+            {
                 i--;
                 printf("Free: %d\n", i);
             }
 #endif
-            free(a); a = 0;
-        } while ((a = *ap) != 0);
-    } else {
+            free(a);
+            a = 0;
+        } while((a = *ap) != 0);
+    }
+    else
+    {
         /* Insert as much of the arena chain as we can hold at the front of the freelist. */
-        do {
+        do
+        {
             ap = &(*ap)->next;
             freelist_count++;
-        } while (*ap && freelist_count < FREELIST_MAX);
-        
+        } while(*ap && freelist_count < FREELIST_MAX);
+
         /* Get rid of excess */
-        if (*ap) {
+        if(*ap)
+        {
             Arena *xa, *n;
-            for (xa = *ap; xa; xa = n) {
+            for(xa = *ap; xa; xa = n)
+            {
                 VALGRIND_DESTROY_MEMPOOL(xa->base);
                 n = xa->next;
 #ifdef DEBUG_ARENA_MALLOC
@@ -285,7 +301,7 @@ static void FreeArenaList(ArenaPool *pool, Arena *head, bool reallyFree)
                 CLEAR_ARENA(xa);
                 free(xa);
             }
-        }                                    
+        }
         *ap = arena_freelist;
         arena_freelist = a;
         head->next = 0;
@@ -297,8 +313,10 @@ void ArenaRelease(ArenaPool *pool, char *mark)
 {
     Arena *a;
 
-    for (a = pool->first.next; a; a = a->next) {
-        if (UPTRDIFF(mark, a->base) < UPTRDIFF(a->avail, a->base)) {
+    for(a = pool->first.next; a; a = a->next)
+    {
+        if(UPTRDIFF(mark, a->base) < UPTRDIFF(a->avail, a->base))
+        {
             a->avail = (uword)ARENA_ALIGN(pool, mark);
             FreeArenaList(pool, a, false);
             return;
@@ -322,9 +340,11 @@ void ArenaFinish()
 #ifdef DEBUG_ARENA_MALLOC
     printf("releasing global Arena freelist\n");
 #endif
-    for (a = arena_freelist; a; a = next) {
+    for(a = arena_freelist; a; a = next)
+    {
         next = a->next;
-        free(a); a = 0;
+        free(a);
+        a = 0;
     }
     freelist_count = 0;
     arena_freelist = NULL;

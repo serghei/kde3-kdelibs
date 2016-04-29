@@ -28,83 +28,81 @@
 
 struct KArtsServer::Data
 {
-	Arts::SoundServerV2 server;
+    Arts::SoundServerV2 server;
 };
 
-KArtsServer::KArtsServer(QObject *parent, const char *name)
-	: QObject(parent, name)
-	, d(new Data)
+KArtsServer::KArtsServer(QObject *parent, const char *name) : QObject(parent, name), d(new Data)
 {
-	d->server = Arts::SoundServerV2::null();
+    d->server = Arts::SoundServerV2::null();
 }
 
 KArtsServer::~KArtsServer(void)
 {
-	d->server = Arts::SoundServerV2::null();
-	delete d;
+    d->server = Arts::SoundServerV2::null();
+    delete d;
 }
 
 Arts::SoundServerV2 KArtsServer::server(void)
 {
-	bool error = d->server.error();
-	if( d->server.isNull() || error )
-	{
-		d->server = Arts::Reference("global:Arts_SoundServerV2");
-		if( error && !d->server.isNull() && !d->server.error() )
-			emit restartedServer();
-	}
+    bool error = d->server.error();
+    if(d->server.isNull() || error)
+    {
+        d->server = Arts::Reference("global:Arts_SoundServerV2");
+        if(error && !d->server.isNull() && !d->server.error())
+            emit restartedServer();
+    }
 
-	if(!d->server.isNull() && !d->server.error())
-		return d->server;
+    if(!d->server.isNull() && !d->server.error())
+        return d->server;
 
-	// aRts seems not to be running, let's try to run it
-	// First, let's read the configuration as in kcmarts
-	KConfig config("kcmartsrc", false /*bReadOnly*/, false /*bUseKDEGlobals*/);
-	KProcess proc;
+    // aRts seems not to be running, let's try to run it
+    // First, let's read the configuration as in kcmarts
+    KConfig config("kcmartsrc", false /*bReadOnly*/, false /*bUseKDEGlobals*/);
+    KProcess proc;
 
-	config.setGroup("Arts");
+    config.setGroup("Arts");
 
-	bool rt = config.readBoolEntry("StartRealtime", false);
-	bool x11Comm = config.readBoolEntry("X11GlobalComm", false);
+    bool rt = config.readBoolEntry("StartRealtime", false);
+    bool x11Comm = config.readBoolEntry("X11GlobalComm", false);
 
-	// put the value of x11Comm into .mcoprc
-	KSimpleConfig X11CommConfig(QDir::homeDirPath()+"/.mcoprc");
+    // put the value of x11Comm into .mcoprc
+    KSimpleConfig X11CommConfig(QDir::homeDirPath() + "/.mcoprc");
 
-	if(x11Comm)
-		X11CommConfig.writeEntry("GlobalComm", "Arts::X11GlobalComm");
-	else
-		X11CommConfig.writeEntry("GlobalComm", "Arts::TmpGlobalComm");
+    if(x11Comm)
+        X11CommConfig.writeEntry("GlobalComm", "Arts::X11GlobalComm");
+    else
+        X11CommConfig.writeEntry("GlobalComm", "Arts::TmpGlobalComm");
 
-	X11CommConfig.sync();
-	
-	proc << QFile::encodeName(KStandardDirs::findExe(QString::fromLatin1("kdeinit_wrapper")));
+    X11CommConfig.sync();
 
-	if(rt)
-		proc << QFile::encodeName(KStandardDirs::findExe(QString::fromLatin1("artswrapper")));
-	else
-		proc << QFile::encodeName(KStandardDirs::findExe(QString::fromLatin1("artsd")));
+    proc << QFile::encodeName(KStandardDirs::findExe(QString::fromLatin1("kdeinit_wrapper")));
 
-	proc << QStringList::split( " ", config.readEntry( "Arguments", "-F 10 -S 4096 -s 60 -m artsmessage -l 3 -f" ) );
+    if(rt)
+        proc << QFile::encodeName(KStandardDirs::findExe(QString::fromLatin1("artswrapper")));
+    else
+        proc << QFile::encodeName(KStandardDirs::findExe(QString::fromLatin1("artsd")));
 
-	if(proc.start(KProcess::Block) && proc.normalExit())
-	{
-		// We could have a race-condition here.
-		// The correct way to do it is to make artsd fork-and-exit
-		// after starting to listen to connections (and running artsd
-		// directly instead of using kdeinit), but this is better
-		// than nothing.
-		int time = 0;
-		do
-		{
-			sleep(1);
-			d->server = Arts::Reference("global:Arts_SoundServerV2");
-		} while(++time < 5 && (d->server.isNull()));
+    proc << QStringList::split(" ", config.readEntry("Arguments", "-F 10 -S 4096 -s 60 -m artsmessage -l 3 -f"));
 
-		emit restartedServer();
-	}
-	// TODO else what?
+    if(proc.start(KProcess::Block) && proc.normalExit())
+    {
+        // We could have a race-condition here.
+        // The correct way to do it is to make artsd fork-and-exit
+        // after starting to listen to connections (and running artsd
+        // directly instead of using kdeinit), but this is better
+        // than nothing.
+        int time = 0;
+        do
+        {
+            sleep(1);
+            d->server = Arts::Reference("global:Arts_SoundServerV2");
+        } while(++time < 5 && (d->server.isNull()));
 
-	return d->server;
+        emit restartedServer();
+    }
+    // TODO else what?
+
+    return d->server;
 }
 
 // vim: sw=4 ts=4 noet

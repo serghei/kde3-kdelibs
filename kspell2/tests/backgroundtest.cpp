@@ -27,7 +27,8 @@ using namespace KSpell2;
 #include <kapplication.h>
 #include <kdebug.h>
 
-const char *text = "Rationale \
+const char *text =
+    "Rationale \
 ========= \
  \
 This code is intended to provide an implementation of the W3C's XPath \
@@ -130,34 +131,30 @@ Discussion\
  \
 If you want to talk about this code feel free to mail us.";
 
-BackgroundTest::BackgroundTest()
-    : QObject( 0 )
+BackgroundTest::BackgroundTest() : QObject(0)
 {
-    m_checker = new BackgroundChecker( Broker::openBroker(), this );
-    connect( m_checker, SIGNAL(done()),
-             SLOT(slotDone()) );
-    connect( m_checker, SIGNAL(misspelling(const QString&, int)),
-             SLOT(slotMisspelling(const QString&, int)) );
-    m_len = strlen( text );
-    m_checker->checkText( text );
+    m_checker = new BackgroundChecker(Broker::openBroker(), this);
+    connect(m_checker, SIGNAL(done()), SLOT(slotDone()));
+    connect(m_checker, SIGNAL(misspelling(const QString &, int)), SLOT(slotMisspelling(const QString &, int)));
+    m_len = strlen(text);
+    m_checker->checkText(text);
     m_timer.start();
 }
 
 void BackgroundTest::slotDone()
 {
-    kdDebug()<<"Text of length "<<m_len<<" checked in "
-             << m_timer.elapsed() << " msec."<<endl;
+    kdDebug() << "Text of length " << m_len << " checked in " << m_timer.elapsed() << " msec." << endl;
     QApplication::exit();
 }
 
-void BackgroundTest::slotMisspelling( const QString& word, int start )
+void BackgroundTest::slotMisspelling(const QString &word, int start)
 {
-    kdDebug()<<"Misspelling \""<< word << "\" at " << start << endl;
+    kdDebug() << "Misspelling \"" << word << "\" at " << start << endl;
     m_checker->continueChecking();
 }
 
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
     KApplication app(argc, argv, "KSpell2Test");
 

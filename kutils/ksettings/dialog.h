@@ -23,13 +23,12 @@
 #include <qobject.h>
 #include <kservice.h>
 
-template<class T> class QValueList;
+template < class T > class QValueList;
 class KPluginInfo;
 class KCMultiDialog;
 class KCModuleInfo;
 
-namespace KSettings
-{
+namespace KSettings {
 
 /**
  * @ingroup main
@@ -70,154 +69,148 @@ namespace KSettings
  * @author Matthias Kretz <kretz@kde.org>
  * @since 3.2
  */
-class KUTILS_EXPORT Dialog : public QObject
-{
+class KUTILS_EXPORT Dialog : public QObject {
     friend class PageNode;
     Q_OBJECT
-    public:
+public:
+    /**
+     * Tells the dialog whether the entries in the listview are all static
+     * or whether it should add a Configure... button to select which parts
+     * of the optional functionality should be active or not.
+     */
+    enum ContentInListView
+    {
         /**
-         * Tells the dialog whether the entries in the listview are all static
-         * or whether it should add a Configure... button to select which parts
-         * of the optional functionality should be active or not.
+         * Static listview, while running no entries are added or deleted
          */
-        enum ContentInListView
-        {
-            /**
-             * Static listview, while running no entries are added or deleted
-             */
-            Static,
-            /**
-             * Configurable listview. The user can select what functionality he
-             * wants.
-             */
-            Configurable
-        };
-
+        Static,
         /**
-         * Construct a new Preferences Dialog for the application. It uses all
-         * KCMs with X-KDE-ParentApp set to KGlobal::instance()->instanceName().
-         *
-         * @param parent       The parent is only used as the parent for the
-         *                     dialog - centering the dialog over the parent
-         *                     widget.
-         * @param name         name
+         * Configurable listview. The user can select what functionality he
+         * wants.
          */
-        Dialog( QWidget * parent = 0, const char * name = 0 );
+        Configurable
+    };
 
-        /**
-         * Construct a new Preferences Dialog for the application. It uses all
-         * KCMs with X-KDE-ParentApp set to KGlobal::instance()->instanceName().
-         *
-         * @param content      Select whether you want a static or configurable
-         *                     config dialog.
-         * @param parent       The parent is only used as the parent for the
-         *                     dialog - centering the dialog over the parent
-         *                     widget.
-         * @param name         name
-         */
-        Dialog( ContentInListView content = Static, QWidget * parent = 0,
-                const char * name = 0 );
+    /**
+     * Construct a new Preferences Dialog for the application. It uses all
+     * KCMs with X-KDE-ParentApp set to KGlobal::instance()->instanceName().
+     *
+     * @param parent       The parent is only used as the parent for the
+     *                     dialog - centering the dialog over the parent
+     *                     widget.
+     * @param name         name
+     */
+    Dialog(QWidget *parent = 0, const char *name = 0);
 
-        /**
-         * Construct a new Preferences Dialog with the pages for the selected
-         * instance names. For example if you want to have the configuration
-         * pages for the kviewviewer KPart you would pass a
-         * QStringList consisting of only the name of the part "kviewviewer".
-         *
-         * @param components   A list of the names of the components that your
-         *                     config dialog should merge the config pages in.
-         * @param parent       The parent is only used as the parent for the
-         *                     dialog - centering the dialog over the parent
-         *                     widget.
-         * @param name         name
-         */
-        Dialog( const QStringList & components, QWidget * parent = 0,
-                const char * name = 0 );
+    /**
+     * Construct a new Preferences Dialog for the application. It uses all
+     * KCMs with X-KDE-ParentApp set to KGlobal::instance()->instanceName().
+     *
+     * @param content      Select whether you want a static or configurable
+     *                     config dialog.
+     * @param parent       The parent is only used as the parent for the
+     *                     dialog - centering the dialog over the parent
+     *                     widget.
+     * @param name         name
+     */
+    Dialog(ContentInListView content = Static, QWidget *parent = 0, const char *name = 0);
 
-        /**
-         * Construct a new Preferences Dialog with the pages for the selected
-         * instance names. For example if you want to have the configuration
-         * pages for the kviewviewer KPart you would pass a
-         * QStringList consisting of only the name of the part "kviewviewer".
-         *
-         * @param components   A list of the names of the components that your
-         *                     config dialog should merge the config pages in.
-         * @param content      Select whether you want a static or configurable
-         *                     config dialog.
-         * @param parent       The parent is only used as the parent for the
-         *                     dialog - centering the dialog over the parent
-         *                     widget.
-         * @param name         name
-         */
-        Dialog( const QStringList & components, ContentInListView
-                content, QWidget * parent = 0, const char * name = 0 );
+    /**
+     * Construct a new Preferences Dialog with the pages for the selected
+     * instance names. For example if you want to have the configuration
+     * pages for the kviewviewer KPart you would pass a
+     * QStringList consisting of only the name of the part "kviewviewer".
+     *
+     * @param components   A list of the names of the components that your
+     *                     config dialog should merge the config pages in.
+     * @param parent       The parent is only used as the parent for the
+     *                     dialog - centering the dialog over the parent
+     *                     widget.
+     * @param name         name
+     */
+    Dialog(const QStringList &components, QWidget *parent = 0, const char *name = 0);
 
-        ~Dialog();
+    /**
+     * Construct a new Preferences Dialog with the pages for the selected
+     * instance names. For example if you want to have the configuration
+     * pages for the kviewviewer KPart you would pass a
+     * QStringList consisting of only the name of the part "kviewviewer".
+     *
+     * @param components   A list of the names of the components that your
+     *                     config dialog should merge the config pages in.
+     * @param content      Select whether you want a static or configurable
+     *                     config dialog.
+     * @param parent       The parent is only used as the parent for the
+     *                     dialog - centering the dialog over the parent
+     *                     widget.
+     * @param name         name
+     */
+    Dialog(const QStringList &components, ContentInListView content, QWidget *parent = 0, const char *name = 0);
 
-        /**
-         * If you use a Configurable dialog you need to pass KPluginInfo
-         * objects that the dialog should configure.
-         */
-        void addPluginInfos( const QValueList<KPluginInfo*> & plugininfos );
+    ~Dialog();
 
-        KCMultiDialog * dialog();
+    /**
+     * If you use a Configurable dialog you need to pass KPluginInfo
+     * objects that the dialog should configure.
+     */
+    void addPluginInfos(const QValueList< KPluginInfo * > &plugininfos);
 
-    public slots:
-        /**
-         * Show the config dialog. The slot immediatly returns since the dialog
-         * is non-modal.
-         */
-        void show();
+    KCMultiDialog *dialog();
 
-    signals:
-        /**
-         * If you use the dialog in Configurable mode and want to be notified
-         * when the user changes the plugin selections use this signal. It's
-         * emitted if the selection has changed and the user pressed Apply or
-         * Ok. In the slot you would then load and unload the plugins as
-         * requested.
-         */
-        void pluginSelectionChanged();
+public slots:
+    /**
+     * Show the config dialog. The slot immediatly returns since the dialog
+     * is non-modal.
+     */
+    void show();
 
-    protected slots:
-        void configureTree();
-        void updateTreeList();
+signals:
+    /**
+     * If you use the dialog in Configurable mode and want to be notified
+     * when the user changes the plugin selections use this signal. It's
+     * emitted if the selection has changed and the user pressed Apply or
+     * Ok. In the slot you would then load and unload the plugins as
+     * requested.
+     */
+    void pluginSelectionChanged();
 
-    private:
-        /**
-         * @internal
-         * Check whether the plugin associated with this KCM is enabled.
-         */
-        bool isPluginForKCMEnabled( KCModuleInfo * ) const;
+protected slots:
+    void configureTree();
+    void updateTreeList();
 
-        QValueList<KService::Ptr> instanceServices() const;
-        QValueList<KService::Ptr> parentComponentsServices(
-                const QStringList & ) const;
-        /**
-         * @internal
-         * Read the .setdlg file and add it to the groupmap
-         */
-        void parseGroupFile( const QString & );
+private:
+    /**
+     * @internal
+     * Check whether the plugin associated with this KCM is enabled.
+     */
+    bool isPluginForKCMEnabled(KCModuleInfo *) const;
 
-        /**
-         * @internal
-         * If this module is put into a TreeList hierarchy this will return a
-         * list of the names of the parent modules.
-         */
-        QStringList parentModuleNames( KCModuleInfo * );
+    QValueList< KService::Ptr > instanceServices() const;
+    QValueList< KService::Ptr > parentComponentsServices(const QStringList &) const;
+    /**
+     * @internal
+     * Read the .setdlg file and add it to the groupmap
+     */
+    void parseGroupFile(const QString &);
 
-        /**
-         * @internal
-         * This method is called only once. The KCMultiDialog is not created
-         * until it's really needed. So if some method needs to access d->dlg it
-         * checks for 0 and if it's not created this method will do it.
-         */
-        void createDialogFromServices();
+    /**
+     * @internal
+     * If this module is put into a TreeList hierarchy this will return a
+     * list of the names of the parent modules.
+     */
+    QStringList parentModuleNames(KCModuleInfo *);
 
-        class DialogPrivate;
-        DialogPrivate * d;
+    /**
+     * @internal
+     * This method is called only once. The KCMultiDialog is not created
+     * until it's really needed. So if some method needs to access d->dlg it
+     * checks for 0 and if it's not created this method will do it.
+     */
+    void createDialogFromServices();
+
+    class DialogPrivate;
+    DialogPrivate *d;
 };
-
 }
 
 // vim: sw=4 sts=4 et

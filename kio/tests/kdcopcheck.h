@@ -5,8 +5,7 @@
 #include <qstring.h>
 #include <qobject.h>
 
-class TestService : public QObject
-{
+class TestService : public QObject {
     Q_OBJECT
 public:
     TestService(const QString &exec);
@@ -19,7 +18,7 @@ public slots:
     void appExit();
     void stop();
 
-protected:  
+protected:
     int result;
     QString m_exec;
     KProcess proc;

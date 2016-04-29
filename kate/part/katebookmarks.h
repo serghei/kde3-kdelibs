@@ -25,9 +25,13 @@
 
 class KateView;
 
-namespace KTextEditor { class Mark; }
+namespace KTextEditor {
+class Mark;
+}
 
-namespace Kate { class View; }
+namespace Kate {
+class View;
+}
 
 class KAction;
 class KToggleAction;
@@ -35,29 +39,38 @@ class KActionCollection;
 class QPopupMenu;
 class QMenuData;
 
-class KateBookmarks : public QObject
-{
-  Q_OBJECT
+class KateBookmarks : public QObject {
+    Q_OBJECT
 
-  public:
-    enum Sorting { Position, Creation };
-    KateBookmarks( KateView* parent, Sorting sort=Position );
+public:
+    enum Sorting
+    {
+        Position,
+        Creation
+    };
+    KateBookmarks(KateView *parent, Sorting sort = Position);
     virtual ~KateBookmarks();
 
-    void createActions( KActionCollection* );
+    void createActions(KActionCollection *);
 
-    KateBookmarks::Sorting sorting() { return m_sorting; };
-    void setSorting( Sorting s ) { m_sorting = s; };
+    KateBookmarks::Sorting sorting()
+    {
+        return m_sorting;
+    };
+    void setSorting(Sorting s)
+    {
+        m_sorting = s;
+    };
 
-  protected:
-    void insertBookmarks( QPopupMenu& menu);
+protected:
+    void insertBookmarks(QPopupMenu &menu);
 
-  private slots:
+private slots:
     void toggleBookmark();
     void clearBookmarks();
 
-    void slotViewGotFocus( Kate::View * );
-    void slotViewLostFocus( Kate::View * );
+    void slotViewGotFocus(Kate::View *);
+    void slotViewLostFocus(Kate::View *);
 
     void bookmarkMenuAboutToShow();
     void bookmarkMenuAboutToHide();
@@ -65,17 +78,17 @@ class KateBookmarks : public QObject
     void goNext();
     void goPrevious();
 
-    void marksChanged ();
+    void marksChanged();
 
-  private:
-    KateView*                    m_view;
-    KToggleAction*               m_bookmarkToggle;
-    KAction*                     m_bookmarkClear;
-    KAction*                     m_goNext;
-    KAction*                     m_goPrevious;
+private:
+    KateView *m_view;
+    KToggleAction *m_bookmarkToggle;
+    KAction *m_bookmarkClear;
+    KAction *m_goNext;
+    KAction *m_goPrevious;
 
-    Sorting                      m_sorting;
-    QPopupMenu*          m_bookmarksMenu;
+    Sorting m_sorting;
+    QPopupMenu *m_bookmarksMenu;
 
     uint _tries;
 };

@@ -30,80 +30,81 @@
 /**
  * @internal
  */
-class KGlobalAccelPrivate : public QWidget, public KAccelBase
-{
-	friend class KGlobalAccel;
-	Q_OBJECT
- public:
-	KGlobalAccelPrivate();
-	virtual ~KGlobalAccelPrivate();
+class KGlobalAccelPrivate : public QWidget, public KAccelBase {
+    friend class KGlobalAccel;
+    Q_OBJECT
+public:
+    KGlobalAccelPrivate();
+    virtual ~KGlobalAccelPrivate();
 
-	virtual void setEnabled( bool bEnabled );
+    virtual void setEnabled(bool bEnabled);
 
-	virtual bool emitSignal( Signal signal );
-	virtual bool connectKey( KAccelAction& action, const KKeyServer::Key& key );
-	virtual bool connectKey( const KKeyServer::Key& key );
-	virtual bool disconnectKey( KAccelAction& action, const KKeyServer::Key& key );
-	virtual bool disconnectKey( const KKeyServer::Key& key );
+    virtual bool emitSignal(Signal signal);
+    virtual bool connectKey(KAccelAction &action, const KKeyServer::Key &key);
+    virtual bool connectKey(const KKeyServer::Key &key);
+    virtual bool disconnectKey(KAccelAction &action, const KKeyServer::Key &key);
+    virtual bool disconnectKey(const KKeyServer::Key &key);
 
- protected:
-	/**
-	 * @internal
-	 * Represents a key code and modifier combination.
-	 */
-	class CodeMod
-	{
-	 public:
-	  /**
-	   * The key code of the CodeMod.
-	   */
-		uchar code;
-	  /**
-	   * The modifier flags of the CodeMod.
-	   */
-		uint mod;
-	
-		/**
-		 * Compares two CodeMods. 
-		 */
-		bool operator < ( const CodeMod& b ) const
-		{
-			if( code < b.code ) return true;
-			if( code == b.code && mod < b.mod ) return true;
-			return false;
-		}
-	};
-	typedef QMap<CodeMod, KAccelAction*> CodeModMap;
+protected:
+    /**
+     * @internal
+     * Represents a key code and modifier combination.
+     */
+    class CodeMod {
+    public:
+        /**
+         * The key code of the CodeMod.
+         */
+        uchar code;
+        /**
+         * The modifier flags of the CodeMod.
+         */
+        uint mod;
 
-	CodeModMap m_rgCodeModToAction;
+        /**
+         * Compares two CodeMods.
+         */
+        bool operator<(const CodeMod &b) const
+        {
+            if(code < b.code)
+                return true;
+            if(code == b.code && mod < b.mod)
+                return true;
+            return false;
+        }
+    };
+    typedef QMap< CodeMod, KAccelAction * > CodeModMap;
 
-	/**
-	 * @param bGrab Set to true to grab key, false to ungrab key.
-	 */
-	bool grabKey( const KKeyServer::Key&, bool bGrab, KAccelAction* );
+    CodeModMap m_rgCodeModToAction;
 
-	/**
-	 * Filters X11 events ev for key bindings in the accelerator dictionary.
-	 * If a match is found the activated activated is emitted and the function
-	 * returns true. Return false if the event is not processed.
-	 *
-	 * This is public for compatibility only. You do not need to call it.
-	 */
-	virtual bool x11Event( XEvent* );
-	void x11MappingNotify();
-	bool x11KeyPress( const XEvent *pEvent );
-	void activate( KAccelAction* pAction, const KKeySequence& seq );
-	virtual bool isEnabledInternal() const;
-	static void blockShortcuts( bool block );
-	void disableBlocking( bool disable );
-        void suspend( bool s );
+    /**
+     * @param bGrab Set to true to grab key, false to ungrab key.
+     */
+    bool grabKey(const KKeyServer::Key &, bool bGrab, KAccelAction *);
 
- protected slots:
-	void slotActivated( int iAction );
- private:
-	bool m_blocked;
-	bool m_blockingDisabled;
-        bool m_suspended;
+    /**
+     * Filters X11 events ev for key bindings in the accelerator dictionary.
+     * If a match is found the activated activated is emitted and the function
+     * returns true. Return false if the event is not processed.
+     *
+     * This is public for compatibility only. You do not need to call it.
+     */
+    virtual bool x11Event(XEvent *);
+    void x11MappingNotify();
+    bool x11KeyPress(const XEvent *pEvent);
+    void activate(KAccelAction *pAction, const KKeySequence &seq);
+    virtual bool isEnabledInternal() const;
+    static void blockShortcuts(bool block);
+    void disableBlocking(bool disable);
+    void suspend(bool s);
+
+protected slots:
+    void slotActivated(int iAction);
+
+private:
+    bool m_blocked;
+    bool m_blockingDisabled;
+    bool m_suspended;
 };
 
 #endif // _KGLOBALACCEL_X11_H

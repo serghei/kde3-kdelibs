@@ -21,53 +21,50 @@
 
 #include "editor.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
  * The main class representing a text document.
  * This class provides access to the document's views.
  */
-class KTEXTEDITOR_EXPORT Document : public KTextEditor::Editor
-{
-  friend class PrivateDocument;
+class KTEXTEDITOR_EXPORT Document : public KTextEditor::Editor {
+    friend class PrivateDocument;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    Document ( QObject *parent = 0, const char *name = 0 );
-    virtual ~Document ();
+public:
+    Document(QObject *parent = 0, const char *name = 0);
+    virtual ~Document();
 
     /**
      * Returns the global number of this document in your app.
      */
-    unsigned int documentNumber () const;
+    unsigned int documentNumber() const;
 
     /**
      * Returns this document's DCOP suffix for identifiying its DCOP interface.
      */
-    QCString documentDCOPSuffix () const;
+    QCString documentDCOPSuffix() const;
 
     /**
     * Create a view that will display the document data. You can create as many
     * views as you like. When the user modifies data in one view then all other
     * views will be updated as well.
     */
-    virtual class View *createView ( QWidget *parent, const char *name = 0 ) = 0;
+    virtual class View *createView(QWidget *parent, const char *name = 0) = 0;
 
     /*
     * Returns a list of all views of this document.
     */
-    virtual QPtrList<class View> views () const = 0;
+    virtual QPtrList< class View > views() const = 0;
 
-  private:
+private:
     class PrivateDocument *d;
     static unsigned int globalDocumentNumber;
     unsigned int myDocumentNumber;
 };
 
-KTEXTEDITOR_EXPORT Document *createDocument ( const char* libname, QObject *parent = 0, const char *name = 0 );
-
+KTEXTEDITOR_EXPORT Document *createDocument(const char *libname, QObject *parent = 0, const char *name = 0);
 }
 
 #endif

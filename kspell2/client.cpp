@@ -21,14 +21,11 @@
  */
 #include "client.h"
 
-namespace KSpell2
-{
+namespace KSpell2 {
 
-Client::Client( QObject *parent, const char *name )
-    : QObject( parent, name )
+Client::Client(QObject *parent, const char *name) : QObject(parent, name)
 {
 }
-
 }
 
 #include "client.moc"

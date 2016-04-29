@@ -41,98 +41,97 @@ class QPushButton;
  * @short KDE X.509 Certificate Dialog
  */
 class KIO_EXPORT KSSLCertDlg : public KDialog {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	/**
-	 *  Construct a KSSL certificate dialog
-	 *
-	 *  @param parent the parent widget
-	 *  @param name the internal name of this instance
-	 *  @param modal create a modal dialog if set to true
-	 */
-	KSSLCertDlg(QWidget *parent=0L, const char *name=0L, bool modal=false);
+    /**
+     *  Construct a KSSL certificate dialog
+     *
+     *  @param parent the parent widget
+     *  @param name the internal name of this instance
+     *  @param modal create a modal dialog if set to true
+     */
+    KSSLCertDlg(QWidget *parent = 0L, const char *name = 0L, bool modal = false);
 
-	/**
-	 *  Destroy this object and close the dialog
-	 */
-	virtual ~KSSLCertDlg();
+    /**
+     *  Destroy this object and close the dialog
+     */
+    virtual ~KSSLCertDlg();
 
-	/**
-	 *  Setup the dialog. Call this before you display the dialog.
-	 *
-	 *  @param certs the list of possible certificates
-	 *  @param saveChecked save the checked item for the future
-	 *  @param sendChecked send the checked item to the remote host
-	 *  @deprecated
-	 */
-	void setup(QStringList certs, bool saveChecked = false, bool sendChecked = true) KDE_DEPRECATED;
+    /**
+     *  Setup the dialog. Call this before you display the dialog.
+     *
+     *  @param certs the list of possible certificates
+     *  @param saveChecked save the checked item for the future
+     *  @param sendChecked send the checked item to the remote host
+     *  @deprecated
+     */
+    void setup(QStringList certs, bool saveChecked = false, bool sendChecked = true) KDE_DEPRECATED;
 
-	/**
-	 *  Setup the dialog. Call this before you display the dialog.
-	 *
-	 *  @param certs the list of possible certificates
-	 *  @param saveChecked save the checked item for the future
-	 *  @param sendChecked send the checked item to the remote host
-	 */
-	void setupDialog(const QStringList& certs, bool saveChecked = false, bool sendChecked = true);
+    /**
+     *  Setup the dialog. Call this before you display the dialog.
+     *
+     *  @param certs the list of possible certificates
+     *  @param saveChecked save the checked item for the future
+     *  @param sendChecked send the checked item to the remote host
+     */
+    void setupDialog(const QStringList &certs, bool saveChecked = false, bool sendChecked = true);
 
-	/**
-	 *  Obtain the name of the certificate the user wants to send
-	 *
-	 *  @return the name of the certificate
-	 */
-	QString getChoice();
+    /**
+     *  Obtain the name of the certificate the user wants to send
+     *
+     *  @return the name of the certificate
+     */
+    QString getChoice();
 
-	/**
-	 *  Determine if the user wants to send a certificate.
-	 *
-	 *  @return true if the user wants to send a certificate
-	 */
-	bool wantsToSend();
+    /**
+     *  Determine if the user wants to send a certificate.
+     *
+     *  @return true if the user wants to send a certificate
+     */
+    bool wantsToSend();
 
-	/**
-	 *  Determine if the user wants to save the choice for the future.
-	 *
-	 *  @return true if the user wants to save the choice.
-	 */
-	bool saveChoice();
+    /**
+     *  Determine if the user wants to save the choice for the future.
+     *
+     *  @return true if the user wants to save the choice.
+     */
+    bool saveChoice();
 
-	/**
-	 *  Set the hostname that we are connecting to.
-	 *
-	 *  @param host the hostname
-	 */
-	void setHost(const QString& host);
+    /**
+     *  Set the hostname that we are connecting to.
+     *
+     *  @param host the hostname
+     */
+    void setHost(const QString &host);
 
 private slots:
-	void slotSend();
-	void slotDont();
+    void slotSend();
+    void slotDont();
 
 private:
-	class KSSLCertDlgPrivate;
-	KSSLCertDlgPrivate *d;
-	QCheckBox *_save;
-	QRadioButton *_send, *_dont;
-	QListView *_certs;
-	QPushButton *_ok;
-	QString _host;
+    class KSSLCertDlgPrivate;
+    KSSLCertDlgPrivate *d;
+    QCheckBox *_save;
+    QRadioButton *_send, *_dont;
+    QListView *_certs;
+    QPushButton *_ok;
+    QString _host;
 };
 
 
 class KIO_EXPORT KSSLCertDlgRet {
 public:
-   bool ok;
-   QString choice;
-   bool send;
-   bool save;
+    bool ok;
+    QString choice;
+    bool send;
+    bool save;
 
 protected:
-   class KSSLCertDlgRetPrivate;
-   KSSLCertDlgRetPrivate *d;
+    class KSSLCertDlgRetPrivate;
+    KSSLCertDlgRetPrivate *d;
 };
 
-KIO_EXPORT QDataStream& operator<<(QDataStream& s, const KSSLCertDlgRet& r);
-KIO_EXPORT QDataStream& operator>>(QDataStream& s, KSSLCertDlgRet& r);
+KIO_EXPORT QDataStream &operator<<(QDataStream &s, const KSSLCertDlgRet &r);
+KIO_EXPORT QDataStream &operator>>(QDataStream &s, KSSLCertDlgRet &r);
 
 #endif
-

@@ -24,17 +24,16 @@
 
 class KMDriverDbWidget;
 
-class KMWDriver : public KMWizardPage
-{
+class KMWDriver : public KMWizardPage {
 public:
-	KMWDriver(QWidget *parent = 0, const char *name = 0);
+    KMWDriver(QWidget *parent = 0, const char *name = 0);
 
-	bool isValid(QString&);
-	void updatePrinter(KMPrinter*);
-	void initPrinter(KMPrinter*);
+    bool isValid(QString &);
+    void updatePrinter(KMPrinter *);
+    void initPrinter(KMPrinter *);
 
 private:
-	KMDriverDbWidget	*m_widget;
+    KMDriverDbWidget *m_widget;
 };
 
 #endif

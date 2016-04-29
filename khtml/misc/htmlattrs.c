@@ -1,28 +1,16 @@
 /* ANSI-C code produced by gperf version 3.0.3 */
 /* Command-line: gperf -c -a -L ANSI-C -P -G -D -E -C -o -t -k '*' -NfindAttr -Hhash_attr -Wwordlist_attr -Qspool_attr -s 2 htmlattrs.gperf  */
 
-#if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \
-      && ('%' == 37) && ('&' == 38) && ('\'' == 39) && ('(' == 40) \
-      && (')' == 41) && ('*' == 42) && ('+' == 43) && (',' == 44) \
-      && ('-' == 45) && ('.' == 46) && ('/' == 47) && ('0' == 48) \
-      && ('1' == 49) && ('2' == 50) && ('3' == 51) && ('4' == 52) \
-      && ('5' == 53) && ('6' == 54) && ('7' == 55) && ('8' == 56) \
-      && ('9' == 57) && (':' == 58) && (';' == 59) && ('<' == 60) \
-      && ('=' == 61) && ('>' == 62) && ('?' == 63) && ('A' == 65) \
-      && ('B' == 66) && ('C' == 67) && ('D' == 68) && ('E' == 69) \
-      && ('F' == 70) && ('G' == 71) && ('H' == 72) && ('I' == 73) \
-      && ('J' == 74) && ('K' == 75) && ('L' == 76) && ('M' == 77) \
-      && ('N' == 78) && ('O' == 79) && ('P' == 80) && ('Q' == 81) \
-      && ('R' == 82) && ('S' == 83) && ('T' == 84) && ('U' == 85) \
-      && ('V' == 86) && ('W' == 87) && ('X' == 88) && ('Y' == 89) \
-      && ('Z' == 90) && ('[' == 91) && ('\\' == 92) && (']' == 93) \
-      && ('^' == 94) && ('_' == 95) && ('a' == 97) && ('b' == 98) \
-      && ('c' == 99) && ('d' == 100) && ('e' == 101) && ('f' == 102) \
-      && ('g' == 103) && ('h' == 104) && ('i' == 105) && ('j' == 106) \
-      && ('k' == 107) && ('l' == 108) && ('m' == 109) && ('n' == 110) \
-      && ('o' == 111) && ('p' == 112) && ('q' == 113) && ('r' == 114) \
-      && ('s' == 115) && ('t' == 116) && ('u' == 117) && ('v' == 118) \
-      && ('w' == 119) && ('x' == 120) && ('y' == 121) && ('z' == 122) \
+#if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) && ('%' == 37) && ('&' == 38) && ('\'' == 39) && ('(' == 40) && (')' == 41)           \
+      && ('*' == 42) && ('+' == 43) && (',' == 44) && ('-' == 45) && ('.' == 46) && ('/' == 47) && ('0' == 48) && ('1' == 49) && ('2' == 50)         \
+      && ('3' == 51) && ('4' == 52) && ('5' == 53) && ('6' == 54) && ('7' == 55) && ('8' == 56) && ('9' == 57) && (':' == 58) && (';' == 59)         \
+      && ('<' == 60) && ('=' == 61) && ('>' == 62) && ('?' == 63) && ('A' == 65) && ('B' == 66) && ('C' == 67) && ('D' == 68) && ('E' == 69)         \
+      && ('F' == 70) && ('G' == 71) && ('H' == 72) && ('I' == 73) && ('J' == 74) && ('K' == 75) && ('L' == 76) && ('M' == 77) && ('N' == 78)         \
+      && ('O' == 79) && ('P' == 80) && ('Q' == 81) && ('R' == 82) && ('S' == 83) && ('T' == 84) && ('U' == 85) && ('V' == 86) && ('W' == 87)         \
+      && ('X' == 88) && ('Y' == 89) && ('Z' == 90) && ('[' == 91) && ('\\' == 92) && (']' == 93) && ('^' == 94) && ('_' == 95) && ('a' == 97)        \
+      && ('b' == 98) && ('c' == 99) && ('d' == 100) && ('e' == 101) && ('f' == 102) && ('g' == 103) && ('h' == 104) && ('i' == 105) && ('j' == 106)  \
+      && ('k' == 107) && ('l' == 108) && ('m' == 109) && ('n' == 110) && ('o' == 111) && ('p' == 112) && ('q' == 113) && ('r' == 114)                \
+      && ('s' == 115) && ('t' == 116) && ('u' == 117) && ('v' == 118) && ('w' == 119) && ('x' == 120) && ('y' == 121) && ('z' == 122)                \
       && ('{' == 123) && ('|' == 124) && ('}' == 125) && ('~' == 126))
 /* The character set is not based on ISO-646.  */
 #error "gperf generated tables don't work with this execution character set. Please report a bug to <bug-gnu-gperf@gnu.org>."
@@ -34,18 +22,19 @@
 #htmlattrs.in by makeattrs, do not edit */
 #include "htmlattrs.h"
 #line 6 "htmlattrs.gperf"
-struct attrs {
+struct attrs
+{
     int name;
     int id;
 };
 enum
-  {
+{
     TOTAL_KEYWORDS = 152,
     MIN_WORD_LENGTH = 2,
     MAX_WORD_LENGTH = 15,
     MIN_HASH_VALUE = 3,
     MAX_HASH_VALUE = 576
-  };
+};
 
 /* maximum key range = 574, duplicates = 0 */
 
@@ -56,93 +45,75 @@ __inline
 inline
 #endif
 #endif
-static unsigned int
-hash_attr (register const char *str, register unsigned int len)
+    static unsigned int
+    hash_attr(register const char *str, register unsigned int len)
 {
-  static const unsigned short asso_values[] =
-    {
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577,   5,   5, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577,  30,  10,   0,
-       10,   5,  10,  15, 165,  40, 140,  80,   0,  25,
-       70,   0,   5,   5,   0,   0,  10,  55,  70, 180,
-        5,  90,  45, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
-      577, 577, 577, 577, 577, 577, 577
-    };
-  register int hval = len;
+    static const unsigned short asso_values[] = {
+        577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
+        577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 5,   5,   577, 577, 577, 577, 577,
+        577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
+        577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 30,  10,  0,   10,  5,   10,  15,
+        165, 40,  140, 80,  0,   25,  70,  0,   5,   5,   0,   0,   10,  55,  70,  180, 5,   90,  45,  577, 577, 577, 577, 577, 577, 577,
+        577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
+        577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
+        577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
+        577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577,
+        577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577, 577};
+    register int hval = len;
 
-  switch (hval)
+    switch(hval)
     {
-      default:
-        hval += asso_values[(unsigned char)str[14]];
-      /*FALLTHROUGH*/
-      case 14:
-        hval += asso_values[(unsigned char)str[13]];
-      /*FALLTHROUGH*/
-      case 13:
-        hval += asso_values[(unsigned char)str[12]];
-      /*FALLTHROUGH*/
-      case 12:
-        hval += asso_values[(unsigned char)str[11]];
-      /*FALLTHROUGH*/
-      case 11:
-        hval += asso_values[(unsigned char)str[10]];
-      /*FALLTHROUGH*/
-      case 10:
-        hval += asso_values[(unsigned char)str[9]];
-      /*FALLTHROUGH*/
-      case 9:
-        hval += asso_values[(unsigned char)str[8]];
-      /*FALLTHROUGH*/
-      case 8:
-        hval += asso_values[(unsigned char)str[7]];
-      /*FALLTHROUGH*/
-      case 7:
-        hval += asso_values[(unsigned char)str[6]];
-      /*FALLTHROUGH*/
-      case 6:
-        hval += asso_values[(unsigned char)str[5]];
-      /*FALLTHROUGH*/
-      case 5:
-        hval += asso_values[(unsigned char)str[4]];
-      /*FALLTHROUGH*/
-      case 4:
-        hval += asso_values[(unsigned char)str[3]];
-      /*FALLTHROUGH*/
-      case 3:
-        hval += asso_values[(unsigned char)str[2]];
-      /*FALLTHROUGH*/
-      case 2:
-        hval += asso_values[(unsigned char)str[1]+1];
-      /*FALLTHROUGH*/
-      case 1:
-        hval += asso_values[(unsigned char)str[0]];
-        break;
+        default:
+            hval += asso_values[(unsigned char)str[14]];
+        /*FALLTHROUGH*/
+        case 14:
+            hval += asso_values[(unsigned char)str[13]];
+        /*FALLTHROUGH*/
+        case 13:
+            hval += asso_values[(unsigned char)str[12]];
+        /*FALLTHROUGH*/
+        case 12:
+            hval += asso_values[(unsigned char)str[11]];
+        /*FALLTHROUGH*/
+        case 11:
+            hval += asso_values[(unsigned char)str[10]];
+        /*FALLTHROUGH*/
+        case 10:
+            hval += asso_values[(unsigned char)str[9]];
+        /*FALLTHROUGH*/
+        case 9:
+            hval += asso_values[(unsigned char)str[8]];
+        /*FALLTHROUGH*/
+        case 8:
+            hval += asso_values[(unsigned char)str[7]];
+        /*FALLTHROUGH*/
+        case 7:
+            hval += asso_values[(unsigned char)str[6]];
+        /*FALLTHROUGH*/
+        case 6:
+            hval += asso_values[(unsigned char)str[5]];
+        /*FALLTHROUGH*/
+        case 5:
+            hval += asso_values[(unsigned char)str[4]];
+        /*FALLTHROUGH*/
+        case 4:
+            hval += asso_values[(unsigned char)str[3]];
+        /*FALLTHROUGH*/
+        case 3:
+            hval += asso_values[(unsigned char)str[2]];
+        /*FALLTHROUGH*/
+        case 2:
+            hval += asso_values[(unsigned char)str[1] + 1];
+        /*FALLTHROUGH*/
+        case 1:
+            hval += asso_values[(unsigned char)str[0]];
+            break;
     }
-  return hval;
+    return hval;
 }
 
 struct spool_attr_t
-  {
+{
     char spool_attr_str0[sizeof("src")];
     char spool_attr_str1[sizeof("onscroll")];
     char spool_attr_str2[sizeof("cols")];
@@ -295,166 +266,30 @@ struct spool_attr_t
     char spool_attr_str149[sizeof("width")];
     char spool_attr_str150[sizeof("marginheight")];
     char spool_attr_str151[sizeof("marginwidth")];
-  };
-static const struct spool_attr_t spool_attr_contents =
-  {
-    "src",
-    "onscroll",
-    "cols",
-    "color",
-    "onerror",
-    "rel",
-    "loop",
-    "for",
-    "coords",
-    "top",
-    "code",
-    "scope",
-    "onreset",
-    "onselect",
-    "face",
-    "label",
-    "left",
-    "border",
-    "text",
-    "defer",
-    "bordercolor",
-    "abbr",
-    "pagex",
-    "onload",
-    "id",
-    "selected",
-    "prompt",
-    "target",
-    "onabort",
-    "class",
-    "declare",
-    "data",
-    "clear",
-    "accept",
-    "profile",
-    "alt",
-    "type",
-    "onblur",
-    "onfocus",
-    "codebase",
-    "char",
-    "frame",
-    "rules",
-    "compact",
-    "rev",
-    "shape",
-    "charset",
-    "charoff",
-    "lang",
-    "start",
-    "onresize",
-    "truespeed",
-    "frameborder",
-    "span",
-    "classid",
-    "longdesc",
-    "name",
-    "ismap",
-    "colspan",
-    "media",
-    "enctype",
-    "datetime",
-    "vspace",
-    "onclick",
-    "pagey",
-    "usemap",
-    "codetype",
-    "scrolling",
-    "value",
-    "checked",
-    "onsubmit",
-    "ondblclick",
-    "dir",
-    "onmouseup",
-    "style",
-    "scrolldelay",
-    "cite",
-    "onmouseout",
-    "object",
-    "multiple",
-    "axis",
-    "action",
-    "tabindex",
-    "title",
-    "onmouseover",
-    "autocomplete",
-    "onunload",
-    "challenge",
-    "plain",
-    "content",
-    "noresize",
-    "cellspacing",
-    "bgcolor",
-    "href",
-    "align",
-    "nosave",
-    "z-index",
-    "rows",
-    "oversrc",
-    "size",
-    "onkeypress",
-    "onmousemove",
-    "version",
-    "cellpadding",
-    "language",
-    "topmargin",
-    "valign",
-    "scrollamount",
-    "disabled",
-    "scheme",
-    "readonly",
-    "wrap",
-    "leftmargin",
-    "hspace",
-    "method",
-    "headers",
-    "accesskey",
-    "onkeyup",
-    "summary",
-    "html",
-    "alink",
-    "bgproperties",
-    "valuetype",
-    "background",
-    "nohref",
-    "standby",
-    "pluginurl",
-    "pluginpage",
-    "pluginspage",
-    "direction",
-    "accept-charset",
-    "vlink",
-    "noshade",
-    "onchange",
-    "link",
-    "contenteditable",
-    "nowrap",
-    "rowspan",
-    "hreflang",
-    "maxlength",
-    "archive",
-    "behavior",
-    "onmousedown",
-    "hidden",
-    "height",
-    "http-equiv",
-    "onkeydown",
-    "visibility",
-    "unknown",
-    "width",
-    "marginheight",
-    "marginwidth"
-  };
-#define spool_attr ((const char *) &spool_attr_contents)
+};
+static const struct spool_attr_t spool_attr_contents = {
+    "src",         "onscroll",     "cols",           "color",        "onerror",     "rel",          "loop",         "for",
+    "coords",      "top",          "code",           "scope",        "onreset",     "onselect",     "face",         "label",
+    "left",        "border",       "text",           "defer",        "bordercolor", "abbr",         "pagex",        "onload",
+    "id",          "selected",     "prompt",         "target",       "onabort",     "class",        "declare",      "data",
+    "clear",       "accept",       "profile",        "alt",          "type",        "onblur",       "onfocus",      "codebase",
+    "char",        "frame",        "rules",          "compact",      "rev",         "shape",        "charset",      "charoff",
+    "lang",        "start",        "onresize",       "truespeed",    "frameborder", "span",         "classid",      "longdesc",
+    "name",        "ismap",        "colspan",        "media",        "enctype",     "datetime",     "vspace",       "onclick",
+    "pagey",       "usemap",       "codetype",       "scrolling",    "value",       "checked",      "onsubmit",     "ondblclick",
+    "dir",         "onmouseup",    "style",          "scrolldelay",  "cite",        "onmouseout",   "object",       "multiple",
+    "axis",        "action",       "tabindex",       "title",        "onmouseover", "autocomplete", "onunload",     "challenge",
+    "plain",       "content",      "noresize",       "cellspacing",  "bgcolor",     "href",         "align",        "nosave",
+    "z-index",     "rows",         "oversrc",        "size",         "onkeypress",  "onmousemove",  "version",      "cellpadding",
+    "language",    "topmargin",    "valign",         "scrollamount", "disabled",    "scheme",       "readonly",     "wrap",
+    "leftmargin",  "hspace",       "method",         "headers",      "accesskey",   "onkeyup",      "summary",      "html",
+    "alink",       "bgproperties", "valuetype",      "background",   "nohref",      "standby",      "pluginurl",    "pluginpage",
+    "pluginspage", "direction",    "accept-charset", "vlink",        "noshade",     "onchange",     "link",         "contenteditable",
+    "nowrap",      "rowspan",      "hreflang",       "maxlength",    "archive",     "behavior",     "onmousedown",  "hidden",
+    "height",      "http-equiv",   "onkeydown",      "visibility",   "unknown",     "width",        "marginheight", "marginwidth"};
+#define spool_attr ((const char *)&spool_attr_contents)
 
-static const struct attrs wordlist_attr[] =
-  {
+static const struct attrs wordlist_attr[] = {
 #line 157 "htmlattrs.gperf"
     {(int)(long)&((struct spool_attr_t *)0)->spool_attr_str0, ATTR_SRC},
 #line 151 "htmlattrs.gperf"
@@ -758,256 +593,65 @@ static const struct attrs wordlist_attr[] =
 #line 60 "htmlattrs.gperf"
     {(int)(long)&((struct spool_attr_t *)0)->spool_attr_str150, ATTR_MARGINHEIGHT},
 #line 61 "htmlattrs.gperf"
-    {(int)(long)&((struct spool_attr_t *)0)->spool_attr_str151, ATTR_MARGINWIDTH}
-  };
+    {(int)(long)&((struct spool_attr_t *)0)->spool_attr_str151, ATTR_MARGINWIDTH}};
 
-static const short lookup[] =
-  {
-     -1,  -1,  -1,   0,  -1,  -1,  -1,  -1,   1,   2,
-      3,  -1,   4,   5,   6,  -1,  -1,  -1,   7,  -1,
-     -1,   8,  -1,   9,  10,  11,  -1,  12,  13,  14,
-     15,  -1,  -1,  -1,  16,  -1,  17,  -1,  -1,  18,
-     19,  20,  -1,  -1,  21,  22,  23,  24,  25,  -1,
-     -1,  26,  -1,  -1,  -1,  -1,  27,  28,  -1,  -1,
-     29,  -1,  30,  -1,  31,  32,  33,  34,  35,  36,
-     -1,  37,  38,  39,  40,  41,  -1,  -1,  -1,  -1,
-     42,  -1,  43,  44,  -1,  45,  -1,  -1,  -1,  -1,
-     -1,  -1,  46,  -1,  -1,  -1,  -1,  47,  -1,  48,
-     49,  -1,  -1,  50,  51,  -1,  52,  -1,  -1,  53,
-     -1,  -1,  54,  55,  56,  57,  -1,  58,  -1,  -1,
-     59,  -1,  60,  61,  -1,  -1,  62,  63,  -1,  -1,
-     64,  -1,  -1,  -1,  -1,  -1,  65,  -1,  66,  -1,
-     -1,  -1,  -1,  -1,  67,  68,  -1,  69,  70,  -1,
-     71,  -1,  -1,  72,  73,  74,  75,  -1,  -1,  76,
-     77,  78,  -1,  79,  80,  -1,  81,  -1,  82,  -1,
-     83,  84,  85,  86,  87,  88,  -1,  89,  90,  -1,
-     -1,  91,  92,  -1,  93,  94,  95,  96,  -1,  97,
-     -1,  -1,  98,  -1,  99, 100, 101, 102,  -1,  -1,
-     -1, 103,  -1,  -1,  -1,  -1,  -1,  -1, 104, 105,
-     -1, 106, 107, 108,  -1,  -1, 109,  -1, 110, 111,
-    112, 113,  -1,  -1,  -1,  -1, 114, 115,  -1, 116,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1, 117,  -1,  -1,  -1,  -1, 118,  -1, 119,
-    120,  -1,  -1,  -1,  -1,  -1,  -1, 121,  -1, 122,
-    123, 124,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1, 125,  -1, 126, 127, 128,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1, 129,  -1,  -1,  -1,  -1, 130,
-    131,  -1, 132, 133, 134, 135, 136, 137,  -1,  -1,
-     -1,  -1,  -1, 138,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1, 139,  -1,  -1, 140,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1, 141,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1, 142,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1, 143,  -1,  -1,  -1,
-     -1, 144,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1, 145,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1, 146,  -1,  -1,  -1,  -1,  -1,
-    147,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1, 148,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    149,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-     -1,  -1, 150,  -1,  -1,  -1, 151
-  };
+static const short lookup[] = {
+    -1,  -1, -1,  0,   -1,  -1,  -1,  -1,  1,   2,   3,   -1,  4,  5,   6,   -1,  -1,  -1,  7,   -1,  -1, 8,   -1,  9,   10,  11,  -1,  12,  13,
+    14,  15, -1,  -1,  -1,  16,  -1,  17,  -1,  -1,  18,  19,  20, -1,  -1,  21,  22,  23,  24,  25,  -1, -1,  26,  -1,  -1,  -1,  -1,  27,  28,
+    -1,  -1, 29,  -1,  30,  -1,  31,  32,  33,  34,  35,  36,  -1, 37,  38,  39,  40,  41,  -1,  -1,  -1, -1,  42,  -1,  43,  44,  -1,  45,  -1,
+    -1,  -1, -1,  -1,  -1,  46,  -1,  -1,  -1,  -1,  47,  -1,  48, 49,  -1,  -1,  50,  51,  -1,  52,  -1, -1,  53,  -1,  -1,  54,  55,  56,  57,
+    -1,  58, -1,  -1,  59,  -1,  60,  61,  -1,  -1,  62,  63,  -1, -1,  64,  -1,  -1,  -1,  -1,  -1,  65, -1,  66,  -1,  -1,  -1,  -1,  -1,  67,
+    68,  -1, 69,  70,  -1,  71,  -1,  -1,  72,  73,  74,  75,  -1, -1,  76,  77,  78,  -1,  79,  80,  -1, 81,  -1,  82,  -1,  83,  84,  85,  86,
+    87,  88, -1,  89,  90,  -1,  -1,  91,  92,  -1,  93,  94,  95, 96,  -1,  97,  -1,  -1,  98,  -1,  99, 100, 101, 102, -1,  -1,  -1,  103, -1,
+    -1,  -1, -1,  -1,  -1,  104, 105, -1,  106, 107, 108, -1,  -1, 109, -1,  110, 111, 112, 113, -1,  -1, -1,  -1,  114, 115, -1,  116, -1,  -1,
+    -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  117, -1,  -1, -1,  -1,  118, -1,  119, 120, -1,  -1, -1,  -1,  -1,  -1,  121, -1,  122, 123,
+    124, -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  125, -1, 126, 127, 128, -1,  -1,  -1,  -1,  -1, -1,  -1,  129, -1,  -1,  -1,  -1,  130,
+    131, -1, 132, 133, 134, 135, 136, 137, -1,  -1,  -1,  -1,  -1, 138, -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  139, -1,  -1,  140, -1,
+    -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  141, -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  142, -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    143, -1, -1,  -1,  -1,  144, -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  145, -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  146, -1,  -1,  -1, -1,  -1,  147, -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  148, -1,
+    -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  149, -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+    -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, 150, -1,  -1,  -1,  151};
 
-const struct attrs *
-findAttr (register const char *str, register unsigned int len)
+const struct attrs *findAttr(register const char *str, register unsigned int len)
 {
-  if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
+    if(len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {
-      register int key = hash_attr (str, len);
+        register int key = hash_attr(str, len);
 
-      if (key <= MAX_HASH_VALUE && key >= 0)
+        if(key <= MAX_HASH_VALUE && key >= 0)
         {
-          register int index = lookup[key];
+            register int index = lookup[key];
 
-          if (index >= 0)
+            if(index >= 0)
             {
-              register const char *s = wordlist_attr[index].name + spool_attr;
+                register const char *s = wordlist_attr[index].name + spool_attr;
 
-              if (*str == *s && !strncmp (str + 1, s + 1, len - 1) && s[len] == '\0')
-                return &wordlist_attr[index];
+                if(*str == *s && !strncmp(str + 1, s + 1, len - 1) && s[len] == '\0')
+                    return &wordlist_attr[index];
             }
         }
     }
-  return 0;
+    return 0;
 }
 #line 163 "htmlattrs.gperf"
 
 
-
 static const unsigned short attrList[] = {
-    65535,
-    145,
-    33,
-    116,
-    94,
-    120,
-    85,
-    80,
-    141,
-    92,
-    121,
-    17,
-    20,
-    103,
-    91,
-    40,
-    87,
-    47,
-    46,
-    69,
-    32,
-    66,
-    3,
-    2,
-    58,
-    43,
-    135,
-    8,
-    30,
-    19,
-    72,
-    129,
-    108,
-    60,
-    14,
-    41,
-    52,
-    144,
-    143,
-    138,
-    113,
-    119,
-    145,
-    57,
-    48,
-    104,
-    16,
-    112,
-    134,
-    6,
-    150,
-    151,
-    139,
-    59,
-    114,
-    79,
-    124,
-    90,
-    95,
-    132,
-    136,
-    28,
-    4,
-    50,
-    98,
-    22,
-    64,
-    88,
-    127,
-    128,
-    126,
-    110,
-    5,
-    44,
-    97,
-    137,
-    42,
-    11,
-    107,
-    75,
-    67,
-    25,
-    45,
-    99,
-    53,
-    49,
-    74,
-    82,
-    27,
-    18,
-    9,
-    105,
-    51,
-    36,
-    148,
-    106,
-    122,
-    102,
-    147,
-    131,
-    62,
-    149,
-    111,
-    145,
-    21,
-    81,
-    35,
-    140,
-    123,
-    76,
-    29,
-    54,
-    10,
-    39,
-    89,
-    31,
-    61,
-    7,
-    115,
-    93,
-    24,
-    15,
-    55,
-    56,
-    78,
-    37,
-    133,
-    63,
-    71,
-    38,
-    146,
-    100,
-    117,
-    23,
-    142,
-    101,
-    77,
-    84,
-    73,
-    12,
-    13,
-    1,
-    70,
-    86,
-    34,
-    26,
-    109,
-    0,
-    125,
-    118,
-    83,
-    65,
-    68,
-    65535
-};
+    65535, 145, 33,  116, 94,  120, 85,  80,  141, 92, 121, 17,  20,  103, 91,  40,  87,  47,  46,  69,  32,  66,  3,   2,    58,  43,
+    135,   8,   30,  19,  72,  129, 108, 60,  14,  41, 52,  144, 143, 138, 113, 119, 145, 57,  48,  104, 16,  112, 134, 6,    150, 151,
+    139,   59,  114, 79,  124, 90,  95,  132, 136, 28, 4,   50,  98,  22,  64,  88,  127, 128, 126, 110, 5,   44,  97,  137,  42,  11,
+    107,   75,  67,  25,  45,  99,  53,  49,  74,  82, 27,  18,  9,   105, 51,  36,  148, 106, 122, 102, 147, 131, 62,  149,  111, 145,
+    21,    81,  35,  140, 123, 76,  29,  54,  10,  39, 89,  31,  61,  7,   115, 93,  24,  15,  55,  56,  78,  37,  133, 63,   71,  38,
+    146,   100, 117, 23,  142, 101, 77,  84,  73,  12, 13,  1,   70,  86,  34,  26,  109, 0,   125, 118, 83,  65,  68,  65535};
 
-const char* KDE_NO_EXPORT getAttrName(unsigned short id)
+const char *KDE_NO_EXPORT getAttrName(unsigned short id)
 {
-    if (!id || id > TOTAL_KEYWORDS) return "";
+    if(!id || id > TOTAL_KEYWORDS)
+        return "";
     return spool_attr + wordlist_attr[attrList[id]].name;
 }

@@ -23,16 +23,13 @@
 
 #include <kio/slavebase.h>
 
-class MetaInfoProtocol : public KIO::SlaveBase
-{
+class MetaInfoProtocol : public KIO::SlaveBase {
 public:
     MetaInfoProtocol(const QCString &pool, const QCString &app);
     virtual ~MetaInfoProtocol();
 
     virtual void get(const KURL &url);
-    virtual void put(const KURL& url, int permissions,
-                     bool overwrite, bool resume);
-
+    virtual void put(const KURL &url, int permissions, bool overwrite, bool resume);
 };
 
 #endif

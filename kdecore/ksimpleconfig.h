@@ -38,44 +38,43 @@ class KSimpleConfigPrivate;
  * @see KConfigBase KConfig
  * @short KDE Configuration Management class with deletion ability
  */
-class KDECORE_EXPORT KSimpleConfig : public KConfig
-{
-  Q_OBJECT
+class KDECORE_EXPORT KSimpleConfig : public KConfig {
+    Q_OBJECT
 
 public:
-  /**
-   * Construct a KSimpleConfig object and make it either read-write
-   * or read-only.
-   *
-   * @param fileName The file used for saving the config data. Either
-   *                  a full path can be specified or just the filename.
-   *                  If only a filename is specified, the default
-   *                  directory for "config" files is used.
-   * @param bReadOnly Whether the object should be read-only.
-   */
-  KSimpleConfig( const QString &fileName, bool bReadOnly = false);
+    /**
+     * Construct a KSimpleConfig object and make it either read-write
+     * or read-only.
+     *
+     * @param fileName The file used for saving the config data. Either
+     *                  a full path can be specified or just the filename.
+     *                  If only a filename is specified, the default
+     *                  directory for "config" files is used.
+     * @param bReadOnly Whether the object should be read-only.
+     */
+    KSimpleConfig(const QString &fileName, bool bReadOnly = false);
 
-  KSimpleConfig(KConfigBackEnd *backEnd, bool bReadOnly = false);
+    KSimpleConfig(KConfigBackEnd *backEnd, bool bReadOnly = false);
 
-  /**
-   * Destructor.
-   *
-   * Writes back any dirty configuration entries.
-   */
-  virtual ~KSimpleConfig();
+    /**
+     * Destructor.
+     *
+     * Writes back any dirty configuration entries.
+     */
+    virtual ~KSimpleConfig();
 
-  virtual void sync();
+    virtual void sync();
 
 private:
-
-  // copy-construction and assignment are not allowed
-  KSimpleConfig( const KSimpleConfig& );
-  KSimpleConfig& operator= ( const KSimpleConfig& rConfig );
+    // copy-construction and assignment are not allowed
+    KSimpleConfig(const KSimpleConfig &);
+    KSimpleConfig &operator=(const KSimpleConfig &rConfig);
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  KSimpleConfigPrivate *d;
+    KSimpleConfigPrivate *d;
 };
 
 #endif

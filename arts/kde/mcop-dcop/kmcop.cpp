@@ -39,27 +39,25 @@
 using namespace Arts;
 using namespace std;
 
-class KMCOPPrivate
-{
+class KMCOPPrivate {
 public:
-	MCOPInfo mcopInfo; 
-	QPtrList<MCOPDCOPObject> list;
+    MCOPInfo mcopInfo;
+    QPtrList< MCOPDCOPObject > list;
 };
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutdata("kmcop", I18N_NOOP("KMCOP"),
-                         "0.1", I18N_NOOP("KDE MCOP-DCOP Bridge"),
-                         KAboutData::License_GPL, "(C) 2001, Nikolas Zimmermann");
+    KAboutData aboutdata("kmcop", I18N_NOOP("KMCOP"), "0.1", I18N_NOOP("KDE MCOP-DCOP Bridge"), KAboutData::License_GPL,
+                         "(C) 2001, Nikolas Zimmermann");
     aboutdata.addAuthor("Nikolas Zimmermann", I18N_NOOP("Author"), "wildfox@kde.org");
 
     KCmdLineArgs::init(argc, argv, &aboutdata);
     KUniqueApplication::addCmdLineOptions();
 
     if(!KUniqueApplication::start())
-	{
-		kdDebug() << "Running kmcop found" << endl;
-		return 0;
+    {
+        kdDebug() << "Running kmcop found" << endl;
+        return 0;
     }
 
     KUniqueApplication app;
@@ -70,15 +68,15 @@ int main(int argc, char **argv)
     KMCOP notify;
     app.dcopClient()->setDefaultObject("arts");
     app.dcopClient()->setDaemonMode(true);
-	
+
     return app.exec();
 }
 
 KMCOP::KMCOP() : QObject(), DCOPObject("arts")
 {
     d = new KMCOPPrivate();
-	d->mcopInfo = Reference("global:Arts_MCOPInfo");
-	d->list.setAutoDelete(true);
+    d->mcopInfo = Reference("global:Arts_MCOPInfo");
+    d->list.setAutoDelete(true);
 }
 
 KMCOP::~KMCOP()
@@ -88,84 +86,85 @@ KMCOP::~KMCOP()
 
 int KMCOP::objectCount()
 {
-	return d->mcopInfo.objectCount();
+    return d->mcopInfo.objectCount();
 }
 
 QCString KMCOP::correctType(const QCString &str)
 {
-	if(str == "string")
-		return "QCString";
-	return str;
+    if(str == "string")
+        return "QCString";
+    return str;
 }
 
 void KMCOP::addInterfacesHackHackHack()
 {
-	for(int i = 0; i <= objectCount(); i++)
-	{
-		Arts::Object obj = d->mcopInfo.objectForNumber(i);
-		
-		if(!obj.isNull())		
-		{
-			QCString interfaceName = obj._interfaceName().c_str();
+    for(int i = 0; i <= objectCount(); i++)
+    {
+        Arts::Object obj = d->mcopInfo.objectForNumber(i);
 
-			if(interfaceName != "Arts::TraderOffer")
-			{
-				Arts::InterfaceRepo ifaceRepo = Dispatcher::the()->interfaceRepo();
+        if(!obj.isNull())
+        {
+            QCString interfaceName = obj._interfaceName().c_str();
 
-				MCOPDCOPObject *interface = new MCOPDCOPObject(interfaceName);
-				d->list.append(interface);
-			
-				InterfaceDef ifaceDef = ifaceRepo.queryInterface(string(interfaceName));
-				vector<MethodDef> ifaceMethods = ifaceDef.methods;
+            if(interfaceName != "Arts::TraderOffer")
+            {
+                Arts::InterfaceRepo ifaceRepo = Dispatcher::the()->interfaceRepo();
 
-				vector<MethodDef>::iterator ifaceMethodsIterator;
-				for(ifaceMethodsIterator = ifaceMethods.begin(); ifaceMethodsIterator != ifaceMethods.end(); ifaceMethodsIterator++)
-				{
-					QCString function, signature;
+                MCOPDCOPObject *interface = new MCOPDCOPObject(interfaceName);
+                d->list.append(interface);
 
-					MCOPEntryInfo *entry = new MCOPEntryInfo();
-					
-					MethodDef currentMethod = *ifaceMethodsIterator;
-					vector<ParamDef> currentParameters = currentMethod.signature;
+                InterfaceDef ifaceDef = ifaceRepo.queryInterface(string(interfaceName));
+                vector< MethodDef > ifaceMethods = ifaceDef.methods;
 
-					QCString newType = correctType(QCString(currentMethod.type.c_str()));
-					
-					entry->setFunctionType(newType);
-					entry->setFunctionName(QCString(currentMethod.name.c_str()));
-					
-					function = entry->functionType() + QCString(" ") + entry->functionName() + QCString("(");
-					
-					signature = QCString("(");
+                vector< MethodDef >::iterator ifaceMethodsIterator;
+                for(ifaceMethodsIterator = ifaceMethods.begin(); ifaceMethodsIterator != ifaceMethods.end(); ifaceMethodsIterator++)
+                {
+                    QCString function, signature;
 
-					QCStringList signatureList;
-					
-					vector<ParamDef>::iterator methodParametersIterator;
-					for(methodParametersIterator = currentParameters.begin(); methodParametersIterator != currentParameters.end(); methodParametersIterator++)
-					{
-						ParamDef parameter = *methodParametersIterator;
-						if(methodParametersIterator != currentParameters.begin())
-						{
-							function += QCString(", ");						
-							signature += QCString(",");
-						}
-						
-						QCString correctParameter = correctType(QCString(parameter.type.c_str()));
-						
-						function += correctParameter;
-						signature += correctParameter;
+                    MCOPEntryInfo *entry = new MCOPEntryInfo();
 
-						signatureList.append(QCString(parameter.type.c_str()));
-					}
-					
-					function += QCString(")");
-					signature += QCString(")");
+                    MethodDef currentMethod = *ifaceMethodsIterator;
+                    vector< ParamDef > currentParameters = currentMethod.signature;
 
-					entry->setSignature(signature);
-					entry->setSignatureList(signatureList);
+                    QCString newType = correctType(QCString(currentMethod.type.c_str()));
 
-					interface->addDynamicFunction(function, entry);
-				}
-			}
-		}
-	}
+                    entry->setFunctionType(newType);
+                    entry->setFunctionName(QCString(currentMethod.name.c_str()));
+
+                    function = entry->functionType() + QCString(" ") + entry->functionName() + QCString("(");
+
+                    signature = QCString("(");
+
+                    QCStringList signatureList;
+
+                    vector< ParamDef >::iterator methodParametersIterator;
+                    for(methodParametersIterator = currentParameters.begin(); methodParametersIterator != currentParameters.end();
+                        methodParametersIterator++)
+                    {
+                        ParamDef parameter = *methodParametersIterator;
+                        if(methodParametersIterator != currentParameters.begin())
+                        {
+                            function += QCString(", ");
+                            signature += QCString(",");
+                        }
+
+                        QCString correctParameter = correctType(QCString(parameter.type.c_str()));
+
+                        function += correctParameter;
+                        signature += correctParameter;
+
+                        signatureList.append(QCString(parameter.type.c_str()));
+                    }
+
+                    function += QCString(")");
+                    signature += QCString(")");
+
+                    entry->setSignature(signature);
+                    entry->setSignatureList(signatureList);
+
+                    interface->addDynamicFunction(function, entry);
+                }
+            }
+        }
+    }
 }

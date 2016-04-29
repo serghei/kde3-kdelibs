@@ -30,19 +30,18 @@ namespace KABC {
 
 /**
   @short Phonenumber information.
-  
+
   This class provides phone number information. A phone number is classified by
   a type. The following types are available, it's possible to use multiple types
  Types for a number by combining them through a logical or.
 */
-class KABC_EXPORT PhoneNumber
-{
-    friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const PhoneNumber & );
-    friend KABC_EXPORT QDataStream &operator>>( QDataStream &, PhoneNumber & );
+class KABC_EXPORT PhoneNumber {
+    friend KABC_EXPORT QDataStream &operator<<(QDataStream &, const PhoneNumber &);
+    friend KABC_EXPORT QDataStream &operator>>(QDataStream &, PhoneNumber &);
 
-  public:
-    typedef QValueList<PhoneNumber> List;
-    typedef QValueList<int> TypeList;
+public:
+    typedef QValueList< PhoneNumber > List;
+    typedef QValueList< int > TypeList;
 
     /**
       @li @p Home -  Home number
@@ -60,57 +59,71 @@ class KABC_EXPORT PhoneNumber
       @li @p Pcs -   Personal Communication Service
       @li @p Pager - Pager
     */
-    enum Types { Home = 1, Work = 2, Msg = 4, Pref = 8, Voice = 16, Fax = 32,
-           Cell = 64, Video = 128, Bbs = 256, Modem = 512, Car = 1024,
-           Isdn = 2048, Pcs = 4096, Pager = 8192 };
+    enum Types
+    {
+        Home = 1,
+        Work = 2,
+        Msg = 4,
+        Pref = 8,
+        Voice = 16,
+        Fax = 32,
+        Cell = 64,
+        Video = 128,
+        Bbs = 256,
+        Modem = 512,
+        Car = 1024,
+        Isdn = 2048,
+        Pcs = 4096,
+        Pager = 8192
+    };
 
     /**
       Create an empty phone number object.
-    */  
+    */
     PhoneNumber();
 
     /**
       Create a phonenumber object.
-     
+
       @param number Number
       @param type   Type as defined in enum. Multiple types can be
                     specified by combining them by a logical or.
     */
-    PhoneNumber( const QString &number, int type = Home );
+    PhoneNumber(const QString &number, int type = Home);
 
     /**
       Destructor.
     */
     ~PhoneNumber();
-    
-    bool operator==( const PhoneNumber & ) const;
-    bool operator!=( const PhoneNumber & ) const;
-    
+
+    bool operator==(const PhoneNumber &) const;
+    bool operator!=(const PhoneNumber &) const;
+
     /**
       Sets the unique identifier.
     */
-    void setId( const QString &id );
+    void setId(const QString &id);
 
     /**
       Returns the unique identifier.
     */
     QString id() const;
-    
+
     /**
       Sets the number.
     */
-    void setNumber( const QString & );
+    void setNumber(const QString &);
 
     /**
       Returns the number.
     */
     QString number() const;
-    
+
     /**
       Sets the type. Multiple types can be specified by combining them by
       a logical or.
     */
-    void setType( int );
+    void setType(int);
 
     /**
       Returns the type. Can be a multiple types combined by a logical or.
@@ -135,27 +148,26 @@ class KABC_EXPORT PhoneNumber
     /**
       Returns the translated label for phone number type.
     */
-    static QString typeLabel( int type );
+    static QString typeLabel(int type);
 
     /**
       Returns the translated label for phone number type.
       @obsolete
     */
-    static QString label( int type );
+    static QString label(int type);
 
-  private:
+private:
     void init();
-    void validateNumber( const QString& );
+    void validateNumber(const QString &);
 
     QString mId;
-  
+
     int mType;
     QString mNumber;
 };
 
-KABC_EXPORT QDataStream &operator<<( QDataStream &, const PhoneNumber & );
-KABC_EXPORT QDataStream &operator>>( QDataStream &, PhoneNumber & );
-
+KABC_EXPORT QDataStream &operator<<(QDataStream &, const PhoneNumber &);
+KABC_EXPORT QDataStream &operator>>(QDataStream &, PhoneNumber &);
 }
 
 #endif

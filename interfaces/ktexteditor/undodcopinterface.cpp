@@ -4,54 +4,52 @@
 #include <dcopclient.h>
 using namespace KTextEditor;
 
-UndoDCOPInterface::UndoDCOPInterface( UndoInterface *Parent, const char *name)
-	: DCOPObject(name)
+UndoDCOPInterface::UndoDCOPInterface(UndoInterface *Parent, const char *name) : DCOPObject(name)
 {
-	m_parent = Parent;
+    m_parent = Parent;
 }
 
 UndoDCOPInterface::~UndoDCOPInterface()
 {
-
 }
 
-uint UndoDCOPInterface::undoInterfaceNumber ()
+uint UndoDCOPInterface::undoInterfaceNumber()
 {
-	return m_parent->undoInterfaceNumber();
+    return m_parent->undoInterfaceNumber();
 }
-void UndoDCOPInterface::undo ()
+void UndoDCOPInterface::undo()
 {
-	m_parent->undo();
+    m_parent->undo();
 }
-void UndoDCOPInterface::redo () 
+void UndoDCOPInterface::redo()
 {
-	m_parent->redo();
+    m_parent->redo();
 }
-void UndoDCOPInterface::clearUndo () 
+void UndoDCOPInterface::clearUndo()
 {
-	m_parent->clearUndo();
+    m_parent->clearUndo();
 }
-void UndoDCOPInterface::clearRedo () 
+void UndoDCOPInterface::clearRedo()
 {
-	m_parent->clearRedo();
+    m_parent->clearRedo();
 }
-uint UndoDCOPInterface::undoCount () 
+uint UndoDCOPInterface::undoCount()
 {
-	return m_parent->undoCount();
+    return m_parent->undoCount();
 }
-uint UndoDCOPInterface::redoCount ()
+uint UndoDCOPInterface::redoCount()
 {
-	return m_parent->redoCount();
+    return m_parent->redoCount();
 }
-uint UndoDCOPInterface::undoSteps ()
+uint UndoDCOPInterface::undoSteps()
 {
-	return m_parent->undoSteps();
+    return m_parent->undoSteps();
 }
-void UndoDCOPInterface::setUndoSteps ( uint steps )
+void UndoDCOPInterface::setUndoSteps(uint steps)
 {
-	m_parent->setUndoSteps(steps);
+    m_parent->setUndoSteps(steps);
 }
-void UndoDCOPInterface::undoChanged ()
+void UndoDCOPInterface::undoChanged()
 {
-	m_parent->undoChanged();
+    m_parent->undoChanged();
 }

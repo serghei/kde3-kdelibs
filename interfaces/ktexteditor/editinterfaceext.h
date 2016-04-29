@@ -24,51 +24,48 @@
 
 #include <kdelibs_export.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 * This is the main interface for accessing and modifying
 * text of the Document class.
 */
-class KTEXTEDITOR_EXPORT EditInterfaceExt
-{
-  friend class PrivateEditInterfaceExt;
+class KTEXTEDITOR_EXPORT EditInterfaceExt {
+    friend class PrivateEditInterfaceExt;
 
-  public:
+public:
     EditInterfaceExt();
     virtual ~EditInterfaceExt();
 
     uint editInterfaceExtNumber() const;
 
     /**
-	 * Begin an editing sequence.  Edit commands during this sequence will be
-	 * bunched together such that they represent a single undo command in the
-	 * editor, and so that repaint events do not occur inbetween.
-	 *
-	 * Your application should not return control to the event loop while it
-	 * has an unterminated (no matching editEnd() call) editing sequence
-	 * (result undefined) - so do all of your work in one go...
-	 */
+     * Begin an editing sequence.  Edit commands during this sequence will be
+     * bunched together such that they represent a single undo command in the
+     * editor, and so that repaint events do not occur inbetween.
+     *
+     * Your application should not return control to the event loop while it
+     * has an unterminated (no matching editEnd() call) editing sequence
+     * (result undefined) - so do all of your work in one go...
+     */
     virtual void editBegin() = 0;
 
-	/**
-	 * End and editing sequence.
-	 */
+    /**
+     * End and editing sequence.
+     */
     virtual void editEnd() = 0;
 
-  public:
-  /**
-  * only for the interface itself - REAL PRIVATE
-  */
-  private:
+public:
+    /**
+    * only for the interface itself - REAL PRIVATE
+    */
+private:
     class PrivateEditInterfaceExt *d;
     static uint globalEditInterfaceExtNumber;
     uint myEditInterfaceExtNumber;
 };
 
-KTEXTEDITOR_EXPORT EditInterfaceExt *editInterfaceExt (class Document *doc);
-
+KTEXTEDITOR_EXPORT EditInterfaceExt *editInterfaceExt(class Document *doc);
 }
 
 #endif

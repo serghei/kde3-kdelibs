@@ -44,8 +44,7 @@ class KInstance;
  * described by the service.
  * @see KDataTool
  */
-class KIO_EXPORT KDataToolInfo
-{
+class KIO_EXPORT KDataToolInfo {
 public:
     /**
      * Create an invalid KDataToolInfo.
@@ -56,15 +55,15 @@ public:
      * @param service the corresponding service
      * @param instance the instance to use
      */
-    KDataToolInfo( const KService::Ptr& service, KInstance* instance );
+    KDataToolInfo(const KService::Ptr &service, KInstance *instance);
     /**
      * Copy constructor.
      */
-    KDataToolInfo( const KDataToolInfo& info );
+    KDataToolInfo(const KDataToolInfo &info);
     /**
      * Assignment operator.
      */
-    KDataToolInfo& operator= ( const KDataToolInfo& info );
+    KDataToolInfo &operator=(const KDataToolInfo &info);
 
     /**
      * Returns the data type that the DataTool can accept.
@@ -113,7 +112,7 @@ public:
      * Returns a list of strings that you can put in a QPopupMenu item, for example to
      * offer the DataTools services to the user. The returned value
      * is usually something like "Spell checking", "Shrink Image", "Rotate Image"
-     * or something like that.     
+     * or something like that.
      * This list comes from the Comment field of the tool's desktop file
      * (so that it can be translated).
      *
@@ -131,7 +130,7 @@ public:
      *
      * Each of the strings returned corresponds to a string in the list returned by
      * userCommands.
-     * @return the list of commands the DataTool can execute, suitable for 
+     * @return the list of commands the DataTool can execute, suitable for
      *         the KDataTool::run method.
      */
     QStringList commands() const;
@@ -142,7 +141,7 @@ public:
      * @param name the name of the QObject, can be 0
      * @return a pointer to the created data tool or 0 on error.
      */
-    KDataTool* createTool( QObject* parent = 0, const char* name = 0 ) const;
+    KDataTool *createTool(QObject *parent = 0, const char *name = 0) const;
 
     /**
      * The KDataToolInfo's service that is represented by this class.
@@ -154,7 +153,10 @@ public:
      * The instance of the service.
      * @return the instance
      */
-    KInstance* instance() const { return m_instance; }
+    KInstance *instance() const
+    {
+        return m_instance;
+    }
 
     /**
      * A DataToolInfo may be invalid if the KService passed to its constructor does
@@ -171,13 +173,14 @@ public:
      * and also used if the tool wants to read its configuration in the app's config file).
      * @return the list of results
      */
-    static QValueList<KDataToolInfo> query( const QString& datatype, const QString& mimetype, KInstance * instance );
+    static QValueList< KDataToolInfo > query(const QString &datatype, const QString &mimetype, KInstance *instance);
 
 private:
     KService::Ptr m_service;
-    KInstance* m_instance;
+    KInstance *m_instance;
+
 private:
-    class KDataToolInfoPrivate* d;
+    class KDataToolInfoPrivate *d;
 };
 
 
@@ -191,8 +194,7 @@ private:
  * The slot defined for step 2 is called when the action is activated, and
  * that's where the tool should be created and run.
  */
-class KIO_EXPORT KDataToolAction : public KAction
-{
+class KIO_EXPORT KDataToolAction : public KAction {
     Q_OBJECT
 public:
     /**
@@ -204,7 +206,7 @@ public:
      * @param parent This action's parent.
      * @param name An internal name for this action.
      */
-    KDataToolAction( const QString & text, const KDataToolInfo & info, const QString & command, QObject * parent = 0, const char * name = 0);
+    KDataToolAction(const QString &text, const KDataToolInfo &info, const QString &command, QObject *parent = 0, const char *name = 0);
 
     /**
      * Creates a list of actions from a list of information about data-tools.
@@ -216,7 +218,7 @@ public:
      * @param slot the slot that will receive the toolActivated() signals
      * @return the KActions
      */
-    static QPtrList<KAction> dataToolActionList( const QValueList<KDataToolInfo> & tools, const QObject *receiver, const char* slot );
+    static QPtrList< KAction > dataToolActionList(const QValueList< KDataToolInfo > &tools, const QObject *receiver, const char *slot);
 
 signals:
     /**
@@ -224,7 +226,7 @@ signals:
      * @param info a description of the activated tools
      * @param command the command for the tool
      */
-    void toolActivated( const KDataToolInfo & info, const QString & command );
+    void toolActivated(const KDataToolInfo &info, const QString &command);
 
 protected:
     virtual void slotActivated();
@@ -232,11 +234,12 @@ protected:
 private:
     QString m_command;
     KDataToolInfo m_info;
-protected:
-    virtual void virtual_hook( int id, void* data );
-private:
-    class KDataToolActionPrivate* d;
 
+protected:
+    virtual void virtual_hook(int id, void *data);
+
+private:
+    class KDataToolActionPrivate *d;
 };
 
 /**
@@ -250,8 +253,7 @@ private:
  * @see KDataToolAction, and for activating a tool, passing it the data
  * (and possibly getting modified data from it).
  */
-class KIO_EXPORT KDataTool : public QObject
-{
+class KIO_EXPORT KDataTool : public QObject {
     Q_OBJECT
 public:
     /**
@@ -260,19 +262,22 @@ public:
      * @param parent the parent of the QObject (or 0 for parent-less KDataTools)
      * @param name the name of the QObject, can be 0
      */
-    KDataTool( QObject* parent = 0, const char* name = 0 );
+    KDataTool(QObject *parent = 0, const char *name = 0);
 
     /**
      * @internal. Do not use under any circumstance (including bad weather).
      */
-    void setInstance( KInstance* instance ) { m_instance = instance; }
+    void setInstance(KInstance *instance)
+    {
+        m_instance = instance;
+    }
 
     /**
      * Returns the instance of the part that created this tool.
      * Usually used if the tool wants to read its configuration in the app's config file.
      * @return the instance of the part that created this tool.
      */
-    KInstance* instance() const;
+    KInstance *instance() const;
 
     /**
      * Interface for 'running' this tool.
@@ -287,15 +292,17 @@ public:
      *                 QString, but the mimetype can be text/plain, text/html etc.)
      * @return true if successful, false otherwise
      */
-    virtual bool run( const QString& command, void* data, const QString& datatype, const QString& mimetype) = 0;
+    virtual bool run(const QString &command, void *data, const QString &datatype, const QString &mimetype) = 0;
 
 private:
-    KInstance * m_instance;
+    KInstance *m_instance;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KDataToolPrivate;
-    KDataToolPrivate * d;
+    KDataToolPrivate *d;
 };
 
 #endif

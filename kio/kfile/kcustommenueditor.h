@@ -24,14 +24,13 @@
 class KListView;
 class KConfigBase;
 
- /*
-  * Dialog for editing custom menus.
-  *
-  * @author Waldo Bastian (bastian@kde.org)
-  * @since 3.1
-  */
-class KIO_EXPORT KCustomMenuEditor : public KDialogBase
-{
+/*
+ * Dialog for editing custom menus.
+ *
+ * @author Waldo Bastian (bastian@kde.org)
+ * @since 3.1
+ */
+class KIO_EXPORT KCustomMenuEditor : public KDialogBase {
     Q_OBJECT
 public:
     /**

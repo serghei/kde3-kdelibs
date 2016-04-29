@@ -36,18 +36,21 @@ class QWidget;
  * The widget uses the user's global "echo mode" setting.
  */
 
-class KDEUI_EXPORT KPasswordEdit
-    : public QLineEdit
-{
+class KDEUI_EXPORT KPasswordEdit : public QLineEdit {
     Q_OBJECT
 
 public:
-    enum EchoModes { OneStar, ThreeStars, NoEcho };
+    enum EchoModes
+    {
+        OneStar,
+        ThreeStars,
+        NoEcho
+    };
 
     /**
      * Constructs a password input widget using the user's global "echo mode" setting.
      */
-    KPasswordEdit(QWidget *parent=0, const char *name=0);
+    KPasswordEdit(QWidget *parent = 0, const char *name = 0);
     // KDE4: either of the two must go! add default values for parameters
 
     /**
@@ -79,7 +82,10 @@ public:
      * Returns the password. The memory is freed in the destructor
      * so you should make a copy.
      */
-    const char *password() const { return m_Password; }
+    const char *password() const
+    {
+        return m_Password;
+    }
 
     /**
      * Erases the current password.
@@ -109,7 +115,7 @@ public slots:
     /**
      * Reimplementation
      */
-    virtual void insert( const QString &);
+    virtual void insert(const QString &);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *);
@@ -163,16 +169,15 @@ private:
  * @author Geert Jansen <jansen@kde.org>
  */
 
-class KDEUI_EXPORT KPasswordDialog
-    : public KDialogBase
-{
+class KDEUI_EXPORT KPasswordDialog : public KDialogBase {
     Q_OBJECT
 
 public:
     /**
      * This enum distinguishes the two operation modes of this dialog:
      */
-    enum Types {
+    enum Types
+    {
         /**
          * The user is asked to enter a password.
          */
@@ -200,15 +205,13 @@ public:
      *
      * @since 3.0
      */
-    KPasswordDialog(Types type, bool enableKeep, int extraBttn,
-                    QWidget *parent=0, const char *name=0);
+    KPasswordDialog(Types type, bool enableKeep, int extraBttn, QWidget *parent = 0, const char *name = 0);
 
     /**
      * @deprecated Variant of the previous constructor without the
      * possibility to specify a parent. Will be removed in KDE 4.0
      */
-    KPasswordDialog(int type, QString prompt, bool enableKeep=false,
-                    int extraBttn=0) KDE_DEPRECATED;
+    KPasswordDialog(int type, QString prompt, bool enableKeep = false, int extraBttn = 0) KDE_DEPRECATED;
     // note that this implicitly deprecates the 'prompt' variants of
     // getPassword() below. i guess the above constructor needs to be extended.
 
@@ -227,8 +230,7 @@ public:
      * @param name Passed to lower level constructor
      * @since 3.3
      */
-    KPasswordDialog(Types type, bool enableKeep, int extraBttn, const QString& iconName,
-                    QWidget *parent = 0, const char *name = 0);
+    KPasswordDialog(Types type, bool enableKeep, int extraBttn, const QString &iconName, QWidget *parent = 0, const char *name = 0);
 
     /**
      * Destructs the password dialog.
@@ -331,7 +333,10 @@ public:
      * Returns the password entered. The memory is freed in the destructor,
      * so you should make a copy.
      */
-    const char *password() const { return m_pEdit->password(); }
+    const char *password() const
+    {
+        return m_pEdit->password();
+    }
 
     /**
      * Clears the password input field. You might want to use this after the
@@ -343,7 +348,10 @@ public:
     /**
      * Returns true if the user wants to keep the password.
      */
-    bool keep() const { return m_Keep; }
+    bool keep() const
+    {
+        return m_Keep;
+    }
 
     /**
      * Pops up the dialog, asks the user for a password, and returns it.
@@ -357,7 +365,7 @@ public:
      * is shown and the result is stored in *keep.
      * @return Result code: Accepted or Rejected.
      */
-    static int getPassword(QCString &password, QString prompt, int *keep=0L);
+    static int getPassword(QCString &password, QString prompt, int *keep = 0L);
 
     /**
      * Pops up the dialog, asks the user for a password and returns it. The
@@ -382,16 +390,18 @@ protected slots:
     void slotKeep(bool);
 
 protected:
-
     /**
      * Virtual function that can be overridden to provide password
      * checking in derived classes. It should return @p true if the
      * password is valid, @p false otherwise.
      */
-    virtual bool checkPassword(const char *) { return true; }
+    virtual bool checkPassword(const char *)
+    {
+        return true;
+    }
 
 private slots:
-  void enableOkBtn();
+    void enableOkBtn();
 
 private:
     void init();
@@ -404,10 +414,11 @@ private:
     KPasswordEdit *m_pEdit, *m_pEdit2;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KPasswordDialogPrivate;
-    KPasswordDialogPrivate* const d;
+    KPasswordDialogPrivate *const d;
 };
 
 

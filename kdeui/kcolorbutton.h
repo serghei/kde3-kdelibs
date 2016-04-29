@@ -34,25 +34,23 @@ class KColorButtonPrivate;
 *
 * \image html kcolorbutton.png "KDE Color Button"
 */
-class KDEUI_EXPORT KColorButton : public QPushButton
-{
+class KDEUI_EXPORT KColorButton : public QPushButton {
     Q_OBJECT
-    Q_PROPERTY( QColor color READ color WRITE setColor )
-    Q_PROPERTY( QColor defaultColor READ defaultColor WRITE setDefaultColor )
+    Q_PROPERTY(QColor color READ color WRITE setColor)
+    Q_PROPERTY(QColor defaultColor READ defaultColor WRITE setDefaultColor)
 
 public:
     /**
      * Creates a color button.
      */
-    KColorButton( QWidget *parent, const char *name = 0L );
+    KColorButton(QWidget *parent, const char *name = 0L);
 
     /**
      * Creates a color button with an initial color @p c.
      */
-    KColorButton( const QColor &c, QWidget *parent, const char *name = 0L );
+    KColorButton(const QColor &c, QWidget *parent, const char *name = 0L);
     /// @since 3.1
-    KColorButton( const QColor &c, const QColor &defaultColor, QWidget *parent,
-                  const char *name=0L );
+    KColorButton(const QColor &c, const QColor &defaultColor, QWidget *parent, const char *name = 0L);
 
     virtual ~KColorButton();
 
@@ -60,12 +58,14 @@ public:
      * Returns the currently chosen color.
      */
     QColor color() const
-        { return col; }
+    {
+        return col;
+    }
 
     /**
      * Sets the current color to @p c.
      */
-     void setColor( const QColor &c );
+    void setColor(const QColor &c);
 
     /**
      * Returns the default color or an invalid color
@@ -78,7 +78,7 @@ public:
      * Sets the default color to @p c.
      * @since 3.4
      */
-    void setDefaultColor( const QColor &c );
+    void setDefaultColor(const QColor &c);
 
     QSize sizeHint() const;
 
@@ -87,29 +87,30 @@ signals:
      * Emitted when the color of the widget
      * is changed, either with setColor() or via user selection.
      */
-    void changed( const QColor &newColor );
+    void changed(const QColor &newColor);
 
 protected slots:
     void chooseColor();
 
 protected:
-    virtual void drawButtonLabel( QPainter *p );
-    virtual void dragEnterEvent( QDragEnterEvent *);
-    virtual void dropEvent( QDropEvent *);
-    virtual void mousePressEvent( QMouseEvent *e );
-    virtual void mouseMoveEvent( QMouseEvent *e);
-    virtual void keyPressEvent( QKeyEvent *e );
+    virtual void drawButtonLabel(QPainter *p);
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
+    virtual void mousePressEvent(QMouseEvent *e);
+    virtual void mouseMoveEvent(QMouseEvent *e);
+    virtual void keyPressEvent(QKeyEvent *e);
+
 private:
     QColor col;
     QPoint mPos;
     bool dragFlag;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KColorButtonPrivate;
     KColorButtonPrivate *d;
 };
 
 #endif
-

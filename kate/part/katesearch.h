@@ -39,57 +39,55 @@ class KateSuperRangeList;
 
 class KActionCollection;
 
-class KateSearch : public QObject
-{
-  Q_OBJECT
+class KateSearch : public QObject {
+    Q_OBJECT
 
-  friend class KateDocument;
+    friend class KateDocument;
 
-  private:
-    class SearchFlags
-    {
-      public:
-        bool caseSensitive     :1;
-        bool wholeWords        :1;
-        bool fromBeginning     :1;
-        bool backward          :1;
-        bool selected          :1;
-        bool prompt            :1;
-        bool replace           :1;
-        bool finished          :1;
-        bool regExp            :1;
-        bool useBackRefs       :1;
+private:
+    class SearchFlags {
+    public:
+        bool caseSensitive : 1;
+        bool wholeWords : 1;
+        bool fromBeginning : 1;
+        bool backward : 1;
+        bool selected : 1;
+        bool prompt : 1;
+        bool replace : 1;
+        bool finished : 1;
+        bool regExp : 1;
+        bool useBackRefs : 1;
     };
 
-    class SConfig
-    {
-      public:
+    class SConfig {
+    public:
         SearchFlags flags;
         KateTextCursor cursor;
         KateTextCursor wrappedEnd; // after wraping around, search/replace until here
-        bool wrapped; // have we allready wrapped around ?
-        bool showNotFound; // pop up annoying dialogs?
+        bool wrapped;              // have we allready wrapped around ?
+        bool showNotFound;         // pop up annoying dialogs?
         uint matchedLength;
         KateTextCursor selBegin;
         KateTextCursor selEnd;
     };
 
-  public:
-    enum Dialog_results {
-      srCancel = KDialogBase::Cancel,
-      srAll = KDialogBase::User1,
-      srLast = KDialogBase::User2,
-      srNo = KDialogBase::User3,
-      srYes = KDialogBase::Ok
+public:
+    enum Dialog_results
+    {
+        srCancel = KDialogBase::Cancel,
+        srAll = KDialogBase::User1,
+        srLast = KDialogBase::User2,
+        srNo = KDialogBase::User3,
+        srYes = KDialogBase::Ok
     };
 
-  public:
-    KateSearch( KateView* );
+public:
+    KateSearch(KateView *);
     ~KateSearch();
 
-    void createActions( KActionCollection* );
+    void createActions(KActionCollection *);
 
-  public slots:
+public slots:
     void find();
     /**
      * Search for @p pattern given @p flags
@@ -102,7 +100,7 @@ class KateSearch : public QObject
      * That must now be explicitly required -- the find dialog does, but the commandline
      * incremental search does not.
      */
-    void find( const QString &pattern, long flags, bool add=true, bool shownotfound=false );
+    void find(const QString &pattern, long flags, bool add = true, bool shownotfound = false);
     void replace();
     /**
      * Replace @p pattern with @p replacement given @p flags.
@@ -112,23 +110,35 @@ class KateSearch : public QObject
      * @param replacement Replacement string.
      * @param flags OR'd combination of KFindDialog::Options
      */
-    void replace( const QString &pattern, const QString &replacement, long flags );
-    void findAgain( bool reverseDirection );
+    void replace(const QString &pattern, const QString &replacement, long flags);
+    void findAgain(bool reverseDirection);
 
-  private slots:
+private slots:
     void replaceSlot();
-    void slotFindNext() { findAgain( false ); }
-    void slotFindPrev() { findAgain( true );  }
+    void slotFindNext()
+    {
+        findAgain(false);
+    }
+    void slotFindPrev()
+    {
+        findAgain(true);
+    }
 
-  private:
-    static void addToList( QStringList&, const QString& );
-    static void addToSearchList( const QString& s )  { addToList( s_searchList, s ); }
-    static void addToReplaceList( const QString& s ) { addToList( s_replaceList, s ); }
-    static QStringList s_searchList; ///< recent patterns
+private:
+    static void addToList(QStringList &, const QString &);
+    static void addToSearchList(const QString &s)
+    {
+        addToList(s_searchList, s);
+    }
+    static void addToReplaceList(const QString &s)
+    {
+        addToList(s_replaceList, s);
+    }
+    static QStringList s_searchList;  ///< recent patterns
     static QStringList s_replaceList; ///< recent replacement strings
-    static QString s_pattern; ///< the string to search for
+    static QString s_pattern;         ///< the string to search for
 
-    void search( SearchFlags flags );
+    void search(SearchFlags flags);
     void wrapSearch();
     bool askContinue();
 
@@ -139,25 +149,31 @@ class KateSearch : public QObject
     void skipOne();
 
     QString getSearchText();
-    KateTextCursor getCursor( SearchFlags flags );
-    bool doSearch( const QString& text );
-    void exposeFound( KateTextCursor &cursor, int slen );
+    KateTextCursor getCursor(SearchFlags flags);
+    bool doSearch(const QString &text);
+    void exposeFound(KateTextCursor &cursor, int slen);
 
-    inline KateView* view()    { return m_view; }
-    inline KateDocument* doc() { return m_doc;  }
+    inline KateView *view()
+    {
+        return m_view;
+    }
+    inline KateDocument *doc()
+    {
+        return m_doc;
+    }
 
-    KateView*     m_view;
-    KateDocument* m_doc;
+    KateView *m_view;
+    KateDocument *m_doc;
 
-    KateSuperRangeList* m_arbitraryHLList;
+    KateSuperRangeList *m_arbitraryHLList;
 
     SConfig s;
 
-    QValueList<SConfig> m_searchResults;
-    int                 m_resultIndex;
+    QValueList< SConfig > m_searchResults;
+    int m_resultIndex;
 
-    int           replaces;
-    QDialog*      replacePrompt;
+    int replaces;
+    QDialog *replacePrompt;
     QString m_replacement;
     QRegExp m_re;
 };
@@ -165,71 +181,72 @@ class KateSearch : public QObject
 /**
  * simple replace prompt dialog
  */
-class KateReplacePrompt : public KDialogBase
-{
-  Q_OBJECT
+class KateReplacePrompt : public KDialogBase {
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Constructor
      * @param parent parent widget for the dialog
      */
     KateReplacePrompt(QWidget *parent);
 
-  signals:
+signals:
     /**
      * button clicked
      */
     void clicked();
 
-  protected slots:
+protected slots:
     /**
      * ok pressed
      */
-    void slotOk ();
+    void slotOk();
 
     /**
      * close pressed
      */
-    void slotClose ();
+    void slotClose();
 
     /**
      * replace all pressed
      */
-    void slotUser1 ();
+    void slotUser1();
 
     /**
      * last pressed
      */
-    void slotUser2 ();
+    void slotUser2();
 
     /**
      * Yes pressed
      */
-    void slotUser3 ();
+    void slotUser3();
 
     /**
      * dialog done
      * @param result dialog result
      */
-    void done (int result);
+    void done(int result);
 };
 
-class SearchCommand : public Kate::Command, public Kate::CommandExtension
-{
-  public:
-    SearchCommand() : m_ifindFlags(0) {;}
+class SearchCommand : public Kate::Command, public Kate::CommandExtension {
+public:
+    SearchCommand() : m_ifindFlags(0)
+    {
+        ;
+    }
     bool exec(class Kate::View *view, const QString &cmd, QString &errorMsg);
     bool help(class Kate::View *, const QString &, QString &);
     QStringList cmds();
-    bool wantsToProcessText( const QString &/*cmdname*/ );
-    void processText( Kate::View *view, const QString& text );
+    bool wantsToProcessText(const QString & /*cmdname*/);
+    void processText(Kate::View *view, const QString &text);
 
-  private:
+private:
     /**
      * set up properties for incremental find
      */
-    void ifindInit( const QString &cmd );
+    void ifindInit(const QString &cmd);
     /**
      * clear properties for incremental find
      */

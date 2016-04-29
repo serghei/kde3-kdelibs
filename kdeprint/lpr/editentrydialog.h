@@ -31,32 +31,31 @@ class QListView;
 class QListviewItem;
 class QWidgetStack;
 
-class EditEntryDialog : public KDialogBase
-{
-	Q_OBJECT
+class EditEntryDialog : public KDialogBase {
+    Q_OBJECT
 public:
-	EditEntryDialog(PrintcapEntry *entry, QWidget *parent = 0, const char *name = 0);
+    EditEntryDialog(PrintcapEntry *entry, QWidget *parent = 0, const char *name = 0);
 
-	void fillEntry(PrintcapEntry *entry);
+    void fillEntry(PrintcapEntry *entry);
 
 protected slots:
-	void slotItemSelected(QListViewItem*);
-	void slotChanged();
-	void slotTypeChanged(int);
+    void slotItemSelected(QListViewItem *);
+    void slotChanged();
+    void slotTypeChanged(int);
 
 protected:
-	Field createField();
+    Field createField();
 
 private:
-	QMap<QString,Field>	m_fields;
-	QLineEdit	*m_name, *m_string, *m_aliases;
-	QCheckBox	*m_boolean;
-	QComboBox	*m_type;
-	QSpinBox	*m_number;
-	QListView	*m_view;
-	QWidgetStack	*m_stack;
-	QString		m_current;
-	bool		m_block;
+    QMap< QString, Field > m_fields;
+    QLineEdit *m_name, *m_string, *m_aliases;
+    QCheckBox *m_boolean;
+    QComboBox *m_type;
+    QSpinBox *m_number;
+    QListView *m_view;
+    QWidgetStack *m_stack;
+    QString m_current;
+    bool m_block;
 };
 
 #endif

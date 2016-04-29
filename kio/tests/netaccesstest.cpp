@@ -24,25 +24,27 @@
 
 int main(int argc, char **argv)
 {
-  KApplication app( argc, argv, "netaccesstest", true /* it _has_ a GUI ! */);
+    KApplication app(argc, argv, "netaccesstest", true /* it _has_ a GUI ! */);
 
-  KURL srcURL( "ftp://ftp.kde.org/pub/kde/README" );
-  KURL tmpURL( "file:/tmp/netaccesstest_README" );
+    KURL srcURL("ftp://ftp.kde.org/pub/kde/README");
+    KURL tmpURL("file:/tmp/netaccesstest_README");
 
-  for ( uint i = 0; i < 4 ; ++i ) {
-    kdDebug() << "file_copy" << endl;
-    if ( !KIO::NetAccess::file_copy(srcURL, tmpURL, -1, true, false, 0) )
-      kdError() << "file_copy failed: " << KIO::NetAccess::lastErrorString() << endl;
-    else {
-      QFile f( tmpURL.path() );
-      if (!f.open(IO_ReadOnly))
-        kdFatal() << "Cannot open: " << f.name() << ". The error was: " << f.errorString() << endl;
-      else {
-        f.close();
-      }
+    for(uint i = 0; i < 4; ++i)
+    {
+        kdDebug() << "file_copy" << endl;
+        if(!KIO::NetAccess::file_copy(srcURL, tmpURL, -1, true, false, 0))
+            kdError() << "file_copy failed: " << KIO::NetAccess::lastErrorString() << endl;
+        else
+        {
+            QFile f(tmpURL.path());
+            if(!f.open(IO_ReadOnly))
+                kdFatal() << "Cannot open: " << f.name() << ". The error was: " << f.errorString() << endl;
+            else
+            {
+                f.close();
+            }
+        }
     }
-  }
 
-  return 0;
+    return 0;
 }
-

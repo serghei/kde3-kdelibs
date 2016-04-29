@@ -45,7 +45,10 @@ namespace KJS {
 static int numProbes;
 static int numCollisions;
 
-struct PropertyMapStatisticsExitLogger { ~PropertyMapStatisticsExitLogger(); };
+struct PropertyMapStatisticsExitLogger
+{
+    ~PropertyMapStatisticsExitLogger();
+};
 
 static PropertyMapStatisticsExitLogger logger;
 
@@ -80,11 +83,13 @@ public:
     int attributes;
 };
 
-SavedProperties::SavedProperties() : _count(0), _properties(0) { }
+SavedProperties::SavedProperties() : _count(0), _properties(0)
+{
+}
 
 SavedProperties::~SavedProperties()
 {
-    delete [] _properties;
+    delete[] _properties;
 }
 
 // Algorithm concepts from Algorithms in C++, Sedgewick.
@@ -95,33 +100,37 @@ PropertyMap::PropertyMap() : _table(0)
 
 PropertyMap::~PropertyMap()
 {
-    if (!_table) {
+    if(!_table)
+    {
 #if USE_SINGLE_ENTRY
         UString::Rep *key = _singleEntry.key;
-        if (key)
+        if(key)
             key->deref();
 #endif
         return;
     }
 
-    for (int i = 0; i < _table->size; i++) {
+    for(int i = 0; i < _table->size; i++)
+    {
         UString::Rep *key = _table->entries[i].key;
-        if (key)
-	  key->deref();
+        if(key)
+            key->deref();
     }
     // fredrik added to cleanup sortorder
-    if (_table)
-        delete [] _table->hashToIndex;
+    if(_table)
+        delete[] _table->hashToIndex;
 
     free(_table);
 }
 
 void PropertyMap::clear()
 {
-    if (!_table) {
+    if(!_table)
+    {
 #if USE_SINGLE_ENTRY
         UString::Rep *key = _singleEntry.key;
-        if (key) {
+        if(key)
+        {
             key->deref();
             _singleEntry.key = 0;
         }
@@ -129,9 +138,11 @@ void PropertyMap::clear()
         return;
     }
 
-    for (int i = 0; i < _table->size; i++) {
+    for(int i = 0; i < _table->size; i++)
+    {
         UString::Rep *key = _table->entries[i].key;
-        if (key) {
+        if(key)
+        {
             key->deref();
             _table->entries[i].key = 0;
         }
@@ -150,10 +161,12 @@ ValueImp *PropertyMap::get(const Identifier &name, int &attributes) const
 
     UString::Rep *rep = name._ustring.rep;
 
-    if (!_table) {
+    if(!_table)
+    {
 #if USE_SINGLE_ENTRY
         UString::Rep *key = _singleEntry.key;
-        if (rep == key) {
+        if(rep == key)
+        {
             attributes = _singleEntry.attributes;
             return _singleEntry.value;
         }
@@ -166,8 +179,10 @@ ValueImp *PropertyMap::get(const Identifier &name, int &attributes) const
     ++numProbes;
     numCollisions += _table->entries[i].key && _table->entries[i].key != rep;
 #endif
-    while (UString::Rep *key = _table->entries[i].key) {
-        if (rep == key) {
+    while(UString::Rep *key = _table->entries[i].key)
+    {
+        if(rep == key)
+        {
             attributes = _table->entries[i].attributes;
             return _table->entries[i].value;
         }
@@ -182,10 +197,11 @@ ValueImp *PropertyMap::get(const Identifier &name) const
 
     UString::Rep *rep = name._ustring.rep;
 
-    if (!_table) {
+    if(!_table)
+    {
 #if USE_SINGLE_ENTRY
         UString::Rep *key = _singleEntry.key;
-        if (rep == key)
+        if(rep == key)
             return _singleEntry.value;
 #endif
         return 0;
@@ -196,8 +212,9 @@ ValueImp *PropertyMap::get(const Identifier &name) const
     ++numProbes;
     numCollisions += _table->entries[i].key && _table->entries[i].key != rep;
 #endif
-    while (UString::Rep *key = _table->entries[i].key) {
-        if (rep == key)
+    while(UString::Rep *key = _table->entries[i].key)
+    {
+        if(rep == key)
             return _table->entries[i].value;
         i = (i + 1) & _table->sizeMask;
     }
@@ -207,18 +224,18 @@ ValueImp *PropertyMap::get(const Identifier &name) const
 #if DEBUG_PROPERTIES
 static void printAttributes(int attributes)
 {
-    if (attributes == 0)
-        printf ("None ");
-    if (attributes & ReadOnly)
-        printf ("ReadOnly ");
-    if (attributes & DontEnum)
-        printf ("DontEnum ");
-    if (attributes & DontDelete)
-        printf ("DontDelete ");
-    if (attributes & Internal)
-        printf ("Internal ");
-    if (attributes & Function)
-        printf ("Function ");
+    if(attributes == 0)
+        printf("None ");
+    if(attributes & ReadOnly)
+        printf("ReadOnly ");
+    if(attributes & DontEnum)
+        printf("DontEnum ");
+    if(attributes & DontDelete)
+        printf("DontDelete ");
+    if(attributes & Internal)
+        printf("Internal ");
+    if(attributes & Function)
+        printf("Function ");
 }
 #endif
 
@@ -240,14 +257,19 @@ void PropertyMap::put(const Identifier &name, ValueImp *value, int attributes)
 #endif
 
 #if USE_SINGLE_ENTRY
-    if (!_table) {
+    if(!_table)
+    {
         UString::Rep *key = _singleEntry.key;
-        if (key) {
-            if (rep == key) {
+        if(key)
+        {
+            if(rep == key)
+            {
                 _singleEntry.value = value;
                 return;
             }
-        } else {
+        }
+        else
+        {
             rep->ref();
             _singleEntry.key = rep;
             _singleEntry.value = value;
@@ -257,15 +279,17 @@ void PropertyMap::put(const Identifier &name, ValueImp *value, int attributes)
         }
     }
 #endif
-    if (!_table || _table->keyCount * 2 >= _table->size)
+    if(!_table || _table->keyCount * 2 >= _table->size)
         expand();
     int i = hash(rep);
 #if DUMP_STATISTICS
     ++numProbes;
     numCollisions += _table->entries[i].key && _table->entries[i].key != rep;
 #endif
-    while (UString::Rep *key = _table->entries[i].key) {
-        if (rep == key) {
+    while(UString::Rep *key = _table->entries[i].key)
+    {
+        if(rep == key)
+        {
             // Put a new value in an existing hash table entry.
             _table->entries[i].value = value;
             // Attributes are intentionally not updated.
@@ -285,7 +309,7 @@ void PropertyMap::put(const Identifier &name, ValueImp *value, int attributes)
     _table->indexCount++;
     _table->hashToIndex[i] = _table->indexCount;
 
-#if DO_CONSISTENCY_CHECK// speed, why call a stub if we dont need to??
+#if DO_CONSISTENCY_CHECK // speed, why call a stub if we dont need to??
     checkConsistency();
 #endif
 }
@@ -299,7 +323,7 @@ inline void PropertyMap::insert(UString::Rep *key, ValueImp *value, int attribut
     ++numProbes;
     numCollisions += _table->entries[i].key && _table->entries[i].key != key;
 #endif
-    while (_table->entries[i].key)
+    while(_table->entries[i].key)
         i = (i + 1) & _table->sizeMask;
 
     _table->entries[i].key = key;
@@ -309,7 +333,7 @@ inline void PropertyMap::insert(UString::Rep *key, ValueImp *value, int attribut
 
 void PropertyMap::expand()
 {
-#if DO_CONSISTENCY_CHECK// speed, why call a stub if we dont need to??
+#if DO_CONSISTENCY_CHECK // speed, why call a stub if we dont need to??
     checkConsistency();
 #endif
     Table *oldTable = _table;
@@ -321,10 +345,10 @@ void PropertyMap::expand()
     // Is this realy the best way? wouldnt it be easier to use new/delete on an array instead
     // and do a pointer in Table to that array, that way we wouldnt need to delete the whole _table
     // every time we need to expand
-    _table = (Table *)calloc(1, sizeof(Table) + ((newTableSize - 1) * sizeof(Entry)) );
+    _table = (Table *)calloc(1, sizeof(Table) + ((newTableSize - 1) * sizeof(Entry)));
 
     int *p = new int[newTableSize];
-    for (int i = 0; i < newTableSize; i++)
+    for(int i = 0; i < newTableSize; i++)
         p[i] = 0;
 
     _table->hashToIndex = p;
@@ -339,7 +363,8 @@ void PropertyMap::expand()
 
 #if USE_SINGLE_ENTRY
     UString::Rep *key = _singleEntry.key;
-    if (key) {
+    if(key)
+    {
         insert(key, _singleEntry.value, _singleEntry.attributes);
         _table->keyCount++;
         _singleEntry.key = 0;
@@ -348,33 +373,37 @@ void PropertyMap::expand()
         // first get the id of newly inserted key, check for trashed hash, then store it
         int k = hash(key);
 #if DUMP_STATISTICS
-    ++numProbes;
-    numCollisions += _table->entries[k].key && _table->entries[k].key != key;
+        ++numProbes;
+        numCollisions += _table->entries[k].key && _table->entries[k].key != key;
 #endif
-        while (UString::Rep *newKey = _table->entries[k].key) {
-             if (key == newKey)
-                 break;
-             k = (k + 1) & _table->sizeMask;
+        while(UString::Rep *newKey = _table->entries[k].key)
+        {
+            if(key == newKey)
+                break;
+            k = (k + 1) & _table->sizeMask;
         }
         _table->indexCount++;
         _table->hashToIndex[k] = _table->indexCount;
     }
 #endif
 
-    for (int i = 0; i != oldTableSize; ++i) {
+    for(int i = 0; i != oldTableSize; ++i)
+    {
         UString::Rep *key = oldTable->entries[i].key;
-        if (key) {
+        if(key)
+        {
             insert(key, oldTable->entries[i].value, oldTable->entries[i].attributes);
 
             // store sort order
             // first get the id of newly inserted key, check for trashed hash, then store it
             int k = hash(key);
 #if DUMP_STATISTICS
-    ++numProbes;
-    numCollisions += _table->entries[k].key && _table->entries[k].key != key;
+            ++numProbes;
+            numCollisions += _table->entries[k].key && _table->entries[k].key != key;
 #endif
-            while (UString::Rep *newKey = _table->entries[k].key) {
-                if (key == newKey)
+            while(UString::Rep *newKey = _table->entries[k].key)
+            {
+                if(key == newKey)
                     break;
                 k = (k + 1) & _table->sizeMask;
             }
@@ -383,12 +412,13 @@ void PropertyMap::expand()
         }
     }
 
-    if (oldTable){
-        delete [] oldTable->hashToIndex;
+    if(oldTable)
+    {
+        delete[] oldTable->hashToIndex;
     }
     free(oldTable);
 
-#if DO_CONSISTENCY_CHECK// speed, why call a stub if we dont need to??
+#if DO_CONSISTENCY_CHECK // speed, why call a stub if we dont need to??
     checkConsistency();
 #endif
 }
@@ -397,7 +427,7 @@ void PropertyMap::remove(const Identifier &name)
 {
     assert(!name.isNull());
 
-#if DO_CONSISTENCY_CHECK// speed, why call a stub if we dont need to??
+#if DO_CONSISTENCY_CHECK // speed, why call a stub if we dont need to??
     checkConsistency();
 #endif
 
@@ -405,10 +435,12 @@ void PropertyMap::remove(const Identifier &name)
 
     UString::Rep *key;
 
-    if (!_table) {
+    if(!_table)
+    {
 #if USE_SINGLE_ENTRY
         key = _singleEntry.key;
-        if (rep == key) {
+        if(rep == key)
+        {
             key->deref();
             _singleEntry.key = 0;
             checkConsistency();
@@ -423,13 +455,14 @@ void PropertyMap::remove(const Identifier &name)
     ++numProbes;
     numCollisions += _table->entries[i].key && _table->entries[i].key != rep;
 #endif
-    while ((key = _table->entries[i].key)) {
-        if (rep == key)
+    while((key = _table->entries[i].key))
+    {
+        if(rep == key)
             break;
         i = (i + 1) & _table->sizeMask;
     }
 
-    if (!key)
+    if(!key)
         return;
 
     // Remove the one key.
@@ -439,10 +472,11 @@ void PropertyMap::remove(const Identifier &name)
     --_table->keyCount;
 
     // Reinsert all the items to the right in the same cluster.
-    while (1) {
+    while(1)
+    {
         i = (i + 1) & _table->sizeMask;
         key = _table->entries[i].key;
-        if (!key)
+        if(!key)
             break;
 
         _table->entries[i].key = 0;
@@ -452,11 +486,12 @@ void PropertyMap::remove(const Identifier &name)
         // store the index of the new hash
         int k = hash(key);
 #if DUMP_STATISTICS
-    ++numProbes;
-    numCollisions += _table->entries[k].key && _table->entries[k].key != key;
+        ++numProbes;
+        numCollisions += _table->entries[k].key && _table->entries[k].key != key;
 #endif
-        while (UString::Rep *newKey = _table->entries[k].key) {
-            if (key == newKey)
+        while(UString::Rep *newKey = _table->entries[k].key)
+        {
+            if(key == newKey)
                 break;
             k = (k + 1) & _table->sizeMask;
         }
@@ -465,28 +500,32 @@ void PropertyMap::remove(const Identifier &name)
         _table->hashToIndex[k] = _table->hashToIndex[i];
     }
 
-#if DO_CONSISTENCY_CHECK// speed, why call a stub if we dont need to??
+#if DO_CONSISTENCY_CHECK // speed, why call a stub if we dont need to??
     checkConsistency();
 #endif
 }
 
 void PropertyMap::mark() const
 {
-    if (!_table) {
+    if(!_table)
+    {
 #if USE_SINGLE_ENTRY
-        if (_singleEntry.key) {
+        if(_singleEntry.key)
+        {
             ValueImp *v = _singleEntry.value;
-            if (!v->marked())
+            if(!v->marked())
                 v->mark();
         }
 #endif
         return;
     }
 
-    for (int i = 0; i != _table->size; ++i) {
-        if (_table->entries[i].key) {
+    for(int i = 0; i != _table->size; ++i)
+    {
+        if(_table->entries[i].key)
+        {
             ValueImp *v = _table->entries[i].value;
-            if (!v->marked())
+            if(!v->marked())
                 v->mark();
         }
     }
@@ -494,10 +533,11 @@ void PropertyMap::mark() const
 
 void PropertyMap::addEnumerablesToReferenceList(ReferenceList &list, const Object &base) const
 {
-    if (!_table) {
+    if(!_table)
+    {
 #if USE_SINGLE_ENTRY
         UString::Rep *key = _singleEntry.key;
-        if (key && !(_singleEntry.attributes & DontEnum))
+        if(key && !(_singleEntry.attributes & DontEnum))
             list.append(Reference(base, Identifier(key)));
 #endif
         return;
@@ -505,9 +545,9 @@ void PropertyMap::addEnumerablesToReferenceList(ReferenceList &list, const Objec
 
     // Allocate a buffer to use to sort the keys.
     int indexSize = _table->indexCount + 1; // indexes is one based
-    UString::Rep **allKeys = new UString::Rep*[indexSize];
+    UString::Rep **allKeys = new UString::Rep *[indexSize];
 
-    for (int i = 0; i < indexSize; i++)
+    for(int i = 0; i < indexSize; i++)
         allKeys[i] = NULL;
 
     // push  valid hashes to the array allKeys, using insert order as index.
@@ -515,54 +555,65 @@ void PropertyMap::addEnumerablesToReferenceList(ReferenceList &list, const Objec
     // memory corruption sometimes, seems that Identifier in below call deletes the key
     int size = _table->size;
     Entry *entries = _table->entries;
-    for (int i = 0; i != size; ++i) {
-        if (entries[i].key && !(entries[i].attributes & DontEnum)) {
+    for(int i = 0; i != size; ++i)
+    {
+        if(entries[i].key && !(entries[i].attributes & DontEnum))
+        {
             int idx = _table->hashToIndex[i];
-            if (idx) {
+            if(idx)
+            {
                 allKeys[idx] = entries[i].key;
-            } else { // nonsorted key, failure
-                //cout<<"Error with in KJS property_map.addEnumerablesToReferenceList \nUnsorted key"<<endl;
-                assert(0==1); // allways throw error if get here
+            }
+            else
+            { // nonsorted key, failure
+                // cout<<"Error with in KJS property_map.addEnumerablesToReferenceList \nUnsorted key"<<endl;
+                assert(0 == 1); // allways throw error if get here
             }
         }
     }
     // Put the keys of the sorted entries into the reference list.
-    for (int i = 0; i < indexSize; ++i) {
-        if (allKeys[i] != NULL){
+    for(int i = 0; i < indexSize; ++i)
+    {
+        if(allKeys[i] != NULL)
+        {
             list.append(Reference(base, Identifier(allKeys[i])));
         }
         allKeys[i] = NULL; // dont deallocate key by accident, when we delete allKeys
     }
 
     // Deallocate the buffer.
-    delete [] allKeys;
+    delete[] allKeys;
 }
 
 void PropertyMap::addSparseArrayPropertiesToReferenceList(ReferenceList &list, const Object &base) const
 {
     // NOTE: I did'nt add sort in this method because It seems to be referenced in ArrayInstanceImp
     // only and arrays are sorted by definition, dont need the extra overhead
-    if (!_table) {
+    if(!_table)
+    {
 #if USE_SINGLE_ENTRY
         UString::Rep *key = _singleEntry.key;
-        if (key) {
+        if(key)
+        {
             UString k(key);
             bool fitsInULong;
             unsigned long i = k.toULong(&fitsInULong);
-            if (fitsInULong && i <= 0xFFFFFFFFU)
+            if(fitsInULong && i <= 0xFFFFFFFFU)
                 list.append(Reference(base, Identifier(key)));
         }
 #endif
         return;
     }
 
-    for (int i = 0; i != _table->size; ++i) {
+    for(int i = 0; i != _table->size; ++i)
+    {
         UString::Rep *key = _table->entries[i].key;
-        if (key) {
+        if(key)
+        {
             UString k(key);
             bool fitsInULong;
             unsigned long i = k.toULong(&fitsInULong);
-            if (fitsInULong && i <= 0xFFFFFFFFU)
+            if(fitsInULong && i <= 0xFFFFFFFFU)
                 list.append(Reference(base, Identifier(key)));
         }
     }
@@ -572,42 +623,52 @@ void PropertyMap::save(SavedProperties &p) const
 {
     int count = 0;
 
-    if (!_table) {
+    if(!_table)
+    {
 #if USE_SINGLE_ENTRY
-        if (_singleEntry.key && !(_singleEntry.attributes & (ReadOnly | DontEnum | Function)))
+        if(_singleEntry.key && !(_singleEntry.attributes & (ReadOnly | DontEnum | Function)))
             ++count;
 #endif
-    } else {
-        for (int i = 0; i != _table->size; ++i)
-            if (_table->entries[i].key && !(_table->entries[i].attributes & (ReadOnly | DontEnum | Function)))
+    }
+    else
+    {
+        for(int i = 0; i != _table->size; ++i)
+            if(_table->entries[i].key && !(_table->entries[i].attributes & (ReadOnly | DontEnum | Function)))
                 ++count;
     }
 
-    delete [] p._properties;
+    delete[] p._properties;
 
     p._count = count;
 
-    if (count == 0) {
+    if(count == 0)
+    {
         p._properties = 0;
         return;
     }
 
-    p._properties = new SavedProperty [count];
+    p._properties = new SavedProperty[count];
 
     SavedProperty *prop = p._properties;
 
-    if (!_table) {
+    if(!_table)
+    {
 #if USE_SINGLE_ENTRY
-        if (_singleEntry.key && !(_singleEntry.attributes & (ReadOnly | DontEnum | Function))) {
+        if(_singleEntry.key && !(_singleEntry.attributes & (ReadOnly | DontEnum | Function)))
+        {
             prop->key = Identifier(_singleEntry.key);
             prop->value = Value(_singleEntry.value);
             prop->attributes = _singleEntry.attributes;
             ++prop;
         }
 #endif
-    } else {
-        for (int i = 0; i != _table->size; ++i) {
-            if (_table->entries[i].key && !(_table->entries[i].attributes & (ReadOnly | DontEnum | Function))) {
+    }
+    else
+    {
+        for(int i = 0; i != _table->size; ++i)
+        {
+            if(_table->entries[i].key && !(_table->entries[i].attributes & (ReadOnly | DontEnum | Function)))
+            {
                 prop->key = Identifier(_table->entries[i].key);
                 prop->value = Value(_table->entries[i].value);
                 prop->attributes = _table->entries[i].attributes;
@@ -619,7 +680,7 @@ void PropertyMap::save(SavedProperties &p) const
 
 void PropertyMap::restore(const SavedProperties &p)
 {
-    for (int i = 0; i != p._count; ++i)
+    for(int i = 0; i != p._count; ++i)
         put(p._properties[i].key, p._properties[i].value.imp(), p._properties[i].attributes);
 }
 
@@ -627,17 +688,19 @@ void PropertyMap::restore(const SavedProperties &p)
 
 void PropertyMap::checkConsistency()
 {
-    if (!_table)
+    if(!_table)
         return;
 
     int count = 0;
-    for (int j = 0; j != _table->size; ++j) {
+    for(int j = 0; j != _table->size; ++j)
+    {
         UString::Rep *rep = _table->entries[j].key;
-        if (!rep)
+        if(!rep)
             continue;
         int i = hash(rep);
-        while (UString::Rep *key = _table->entries[i].key) {
-            if (rep == key)
+        while(UString::Rep *key = _table->entries[i].key)
+        {
+            if(rep == key)
                 break;
             i = (i + 1) & _table->sizeMask;
         }

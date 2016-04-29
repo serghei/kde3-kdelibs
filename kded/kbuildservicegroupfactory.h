@@ -27,62 +27,65 @@
  * Service group factory for building ksycoca
  * @internal
  */
-class KBuildServiceGroupFactory : public KServiceGroupFactory
-{
+class KBuildServiceGroupFactory : public KServiceGroupFactory {
 public:
-  /**
-   * Create factory
-   */
-  KBuildServiceGroupFactory();
+    /**
+     * Create factory
+     */
+    KBuildServiceGroupFactory();
 
-  virtual ~KBuildServiceGroupFactory();
+    virtual ~KBuildServiceGroupFactory();
 
-  /**
-   * Create new entry.
-   */
-  virtual KServiceGroup * createEntry(const QString &, const char *);
+    /**
+     * Create new entry.
+     */
+    virtual KServiceGroup *createEntry(const QString &, const char *);
 
-  virtual KServiceGroup * createEntry(int) { assert(0); return 0L; }
+    virtual KServiceGroup *createEntry(int)
+    {
+        assert(0);
+        return 0L;
+    }
 
-  /**
-   * Adds the entry @p newEntry to the menu @p menuName
-   */
-  void addNewEntryTo( const QString &menuName, KService *newEntry);
+    /**
+     * Adds the entry @p newEntry to the menu @p menuName
+     */
+    void addNewEntryTo(const QString &menuName, KService *newEntry);
 
-  /**
-   * Adds the entry @p newEntry to the "parent group" @p parent, creating
-   * the group if necassery.
-   * A "parent group" is a group of services that all have the same
-   * "X-KDE-ParentApp".
-   */
-  KServiceGroup *addNewChild( const QString &parent, const char *resource, KSycocaEntry *newEntry);
- 
-  /**
-   * Add new menu @p menuName defined by @p file
-   * When @p entry is non-null it is re-used, otherwise a new group is created.
-   * A pointer to the group is returned.
-   */
-  KServiceGroup *addNew( const QString &menuName, const QString& file, KServiceGroup *entry, bool isDeleted);
+    /**
+     * Adds the entry @p newEntry to the "parent group" @p parent, creating
+     * the group if necassery.
+     * A "parent group" is a group of services that all have the same
+     * "X-KDE-ParentApp".
+     */
+    KServiceGroup *addNewChild(const QString &parent, const char *resource, KSycocaEntry *newEntry);
 
-  /**
-   * Add a new menu entry
-   */
-  virtual void addEntry( KSycocaEntry *newEntry, const char *resource );
+    /**
+     * Add new menu @p menuName defined by @p file
+     * When @p entry is non-null it is re-used, otherwise a new group is created.
+     * A pointer to the group is returned.
+     */
+    KServiceGroup *addNew(const QString &menuName, const QString &file, KServiceGroup *entry, bool isDeleted);
 
-  /**
-   * Write out servicegroup  specific index files.
-   */
-  virtual void save(QDataStream &str);
+    /**
+     * Add a new menu entry
+     */
+    virtual void addEntry(KSycocaEntry *newEntry, const char *resource);
 
-  /**
-   * Write out header information
-   */
-  virtual void saveHeader(QDataStream &str);
+    /**
+     * Write out servicegroup  specific index files.
+     */
+    virtual void save(QDataStream &str);
 
-  /**
-   * Returns all resource types for this service factory
-   */  
-  static QStringList resourceTypes();
+    /**
+     * Write out header information
+     */
+    virtual void saveHeader(QDataStream &str);
+
+    /**
+     * Returns all resource types for this service factory
+     */
+    static QStringList resourceTypes();
 };
 
 #endif

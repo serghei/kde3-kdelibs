@@ -26,15 +26,17 @@ namespace khtml {
 uint TokenizerString::length() const
 {
     uint length = m_currentString.m_length;
-    if (!m_pushedChar1.isNull()) {
+    if(!m_pushedChar1.isNull())
+    {
         ++length;
-        if (!m_pushedChar2.isNull())
+        if(!m_pushedChar2.isNull())
             ++length;
     }
-    if (m_composite) {
-        QValueListConstIterator<TokenizerSubstring> i = m_substrings.begin();
-        QValueListConstIterator<TokenizerSubstring> e = m_substrings.end();
-        for (; i != e; ++i)
+    if(m_composite)
+    {
+        QValueListConstIterator< TokenizerSubstring > i = m_substrings.begin();
+        QValueListConstIterator< TokenizerSubstring > e = m_substrings.end();
+        for(; i != e; ++i)
             length += (*i).m_length;
     }
     return length;
@@ -53,10 +55,14 @@ void TokenizerString::clear()
 
 void TokenizerString::append(const TokenizerSubstring &s)
 {
-    if (s.m_length) {
-        if (!m_currentString.m_length) {
+    if(s.m_length)
+    {
+        if(!m_currentString.m_length)
+        {
             m_currentString = s;
-	} else {
+        }
+        else
+        {
             m_substrings.append(s);
             m_composite = true;
         }
@@ -66,10 +72,12 @@ void TokenizerString::append(const TokenizerSubstring &s)
 void TokenizerString::prepend(const TokenizerSubstring &s)
 {
     assert(!escaped());
-    if (s.m_length) {
-        if (!m_currentString.m_length)
+    if(s.m_length)
+    {
+        if(!m_currentString.m_length)
             m_currentString = s;
-        else {
+        else
+        {
             // Shift our m_currentString into our list.
             m_substrings.prepend(m_currentString);
             m_currentString = s;
@@ -82,10 +90,11 @@ void TokenizerString::append(const TokenizerString &s)
 {
     assert(!s.escaped());
     append(s.m_currentString);
-    if (s.m_composite) {
-        QValueListConstIterator<TokenizerSubstring> i = s.m_substrings.begin();
-        QValueListConstIterator<TokenizerSubstring> e = s.m_substrings.end();
-        for (; i != e; ++i)
+    if(s.m_composite)
+    {
+        QValueListConstIterator< TokenizerSubstring > i = s.m_substrings.begin();
+        QValueListConstIterator< TokenizerSubstring > e = s.m_substrings.end();
+        for(; i != e; ++i)
             append(*i);
     }
     m_currentChar = m_pushedChar1.isNull() ? m_currentString.m_current : &m_pushedChar1;
@@ -95,10 +104,11 @@ void TokenizerString::prepend(const TokenizerString &s)
 {
     assert(!escaped());
     assert(!s.escaped());
-    if (s.m_composite) {
-        QValueListConstIterator<TokenizerSubstring> i = s.m_substrings.fromLast();
-        QValueListConstIterator<TokenizerSubstring> e = s.m_substrings.end();
-        for (; i != e; --i)
+    if(s.m_composite)
+    {
+        QValueListConstIterator< TokenizerSubstring > i = s.m_substrings.fromLast();
+        QValueListConstIterator< TokenizerSubstring > e = s.m_substrings.end();
+        for(; i != e; --i)
             prepend(*i);
     }
     prepend(s.m_currentString);
@@ -107,12 +117,15 @@ void TokenizerString::prepend(const TokenizerString &s)
 
 void TokenizerString::advanceSubstring()
 {
-    if (m_composite) {
+    if(m_composite)
+    {
         m_currentString = m_substrings.first();
         m_substrings.remove(m_substrings.begin());
-        if (m_substrings.isEmpty())
+        if(m_substrings.isEmpty())
             m_composite = false;
-    } else {
+    }
+    else
+    {
         m_currentString.clear();
     }
 }
@@ -120,19 +133,20 @@ void TokenizerString::advanceSubstring()
 QString TokenizerString::toString() const
 {
     QString result;
-    if (!m_pushedChar1.isNull()) {
+    if(!m_pushedChar1.isNull())
+    {
         result.append(m_pushedChar1);
-        if (!m_pushedChar2.isNull())
+        if(!m_pushedChar2.isNull())
             result.append(m_pushedChar2);
     }
     m_currentString.appendTo(result);
-    if (m_composite) {
-        QValueListConstIterator<TokenizerSubstring> i = m_substrings.begin();
-        QValueListConstIterator<TokenizerSubstring> e = m_substrings.end();
-        for (; i != e; ++i)
+    if(m_composite)
+    {
+        QValueListConstIterator< TokenizerSubstring > i = m_substrings.begin();
+        QValueListConstIterator< TokenizerSubstring > e = m_substrings.end();
+        for(; i != e; ++i)
             (*i).appendTo(result);
     }
     return result;
 }
-
 }

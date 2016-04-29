@@ -30,11 +30,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 int main(int argc, char *argv[])
 {
-   if ((argc != 3) || (argv[1][0] == '-'))
-   {
-      fprintf(stderr, "Usage: dcopref <dcopclient> <dcopobject>\n");
-      return 1;
-   }
-   printf("DCOPRef(%s,%s)\n", argv[1], argv[2]);
-   return 0;
+    if((argc != 3) || (argv[1][0] == '-'))
+    {
+        fprintf(stderr, "Usage: dcopref <dcopclient> <dcopobject>\n");
+        return 1;
+    }
+    printf("DCOPRef(%s,%s)\n", argv[1], argv[2]);
+    return 0;
 }

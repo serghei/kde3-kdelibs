@@ -27,37 +27,36 @@
 #include <kconfig.h>
 #include <kdialog.h>
 
-KMConfigJobs::KMConfigJobs(QWidget *parent, const char *name)
-: KMConfigPage(parent, name)
+KMConfigJobs::KMConfigJobs(QWidget *parent, const char *name) : KMConfigPage(parent, name)
 {
-	setPageName(i18n("Jobs"));
-	setPageHeader(i18n("Print Job Settings"));
-	setPagePixmap("exec");
+    setPageName(i18n("Jobs"));
+    setPageHeader(i18n("Print Job Settings"));
+    setPagePixmap("exec");
 
-	QGroupBox	*box = new QGroupBox(0, Qt::Vertical, i18n("Jobs Shown"), this);
+    QGroupBox *box = new QGroupBox(0, Qt::Vertical, i18n("Jobs Shown"), this);
 
-	m_limit = new KIntNumInput(box);
-	m_limit->setRange(0, 9999, 1, true);
-	m_limit->setSpecialValueText(i18n("Unlimited"));
-	m_limit->setLabel(i18n("Maximum number of jobs shown:"));
+    m_limit = new KIntNumInput(box);
+    m_limit->setRange(0, 9999, 1, true);
+    m_limit->setSpecialValueText(i18n("Unlimited"));
+    m_limit->setLabel(i18n("Maximum number of jobs shown:"));
 
-	QVBoxLayout	*l0 = new QVBoxLayout(this, 0, KDialog::spacingHint());
-	l0->addWidget(box, 0);
-	l0->addStretch(1);
-	QVBoxLayout	*l1 = new QVBoxLayout(box->layout(), KDialog::spacingHint());
-	l1->addWidget(m_limit);
+    QVBoxLayout *l0 = new QVBoxLayout(this, 0, KDialog::spacingHint());
+    l0->addWidget(box, 0);
+    l0->addStretch(1);
+    QVBoxLayout *l1 = new QVBoxLayout(box->layout(), KDialog::spacingHint());
+    l1->addWidget(m_limit);
 }
 
 void KMConfigJobs::loadConfig(KConfig *conf)
 {
-	conf->setGroup("Jobs");
-	m_limit->setValue(conf->readNumEntry("Limit", 0));
+    conf->setGroup("Jobs");
+    m_limit->setValue(conf->readNumEntry("Limit", 0));
 }
 
 void KMConfigJobs::saveConfig(KConfig *conf)
 {
-	conf->setGroup("Jobs");
-	conf->writeEntry("Limit", m_limit->value());
+    conf->setGroup("Jobs");
+    conf->writeEntry("Limit", m_limit->value());
 }
 
 #include "kmconfigjobs.moc"

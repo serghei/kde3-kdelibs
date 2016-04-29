@@ -35,91 +35,92 @@ class QValidator;
  * @author David Faure <faure@kde.org>, layout management by Preston Brown <pbrown@kde.org>
  */
 
-class KDEUI_EXPORT_DEPRECATED KLineEditDlg : public KDialogBase
-{
-  Q_OBJECT
+class KDEUI_EXPORT_DEPRECATED KLineEditDlg : public KDialogBase {
+    Q_OBJECT
 public:
-  /**
-   * Create a dialog that asks for a single line of text. _value is
-   * the initial value of the line. _text appears as label on top of
-   * the entry box. If the internal line edit has an associated
-   * QValidator set, the OK button is disabled as long as the
-   * validator doesn't return Acceptable. If there's no validator, the
-   * OK button is enabled whenever the line edit isn't empty.
-   *
-   * If you want to accept empty input, make a trivial QValidator that
-   * always returns Acceptable, e.g. QRegExpValidator with a
-   * regexp of ".*".
-   *
-   * @param _text      Text of the label
-   * @param _value     Initial value of the inputline
-   * @param parent     Parent widget for the line edit dialog
-   */
-  KLineEditDlg( const QString& _text, const QString& _value, QWidget *parent ) KDE_DEPRECATED;
-  virtual ~KLineEditDlg();
+    /**
+     * Create a dialog that asks for a single line of text. _value is
+     * the initial value of the line. _text appears as label on top of
+     * the entry box. If the internal line edit has an associated
+     * QValidator set, the OK button is disabled as long as the
+     * validator doesn't return Acceptable. If there's no validator, the
+     * OK button is enabled whenever the line edit isn't empty.
+     *
+     * If you want to accept empty input, make a trivial QValidator that
+     * always returns Acceptable, e.g. QRegExpValidator with a
+     * regexp of ".*".
+     *
+     * @param _text      Text of the label
+     * @param _value     Initial value of the inputline
+     * @param parent     Parent widget for the line edit dialog
+     */
+    KLineEditDlg(const QString &_text, const QString &_value, QWidget *parent) KDE_DEPRECATED;
+    virtual ~KLineEditDlg();
 
-  /**
-   * @return the value the user entered
-   */
-  QString text() const;
+    /**
+     * @return the value the user entered
+     */
+    QString text() const;
 
-  /**
-   * @return the line edit widget
-   */
-  KLineEdit *lineEdit() const { return edit; }
+    /**
+     * @return the line edit widget
+     */
+    KLineEdit *lineEdit() const
+    {
+        return edit;
+    }
 
-  /**
-   * Static convenience function to get a textual input from the user.
-   *
-   * @param text      Text of the label
-   * @param value     Initial value of the inputline
-   * @param ok         this bool will be set to true if user pressed "Ok"
-   * @param validator Validator to be stuffed into the line edit.
-   * @param parent    The parent widget
-   */
-  static QString getText(const QString &text, const QString& value,
-		 bool *ok, QWidget *parent, QValidator *validator=0 ) KDE_DEPRECATED;
+    /**
+     * Static convenience function to get a textual input from the user.
+     *
+     * @param text      Text of the label
+     * @param value     Initial value of the inputline
+     * @param ok         this bool will be set to true if user pressed "Ok"
+     * @param validator Validator to be stuffed into the line edit.
+     * @param parent    The parent widget
+     */
+    static QString getText(const QString &text, const QString &value, bool *ok, QWidget *parent, QValidator *validator = 0) KDE_DEPRECATED;
 
-  /**
-   * Static convenience function to get a textual input from the user.
-   * This method includes a caption, and has (almost) the same API as QInputDialog::getText
-   * (no echo mode, we have KPasswordDialog).
-   *
-   * @param caption   Caption of the dialog
-   * @param text      Text of the label
-   * @param value     Initial value of the inputline
-   * @param ok         this bool will be set to true if user pressed "Ok"
-   * @param parent    The parent widget for this text input dialog
-   * @param validator Validator to be stuffed into the line edit.
-   */
-  static QString getText(const QString &caption, const QString &text,
-                         const QString& value=QString::null,
-                         bool *ok=0, QWidget *parent=0,
-			 QValidator *validator=0) KDE_DEPRECATED;
+    /**
+     * Static convenience function to get a textual input from the user.
+     * This method includes a caption, and has (almost) the same API as QInputDialog::getText
+     * (no echo mode, we have KPasswordDialog).
+     *
+     * @param caption   Caption of the dialog
+     * @param text      Text of the label
+     * @param value     Initial value of the inputline
+     * @param ok         this bool will be set to true if user pressed "Ok"
+     * @param parent    The parent widget for this text input dialog
+     * @param validator Validator to be stuffed into the line edit.
+     */
+    static QString getText(const QString &caption, const QString &text, const QString &value = QString::null, bool *ok = 0, QWidget *parent = 0,
+                           QValidator *validator = 0) KDE_DEPRECATED;
 
 public slots:
-  /**
-   * Clears the edit widget
-   */
-  void slotClear();
+    /**
+     * Clears the edit widget
+     */
+    void slotClear();
 
 protected slots:
-  /**
-   * Enables and disables the OK button depending on the state
-   * returned by the lineedit's QValidator.
-   */
-  void slotTextChanged( const QString& );
+    /**
+     * Enables and disables the OK button depending on the state
+     * returned by the lineedit's QValidator.
+     */
+    void slotTextChanged(const QString &);
 
 protected:
-  /**
-   * The line edit widget
-   */
-  KLineEdit *edit;
+    /**
+     * The line edit widget
+     */
+    KLineEdit *edit;
+
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KLineEditDlgPrivate;
-  KLineEditDlgPrivate* d;
+    class KLineEditDlgPrivate;
+    KLineEditDlgPrivate *d;
 };
 
 #endif

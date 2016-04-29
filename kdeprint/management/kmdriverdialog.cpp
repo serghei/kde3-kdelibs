@@ -24,12 +24,12 @@
 #include <kmessagebox.h>
 
 KMDriverDialog::KMDriverDialog(QWidget *parent, const char *name)
-: KDialogBase(KDialogBase::Swallow,i18n("Configure"),KDialogBase::Ok|KDialogBase::Cancel,KDialogBase::Ok,parent,name,true,false)
+    : KDialogBase(KDialogBase::Swallow, i18n("Configure"), KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok, parent, name, true, false)
 {
-	m_view = new DriverView(0);
-	setMainWidget(m_view);
+    m_view = new DriverView(0);
+    setMainWidget(m_view);
 
-	resize(400,450);
+    resize(400, 450);
 }
 
 KMDriverDialog::~KMDriverDialog()
@@ -38,18 +38,19 @@ KMDriverDialog::~KMDriverDialog()
 
 void KMDriverDialog::setDriver(DrMain *d)
 {
-	m_view->setDriver(d);
+    m_view->setDriver(d);
 }
 
 void KMDriverDialog::slotOk()
 {
-	if (m_view->hasConflict())
-	{
-		KMessageBox::error(this, "<qt>"+i18n("Some options are in conflict. You must resolve those conflicts "
-		                                     "before continuing.")+"</qt>");
-		return;
-	}
-	KDialogBase::slotOk();
+    if(m_view->hasConflict())
+    {
+        KMessageBox::error(this, "<qt>" + i18n("Some options are in conflict. You must resolve those conflicts "
+                                               "before continuing.")
+                                     + "</qt>");
+        return;
+    }
+    KDialogBase::slotOk();
 }
 
 #include "kmdriverdialog.moc"

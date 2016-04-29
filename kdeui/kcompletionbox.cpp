@@ -33,8 +33,7 @@
 
 #include "kcompletionbox.h"
 
-class KCompletionBox::KCompletionBoxPrivate
-{
+class KCompletionBox::KCompletionBoxPrivate {
 public:
     QWidget *m_parent; // necessary to set the focus back
     QString cancelText;
@@ -44,36 +43,32 @@ public:
     bool emitSelected;
 };
 
-KCompletionBox::KCompletionBox( QWidget *parent, const char *name )
- :KListBox( parent, name, WType_Popup ), d(new KCompletionBoxPrivate)
+KCompletionBox::KCompletionBox(QWidget *parent, const char *name) : KListBox(parent, name, WType_Popup), d(new KCompletionBoxPrivate)
 {
 
-    d->m_parent        = parent;
-    d->tabHandling     = true;
+    d->m_parent = parent;
+    d->tabHandling = true;
     d->down_workaround = false;
-    d->upwardBox       = false;
-    d->emitSelected    = true;
+    d->upwardBox = false;
+    d->emitSelected = true;
 
-    setColumnMode( 1 );
-    setLineWidth( 1 );
-    setFrameStyle( QFrame::Box | QFrame::Plain );
+    setColumnMode(1);
+    setLineWidth(1);
+    setFrameStyle(QFrame::Box | QFrame::Plain);
 
-    if ( parent )
-        setFocusProxy( parent );
+    if(parent)
+        setFocusProxy(parent);
     else
-        setFocusPolicy( NoFocus );
+        setFocusPolicy(NoFocus);
 
-    setVScrollBarMode( Auto );
-    setHScrollBarMode( AlwaysOff );
+    setVScrollBarMode(Auto);
+    setHScrollBarMode(AlwaysOff);
 
-    connect( this, SIGNAL( doubleClicked( QListBoxItem * )),
-             SLOT( slotActivated( QListBoxItem * )) );
+    connect(this, SIGNAL(doubleClicked(QListBoxItem *)), SLOT(slotActivated(QListBoxItem *)));
 
     // grmbl, just QListBox workarounds :[ Thanks Volker.
-    connect( this, SIGNAL( currentChanged( QListBoxItem * )),
-             SLOT( slotCurrentChanged() ));
-    connect( this, SIGNAL( clicked( QListBoxItem * )),
-             SLOT( slotItemClicked( QListBoxItem * )) );
+    connect(this, SIGNAL(currentChanged(QListBoxItem *)), SLOT(slotCurrentChanged()));
+    connect(this, SIGNAL(clicked(QListBoxItem *)), SLOT(slotItemClicked(QListBoxItem *)));
 }
 
 KCompletionBox::~KCompletionBox()
@@ -86,9 +81,10 @@ QStringList KCompletionBox::items() const
 {
     QStringList list;
 
-    const QListBoxItem* currItem = firstItem();
+    const QListBoxItem *currItem = firstItem();
 
-    while (currItem) {
+    while(currItem)
+    {
         list.append(currItem->text());
         currItem = currItem->next();
     }
@@ -96,34 +92,39 @@ QStringList KCompletionBox::items() const
     return list;
 }
 
-void KCompletionBox::slotActivated( QListBoxItem *item )
+void KCompletionBox::slotActivated(QListBoxItem *item)
 {
-    if ( !item )
+    if(!item)
         return;
 
     hide();
-    emit activated( item->text() );
+    emit activated(item->text());
 }
 
-bool KCompletionBox::eventFilter( QObject *o, QEvent *e )
+bool KCompletionBox::eventFilter(QObject *o, QEvent *e)
 {
     int type = e->type();
 
-    if ( o == d->m_parent ) {
-        if ( isVisible() ) {
-            if ( type == QEvent::KeyPress ) {
-                QKeyEvent *ev = static_cast<QKeyEvent *>( e );
-                switch ( ev->key() ) {
+    if(o == d->m_parent)
+    {
+        if(isVisible())
+        {
+            if(type == QEvent::KeyPress)
+            {
+                QKeyEvent *ev = static_cast< QKeyEvent * >(e);
+                switch(ev->key())
+                {
                     case Key_BackTab:
-                        if ( d->tabHandling && (ev->state() == NoButton ||
-                             (ev->state() & ShiftButton)) ) {
+                        if(d->tabHandling && (ev->state() == NoButton || (ev->state() & ShiftButton)))
+                        {
                             up();
                             ev->accept();
                             return true;
                         }
                         break;
                     case Key_Tab:
-                        if ( d->tabHandling && (ev->state() == NoButton) ) {
+                        if(d->tabHandling && (ev->state() == NoButton))
+                        {
                             down(); // Only on TAB!!
                             ev->accept();
                             return true;
@@ -136,9 +137,7 @@ bool KCompletionBox::eventFilter( QObject *o, QEvent *e )
                     case Key_Up:
                         // If there is no selected item and we've popped up above
                         // our parent, select the first item when they press up.
-                        if ( selectedItem() ||
-                             mapToGlobal( QPoint( 0, 0 ) ).y() >
-                             d->m_parent->mapToGlobal( QPoint( 0, 0 ) ).y() )
+                        if(selectedItem() || mapToGlobal(QPoint(0, 0)).y() > d->m_parent->mapToGlobal(QPoint(0, 0)).y())
                             up();
                         else
                             down();
@@ -158,21 +157,22 @@ bool KCompletionBox::eventFilter( QObject *o, QEvent *e )
                         return true;
                     case Key_Enter:
                     case Key_Return:
-                        if ( ev->state() & ShiftButton ) {
+                        if(ev->state() & ShiftButton)
+                        {
                             hide();
-                            ev->accept();  // Consume the Enter event
+                            ev->accept(); // Consume the Enter event
                             return true;
                         }
                         break;
                     case Key_End:
-                        if ( ev->state() & ControlButton )
+                        if(ev->state() & ControlButton)
                         {
                             end();
                             ev->accept();
                             return true;
                         }
                     case Key_Home:
-                        if ( ev->state() & ControlButton )
+                        if(ev->state() & ControlButton)
                         {
                             home();
                             ev->accept();
@@ -182,11 +182,13 @@ bool KCompletionBox::eventFilter( QObject *o, QEvent *e )
                         break;
                 }
             }
-            else if ( type == QEvent::AccelOverride ) {
+            else if(type == QEvent::AccelOverride)
+            {
                 // Override any acceleartors that match
                 // the key sequences we use here...
-                QKeyEvent *ev = static_cast<QKeyEvent *>( e );
-                switch ( ev->key() ) {
+                QKeyEvent *ev = static_cast< QKeyEvent * >(e);
+                switch(ev->key())
+                {
                     case Key_Down:
                     case Key_Up:
                     case Key_Prior:
@@ -194,13 +196,12 @@ bool KCompletionBox::eventFilter( QObject *o, QEvent *e )
                     case Key_Escape:
                     case Key_Enter:
                     case Key_Return:
-                      ev->accept();
-                      return true;
-                      break;
+                        ev->accept();
+                        return true;
+                        break;
                     case Key_Tab:
                     case Key_BackTab:
-                        if ( ev->state() == NoButton ||
-                            (ev->state() & ShiftButton))
+                        if(ev->state() == NoButton || (ev->state() & ShiftButton))
                         {
                             ev->accept();
                             return true;
@@ -208,7 +209,7 @@ bool KCompletionBox::eventFilter( QObject *o, QEvent *e )
                         break;
                     case Key_Home:
                     case Key_End:
-                        if ( ev->state() & ControlButton )
+                        if(ev->state() & ControlButton)
                         {
                             ev->accept();
                             return true;
@@ -220,47 +221,48 @@ bool KCompletionBox::eventFilter( QObject *o, QEvent *e )
             }
 
             // parent loses focus or gets a click -> we hide
-            else if ( type == QEvent::FocusOut || type == QEvent::Resize ||
-                      type == QEvent::Close || type == QEvent::Hide ||
-                      type == QEvent::Move ) {
+            else if(type == QEvent::FocusOut || type == QEvent::Resize || type == QEvent::Close || type == QEvent::Hide || type == QEvent::Move)
+            {
                 hide();
             }
         }
     }
 
     // any mouse-click on something else than "this" makes us hide
-    else if ( type == QEvent::MouseButtonPress ) {
-        QMouseEvent *ev = static_cast<QMouseEvent *>( e );
-        if ( !rect().contains( ev->pos() )) // this widget
+    else if(type == QEvent::MouseButtonPress)
+    {
+        QMouseEvent *ev = static_cast< QMouseEvent * >(e);
+        if(!rect().contains(ev->pos())) // this widget
             hide();
 
-        if ( !d->emitSelected && currentItem() && !::qt_cast<QScrollBar*>(o) )
+        if(!d->emitSelected && currentItem() && !::qt_cast< QScrollBar * >(o))
         {
-          emit highlighted( currentText() );
-          hide();
-          ev->accept();  // Consume the mouse click event...
-          return true;
+            emit highlighted(currentText());
+            hide();
+            ev->accept(); // Consume the mouse click event...
+            return true;
         }
     }
 
-    return KListBox::eventFilter( o, e );
+    return KListBox::eventFilter(o, e);
 }
 
 
 void KCompletionBox::popup()
 {
-    if ( count() == 0 )
+    if(count() == 0)
         hide();
-    else {
+    else
+    {
         ensureCurrentVisible();
         bool block = signalsBlocked();
-        blockSignals( true );
-        setCurrentItem( 0 );
-        blockSignals( block );
+        blockSignals(true);
+        setCurrentItem(0);
+        blockSignals(block);
         clearSelection();
-        if ( !isVisible() )
+        if(!isVisible())
             show();
-        else if ( size().height() != sizeHint().height() )
+        else if(size().height() != sizeHint().height())
             sizeAndPosition();
     }
 }
@@ -270,44 +272,49 @@ void KCompletionBox::sizeAndPosition()
     int currentGeom = height();
     QPoint currentPos = pos();
     QRect geom = calculateGeometry();
-    resize( geom.size() );
+    resize(geom.size());
 
     int x = currentPos.x(), y = currentPos.y();
-    if ( d->m_parent ) {
-      if ( !isVisible() ) {
-        QRect screenSize = KGlobalSettings::desktopGeometry(d->m_parent);
+    if(d->m_parent)
+    {
+        if(!isVisible())
+        {
+            QRect screenSize = KGlobalSettings::desktopGeometry(d->m_parent);
 
-        QPoint orig = d->m_parent->mapToGlobal( QPoint(0, d->m_parent->height()) );
-        x = orig.x() + geom.x();
-        y = orig.y() + geom.y();
+            QPoint orig = d->m_parent->mapToGlobal(QPoint(0, d->m_parent->height()));
+            x = orig.x() + geom.x();
+            y = orig.y() + geom.y();
 
-        if ( x + width() > screenSize.right() )
-            x = screenSize.right() - width();
-        if (y + height() > screenSize.bottom() ) {
-            y = y - height() - d->m_parent->height();
-            d->upwardBox = true;
+            if(x + width() > screenSize.right())
+                x = screenSize.right() - width();
+            if(y + height() > screenSize.bottom())
+            {
+                y = y - height() - d->m_parent->height();
+                d->upwardBox = true;
+            }
         }
-      }
-      else {
-        // Are we above our parent? If so we must keep bottom edge anchored.
-        if (d->upwardBox)
-          y += (currentGeom-height());
-      }
-      move( x, y);
+        else
+        {
+            // Are we above our parent? If so we must keep bottom edge anchored.
+            if(d->upwardBox)
+                y += (currentGeom - height());
+        }
+        move(x, y);
     }
 }
 
 void KCompletionBox::show()
 {
     d->upwardBox = false;
-    if ( d->m_parent ) {
+    if(d->m_parent)
+    {
         sizeAndPosition();
-        qApp->installEventFilter( this );
+        qApp->installEventFilter(this);
     }
 
     // ### we shouldn't need to call this, but without this, the scrollbars
     // are pretty b0rked.
-    //triggerUpdate( true );
+    // triggerUpdate( true );
 
     // Workaround for I'm not sure whose bug - if this KCompletionBox' parent
     // is in a layout, that layout will detect inserting new child (posted
@@ -323,8 +330,8 @@ void KCompletionBox::show()
 
 void KCompletionBox::hide()
 {
-    if ( d->m_parent )
-        qApp->removeEventFilter( this );
+    if(d->m_parent)
+        qApp->removeEventFilter(this);
     d->cancelText = QString::null;
     KListBox::hide();
 }
@@ -333,42 +340,37 @@ QRect KCompletionBox::calculateGeometry() const
 {
     int x = 0, y = 0;
     int ih = itemHeight();
-    int h = QMIN( 15 * ih, (int) count() * ih ) + 2*frameWidth();
+    int h = QMIN(15 * ih, (int)count() * ih) + 2 * frameWidth();
 
     int w = (d->m_parent) ? d->m_parent->width() : KListBox::minimumSizeHint().width();
-    w = QMAX( KListBox::minimumSizeHint().width(), w );
+    w = QMAX(KListBox::minimumSizeHint().width(), w);
 
-    //If we're inside a combox, Qt by default makes the dropdown
+    // If we're inside a combox, Qt by default makes the dropdown
     // as wide as the combo, and gives the style a chance
     // to adjust it. Do that here as well, for consistency
-    const QObject* combo;
-    if ( d->m_parent && (combo = d->m_parent->parent() ) &&
-        combo->inherits("QComboBox") )
+    const QObject *combo;
+    if(d->m_parent && (combo = d->m_parent->parent()) && combo->inherits("QComboBox"))
     {
-        const QComboBox* cb = static_cast<const QComboBox*>(combo);
+        const QComboBox *cb = static_cast< const QComboBox * >(combo);
 
-        //Expand to the combo width
-        w = QMAX( w, cb->width() );
+        // Expand to the combo width
+        w = QMAX(w, cb->width());
 
         QPoint parentCorner = d->m_parent->mapToGlobal(QPoint(0, 0));
-        QPoint comboCorner  = cb->mapToGlobal(QPoint(0, 0));
+        QPoint comboCorner = cb->mapToGlobal(QPoint(0, 0));
 
-        //We need to adjust our horizontal position to also be WRT to the combo
-        x += comboCorner.x() -  parentCorner.x();
+        // We need to adjust our horizontal position to also be WRT to the combo
+        x += comboCorner.x() - parentCorner.x();
 
-        //The same with vertical one
-        y += cb->height() - d->m_parent->height() +
-             comboCorner.y() - parentCorner.y();
+        // The same with vertical one
+        y += cb->height() - d->m_parent->height() + comboCorner.y() - parentCorner.y();
 
-        //Ask the style to refine this a bit
-        QRect styleAdj = style().querySubControlMetrics(QStyle::CC_ComboBox,
-                                    cb, QStyle::SC_ComboBoxListBoxPopup,
-                                    QStyleOption(x, y, w, h));
-        //QCommonStyle returns QRect() by default, so this is what we get if the
-        //style doesn't implement this
-        if (!styleAdj.isNull())
+        // Ask the style to refine this a bit
+        QRect styleAdj = style().querySubControlMetrics(QStyle::CC_ComboBox, cb, QStyle::SC_ComboBoxListBoxPopup, QStyleOption(x, y, w, h));
+        // QCommonStyle returns QRect() by default, so this is what we get if the
+        // style doesn't implement this
+        if(!styleAdj.isNull())
             return styleAdj;
-
     }
     return QRect(x, y, w, h);
 }
@@ -382,48 +384,49 @@ void KCompletionBox::down()
 {
     int i = currentItem();
 
-    if ( i == 0 && d->down_workaround ) {
+    if(i == 0 && d->down_workaround)
+    {
         d->down_workaround = false;
-        setCurrentItem( 0 );
-        setSelected( 0, true );
-        emit highlighted( currentText() );
+        setCurrentItem(0);
+        setSelected(0, true);
+        emit highlighted(currentText());
     }
 
-    else if ( i < (int) count() - 1 )
-        setCurrentItem( i + 1 );
+    else if(i < (int)count() - 1)
+        setCurrentItem(i + 1);
 }
 
 void KCompletionBox::up()
 {
-    if ( currentItem() > 0 )
-        setCurrentItem( currentItem() - 1 );
+    if(currentItem() > 0)
+        setCurrentItem(currentItem() - 1);
 }
 
 void KCompletionBox::pageDown()
 {
     int i = currentItem() + numItemsVisible();
     i = i > (int)count() - 1 ? (int)count() - 1 : i;
-    setCurrentItem( i );
+    setCurrentItem(i);
 }
 
 void KCompletionBox::pageUp()
 {
     int i = currentItem() - numItemsVisible();
     i = i < 0 ? 0 : i;
-    setCurrentItem( i );
+    setCurrentItem(i);
 }
 
 void KCompletionBox::home()
 {
-    setCurrentItem( 0 );
+    setCurrentItem(0);
 }
 
 void KCompletionBox::end()
 {
-    setCurrentItem( count() -1 );
+    setCurrentItem(count() - 1);
 }
 
-void KCompletionBox::setTabHandling( bool enable )
+void KCompletionBox::setTabHandling(bool enable)
 {
     d->tabHandling = enable;
 }
@@ -433,7 +436,7 @@ bool KCompletionBox::isTabHandling() const
     return d->tabHandling;
 }
 
-void KCompletionBox::setCancelledText( const QString& text )
+void KCompletionBox::setCancelledText(const QString &text)
 {
     d->cancelText = text;
 }
@@ -445,85 +448,91 @@ QString KCompletionBox::cancelledText() const
 
 void KCompletionBox::canceled()
 {
-    if ( !d->cancelText.isNull() )
-        emit userCancelled( d->cancelText );
-    if ( isVisible() )
+    if(!d->cancelText.isNull())
+        emit userCancelled(d->cancelText);
+    if(isVisible())
         hide();
 }
 
-class KCompletionBoxItem : public QListBoxItem
-{
+class KCompletionBoxItem : public QListBoxItem {
 public:
-    //Returns true if dirty.
-    bool reuse( const QString& newText )
+    // Returns true if dirty.
+    bool reuse(const QString &newText)
     {
-        if ( text() == newText )
+        if(text() == newText)
             return false;
-        setText( newText );
+        setText(newText);
         return true;
     }
 };
 
 
-void KCompletionBox::insertItems( const QStringList& items, int index )
+void KCompletionBox::insertItems(const QStringList &items, int index)
 {
     bool block = signalsBlocked();
-    blockSignals( true );
-    insertStringList( items, index );
-    blockSignals( block );
+    blockSignals(true);
+    insertStringList(items, index);
+    blockSignals(block);
     d->down_workaround = true;
 }
 
-void KCompletionBox::setItems( const QStringList& items )
+void KCompletionBox::setItems(const QStringList &items)
 {
     bool block = signalsBlocked();
-    blockSignals( true );
+    blockSignals(true);
 
-    QListBoxItem* item = firstItem();
-    if ( !item ) {
-        insertStringList( items );
+    QListBoxItem *item = firstItem();
+    if(!item)
+    {
+        insertStringList(items);
     }
-    else {
-        //Keep track of whether we need to change anything,
-        //so we can avoid a repaint for identical updates,
-        //to reduce flicker
+    else
+    {
+        // Keep track of whether we need to change anything,
+        // so we can avoid a repaint for identical updates,
+        // to reduce flicker
         bool dirty = false;
 
         QStringList::ConstIterator it = items.constBegin();
         const QStringList::ConstIterator itEnd = items.constEnd();
 
-        for ( ; it != itEnd; ++it) {
-            if ( item ) {
-                const bool changed = ((KCompletionBoxItem*)item)->reuse( *it );
+        for(; it != itEnd; ++it)
+        {
+            if(item)
+            {
+                const bool changed = ((KCompletionBoxItem *)item)->reuse(*it);
                 dirty = dirty || changed;
                 item = item->next();
             }
-            else {
+            else
+            {
                 dirty = true;
-                //Inserting an item is a way of making this dirty
-                insertItem( new QListBoxText( *it ) );
+                // Inserting an item is a way of making this dirty
+                insertItem(new QListBoxText(*it));
             }
         }
 
-        //If there is an unused item, mark as dirty -> less items now
-        if ( item ) {
+        // If there is an unused item, mark as dirty -> less items now
+        if(item)
+        {
             dirty = true;
         }
 
-        QListBoxItem* tmp = item;
-        while ( (item = tmp ) ) {
+        QListBoxItem *tmp = item;
+        while((item = tmp))
+        {
             tmp = item->next();
             delete item;
         }
 
-        if (dirty)
-            triggerUpdate( false );
+        if(dirty)
+            triggerUpdate(false);
     }
 
-    if ( isVisible() && size().height() != sizeHint().height() )
+    if(isVisible() && size().height() != sizeHint().height())
         sizeAndPosition();
 
-    blockSignals( block );
+    blockSignals(block);
     d->down_workaround = true;
 }
 
@@ -532,17 +541,18 @@ void KCompletionBox::slotCurrentChanged()
     d->down_workaround = false;
 }
 
-void KCompletionBox::slotItemClicked( QListBoxItem *item )
+void KCompletionBox::slotItemClicked(QListBoxItem *item)
 {
-    if ( item )
+    if(item)
     {
-        if ( d->down_workaround ) {
+        if(d->down_workaround)
+        {
             d->down_workaround = false;
-            emit highlighted( item->text() );
+            emit highlighted(item->text());
         }
 
         hide();
-        emit activated( item->text() );
+        emit activated(item->text());
     }
 }
 
@@ -556,7 +566,9 @@ bool KCompletionBox::activateOnSelect() const
     return d->emitSelected;
 }
 
-void KCompletionBox::virtual_hook( int id, void* data )
-{ KListBox::virtual_hook( id, data ); }
+void KCompletionBox::virtual_hook(int id, void *data)
+{
+    KListBox::virtual_hook(id, data);
+}
 
 #include "kcompletionbox.moc"

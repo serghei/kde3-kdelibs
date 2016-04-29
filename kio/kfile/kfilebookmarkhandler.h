@@ -26,34 +26,40 @@ class QTextStream;
 class KPopupMenu;
 
 
-class KIO_EXPORT KFileBookmarkHandler : public QObject, public KBookmarkOwner
-{
+class KIO_EXPORT KFileBookmarkHandler : public QObject, public KBookmarkOwner {
     Q_OBJECT
 
 public:
-    KFileBookmarkHandler( KFileDialog *dialog );
+    KFileBookmarkHandler(KFileDialog *dialog);
     ~KFileBookmarkHandler();
 
-    QPopupMenu * popupMenu();
+    QPopupMenu *popupMenu();
 
     // KBookmarkOwner interface:
-    virtual void openBookmarkURL( const QString& url ) { emit openURL( url ); }
+    virtual void openBookmarkURL(const QString &url)
+    {
+        emit openURL(url);
+    }
     virtual QString currentURL() const;
 
-    KPopupMenu *menu() const { return m_menu; }
+    KPopupMenu *menu() const
+    {
+        return m_menu;
+    }
 
 signals:
-    void openURL( const QString& url );
+    void openURL(const QString &url);
 
 private:
-    void importOldBookmarks( const QString& path, KBookmarkManager *manager );
+    void importOldBookmarks(const QString &path, KBookmarkManager *manager);
 
     KFileDialog *m_dialog;
     KPopupMenu *m_menu;
     KBookmarkMenu *m_bookmarkMenu;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KFileBookmarkHandlerPrivate;
     KFileBookmarkHandlerPrivate *d;

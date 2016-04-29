@@ -114,10 +114,9 @@ class KHTMLToolTip;
 
 #ifndef QT_NO_TOOLTIP
 
-class KHTMLToolTip : public QToolTip
-{
+class KHTMLToolTip : public QToolTip {
 public:
-    KHTMLToolTip(KHTMLView *view,  KHTMLViewPrivate* vp) : QToolTip(view->viewport())
+    KHTMLToolTip(KHTMLView *view, KHTMLViewPrivate *vp) : QToolTip(view->viewport())
     {
         m_view = view;
         m_viewprivate = vp;
@@ -128,65 +127,68 @@ protected:
 
 private:
     KHTMLView *m_view;
-    KHTMLViewPrivate* m_viewprivate;
+    KHTMLViewPrivate *m_viewprivate;
 };
 
 #endif
 
 class KHTMLViewPrivate {
     friend class KHTMLToolTip;
-public:
 
-    enum PseudoFocusNodes {
-	PFNone,
-	PFTop,
-	PFBottom
+public:
+    enum PseudoFocusNodes
+    {
+        PFNone,
+        PFTop,
+        PFBottom
     };
 
-    enum CompletedState {
+    enum CompletedState
+    {
         CSNone = 0,
         CSFull,
         CSActionPending
     };
 
-    KHTMLViewPrivate()
-        : underMouse( 0 ), underMouseNonShared( 0 ), visibleWidgets( 107 )
+    KHTMLViewPrivate() : underMouse(0), underMouseNonShared(0), visibleWidgets(107)
     {
 #ifndef KHTML_NO_CARET
-	m_caretViewContext = 0;
-	m_editorContext = 0;
+        m_caretViewContext = 0;
+        m_editorContext = 0;
 #endif // KHTML_NO_CARET
         postponed_autorepeat = NULL;
         reset();
         vmode = QScrollView::Auto;
- 	hmode = QScrollView::Auto;
-        tp=0;
-        paintBuffer=0;
-        vertPaintBuffer=0;
-        formCompletions=0;
+        hmode = QScrollView::Auto;
+        tp = 0;
+        paintBuffer = 0;
+        vertPaintBuffer = 0;
+        formCompletions = 0;
         prevScrollbarVisible = true;
-	tooltip = 0;
+        tooltip = 0;
         possibleTripleClick = false;
         emitCompletedAfterRepaint = CSNone;
-	cursor_icon_widget = NULL;
+        cursor_icon_widget = NULL;
         m_mouseScrollTimer = 0;
         m_mouseScrollIndicator = 0;
     }
     ~KHTMLViewPrivate()
     {
         delete formCompletions;
-        delete tp; tp = 0;
-        delete paintBuffer; paintBuffer =0;
+        delete tp;
+        tp = 0;
+        delete paintBuffer;
+        paintBuffer = 0;
         delete vertPaintBuffer;
         delete postponed_autorepeat;
-        if (underMouse)
-	    underMouse->deref();
-        if (underMouseNonShared)
-	    underMouseNonShared->deref();
-	delete tooltip;
+        if(underMouse)
+            underMouse->deref();
+        if(underMouseNonShared)
+            underMouseNonShared->deref();
+        delete tooltip;
 #ifndef KHTML_NO_CARET
-	delete m_caretViewContext;
-	delete m_editorContext;
+        delete m_caretViewContext;
+        delete m_editorContext;
 #endif // KHTML_NO_CARET
         delete cursor_icon_widget;
         delete m_mouseScrollTimer;
@@ -194,22 +196,22 @@ public:
     }
     void reset()
     {
-        if (underMouse)
-	    underMouse->deref();
-	underMouse = 0;
-        if (underMouseNonShared)
-	    underMouseNonShared->deref();
-	underMouseNonShared = 0;
+        if(underMouse)
+            underMouse->deref();
+        underMouse = 0;
+        if(underMouseNonShared)
+            underMouseNonShared->deref();
+        underMouseNonShared = 0;
         linkPressed = false;
         useSlowRepaints = false;
-	tabMovePending = false;
-	lastTabbingDirection = true;
-	pseudoFocusNode = PFNone;
+        tabMovePending = false;
+        lastTabbingDirection = true;
+        pseudoFocusNode = PFNone;
 #ifndef KHTML_NO_SCROLLBARS
-        //We don't turn off the toolbars here
-	//since if the user turns them
-	//off, then chances are they want them turned
-	//off always - even after a reset.
+// We don't turn off the toolbars here
+// since if the user turns them
+// off, then chances are they want them turned
+// off always - even after a reset.
 #else
         vmode = QScrollView::AlwaysOff;
         hmode = QScrollView::AlwaysOff;
@@ -222,19 +224,19 @@ public:
         scrollBarMoved = false;
         contentsMoving = false;
         ignoreWheelEvents = false;
-	borderX = 30;
-	borderY = 30;
+        borderX = 30;
+        borderY = 30;
         paged = false;
-	clickX = -1;
-	clickY = -1;
+        clickX = -1;
+        clickY = -1;
         prevMouseX = -1;
         prevMouseY = -1;
-	clickCount = 0;
-	isDoubleClick = false;
-	scrollingSelf = false;
+        clickCount = 0;
+        isDoubleClick = false;
+        scrollingSelf = false;
         delete postponed_autorepeat;
         postponed_autorepeat = NULL;
-	layoutTimerId = 0;
+        layoutTimerId = 0;
         repaintTimerId = 0;
         scrollTimerId = 0;
         scrollSuspended = false;
@@ -248,16 +250,17 @@ public:
         updateRegion = QRegion();
         m_dialogsAllowed = true;
 #ifndef KHTML_NO_CARET
-        if (m_caretViewContext) {
-          m_caretViewContext->caretMoved = false;
-	  m_caretViewContext->keyReleasePending = false;
-        }/*end if*/
-#endif // KHTML_NO_CARET
+        if(m_caretViewContext)
+        {
+            m_caretViewContext->caretMoved = false;
+            m_caretViewContext->keyReleasePending = false;
+        } /*end if*/
+#endif    // KHTML_NO_CARET
 #ifndef KHTML_NO_TYPE_AHEAD_FIND
         typeAheadActivated = false;
 #endif // KHTML_NO_TYPE_AHEAD_FIND
-	accessKeysActivated = false;
-	accessKeysPreActivate = false;
+        accessKeysActivated = false;
+        accessKeysPreActivate = false;
 
         // We ref/deref to ensure defaultHTMLSettings is available
         KHTMLFactory::ref();
@@ -268,32 +271,43 @@ public:
     }
     void newScrollTimer(QWidget *view, int tid)
     {
-        //kdDebug(6000) << "newScrollTimer timer " << tid << endl;
+        // kdDebug(6000) << "newScrollTimer timer " << tid << endl;
         view->killTimer(scrollTimerId);
         scrollTimerId = tid;
         scrollSuspended = false;
     }
-    enum ScrollDirection { ScrollLeft, ScrollRight, ScrollUp, ScrollDown };
+    enum ScrollDirection
+    {
+        ScrollLeft,
+        ScrollRight,
+        ScrollUp,
+        ScrollDown
+    };
 
     void adjustScroller(QWidget *view, ScrollDirection direction, ScrollDirection oppositedir)
     {
-        static const struct { int msec, pixels; } timings [] = {
-            {320,1}, {224,1}, {160,1}, {112,1}, {80,1}, {56,1}, {40,1},
-            {28,1}, {20,1}, {20,2}, {20,3}, {20,4}, {20,6}, {20,8}, {0,0}
-        };
-        if (!scrollTimerId ||
-            (static_cast<int>(scrollDirection) != direction &&
-             (static_cast<int>(scrollDirection) != oppositedir || scrollSuspended))) {
+        static const struct
+        {
+            int msec, pixels;
+        } timings[] = {{320, 1}, {224, 1}, {160, 1}, {112, 1}, {80, 1}, {56, 1}, {40, 1}, {28, 1},
+                       {20, 1},  {20, 2},  {20, 3},  {20, 4},  {20, 6}, {20, 8}, {0, 0}};
+        if(!scrollTimerId
+           || (static_cast< int >(scrollDirection) != direction && (static_cast< int >(scrollDirection) != oppositedir || scrollSuspended)))
+        {
             scrollTiming = 6;
             scrollBy = timings[scrollTiming].pixels;
             scrollDirection = direction;
             newScrollTimer(view, view->startTimer(timings[scrollTiming].msec));
-        } else if (scrollDirection == direction &&
-                   timings[scrollTiming+1].msec && !scrollSuspended) {
+        }
+        else if(scrollDirection == direction && timings[scrollTiming + 1].msec && !scrollSuspended)
+        {
             scrollBy = timings[++scrollTiming].pixels;
             newScrollTimer(view, view->startTimer(timings[scrollTiming].msec));
-        } else if (scrollDirection == oppositedir) {
-            if (scrollTiming) {
+        }
+        else if(scrollDirection == oppositedir)
+        {
+            if(scrollTiming)
+            {
                 scrollBy = timings[--scrollTiming].pixels;
                 newScrollTimer(view, view->startTimer(timings[scrollTiming].msec));
             }
@@ -305,16 +319,20 @@ public:
     /** this function returns an instance of the caret view context. If none
      * exists, it will be instantiated.
      */
-    CaretViewContext *caretViewContext() {
-      if (!m_caretViewContext) m_caretViewContext = new CaretViewContext();
-      return m_caretViewContext;
+    CaretViewContext *caretViewContext()
+    {
+        if(!m_caretViewContext)
+            m_caretViewContext = new CaretViewContext();
+        return m_caretViewContext;
     }
     /** this function returns an instance of the editor context. If none
      * exists, it will be instantiated.
      */
-    EditorContext *editorContext() {
-      if (!m_editorContext) m_editorContext = new EditorContext();
-      return m_editorContext;
+    EditorContext *editorContext()
+    {
+        if(!m_editorContext)
+            m_editorContext = new EditorContext();
+        return m_editorContext;
     }
 #endif // KHTML_NO_CARET
 
@@ -325,23 +343,23 @@ public:
 #endif
 
     QPainter *tp;
-    QPixmap  *paintBuffer;
-    QPixmap  *vertPaintBuffer;
+    QPixmap *paintBuffer;
+    QPixmap *vertPaintBuffer;
     NodeImpl *underMouse;
     NodeImpl *underMouseNonShared;
 
-    bool tabMovePending:1;
-    bool lastTabbingDirection:1;
-    PseudoFocusNodes pseudoFocusNode:2;
-    bool scrollBarMoved:1;
-    bool contentsMoving:1;
+    bool tabMovePending : 1;
+    bool lastTabbingDirection : 1;
+    PseudoFocusNodes pseudoFocusNode : 2;
+    bool scrollBarMoved : 1;
+    bool contentsMoving : 1;
 
     QScrollView::ScrollBarMode vmode;
     QScrollView::ScrollBarMode hmode;
-    bool prevScrollbarVisible:1;
-    bool linkPressed:1;
-    bool useSlowRepaints:1;
-    bool ignoreWheelEvents:1;
+    bool prevScrollbarVisible : 1;
+    bool linkPressed : 1;
+    bool useSlowRepaints : 1;
+    bool ignoreWheelEvents : 1;
 
     int borderX, borderY;
     KSimpleConfig *formCompletions;
@@ -354,26 +372,26 @@ public:
     int prevMouseX, prevMouseY;
     bool scrollingSelf;
     int layoutTimerId;
-    QKeyEvent* postponed_autorepeat;
+    QKeyEvent *postponed_autorepeat;
 
     int repaintTimerId;
     int scrollTimerId;
     int scrollTiming;
     int scrollBy;
-    ScrollDirection scrollDirection		:2;
-    bool scrollSuspended			:1;
-    bool scrollSuspendPreActivate		:1;
-    bool complete				:1;
-    bool firstRelayout				:1;
-    bool layoutSchedulingEnabled		:1;
-    bool needsFullRepaint			:1;
-    bool painting				:1;
-    bool possibleTripleClick			:1;
-    bool dirtyLayout                           :1;
-    bool m_dialogsAllowed			:1;
+    ScrollDirection scrollDirection : 2;
+    bool scrollSuspended : 1;
+    bool scrollSuspendPreActivate : 1;
+    bool complete : 1;
+    bool firstRelayout : 1;
+    bool layoutSchedulingEnabled : 1;
+    bool needsFullRepaint : 1;
+    bool painting : 1;
+    bool possibleTripleClick : 1;
+    bool dirtyLayout : 1;
+    bool m_dialogsAllowed : 1;
     QRegion updateRegion;
     KHTMLToolTip *tooltip;
-    QPtrDict<QWidget> visibleWidgets;
+    QPtrDict< QWidget > visibleWidgets;
 #ifndef KHTML_NO_CARET
     CaretViewContext *m_caretViewContext;
     EditorContext *m_editorContext;
@@ -389,7 +407,7 @@ public:
     bool accessKeysPreActivate;
     CompletedState emitCompletedAfterRepaint;
 
-    QWidget* cursor_icon_widget;
+    QWidget *cursor_icon_widget;
 
     // scrolling activated by MMB
     short m_mouseScroll_byX;
@@ -409,27 +427,26 @@ public:
  * @return true if an appropriate area was found -- only in this case r and
  *	s are valid, false otherwise
  */
-static bool findImageMapRect(HTMLImageElementImpl *img, const QPoint &scrollOfs,
-			const QPoint &p, QRect &r, QString &s)
+static bool findImageMapRect(HTMLImageElementImpl *img, const QPoint &scrollOfs, const QPoint &p, QRect &r, QString &s)
 {
-    HTMLMapElementImpl* map;
-    if (img && img->getDocument()->isHTMLDocument() &&
-        (map = static_cast<HTMLDocumentImpl*>(img->getDocument())->getMap(img->imageMap()))) {
+    HTMLMapElementImpl *map;
+    if(img && img->getDocument()->isHTMLDocument() && (map = static_cast< HTMLDocumentImpl * >(img->getDocument())->getMap(img->imageMap())))
+    {
         RenderObject::NodeInfo info(true, false);
         RenderObject *rend = img->renderer();
         int ax, ay;
-        if (!rend || !rend->absolutePosition(ax, ay))
+        if(!rend || !rend->absolutePosition(ax, ay))
             return false;
         // we're a client side image map
-        bool inside = map->mapMouseEvent(p.x() - ax + scrollOfs.x(),
-                p.y() - ay + scrollOfs.y(), rend->contentWidth(),
-                rend->contentHeight(), info);
-        if (inside && info.URLElement()) {
-            HTMLAreaElementImpl *area = static_cast<HTMLAreaElementImpl *>(info.URLElement());
+        bool inside = map->mapMouseEvent(p.x() - ax + scrollOfs.x(), p.y() - ay + scrollOfs.y(), rend->contentWidth(), rend->contentHeight(), info);
+        if(inside && info.URLElement())
+        {
+            HTMLAreaElementImpl *area = static_cast< HTMLAreaElementImpl * >(info.URLElement());
             Q_ASSERT(area->id() == ID_AREA);
             s = area->getAttribute(ATTR_TITLE).string();
             QRegion reg = area->cachedRegion();
-            if (!s.isEmpty() && !reg.isEmpty()) {
+            if(!s.isEmpty() && !reg.isEmpty())
+            {
                 r = reg.boundingRect();
                 r.moveBy(ax, ay);
                 return true;
@@ -439,29 +456,33 @@ static bool findImageMapRect(HTMLImageElementImpl *img, const QPoint &scrollOfs,
     return false;
 }
 
-void KHTMLToolTip::maybeTip(const QPoint& p)
+void KHTMLToolTip::maybeTip(const QPoint &p)
 {
     DOM::NodeImpl *node = m_viewprivate->underMouseNonShared;
     QRect region;
-    while ( node ) {
-        if ( node->isElementNode() ) {
-            DOM::ElementImpl *e = static_cast<DOM::ElementImpl*>( node );
+    while(node)
+    {
+        if(node->isElementNode())
+        {
+            DOM::ElementImpl *e = static_cast< DOM::ElementImpl * >(node);
             QRect r;
             QString s;
             bool found = false;
             // for images, check if it is part of a client-side image map,
             // and query the <area>s' title attributes, too
-            if (e->id() == ID_IMG && !e->getAttribute( ATTR_USEMAP ).isEmpty()) {
-                found = findImageMapRect(static_cast<HTMLImageElementImpl *>(e),
-                    		m_view->viewportToContents(QPoint(0, 0)), p, r, s);
+            if(e->id() == ID_IMG && !e->getAttribute(ATTR_USEMAP).isEmpty())
+            {
+                found = findImageMapRect(static_cast< HTMLImageElementImpl * >(e), m_view->viewportToContents(QPoint(0, 0)), p, r, s);
             }
-            if (!found) {
-                s = e->getAttribute( ATTR_TITLE ).string();
+            if(!found)
+            {
+                s = e->getAttribute(ATTR_TITLE).string();
                 r = node->getRect();
             }
-            region |= QRect( m_view->contentsToViewport( r.topLeft() ), r.size() );
-            if ( !s.isEmpty() ) {
-                tip( region, QStyleSheet::convertFromPlainText( s, QStyleSheetItem::WhiteSpaceNormal ) );
+            region |= QRect(m_view->contentsToViewport(r.topLeft()), r.size());
+            if(!s.isEmpty())
+            {
+                tip(region, QStyleSheet::convertFromPlainText(s, QStyleSheetItem::WhiteSpaceNormal));
                 break;
             }
         }
@@ -470,8 +491,7 @@ void KHTMLToolTip::maybeTip(const QPoint& p)
 }
 #endif
 
-KHTMLView::KHTMLView( KHTMLPart *part, QWidget *parent, const char *name)
-    : QScrollView( parent, name, WResizeNoErase | WRepaintNoErase )
+KHTMLView::KHTMLView(KHTMLPart *part, QWidget *parent, const char *name) : QScrollView(parent, name, WResizeNoErase | WRepaintNoErase)
 {
     m_medium = "screen";
 
@@ -485,7 +505,7 @@ KHTMLView::KHTMLView( KHTMLPart *part, QWidget *parent, const char *name)
     // initialize QScrollView
     enableClipper(true);
     // hack to get unclipped painting on the viewport.
-    static_cast<KHTMLView *>(static_cast<QWidget *>(viewport()))->setWFlags(WPaintUnclipped);
+    static_cast< KHTMLView * >(static_cast< QWidget * >(viewport()))->setWFlags(WPaintUnclipped);
 
     setResizePolicy(Manual);
     viewport()->setMouseTracking(true);
@@ -494,7 +514,7 @@ KHTMLView::KHTMLView( KHTMLPart *part, QWidget *parent, const char *name)
     KImageIO::registerFormats();
 
 #ifndef QT_NO_TOOLTIP
-    d->tooltip = new KHTMLToolTip( this, d );
+    d->tooltip = new KHTMLToolTip(this, d);
 #endif
 
 #ifndef KHTML_NO_TYPE_AHEAD_FIND
@@ -509,23 +529,26 @@ KHTMLView::KHTMLView( KHTMLPart *part, QWidget *parent, const char *name)
 KHTMLView::~KHTMLView()
 {
     closeChildDialogs();
-    if (m_part)
+    if(m_part)
     {
-        //WABA: Is this Ok? Do I need to deref it as well?
-        //Does this need to be done somewhere else?
+        // WABA: Is this Ok? Do I need to deref it as well?
+        // Does this need to be done somewhere else?
         DOM::DocumentImpl *doc = m_part->xmlDocImpl();
-        if (doc)
+        if(doc)
             doc->detach();
     }
-    delete d; d = 0;
+    delete d;
+    d = 0;
 }
 
 void KHTMLView::init()
 {
-    if(!d->paintBuffer) d->paintBuffer = new QPixmap(PAINT_BUFFER_HEIGHT, PAINT_BUFFER_HEIGHT);
+    if(!d->paintBuffer)
+        d->paintBuffer = new QPixmap(PAINT_BUFFER_HEIGHT, PAINT_BUFFER_HEIGHT);
     if(!d->vertPaintBuffer)
         d->vertPaintBuffer = new QPixmap(10, PAINT_BUFFER_HEIGHT);
-    if(!d->tp) d->tp = new QPainter();
+    if(!d->tp)
+        d->tp = new QPainter();
 
     setFocusPolicy(QWidget::StrongFocus);
     viewport()->setFocusProxy(this);
@@ -547,17 +570,18 @@ void KHTMLView::clear()
     // work around QScrollview's unbelievable bugginess
     setStaticBackground(true);
 #ifndef KHTML_NO_CARET
-    if (!m_part->isCaretMode() && !m_part->isEditable()) caretOff();
+    if(!m_part->isCaretMode() && !m_part->isEditable())
+        caretOff();
 #endif
 
 #ifndef KHTML_NO_TYPE_AHEAD_FIND
-    if( d->typeAheadActivated )
+    if(d->typeAheadActivated)
         findTimeout();
 #endif
-    if (d->accessKeysEnabled && d->accessKeysActivated)
+    if(d->accessKeysEnabled && d->accessKeysActivated)
         accessKeysTimeout();
     viewport()->unsetCursor();
-    if ( d->cursor_icon_widget )
+    if(d->cursor_icon_widget)
         d->cursor_icon_widget->hide();
     d->reset();
     killTimers();
@@ -565,94 +589,99 @@ void KHTMLView::clear()
 
     QScrollView::setHScrollBarMode(d->hmode);
     QScrollView::setVScrollBarMode(d->vmode);
-    verticalScrollBar()->setEnabled( false );
-    horizontalScrollBar()->setEnabled( false );
+    verticalScrollBar()->setEnabled(false);
+    horizontalScrollBar()->setEnabled(false);
 }
 
-void KHTMLView::hideEvent(QHideEvent* e)
+void KHTMLView::hideEvent(QHideEvent *e)
 {
     QScrollView::hideEvent(e);
-    if ( m_part && m_part->xmlDocImpl() )
+    if(m_part && m_part->xmlDocImpl())
         m_part->xmlDocImpl()->docLoader()->pauseAnimations();
 }
 
-void KHTMLView::showEvent(QShowEvent* e)
+void KHTMLView::showEvent(QShowEvent *e)
 {
     QScrollView::showEvent(e);
-    if ( m_part && m_part->xmlDocImpl() )
+    if(m_part && m_part->xmlDocImpl())
         m_part->xmlDocImpl()->docLoader()->resumeAnimations();
 }
 
-void KHTMLView::resizeEvent (QResizeEvent* e)
+void KHTMLView::resizeEvent(QResizeEvent *e)
 {
     int dw = e->oldSize().width() - e->size().width();
     int dh = e->oldSize().height() - e->size().height();
 
     // if we are shrinking the view, don't allow the content to overflow
     // before the layout occurs - we don't know if we need scrollbars yet
-    dw = dw>0 ? kMax(0, contentsWidth()-dw) : contentsWidth();
-    dh = dh>0 ? kMax(0, contentsHeight()-dh) : contentsHeight();
+    dw = dw > 0 ? kMax(0, contentsWidth() - dw) : contentsWidth();
+    dh = dh > 0 ? kMax(0, contentsHeight() - dh) : contentsHeight();
 
     resizeContents(dw, dh);
 
     QScrollView::resizeEvent(e);
 
-    if ( m_part && m_part->xmlDocImpl() )
-        m_part->xmlDocImpl()->dispatchWindowEvent( EventImpl::RESIZE_EVENT, false, false );
+    if(m_part && m_part->xmlDocImpl())
+        m_part->xmlDocImpl()->dispatchWindowEvent(EventImpl::RESIZE_EVENT, false, false);
 }
 
-void KHTMLView::viewportResizeEvent (QResizeEvent* e)
+void KHTMLView::viewportResizeEvent(QResizeEvent *e)
 {
     QScrollView::viewportResizeEvent(e);
 
-    //int w = visibleWidth();
-    //int h = visibleHeight();
+    // int w = visibleWidth();
+    // int h = visibleHeight();
 
-    if (d->layoutSchedulingEnabled)
+    if(d->layoutSchedulingEnabled)
         layout();
 #ifndef KHTML_NO_CARET
-    else {
+    else
+    {
         hideCaret();
         recalcAndStoreCaretPos();
-	showCaret();
-    }/*end if*/
+        showCaret();
+    } /*end if*/
 #endif
 
     KApplication::sendPostedEvents(viewport(), QEvent::Paint);
 }
 
 // this is to get rid of a compiler virtual overload mismatch warning. do not remove
-void KHTMLView::drawContents( QPainter*)
+void KHTMLView::drawContents(QPainter *)
 {
 }
 
-void KHTMLView::drawContents( QPainter *p, int ex, int ey, int ew, int eh )
+void KHTMLView::drawContents(QPainter *p, int ex, int ey, int ew, int eh)
 {
 #ifdef DEBUG_PIXEL
 
-    if ( d->timer.elapsed() > 5000 ) {
-        qDebug( "drawed %d pixels in %d repaints the last %d milliseconds",
-                d->pixelbooth, d->repaintbooth,  d->timer.elapsed() );
+    if(d->timer.elapsed() > 5000)
+    {
+        qDebug("drawed %d pixels in %d repaints the last %d milliseconds", d->pixelbooth, d->repaintbooth, d->timer.elapsed());
         d->timer.restart();
         d->pixelbooth = 0;
         d->repaintbooth = 0;
     }
-    d->pixelbooth += ew*eh;
+    d->pixelbooth += ew * eh;
     d->repaintbooth++;
 #endif
 
-    //kdDebug( 6000 ) << "drawContents this="<< this <<" x=" << ex << ",y=" << ey << ",w=" << ew << ",h=" << eh << endl;
-    if(!m_part || !m_part->xmlDocImpl() || !m_part->xmlDocImpl()->renderer()) {
+    // kdDebug( 6000 ) << "drawContents this="<< this <<" x=" << ex << ",y=" << ey << ",w=" << ew << ",h=" << eh << endl;
+    if(!m_part || !m_part->xmlDocImpl() || !m_part->xmlDocImpl()->renderer())
+    {
         p->fillRect(ex, ey, ew, eh, palette().active().brush(QColorGroup::Base));
         return;
-    } else if ( d->complete && static_cast<RenderCanvas*>(m_part->xmlDocImpl()->renderer())->needsLayout() ) {
+    }
+    else if(d->complete && static_cast< RenderCanvas * >(m_part->xmlDocImpl()->renderer())->needsLayout())
+    {
         // an external update request happens while we have a layout scheduled
         unscheduleRelayout();
         layout();
     }
 
-    if (d->painting) {
-        kdDebug( 6000 ) << "WARNING: drawContents reentered! " << endl;
+    if(d->painting)
+    {
+        kdDebug(6000) << "WARNING: drawContents reentered! " << endl;
         return;
     }
     d->painting = true;
@@ -661,30 +690,33 @@ void KHTMLView::drawContents( QPainter *p, int ex, int ey, int ew, int eh )
     QRegion cr = QRect(pt.x(), pt.y(), ew, eh);
 
     // kdDebug(6000) << "clip rect: " << QRect(pt.x(), pt.y(), ew, eh) << endl;
-    for (QPtrDictIterator<QWidget> it(d->visibleWidgets); it.current(); ++it) {
-	QWidget *w = it.current();
-	RenderWidget* rw = static_cast<RenderWidget*>( it.currentKey() );
-	if (w && rw && !rw->isKHTMLWidget()) {
+    for(QPtrDictIterator< QWidget > it(d->visibleWidgets); it.current(); ++it)
+    {
+        QWidget *w = it.current();
+        RenderWidget *rw = static_cast< RenderWidget * >(it.currentKey());
+        if(w && rw && !rw->isKHTMLWidget())
+        {
             int x, y;
             rw->absolutePosition(x, y);
             contentsToViewport(x, y, x, y);
-            int pbx = rw->borderLeft()+rw->paddingLeft();
-            int pby = rw->borderTop()+rw->paddingTop();
-            QRect g = QRect(x+pbx, y+pby,
-                            rw->width()-pbx-rw->borderRight()-rw->paddingRight(),
-                            rw->height()-pby-rw->borderBottom()-rw->paddingBottom());
-            if ( !rw->isFrame() && ((g.top() > pt.y()+eh) || (g.bottom() <= pt.y()) ||
-                                    (g.right() <= pt.x()) || (g.left() > pt.x()+ew) ))
+            int pbx = rw->borderLeft() + rw->paddingLeft();
+            int pby = rw->borderTop() + rw->paddingTop();
+            QRect g = QRect(x + pbx, y + pby, rw->width() - pbx - rw->borderRight() - rw->paddingRight(),
+                            rw->height() - pby - rw->borderBottom() - rw->paddingBottom());
+            if(!rw->isFrame() && ((g.top() > pt.y() + eh) || (g.bottom() <= pt.y()) || (g.right() <= pt.x()) || (g.left() > pt.x() + ew)))
                 continue;
-            RenderLayer* rl = rw->needsMask() ? rw->enclosingStackingContext() : 0;
+            RenderLayer *rl = rw->needsMask() ? rw->enclosingStackingContext() : 0;
             QRegion mask = rl ? rl->getMask() : QRegion();
-            if (!mask.isNull()) {
-                QPoint o(0,0);
+            if(!mask.isNull())
+            {
+                QPoint o(0, 0);
                 o = contentsToViewport(o);
-                mask.translate(o.x(),o.y());
-                mask = mask.intersect( QRect(g.x(),g.y(),g.width(),g.height()) );
+                mask.translate(o.x(), o.y());
+                mask = mask.intersect(QRect(g.x(), g.y(), g.width(), g.height()));
                 cr -= mask;
-            } else {
+            }
+            else
+            {
                 cr -= g;
             }
         }
@@ -702,66 +734,74 @@ void KHTMLView::drawContents( QPainter *p, int ex, int ey, int ew, int eh )
 #ifndef DEBUG_NO_PAINT_BUFFER
     p->setClipRegion(cr);
 
-    if (eh > PAINT_BUFFER_HEIGHT && ew <= 10) {
-        if ( d->vertPaintBuffer->height() < visibleHeight() )
+    if(eh > PAINT_BUFFER_HEIGHT && ew <= 10)
+    {
+        if(d->vertPaintBuffer->height() < visibleHeight())
             d->vertPaintBuffer->resize(10, visibleHeight());
         d->tp->begin(d->vertPaintBuffer);
         d->tp->translate(-ex, -ey);
         d->tp->fillRect(ex, ey, ew, eh, palette().active().brush(QColorGroup::Base));
         m_part->xmlDocImpl()->renderer()->layer()->paint(d->tp, QRect(ex, ey, ew, eh));
         d->tp->end();
-	p->drawPixmap(ex, ey, *d->vertPaintBuffer, 0, 0, ew, eh);
+        p->drawPixmap(ex, ey, *d->vertPaintBuffer, 0, 0, ew, eh);
     }
-    else {
-        if ( d->paintBuffer->width() < visibleWidth() )
-            d->paintBuffer->resize(visibleWidth(),PAINT_BUFFER_HEIGHT);
+    else
+    {
+        if(d->paintBuffer->width() < visibleWidth())
+            d->paintBuffer->resize(visibleWidth(), PAINT_BUFFER_HEIGHT);
 
-        int py=0;
-        while (py < eh) {
-            int ph = eh-py < PAINT_BUFFER_HEIGHT ? eh-py : PAINT_BUFFER_HEIGHT;
+        int py = 0;
+        while(py < eh)
+        {
+            int ph = eh - py < PAINT_BUFFER_HEIGHT ? eh - py : PAINT_BUFFER_HEIGHT;
             d->tp->begin(d->paintBuffer);
-            d->tp->translate(-ex, -ey-py);
-            d->tp->fillRect(ex, ey+py, ew, ph, palette().active().brush(QColorGroup::Base));
-            m_part->xmlDocImpl()->renderer()->layer()->paint(d->tp, QRect(ex, ey+py, ew, ph));
+            d->tp->translate(-ex, -ey - py);
+            d->tp->fillRect(ex, ey + py, ew, ph, palette().active().brush(QColorGroup::Base));
+            m_part->xmlDocImpl()->renderer()->layer()->paint(d->tp, QRect(ex, ey + py, ew, ph));
             d->tp->end();
 
-	    p->drawPixmap(ex, ey+py, *d->paintBuffer, 0, 0, ew, ph);
+            p->drawPixmap(ex, ey + py, *d->paintBuffer, 0, 0, ew, ph);
             py += PAINT_BUFFER_HEIGHT;
         }
     }
-#else // !DEBUG_NO_PAINT_BUFFER
-static int cnt=0;
-	ex = contentsX(); ey = contentsY();
-	ew = visibleWidth(); eh = visibleHeight();
-	QRect pr(ex,ey,ew,eh);
-	kdDebug() << "[" << ++cnt << "]" << " clip region: " << pr << endl;
-//	p->setClipRegion(QRect(0,0,ew,eh));
-//        p->translate(-ex, -ey);
-        p->fillRect(ex, ey, ew, eh, palette().active().brush(QColorGroup::Base));
-        m_part->xmlDocImpl()->renderer()->layer()->paint(p, pr);
+#else  // !DEBUG_NO_PAINT_BUFFER
+    static int cnt = 0;
+    ex = contentsX();
+    ey = contentsY();
+    ew = visibleWidth();
+    eh = visibleHeight();
+    QRect pr(ex, ey, ew, eh);
+    kdDebug() << "[" << ++cnt << "]"
+              << " clip region: " << pr << endl;
+    //	p->setClipRegion(QRect(0,0,ew,eh));
+    //        p->translate(-ex, -ey);
+    p->fillRect(ex, ey, ew, eh, palette().active().brush(QColorGroup::Base));
+    m_part->xmlDocImpl()->renderer()->layer()->paint(p, pr);
 #endif // DEBUG_NO_PAINT_BUFFER
 
 #ifndef KHTML_NO_CARET
-    if (d->m_caretViewContext && d->m_caretViewContext->visible) {
-        QRect pos(d->m_caretViewContext->x, d->m_caretViewContext->y,
-		d->m_caretViewContext->width, d->m_caretViewContext->height);
-        if (pos.intersects(QRect(ex, ey, ew, eh))) {
+    if(d->m_caretViewContext && d->m_caretViewContext->visible)
+    {
+        QRect pos(d->m_caretViewContext->x, d->m_caretViewContext->y, d->m_caretViewContext->width, d->m_caretViewContext->height);
+        if(pos.intersects(QRect(ex, ey, ew, eh)))
+        {
             p->setRasterOp(XorROP);
-	    p->setPen(white);
-	    if (pos.width() == 1)
-              p->drawLine(pos.topLeft(), pos.bottomRight());
-	    else {
-	      p->fillRect(pos, white);
-	    }/*end if*/
-	}/*end if*/
-    }/*end if*/
-#endif // KHTML_NO_CARET
+            p->setPen(white);
+            if(pos.width() == 1)
+                p->drawLine(pos.topLeft(), pos.bottomRight());
+            else
+            {
+                p->fillRect(pos, white);
+            } /*end if*/
+        }     /*end if*/
+    }         /*end if*/
+#endif        // KHTML_NO_CARET
 
-//    p->setPen(QPen(magenta,0,DashDotDotLine));
-//    p->drawRect(dbg_paint_rect);
+    //    p->setPen(QPen(magenta,0,DashDotDotLine));
+    //    p->drawRect(dbg_paint_rect);
 
-    khtml::DrawContentsEvent event( p, ex, ey, ew, eh );
-    QApplication::sendEvent( m_part, &event );
+    khtml::DrawContentsEvent event(p, ex, ey, ew, eh);
+    QApplication::sendEvent(m_part, &event);
 
     d->painting = false;
 }
@@ -780,71 +820,99 @@ void KHTMLView::setMarginHeight(int h)
 
 void KHTMLView::layout()
 {
-    if( m_part && m_part->xmlDocImpl() ) {
+    if(m_part && m_part->xmlDocImpl())
+    {
         DOM::DocumentImpl *document = m_part->xmlDocImpl();
 
-        khtml::RenderCanvas* canvas = static_cast<khtml::RenderCanvas *>(document->renderer());
-        if ( !canvas ) return;
+        khtml::RenderCanvas *canvas = static_cast< khtml::RenderCanvas * >(document->renderer());
+        if(!canvas)
+            return;
 
-        d->layoutSchedulingEnabled=false;
+        d->layoutSchedulingEnabled = false;
 
         // the reference object for the overflow property on canvas
-        RenderObject * ref = 0;
-        RenderObject* root = document->documentElement() ? document->documentElement()->renderer() : 0;
+        RenderObject *ref = 0;
+        RenderObject *root = document->documentElement() ? document->documentElement()->renderer() : 0;
 
-        if (document->isHTMLDocument()) {
-             NodeImpl *body = static_cast<HTMLDocumentImpl*>(document)->body();
-             if(body && body->renderer() && body->id() == ID_FRAMESET) {
-                 QScrollView::setVScrollBarMode(AlwaysOff);
-                 QScrollView::setHScrollBarMode(AlwaysOff);
-                 body->renderer()->setNeedsLayout(true);
-//                  if (d->tooltip) {
-//                      delete d->tooltip;
-//                      d->tooltip = 0;
-//                  }
-             }
-             else {
-                 if (!d->tooltip)
-                     d->tooltip = new KHTMLToolTip( this, d );
-                 // only apply body's overflow to canvas if root as a visible overflow
-                 if (root)
-                     ref = (!body || root->style()->hidesOverflow()) ? root : body->renderer();
-             }
-        } else {
+        if(document->isHTMLDocument())
+        {
+            NodeImpl *body = static_cast< HTMLDocumentImpl * >(document)->body();
+            if(body && body->renderer() && body->id() == ID_FRAMESET)
+            {
+                QScrollView::setVScrollBarMode(AlwaysOff);
+                QScrollView::setHScrollBarMode(AlwaysOff);
+                body->renderer()->setNeedsLayout(true);
+                //                  if (d->tooltip) {
+                //                      delete d->tooltip;
+                //                      d->tooltip = 0;
+                //                  }
+            }
+            else
+            {
+                if(!d->tooltip)
+                    d->tooltip = new KHTMLToolTip(this, d);
+                // only apply body's overflow to canvas if root as a visible overflow
+                if(root)
+                    ref = (!body || root->style()->hidesOverflow()) ? root : body->renderer();
+            }
+        }
+        else
+        {
             ref = root;
         }
-        if (ref) {
-            if( ref->style()->overflowX() == OHIDDEN ) {
-                if (d->hmode == Auto) QScrollView::setHScrollBarMode(AlwaysOff);
-            } else if (ref->style()->overflowX() == OSCROLL ) {
-                if (d->hmode == Auto) QScrollView::setHScrollBarMode(AlwaysOn);
-            } else {
-                if (QScrollView::hScrollBarMode() == AlwaysOff) QScrollView::setHScrollBarMode(d->hmode);
-            } if ( ref->style()->overflowY() == OHIDDEN ) {
-                if (d->vmode == Auto) QScrollView::setVScrollBarMode(AlwaysOff);
-            } else if (ref->style()->overflowY() == OSCROLL ) {
-                if (d->vmode == Auto) QScrollView::setVScrollBarMode(AlwaysOn);
-            } else {
-                if (QScrollView::vScrollBarMode() == AlwaysOff) QScrollView::setVScrollBarMode(d->vmode);
+        if(ref)
+        {
+            if(ref->style()->overflowX() == OHIDDEN)
+            {
+                if(d->hmode == Auto)
+                    QScrollView::setHScrollBarMode(AlwaysOff);
+            }
+            else if(ref->style()->overflowX() == OSCROLL)
+            {
+                if(d->hmode == Auto)
+                    QScrollView::setHScrollBarMode(AlwaysOn);
+            }
+            else
+            {
+                if(QScrollView::hScrollBarMode() == AlwaysOff)
+                    QScrollView::setHScrollBarMode(d->hmode);
+            }
+            if(ref->style()->overflowY() == OHIDDEN)
+            {
+                if(d->vmode == Auto)
+                    QScrollView::setVScrollBarMode(AlwaysOff);
+            }
+            else if(ref->style()->overflowY() == OSCROLL)
+            {
+                if(d->vmode == Auto)
+                    QScrollView::setVScrollBarMode(AlwaysOn);
+            }
+            else
+            {
+                if(QScrollView::vScrollBarMode() == AlwaysOff)
+                    QScrollView::setVScrollBarMode(d->vmode);
             }
         }
         d->needsFullRepaint = d->firstRelayout;
-        if (_height !=  visibleHeight() || _width != visibleWidth()) {;
+        if(_height != visibleHeight() || _width != visibleWidth())
+        {
+            ;
             d->needsFullRepaint = true;
             _height = visibleHeight();
             _width = visibleWidth();
         }
-        //QTime qt;
-        //qt.start();
+        // QTime qt;
+        // qt.start();
         canvas->layout();
 
         emit finishedLayout();
-        if (d->firstRelayout) {
+        if(d->firstRelayout)
+        {
             // make sure firstRelayout is set to false now in case this layout
             // wasn't scheduled
             d->firstRelayout = false;
-            verticalScrollBar()->setEnabled( true );
-            horizontalScrollBar()->setEnabled( true );
+            verticalScrollBar()->setEnabled(true);
+            horizontalScrollBar()->setEnabled(true);
         }
 #if 0
     ElementImpl *listitem = m_part->xmlDocImpl()->getElementById("__test_element__");
@@ -853,37 +921,41 @@ void KHTMLView::layout()
 #endif
 #ifndef KHTML_NO_CARET
         hideCaret();
-        if ((m_part->isCaretMode() || m_part->isEditable())
-        	&& !d->complete && d->m_caretViewContext
-                && !d->m_caretViewContext->caretMoved) {
+        if((m_part->isCaretMode() || m_part->isEditable()) && !d->complete && d->m_caretViewContext && !d->m_caretViewContext->caretMoved)
+        {
             initCaret();
-        } else {
-	    recalcAndStoreCaretPos();
-	    showCaret();
-        }/*end if*/
+        }
+        else
+        {
+            recalcAndStoreCaretPos();
+            showCaret();
+        } /*end if*/
 #endif
-        if (d->accessKeysEnabled && d->accessKeysActivated) {
+        if(d->accessKeysEnabled && d->accessKeysActivated)
+        {
             emit hideAccessKeys();
             displayAccessKeys();
         }
-        //kdDebug( 6000 ) << "TIME: layout() dt=" << qt.elapsed() << endl;
+        // kdDebug( 6000 ) << "TIME: layout() dt=" << qt.elapsed() << endl;
     }
     else
-       _width = visibleWidth();
+        _width = visibleWidth();
 
     killTimer(d->layoutTimerId);
     d->layoutTimerId = 0;
-    d->layoutSchedulingEnabled=true;
+    d->layoutSchedulingEnabled = true;
 }
 
 void KHTMLView::closeChildDialogs()
 {
     QObjectList *dlgs = queryList("QDialog");
-    for (QObject *dlg = dlgs->first(); dlg; dlg = dlgs->next())
+    for(QObject *dlg = dlgs->first(); dlg; dlg = dlgs->next())
     {
-        KDialogBase* dlgbase = dynamic_cast<KDialogBase *>( dlg );
-        if ( dlgbase ) {
-            if ( dlgbase->testWFlags( WShowModal ) ) {
+        KDialogBase *dlgbase = dynamic_cast< KDialogBase * >(dlg);
+        if(dlgbase)
+        {
+            if(dlgbase->testWFlags(WShowModal))
+            {
                 kdDebug(6000) << "closeChildDialogs: closing dialog " << dlgbase << endl;
                 // close() ends up calling QButton::animateClick, which isn't immediate
                 // we need something the exits the event loop immediately (#49068)
@@ -892,26 +964,27 @@ void KHTMLView::closeChildDialogs()
         }
         else
         {
-            kdWarning() << "closeChildDialogs: not a KDialogBase! Don't use QDialogs in KDE! " << static_cast<QWidget*>(dlg) << endl;
-            static_cast<QWidget*>(dlg)->hide();
+            kdWarning() << "closeChildDialogs: not a KDialogBase! Don't use QDialogs in KDE! " << static_cast< QWidget * >(dlg) << endl;
+            static_cast< QWidget * >(dlg)->hide();
         }
     }
     delete dlgs;
     d->m_dialogsAllowed = false;
 }
 
-bool KHTMLView::dialogsAllowed() {
+bool KHTMLView::dialogsAllowed()
+{
     bool allowed = d->m_dialogsAllowed;
-    KHTMLPart* p = m_part->parentPart();
-    if (p && p->view())
+    KHTMLPart *p = m_part->parentPart();
+    if(p && p->view())
         allowed &= p->view()->dialogsAllowed();
     return allowed;
 }
 
-void KHTMLView::closeEvent( QCloseEvent* ev )
+void KHTMLView::closeEvent(QCloseEvent *ev)
 {
     closeChildDialogs();
-    QScrollView::closeEvent( ev );
+    QScrollView::closeEvent(ev);
 }
 
 //
@@ -919,164 +992,174 @@ void KHTMLView::closeEvent( QCloseEvent* ev )
 //
 /////////////////
 
-void KHTMLView::viewportMousePressEvent( QMouseEvent *_mouse )
+void KHTMLView::viewportMousePressEvent(QMouseEvent *_mouse)
 {
-    if (!m_part->xmlDocImpl()) return;
-    if (d->possibleTripleClick && ( _mouse->button() & MouseButtonMask ) == LeftButton)
+    if(!m_part->xmlDocImpl())
+        return;
+    if(d->possibleTripleClick && (_mouse->button() & MouseButtonMask) == LeftButton)
     {
-        viewportMouseDoubleClickEvent( _mouse ); // it handles triple clicks too
+        viewportMouseDoubleClickEvent(_mouse); // it handles triple clicks too
         return;
     }
 
     int xm, ym;
     viewportToContents(_mouse->x(), _mouse->y(), xm, ym);
-    //kdDebug( 6000 ) << "mousePressEvent: viewport=("<<_mouse->x()<<"/"<<_mouse->y()<<"), contents=(" << xm << "/" << ym << ")\n";
+    // kdDebug( 6000 ) << "mousePressEvent: viewport=("<<_mouse->x()<<"/"<<_mouse->y()<<"), contents=(" << xm << "/" << ym << ")\n";
 
     d->isDoubleClick = false;
 
-    DOM::NodeImpl::MouseEvent mev( _mouse->stateAfter(), DOM::NodeImpl::MousePress );
-    m_part->xmlDocImpl()->prepareMouseEvent( false, xm, ym, &mev );
+    DOM::NodeImpl::MouseEvent mev(_mouse->stateAfter(), DOM::NodeImpl::MousePress);
+    m_part->xmlDocImpl()->prepareMouseEvent(false, xm, ym, &mev);
 
-    //kdDebug(6000) << "innerNode="<<mev.innerNode.nodeName().string()<<endl;
+    // kdDebug(6000) << "innerNode="<<mev.innerNode.nodeName().string()<<endl;
 
-    if ( (_mouse->button() == MidButton) &&
-          !m_part->d->m_bOpenMiddleClick && !d->m_mouseScrollTimer &&
-          mev.url.isNull() && (mev.innerNode.elementId() != ID_INPUT) ) {
-        QPoint point = mapFromGlobal( _mouse->globalPos() );
+    if((_mouse->button() == MidButton) && !m_part->d->m_bOpenMiddleClick && !d->m_mouseScrollTimer && mev.url.isNull()
+       && (mev.innerNode.elementId() != ID_INPUT))
+    {
+        QPoint point = mapFromGlobal(_mouse->globalPos());
 
         d->m_mouseScroll_byX = 0;
         d->m_mouseScroll_byY = 0;
 
-        d->m_mouseScrollTimer = new QTimer( this );
-        connect( d->m_mouseScrollTimer, SIGNAL(timeout()), this, SLOT(slotMouseScrollTimer()) );
+        d->m_mouseScrollTimer = new QTimer(this);
+        connect(d->m_mouseScrollTimer, SIGNAL(timeout()), this, SLOT(slotMouseScrollTimer()));
 
-        if ( !d->m_mouseScrollIndicator ) {
+        if(!d->m_mouseScrollIndicator)
+        {
             QPixmap pixmap, icon;
-            pixmap.resize( 48, 48 );
-            pixmap.fill( QColor( qRgba( 127, 127, 127, 127 ) ) );
+            pixmap.resize(48, 48);
+            pixmap.fill(QColor(qRgba(127, 127, 127, 127)));
 
-            QPainter p( &pixmap );
-            icon = KGlobal::iconLoader()->loadIcon( "1uparrow", KIcon::Small );
-            p.drawPixmap( 16, 0, icon );
-            icon = KGlobal::iconLoader()->loadIcon( "1leftarrow", KIcon::Small );
-            p.drawPixmap( 0, 16, icon );
-            icon = KGlobal::iconLoader()->loadIcon( "1downarrow", KIcon::Small );
-            p.drawPixmap( 16, 32,icon  );
-            icon = KGlobal::iconLoader()->loadIcon( "1rightarrow", KIcon::Small );
-            p.drawPixmap( 32, 16, icon );
-            p.drawEllipse( 23, 23, 2, 2 );
+            QPainter p(&pixmap);
+            icon = KGlobal::iconLoader()->loadIcon("1uparrow", KIcon::Small);
+            p.drawPixmap(16, 0, icon);
+            icon = KGlobal::iconLoader()->loadIcon("1leftarrow", KIcon::Small);
+            p.drawPixmap(0, 16, icon);
+            icon = KGlobal::iconLoader()->loadIcon("1downarrow", KIcon::Small);
+            p.drawPixmap(16, 32, icon);
+            icon = KGlobal::iconLoader()->loadIcon("1rightarrow", KIcon::Small);
+            p.drawPixmap(32, 16, icon);
+            p.drawEllipse(23, 23, 2, 2);
 
-            d->m_mouseScrollIndicator = new QWidget( this, 0 );
-            d->m_mouseScrollIndicator->setFixedSize( 48, 48 );
-            d->m_mouseScrollIndicator->setPaletteBackgroundPixmap( pixmap );
+            d->m_mouseScrollIndicator = new QWidget(this, 0);
+            d->m_mouseScrollIndicator->setFixedSize(48, 48);
+            d->m_mouseScrollIndicator->setPaletteBackgroundPixmap(pixmap);
         }
-        d->m_mouseScrollIndicator->move( point.x()-24, point.y()-24 );
+        d->m_mouseScrollIndicator->move(point.x() - 24, point.y() - 24);
 
         bool hasHorBar = visibleWidth() < contentsWidth();
         bool hasVerBar = visibleHeight() < contentsHeight();
 
         KConfig *config = KGlobal::config();
-        KConfigGroupSaver saver( config, "HTML Settings" );
-        if ( config->readBoolEntry( "ShowMouseScrollIndicator", true ) ) {
+        KConfigGroupSaver saver(config, "HTML Settings");
+        if(config->readBoolEntry("ShowMouseScrollIndicator", true))
+        {
             d->m_mouseScrollIndicator->show();
             d->m_mouseScrollIndicator->unsetCursor();
 
-            QBitmap mask = d->m_mouseScrollIndicator->paletteBackgroundPixmap()->createHeuristicMask( true );
+            QBitmap mask = d->m_mouseScrollIndicator->paletteBackgroundPixmap()->createHeuristicMask(true);
 
-	    if ( hasHorBar && !hasVerBar ) {
-                QBitmap bm( 16, 16, true );
-                bitBlt( &mask, 16,  0, &bm, 0, 0, -1, -1 );
-                bitBlt( &mask, 16, 32, &bm, 0, 0, -1, -1 );
-                d->m_mouseScrollIndicator->setCursor( KCursor::SizeHorCursor );
+            if(hasHorBar && !hasVerBar)
+            {
+                QBitmap bm(16, 16, true);
+                bitBlt(&mask, 16, 0, &bm, 0, 0, -1, -1);
+                bitBlt(&mask, 16, 32, &bm, 0, 0, -1, -1);
+                d->m_mouseScrollIndicator->setCursor(KCursor::SizeHorCursor);
             }
-            else if ( !hasHorBar && hasVerBar ) {
-                QBitmap bm( 16, 16, true );
-                bitBlt( &mask,  0, 16, &bm, 0, 0, -1, -1 );
-                bitBlt( &mask, 32, 16, &bm, 0, 0, -1, -1 );
-                d->m_mouseScrollIndicator->setCursor( KCursor::SizeVerCursor );
+            else if(!hasHorBar && hasVerBar)
+            {
+                QBitmap bm(16, 16, true);
+                bitBlt(&mask, 0, 16, &bm, 0, 0, -1, -1);
+                bitBlt(&mask, 32, 16, &bm, 0, 0, -1, -1);
+                d->m_mouseScrollIndicator->setCursor(KCursor::SizeVerCursor);
             }
             else
-                d->m_mouseScrollIndicator->setCursor( KCursor::SizeAllCursor );
+                d->m_mouseScrollIndicator->setCursor(KCursor::SizeAllCursor);
 
-            d->m_mouseScrollIndicator->setMask( mask );
+            d->m_mouseScrollIndicator->setMask(mask);
         }
-        else {
-            if ( hasHorBar && !hasVerBar )
-                viewport()->setCursor( KCursor::SizeHorCursor );
-            else if ( !hasHorBar && hasVerBar )
-                viewport()->setCursor( KCursor::SizeVerCursor );
+        else
+        {
+            if(hasHorBar && !hasVerBar)
+                viewport()->setCursor(KCursor::SizeHorCursor);
+            else if(!hasHorBar && hasVerBar)
+                viewport()->setCursor(KCursor::SizeVerCursor);
             else
-                viewport()->setCursor( KCursor::SizeAllCursor );
+                viewport()->setCursor(KCursor::SizeAllCursor);
         }
 
         return;
     }
-    else if ( d->m_mouseScrollTimer ) {
+    else if(d->m_mouseScrollTimer)
+    {
         delete d->m_mouseScrollTimer;
         d->m_mouseScrollTimer = 0;
 
-        if ( d->m_mouseScrollIndicator )
+        if(d->m_mouseScrollIndicator)
             d->m_mouseScrollIndicator->hide();
     }
 
-	d->clickCount = 1;
-	d->clickX = xm;
-	d->clickY = ym;
+    d->clickCount = 1;
+    d->clickX = xm;
+    d->clickY = ym;
 
-    bool swallowEvent = dispatchMouseEvent(EventImpl::MOUSEDOWN_EVENT,mev.innerNode.handle(),mev.innerNonSharedNode.handle(),true,
-                                           d->clickCount,_mouse,true,DOM::NodeImpl::MousePress);
+    bool swallowEvent = dispatchMouseEvent(EventImpl::MOUSEDOWN_EVENT, mev.innerNode.handle(), mev.innerNonSharedNode.handle(), true, d->clickCount,
+                                           _mouse, true, DOM::NodeImpl::MousePress);
 
-    khtml::RenderObject* r = mev.innerNode.handle() ? mev.innerNode.handle()->renderer() : 0;
-    if (r && r->isWidget())
-	_mouse->ignore();
+    khtml::RenderObject *r = mev.innerNode.handle() ? mev.innerNode.handle()->renderer() : 0;
+    if(r && r->isWidget())
+        _mouse->ignore();
 
-    if (!swallowEvent) {
-	emit m_part->nodeActivated(mev.innerNode);
+    if(!swallowEvent)
+    {
+        emit m_part->nodeActivated(mev.innerNode);
 
-	khtml::MousePressEvent event( _mouse, xm, ym, mev.url, mev.target, mev.innerNode );
-        QApplication::sendEvent( m_part, &event );
+        khtml::MousePressEvent event(_mouse, xm, ym, mev.url, mev.target, mev.innerNode);
+        QApplication::sendEvent(m_part, &event);
         // we might be deleted after this
     }
 }
 
-void KHTMLView::viewportMouseDoubleClickEvent( QMouseEvent *_mouse )
+void KHTMLView::viewportMouseDoubleClickEvent(QMouseEvent *_mouse)
 {
-    if(!m_part->xmlDocImpl()) return;
+    if(!m_part->xmlDocImpl())
+        return;
 
     int xm, ym;
     viewportToContents(_mouse->x(), _mouse->y(), xm, ym);
 
-    kdDebug( 6000 ) << "mouseDblClickEvent: x=" << xm << ", y=" << ym << endl;
+    kdDebug(6000) << "mouseDblClickEvent: x=" << xm << ", y=" << ym << endl;
 
     d->isDoubleClick = true;
 
-    DOM::NodeImpl::MouseEvent mev( _mouse->stateAfter(), DOM::NodeImpl::MouseDblClick );
-    m_part->xmlDocImpl()->prepareMouseEvent( false, xm, ym, &mev );
+    DOM::NodeImpl::MouseEvent mev(_mouse->stateAfter(), DOM::NodeImpl::MouseDblClick);
+    m_part->xmlDocImpl()->prepareMouseEvent(false, xm, ym, &mev);
 
     // We do the same thing as viewportMousePressEvent() here, since the DOM does not treat
     // single and double-click events as separate (only the detail, i.e. number of clicks differs)
-    if (d->clickCount > 0 &&
-        QPoint(d->clickX-xm,d->clickY-ym).manhattanLength() <= QApplication::startDragDistance())
-	d->clickCount++;
-    else { // shouldn't happen, if Qt has the same criterias for double clicks.
-	d->clickCount = 1;
-	d->clickX = xm;
-	d->clickY = ym;
+    if(d->clickCount > 0 && QPoint(d->clickX - xm, d->clickY - ym).manhattanLength() <= QApplication::startDragDistance())
+        d->clickCount++;
+    else
+    { // shouldn't happen, if Qt has the same criterias for double clicks.
+        d->clickCount = 1;
+        d->clickX = xm;
+        d->clickY = ym;
     }
-    bool swallowEvent = dispatchMouseEvent(EventImpl::MOUSEDOWN_EVENT,mev.innerNode.handle(),mev.innerNonSharedNode.handle(),true,
-                                           d->clickCount,_mouse,true,DOM::NodeImpl::MouseDblClick);
+    bool swallowEvent = dispatchMouseEvent(EventImpl::MOUSEDOWN_EVENT, mev.innerNode.handle(), mev.innerNonSharedNode.handle(), true, d->clickCount,
+                                           _mouse, true, DOM::NodeImpl::MouseDblClick);
 
-    khtml::RenderObject* r = mev.innerNode.handle() ? mev.innerNode.handle()->renderer() : 0;
-    if (r && r->isWidget())
-	_mouse->ignore();
+    khtml::RenderObject *r = mev.innerNode.handle() ? mev.innerNode.handle()->renderer() : 0;
+    if(r && r->isWidget())
+        _mouse->ignore();
 
-    if (!swallowEvent) {
-	khtml::MouseDoubleClickEvent event( _mouse, xm, ym, mev.url, mev.target, mev.innerNode, d->clickCount );
-	QApplication::sendEvent( m_part, &event );
+    if(!swallowEvent)
+    {
+        khtml::MouseDoubleClickEvent event(_mouse, xm, ym, mev.url, mev.target, mev.innerNode, d->clickCount);
+        QApplication::sendEvent(m_part, &event);
     }
 
-    d->possibleTripleClick=true;
-    QTimer::singleShot(QApplication::doubleClickInterval(),this,SLOT(tripleClickTimeout()));
+    d->possibleTripleClick = true;
+    QTimer::singleShot(QApplication::doubleClickInterval(), this, SLOT(tripleClickTimeout()));
 }
 
 void KHTMLView::tripleClickTimeout()
@@ -1085,42 +1168,44 @@ void KHTMLView::tripleClickTimeout()
     d->clickCount = 0;
 }
 
-static inline void forwardPeripheralEvent(khtml::RenderWidget* r, QMouseEvent* me, int x, int y)
+static inline void forwardPeripheralEvent(khtml::RenderWidget *r, QMouseEvent *me, int x, int y)
 {
     int absx = 0;
     int absy = 0;
     r->absolutePosition(absx, absy);
-    QPoint p(x-absx, y-absy);
+    QPoint p(x - absx, y - absy);
     QMouseEvent fw(me->type(), p, me->button(), me->state());
-    QWidget* w = r->widget();
-    QScrollView* sc = ::qt_cast<QScrollView*>(w);
-    if (sc && !::qt_cast<QListBox*>(w))
-        static_cast<khtml::RenderWidget::ScrollViewEventPropagator*>(sc)->sendEvent(&fw);
+    QWidget *w = r->widget();
+    QScrollView *sc = ::qt_cast< QScrollView * >(w);
+    if(sc && !::qt_cast< QListBox * >(w))
+        static_cast< khtml::RenderWidget::ScrollViewEventPropagator * >(sc)->sendEvent(&fw);
     else if(w)
-        static_cast<khtml::RenderWidget::EventPropagator*>(w)->sendEvent(&fw);
+        static_cast< khtml::RenderWidget::EventPropagator * >(w)->sendEvent(&fw);
 }
 
 
 static bool targetOpensNewWindow(KHTMLPart *part, QString target)
 {
-    if (!target.isEmpty() && (target.lower() != "_top") &&
-       (target.lower() != "_self") && (target.lower() != "_parent")) {
-        if (target.lower() == "_blank")
+    if(!target.isEmpty() && (target.lower() != "_top") && (target.lower() != "_self") && (target.lower() != "_parent"))
+    {
+        if(target.lower() == "_blank")
             return true;
-        else {
-            while (part->parentPart())
+        else
+        {
+            while(part->parentPart())
                 part = part->parentPart();
-            if (!part->frameExists(target))
+            if(!part->frameExists(target))
                 return true;
         }
     }
     return false;
 }
 
-void KHTMLView::viewportMouseMoveEvent( QMouseEvent * _mouse )
+void KHTMLView::viewportMouseMoveEvent(QMouseEvent *_mouse)
 {
-    if ( d->m_mouseScrollTimer ) {
-        QPoint point = mapFromGlobal( _mouse->globalPos() );
+    if(d->m_mouseScrollTimer)
+    {
+        QPoint point = mapFromGlobal(_mouse->globalPos());
 
         int deltaX = point.x() - d->m_mouseScrollIndicator->x() - 24;
         int deltaY = point.y() - d->m_mouseScrollIndicator->y() - 24;
@@ -1128,219 +1213,234 @@ void KHTMLView::viewportMouseMoveEvent( QMouseEvent * _mouse )
         (deltaX > 0) ? d->m_mouseScroll_byX = 1 : d->m_mouseScroll_byX = -1;
         (deltaY > 0) ? d->m_mouseScroll_byY = 1 : d->m_mouseScroll_byY = -1;
 
-        double adX = QABS(deltaX)/30.0;
-        double adY = QABS(deltaY)/30.0;
+        double adX = QABS(deltaX) / 30.0;
+        double adY = QABS(deltaY) / 30.0;
 
-        d->m_mouseScroll_byX = kMax(kMin(d->m_mouseScroll_byX * int(adX*adX), SHRT_MAX), SHRT_MIN);
-        d->m_mouseScroll_byY = kMax(kMin(d->m_mouseScroll_byY * int(adY*adY), SHRT_MAX), SHRT_MIN);
+        d->m_mouseScroll_byX = kMax(kMin(d->m_mouseScroll_byX * int(adX * adX), SHRT_MAX), SHRT_MIN);
+        d->m_mouseScroll_byY = kMax(kMin(d->m_mouseScroll_byY * int(adY * adY), SHRT_MAX), SHRT_MIN);
 
-        if (d->m_mouseScroll_byX == 0 && d->m_mouseScroll_byY == 0) {
+        if(d->m_mouseScroll_byX == 0 && d->m_mouseScroll_byY == 0)
+        {
             d->m_mouseScrollTimer->stop();
         }
-        else if (!d->m_mouseScrollTimer->isActive()) {
-            d->m_mouseScrollTimer->changeInterval( 20 );
+        else if(!d->m_mouseScrollTimer->isActive())
+        {
+            d->m_mouseScrollTimer->changeInterval(20);
         }
     }
 
-    if(!m_part->xmlDocImpl()) return;
+    if(!m_part->xmlDocImpl())
+        return;
 
     int xm, ym;
     viewportToContents(_mouse->x(), _mouse->y(), xm, ym);
 
-    DOM::NodeImpl::MouseEvent mev( _mouse->stateAfter(), DOM::NodeImpl::MouseMove );
+    DOM::NodeImpl::MouseEvent mev(_mouse->stateAfter(), DOM::NodeImpl::MouseMove);
     // Do not modify :hover/:active state while mouse is pressed.
-    m_part->xmlDocImpl()->prepareMouseEvent( _mouse->state() & Qt::MouseButtonMask /*readonly ?*/, xm, ym, &mev );
+    m_part->xmlDocImpl()->prepareMouseEvent(_mouse->state() & Qt::MouseButtonMask /*readonly ?*/, xm, ym, &mev);
 
-//     kdDebug(6000) << "mouse move: " << _mouse->pos()
-// 		  << " button " << _mouse->button()
-// 		  << " state " << _mouse->state() << endl;
+    //     kdDebug(6000) << "mouse move: " << _mouse->pos()
+    // 		  << " button " << _mouse->button()
+    // 		  << " state " << _mouse->state() << endl;
 
-    bool swallowEvent = dispatchMouseEvent(EventImpl::MOUSEMOVE_EVENT,mev.innerNode.handle(),mev.innerNonSharedNode.handle(),false,
-                                           0,_mouse,true,DOM::NodeImpl::MouseMove);
+    bool swallowEvent = dispatchMouseEvent(EventImpl::MOUSEMOVE_EVENT, mev.innerNode.handle(), mev.innerNonSharedNode.handle(), false, 0, _mouse,
+                                           true, DOM::NodeImpl::MouseMove);
 
-    if (d->clickCount > 0 &&
-        QPoint(d->clickX-xm,d->clickY-ym).manhattanLength() > QApplication::startDragDistance()) {
-	d->clickCount = 0;  // moving the mouse outside the threshold invalidates the click
+    if(d->clickCount > 0 && QPoint(d->clickX - xm, d->clickY - ym).manhattanLength() > QApplication::startDragDistance())
+    {
+        d->clickCount = 0; // moving the mouse outside the threshold invalidates the click
     }
 
     // execute the scheduled script. This is to make sure the mouseover events come after the mouseout events
     m_part->executeScheduledScript();
 
-    DOM::NodeImpl* fn = m_part->xmlDocImpl()->focusNode();
-    if (fn && fn != mev.innerNode.handle() &&
-        fn->renderer() && fn->renderer()->isWidget()) {
-        forwardPeripheralEvent(static_cast<khtml::RenderWidget*>(fn->renderer()), _mouse, xm, ym);
+    DOM::NodeImpl *fn = m_part->xmlDocImpl()->focusNode();
+    if(fn && fn != mev.innerNode.handle() && fn->renderer() && fn->renderer()->isWidget())
+    {
+        forwardPeripheralEvent(static_cast< khtml::RenderWidget * >(fn->renderer()), _mouse, xm, ym);
     }
 
-    khtml::RenderObject* r = mev.innerNode.handle() ? mev.innerNode.handle()->renderer() : 0;
-    khtml::RenderStyle* style = (r && r->style()) ? r->style() : 0;
+    khtml::RenderObject *r = mev.innerNode.handle() ? mev.innerNode.handle()->renderer() : 0;
+    khtml::RenderStyle *style = (r && r->style()) ? r->style() : 0;
     QCursor c;
     bool mailtoCursor = false;
     bool newWindowCursor = false;
-    switch ( style ? style->cursor() : CURSOR_AUTO) {
-    case CURSOR_AUTO:
-        if ( r && r->isText() )
-            c = KCursor::ibeamCursor();
-        if ( mev.url.length() && m_part->settings()->changeCursor() ) {
+    switch(style ? style->cursor() : CURSOR_AUTO)
+    {
+        case CURSOR_AUTO:
+            if(r && r->isText())
+                c = KCursor::ibeamCursor();
+            if(mev.url.length() && m_part->settings()->changeCursor())
+            {
+                c = m_part->urlCursor();
+                if(mev.url.string().startsWith("mailto:") && mev.url.string().find('@') > 0)
+                    mailtoCursor = true;
+                else
+                    newWindowCursor = targetOpensNewWindow(m_part, mev.target.string());
+            }
+
+            if(r && r->isFrameSet() && !static_cast< RenderFrameSet * >(r)->noResize())
+                c = QCursor(static_cast< RenderFrameSet * >(r)->cursorShape());
+
+            break;
+        case CURSOR_CROSS:
+            c = KCursor::crossCursor();
+            break;
+        case CURSOR_POINTER:
             c = m_part->urlCursor();
-	    if (mev.url.string().startsWith("mailto:") && mev.url.string().find('@')>0)
+            if(mev.url.string().startsWith("mailto:") && mev.url.string().find('@') > 0)
                 mailtoCursor = true;
             else
-                newWindowCursor = targetOpensNewWindow( m_part, mev.target.string() );
-        }
-
-        if (r && r->isFrameSet() && !static_cast<RenderFrameSet*>(r)->noResize())
-            c = QCursor(static_cast<RenderFrameSet*>(r)->cursorShape());
-
-        break;
-    case CURSOR_CROSS:
-        c = KCursor::crossCursor();
-        break;
-    case CURSOR_POINTER:
-        c = m_part->urlCursor();
-	if (mev.url.string().startsWith("mailto:") && mev.url.string().find('@')>0)
-            mailtoCursor = true;
-        else
-            newWindowCursor = targetOpensNewWindow( m_part, mev.target.string() );
-        break;
-    case CURSOR_PROGRESS:
-        c = KCursor::workingCursor();
-        break;
-    case CURSOR_MOVE:
-        c = KCursor::sizeAllCursor();
-        break;
-    case CURSOR_E_RESIZE:
-    case CURSOR_W_RESIZE:
-        c = KCursor::sizeHorCursor();
-        break;
-    case CURSOR_N_RESIZE:
-    case CURSOR_S_RESIZE:
-        c = KCursor::sizeVerCursor();
-        break;
-    case CURSOR_NE_RESIZE:
-    case CURSOR_SW_RESIZE:
-        c = KCursor::sizeBDiagCursor();
-        break;
-    case CURSOR_NW_RESIZE:
-    case CURSOR_SE_RESIZE:
-        c = KCursor::sizeFDiagCursor();
-        break;
-    case CURSOR_TEXT:
-        c = KCursor::ibeamCursor();
-        break;
-    case CURSOR_WAIT:
-        c = KCursor::waitCursor();
-        break;
-    case CURSOR_HELP:
-        c = KCursor::whatsThisCursor();
-        break;
-    case CURSOR_DEFAULT:
-        break;
+                newWindowCursor = targetOpensNewWindow(m_part, mev.target.string());
+            break;
+        case CURSOR_PROGRESS:
+            c = KCursor::workingCursor();
+            break;
+        case CURSOR_MOVE:
+            c = KCursor::sizeAllCursor();
+            break;
+        case CURSOR_E_RESIZE:
+        case CURSOR_W_RESIZE:
+            c = KCursor::sizeHorCursor();
+            break;
+        case CURSOR_N_RESIZE:
+        case CURSOR_S_RESIZE:
+            c = KCursor::sizeVerCursor();
+            break;
+        case CURSOR_NE_RESIZE:
+        case CURSOR_SW_RESIZE:
+            c = KCursor::sizeBDiagCursor();
+            break;
+        case CURSOR_NW_RESIZE:
+        case CURSOR_SE_RESIZE:
+            c = KCursor::sizeFDiagCursor();
+            break;
+        case CURSOR_TEXT:
+            c = KCursor::ibeamCursor();
+            break;
+        case CURSOR_WAIT:
+            c = KCursor::waitCursor();
+            break;
+        case CURSOR_HELP:
+            c = KCursor::whatsThisCursor();
+            break;
+        case CURSOR_DEFAULT:
+            break;
     }
 
-    if ( viewport()->cursor().handle() != c.handle() ) {
-        if( c.handle() == KCursor::arrowCursor().handle()) {
-            for (KHTMLPart* p = m_part; p; p = p->parentPart())
+    if(viewport()->cursor().handle() != c.handle())
+    {
+        if(c.handle() == KCursor::arrowCursor().handle())
+        {
+            for(KHTMLPart *p = m_part; p; p = p->parentPart())
                 p->view()->viewport()->unsetCursor();
         }
-        else {
-            viewport()->setCursor( c );
+        else
+        {
+            viewport()->setCursor(c);
         }
     }
 
-    if ( ( mailtoCursor || newWindowCursor ) && isVisible() && hasFocus() ) {
+    if((mailtoCursor || newWindowCursor) && isVisible() && hasFocus())
+    {
 #ifdef Q_WS_X11
-        QPixmap icon_pixmap = KGlobal::iconLoader()->loadIcon( mailtoCursor ? "mail_generic" : "window_new", KIcon::Small, 0, KIcon::DefaultState, 0, true );
+        QPixmap icon_pixmap =
+            KGlobal::iconLoader()->loadIcon(mailtoCursor ? "mail_generic" : "window_new", KIcon::Small, 0, KIcon::DefaultState, 0, true);
 
-        if (d->cursor_icon_widget) {
+        if(d->cursor_icon_widget)
+        {
             const QPixmap *pm = d->cursor_icon_widget->backgroundPixmap();
-            if (!pm || pm->serialNumber()!=icon_pixmap.serialNumber()) {
+            if(!pm || pm->serialNumber() != icon_pixmap.serialNumber())
+            {
                 delete d->cursor_icon_widget;
                 d->cursor_icon_widget = 0;
             }
         }
 
-        if( !d->cursor_icon_widget ) {
-            d->cursor_icon_widget = new QWidget( NULL, NULL, WX11BypassWM );
+        if(!d->cursor_icon_widget)
+        {
+            d->cursor_icon_widget = new QWidget(NULL, NULL, WX11BypassWM);
             XSetWindowAttributes attr;
             attr.save_under = True;
-            XChangeWindowAttributes( qt_xdisplay(), d->cursor_icon_widget->winId(), CWSaveUnder, &attr );
-            d->cursor_icon_widget->resize( icon_pixmap.width(), icon_pixmap.height());
-            if( icon_pixmap.mask() )
-                d->cursor_icon_widget->setMask( *icon_pixmap.mask());
+            XChangeWindowAttributes(qt_xdisplay(), d->cursor_icon_widget->winId(), CWSaveUnder, &attr);
+            d->cursor_icon_widget->resize(icon_pixmap.width(), icon_pixmap.height());
+            if(icon_pixmap.mask())
+                d->cursor_icon_widget->setMask(*icon_pixmap.mask());
             else
                 d->cursor_icon_widget->clearMask();
-            d->cursor_icon_widget->setBackgroundPixmap( icon_pixmap );
+            d->cursor_icon_widget->setBackgroundPixmap(icon_pixmap);
             d->cursor_icon_widget->erase();
         }
         QPoint c_pos = QCursor::pos();
-        d->cursor_icon_widget->move( c_pos.x() + 15, c_pos.y() + 15 );
-        XRaiseWindow( qt_xdisplay(), d->cursor_icon_widget->winId());
+        d->cursor_icon_widget->move(c_pos.x() + 15, c_pos.y() + 15);
+        XRaiseWindow(qt_xdisplay(), d->cursor_icon_widget->winId());
         QApplication::flushX();
         d->cursor_icon_widget->show();
 #endif
     }
-    else if ( d->cursor_icon_widget )
+    else if(d->cursor_icon_widget)
         d->cursor_icon_widget->hide();
 
-    if (r && r->isWidget()) {
-	_mouse->ignore();
+    if(r && r->isWidget())
+    {
+        _mouse->ignore();
     }
 
 
     d->prevMouseX = xm;
     d->prevMouseY = ym;
 
-    if (!swallowEvent) {
-        khtml::MouseMoveEvent event( _mouse, xm, ym, mev.url, mev.target, mev.innerNode );
-        QApplication::sendEvent( m_part, &event );
+    if(!swallowEvent)
+    {
+        khtml::MouseMoveEvent event(_mouse, xm, ym, mev.url, mev.target, mev.innerNode);
+        QApplication::sendEvent(m_part, &event);
     }
 }
 
-void KHTMLView::viewportMouseReleaseEvent( QMouseEvent * _mouse )
+void KHTMLView::viewportMouseReleaseEvent(QMouseEvent *_mouse)
 {
     bool swallowEvent = false;
     int xm, ym;
     viewportToContents(_mouse->x(), _mouse->y(), xm, ym);
-    DOM::NodeImpl::MouseEvent mev( _mouse->stateAfter(), DOM::NodeImpl::MouseRelease );
+    DOM::NodeImpl::MouseEvent mev(_mouse->stateAfter(), DOM::NodeImpl::MouseRelease);
 
-    if ( m_part->xmlDocImpl() )
+    if(m_part->xmlDocImpl())
     {
-        m_part->xmlDocImpl()->prepareMouseEvent( false, xm, ym, &mev );
+        m_part->xmlDocImpl()->prepareMouseEvent(false, xm, ym, &mev);
 
-        swallowEvent = dispatchMouseEvent(EventImpl::MOUSEUP_EVENT,mev.innerNode.handle(),mev.innerNonSharedNode.handle(),true,
-                                          d->clickCount,_mouse,false,DOM::NodeImpl::MouseRelease);
+        swallowEvent = dispatchMouseEvent(EventImpl::MOUSEUP_EVENT, mev.innerNode.handle(), mev.innerNonSharedNode.handle(), true, d->clickCount,
+                                          _mouse, false, DOM::NodeImpl::MouseRelease);
 
-        if (d->clickCount > 0 &&
-            QPoint(d->clickX-xm,d->clickY-ym).manhattanLength() <= QApplication::startDragDistance()) {
-            QMouseEvent me(d->isDoubleClick ? QEvent::MouseButtonDblClick : QEvent::MouseButtonRelease,
-                           _mouse->pos(), _mouse->button(), _mouse->state());
-            dispatchMouseEvent(EventImpl::CLICK_EVENT, mev.innerNode.handle(),mev.innerNonSharedNode.handle(),true,
-                               d->clickCount, &me, true, DOM::NodeImpl::MouseRelease);
+        if(d->clickCount > 0 && QPoint(d->clickX - xm, d->clickY - ym).manhattanLength() <= QApplication::startDragDistance())
+        {
+            QMouseEvent me(d->isDoubleClick ? QEvent::MouseButtonDblClick : QEvent::MouseButtonRelease, _mouse->pos(), _mouse->button(),
+                           _mouse->state());
+            dispatchMouseEvent(EventImpl::CLICK_EVENT, mev.innerNode.handle(), mev.innerNonSharedNode.handle(), true, d->clickCount, &me, true,
+                               DOM::NodeImpl::MouseRelease);
         }
 
-        DOM::NodeImpl* fn = m_part->xmlDocImpl()->focusNode();
-        if (fn && fn != mev.innerNode.handle() &&
-            fn->renderer() && fn->renderer()->isWidget() &&
-            _mouse->button() != MidButton) {
-            forwardPeripheralEvent(static_cast<khtml::RenderWidget*>(fn->renderer()), _mouse, xm, ym);
+        DOM::NodeImpl *fn = m_part->xmlDocImpl()->focusNode();
+        if(fn && fn != mev.innerNode.handle() && fn->renderer() && fn->renderer()->isWidget() && _mouse->button() != MidButton)
+        {
+            forwardPeripheralEvent(static_cast< khtml::RenderWidget * >(fn->renderer()), _mouse, xm, ym);
         }
 
-        khtml::RenderObject* r = mev.innerNode.handle() ? mev.innerNode.handle()->renderer() : 0;
-        if (r && r->isWidget())
+        khtml::RenderObject *r = mev.innerNode.handle() ? mev.innerNode.handle()->renderer() : 0;
+        if(r && r->isWidget())
             _mouse->ignore();
     }
 
-    if (!swallowEvent) {
-	khtml::MouseReleaseEvent event( _mouse, xm, ym, mev.url, mev.target, mev.innerNode );
-	QApplication::sendEvent( m_part, &event );
+    if(!swallowEvent)
+    {
+        khtml::MouseReleaseEvent event(_mouse, xm, ym, mev.url, mev.target, mev.innerNode);
+        QApplication::sendEvent(m_part, &event);
     }
 }
 
 // returns true if event should be swallowed
-bool KHTMLView::dispatchKeyEvent( QKeyEvent *_ke )
+bool KHTMLView::dispatchKeyEvent(QKeyEvent *_ke)
 {
-    if (!m_part->xmlDocImpl())
+    if(!m_part->xmlDocImpl())
         return false;
     // Pressing and releasing a key should generate keydown, keypress and keyup events
     // Holding it down should generated keydown, keypress (repeatedly) and keyup events
@@ -1362,26 +1462,26 @@ bool KHTMLView::dispatchKeyEvent( QKeyEvent *_ke )
     // It's also possible to get only Releases. E.g. the release of alt-tab,
     // or when the keypresses get captured by an accel.
 
-    if( _ke == d->postponed_autorepeat ) // replayed event
+    if(_ke == d->postponed_autorepeat) // replayed event
     {
         return false;
     }
 
-    if( _ke->type() == QEvent::KeyPress )
+    if(_ke->type() == QEvent::KeyPress)
     {
-        if( !_ke->isAutoRepeat())
+        if(!_ke->isAutoRepeat())
         {
-            bool ret = dispatchKeyEventHelper( _ke, false ); // keydown
+            bool ret = dispatchKeyEventHelper(_ke, false); // keydown
             // don't send keypress even if keydown was blocked, like IE (and unlike Mozilla)
-            if( !ret && dispatchKeyEventHelper( _ke, true )) // keypress
+            if(!ret && dispatchKeyEventHelper(_ke, true)) // keypress
                 ret = true;
             return ret;
         }
         else // autorepeat
         {
-            bool ret = dispatchKeyEventHelper( _ke, true ); // keypress
-            if( !ret && d->postponed_autorepeat )
-                keyPressEvent( d->postponed_autorepeat );
+            bool ret = dispatchKeyEventHelper(_ke, true); // keypress
+            if(!ret && d->postponed_autorepeat)
+                keyPressEvent(d->postponed_autorepeat);
             delete d->postponed_autorepeat;
             d->postponed_autorepeat = NULL;
             return ret;
@@ -1391,19 +1491,21 @@ bool KHTMLView::dispatchKeyEvent( QKeyEvent *_ke )
     {
         // Discard postponed "autorepeat key-release" events that didn't see
         // a keypress after them (e.g. due to QAccel)
-        if ( d->postponed_autorepeat ) {
+        if(d->postponed_autorepeat)
+        {
             delete d->postponed_autorepeat;
             d->postponed_autorepeat = 0;
         }
 
-        if( !_ke->isAutoRepeat()) {
-            return dispatchKeyEventHelper( _ke, false ); // keyup
+        if(!_ke->isAutoRepeat())
+        {
+            return dispatchKeyEventHelper(_ke, false); // keyup
         }
         else
         {
-            d->postponed_autorepeat = new QKeyEvent( _ke->type(), _ke->key(), _ke->ascii(), _ke->state(),
-                _ke->text(), _ke->isAutoRepeat(), _ke->count());
-            if( _ke->isAccepted())
+            d->postponed_autorepeat =
+                new QKeyEvent(_ke->type(), _ke->key(), _ke->ascii(), _ke->state(), _ke->text(), _ke->isAutoRepeat(), _ke->count());
+            if(_ke->isAccepted())
                 d->postponed_autorepeat->accept();
             else
                 d->postponed_autorepeat->ignore();
@@ -1413,205 +1515,212 @@ bool KHTMLView::dispatchKeyEvent( QKeyEvent *_ke )
 }
 
 // returns true if event should be swallowed
-bool KHTMLView::dispatchKeyEventHelper( QKeyEvent *_ke, bool keypress )
+bool KHTMLView::dispatchKeyEventHelper(QKeyEvent *_ke, bool keypress)
 {
-    DOM::NodeImpl* keyNode = m_part->xmlDocImpl()->focusNode();
-    if (keyNode) {
+    DOM::NodeImpl *keyNode = m_part->xmlDocImpl()->focusNode();
+    if(keyNode)
+    {
         return keyNode->dispatchKeyEvent(_ke, keypress);
-    } else { // no focused node, send to document
+    }
+    else
+    { // no focused node, send to document
         return m_part->xmlDocImpl()->dispatchKeyEvent(_ke, keypress);
     }
 }
 
-void KHTMLView::keyPressEvent( QKeyEvent *_ke )
+void KHTMLView::keyPressEvent(QKeyEvent *_ke)
 {
 #ifndef KHTML_NO_TYPE_AHEAD_FIND
-	if(d->typeAheadActivated)
-	{
-		// type-ahead find aka find-as-you-type
-		if(_ke->key() == Key_BackSpace)
-		{
-			d->findString = d->findString.left(d->findString.length() - 1);
+    if(d->typeAheadActivated)
+    {
+        // type-ahead find aka find-as-you-type
+        if(_ke->key() == Key_BackSpace)
+        {
+            d->findString = d->findString.left(d->findString.length() - 1);
 
-			if(!d->findString.isEmpty())
-			{
-				findAhead(false);
-			}
-			else
-			{
-				findTimeout();
-			}
+            if(!d->findString.isEmpty())
+            {
+                findAhead(false);
+            }
+            else
+            {
+                findTimeout();
+            }
 
-			d->timer.start(3000, true);
-			_ke->accept();
-			return;
-		}
-		else if(_ke->key() == Key_Escape)
-		{
-			findTimeout();
+            d->timer.start(3000, true);
+            _ke->accept();
+            return;
+        }
+        else if(_ke->key() == Key_Escape)
+        {
+            findTimeout();
 
-			_ke->accept();
-			return;
-		}
-		else if(_ke->key() == Key_Space || !_ke->text().stripWhiteSpace().isEmpty())
-		{
-			d->findString += _ke->text();
+            _ke->accept();
+            return;
+        }
+        else if(_ke->key() == Key_Space || !_ke->text().stripWhiteSpace().isEmpty())
+        {
+            d->findString += _ke->text();
 
-			findAhead(true);
+            findAhead(true);
 
-			d->timer.start(3000, true);
-			_ke->accept();
-			return;
-		}
-	}
+            d->timer.start(3000, true);
+            _ke->accept();
+            return;
+        }
+    }
 #endif // KHTML_NO_TYPE_AHEAD_FIND
 
 #ifndef KHTML_NO_CARET
-    if (m_part->isEditable() || m_part->isCaretMode()
-        || (m_part->xmlDocImpl() && m_part->xmlDocImpl()->focusNode()
-	    && m_part->xmlDocImpl()->focusNode()->contentEditable())) {
-      d->caretViewContext()->keyReleasePending = true;
-      caretKeyPressEvent(_ke);
-      return;
+    if(m_part->isEditable() || m_part->isCaretMode()
+       || (m_part->xmlDocImpl() && m_part->xmlDocImpl()->focusNode() && m_part->xmlDocImpl()->focusNode()->contentEditable()))
+    {
+        d->caretViewContext()->keyReleasePending = true;
+        caretKeyPressEvent(_ke);
+        return;
     }
 #endif // KHTML_NO_CARET
 
     // If CTRL was hit, be prepared for access keys
-    if (d->accessKeysEnabled && _ke->key() == Key_Control && _ke->state()==0 && !d->accessKeysActivated)
+    if(d->accessKeysEnabled && _ke->key() == Key_Control && _ke->state() == 0 && !d->accessKeysActivated)
     {
-        d->accessKeysPreActivate=true;
+        d->accessKeysPreActivate = true;
         _ke->accept();
         return;
     }
 
-    if (_ke->key() == Key_Shift && _ke->state()==0)
-	    d->scrollSuspendPreActivate=true;
+    if(_ke->key() == Key_Shift && _ke->state() == 0)
+        d->scrollSuspendPreActivate = true;
 
     // accesskey handling needs to be done before dispatching, otherwise e.g. lineedits
     // may eat the event
 
-    if (d->accessKeysEnabled && d->accessKeysActivated)
+    if(d->accessKeysEnabled && d->accessKeysActivated)
     {
-        int state = ( _ke->state() & ( ShiftButton | ControlButton | AltButton | MetaButton ));
-        if ( state==0 || state==ShiftButton) {
-	if (_ke->key() != Key_Shift) accessKeysTimeout();
-        handleAccessKey( _ke );
-        _ke->accept();
-        return;
-    	}
-	accessKeysTimeout();
+        int state = (_ke->state() & (ShiftButton | ControlButton | AltButton | MetaButton));
+        if(state == 0 || state == ShiftButton)
+        {
+            if(_ke->key() != Key_Shift)
+                accessKeysTimeout();
+            handleAccessKey(_ke);
+            _ke->accept();
+            return;
+        }
+        accessKeysTimeout();
     }
 
-    if ( dispatchKeyEvent( _ke )) {
+    if(dispatchKeyEvent(_ke))
+    {
         // If either keydown or keypress was accepted by a widget, or canceled by JS, stop here.
         _ke->accept();
         return;
     }
 
     int offs = (clipper()->height() < 30) ? clipper()->height() : 30;
-    if (_ke->state() & Qt::ShiftButton)
-      switch(_ke->key())
+    if(_ke->state() & Qt::ShiftButton)
+        switch(_ke->key())
         {
-        case Key_Space:
-            scrollBy( 0, -clipper()->height() + offs );
-            if(d->scrollSuspended)
-                d->newScrollTimer(this, 0);
-            break;
+            case Key_Space:
+                scrollBy(0, -clipper()->height() + offs);
+                if(d->scrollSuspended)
+                    d->newScrollTimer(this, 0);
+                break;
 
-        case Key_Down:
-        case Key_J:
-            d->adjustScroller(this, KHTMLViewPrivate::ScrollDown, KHTMLViewPrivate::ScrollUp);
-            break;
+            case Key_Down:
+            case Key_J:
+                d->adjustScroller(this, KHTMLViewPrivate::ScrollDown, KHTMLViewPrivate::ScrollUp);
+                break;
 
-        case Key_Up:
-        case Key_K:
-            d->adjustScroller(this, KHTMLViewPrivate::ScrollUp, KHTMLViewPrivate::ScrollDown);
-            break;
+            case Key_Up:
+            case Key_K:
+                d->adjustScroller(this, KHTMLViewPrivate::ScrollUp, KHTMLViewPrivate::ScrollDown);
+                break;
 
-        case Key_Left:
-        case Key_H:
-            d->adjustScroller(this, KHTMLViewPrivate::ScrollLeft, KHTMLViewPrivate::ScrollRight);
-            break;
+            case Key_Left:
+            case Key_H:
+                d->adjustScroller(this, KHTMLViewPrivate::ScrollLeft, KHTMLViewPrivate::ScrollRight);
+                break;
 
-        case Key_Right:
-        case Key_L:
-            d->adjustScroller(this, KHTMLViewPrivate::ScrollRight, KHTMLViewPrivate::ScrollLeft);
-            break;
+            case Key_Right:
+            case Key_L:
+                d->adjustScroller(this, KHTMLViewPrivate::ScrollRight, KHTMLViewPrivate::ScrollLeft);
+                break;
         }
     else
-        switch ( _ke->key() )
+        switch(_ke->key())
         {
-        case Key_Down:
-        case Key_J:
-            if (!d->scrollTimerId || d->scrollSuspended)
-                scrollBy( 0, 10 );
-            if (d->scrollTimerId)
-                d->newScrollTimer(this, 0);
-            break;
+            case Key_Down:
+            case Key_J:
+                if(!d->scrollTimerId || d->scrollSuspended)
+                    scrollBy(0, 10);
+                if(d->scrollTimerId)
+                    d->newScrollTimer(this, 0);
+                break;
 
-        case Key_Space:
-        case Key_Next:
-            scrollBy( 0, clipper()->height() - offs );
-            if(d->scrollSuspended)
-                d->newScrollTimer(this, 0);
-            break;
+            case Key_Space:
+            case Key_Next:
+                scrollBy(0, clipper()->height() - offs);
+                if(d->scrollSuspended)
+                    d->newScrollTimer(this, 0);
+                break;
 
-        case Key_Up:
-        case Key_K:
-            if (!d->scrollTimerId || d->scrollSuspended)
-                scrollBy( 0, -10 );
-            if (d->scrollTimerId)
-                d->newScrollTimer(this, 0);
-            break;
+            case Key_Up:
+            case Key_K:
+                if(!d->scrollTimerId || d->scrollSuspended)
+                    scrollBy(0, -10);
+                if(d->scrollTimerId)
+                    d->newScrollTimer(this, 0);
+                break;
 
-        case Key_Prior:
-            scrollBy( 0, -clipper()->height() + offs );
-            if(d->scrollSuspended)
-                d->newScrollTimer(this, 0);
-            break;
-        case Key_Right:
-        case Key_L:
-            if (!d->scrollTimerId || d->scrollSuspended)
-                scrollBy( 10, 0 );
-            if (d->scrollTimerId)
-                d->newScrollTimer(this, 0);
-            break;
-        case Key_Left:
-        case Key_H:
-            if (!d->scrollTimerId || d->scrollSuspended)
-                scrollBy( -10, 0 );
-            if (d->scrollTimerId)
-                d->newScrollTimer(this, 0);
-            break;
-        case Key_Enter:
-        case Key_Return:
-	    // ### FIXME:
-	    // or even better to HTMLAnchorElementImpl::event()
-            if (m_part->xmlDocImpl()) {
-		NodeImpl *n = m_part->xmlDocImpl()->focusNode();
-		if (n)
-		    n->setActive();
-	    }
-            break;
-        case Key_Home:
-            setContentsPos( 0, 0 );
-            if(d->scrollSuspended)
-                d->newScrollTimer(this, 0);
-            break;
-        case Key_End:
-            setContentsPos( 0, contentsHeight() - visibleHeight() );
-            if(d->scrollSuspended)
-                d->newScrollTimer(this, 0);
-            break;
-        case Key_Shift:
-            // what are you doing here?
-	    _ke->ignore();
-            return;
-        default:
-            if (d->scrollTimerId)
-                d->newScrollTimer(this, 0);
-	    _ke->ignore();
-            return;
+            case Key_Prior:
+                scrollBy(0, -clipper()->height() + offs);
+                if(d->scrollSuspended)
+                    d->newScrollTimer(this, 0);
+                break;
+            case Key_Right:
+            case Key_L:
+                if(!d->scrollTimerId || d->scrollSuspended)
+                    scrollBy(10, 0);
+                if(d->scrollTimerId)
+                    d->newScrollTimer(this, 0);
+                break;
+            case Key_Left:
+            case Key_H:
+                if(!d->scrollTimerId || d->scrollSuspended)
+                    scrollBy(-10, 0);
+                if(d->scrollTimerId)
+                    d->newScrollTimer(this, 0);
+                break;
+            case Key_Enter:
+            case Key_Return:
+                // ### FIXME:
+                // or even better to HTMLAnchorElementImpl::event()
+                if(m_part->xmlDocImpl())
+                {
+                    NodeImpl *n = m_part->xmlDocImpl()->focusNode();
+                    if(n)
+                        n->setActive();
+                }
+                break;
+            case Key_Home:
+                setContentsPos(0, 0);
+                if(d->scrollSuspended)
+                    d->newScrollTimer(this, 0);
+                break;
+            case Key_End:
+                setContentsPos(0, contentsHeight() - visibleHeight());
+                if(d->scrollSuspended)
+                    d->newScrollTimer(this, 0);
+                break;
+            case Key_Shift:
+                // what are you doing here?
+                _ke->ignore();
+                return;
+            default:
+                if(d->scrollTimerId)
+                    d->newScrollTimer(this, 0);
+                _ke->ignore();
+                return;
         }
 
     _ke->accept();
@@ -1620,76 +1729,74 @@ void KHTMLView::keyPressEvent( QKeyEvent *_ke )
 void KHTMLView::findTimeout()
 {
 #ifndef KHTML_NO_TYPE_AHEAD_FIND
-	d->typeAheadActivated = false;
-	d->findString = "";
-	m_part->setStatusBarText(i18n("Find stopped."), KHTMLPart::BarDefaultText);
-	m_part->enableFindAheadActions( true );
+    d->typeAheadActivated = false;
+    d->findString = "";
+    m_part->setStatusBarText(i18n("Find stopped."), KHTMLPart::BarDefaultText);
+    m_part->enableFindAheadActions(true);
 #endif // KHTML_NO_TYPE_AHEAD_FIND
 }
 
 #ifndef KHTML_NO_TYPE_AHEAD_FIND
-void KHTMLView::startFindAhead( bool linksOnly )
+void KHTMLView::startFindAhead(bool linksOnly)
 {
-	if( linksOnly )
-	{
-		d->findLinksOnly = true;
-		m_part->setStatusBarText(i18n("Starting -- find links as you type"),
-		                         KHTMLPart::BarDefaultText);
-	}
-	else
-	{
-		d->findLinksOnly = false;
-		m_part->setStatusBarText(i18n("Starting -- find text as you type"),
-		                         KHTMLPart::BarDefaultText);
-	}
+    if(linksOnly)
+    {
+        d->findLinksOnly = true;
+        m_part->setStatusBarText(i18n("Starting -- find links as you type"), KHTMLPart::BarDefaultText);
+    }
+    else
+    {
+        d->findLinksOnly = false;
+        m_part->setStatusBarText(i18n("Starting -- find text as you type"), KHTMLPart::BarDefaultText);
+    }
 
-	m_part->findTextBegin();
-	d->typeAheadActivated = true;
-        // disable, so that the shortcut ( / or ' by default ) doesn't interfere
-	m_part->enableFindAheadActions( false );
-	d->timer.start(3000, true);
+    m_part->findTextBegin();
+    d->typeAheadActivated = true;
+    // disable, so that the shortcut ( / or ' by default ) doesn't interfere
+    m_part->enableFindAheadActions(false);
+    d->timer.start(3000, true);
 }
 
 void KHTMLView::findAhead(bool increase)
 {
-	QString status;
+    QString status;
 
-	if(d->findLinksOnly)
-	{
-		m_part->findText(d->findString, KHTMLPart::FindNoPopups |
-		                 KHTMLPart::FindLinksOnly, this);
-		if(m_part->findTextNext())
-		{
-			status = i18n("Link found: \"%1\".");
-		}
-		else
-		{
-			if(increase) KNotifyClient::beep();
-			status = i18n("Link not found: \"%1\".");
-		}
-	}
-	else
-	{
-		m_part->findText(d->findString, KHTMLPart::FindNoPopups, this);
-		if(m_part->findTextNext())
-		{
-			status = i18n("Text found: \"%1\".");
-		}
-		else
-		{
-			if(increase) KNotifyClient::beep();
-			status = i18n("Text not found: \"%1\".");
-		}
-	}
+    if(d->findLinksOnly)
+    {
+        m_part->findText(d->findString, KHTMLPart::FindNoPopups | KHTMLPart::FindLinksOnly, this);
+        if(m_part->findTextNext())
+        {
+            status = i18n("Link found: \"%1\".");
+        }
+        else
+        {
+            if(increase)
+                KNotifyClient::beep();
+            status = i18n("Link not found: \"%1\".");
+        }
+    }
+    else
+    {
+        m_part->findText(d->findString, KHTMLPart::FindNoPopups, this);
+        if(m_part->findTextNext())
+        {
+            status = i18n("Text found: \"%1\".");
+        }
+        else
+        {
+            if(increase)
+                KNotifyClient::beep();
+            status = i18n("Text not found: \"%1\".");
+        }
+    }
 
-	m_part->setStatusBarText(status.arg(d->findString.lower()),
-	                         KHTMLPart::BarDefaultText);
+    m_part->setStatusBarText(status.arg(d->findString.lower()), KHTMLPart::BarDefaultText);
 }
 
 void KHTMLView::updateFindAheadTimeout()
 {
-    if( d->typeAheadActivated )
-        d->timer.start( 3000, true );
+    if(d->typeAheadActivated)
+        d->timer.start(3000, true);
 }
 
 #endif // KHTML_NO_TYPE_AHEAD_FIND
@@ -1697,38 +1804,40 @@ void KHTMLView::updateFindAheadTimeout()
 void KHTMLView::keyReleaseEvent(QKeyEvent *_ke)
 {
 #ifndef KHTML_NO_TYPE_AHEAD_FIND
-    if(d->typeAheadActivated) {
+    if(d->typeAheadActivated)
+    {
         _ke->accept();
         return;
     }
 #endif
-    if (d->m_caretViewContext && d->m_caretViewContext->keyReleasePending) {
-        //caretKeyReleaseEvent(_ke);
-	d->m_caretViewContext->keyReleasePending = false;
-	return;
+    if(d->m_caretViewContext && d->m_caretViewContext->keyReleasePending)
+    {
+        // caretKeyReleaseEvent(_ke);
+        d->m_caretViewContext->keyReleasePending = false;
+        return;
     }
 
-    if( d->scrollSuspendPreActivate && _ke->key() != Key_Shift )
+    if(d->scrollSuspendPreActivate && _ke->key() != Key_Shift)
         d->scrollSuspendPreActivate = false;
-    if( _ke->key() == Key_Shift && d->scrollSuspendPreActivate && _ke->state() == Qt::ShiftButton
-        && !(KApplication::keyboardMouseState() & Qt::ShiftButton))
-        if (d->scrollTimerId)
-                d->scrollSuspended = !d->scrollSuspended;
+    if(_ke->key() == Key_Shift && d->scrollSuspendPreActivate && _ke->state() == Qt::ShiftButton
+       && !(KApplication::keyboardMouseState() & Qt::ShiftButton))
+        if(d->scrollTimerId)
+            d->scrollSuspended = !d->scrollSuspended;
 
-    if (d->accessKeysEnabled)
+    if(d->accessKeysEnabled)
     {
-        if (d->accessKeysPreActivate && _ke->key() != Key_Control)
-            d->accessKeysPreActivate=false;
-        if (d->accessKeysPreActivate && _ke->state() == Qt::ControlButton && !(KApplication::keyboardMouseState() & Qt::ControlButton))
+        if(d->accessKeysPreActivate && _ke->key() != Key_Control)
+            d->accessKeysPreActivate = false;
+        if(d->accessKeysPreActivate && _ke->state() == Qt::ControlButton && !(KApplication::keyboardMouseState() & Qt::ControlButton))
         {
-	    displayAccessKeys();
-	    m_part->setStatusBarText(i18n("Access Keys activated"),KHTMLPart::BarOverrideText);
-	    d->accessKeysActivated = true;
-	    d->accessKeysPreActivate = false;
+            displayAccessKeys();
+            m_part->setStatusBarText(i18n("Access Keys activated"), KHTMLPart::BarOverrideText);
+            d->accessKeysActivated = true;
+            d->accessKeysPreActivate = false;
             _ke->accept();
             return;
         }
-	else if (d->accessKeysActivated)
+        else if(d->accessKeysActivated)
         {
             accessKeysTimeout();
             _ke->accept();
@@ -1737,7 +1846,7 @@ void KHTMLView::keyReleaseEvent(QKeyEvent *_ke)
     }
 
     // Send keyup event
-    if ( dispatchKeyEvent( _ke ) )
+    if(dispatchKeyEvent(_ke))
     {
         _ke->accept();
         return;
@@ -1746,7 +1855,7 @@ void KHTMLView::keyReleaseEvent(QKeyEvent *_ke)
     QScrollView::keyReleaseEvent(_ke);
 }
 
-void KHTMLView::contentsContextMenuEvent ( QContextMenuEvent * /*ce*/ )
+void KHTMLView::contentsContextMenuEvent(QContextMenuEvent * /*ce*/)
 {
 // ### what kind of c*** is that ?
 #if 0
@@ -1773,20 +1882,19 @@ void KHTMLView::contentsContextMenuEvent ( QContextMenuEvent * /*ce*/ )
 #endif
 }
 
-bool KHTMLView::focusNextPrevChild( bool next )
+bool KHTMLView::focusNextPrevChild(bool next)
 {
     // Now try to find the next child
-    if (m_part->xmlDocImpl() && focusNextPrevNode(next))
+    if(m_part->xmlDocImpl() && focusNextPrevNode(next))
     {
-	if (m_part->xmlDocImpl()->focusNode())
-	    kdDebug() << "focusNode.name: "
-		      << m_part->xmlDocImpl()->focusNode()->nodeName().string() << endl;
-	return true; // focus node found
+        if(m_part->xmlDocImpl()->focusNode())
+            kdDebug() << "focusNode.name: " << m_part->xmlDocImpl()->focusNode()->nodeName().string() << endl;
+        return true; // focus node found
     }
 
     // If we get here, pass tabbing control up to the next/previous child in our parent
     d->pseudoFocusNode = KHTMLViewPrivate::PFNone;
-    if (m_part->parentPart() && m_part->parentPart()->view())
+    if(m_part->parentPart() && m_part->parentPart()->view())
         return m_part->parentPart()->view()->focusNextPrevChild(next);
 
     return QWidget::focusNextPrevChild(next);
@@ -1795,191 +1903,217 @@ bool KHTMLView::focusNextPrevChild( bool next )
 void KHTMLView::doAutoScroll()
 {
     QPoint pos = QCursor::pos();
-    pos = viewport()->mapFromGlobal( pos );
+    pos = viewport()->mapFromGlobal(pos);
 
     int xm, ym;
     viewportToContents(pos.x(), pos.y(), xm, ym);
 
     pos = QPoint(pos.x() - viewport()->x(), pos.y() - viewport()->y());
-    if ( (pos.y() < 0) || (pos.y() > visibleHeight()) ||
-         (pos.x() < 0) || (pos.x() > visibleWidth()) )
+    if((pos.y() < 0) || (pos.y() > visibleHeight()) || (pos.x() < 0) || (pos.x() > visibleWidth()))
     {
-        ensureVisible( xm, ym, 0, 5 );
+        ensureVisible(xm, ym, 0, 5);
 
 #ifndef KHTML_NO_SELECTION
         // extend the selection while scrolling
-	DOM::Node innerNode;
-	if (m_part->isExtendingSelection()) {
-            RenderObject::NodeInfo renderInfo(true/*readonly*/, false/*active*/);
-            m_part->xmlDocImpl()->renderer()->layer()
-				->nodeAtPoint(renderInfo, xm, ym);
+        DOM::Node innerNode;
+        if(m_part->isExtendingSelection())
+        {
+            RenderObject::NodeInfo renderInfo(true /*readonly*/, false /*active*/);
+            m_part->xmlDocImpl()->renderer()->layer()->nodeAtPoint(renderInfo, xm, ym);
             innerNode = renderInfo.innerNode();
-	}/*end if*/
+        } /*end if*/
 
-        if (innerNode.handle() && innerNode.handle()->renderer()) {
+        if(innerNode.handle() && innerNode.handle()->renderer())
+        {
             int absX, absY;
             innerNode.handle()->renderer()->absolutePosition(absX, absY);
 
             m_part->extendSelectionTo(xm, ym, absX, absY, innerNode);
-        }/*end if*/
-#endif // KHTML_NO_SELECTION
+        } /*end if*/
+#endif    // KHTML_NO_SELECTION
     }
 }
 
 
-class HackWidget : public QWidget
-{
- public:
-    inline void setNoErase() { setWFlags(getWFlags()|WRepaintNoErase); }
+class HackWidget : public QWidget {
+public:
+    inline void setNoErase()
+    {
+        setWFlags(getWFlags() | WRepaintNoErase);
+    }
 };
 
 bool KHTMLView::eventFilter(QObject *o, QEvent *e)
 {
-    if ( e->type() == QEvent::AccelOverride ) {
-	QKeyEvent* ke = (QKeyEvent*) e;
-//kdDebug(6200) << "QEvent::AccelOverride" << endl;
-	if (m_part->isEditable() || m_part->isCaretMode()
-	    || (m_part->xmlDocImpl() && m_part->xmlDocImpl()->focusNode()
-		&& m_part->xmlDocImpl()->focusNode()->contentEditable())) {
-//kdDebug(6200) << "editable/navigable" << endl;
-	    if ( (ke->state() & ControlButton) || (ke->state() & ShiftButton) ) {
-		switch ( ke->key() ) {
-		case Key_Left:
-		case Key_Right:
-		case Key_Up:
-		case Key_Down:
-		case Key_Home:
-		case Key_End:
-		    ke->accept();
-//kdDebug(6200) << "eaten" << endl;
-		    return true;
-		default:
-		    break;
-		}
-	    }
-	}
+    if(e->type() == QEvent::AccelOverride)
+    {
+        QKeyEvent *ke = (QKeyEvent *)e;
+        // kdDebug(6200) << "QEvent::AccelOverride" << endl;
+        if(m_part->isEditable() || m_part->isCaretMode()
+           || (m_part->xmlDocImpl() && m_part->xmlDocImpl()->focusNode() && m_part->xmlDocImpl()->focusNode()->contentEditable()))
+        {
+            // kdDebug(6200) << "editable/navigable" << endl;
+            if((ke->state() & ControlButton) || (ke->state() & ShiftButton))
+            {
+                switch(ke->key())
+                {
+                    case Key_Left:
+                    case Key_Right:
+                    case Key_Up:
+                    case Key_Down:
+                    case Key_Home:
+                    case Key_End:
+                        ke->accept();
+                        // kdDebug(6200) << "eaten" << endl;
+                        return true;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
-    if ( e->type() == QEvent::Leave ) {
-      if ( d->cursor_icon_widget )
-        d->cursor_icon_widget->hide();
-      m_part->resetHoverText();
+    if(e->type() == QEvent::Leave)
+    {
+        if(d->cursor_icon_widget)
+            d->cursor_icon_widget->hide();
+        m_part->resetHoverText();
     }
 
     QWidget *view = viewport();
 
-    if (o == view) {
-	// we need to install an event filter on all children of the viewport to
-	// be able to get correct stacking of children within the document.
-	if(e->type() == QEvent::ChildInserted) {
-	    QObject *c = static_cast<QChildEvent *>(e)->child();
-	    if (c->isWidgetType()) {
-		QWidget *w = static_cast<QWidget *>(c);
-		// don't install the event filter on toplevels
-		if (w->parentWidget(true) == view) {
-		    if (!strcmp(w->name(), "__khtml")) {
-			w->installEventFilter(this);
-			w->unsetCursor();
-			if (!::qt_cast<QFrame*>(w))
-			    w->setBackgroundMode( QWidget::NoBackground );
-			static_cast<HackWidget *>(w)->setNoErase();
-			if (w->children()) {
-			    QObjectListIterator it(*w->children());
-			    for (; it.current(); ++it) {
-				QWidget *widget = ::qt_cast<QWidget *>(it.current());
-				if (widget && !widget->isTopLevel()) {
-				    if (!::qt_cast<QFrame*>(w))
-				        widget->setBackgroundMode( QWidget::NoBackground );
-				    static_cast<HackWidget *>(widget)->setNoErase();
-				    widget->installEventFilter(this);
-				}
-			    }
-			}
-		    }
-		}
-	    }
-	}
-    } else if (o->isWidgetType()) {
-	QWidget *v = static_cast<QWidget *>(o);
-        QWidget *c = v;
-	while (v && v != view) {
-            c = v;
-	    v = v->parentWidget(true);
-	}
-
-	if (v && !strcmp(c->name(), "__khtml")) {
-	    bool block = false;
-	    QWidget *w = static_cast<QWidget *>(o);
-	    switch(e->type()) {
-	    case QEvent::Paint:
-		if (!allowWidgetPaintEvents) {
-		    // eat the event. Like this we can control exactly when the widget
-		    // get's repainted.
-		    block = true;
-		    int x = 0, y = 0;
-		    QWidget *v = w;
-		    while (v && v != view) {
-			x += v->x();
-			y += v->y();
-			v = v->parentWidget();
-		    }
-		    viewportToContents( x, y, x, y );
-		    QPaintEvent *pe = static_cast<QPaintEvent *>(e);
-		    bool asap = !d->contentsMoving && ::qt_cast<QScrollView *>(c);
-
-		    // QScrollView needs fast repaints
-		    if ( asap && !d->painting && m_part->xmlDocImpl() && m_part->xmlDocImpl()->renderer() &&
-		         !static_cast<khtml::RenderCanvas *>(m_part->xmlDocImpl()->renderer())->needsLayout() ) {
-		        repaintContents(x + pe->rect().x(), y + pe->rect().y(),
-	                                        pe->rect().width(), pe->rect().height(), true);
-                    } else {
- 		        scheduleRepaint(x + pe->rect().x(), y + pe->rect().y(),
- 				    pe->rect().width(), pe->rect().height(), asap);
+    if(o == view)
+    {
+        // we need to install an event filter on all children of the viewport to
+        // be able to get correct stacking of children within the document.
+        if(e->type() == QEvent::ChildInserted)
+        {
+            QObject *c = static_cast< QChildEvent * >(e)->child();
+            if(c->isWidgetType())
+            {
+                QWidget *w = static_cast< QWidget * >(c);
+                // don't install the event filter on toplevels
+                if(w->parentWidget(true) == view)
+                {
+                    if(!strcmp(w->name(), "__khtml"))
+                    {
+                        w->installEventFilter(this);
+                        w->unsetCursor();
+                        if(!::qt_cast< QFrame * >(w))
+                            w->setBackgroundMode(QWidget::NoBackground);
+                        static_cast< HackWidget * >(w)->setNoErase();
+                        if(w->children())
+                        {
+                            QObjectListIterator it(*w->children());
+                            for(; it.current(); ++it)
+                            {
+                                QWidget *widget = ::qt_cast< QWidget * >(it.current());
+                                if(widget && !widget->isTopLevel())
+                                {
+                                    if(!::qt_cast< QFrame * >(w))
+                                        widget->setBackgroundMode(QWidget::NoBackground);
+                                    static_cast< HackWidget * >(widget)->setNoErase();
+                                    widget->installEventFilter(this);
+                                }
+                            }
+                        }
                     }
-		}
-		break;
-	    case QEvent::MouseMove:
-	    case QEvent::MouseButtonPress:
-	    case QEvent::MouseButtonRelease:
-	    case QEvent::MouseButtonDblClick: {
-		if ( (w->parentWidget() == view || ::qt_cast<QScrollView*>(c)) && !::qt_cast<QScrollBar *>(w)) {
-		    QMouseEvent *me = static_cast<QMouseEvent *>(e);
-		    QPoint pt = w->mapTo( view, me->pos());
-		    QMouseEvent me2(me->type(), pt, me->button(), me->state());
-
-		    if (e->type() == QEvent::MouseMove)
-			viewportMouseMoveEvent(&me2);
-		    else if(e->type() == QEvent::MouseButtonPress)
-			viewportMousePressEvent(&me2);
-		    else if(e->type() == QEvent::MouseButtonRelease)
-			viewportMouseReleaseEvent(&me2);
-		    else
-			viewportMouseDoubleClickEvent(&me2);
-		    block = true;
                 }
-		break;
-	    }
-	    case QEvent::KeyPress:
-	    case QEvent::KeyRelease:
-		if (w->parentWidget() == view && !::qt_cast<QScrollBar *>(w)) {
-		    QKeyEvent *ke = static_cast<QKeyEvent *>(e);
-		    if (e->type() == QEvent::KeyPress)
-			keyPressEvent(ke);
-		    else
-			keyReleaseEvent(ke);
-		    block = true;
-		}
-	    default:
-		break;
-	    }
-	    if (block) {
- 		//qDebug("eating event");
-		return true;
-	    }
-	}
+            }
+        }
+    }
+    else if(o->isWidgetType())
+    {
+        QWidget *v = static_cast< QWidget * >(o);
+        QWidget *c = v;
+        while(v && v != view)
+        {
+            c = v;
+            v = v->parentWidget(true);
+        }
+
+        if(v && !strcmp(c->name(), "__khtml"))
+        {
+            bool block = false;
+            QWidget *w = static_cast< QWidget * >(o);
+            switch(e->type())
+            {
+                case QEvent::Paint:
+                    if(!allowWidgetPaintEvents)
+                    {
+                        // eat the event. Like this we can control exactly when the widget
+                        // get's repainted.
+                        block = true;
+                        int x = 0, y = 0;
+                        QWidget *v = w;
+                        while(v && v != view)
+                        {
+                            x += v->x();
+                            y += v->y();
+                            v = v->parentWidget();
+                        }
+                        viewportToContents(x, y, x, y);
+                        QPaintEvent *pe = static_cast< QPaintEvent * >(e);
+                        bool asap = !d->contentsMoving && ::qt_cast< QScrollView * >(c);
+
+                        // QScrollView needs fast repaints
+                        if(asap && !d->painting && m_part->xmlDocImpl() && m_part->xmlDocImpl()->renderer()
+                           && !static_cast< khtml::RenderCanvas * >(m_part->xmlDocImpl()->renderer())->needsLayout())
+                        {
+                            repaintContents(x + pe->rect().x(), y + pe->rect().y(), pe->rect().width(), pe->rect().height(), true);
+                        }
+                        else
+                        {
+                            scheduleRepaint(x + pe->rect().x(), y + pe->rect().y(), pe->rect().width(), pe->rect().height(), asap);
+                        }
+                    }
+                    break;
+                case QEvent::MouseMove:
+                case QEvent::MouseButtonPress:
+                case QEvent::MouseButtonRelease:
+                case QEvent::MouseButtonDblClick:
+                {
+                    if((w->parentWidget() == view || ::qt_cast< QScrollView * >(c)) && !::qt_cast< QScrollBar * >(w))
+                    {
+                        QMouseEvent *me = static_cast< QMouseEvent * >(e);
+                        QPoint pt = w->mapTo(view, me->pos());
+                        QMouseEvent me2(me->type(), pt, me->button(), me->state());
+
+                        if(e->type() == QEvent::MouseMove)
+                            viewportMouseMoveEvent(&me2);
+                        else if(e->type() == QEvent::MouseButtonPress)
+                            viewportMousePressEvent(&me2);
+                        else if(e->type() == QEvent::MouseButtonRelease)
+                            viewportMouseReleaseEvent(&me2);
+                        else
+                            viewportMouseDoubleClickEvent(&me2);
+                        block = true;
+                    }
+                    break;
+                }
+                case QEvent::KeyPress:
+                case QEvent::KeyRelease:
+                    if(w->parentWidget() == view && !::qt_cast< QScrollBar * >(w))
+                    {
+                        QKeyEvent *ke = static_cast< QKeyEvent * >(e);
+                        if(e->type() == QEvent::KeyPress)
+                            keyPressEvent(ke);
+                        else
+                            keyReleaseEvent(ke);
+                        block = true;
+                    }
+                default:
+                    break;
+            }
+            if(block)
+            {
+                // qDebug("eating event");
+                return true;
+            }
+        }
     }
 
-//    kdDebug(6000) <<"passing event on to sv event filter object=" << o->className() << " event=" << e->type() << endl;
+    //    kdDebug(6000) <<"passing event on to sv event filter object=" << o->className() << " event=" << e->type() << endl;
     return QScrollView::eventFilter(o, e);
 }
 
@@ -2004,7 +2138,7 @@ bool KHTMLView::scrollTo(const QRect &bounds)
     xe = bounds.right();
     ye = bounds.bottom();
 
-    //kdDebug(6000)<<"scrolling coords: x="<<x<<" y="<<y<<" width="<<xe-x<<" height="<<ye-y<<endl;
+    // kdDebug(6000)<<"scrolling coords: x="<<x<<" y="<<y<<" width="<<xe-x<<" height="<<ye-y<<endl;
 
     int deltax;
     int deltay;
@@ -2012,56 +2146,56 @@ bool KHTMLView::scrollTo(const QRect &bounds)
     int curHeight = visibleHeight();
     int curWidth = visibleWidth();
 
-    if (ye-y>curHeight-d->borderY)
-	ye  = y + curHeight - d->borderY;
+    if(ye - y > curHeight - d->borderY)
+        ye = y + curHeight - d->borderY;
 
-    if (xe-x>curWidth-d->borderX)
-	xe = x + curWidth - d->borderX;
+    if(xe - x > curWidth - d->borderX)
+        xe = x + curWidth - d->borderX;
 
     // is xpos of target left of the view's border?
-    if (x < contentsX() + d->borderX )
-            deltax = x - contentsX() - d->borderX;
+    if(x < contentsX() + d->borderX)
+        deltax = x - contentsX() - d->borderX;
     // is xpos of target right of the view's right border?
-    else if (xe + d->borderX > contentsX() + curWidth)
-            deltax = xe + d->borderX - ( contentsX() + curWidth );
+    else if(xe + d->borderX > contentsX() + curWidth)
+        deltax = xe + d->borderX - (contentsX() + curWidth);
     else
         deltax = 0;
 
     // is ypos of target above upper border?
-    if (y < contentsY() + d->borderY)
-            deltay = y - contentsY() - d->borderY;
+    if(y < contentsY() + d->borderY)
+        deltay = y - contentsY() - d->borderY;
     // is ypos of target below lower border?
-    else if (ye + d->borderY > contentsY() + curHeight)
-            deltay = ye + d->borderY - ( contentsY() + curHeight );
+    else if(ye + d->borderY > contentsY() + curHeight)
+        deltay = ye + d->borderY - (contentsY() + curHeight);
     else
         deltay = 0;
 
-    int maxx = curWidth-d->borderX;
-    int maxy = curHeight-d->borderY;
+    int maxx = curWidth - d->borderX;
+    int maxy = curHeight - d->borderY;
 
-    int scrollX,scrollY;
+    int scrollX, scrollY;
 
-    scrollX = deltax > 0 ? (deltax > maxx ? maxx : deltax) : deltax == 0 ? 0 : (deltax>-maxx ? deltax : -maxx);
-    scrollY = deltay > 0 ? (deltay > maxy ? maxy : deltay) : deltay == 0 ? 0 : (deltay>-maxy ? deltay : -maxy);
+    scrollX = deltax > 0 ? (deltax > maxx ? maxx : deltax) : deltax == 0 ? 0 : (deltax > -maxx ? deltax : -maxx);
+    scrollY = deltay > 0 ? (deltay > maxy ? maxy : deltay) : deltay == 0 ? 0 : (deltay > -maxy ? deltay : -maxy);
 
-    if (contentsX() + scrollX < 0)
-	scrollX = -contentsX();
-    else if (contentsWidth() - visibleWidth() - contentsX() < scrollX)
-	scrollX = contentsWidth() - visibleWidth() - contentsX();
+    if(contentsX() + scrollX < 0)
+        scrollX = -contentsX();
+    else if(contentsWidth() - visibleWidth() - contentsX() < scrollX)
+        scrollX = contentsWidth() - visibleWidth() - contentsX();
 
-    if (contentsY() + scrollY < 0)
-	scrollY = -contentsY();
-    else if (contentsHeight() - visibleHeight() - contentsY() < scrollY)
-	scrollY = contentsHeight() - visibleHeight() - contentsY();
+    if(contentsY() + scrollY < 0)
+        scrollY = -contentsY();
+    else if(contentsHeight() - visibleHeight() - contentsY() < scrollY)
+        scrollY = contentsHeight() - visibleHeight() - contentsY();
 
     scrollBy(scrollX, scrollY);
 
     d->scrollingSelf = false;
 
-    if ( (abs(deltax)<=maxx) && (abs(deltay)<=maxy) )
-	return true;
-    else return false;
-
+    if((abs(deltax) <= maxx) && (abs(deltay) <= maxy))
+        return true;
+    else
+        return false;
 }
 
 bool KHTMLView::focusNextPrevNode(bool next)
@@ -2079,8 +2213,8 @@ bool KHTMLView::focusNextPrevNode(bool next)
     // See whether we're in the middle of detach. If so, we want to
     // clear focus... The document code will be careful to not
     // emit events in that case..
-    if (oldFocusNode && oldFocusNode->renderer() &&
-        !oldFocusNode->renderer()->parent()) {
+    if(oldFocusNode && oldFocusNode->renderer() && !oldFocusNode->renderer()->parent())
+    {
         doc->setFocusNode(0);
         return true;
     }
@@ -2089,344 +2223,357 @@ bool KHTMLView::focusNextPrevNode(bool next)
     // If the user has scrolled the document, then instead of picking
     // the next focusable node in the document, use the first one that
     // is within the visible area (if possible).
-    if (d->scrollBarMoved)
+    if(d->scrollBarMoved)
     {
-	NodeImpl *toFocus;
-	if (next)
-	    toFocus = doc->nextFocusNode(oldFocusNode);
-	else
-	    toFocus = doc->previousFocusNode(oldFocusNode);
+        NodeImpl *toFocus;
+        if(next)
+            toFocus = doc->nextFocusNode(oldFocusNode);
+        else
+            toFocus = doc->previousFocusNode(oldFocusNode);
 
-	if (!toFocus && oldFocusNode)
-	    if (next)
-		toFocus = doc->nextFocusNode(NULL);
-	    else
-		toFocus = doc->previousFocusNode(NULL);
+        if(!toFocus && oldFocusNode)
+            if(next)
+                toFocus = doc->nextFocusNode(NULL);
+            else
+                toFocus = doc->previousFocusNode(NULL);
 
-	while (toFocus && toFocus != oldFocusNode)
-	{
+        while(toFocus && toFocus != oldFocusNode)
+        {
 
-	    QRect focusNodeRect = toFocus->getRect();
-	    if ((focusNodeRect.left() > contentsX()) && (focusNodeRect.right() < contentsX() + visibleWidth()) &&
-		(focusNodeRect.top() > contentsY()) && (focusNodeRect.bottom() < contentsY() + visibleHeight())) {
-		{
-		    QRect r = toFocus->getRect();
-		    ensureVisible( r.right(), r.bottom());
-		    ensureVisible( r.left(), r.top());
-		    d->scrollBarMoved = false;
-		    d->tabMovePending = false;
-		    d->lastTabbingDirection = next;
-		    d->pseudoFocusNode = KHTMLViewPrivate::PFNone;
-		    m_part->xmlDocImpl()->setFocusNode(toFocus);
-		    Node guard(toFocus);
-		    if (!toFocus->hasOneRef() )
-		    {
-			emit m_part->nodeActivated(Node(toFocus));
-		    }
-		    return true;
-		}
-	    }
-	    if (next)
-		toFocus = doc->nextFocusNode(toFocus);
-	    else
-		toFocus = doc->previousFocusNode(toFocus);
+            QRect focusNodeRect = toFocus->getRect();
+            if((focusNodeRect.left() > contentsX()) && (focusNodeRect.right() < contentsX() + visibleWidth()) && (focusNodeRect.top() > contentsY())
+               && (focusNodeRect.bottom() < contentsY() + visibleHeight()))
+            {
+                {
+                    QRect r = toFocus->getRect();
+                    ensureVisible(r.right(), r.bottom());
+                    ensureVisible(r.left(), r.top());
+                    d->scrollBarMoved = false;
+                    d->tabMovePending = false;
+                    d->lastTabbingDirection = next;
+                    d->pseudoFocusNode = KHTMLViewPrivate::PFNone;
+                    m_part->xmlDocImpl()->setFocusNode(toFocus);
+                    Node guard(toFocus);
+                    if(!toFocus->hasOneRef())
+                    {
+                        emit m_part->nodeActivated(Node(toFocus));
+                    }
+                    return true;
+                }
+            }
+            if(next)
+                toFocus = doc->nextFocusNode(toFocus);
+            else
+                toFocus = doc->previousFocusNode(toFocus);
 
-	    if (!toFocus && oldFocusNode)
-		if (next)
-		    toFocus = doc->nextFocusNode(NULL);
-		else
-		    toFocus = doc->previousFocusNode(NULL);
-	}
+            if(!toFocus && oldFocusNode)
+                if(next)
+                    toFocus = doc->nextFocusNode(NULL);
+                else
+                    toFocus = doc->previousFocusNode(NULL);
+        }
 
-	d->scrollBarMoved = false;
+        d->scrollBarMoved = false;
     }
 #endif
 
-    if (!oldFocusNode && d->pseudoFocusNode == KHTMLViewPrivate::PFNone)
+    if(!oldFocusNode && d->pseudoFocusNode == KHTMLViewPrivate::PFNone)
     {
-	ensureVisible(contentsX(), next?0:contentsHeight());
-	d->scrollBarMoved = false;
-	d->pseudoFocusNode = next?KHTMLViewPrivate::PFTop:KHTMLViewPrivate::PFBottom;
-	return true;
+        ensureVisible(contentsX(), next ? 0 : contentsHeight());
+        d->scrollBarMoved = false;
+        d->pseudoFocusNode = next ? KHTMLViewPrivate::PFTop : KHTMLViewPrivate::PFBottom;
+        return true;
     }
 
     NodeImpl *newFocusNode = NULL;
 
-    if (d->tabMovePending && next != d->lastTabbingDirection)
+    if(d->tabMovePending && next != d->lastTabbingDirection)
     {
-	//kdDebug ( 6000 ) << " tab move pending and tabbing direction changed!\n";
-	newFocusNode = oldFocusNode;
+        // kdDebug ( 6000 ) << " tab move pending and tabbing direction changed!\n";
+        newFocusNode = oldFocusNode;
     }
-    else if (next)
+    else if(next)
     {
-	if (oldFocusNode || d->pseudoFocusNode == KHTMLViewPrivate::PFTop )
-	    newFocusNode = doc->nextFocusNode(oldFocusNode);
+        if(oldFocusNode || d->pseudoFocusNode == KHTMLViewPrivate::PFTop)
+            newFocusNode = doc->nextFocusNode(oldFocusNode);
     }
     else
     {
-	if (oldFocusNode || d->pseudoFocusNode == KHTMLViewPrivate::PFBottom )
-	    newFocusNode = doc->previousFocusNode(oldFocusNode);
+        if(oldFocusNode || d->pseudoFocusNode == KHTMLViewPrivate::PFBottom)
+            newFocusNode = doc->previousFocusNode(oldFocusNode);
     }
 
     bool targetVisible = false;
-    if (!newFocusNode)
+    if(!newFocusNode)
     {
-	if ( next )
-	{
-	    targetVisible = scrollTo(QRect(contentsX()+visibleWidth()/2,contentsHeight()-d->borderY,0,0));
-	}
-	else
-	{
-	    targetVisible = scrollTo(QRect(contentsX()+visibleWidth()/2,d->borderY,0,0));
-	}
+        if(next)
+        {
+            targetVisible = scrollTo(QRect(contentsX() + visibleWidth() / 2, contentsHeight() - d->borderY, 0, 0));
+        }
+        else
+        {
+            targetVisible = scrollTo(QRect(contentsX() + visibleWidth() / 2, d->borderY, 0, 0));
+        }
     }
     else
     {
 #ifndef KHTML_NO_CARET
         // if it's an editable element, activate the caret
-        if (!m_part->isCaretMode() && !m_part->isEditable()
-		&& newFocusNode->contentEditable()) {
-	    d->caretViewContext();
-	    moveCaretTo(newFocusNode, 0L, true);
-        } else {
-	    caretOff();
-	}
+        if(!m_part->isCaretMode() && !m_part->isEditable() && newFocusNode->contentEditable())
+        {
+            d->caretViewContext();
+            moveCaretTo(newFocusNode, 0L, true);
+        }
+        else
+        {
+            caretOff();
+        }
 #endif // KHTML_NO_CARET
 
-	targetVisible = scrollTo(newFocusNode->getRect());
+        targetVisible = scrollTo(newFocusNode->getRect());
     }
 
-    if (targetVisible)
+    if(targetVisible)
     {
-	//kdDebug ( 6000 ) << " target reached.\n";
-	d->tabMovePending = false;
+        // kdDebug ( 6000 ) << " target reached.\n";
+        d->tabMovePending = false;
 
-	m_part->xmlDocImpl()->setFocusNode(newFocusNode);
-	if (newFocusNode)
-	{
-	    Node guard(newFocusNode);
-	    if (!newFocusNode->hasOneRef() )
-	    {
-		emit m_part->nodeActivated(Node(newFocusNode));
-	    }
-	    return true;
-	}
-	else
-	{
-	    d->pseudoFocusNode = next?KHTMLViewPrivate::PFBottom:KHTMLViewPrivate::PFTop;
-	    return false;
-	}
+        m_part->xmlDocImpl()->setFocusNode(newFocusNode);
+        if(newFocusNode)
+        {
+            Node guard(newFocusNode);
+            if(!newFocusNode->hasOneRef())
+            {
+                emit m_part->nodeActivated(Node(newFocusNode));
+            }
+            return true;
+        }
+        else
+        {
+            d->pseudoFocusNode = next ? KHTMLViewPrivate::PFBottom : KHTMLViewPrivate::PFTop;
+            return false;
+        }
     }
     else
     {
-	if (!d->tabMovePending)
-	    d->lastTabbingDirection = next;
-	d->tabMovePending = true;
-	return true;
+        if(!d->tabMovePending)
+            d->lastTabbingDirection = next;
+        d->tabMovePending = true;
+        return true;
     }
 }
 
 void KHTMLView::displayAccessKeys()
 {
     QValueVector< QChar > taken;
-    displayAccessKeys( NULL, this, taken, false );
-    displayAccessKeys( NULL, this, taken, true );
+    displayAccessKeys(NULL, this, taken, false);
+    displayAccessKeys(NULL, this, taken, true);
 }
 
-void KHTMLView::displayAccessKeys( KHTMLView* caller, KHTMLView* origview, QValueVector< QChar >& taken, bool use_fallbacks )
+void KHTMLView::displayAccessKeys(KHTMLView *caller, KHTMLView *origview, QValueVector< QChar > &taken, bool use_fallbacks)
 {
-    QMap< ElementImpl*, QChar > fallbacks;
-    if( use_fallbacks )
+    QMap< ElementImpl *, QChar > fallbacks;
+    if(use_fallbacks)
         fallbacks = buildFallbackAccessKeys();
-    for( NodeImpl* n = m_part->xmlDocImpl(); n != NULL; n = n->traverseNextNode()) {
-        if( n->isElementNode()) {
-            ElementImpl* en = static_cast< ElementImpl* >( n );
-            DOMString s = en->getAttribute( ATTR_ACCESSKEY );
+    for(NodeImpl *n = m_part->xmlDocImpl(); n != NULL; n = n->traverseNextNode())
+    {
+        if(n->isElementNode())
+        {
+            ElementImpl *en = static_cast< ElementImpl * >(n);
+            DOMString s = en->getAttribute(ATTR_ACCESSKEY);
             QString accesskey;
-            if( s.length() == 1 ) {
-                QChar a = s.string()[ 0 ].upper();
-                if( qFind( taken.begin(), taken.end(), a ) == taken.end()) // !contains
+            if(s.length() == 1)
+            {
+                QChar a = s.string()[0].upper();
+                if(qFind(taken.begin(), taken.end(), a) == taken.end()) // !contains
                     accesskey = a;
             }
-            if( accesskey.isNull() && fallbacks.contains( en )) {
-                QChar a = fallbacks[ en ].upper();
-                if( qFind( taken.begin(), taken.end(), a ) == taken.end()) // !contains
-                    accesskey = QString( "<qt><i>" ) + a + "</i></qt>";
+            if(accesskey.isNull() && fallbacks.contains(en))
+            {
+                QChar a = fallbacks[en].upper();
+                if(qFind(taken.begin(), taken.end(), a) == taken.end()) // !contains
+                    accesskey = QString("<qt><i>") + a + "</i></qt>";
             }
-            if( !accesskey.isNull()) {
-	        QRect rec=en->getRect();
-	        QLabel *lab=new QLabel(accesskey,viewport(),0,Qt::WDestructiveClose);
-	        connect( origview, SIGNAL(hideAccessKeys()), lab, SLOT(close()) );
-	        connect( this, SIGNAL(repaintAccessKeys()), lab, SLOT(repaint()));
-	        lab->setPalette(QToolTip::palette());
-	        lab->setLineWidth(2);
-	        lab->setFrameStyle(QFrame::Box | QFrame::Plain);
-	        lab->setMargin(3);
-	        lab->adjustSize();
-	        addChild(lab,
-                    KMIN(rec.left()+rec.width()/2, contentsWidth() - lab->width()),
-                    KMIN(rec.top()+rec.height()/2, contentsHeight() - lab->height()));
-	        showChild(lab);
-                taken.append( accesskey[ 0 ] );
-	    }
+            if(!accesskey.isNull())
+            {
+                QRect rec = en->getRect();
+                QLabel *lab = new QLabel(accesskey, viewport(), 0, Qt::WDestructiveClose);
+                connect(origview, SIGNAL(hideAccessKeys()), lab, SLOT(close()));
+                connect(this, SIGNAL(repaintAccessKeys()), lab, SLOT(repaint()));
+                lab->setPalette(QToolTip::palette());
+                lab->setLineWidth(2);
+                lab->setFrameStyle(QFrame::Box | QFrame::Plain);
+                lab->setMargin(3);
+                lab->adjustSize();
+                addChild(lab, KMIN(rec.left() + rec.width() / 2, contentsWidth() - lab->width()),
+                         KMIN(rec.top() + rec.height() / 2, contentsHeight() - lab->height()));
+                showChild(lab);
+                taken.append(accesskey[0]);
+            }
         }
     }
-    if( use_fallbacks )
+    if(use_fallbacks)
         return;
-    QPtrList<KParts::ReadOnlyPart> frames = m_part->frames();
-    for( QPtrListIterator<KParts::ReadOnlyPart> it( frames );
-         it != NULL;
-         ++it ) {
-        if( !(*it)->inherits( "KHTMLPart" ))
+    QPtrList< KParts::ReadOnlyPart > frames = m_part->frames();
+    for(QPtrListIterator< KParts::ReadOnlyPart > it(frames); it != NULL; ++it)
+    {
+        if(!(*it)->inherits("KHTMLPart"))
             continue;
-        KHTMLPart* part = static_cast< KHTMLPart* >( *it );
-        if( part->view() && part->view() != caller )
-            part->view()->displayAccessKeys( this, origview, taken, use_fallbacks );
+        KHTMLPart *part = static_cast< KHTMLPart * >(*it);
+        if(part->view() && part->view() != caller)
+            part->view()->displayAccessKeys(this, origview, taken, use_fallbacks);
     }
     // pass up to the parent
-    if (m_part->parentPart() && m_part->parentPart()->view()
-        && m_part->parentPart()->view() != caller)
-        m_part->parentPart()->view()->displayAccessKeys( this, origview, taken, use_fallbacks );
+    if(m_part->parentPart() && m_part->parentPart()->view() && m_part->parentPart()->view() != caller)
+        m_part->parentPart()->view()->displayAccessKeys(this, origview, taken, use_fallbacks);
 }
-
 
 
 void KHTMLView::accessKeysTimeout()
 {
-d->accessKeysActivated=false;
-d->accessKeysPreActivate = false;
-m_part->setStatusBarText(QString::null, KHTMLPart::BarOverrideText);
-emit hideAccessKeys();
+    d->accessKeysActivated = false;
+    d->accessKeysPreActivate = false;
+    m_part->setStatusBarText(QString::null, KHTMLPart::BarOverrideText);
+    emit hideAccessKeys();
 }
 
 // Handling of the HTML accesskey attribute.
-bool KHTMLView::handleAccessKey( const QKeyEvent* ev )
+bool KHTMLView::handleAccessKey(const QKeyEvent *ev)
 {
-// Qt interprets the keyevent also with the modifiers, and ev->text() matches that,
-// but this code must act as if the modifiers weren't pressed
+    // Qt interprets the keyevent also with the modifiers, and ev->text() matches that,
+    // but this code must act as if the modifiers weren't pressed
     QChar c;
-    if( ev->key() >= Key_A && ev->key() <= Key_Z )
+    if(ev->key() >= Key_A && ev->key() <= Key_Z)
         c = 'A' + ev->key() - Key_A;
-    else if( ev->key() >= Key_0 && ev->key() <= Key_9 )
+    else if(ev->key() >= Key_0 && ev->key() <= Key_9)
         c = '0' + ev->key() - Key_0;
-    else {
+    else
+    {
         // TODO fake XKeyEvent and XLookupString ?
         // This below seems to work e.g. for eacute though.
-        if( ev->text().length() == 1 )
-            c = ev->text()[ 0 ];
+        if(ev->text().length() == 1)
+            c = ev->text()[0];
     }
-    if( c.isNull())
+    if(c.isNull())
         return false;
-    return focusNodeWithAccessKey( c );
+    return focusNodeWithAccessKey(c);
 }
 
-bool KHTMLView::focusNodeWithAccessKey( QChar c, KHTMLView* caller )
+bool KHTMLView::focusNodeWithAccessKey(QChar c, KHTMLView *caller)
 {
     DocumentImpl *doc = m_part->xmlDocImpl();
-    if( !doc )
+    if(!doc)
         return false;
-    ElementImpl* node = doc->findAccessKeyElement( c );
-    if( !node ) {
-        QPtrList<KParts::ReadOnlyPart> frames = m_part->frames();
-        for( QPtrListIterator<KParts::ReadOnlyPart> it( frames );
-             it != NULL;
-             ++it ) {
-            if( !(*it)->inherits( "KHTMLPart" ))
+    ElementImpl *node = doc->findAccessKeyElement(c);
+    if(!node)
+    {
+        QPtrList< KParts::ReadOnlyPart > frames = m_part->frames();
+        for(QPtrListIterator< KParts::ReadOnlyPart > it(frames); it != NULL; ++it)
+        {
+            if(!(*it)->inherits("KHTMLPart"))
                 continue;
-            KHTMLPart* part = static_cast< KHTMLPart* >( *it );
-            if( part->view() && part->view() != caller
-                && part->view()->focusNodeWithAccessKey( c, this ))
+            KHTMLPart *part = static_cast< KHTMLPart * >(*it);
+            if(part->view() && part->view() != caller && part->view()->focusNodeWithAccessKey(c, this))
                 return true;
         }
         // pass up to the parent
-        if (m_part->parentPart() && m_part->parentPart()->view()
-            && m_part->parentPart()->view() != caller
-            && m_part->parentPart()->view()->focusNodeWithAccessKey( c, this ))
+        if(m_part->parentPart() && m_part->parentPart()->view() && m_part->parentPart()->view() != caller
+           && m_part->parentPart()->view()->focusNodeWithAccessKey(c, this))
             return true;
-        if( caller == NULL ) { // the active frame (where the accesskey was pressed)
-            QMap< ElementImpl*, QChar > fallbacks = buildFallbackAccessKeys();
-            for( QMap< ElementImpl*, QChar >::ConstIterator it = fallbacks.begin();
-                 it != fallbacks.end();
-                 ++it )
-                if( *it == c ) {
+        if(caller == NULL)
+        { // the active frame (where the accesskey was pressed)
+            QMap< ElementImpl *, QChar > fallbacks = buildFallbackAccessKeys();
+            for(QMap< ElementImpl *, QChar >::ConstIterator it = fallbacks.begin(); it != fallbacks.end(); ++it)
+                if(*it == c)
+                {
                     node = it.key();
                     break;
                 }
         }
-        if( node == NULL )
+        if(node == NULL)
             return false;
     }
 
-    // Scroll the view as necessary to ensure that the new focus node is visible
+// Scroll the view as necessary to ensure that the new focus node is visible
 #ifndef KHTML_NO_CARET
     // if it's an editable element, activate the caret
-    if (!m_part->isCaretMode() && !m_part->isEditable()
-	&& node->contentEditable()) {
+    if(!m_part->isCaretMode() && !m_part->isEditable() && node->contentEditable())
+    {
         d->caretViewContext();
         moveCaretTo(node, 0L, true);
-    } else {
+    }
+    else
+    {
         caretOff();
     }
 #endif // KHTML_NO_CARET
 
     QRect r = node->getRect();
-    ensureVisible( r.right(), r.bottom());
-    ensureVisible( r.left(), r.top());
+    ensureVisible(r.right(), r.bottom());
+    ensureVisible(r.left(), r.top());
 
-    Node guard( node );
-    if( node->isFocusable()) {
-	if (node->id()==ID_LABEL) {
-	    // if Accesskey is a label, give focus to the label's referrer.
-	    node=static_cast<ElementImpl *>(static_cast< HTMLLabelElementImpl* >( node )->getFormElement());
-	    if (!node) return true;
+    Node guard(node);
+    if(node->isFocusable())
+    {
+        if(node->id() == ID_LABEL)
+        {
+            // if Accesskey is a label, give focus to the label's referrer.
+            node = static_cast< ElementImpl * >(static_cast< HTMLLabelElementImpl * >(node)->getFormElement());
+            if(!node)
+                return true;
             guard = node;
-	}
+        }
         // Set focus node on the document
-        QFocusEvent::setReason( QFocusEvent::Shortcut );
+        QFocusEvent::setReason(QFocusEvent::Shortcut);
         m_part->xmlDocImpl()->setFocusNode(node);
         QFocusEvent::resetReason();
-        if( node != NULL && node->hasOneRef()) // deleted, only held by guard
+        if(node != NULL && node->hasOneRef()) // deleted, only held by guard
             return true;
         emit m_part->nodeActivated(Node(node));
-        if( node != NULL && node->hasOneRef())
+        if(node != NULL && node->hasOneRef())
             return true;
     }
 
-    switch( node->id()) {
+    switch(node->id())
+    {
         case ID_A:
-            static_cast< HTMLAnchorElementImpl* >( node )->click();
-          break;
+            static_cast< HTMLAnchorElementImpl * >(node)->click();
+            break;
         case ID_INPUT:
-            static_cast< HTMLInputElementImpl* >( node )->click();
-          break;
+            static_cast< HTMLInputElementImpl * >(node)->click();
+            break;
         case ID_BUTTON:
-            static_cast< HTMLButtonElementImpl* >( node )->click();
-          break;
+            static_cast< HTMLButtonElementImpl * >(node)->click();
+            break;
         case ID_AREA:
-            static_cast< HTMLAreaElementImpl* >( node )->click();
-          break;
+            static_cast< HTMLAreaElementImpl * >(node)->click();
+            break;
         case ID_TEXTAREA:
-	  break; // just focusing it is enough
+            break; // just focusing it is enough
         case ID_LEGEND:
             // TODO
-          break;
+            break;
     }
     return true;
 }
 
-static QString getElementText( NodeImpl* start, bool after )
+static QString getElementText(NodeImpl *start, bool after)
 {
-    QString ret;             // nextSibling(), to go after e.g. </select>
-    for( NodeImpl* n = after ? start->nextSibling() : start->traversePreviousNode();
-         n != NULL;
-         n = after ? n->traverseNextNode() : n->traversePreviousNode()) {
-        if( n->isTextNode()) {
-            if( after )
-                ret += static_cast< TextImpl* >( n )->toString().string();
+    QString ret; // nextSibling(), to go after e.g. </select>
+    for(NodeImpl *n = after ? start->nextSibling() : start->traversePreviousNode(); n != NULL;
+        n = after ? n->traverseNextNode() : n->traversePreviousNode())
+    {
+        if(n->isTextNode())
+        {
+            if(after)
+                ret += static_cast< TextImpl * >(n)->toString().string();
             else
-                ret.prepend( static_cast< TextImpl* >( n )->toString().string());
-        } else {
-            switch( n->id()) {
+                ret.prepend(static_cast< TextImpl * >(n)->toString().string());
+        }
+        else
+        {
+            switch(n->id())
+            {
                 case ID_A:
                 case ID_FONT:
                 case ID_TT:
@@ -2454,9 +2601,9 @@ static QString getElementText( NodeImpl* start, bool after )
                 case ID_WBR:
                     break;
                 case ID_TD:
-                    if( ret.stripWhiteSpace().isEmpty())
+                    if(ret.stripWhiteSpace().isEmpty())
                         break;
-                    // fall through
+                // fall through
                 default:
                     return ret.simplifyWhiteSpace();
             }
@@ -2465,44 +2612,45 @@ static QString getElementText( NodeImpl* start, bool after )
     return ret.simplifyWhiteSpace();
 }
 
-static QMap< NodeImpl*, QString > buildLabels( NodeImpl* start )
+static QMap< NodeImpl *, QString > buildLabels(NodeImpl *start)
 {
-    QMap< NodeImpl*, QString > ret;
-    for( NodeImpl* n = start;
-         n != NULL;
-         n = n->traverseNextNode()) {
-        if( n->id() == ID_LABEL ) {
-            HTMLLabelElementImpl* label = static_cast< HTMLLabelElementImpl* >( n );
-            NodeImpl* labelfor = label->getFormElement();
-            if( labelfor )
-                ret[ labelfor ] = label->innerText().string().simplifyWhiteSpace();
+    QMap< NodeImpl *, QString > ret;
+    for(NodeImpl *n = start; n != NULL; n = n->traverseNextNode())
+    {
+        if(n->id() == ID_LABEL)
+        {
+            HTMLLabelElementImpl *label = static_cast< HTMLLabelElementImpl * >(n);
+            NodeImpl *labelfor = label->getFormElement();
+            if(labelfor)
+                ret[labelfor] = label->innerText().string().simplifyWhiteSpace();
         }
     }
     return ret;
 }
 
 namespace khtml {
-struct AccessKeyData {
-    ElementImpl* element;
+struct AccessKeyData
+{
+    ElementImpl *element;
     QString text;
     QString url;
     int priority; // 10(highest) - 0(lowest)
 };
 }
 
-QMap< ElementImpl*, QChar > KHTMLView::buildFallbackAccessKeys() const
+QMap< ElementImpl *, QChar > KHTMLView::buildFallbackAccessKeys() const
 {
     // build a list of all possible candidate elements that could use an accesskey
     QValueList< AccessKeyData > data;
-    QMap< NodeImpl*, QString > labels = buildLabels( m_part->xmlDocImpl());
-    for( NodeImpl* n = m_part->xmlDocImpl();
-         n != NULL;
-         n = n->traverseNextNode()) {
-        if( n->isElementNode()) {
-            ElementImpl* element = static_cast< ElementImpl* >( n );
-            if( element->getAttribute( ATTR_ACCESSKEY ).length() == 1 )
+    QMap< NodeImpl *, QString > labels = buildLabels(m_part->xmlDocImpl());
+    for(NodeImpl *n = m_part->xmlDocImpl(); n != NULL; n = n->traverseNextNode())
+    {
+        if(n->isElementNode())
+        {
+            ElementImpl *element = static_cast< ElementImpl * >(n);
+            if(element->getAttribute(ATTR_ACCESSKEY).length() == 1)
                 continue; // has accesskey set, ignore
-            if( element->renderer() == NULL )
+            if(element->renderer() == NULL)
                 continue; // not visible
             QString text;
             QString url;
@@ -2510,21 +2658,24 @@ QMap< ElementImpl*, QChar > KHTMLView::buildFallbackAccessKeys() const
             bool ignore = false;
             bool text_after = false;
             bool text_before = false;
-            switch( element->id()) {
+            switch(element->id())
+            {
                 case ID_A:
                     url = khtml::parseURL(element->getAttribute(ATTR_HREF)).string();
-                    if( url.isEmpty()) // doesn't have href, it's only an anchor
+                    if(url.isEmpty()) // doesn't have href, it's only an anchor
                         continue;
-                    text = static_cast< HTMLElementImpl* >( element )->innerText().string().simplifyWhiteSpace();
+                    text = static_cast< HTMLElementImpl * >(element)->innerText().string().simplifyWhiteSpace();
                     priority = 2;
                     break;
-                case ID_INPUT: {
-                    HTMLInputElementImpl* in = static_cast< HTMLInputElementImpl* >( element );
-                    switch( in->inputType()) {
+                case ID_INPUT:
+                {
+                    HTMLInputElementImpl *in = static_cast< HTMLInputElementImpl * >(element);
+                    switch(in->inputType())
+                    {
                         case HTMLInputElementImpl::SUBMIT:
                             text = in->value().string();
-                            if( text.isEmpty())
-                                text = i18n( "Submit" );
+                            if(text.isEmpty())
+                                text = i18n("Submit");
                             priority = 7;
                             break;
                         case HTMLInputElementImpl::IMAGE:
@@ -2537,8 +2688,8 @@ QMap< ElementImpl*, QChar > KHTMLView::buildFallbackAccessKeys() const
                             break;
                         case HTMLInputElementImpl::RESET:
                             text = in->value().string();
-                            if( text.isEmpty())
-                                text = i18n( "Reset" );
+                            if(text.isEmpty())
+                                text = i18n("Reset");
                             priority = 5;
                             break;
                         case HTMLInputElementImpl::HIDDEN:
@@ -2562,22 +2713,23 @@ QMap< ElementImpl*, QChar > KHTMLView::buildFallbackAccessKeys() const
                     break;
                 }
                 case ID_BUTTON:
-                    text = static_cast< HTMLElementImpl* >( element )->innerText().string().simplifyWhiteSpace();
-                    switch( static_cast< HTMLButtonElementImpl* >( element )->buttonType()) {
+                    text = static_cast< HTMLElementImpl * >(element)->innerText().string().simplifyWhiteSpace();
+                    switch(static_cast< HTMLButtonElementImpl * >(element)->buttonType())
+                    {
                         case HTMLButtonElementImpl::SUBMIT:
-                            if( text.isEmpty())
-                                text = i18n( "Submit" );
+                            if(text.isEmpty())
+                                text = i18n("Submit");
                             priority = 7;
                             break;
                         case HTMLButtonElementImpl::RESET:
-                            if( text.isEmpty())
-                                text = i18n( "Reset" );
+                            if(text.isEmpty())
+                                text = i18n("Reset");
                             priority = 5;
                             break;
                         default:
                             priority = 5;
                             break;
-                    break;
+                            break;
                     }
                 case ID_SELECT: // these don't have accesskey attribute, but quick access may be handy
                     text_before = true;
@@ -2592,69 +2744,66 @@ QMap< ElementImpl*, QChar > KHTMLView::buildFallbackAccessKeys() const
                     priority = 2;
                     break;
             }
-            if( ignore )
+            if(ignore)
                 continue;
-            if( text.isNull() && labels.contains( element ))
-                text = labels[ element ];
-            if( text.isNull() && text_before )
-                text = getElementText( element, false );
-            if( text.isNull() && text_after )
-                text = getElementText( element, true );
+            if(text.isNull() && labels.contains(element))
+                text = labels[element];
+            if(text.isNull() && text_before)
+                text = getElementText(element, false);
+            if(text.isNull() && text_after)
+                text = getElementText(element, true);
             text = text.stripWhiteSpace();
             // increase priority of items which have explicitly specified accesskeys in the config
-            QValueList< QPair< QString, QChar > > priorities
-                = m_part->settings()->fallbackAccessKeysAssignments();
-            for( QValueList< QPair< QString, QChar > >::ConstIterator it = priorities.begin();
-                 it != priorities.end();
-                 ++it ) {
-                if( text == (*it).first )
+            QValueList< QPair< QString, QChar > > priorities = m_part->settings()->fallbackAccessKeysAssignments();
+            for(QValueList< QPair< QString, QChar > >::ConstIterator it = priorities.begin(); it != priorities.end(); ++it)
+            {
+                if(text == (*it).first)
                     priority = 10;
             }
-            AccessKeyData tmp = { element, text, url, priority };
-            data.append( tmp );
+            AccessKeyData tmp = {element, text, url, priority};
+            data.append(tmp);
         }
     }
 
     QValueList< QChar > keys;
-    for( char c = 'A'; c <= 'Z'; ++c )
+    for(char c = 'A'; c <= 'Z'; ++c)
         keys << c;
-    for( char c = '0'; c <= '9'; ++c )
+    for(char c = '0'; c <= '9'; ++c)
         keys << c;
-    for( NodeImpl* n = m_part->xmlDocImpl();
-         n != NULL;
-         n = n->traverseNextNode()) {
-        if( n->isElementNode()) {
-            ElementImpl* en = static_cast< ElementImpl* >( n );
-            DOMString s = en->getAttribute( ATTR_ACCESSKEY );
-            if( s.length() == 1 ) {
-                QChar c = s.string()[ 0 ].upper();
-                keys.remove( c ); // remove manually assigned accesskeys
+    for(NodeImpl *n = m_part->xmlDocImpl(); n != NULL; n = n->traverseNextNode())
+    {
+        if(n->isElementNode())
+        {
+            ElementImpl *en = static_cast< ElementImpl * >(n);
+            DOMString s = en->getAttribute(ATTR_ACCESSKEY);
+            if(s.length() == 1)
+            {
+                QChar c = s.string()[0].upper();
+                keys.remove(c); // remove manually assigned accesskeys
             }
         }
     }
 
-    QMap< ElementImpl*, QChar > ret;
-    for( int priority = 10;
-         priority >= 0;
-         --priority ) {
-        for( QValueList< AccessKeyData >::Iterator it = data.begin();
-             it != data.end();
-             ) {
-            if( (*it).priority != priority ) {
+    QMap< ElementImpl *, QChar > ret;
+    for(int priority = 10; priority >= 0; --priority)
+    {
+        for(QValueList< AccessKeyData >::Iterator it = data.begin(); it != data.end();)
+        {
+            if((*it).priority != priority)
+            {
                 ++it;
                 continue;
             }
-            if( keys.isEmpty())
+            if(keys.isEmpty())
                 break;
             QString text = (*it).text;
             QChar key;
-            if( key.isNull() && !text.isEmpty()) {
-                QValueList< QPair< QString, QChar > > priorities
-                    = m_part->settings()->fallbackAccessKeysAssignments();
-                for( QValueList< QPair< QString, QChar > >::ConstIterator it = priorities.begin();
-                     it != priorities.end();
-                     ++it )
-                    if( text == (*it).first && keys.contains( (*it).second )) {
+            if(key.isNull() && !text.isEmpty())
+            {
+                QValueList< QPair< QString, QChar > > priorities = m_part->settings()->fallbackAccessKeysAssignments();
+                for(QValueList< QPair< QString, QChar > >::ConstIterator it = priorities.begin(); it != priorities.end(); ++it)
+                    if(text == (*it).first && keys.contains((*it).second))
+                    {
                         key = (*it).second;
                         break;
                     }
@@ -2662,44 +2811,48 @@ QMap< ElementImpl*, QChar > KHTMLView::buildFallbackAccessKeys() const
             // try first to select the first character as the accesskey,
             // then first character of the following words,
             // and then simply the first free character
-            if( key.isNull() && !text.isEmpty()) {
-                QStringList words = QStringList::split( ' ', text );
-                for( QStringList::ConstIterator it = words.begin();
-                     it != words.end();
-                     ++it ) {
-                    if( keys.contains( (*it)[ 0 ].upper())) {
-                        key = (*it)[ 0 ].upper();
+            if(key.isNull() && !text.isEmpty())
+            {
+                QStringList words = QStringList::split(' ', text);
+                for(QStringList::ConstIterator it = words.begin(); it != words.end(); ++it)
+                {
+                    if(keys.contains((*it)[0].upper()))
+                    {
+                        key = (*it)[0].upper();
                         break;
                     }
                 }
             }
-            if( key.isNull() && !text.isEmpty()) {
-                for( unsigned int i = 0;
-                     i < text.length();
-                     ++i ) {
-                    if( keys.contains( text[ i ].upper())) {
-                        key = text[ i ].upper();
+            if(key.isNull() && !text.isEmpty())
+            {
+                for(unsigned int i = 0; i < text.length(); ++i)
+                {
+                    if(keys.contains(text[i].upper()))
+                    {
+                        key = text[i].upper();
                         break;
                     }
                 }
             }
-            if( key.isNull())
+            if(key.isNull())
                 key = keys.front();
-            ret[ (*it).element ] = key;
-            keys.remove( key );
+            ret[(*it).element] = key;
+            keys.remove(key);
             QString url = (*it).url;
-            it = data.remove( it );
+            it = data.remove(it);
             // assign the same accesskey also to other elements pointing to the same url
-            if( !url.isEmpty() && !url.startsWith( "javascript:", false )) {
-                for( QValueList< AccessKeyData >::Iterator it2 = data.begin();
-                     it2 != data.end();
-                     ) {
-                    if( (*it2).url == url ) {
-                        ret[ (*it2).element ] = key;
-                        if( it == it2 )
+            if(!url.isEmpty() && !url.startsWith("javascript:", false))
+            {
+                for(QValueList< AccessKeyData >::Iterator it2 = data.begin(); it2 != data.end();)
+                {
+                    if((*it2).url == url)
+                    {
+                        ret[(*it2).element] = key;
+                        if(it == it2)
                             ++it;
-                        it2 = data.remove( it2 );
-                    } else
+                        it2 = data.remove(it2);
+                    }
+                    else
                         ++it2;
                 }
             }
@@ -2708,7 +2861,7 @@ QMap< ElementImpl*, QChar > KHTMLView::buildFallbackAccessKeys() const
     return ret;
 }
 
-void KHTMLView::setMediaType( const QString &medium )
+void KHTMLView::setMediaType(const QString &medium)
 {
     m_medium = medium;
 }
@@ -2723,9 +2876,10 @@ bool KHTMLView::pagedMode() const
     return d->paged;
 }
 
-void KHTMLView::setWidgetVisible(RenderWidget* w, bool vis)
+void KHTMLView::setWidgetVisible(RenderWidget *w, bool vis)
 {
-    if (vis) {
+    if(vis)
+    {
         d->visibleWidgets.replace(w, w->widget());
     }
     else
@@ -2739,62 +2893,62 @@ bool KHTMLView::needsFullRepaint() const
 
 void KHTMLView::print()
 {
-    print( false );
+    print(false);
 }
 
 void KHTMLView::print(bool quick)
 {
-    if(!m_part->xmlDocImpl()) return;
-    khtml::RenderCanvas *root = static_cast<khtml::RenderCanvas *>(m_part->xmlDocImpl()->renderer());
-    if(!root) return;
+    if(!m_part->xmlDocImpl())
+        return;
+    khtml::RenderCanvas *root = static_cast< khtml::RenderCanvas * >(m_part->xmlDocImpl()->renderer());
+    if(!root)
+        return;
 
     KPrinter *printer = new KPrinter(true, QPrinter::ScreenResolution);
     printer->addDialogPage(new KHTMLPrintSettings());
     QString docname = m_part->xmlDocImpl()->URL().prettyURL();
-    if ( !docname.isEmpty() )
+    if(!docname.isEmpty())
         docname = KStringHandler::csqueeze(docname, 80);
-    if(quick || printer->setup(this, i18n("Print %1").arg(docname))) {
-        viewport()->setCursor( waitCursor ); // only viewport(), no QApplication::, otherwise we get the busy cursor in kdeprint's dialogs
+    if(quick || printer->setup(this, i18n("Print %1").arg(docname)))
+    {
+        viewport()->setCursor(waitCursor); // only viewport(), no QApplication::, otherwise we get the busy cursor in kdeprint's dialogs
         // set up KPrinter
         printer->setFullPage(false);
         printer->setCreator(QString("KDE %1.%2.%3 HTML Library").arg(KDE_VERSION_MAJOR).arg(KDE_VERSION_MINOR).arg(KDE_VERSION_RELEASE));
         printer->setDocName(docname);
 
         QPainter *p = new QPainter;
-        p->begin( printer );
-        khtml::setPrintPainter( p );
+        p->begin(printer);
+        khtml::setPrintPainter(p);
 
-        m_part->xmlDocImpl()->setPaintDevice( printer );
+        m_part->xmlDocImpl()->setPaintDevice(printer);
         QString oldMediaType = mediaType();
-        setMediaType( "print" );
+        setMediaType("print");
         // We ignore margin settings for html and body when printing
         // and use the default margins from the print-system
         // (In Qt 3.0.x the default margins are hardcoded in Qt)
-        m_part->xmlDocImpl()->setPrintStyleSheet( printer->option("app-khtml-printfriendly") == "true" ?
-                                                  "* { background-image: none !important;"
-                                                  "    background-color: white !important;"
-                                                  "    color: black !important; }"
-						  "body { margin: 0px !important; }"
-						  "html { margin: 0px !important; }" :
-						  "body { margin: 0px !important; }"
-						  "html { margin: 0px !important; }"
-						  );
+        m_part->xmlDocImpl()->setPrintStyleSheet(printer->option("app-khtml-printfriendly") == "true" ? "* { background-image: none !important;"
+                                                                                                        "    background-color: white !important;"
+                                                                                                        "    color: black !important; }"
+                                                                                                        "body { margin: 0px !important; }"
+                                                                                                        "html { margin: 0px !important; }"
+                                                                                                      : "body { margin: 0px !important; }"
+                                                                                                        "html { margin: 0px !important; }");
 
-        QPaintDeviceMetrics metrics( printer );
+        QPaintDeviceMetrics metrics(printer);
 
-        kdDebug(6000) << "printing: physical page width = " << metrics.width()
-                      << " height = " << metrics.height() << endl;
+        kdDebug(6000) << "printing: physical page width = " << metrics.width() << " height = " << metrics.height() << endl;
         root->setStaticMode(true);
         root->setPagedMode(true);
         root->setWidth(metrics.width());
-//         root->setHeight(metrics.height());
+        //         root->setHeight(metrics.height());
         root->setPageTop(0);
         root->setPageBottom(0);
         d->paged = true;
 
         m_part->xmlDocImpl()->styleSelector()->computeFontSizes(&metrics, 100);
         m_part->xmlDocImpl()->updateStyleSelector();
-        root->setPrintImages( printer->option("app-khtml-printimages") == "true");
+        root->setPrintImages(printer->option("app-khtml-printimages") == "true");
         root->makePageBreakAvoidBlocks();
 
         root->setNeedsLayoutAndMinMaxRecalc();
@@ -2808,75 +2962,76 @@ void KHTMLView::print(bool quick)
         int headerHeight = 0;
         QFont headerFont("Sans Serif", 8);
 
-        QString headerLeft = KGlobal::locale()->formatDate(QDate::currentDate(),true);
+        QString headerLeft = KGlobal::locale()->formatDate(QDate::currentDate(), true);
         QString headerMid = docname;
         QString headerRight;
 
-        if (printHeader)
+        if(printHeader)
         {
-           p->setFont(headerFont);
-           headerHeight = (p->fontMetrics().lineSpacing() * 3) / 2;
+            p->setFont(headerFont);
+            headerHeight = (p->fontMetrics().lineSpacing() * 3) / 2;
         }
 
         // ok. now print the pages.
-        kdDebug(6000) << "printing: html page width = " << root->docWidth()
-                      << " height = " << root->docHeight() << endl;
-        kdDebug(6000) << "printing: margins left = " << printer->margins().width()
-                      << " top = " << printer->margins().height() << endl;
-        kdDebug(6000) << "printing: paper width = " << metrics.width()
-                      << " height = " << metrics.height() << endl;
+        kdDebug(6000) << "printing: html page width = " << root->docWidth() << " height = " << root->docHeight() << endl;
+        kdDebug(6000) << "printing: margins left = " << printer->margins().width() << " top = " << printer->margins().height() << endl;
+        kdDebug(6000) << "printing: paper width = " << metrics.width() << " height = " << metrics.height() << endl;
         // if the width is too large to fit on the paper we just scale
         // the whole thing.
         int pageWidth = metrics.width();
         int pageHeight = metrics.height();
-        p->setClipRect(0,0, pageWidth, pageHeight);
+        p->setClipRect(0, 0, pageWidth, pageHeight);
 
         pageHeight -= headerHeight;
 
         bool scalePage = false;
         double scale = 0.0;
 #ifndef QT_NO_TRANSFORMATIONS
-        if(root->docWidth() > metrics.width()) {
+        if(root->docWidth() > metrics.width())
+        {
             scalePage = true;
-            scale = ((double) metrics.width())/((double) root->docWidth());
-            pageHeight = (int) (pageHeight/scale);
-            pageWidth = (int) (pageWidth/scale);
-            headerHeight = (int) (headerHeight/scale);
+            scale = ((double)metrics.width()) / ((double)root->docWidth());
+            pageHeight = (int)(pageHeight / scale);
+            pageWidth = (int)(pageWidth / scale);
+            headerHeight = (int)(headerHeight / scale);
         }
 #endif
-        kdDebug(6000) << "printing: scaled html width = " << pageWidth
-                      << " height = " << pageHeight << endl;
+        kdDebug(6000) << "printing: scaled html width = " << pageWidth << " height = " << pageHeight << endl;
 
         root->setHeight(pageHeight);
         root->setPageBottom(pageHeight);
         root->setNeedsLayout(true);
         root->layoutIfNeeded();
-//         m_part->slotDebugRenderTree();
+        //         m_part->slotDebugRenderTree();
 
         // Squeeze header to make it it on the page.
-        if (printHeader)
+        if(printHeader)
         {
-            int available_width = metrics.width() - 10 -
-                2 * kMax(p->boundingRect(0, 0, metrics.width(), p->fontMetrics().lineSpacing(), Qt::AlignLeft, headerLeft).width(),
-                         p->boundingRect(0, 0, metrics.width(), p->fontMetrics().lineSpacing(), Qt::AlignLeft, headerRight).width());
-            if (available_width < 150)
-               available_width = 150;
+            int available_width =
+                metrics.width() - 10
+                - 2 * kMax(p->boundingRect(0, 0, metrics.width(), p->fontMetrics().lineSpacing(), Qt::AlignLeft, headerLeft).width(),
+                           p->boundingRect(0, 0, metrics.width(), p->fontMetrics().lineSpacing(), Qt::AlignLeft, headerRight).width());
+            if(available_width < 150)
+                available_width = 150;
             int mid_width;
             int squeeze = 120;
-            do {
+            do
+            {
                 headerMid = KStringHandler::csqueeze(docname, squeeze);
                 mid_width = p->boundingRect(0, 0, metrics.width(), p->fontMetrics().lineSpacing(), Qt::AlignLeft, headerMid).width();
                 squeeze -= 10;
-            } while (mid_width > available_width);
+            } while(mid_width > available_width);
         }
 
         int top = 0;
         int bottom = 0;
         int page = 1;
-        while(top < root->docHeight()) {
-            if(top > 0) printer->newPage();
+        while(top < root->docHeight())
+        {
+            if(top > 0)
+                printer->newPage();
             p->setClipRect(0, 0, pageWidth, headerHeight, QPainter::CoordDevice);
-            if (printHeader)
+            if(printHeader)
             {
                 int dy = p->fontMetrics().lineSpacing();
                 p->setPen(Qt::black);
@@ -2891,24 +3046,24 @@ void KHTMLView::print(bool quick)
 
 
 #ifndef QT_NO_TRANSFORMATIONS
-            if (scalePage)
+            if(scalePage)
                 p->scale(scale, scale);
 #endif
 
             p->setClipRect(0, headerHeight, pageWidth, pageHeight, QPainter::CoordDevice);
-            p->translate(0, headerHeight-top);
+            p->translate(0, headerHeight - top);
 
-            bottom = top+pageHeight;
+            bottom = top + pageHeight;
 
             root->setPageTop(top);
             root->setPageBottom(bottom);
             root->setPageNumber(page);
 
             root->layer()->paint(p, QRect(0, top, pageWidth, pageHeight));
-//             m_part->xmlDocImpl()->renderer()->layer()->paint(p, QRect(0, top, pageWidth, pageHeight));
-//             root->repaint();
-//             p->flush();
-            kdDebug(6000) << "printed: page " << page <<" bottom At = " << bottom << endl;
+            //             m_part->xmlDocImpl()->renderer()->layer()->paint(p, QRect(0, top, pageWidth, pageHeight));
+            //             root->repaint();
+            //             p->flush();
+            kdDebug(6000) << "printed: page " << page << " bottom At = " << bottom << endl;
 
             top = bottom;
             p->resetXForm();
@@ -2922,9 +3077,9 @@ void KHTMLView::print(bool quick)
         root->setPagedMode(false);
         root->setStaticMode(false);
         d->paged = false;
-        khtml::setPrintPainter( 0 );
-        setMediaType( oldMediaType );
-        m_part->xmlDocImpl()->setPaintDevice( this );
+        khtml::setPrintPainter(0);
+        setMediaType(oldMediaType);
+        m_part->xmlDocImpl()->setPaintDevice(this);
         m_part->xmlDocImpl()->styleSelector()->computeFontSizes(m_part->xmlDocImpl()->paintDeviceMetrics(), m_part->zoomFactor());
         m_part->xmlDocImpl()->updateStyleSelector();
         viewport()->unsetCursor();
@@ -2934,23 +3089,29 @@ void KHTMLView::print(bool quick)
 
 void KHTMLView::slotPaletteChanged()
 {
-    if(!m_part->xmlDocImpl()) return;
+    if(!m_part->xmlDocImpl())
+        return;
     DOM::DocumentImpl *document = m_part->xmlDocImpl();
-    if (!document->isHTMLDocument()) return;
-    khtml::RenderCanvas *root = static_cast<khtml::RenderCanvas *>(document->renderer());
-    if(!root) return;
+    if(!document->isHTMLDocument())
+        return;
+    khtml::RenderCanvas *root = static_cast< khtml::RenderCanvas * >(document->renderer());
+    if(!root)
+        return;
     root->style()->resetPalette();
-    NodeImpl *body = static_cast<HTMLDocumentImpl*>(document)->body();
-    if(!body) return;
+    NodeImpl *body = static_cast< HTMLDocumentImpl * >(document)->body();
+    if(!body)
+        return;
     body->setChanged(true);
-    body->recalcStyle( NodeImpl::Force );
+    body->recalcStyle(NodeImpl::Force);
 }
 
 void KHTMLView::paint(QPainter *p, const QRect &rc, int yOff, bool *more)
 {
-    if(!m_part->xmlDocImpl()) return;
-    khtml::RenderCanvas *root = static_cast<khtml::RenderCanvas *>(m_part->xmlDocImpl()->renderer());
-    if(!root) return;
+    if(!m_part->xmlDocImpl())
+        return;
+    khtml::RenderCanvas *root = static_cast< khtml::RenderCanvas * >(m_part->xmlDocImpl()->renderer());
+    if(!root)
+        return;
 
     m_part->xmlDocImpl()->setPaintDevice(p->device());
     root->setPagedMode(true);
@@ -2960,22 +3121,22 @@ void KHTMLView::paint(QPainter *p, const QRect &rc, int yOff, bool *more)
     p->save();
     p->setClipRect(rc);
     p->translate(rc.left(), rc.top());
-    double scale = ((double) rc.width()/(double) root->docWidth());
-    int height = (int) ((double) rc.height() / scale);
+    double scale = ((double)rc.width() / (double)root->docWidth());
+    int height = (int)((double)rc.height() / scale);
 #ifndef QT_NO_TRANSFORMATIONS
     p->scale(scale, scale);
 #endif
     root->setPageTop(yOff);
-    root->setPageBottom(yOff+height);
+    root->setPageBottom(yOff + height);
 
     root->layer()->paint(p, QRect(0, yOff, root->docWidth(), height));
-    if (more)
+    if(more)
         *more = yOff + height < root->docHeight();
     p->restore();
 
     root->setPagedMode(false);
     root->setStaticMode(false);
-    m_part->xmlDocImpl()->setPaintDevice( this );
+    m_part->xmlDocImpl()->setPaintDevice(this);
 }
 
 
@@ -2986,23 +3147,23 @@ void KHTMLView::useSlowRepaints()
 }
 
 
-void KHTMLView::setVScrollBarMode ( ScrollBarMode mode )
+void KHTMLView::setVScrollBarMode(ScrollBarMode mode)
 {
 #ifndef KHTML_NO_SCROLLBARS
     d->vmode = mode;
     QScrollView::setVScrollBarMode(mode);
 #else
-    Q_UNUSED( mode );
+    Q_UNUSED(mode);
 #endif
 }
 
-void KHTMLView::setHScrollBarMode ( ScrollBarMode mode )
+void KHTMLView::setHScrollBarMode(ScrollBarMode mode)
 {
 #ifndef KHTML_NO_SCROLLBARS
     d->hmode = mode;
     QScrollView::setHScrollBarMode(mode);
 #else
-    Q_UNUSED( mode );
+    Q_UNUSED(mode);
 #endif
 }
 
@@ -3010,23 +3171,23 @@ void KHTMLView::restoreScrollBar()
 {
     int ow = visibleWidth();
     QScrollView::setVScrollBarMode(d->vmode);
-    if (visibleWidth() != ow)
+    if(visibleWidth() != ow)
         layout();
     d->prevScrollbarVisible = verticalScrollBar()->isVisible();
 }
 
 QStringList KHTMLView::formCompletionItems(const QString &name) const
 {
-    if (!m_part->settings()->isFormCompletionEnabled())
+    if(!m_part->settings()->isFormCompletionEnabled())
         return QStringList();
-    if (!d->formCompletions)
+    if(!d->formCompletions)
         d->formCompletions = new KSimpleConfig(locateLocal("data", "khtml/formcompletions"));
     return d->formCompletions->readListEntry(name);
 }
 
-void KHTMLView::clearCompletionHistory(const QString& name)
+void KHTMLView::clearCompletionHistory(const QString &name)
 {
-    if (!d->formCompletions)
+    if(!d->formCompletions)
     {
         d->formCompletions = new KSimpleConfig(locateLocal("data", "khtml/formcompletions"));
     }
@@ -3036,34 +3197,35 @@ void KHTMLView::clearCompletionHistory(const QString& name)
 
 void KHTMLView::addFormCompletionItem(const QString &name, const QString &value)
 {
-    if (!m_part->settings()->isFormCompletionEnabled())
+    if(!m_part->settings()->isFormCompletionEnabled())
         return;
     // don't store values that are all numbers or just numbers with
     // dashes or spaces as those are likely credit card numbers or
     // something similar
     bool cc_number(true);
-    for (unsigned int i = 0; i < value.length(); ++i)
+    for(unsigned int i = 0; i < value.length(); ++i)
     {
-      QChar c(value[i]);
-      if (!c.isNumber() && c != '-' && !c.isSpace())
-      {
-        cc_number = false;
-        break;
-      }
+        QChar c(value[i]);
+        if(!c.isNumber() && c != '-' && !c.isSpace())
+        {
+            cc_number = false;
+            break;
+        }
     }
-    if (cc_number)
-      return;
+    if(cc_number)
+        return;
     QStringList items = formCompletionItems(name);
-    if (!items.contains(value))
+    if(!items.contains(value))
         items.prepend(value);
-    while ((int)items.count() > m_part->settings()->maxFormCompletionItems())
+    while((int)items.count() > m_part->settings()->maxFormCompletionItems())
         items.remove(items.fromLast());
     d->formCompletions->writeEntry(name, items);
 }
 
-void KHTMLView::addNonPasswordStorableSite(const QString& host)
+void KHTMLView::addNonPasswordStorableSite(const QString &host)
 {
-    if (!d->formCompletions) {
+    if(!d->formCompletions)
+    {
         d->formCompletions = new KSimpleConfig(locateLocal("data", "khtml/formcompletions"));
     }
 
@@ -3072,42 +3234,41 @@ void KHTMLView::addNonPasswordStorableSite(const QString& host)
     sites.append(host);
     d->formCompletions->writeEntry("Sites", sites);
     d->formCompletions->sync();
-    d->formCompletions->setGroup(QString::null);//reset
+    d->formCompletions->setGroup(QString::null); // reset
 }
 
-bool KHTMLView::nonPasswordStorableSite(const QString& host) const
+bool KHTMLView::nonPasswordStorableSite(const QString &host) const
 {
-    if (!d->formCompletions) {
+    if(!d->formCompletions)
+    {
         d->formCompletions = new KSimpleConfig(locateLocal("data", "khtml/formcompletions"));
     }
     d->formCompletions->setGroup("NonPasswordStorableSites");
-    QStringList sites =  d->formCompletions->readListEntry("Sites");
-    d->formCompletions->setGroup(QString::null);//reset
+    QStringList sites = d->formCompletions->readListEntry("Sites");
+    d->formCompletions->setGroup(QString::null); // reset
 
     return (sites.find(host) != sites.end());
 }
 
 // returns true if event should be swallowed
-bool KHTMLView::dispatchMouseEvent(int eventId, DOM::NodeImpl *targetNode,
-				   DOM::NodeImpl *targetNodeNonShared, bool cancelable,
-				   int detail,QMouseEvent *_mouse, bool setUnder,
-				   int mouseEventType)
+bool KHTMLView::dispatchMouseEvent(int eventId, DOM::NodeImpl *targetNode, DOM::NodeImpl *targetNodeNonShared, bool cancelable, int detail,
+                                   QMouseEvent *_mouse, bool setUnder, int mouseEventType)
 {
     // if the target node is a text node, dispatch on the parent node - rdar://4196646 (and #76948)
-    if (targetNode && targetNode->isTextNode())
+    if(targetNode && targetNode->isTextNode())
         targetNode = targetNode->parentNode();
 
-    if (d->underMouse)
-	d->underMouse->deref();
+    if(d->underMouse)
+        d->underMouse->deref();
     d->underMouse = targetNode;
-    if (d->underMouse)
-	d->underMouse->ref();
+    if(d->underMouse)
+        d->underMouse->ref();
 
-    if (d->underMouseNonShared)
-	d->underMouseNonShared->deref();
+    if(d->underMouseNonShared)
+        d->underMouseNonShared->deref();
     d->underMouseNonShared = targetNodeNonShared;
-    if (d->underMouseNonShared)
-	d->underMouseNonShared->ref();
+    if(d->underMouseNonShared)
+        d->underMouseNonShared->ref();
 
     int exceptioncode = 0;
     int pageX = 0;
@@ -3118,21 +3279,22 @@ bool KHTMLView::dispatchMouseEvent(int eventId, DOM::NodeImpl *targetNode,
     int screenX = _mouse->globalX();
     int screenY = _mouse->globalY();
     int button = -1;
-    switch (_mouse->button()) {
-	case LeftButton:
-	    button = 0;
-	    break;
-	case MidButton:
-	    button = 1;
-	    break;
-	case RightButton:
-	    button = 2;
-	    break;
-	default:
-	    break;
+    switch(_mouse->button())
+    {
+        case LeftButton:
+            button = 0;
+            break;
+        case MidButton:
+            button = 1;
+            break;
+        case RightButton:
+            button = 2;
+            break;
+        default:
+            break;
     }
-    if (d->accessKeysEnabled && d->accessKeysPreActivate && button!=-1)
-    	d->accessKeysPreActivate=false;
+    if(d->accessKeysEnabled && d->accessKeysPreActivate && button != -1)
+        d->accessKeysPreActivate = false;
 
     bool ctrlKey = (_mouse->state() & ControlButton);
     bool altKey = (_mouse->state() & AltButton);
@@ -3140,80 +3302,82 @@ bool KHTMLView::dispatchMouseEvent(int eventId, DOM::NodeImpl *targetNode,
     bool metaKey = (_mouse->state() & MetaButton);
 
     // mouseout/mouseover
-    if (setUnder && (d->prevMouseX != pageX || d->prevMouseY != pageY)) {
+    if(setUnder && (d->prevMouseX != pageX || d->prevMouseY != pageY))
+    {
 
         // ### this code sucks. we should save the oldUnder instead of calculating
         // it again. calculating is expensive! (Dirk)
         NodeImpl *oldUnder = 0;
-	if (d->prevMouseX >= 0 && d->prevMouseY >= 0) {
-	    NodeImpl::MouseEvent mev( _mouse->stateAfter(), static_cast<NodeImpl::MouseEventType>(mouseEventType));
-	    m_part->xmlDocImpl()->prepareMouseEvent( true, d->prevMouseX, d->prevMouseY, &mev );
-	    oldUnder = mev.innerNode.handle();
+        if(d->prevMouseX >= 0 && d->prevMouseY >= 0)
+        {
+            NodeImpl::MouseEvent mev(_mouse->stateAfter(), static_cast< NodeImpl::MouseEventType >(mouseEventType));
+            m_part->xmlDocImpl()->prepareMouseEvent(true, d->prevMouseX, d->prevMouseY, &mev);
+            oldUnder = mev.innerNode.handle();
 
-            if (oldUnder && oldUnder->isTextNode())
+            if(oldUnder && oldUnder->isTextNode())
                 oldUnder = oldUnder->parentNode();
-	}
-// 	qDebug("oldunder=%p (%s), target=%p (%s) x/y=%d/%d", oldUnder, oldUnder ? oldUnder->renderer()->renderName() : 0, targetNode,  targetNode ? targetNode->renderer()->renderName() : 0, _mouse->x(), _mouse->y());
-	if (oldUnder != targetNode) {
-	    // send mouseout event to the old node
-	    if (oldUnder){
-		oldUnder->ref();
-		MouseEventImpl *me = new MouseEventImpl(EventImpl::MOUSEOUT_EVENT,
-							true,true,m_part->xmlDocImpl()->defaultView(),
-							0,screenX,screenY,clientX,clientY,pageX, pageY,
-							ctrlKey,altKey,shiftKey,metaKey,
-							button,targetNode);
-		me->ref();
-		oldUnder->dispatchEvent(me,exceptioncode,true);
-		me->deref();
-	    }
+        }
+        // 	qDebug("oldunder=%p (%s), target=%p (%s) x/y=%d/%d", oldUnder, oldUnder ? oldUnder->renderer()->renderName() : 0, targetNode,  targetNode
+        // ? targetNode->renderer()->renderName() : 0, _mouse->x(), _mouse->y());
+        if(oldUnder != targetNode)
+        {
+            // send mouseout event to the old node
+            if(oldUnder)
+            {
+                oldUnder->ref();
+                MouseEventImpl *me =
+                    new MouseEventImpl(EventImpl::MOUSEOUT_EVENT, true, true, m_part->xmlDocImpl()->defaultView(), 0, screenX, screenY, clientX,
+                                       clientY, pageX, pageY, ctrlKey, altKey, shiftKey, metaKey, button, targetNode);
+                me->ref();
+                oldUnder->dispatchEvent(me, exceptioncode, true);
+                me->deref();
+            }
 
-	    // send mouseover event to the new node
-	    if (targetNode) {
-		MouseEventImpl *me = new MouseEventImpl(EventImpl::MOUSEOVER_EVENT,
-							true,true,m_part->xmlDocImpl()->defaultView(),
-							0,screenX,screenY,clientX,clientY,pageX, pageY,
-							ctrlKey,altKey,shiftKey,metaKey,
-							button,oldUnder);
+            // send mouseover event to the new node
+            if(targetNode)
+            {
+                MouseEventImpl *me =
+                    new MouseEventImpl(EventImpl::MOUSEOVER_EVENT, true, true, m_part->xmlDocImpl()->defaultView(), 0, screenX, screenY, clientX,
+                                       clientY, pageX, pageY, ctrlKey, altKey, shiftKey, metaKey, button, oldUnder);
 
-		me->ref();
-		targetNode->dispatchEvent(me,exceptioncode,true);
-		me->deref();
-	    }
+                me->ref();
+                targetNode->dispatchEvent(me, exceptioncode, true);
+                me->deref();
+            }
 
-            if (oldUnder)
+            if(oldUnder)
                 oldUnder->deref();
         }
     }
 
     bool swallowEvent = false;
 
-    if (targetNode) {
+    if(targetNode)
+    {
         // send the actual event
-        bool dblclick = ( eventId == EventImpl::CLICK_EVENT &&
-                          _mouse->type() == QEvent::MouseButtonDblClick );
-        MouseEventImpl *me = new MouseEventImpl(static_cast<EventImpl::EventId>(eventId),
-						true,cancelable,m_part->xmlDocImpl()->defaultView(),
-						detail,screenX,screenY,clientX,clientY,pageX, pageY,
-						ctrlKey,altKey,shiftKey,metaKey,
-						button,0, _mouse, dblclick );
+        bool dblclick = (eventId == EventImpl::CLICK_EVENT && _mouse->type() == QEvent::MouseButtonDblClick);
+        MouseEventImpl *me =
+            new MouseEventImpl(static_cast< EventImpl::EventId >(eventId), true, cancelable, m_part->xmlDocImpl()->defaultView(), detail, screenX,
+                               screenY, clientX, clientY, pageX, pageY, ctrlKey, altKey, shiftKey, metaKey, button, 0, _mouse, dblclick);
         me->ref();
-        targetNode->dispatchEvent(me,exceptioncode,true);
-	bool defaultHandled = me->defaultHandled();
-        if (defaultHandled || me->defaultPrevented())
+        targetNode->dispatchEvent(me, exceptioncode, true);
+        bool defaultHandled = me->defaultHandled();
+        if(defaultHandled || me->defaultPrevented())
             swallowEvent = true;
         me->deref();
 
-        if (eventId == EventImpl::MOUSEDOWN_EVENT) {
+        if(eventId == EventImpl::MOUSEDOWN_EVENT)
+        {
             // Focus should be shifted on mouse down, not on a click.  -dwh
             // Blur current focus node when a link/button is clicked; this
             // is expected by some sites that rely on onChange handlers running
             // from form fields before the button click is processed.
-            DOM::NodeImpl* nodeImpl = targetNode;
-            for ( ; nodeImpl && !nodeImpl->isFocusable(); nodeImpl = nodeImpl->parentNode());
-            if (nodeImpl && nodeImpl->isMouseFocusable())
+            DOM::NodeImpl *nodeImpl = targetNode;
+            for(; nodeImpl && !nodeImpl->isFocusable(); nodeImpl = nodeImpl->parentNode())
+                ;
+            if(nodeImpl && nodeImpl->isMouseFocusable())
                 m_part->xmlDocImpl()->setFocusNode(nodeImpl);
-            else if (!nodeImpl || !nodeImpl->focused())
+            else if(!nodeImpl || !nodeImpl->focused())
                 m_part->xmlDocImpl()->setFocusNode(0);
         }
     }
@@ -3221,305 +3385,309 @@ bool KHTMLView::dispatchMouseEvent(int eventId, DOM::NodeImpl *targetNode,
     return swallowEvent;
 }
 
-void KHTMLView::setIgnoreWheelEvents( bool e )
+void KHTMLView::setIgnoreWheelEvents(bool e)
 {
     d->ignoreWheelEvents = e;
 }
 
 #ifndef QT_NO_WHEELEVENT
 
-void KHTMLView::viewportWheelEvent(QWheelEvent* e)
+void KHTMLView::viewportWheelEvent(QWheelEvent *e)
 {
-    if (d->accessKeysEnabled && d->accessKeysPreActivate) d->accessKeysPreActivate=false;
+    if(d->accessKeysEnabled && d->accessKeysPreActivate)
+        d->accessKeysPreActivate = false;
 
-    if ( ( e->state() & ControlButton) == ControlButton )
+    if((e->state() & ControlButton) == ControlButton)
     {
-        emit zoomView( - e->delta() );
+        emit zoomView(-e->delta());
         e->accept();
     }
-    else if (d->firstRelayout)
+    else if(d->firstRelayout)
     {
         e->accept();
     }
-    else if( (   (e->orientation() == Vertical &&
-                   ((d->ignoreWheelEvents && !verticalScrollBar()->isVisible())
-                     || e->delta() > 0 && contentsY() <= 0
-                     || e->delta() < 0 && contentsY() >= contentsHeight() - visibleHeight()))
-              ||
-                 (e->orientation() == Horizontal &&
-                    ((d->ignoreWheelEvents && !horizontalScrollBar()->isVisible())
-                     || e->delta() > 0 && contentsX() <=0
+    else if(((e->orientation() == Vertical && ((d->ignoreWheelEvents && !verticalScrollBar()->isVisible()) || e->delta() > 0 && contentsY() <= 0
+                                               || e->delta() < 0 && contentsY() >= contentsHeight() - visibleHeight()))
+             || (e->orientation() == Horizontal
+                 && ((d->ignoreWheelEvents && !horizontalScrollBar()->isVisible()) || e->delta() > 0 && contentsX() <= 0
                      || e->delta() < 0 && contentsX() >= contentsWidth() - visibleWidth())))
             && m_part->parentPart())
     {
-        if ( m_part->parentPart()->view() )
-            m_part->parentPart()->view()->wheelEvent( e );
+        if(m_part->parentPart()->view())
+            m_part->parentPart()->view()->wheelEvent(e);
         e->ignore();
     }
     else
     {
         d->scrollBarMoved = true;
-        QScrollView::viewportWheelEvent( e );
+        QScrollView::viewportWheelEvent(e);
 
-        QMouseEvent *tempEvent = new QMouseEvent( QEvent::MouseMove, QPoint(-1,-1), QPoint(-1,-1), Qt::NoButton, e->state() );
-        emit viewportMouseMoveEvent ( tempEvent );
+        QMouseEvent *tempEvent = new QMouseEvent(QEvent::MouseMove, QPoint(-1, -1), QPoint(-1, -1), Qt::NoButton, e->state());
+        emit viewportMouseMoveEvent(tempEvent);
         delete tempEvent;
     }
-
 }
 #endif
 
-void KHTMLView::dragEnterEvent( QDragEnterEvent* ev )
+void KHTMLView::dragEnterEvent(QDragEnterEvent *ev)
 {
     // Handle drops onto frames (#16820)
     // Drops on the main html part is handled by Konqueror (and shouldn't do anything
     // in e.g. kmail, so not handled here).
-    if ( m_part->parentPart() )
+    if(m_part->parentPart())
     {
-    	QApplication::sendEvent(m_part->parentPart()->widget(), ev);
-	return;
+        QApplication::sendEvent(m_part->parentPart()->widget(), ev);
+        return;
     }
-    QScrollView::dragEnterEvent( ev );
+    QScrollView::dragEnterEvent(ev);
 }
 
-void KHTMLView::dropEvent( QDropEvent *ev )
+void KHTMLView::dropEvent(QDropEvent *ev)
 {
     // Handle drops onto frames (#16820)
     // Drops on the main html part is handled by Konqueror (and shouldn't do anything
     // in e.g. kmail, so not handled here).
-    if ( m_part->parentPart() )
+    if(m_part->parentPart())
     {
-    	QApplication::sendEvent(m_part->parentPart()->widget(), ev);
-	return;
+        QApplication::sendEvent(m_part->parentPart()->widget(), ev);
+        return;
     }
-    QScrollView::dropEvent( ev );
+    QScrollView::dropEvent(ev);
 }
 
-void KHTMLView::focusInEvent( QFocusEvent *e )
+void KHTMLView::focusInEvent(QFocusEvent *e)
 {
 #ifndef KHTML_NO_TYPE_AHEAD_FIND
-    m_part->enableFindAheadActions( true );
+    m_part->enableFindAheadActions(true);
 #endif
-    DOM::NodeImpl* fn = m_part->xmlDocImpl() ? m_part->xmlDocImpl()->focusNode() : 0;
-    if (fn && fn->renderer() && fn->renderer()->isWidget() &&
-        (e->reason() != QFocusEvent::Mouse) &&
-        static_cast<khtml::RenderWidget*>(fn->renderer())->widget())
-        static_cast<khtml::RenderWidget*>(fn->renderer())->widget()->setFocus();
+    DOM::NodeImpl *fn = m_part->xmlDocImpl() ? m_part->xmlDocImpl()->focusNode() : 0;
+    if(fn && fn->renderer() && fn->renderer()->isWidget() && (e->reason() != QFocusEvent::Mouse)
+       && static_cast< khtml::RenderWidget * >(fn->renderer())->widget())
+        static_cast< khtml::RenderWidget * >(fn->renderer())->widget()->setFocus();
 #ifndef KHTML_NO_CARET
     // Restart blink frequency timer if it has been killed, but only on
     // editable nodes
-    if (d->m_caretViewContext &&
-        d->m_caretViewContext->freqTimerId == -1 &&
-        fn) {
-        if (m_part->isCaretMode()
-		|| m_part->isEditable()
-     		|| (fn && fn->renderer()
-			&& fn->renderer()->style()->userInput()
-				== UI_ENABLED)) {
+    if(d->m_caretViewContext && d->m_caretViewContext->freqTimerId == -1 && fn)
+    {
+        if(m_part->isCaretMode() || m_part->isEditable() || (fn && fn->renderer() && fn->renderer()->style()->userInput() == UI_ENABLED))
+        {
             d->m_caretViewContext->freqTimerId = startTimer(500);
-	    d->m_caretViewContext->visible = true;
-        }/*end if*/
-    }/*end if*/
+            d->m_caretViewContext->visible = true;
+        } /*end if*/
+    }     /*end if*/
     showCaret();
 #endif // KHTML_NO_CARET
-    QScrollView::focusInEvent( e );
+    QScrollView::focusInEvent(e);
 }
 
-void KHTMLView::focusOutEvent( QFocusEvent *e )
+void KHTMLView::focusOutEvent(QFocusEvent *e)
 {
-    if(m_part) m_part->stopAutoScroll();
+    if(m_part)
+        m_part->stopAutoScroll();
 
 #ifndef KHTML_NO_TYPE_AHEAD_FIND
     if(d->typeAheadActivated)
     {
         findTimeout();
     }
-    m_part->enableFindAheadActions( false );
+    m_part->enableFindAheadActions(false);
 #endif // KHTML_NO_TYPE_AHEAD_FIND
 
 #ifndef KHTML_NO_CARET
-    if (d->m_caretViewContext) {
-        switch (d->m_caretViewContext->displayNonFocused) {
-	case KHTMLPart::CaretInvisible:
-            hideCaret();
-	    break;
-	case KHTMLPart::CaretVisible: {
-	    killTimer(d->m_caretViewContext->freqTimerId);
-	    d->m_caretViewContext->freqTimerId = -1;
-            NodeImpl *caretNode = m_part->xmlDocImpl()->focusNode();
-	    if (!d->m_caretViewContext->visible && (m_part->isCaretMode()
-		|| m_part->isEditable()
-     		|| (caretNode && caretNode->renderer()
-			&& caretNode->renderer()->style()->userInput()
-				== UI_ENABLED))) {
-	        d->m_caretViewContext->visible = true;
-	        showCaret(true);
-	    }/*end if*/
-	    break;
-	}
-	case KHTMLPart::CaretBlink:
-	    // simply leave as is
-	    break;
-	}/*end switch*/
-    }/*end if*/
-#endif // KHTML_NO_CARET
+    if(d->m_caretViewContext)
+    {
+        switch(d->m_caretViewContext->displayNonFocused)
+        {
+            case KHTMLPart::CaretInvisible:
+                hideCaret();
+                break;
+            case KHTMLPart::CaretVisible:
+            {
+                killTimer(d->m_caretViewContext->freqTimerId);
+                d->m_caretViewContext->freqTimerId = -1;
+                NodeImpl *caretNode = m_part->xmlDocImpl()->focusNode();
+                if(!d->m_caretViewContext->visible
+                   && (m_part->isCaretMode() || m_part->isEditable()
+                       || (caretNode && caretNode->renderer() && caretNode->renderer()->style()->userInput() == UI_ENABLED)))
+                {
+                    d->m_caretViewContext->visible = true;
+                    showCaret(true);
+                } /*end if*/
+                break;
+            }
+            case KHTMLPart::CaretBlink:
+                // simply leave as is
+                break;
+        } /*end switch*/
+    }     /*end if*/
+#endif    // KHTML_NO_CARET
 
-    if ( d->cursor_icon_widget )
+    if(d->cursor_icon_widget)
         d->cursor_icon_widget->hide();
 
-    QScrollView::focusOutEvent( e );
+    QScrollView::focusOutEvent(e);
 }
 
 void KHTMLView::slotScrollBarMoved()
 {
-    if ( !d->firstRelayout && !d->complete && m_part->xmlDocImpl() &&
-          d->layoutSchedulingEnabled) {
+    if(!d->firstRelayout && !d->complete && m_part->xmlDocImpl() && d->layoutSchedulingEnabled)
+    {
         // contents scroll while we are not complete: we need to check our layout *now*
-        khtml::RenderCanvas* root = static_cast<khtml::RenderCanvas *>( m_part->xmlDocImpl()->renderer() );
-        if (root && root->needsLayout()) {
+        khtml::RenderCanvas *root = static_cast< khtml::RenderCanvas * >(m_part->xmlDocImpl()->renderer());
+        if(root && root->needsLayout())
+        {
             unscheduleRelayout();
             layout();
         }
     }
-    if (!d->scrollingSelf) {
+    if(!d->scrollingSelf)
+    {
         d->scrollBarMoved = true;
         d->contentsMoving = true;
         // ensure quick reset of contentsMoving flag
         scheduleRepaint(0, 0, 0, 0);
     }
 
-    if (m_part->xmlDocImpl() && m_part->xmlDocImpl()->documentElement())
+    if(m_part->xmlDocImpl() && m_part->xmlDocImpl()->documentElement())
         m_part->xmlDocImpl()->documentElement()->dispatchHTMLEvent(EventImpl::SCROLL_EVENT, true, false);
 }
 
-void KHTMLView::timerEvent ( QTimerEvent *e )
+void KHTMLView::timerEvent(QTimerEvent *e)
 {
-//    kdDebug() << "timer event " << e->timerId() << endl;
-    if ( e->timerId() == d->scrollTimerId ) {
-        if( d->scrollSuspended )
+    //    kdDebug() << "timer event " << e->timerId() << endl;
+    if(e->timerId() == d->scrollTimerId)
+    {
+        if(d->scrollSuspended)
             return;
-        switch (d->scrollDirection) {
+        switch(d->scrollDirection)
+        {
             case KHTMLViewPrivate::ScrollDown:
-                if (contentsY() + visibleHeight () >= contentsHeight())
+                if(contentsY() + visibleHeight() >= contentsHeight())
                     d->newScrollTimer(this, 0);
                 else
-                    scrollBy( 0, d->scrollBy );
+                    scrollBy(0, d->scrollBy);
                 break;
             case KHTMLViewPrivate::ScrollUp:
-                if (contentsY() <= 0)
+                if(contentsY() <= 0)
                     d->newScrollTimer(this, 0);
                 else
-                    scrollBy( 0, -d->scrollBy );
+                    scrollBy(0, -d->scrollBy);
                 break;
             case KHTMLViewPrivate::ScrollRight:
-                if (contentsX() + visibleWidth () >= contentsWidth())
+                if(contentsX() + visibleWidth() >= contentsWidth())
                     d->newScrollTimer(this, 0);
                 else
-                    scrollBy( d->scrollBy, 0 );
+                    scrollBy(d->scrollBy, 0);
                 break;
             case KHTMLViewPrivate::ScrollLeft:
-                if (contentsX() <= 0)
+                if(contentsX() <= 0)
                     d->newScrollTimer(this, 0);
                 else
-                    scrollBy( -d->scrollBy, 0 );
+                    scrollBy(-d->scrollBy, 0);
                 break;
         }
         return;
     }
-    else if ( e->timerId() == d->layoutTimerId ) {
+    else if(e->timerId() == d->layoutTimerId)
+    {
         d->dirtyLayout = true;
         layout();
-        if (d->firstRelayout) {
+        if(d->firstRelayout)
+        {
             d->firstRelayout = false;
-            verticalScrollBar()->setEnabled( true );
-            horizontalScrollBar()->setEnabled( true );
+            verticalScrollBar()->setEnabled(true);
+            horizontalScrollBar()->setEnabled(true);
         }
     }
 #ifndef KHTML_NO_CARET
-    else if (d->m_caretViewContext
-    	     && e->timerId() == d->m_caretViewContext->freqTimerId) {
+    else if(d->m_caretViewContext && e->timerId() == d->m_caretViewContext->freqTimerId)
+    {
         d->m_caretViewContext->visible = !d->m_caretViewContext->visible;
-	if (d->m_caretViewContext->displayed) {
-	    updateContents(d->m_caretViewContext->x, d->m_caretViewContext->y,
-			d->m_caretViewContext->width,
-			d->m_caretViewContext->height);
-	}/*end if*/
-//	if (d->m_caretViewContext->visible) cout << "|" << flush;
-//	else cout << "" << flush;
-	return;
+        if(d->m_caretViewContext->displayed)
+        {
+            updateContents(d->m_caretViewContext->x, d->m_caretViewContext->y, d->m_caretViewContext->width, d->m_caretViewContext->height);
+        } /*end if*/
+          //	if (d->m_caretViewContext->visible) cout << "|" << flush;
+          //	else cout << "" << flush;
+        return;
     }
 #endif
 
     d->contentsMoving = false;
-    if( m_part->xmlDocImpl() ) {
-	DOM::DocumentImpl *document = m_part->xmlDocImpl();
-	khtml::RenderCanvas* root = static_cast<khtml::RenderCanvas *>(document->renderer());
+    if(m_part->xmlDocImpl())
+    {
+        DOM::DocumentImpl *document = m_part->xmlDocImpl();
+        khtml::RenderCanvas *root = static_cast< khtml::RenderCanvas * >(document->renderer());
 
-	if ( root && root->needsLayout() ) {
-	    killTimer(d->repaintTimerId);
-	    d->repaintTimerId = 0;
-	    scheduleRelayout();
-	    return;
-	}
+        if(root && root->needsLayout())
+        {
+            killTimer(d->repaintTimerId);
+            d->repaintTimerId = 0;
+            scheduleRelayout();
+            return;
+        }
     }
 
     setStaticBackground(d->useSlowRepaints);
 
-//        kdDebug() << "scheduled repaint "<< d->repaintTimerId  << endl;
+    //        kdDebug() << "scheduled repaint "<< d->repaintTimerId  << endl;
     killTimer(d->repaintTimerId);
     d->repaintTimerId = 0;
 
     QRect updateRegion;
-    QMemArray<QRect> rects = d->updateRegion.rects();
+    QMemArray< QRect > rects = d->updateRegion.rects();
 
     d->updateRegion = QRegion();
 
-    if ( rects.size() )
+    if(rects.size())
         updateRegion = rects[0];
 
-    for ( unsigned i = 1; i < rects.size(); ++i ) {
+    for(unsigned i = 1; i < rects.size(); ++i)
+    {
         QRect newRegion = updateRegion.unite(rects[i]);
-        if (2*newRegion.height() > 3*updateRegion.height() )
+        if(2 * newRegion.height() > 3 * updateRegion.height())
         {
-            repaintContents( updateRegion );
+            repaintContents(updateRegion);
             updateRegion = rects[i];
         }
         else
             updateRegion = newRegion;
     }
 
-    if ( !updateRegion.isNull() )
-        repaintContents( updateRegion );
+    if(!updateRegion.isNull())
+        repaintContents(updateRegion);
 
     // As widgets can only be accurately positioned during painting, every layout might
     // dissociate a widget from its RenderWidget. E.g: if a RenderWidget was visible before layout, but the layout
     // pushed it out of the viewport, it will not be repainted, and consequently it's assocoated widget won't be repositioned!
     // Thus we need to check each supposedly 'visible' widget at the end of each layout, and remove it in case it's no more in sight.
 
-    if (d->dirtyLayout && !d->visibleWidgets.isEmpty()) {
-        QWidget* w;
+    if(d->dirtyLayout && !d->visibleWidgets.isEmpty())
+    {
+        QWidget *w;
         d->dirtyLayout = false;
 
         QRect visibleRect(contentsX(), contentsY(), visibleWidth(), visibleHeight());
-        QPtrList<RenderWidget> toRemove;
-        for (QPtrDictIterator<QWidget> it(d->visibleWidgets); it.current(); ++it) {
+        QPtrList< RenderWidget > toRemove;
+        for(QPtrDictIterator< QWidget > it(d->visibleWidgets); it.current(); ++it)
+        {
             int xp = 0, yp = 0;
             w = it.current();
-            RenderWidget* rw = static_cast<RenderWidget*>( it.currentKey() );
-            if (!rw->absolutePosition(xp, yp) ||
-                !visibleRect.intersects(QRect(xp, yp, w->width(), w->height())))
+            RenderWidget *rw = static_cast< RenderWidget * >(it.currentKey());
+            if(!rw->absolutePosition(xp, yp) || !visibleRect.intersects(QRect(xp, yp, w->width(), w->height())))
                 toRemove.append(rw);
         }
-        for (RenderWidget* r = toRemove.first(); r; r = toRemove.next())
-            if ( (w = d->visibleWidgets.take(r) ) )
+        for(RenderWidget *r = toRemove.first(); r; r = toRemove.next())
+            if((w = d->visibleWidgets.take(r)))
                 addChild(w, 0, -500000);
     }
 
     emit repaintAccessKeys();
-    if (d->emitCompletedAfterRepaint) {
+    if(d->emitCompletedAfterRepaint)
+    {
         bool full = d->emitCompletedAfterRepaint == KHTMLViewPrivate::CSFull;
         d->emitCompletedAfterRepaint = KHTMLViewPrivate::CSNone;
-        if ( full )
+        if(full)
             emit m_part->completed();
         else
             emit m_part->completed(true);
@@ -3528,16 +3696,15 @@ void KHTMLView::timerEvent ( QTimerEvent *e )
 
 void KHTMLView::scheduleRelayout(khtml::RenderObject * /*clippedObj*/)
 {
-    if (!d->layoutSchedulingEnabled || d->layoutTimerId)
+    if(!d->layoutSchedulingEnabled || d->layoutTimerId)
         return;
 
-    d->layoutTimerId = startTimer( m_part->xmlDocImpl() && m_part->xmlDocImpl()->parsing()
-                             ? 1000 : 0 );
+    d->layoutTimerId = startTimer(m_part->xmlDocImpl() && m_part->xmlDocImpl()->parsing() ? 1000 : 0);
 }
 
 void KHTMLView::unscheduleRelayout()
 {
-    if (!d->layoutTimerId)
+    if(!d->layoutTimerId)
         return;
 
     killTimer(d->layoutTimerId);
@@ -3546,7 +3713,7 @@ void KHTMLView::unscheduleRelayout()
 
 void KHTMLView::unscheduleRepaint()
 {
-    if (!d->repaintTimerId)
+    if(!d->repaintTimerId)
         return;
 
     killTimer(d->repaintTimerId);
@@ -3557,73 +3724,70 @@ void KHTMLView::scheduleRepaint(int x, int y, int w, int h, bool asap)
 {
     bool parsing = !m_part->xmlDocImpl() || m_part->xmlDocImpl()->parsing();
 
-//     kdDebug() << "parsing " << parsing << endl;
-//     kdDebug() << "complete " << d->complete << endl;
+    //     kdDebug() << "parsing " << parsing << endl;
+    //     kdDebug() << "complete " << d->complete << endl;
 
-    int time = parsing ? 300 : (!asap ? ( !d->complete ? 100 : 20 ) : 0);
+    int time = parsing ? 300 : (!asap ? (!d->complete ? 100 : 20) : 0);
 
 #ifdef DEBUG_FLICKER
     QPainter p;
-    p.begin( viewport() );
+    p.begin(viewport());
 
     int vx, vy;
-    contentsToViewport( x, y, vx, vy );
-    p.fillRect( vx, vy, w, h, Qt::red );
+    contentsToViewport(x, y, vx, vy);
+    p.fillRect(vx, vy, w, h, Qt::red);
     p.end();
 #endif
 
-    d->updateRegion = d->updateRegion.unite(QRect(x,y,w,h));
+    d->updateRegion = d->updateRegion.unite(QRect(x, y, w, h));
 
-    if (asap && !parsing)
+    if(asap && !parsing)
         unscheduleRepaint();
 
-    if ( !d->repaintTimerId )
-        d->repaintTimerId = startTimer( time );
+    if(!d->repaintTimerId)
+        d->repaintTimerId = startTimer(time);
 
-//     kdDebug() << "starting timer " << time << endl;
+    //     kdDebug() << "starting timer " << time << endl;
 }
 
-void KHTMLView::complete( bool pendingAction )
+void KHTMLView::complete(bool pendingAction)
 {
-//     kdDebug() << "KHTMLView::complete()" << endl;
+    //     kdDebug() << "KHTMLView::complete()" << endl;
 
     d->complete = true;
 
     // is there a relayout pending?
-    if (d->layoutTimerId)
+    if(d->layoutTimerId)
     {
-//         kdDebug() << "requesting relayout now" << endl;
+        //         kdDebug() << "requesting relayout now" << endl;
         // do it now
         killTimer(d->layoutTimerId);
-        d->layoutTimerId = startTimer( 0 );
-        d->emitCompletedAfterRepaint = pendingAction ?
-            KHTMLViewPrivate::CSActionPending : KHTMLViewPrivate::CSFull;
+        d->layoutTimerId = startTimer(0);
+        d->emitCompletedAfterRepaint = pendingAction ? KHTMLViewPrivate::CSActionPending : KHTMLViewPrivate::CSFull;
     }
 
     // is there a repaint pending?
-    if (d->repaintTimerId)
+    if(d->repaintTimerId)
     {
-//         kdDebug() << "requesting repaint now" << endl;
+        //         kdDebug() << "requesting repaint now" << endl;
         // do it now
         killTimer(d->repaintTimerId);
-        d->repaintTimerId = startTimer( 20 );
-        d->emitCompletedAfterRepaint = pendingAction ?
-            KHTMLViewPrivate::CSActionPending : KHTMLViewPrivate::CSFull;
+        d->repaintTimerId = startTimer(20);
+        d->emitCompletedAfterRepaint = pendingAction ? KHTMLViewPrivate::CSActionPending : KHTMLViewPrivate::CSFull;
     }
 
-    if (!d->emitCompletedAfterRepaint)
+    if(!d->emitCompletedAfterRepaint)
     {
-        if (!pendingAction)
-	    emit m_part->completed();
+        if(!pendingAction)
+            emit m_part->completed();
         else
             emit m_part->completed(true);
     }
-
 }
 
 void KHTMLView::slotMouseScrollTimer()
 {
-    scrollBy( d->m_mouseScroll_byX, d->m_mouseScroll_byY );
+    scrollBy(d->m_mouseScroll_byX, d->m_mouseScroll_byY);
 }
 
 #ifndef KHTML_NO_CARET
@@ -3636,35 +3800,38 @@ void KHTMLView::slotMouseScrollTimer()
 void KHTMLView::initCaret(bool keepSelection)
 {
 #if DEBUG_CARETMODE > 0
-  kdDebug(6200) << "begin initCaret" << endl;
+    kdDebug(6200) << "begin initCaret" << endl;
 #endif
-  // save caretMoved state as moveCaretTo changes it
-  if (m_part->xmlDocImpl()) {
+    // save caretMoved state as moveCaretTo changes it
+    if(m_part->xmlDocImpl())
+    {
 #if 0
     ElementImpl *listitem = m_part->xmlDocImpl()->getElementById("__test_element__");
     if (listitem) dumpLineBoxes(static_cast<RenderFlow *>(listitem->renderer()));
 #endif
-    d->caretViewContext();
-    bool cmoved = d->m_caretViewContext->caretMoved;
-    if (m_part->d->caretNode().isNull()) {
-      // set to document, position will be sanitized anyway
-      m_part->d->caretNode() = m_part->document();
-      m_part->d->caretOffset() = 0L;
-      // This sanity check is necessary for the not so unlikely case that
-      // setEditable or setCaretMode is called before any render objects have
-      // been created.
-      if (!m_part->d->caretNode().handle()->renderer()) return;
-    }/*end if*/
-//    kdDebug(6200) << "d->m_selectionStart " << m_part->d->m_selectionStart.handle()
-//    		<< " d->m_selectionEnd " << m_part->d->m_selectionEnd.handle() << endl;
-    // ### does not repaint the selection on keepSelection!=false
-    moveCaretTo(m_part->d->caretNode().handle(), m_part->d->caretOffset(), !keepSelection);
-//    kdDebug(6200) << "d->m_selectionStart " << m_part->d->m_selectionStart.handle()
-//    		<< " d->m_selectionEnd " << m_part->d->m_selectionEnd.handle() << endl;
-    d->m_caretViewContext->caretMoved = cmoved;
-  }/*end if*/
+        d->caretViewContext();
+        bool cmoved = d->m_caretViewContext->caretMoved;
+        if(m_part->d->caretNode().isNull())
+        {
+            // set to document, position will be sanitized anyway
+            m_part->d->caretNode() = m_part->document();
+            m_part->d->caretOffset() = 0L;
+            // This sanity check is necessary for the not so unlikely case that
+            // setEditable or setCaretMode is called before any render objects have
+            // been created.
+            if(!m_part->d->caretNode().handle()->renderer())
+                return;
+        } /*end if*/
+          //    kdDebug(6200) << "d->m_selectionStart " << m_part->d->m_selectionStart.handle()
+          //    		<< " d->m_selectionEnd " << m_part->d->m_selectionEnd.handle() << endl;
+        // ### does not repaint the selection on keepSelection!=false
+        moveCaretTo(m_part->d->caretNode().handle(), m_part->d->caretOffset(), !keepSelection);
+        //    kdDebug(6200) << "d->m_selectionStart " << m_part->d->m_selectionStart.handle()
+        //    		<< " d->m_selectionEnd " << m_part->d->m_selectionEnd.handle() << endl;
+        d->m_caretViewContext->caretMoved = cmoved;
+    } /*end if*/
 #if DEBUG_CARETMODE > 0
-  kdDebug(6200) << "end initCaret" << endl;
+    kdDebug(6200) << "end initCaret" << endl;
 #endif
 }
 
@@ -3672,562 +3839,614 @@ bool KHTMLView::caretOverrides() const
 {
     bool cm = m_part->isCaretMode();
     bool dm = m_part->isEditable();
-    return cm && !dm ? false
-    	: (dm || m_part->d->caretNode().handle()->contentEditable())
-	  && d->editorContext()->override;
+    return cm && !dm ? false : (dm || m_part->d->caretNode().handle()->contentEditable()) && d->editorContext()->override;
 }
 
 void KHTMLView::ensureNodeHasFocus(NodeImpl *node)
 {
-  if (m_part->isCaretMode() || m_part->isEditable()) return;
-  if (node->focused()) return;
+    if(m_part->isCaretMode() || m_part->isEditable())
+        return;
+    if(node->focused())
+        return;
 
-  // Find first ancestor whose "user-input" is "enabled"
-  NodeImpl *firstAncestor = 0;
-  while (node) {
-    if (node->renderer()
-       && node->renderer()->style()->userInput() != UI_ENABLED)
-      break;
-    firstAncestor = node;
-    node = node->parentNode();
-  }/*wend*/
+    // Find first ancestor whose "user-input" is "enabled"
+    NodeImpl *firstAncestor = 0;
+    while(node)
+    {
+        if(node->renderer() && node->renderer()->style()->userInput() != UI_ENABLED)
+            break;
+        firstAncestor = node;
+        node = node->parentNode();
+    } /*wend*/
 
-  if (!node) firstAncestor = 0;
+    if(!node)
+        firstAncestor = 0;
 
-  DocumentImpl *doc = m_part->xmlDocImpl();
-  // ensure that embedded widgets don't lose their focus
-  if (!firstAncestor && doc->focusNode() && doc->focusNode()->renderer()
-  	&& doc->focusNode()->renderer()->isWidget())
-    return;
+    DocumentImpl *doc = m_part->xmlDocImpl();
+    // ensure that embedded widgets don't lose their focus
+    if(!firstAncestor && doc->focusNode() && doc->focusNode()->renderer() && doc->focusNode()->renderer()->isWidget())
+        return;
 
-  // Set focus node on the document
+// Set focus node on the document
 #if DEBUG_CARETMODE > 1
-  kdDebug(6200) << k_funcinfo << "firstAncestor " << firstAncestor << ": "
-  	<< (firstAncestor ? firstAncestor->nodeName().string() : QString::null) << endl;
+    kdDebug(6200) << k_funcinfo << "firstAncestor " << firstAncestor << ": " << (firstAncestor ? firstAncestor->nodeName().string() : QString::null)
+                  << endl;
 #endif
-  doc->setFocusNode(firstAncestor);
-  emit m_part->nodeActivated(Node(firstAncestor));
+    doc->setFocusNode(firstAncestor);
+    emit m_part->nodeActivated(Node(firstAncestor));
 }
 
 void KHTMLView::recalcAndStoreCaretPos(CaretBox *hintBox)
 {
-    if (!m_part || m_part->d->caretNode().isNull()) return;
+    if(!m_part || m_part->d->caretNode().isNull())
+        return;
     d->caretViewContext();
     NodeImpl *caretNode = m_part->d->caretNode().handle();
 #if DEBUG_CARETMODE > 0
-  kdDebug(6200) << "recalcAndStoreCaretPos: caretNode=" << caretNode << (caretNode ? " "+caretNode->nodeName().string() : QString::null) << " r@" << caretNode->renderer() << (caretNode->renderer() && caretNode->renderer()->isText() ? " \"" + QConstString(static_cast<RenderText *>(caretNode->renderer())->str->s, kMin(static_cast<RenderText *>(caretNode->renderer())->str->l, 15u)).string() + "\"" : QString::null) << endl;
+    kdDebug(6200) << "recalcAndStoreCaretPos: caretNode=" << caretNode << (caretNode ? " " + caretNode->nodeName().string() : QString::null) << " r@"
+                  << caretNode->renderer() << (caretNode->renderer() && caretNode->renderer()->isText()
+                                                   ? " \""
+                                                         + QConstString(static_cast< RenderText * >(caretNode->renderer())->str->s,
+                                                                        kMin(static_cast< RenderText * >(caretNode->renderer())->str->l, 15u))
+                                                               .string()
+                                                         + "\""
+                                                   : QString::null)
+                  << endl;
 #endif
-    caretNode->getCaret(m_part->d->caretOffset(), caretOverrides(),
-    		d->m_caretViewContext->x, d->m_caretViewContext->y,
-		d->m_caretViewContext->width,
-		d->m_caretViewContext->height);
+    caretNode->getCaret(m_part->d->caretOffset(), caretOverrides(), d->m_caretViewContext->x, d->m_caretViewContext->y, d->m_caretViewContext->width,
+                        d->m_caretViewContext->height);
 
-    if (hintBox && d->m_caretViewContext->x == -1) {
+    if(hintBox && d->m_caretViewContext->x == -1)
+    {
 #if DEBUG_CARETMODE > 1
         kdDebug(6200) << "using hint inline box coordinates" << endl;
 #endif
-	RenderObject *r = caretNode->renderer();
-	const QFontMetrics &fm = r->style()->fontMetrics();
+        RenderObject *r = caretNode->renderer();
+        const QFontMetrics &fm = r->style()->fontMetrics();
         int absx, absy;
-	r->containingBlock()->absolutePosition(absx, absy,
-						false);	// ### what about fixed?
-	d->m_caretViewContext->x = absx + hintBox->xPos();
-	d->m_caretViewContext->y = absy + hintBox->yPos();
-// 				+ hintBox->baseline() - fm.ascent();
-	d->m_caretViewContext->width = 1;
-	// ### firstline not regarded. But I think it can be safely neglected
-	// as hint boxes are only used for empty lines.
-	d->m_caretViewContext->height = fm.height();
-    }/*end if*/
+        r->containingBlock()->absolutePosition(absx, absy, false); // ### what about fixed?
+        d->m_caretViewContext->x = absx + hintBox->xPos();
+        d->m_caretViewContext->y = absy + hintBox->yPos();
+        // 				+ hintBox->baseline() - fm.ascent();
+        d->m_caretViewContext->width = 1;
+        // ### firstline not regarded. But I think it can be safely neglected
+        // as hint boxes are only used for empty lines.
+        d->m_caretViewContext->height = fm.height();
+    } /*end if*/
 
 #if DEBUG_CARETMODE > 4
 //    kdDebug(6200) << "freqTimerId: "<<d->m_caretViewContext->freqTimerId<<endl;
 #endif
 #if DEBUG_CARETMODE > 0
-    kdDebug(6200) << "caret: ofs="<<m_part->d->caretOffset()<<" "
-    	<<" x="<<d->m_caretViewContext->x<<" y="<<d->m_caretViewContext->y
-	<<" h="<<d->m_caretViewContext->height<<endl;
+    kdDebug(6200) << "caret: ofs=" << m_part->d->caretOffset() << " "
+                  << " x=" << d->m_caretViewContext->x << " y=" << d->m_caretViewContext->y << " h=" << d->m_caretViewContext->height << endl;
 #endif
 }
 
 void KHTMLView::caretOn()
 {
-    if (d->m_caretViewContext) {
+    if(d->m_caretViewContext)
+    {
         killTimer(d->m_caretViewContext->freqTimerId);
 
-	if (hasFocus() || d->m_caretViewContext->displayNonFocused
-			== KHTMLPart::CaretBlink) {
+        if(hasFocus() || d->m_caretViewContext->displayNonFocused == KHTMLPart::CaretBlink)
+        {
             d->m_caretViewContext->freqTimerId = startTimer(500);
-	} else {
-	    d->m_caretViewContext->freqTimerId = -1;
-	}/*end if*/
+        }
+        else
+        {
+            d->m_caretViewContext->freqTimerId = -1;
+        } /*end if*/
 
         d->m_caretViewContext->visible = true;
-        if ((d->m_caretViewContext->displayed = (hasFocus()
-		|| d->m_caretViewContext->displayNonFocused
-			!= KHTMLPart::CaretInvisible))) {
-	    updateContents(d->m_caretViewContext->x, d->m_caretViewContext->y,
-	    		d->m_caretViewContext->width,
-			d->m_caretViewContext->height);
-	}/*end if*/
-//        kdDebug(6200) << "caret on" << endl;
-    }/*end if*/
+        if((d->m_caretViewContext->displayed = (hasFocus() || d->m_caretViewContext->displayNonFocused != KHTMLPart::CaretInvisible)))
+        {
+            updateContents(d->m_caretViewContext->x, d->m_caretViewContext->y, d->m_caretViewContext->width, d->m_caretViewContext->height);
+        } /*end if*/
+          //        kdDebug(6200) << "caret on" << endl;
+    }     /*end if*/
 }
 
 void KHTMLView::caretOff()
 {
-    if (d->m_caretViewContext) {
+    if(d->m_caretViewContext)
+    {
         killTimer(d->m_caretViewContext->freqTimerId);
-	d->m_caretViewContext->freqTimerId = -1;
+        d->m_caretViewContext->freqTimerId = -1;
         d->m_caretViewContext->displayed = false;
-        if (d->m_caretViewContext->visible) {
+        if(d->m_caretViewContext->visible)
+        {
             d->m_caretViewContext->visible = false;
-	    updateContents(d->m_caretViewContext->x, d->m_caretViewContext->y,
-	    		d->m_caretViewContext->width,
-	    		d->m_caretViewContext->height);
-	}/*end if*/
-//        kdDebug(6200) << "caret off" << endl;
-    }/*end if*/
+            updateContents(d->m_caretViewContext->x, d->m_caretViewContext->y, d->m_caretViewContext->width, d->m_caretViewContext->height);
+        } /*end if*/
+          //        kdDebug(6200) << "caret off" << endl;
+    }     /*end if*/
 }
 
 void KHTMLView::showCaret(bool forceRepaint)
 {
-    if (d->m_caretViewContext) {
+    if(d->m_caretViewContext)
+    {
         d->m_caretViewContext->displayed = true;
-        if (d->m_caretViewContext->visible) {
-	    if (!forceRepaint) {
-	    	updateContents(d->m_caretViewContext->x, d->m_caretViewContext->y,
-	    		d->m_caretViewContext->width,
-			d->m_caretViewContext->height);
-            } else {
-	    	repaintContents(d->m_caretViewContext->x, d->m_caretViewContext->y,
-	    		d->m_caretViewContext->width,
-	    		d->m_caretViewContext->height);
-	    }/*end if*/
-   	}/*end if*/
-//        kdDebug(6200) << "caret shown" << endl;
-    }/*end if*/
+        if(d->m_caretViewContext->visible)
+        {
+            if(!forceRepaint)
+            {
+                updateContents(d->m_caretViewContext->x, d->m_caretViewContext->y, d->m_caretViewContext->width, d->m_caretViewContext->height);
+            }
+            else
+            {
+                repaintContents(d->m_caretViewContext->x, d->m_caretViewContext->y, d->m_caretViewContext->width, d->m_caretViewContext->height);
+            } /*end if*/
+        }     /*end if*/
+              //        kdDebug(6200) << "caret shown" << endl;
+    }         /*end if*/
 }
 
-bool KHTMLView::foldSelectionToCaret(NodeImpl *startNode, long startOffset,
-    				NodeImpl *endNode, long endOffset)
+bool KHTMLView::foldSelectionToCaret(NodeImpl *startNode, long startOffset, NodeImpl *endNode, long endOffset)
 {
-  m_part->d->m_selectionStart = m_part->d->m_selectionEnd = m_part->d->caretNode();
-  m_part->d->m_startOffset = m_part->d->m_endOffset = m_part->d->caretOffset();
-  m_part->d->m_extendAtEnd = true;
+    m_part->d->m_selectionStart = m_part->d->m_selectionEnd = m_part->d->caretNode();
+    m_part->d->m_startOffset = m_part->d->m_endOffset = m_part->d->caretOffset();
+    m_part->d->m_extendAtEnd = true;
 
-  bool folded = startNode != endNode || startOffset != endOffset;
+    bool folded = startNode != endNode || startOffset != endOffset;
 
-  // Only clear the selection if there has been one.
-  if (folded) {
-    m_part->xmlDocImpl()->clearSelection();
-  }/*end if*/
+    // Only clear the selection if there has been one.
+    if(folded)
+    {
+        m_part->xmlDocImpl()->clearSelection();
+    } /*end if*/
 
-  return folded;
+    return folded;
 }
 
 void KHTMLView::hideCaret()
 {
-    if (d->m_caretViewContext) {
-        if (d->m_caretViewContext->visible) {
-//            kdDebug(6200) << "redraw caret hidden" << endl;
-	    d->m_caretViewContext->visible = false;
-	    // force repaint, otherwise the event won't be handled
-	    // before the focus leaves the window
-	    repaintContents(d->m_caretViewContext->x, d->m_caretViewContext->y,
-	    		d->m_caretViewContext->width,
-	    		d->m_caretViewContext->height);
-	    d->m_caretViewContext->visible = true;
-	}/*end if*/
+    if(d->m_caretViewContext)
+    {
+        if(d->m_caretViewContext->visible)
+        {
+            //            kdDebug(6200) << "redraw caret hidden" << endl;
+            d->m_caretViewContext->visible = false;
+            // force repaint, otherwise the event won't be handled
+            // before the focus leaves the window
+            repaintContents(d->m_caretViewContext->x, d->m_caretViewContext->y, d->m_caretViewContext->width, d->m_caretViewContext->height);
+            d->m_caretViewContext->visible = true;
+        } /*end if*/
         d->m_caretViewContext->displayed = false;
-//        kdDebug(6200) << "caret hidden" << endl;
-    }/*end if*/
+        //        kdDebug(6200) << "caret hidden" << endl;
+    } /*end if*/
 }
 
 int KHTMLView::caretDisplayPolicyNonFocused() const
 {
-  if (d->m_caretViewContext)
-    return d->m_caretViewContext->displayNonFocused;
-  else
-    return KHTMLPart::CaretInvisible;
+    if(d->m_caretViewContext)
+        return d->m_caretViewContext->displayNonFocused;
+    else
+        return KHTMLPart::CaretInvisible;
 }
 
 void KHTMLView::setCaretDisplayPolicyNonFocused(int policy)
 {
-  d->caretViewContext();
-//  int old = d->m_caretViewContext->displayNonFocused;
-  d->m_caretViewContext->displayNonFocused = (KHTMLPart::CaretDisplayPolicy)policy;
+    d->caretViewContext();
+    //  int old = d->m_caretViewContext->displayNonFocused;
+    d->m_caretViewContext->displayNonFocused = (KHTMLPart::CaretDisplayPolicy)policy;
 
-  // make change immediately take effect if not focused
-  if (!hasFocus()) {
-    switch (d->m_caretViewContext->displayNonFocused) {
-      case KHTMLPart::CaretInvisible:
-        hideCaret();
-	break;
-      case KHTMLPart::CaretBlink:
-	if (d->m_caretViewContext->freqTimerId != -1) break;
-	d->m_caretViewContext->freqTimerId = startTimer(500);
-	// fall through
-      case KHTMLPart::CaretVisible:
-        d->m_caretViewContext->displayed = true;
-        showCaret();
-	break;
-    }/*end switch*/
-  }/*end if*/
+    // make change immediately take effect if not focused
+    if(!hasFocus())
+    {
+        switch(d->m_caretViewContext->displayNonFocused)
+        {
+            case KHTMLPart::CaretInvisible:
+                hideCaret();
+                break;
+            case KHTMLPart::CaretBlink:
+                if(d->m_caretViewContext->freqTimerId != -1)
+                    break;
+                d->m_caretViewContext->freqTimerId = startTimer(500);
+            // fall through
+            case KHTMLPart::CaretVisible:
+                d->m_caretViewContext->displayed = true;
+                showCaret();
+                break;
+        } /*end switch*/
+    }     /*end if*/
 }
 
 bool KHTMLView::placeCaret(CaretBox *hintBox)
 {
-  CaretViewContext *cv = d->caretViewContext();
-  caretOff();
-  NodeImpl *caretNode = m_part->d->caretNode().handle();
-  // ### why is it sometimes null?
-  if (!caretNode || !caretNode->renderer()) return false;
-  ensureNodeHasFocus(caretNode);
-  if (m_part->isCaretMode() || m_part->isEditable()
-     || caretNode->renderer()->style()->userInput() == UI_ENABLED) {
-    recalcAndStoreCaretPos(hintBox);
+    CaretViewContext *cv = d->caretViewContext();
+    caretOff();
+    NodeImpl *caretNode = m_part->d->caretNode().handle();
+    // ### why is it sometimes null?
+    if(!caretNode || !caretNode->renderer())
+        return false;
+    ensureNodeHasFocus(caretNode);
+    if(m_part->isCaretMode() || m_part->isEditable() || caretNode->renderer()->style()->userInput() == UI_ENABLED)
+    {
+        recalcAndStoreCaretPos(hintBox);
 
-    cv->origX = cv->x;
+        cv->origX = cv->x;
 
-    caretOn();
-    return true;
-  }/*end if*/
-  return false;
+        caretOn();
+        return true;
+    } /*end if*/
+    return false;
 }
 
 void KHTMLView::ensureCaretVisible()
 {
-  CaretViewContext *cv = d->m_caretViewContext;
-  if (!cv) return;
-  ensureVisible(cv->x, cv->y, cv->width, cv->height);
-  d->scrollBarMoved = false;
+    CaretViewContext *cv = d->m_caretViewContext;
+    if(!cv)
+        return;
+    ensureVisible(cv->x, cv->y, cv->width, cv->height);
+    d->scrollBarMoved = false;
 }
 
-bool KHTMLView::extendSelection(NodeImpl *oldStartSel, long oldStartOfs,
-				NodeImpl *oldEndSel, long oldEndOfs)
+bool KHTMLView::extendSelection(NodeImpl *oldStartSel, long oldStartOfs, NodeImpl *oldEndSel, long oldEndOfs)
 {
-  bool changed = false;
-  if (m_part->d->m_selectionStart == m_part->d->m_selectionEnd
-      && m_part->d->m_startOffset == m_part->d->m_endOffset) {
-    changed = foldSelectionToCaret(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs);
-    m_part->d->m_extendAtEnd = true;
-  } else do {
-    changed = m_part->d->m_selectionStart.handle() != oldStartSel
-    		|| m_part->d->m_startOffset != oldStartOfs
-		|| m_part->d->m_selectionEnd.handle() != oldEndSel
-		|| m_part->d->m_endOffset != oldEndOfs;
-    if (!changed) break;
+    bool changed = false;
+    if(m_part->d->m_selectionStart == m_part->d->m_selectionEnd && m_part->d->m_startOffset == m_part->d->m_endOffset)
+    {
+        changed = foldSelectionToCaret(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs);
+        m_part->d->m_extendAtEnd = true;
+    }
+    else
+        do
+        {
+            changed = m_part->d->m_selectionStart.handle() != oldStartSel || m_part->d->m_startOffset != oldStartOfs
+                      || m_part->d->m_selectionEnd.handle() != oldEndSel || m_part->d->m_endOffset != oldEndOfs;
+            if(!changed)
+                break;
 
-    // determine start position -- caret position is always at end.
-    NodeImpl *startNode;
-    long startOffset;
-    if (m_part->d->m_extendAtEnd) {
-      startNode = m_part->d->m_selectionStart.handle();
-      startOffset = m_part->d->m_startOffset;
-    } else {
-      startNode = m_part->d->m_selectionEnd.handle();
-      startOffset = m_part->d->m_endOffset;
-      m_part->d->m_selectionEnd = m_part->d->m_selectionStart;
-      m_part->d->m_endOffset = m_part->d->m_startOffset;
-      m_part->d->m_extendAtEnd = true;
-    }/*end if*/
+            // determine start position -- caret position is always at end.
+            NodeImpl *startNode;
+            long startOffset;
+            if(m_part->d->m_extendAtEnd)
+            {
+                startNode = m_part->d->m_selectionStart.handle();
+                startOffset = m_part->d->m_startOffset;
+            }
+            else
+            {
+                startNode = m_part->d->m_selectionEnd.handle();
+                startOffset = m_part->d->m_endOffset;
+                m_part->d->m_selectionEnd = m_part->d->m_selectionStart;
+                m_part->d->m_endOffset = m_part->d->m_startOffset;
+                m_part->d->m_extendAtEnd = true;
+            } /*end if*/
 
-    bool swapNeeded = false;
-    if (!m_part->d->m_selectionEnd.isNull() && startNode) {
-      swapNeeded = RangeImpl::compareBoundaryPoints(startNode, startOffset,
-      			m_part->d->m_selectionEnd.handle(),
-			m_part->d->m_endOffset) >= 0;
-    }/*end if*/
+            bool swapNeeded = false;
+            if(!m_part->d->m_selectionEnd.isNull() && startNode)
+            {
+                swapNeeded =
+                    RangeImpl::compareBoundaryPoints(startNode, startOffset, m_part->d->m_selectionEnd.handle(), m_part->d->m_endOffset) >= 0;
+            } /*end if*/
 
-    m_part->d->m_selectionStart = startNode;
-    m_part->d->m_startOffset = startOffset;
+            m_part->d->m_selectionStart = startNode;
+            m_part->d->m_startOffset = startOffset;
 
-    if (swapNeeded) {
-      m_part->xmlDocImpl()->setSelection(m_part->d->m_selectionEnd.handle(),
-		m_part->d->m_endOffset, m_part->d->m_selectionStart.handle(),
-		m_part->d->m_startOffset);
-    } else {
-      m_part->xmlDocImpl()->setSelection(m_part->d->m_selectionStart.handle(),
-		m_part->d->m_startOffset, m_part->d->m_selectionEnd.handle(),
-		m_part->d->m_endOffset);
-    }/*end if*/
-  } while(false);/*end if*/
-  return changed;
+            if(swapNeeded)
+            {
+                m_part->xmlDocImpl()->setSelection(m_part->d->m_selectionEnd.handle(), m_part->d->m_endOffset, m_part->d->m_selectionStart.handle(),
+                                                   m_part->d->m_startOffset);
+            }
+            else
+            {
+                m_part->xmlDocImpl()->setSelection(m_part->d->m_selectionStart.handle(), m_part->d->m_startOffset, m_part->d->m_selectionEnd.handle(),
+                                                   m_part->d->m_endOffset);
+            }           /*end if*/
+        } while(false); /*end if*/
+    return changed;
 }
 
-void KHTMLView::updateSelection(NodeImpl *oldStartSel, long oldStartOfs,
-				NodeImpl *oldEndSel, long oldEndOfs)
+void KHTMLView::updateSelection(NodeImpl *oldStartSel, long oldStartOfs, NodeImpl *oldEndSel, long oldEndOfs)
 {
-  if (m_part->d->m_selectionStart == m_part->d->m_selectionEnd
-      && m_part->d->m_startOffset == m_part->d->m_endOffset) {
-    if (foldSelectionToCaret(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs)) {
-      m_part->emitSelectionChanged();
-    }/*end if*/
-    m_part->d->m_extendAtEnd = true;
-  } else {
-    // check if the extending end has passed the immobile end
-    if (!m_part->d->m_selectionEnd.isNull() && !m_part->d->m_selectionEnd.isNull()) {
-      bool swapNeeded = RangeImpl::compareBoundaryPoints(
-      			m_part->d->m_selectionStart.handle(), m_part->d->m_startOffset,
-			m_part->d->m_selectionEnd.handle(), m_part->d->m_endOffset) >= 0;
-      if (swapNeeded) {
-        DOM::Node tmpNode = m_part->d->m_selectionStart;
-        long tmpOffset = m_part->d->m_startOffset;
-        m_part->d->m_selectionStart = m_part->d->m_selectionEnd;
-        m_part->d->m_startOffset = m_part->d->m_endOffset;
-        m_part->d->m_selectionEnd = tmpNode;
-        m_part->d->m_endOffset = tmpOffset;
-        m_part->d->m_startBeforeEnd = true;
-        m_part->d->m_extendAtEnd = !m_part->d->m_extendAtEnd;
-      }/*end if*/
-    }/*end if*/
+    if(m_part->d->m_selectionStart == m_part->d->m_selectionEnd && m_part->d->m_startOffset == m_part->d->m_endOffset)
+    {
+        if(foldSelectionToCaret(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs))
+        {
+            m_part->emitSelectionChanged();
+        } /*end if*/
+        m_part->d->m_extendAtEnd = true;
+    }
+    else
+    {
+        // check if the extending end has passed the immobile end
+        if(!m_part->d->m_selectionEnd.isNull() && !m_part->d->m_selectionEnd.isNull())
+        {
+            bool swapNeeded = RangeImpl::compareBoundaryPoints(m_part->d->m_selectionStart.handle(), m_part->d->m_startOffset,
+                                                               m_part->d->m_selectionEnd.handle(), m_part->d->m_endOffset)
+                              >= 0;
+            if(swapNeeded)
+            {
+                DOM::Node tmpNode = m_part->d->m_selectionStart;
+                long tmpOffset = m_part->d->m_startOffset;
+                m_part->d->m_selectionStart = m_part->d->m_selectionEnd;
+                m_part->d->m_startOffset = m_part->d->m_endOffset;
+                m_part->d->m_selectionEnd = tmpNode;
+                m_part->d->m_endOffset = tmpOffset;
+                m_part->d->m_startBeforeEnd = true;
+                m_part->d->m_extendAtEnd = !m_part->d->m_extendAtEnd;
+            } /*end if*/
+        }     /*end if*/
 
-    m_part->xmlDocImpl()->setSelection(m_part->d->m_selectionStart.handle(),
-		m_part->d->m_startOffset, m_part->d->m_selectionEnd.handle(),
-		m_part->d->m_endOffset);
-    m_part->emitSelectionChanged();
-  }/*end if*/
+        m_part->xmlDocImpl()->setSelection(m_part->d->m_selectionStart.handle(), m_part->d->m_startOffset, m_part->d->m_selectionEnd.handle(),
+                                           m_part->d->m_endOffset);
+        m_part->emitSelectionChanged();
+    } /*end if*/
 }
 
 void KHTMLView::caretKeyPressEvent(QKeyEvent *_ke)
 {
-  NodeImpl *oldStartSel = m_part->d->m_selectionStart.handle();
-  long oldStartOfs = m_part->d->m_startOffset;
-  NodeImpl *oldEndSel = m_part->d->m_selectionEnd.handle();
-  long oldEndOfs = m_part->d->m_endOffset;
+    NodeImpl *oldStartSel = m_part->d->m_selectionStart.handle();
+    long oldStartOfs = m_part->d->m_startOffset;
+    NodeImpl *oldEndSel = m_part->d->m_selectionEnd.handle();
+    long oldEndOfs = m_part->d->m_endOffset;
 
-  NodeImpl *oldCaretNode = m_part->d->caretNode().handle();
-  long oldOffset = m_part->d->caretOffset();
+    NodeImpl *oldCaretNode = m_part->d->caretNode().handle();
+    long oldOffset = m_part->d->caretOffset();
 
-  bool ctrl = _ke->state() & ControlButton;
+    bool ctrl = _ke->state() & ControlButton;
 
-// FIXME: this is that widely indented because I will write ifs around it.
-      switch(_ke->key()) {
+    // FIXME: this is that widely indented because I will write ifs around it.
+    switch(_ke->key())
+    {
         case Key_Space:
-          break;
+            break;
 
         case Key_Down:
-	  moveCaretNextLine(1);
-          break;
+            moveCaretNextLine(1);
+            break;
 
         case Key_Up:
-	  moveCaretPrevLine(1);
-          break;
+            moveCaretPrevLine(1);
+            break;
 
         case Key_Left:
-	  moveCaretBy(false, ctrl ? CaretByWord : CaretByCharacter, 1);
-          break;
+            moveCaretBy(false, ctrl ? CaretByWord : CaretByCharacter, 1);
+            break;
 
         case Key_Right:
-	  moveCaretBy(true, ctrl ? CaretByWord : CaretByCharacter, 1);
-          break;
+            moveCaretBy(true, ctrl ? CaretByWord : CaretByCharacter, 1);
+            break;
 
         case Key_Next:
-	  moveCaretNextPage();
-          break;
+            moveCaretNextPage();
+            break;
 
         case Key_Prior:
-	  moveCaretPrevPage();
-          break;
+            moveCaretPrevPage();
+            break;
 
         case Key_Home:
-	  if (ctrl)
-	    moveCaretToDocumentBoundary(false);
-	  else
-	    moveCaretToLineBegin();
-          break;
+            if(ctrl)
+                moveCaretToDocumentBoundary(false);
+            else
+                moveCaretToLineBegin();
+            break;
 
         case Key_End:
-	  if (ctrl)
-	    moveCaretToDocumentBoundary(true);
-	  else
-	    moveCaretToLineEnd();
-          break;
+            if(ctrl)
+                moveCaretToDocumentBoundary(true);
+            else
+                moveCaretToLineEnd();
+            break;
 
-      }/*end switch*/
+    } /*end switch*/
 
-  if ((m_part->d->caretNode().handle() != oldCaretNode
-  	|| m_part->d->caretOffset() != oldOffset)
-	// node should never be null, but faulty conditions may cause it to be
-	&& !m_part->d->caretNode().isNull()) {
+    if((m_part->d->caretNode().handle() != oldCaretNode || m_part->d->caretOffset() != oldOffset)
+       // node should never be null, but faulty conditions may cause it to be
+       && !m_part->d->caretNode().isNull())
+    {
 
-    d->m_caretViewContext->caretMoved = true;
+        d->m_caretViewContext->caretMoved = true;
 
-    if (_ke->state() & ShiftButton) {	// extend selection
-      updateSelection(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs);
-    } else {			// clear any selection
-      if (foldSelectionToCaret(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs))
-        m_part->emitSelectionChanged();
-    }/*end if*/
+        if(_ke->state() & ShiftButton)
+        { // extend selection
+            updateSelection(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs);
+        }
+        else
+        { // clear any selection
+            if(foldSelectionToCaret(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs))
+                m_part->emitSelectionChanged();
+        } /*end if*/
 
-    m_part->emitCaretPositionChanged(m_part->d->caretNode(), m_part->d->caretOffset());
-  }/*end if*/
+        m_part->emitCaretPositionChanged(m_part->d->caretNode(), m_part->d->caretOffset());
+    } /*end if*/
 
-  _ke->accept();
+    _ke->accept();
 }
 
 bool KHTMLView::moveCaretTo(NodeImpl *node, long offset, bool clearSel)
 {
-  if (!node) return false;
-  ElementImpl *baseElem = determineBaseElement(node);
-  RenderFlow *base = static_cast<RenderFlow *>(baseElem ? baseElem->renderer() : 0);
-  if (!node) return false;
+    if(!node)
+        return false;
+    ElementImpl *baseElem = determineBaseElement(node);
+    RenderFlow *base = static_cast< RenderFlow * >(baseElem ? baseElem->renderer() : 0);
+    if(!node)
+        return false;
 
-  // need to find out the node's inline box. If there is none, this function
-  // will snap to the next node that has one. This is necessary to make the
-  // caret visible in any case.
-  CaretBoxLineDeleter cblDeleter;
-//   RenderBlock *cb;
-  long r_ofs;
-  CaretBoxIterator cbit;
-  CaretBoxLine *cbl = findCaretBoxLine(node, offset, &cblDeleter, base, r_ofs, cbit);
-  if(!cbl) {
-      kdWarning() << "KHTMLView::moveCaretTo - findCaretBoxLine() returns NULL" << endl;
-      return false;
-  }
+    // need to find out the node's inline box. If there is none, this function
+    // will snap to the next node that has one. This is necessary to make the
+    // caret visible in any case.
+    CaretBoxLineDeleter cblDeleter;
+    //   RenderBlock *cb;
+    long r_ofs;
+    CaretBoxIterator cbit;
+    CaretBoxLine *cbl = findCaretBoxLine(node, offset, &cblDeleter, base, r_ofs, cbit);
+    if(!cbl)
+    {
+        kdWarning() << "KHTMLView::moveCaretTo - findCaretBoxLine() returns NULL" << endl;
+        return false;
+    }
 
 #if DEBUG_CARETMODE > 3
-  if (cbl) kdDebug(6200) << cbl->information() << endl;
+    if(cbl)
+        kdDebug(6200) << cbl->information() << endl;
 #endif
-  CaretBox *box = *cbit;
-  if (cbit != cbl->end() && box->object() != node->renderer()) {
-    if (box->object()->element()) {
-      mapRenderPosToDOMPos(box->object(), r_ofs, box->isOutside(),
-      			box->isOutsideEnd(), node, offset);
-      //if (!outside) offset = node->minOffset();
+    CaretBox *box = *cbit;
+    if(cbit != cbl->end() && box->object() != node->renderer())
+    {
+        if(box->object()->element())
+        {
+            mapRenderPosToDOMPos(box->object(), r_ofs, box->isOutside(), box->isOutsideEnd(), node, offset);
+// if (!outside) offset = node->minOffset();
 #if DEBUG_CARETMODE > 1
-      kdDebug(6200) << "set new node " << node->nodeName().string() << "@" << node << endl;
+            kdDebug(6200) << "set new node " << node->nodeName().string() << "@" << node << endl;
 #endif
-    } else {	// box has no associated element -> do not use
-      // this case should actually never happen.
-      box = 0;
-      kdError(6200) << "Box contains no node! Crash imminent" << endl;
-    }/*end if*/
-  }
+        }
+        else
+        { // box has no associated element -> do not use
+            // this case should actually never happen.
+            box = 0;
+            kdError(6200) << "Box contains no node! Crash imminent" << endl;
+        } /*end if*/
+    }
 
-  NodeImpl *oldStartSel = m_part->d->m_selectionStart.handle();
-  long oldStartOfs = m_part->d->m_startOffset;
-  NodeImpl *oldEndSel = m_part->d->m_selectionEnd.handle();
-  long oldEndOfs = m_part->d->m_endOffset;
+    NodeImpl *oldStartSel = m_part->d->m_selectionStart.handle();
+    long oldStartOfs = m_part->d->m_startOffset;
+    NodeImpl *oldEndSel = m_part->d->m_selectionEnd.handle();
+    long oldEndOfs = m_part->d->m_endOffset;
 
-  // test for position change
-  bool posChanged = m_part->d->caretNode().handle() != node
-  		|| m_part->d->caretOffset() != offset;
-  bool selChanged = false;
+    // test for position change
+    bool posChanged = m_part->d->caretNode().handle() != node || m_part->d->caretOffset() != offset;
+    bool selChanged = false;
 
-  m_part->d->caretNode() = node;
-  m_part->d->caretOffset() = offset;
-  if (clearSel || !oldStartSel || !oldEndSel) {
-    selChanged = foldSelectionToCaret(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs);
-  } else {
-    //kdDebug(6200) << "moveToCaret: extendSelection: m_extendAtEnd " << m_part->d->m_extendAtEnd << endl;
-    //kdDebug(6200) << "selection: start(" << m_part->d->m_selectionStart.handle() << "," << m_part->d->m_startOffset << "), end(" << m_part->d->m_selectionEnd.handle() << "," << m_part->d->m_endOffset << "), caret(" << m_part->d->caretNode().handle() << "," << m_part->d->caretOffset() << ")" << endl;
-    selChanged = extendSelection(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs);
-    //kdDebug(6200) << "after extendSelection: m_extendAtEnd " << m_part->d->m_extendAtEnd << endl;
-    //kdDebug(6200) << "selection: start(" << m_part->d->m_selectionStart.handle() << "," << m_part->d->m_startOffset << "), end(" << m_part->d->m_selectionEnd.handle() << "," << m_part->d->m_endOffset << "), caret(" << m_part->d->caretNode().handle() << "," << m_part->d->caretOffset() << ")" << endl;
-  }/*end if*/
+    m_part->d->caretNode() = node;
+    m_part->d->caretOffset() = offset;
+    if(clearSel || !oldStartSel || !oldEndSel)
+    {
+        selChanged = foldSelectionToCaret(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs);
+    }
+    else
+    {
+        // kdDebug(6200) << "moveToCaret: extendSelection: m_extendAtEnd " << m_part->d->m_extendAtEnd << endl;
+        // kdDebug(6200) << "selection: start(" << m_part->d->m_selectionStart.handle() << "," << m_part->d->m_startOffset << "), end(" <<
+        // m_part->d->m_selectionEnd.handle() << "," << m_part->d->m_endOffset << "), caret(" << m_part->d->caretNode().handle() << "," <<
+        // m_part->d->caretOffset() << ")" << endl;
+        selChanged = extendSelection(oldStartSel, oldStartOfs, oldEndSel, oldEndOfs);
+        // kdDebug(6200) << "after extendSelection: m_extendAtEnd " << m_part->d->m_extendAtEnd << endl;
+        // kdDebug(6200) << "selection: start(" << m_part->d->m_selectionStart.handle() << "," << m_part->d->m_startOffset << "), end(" <<
+        // m_part->d->m_selectionEnd.handle() << "," << m_part->d->m_endOffset << "), caret(" << m_part->d->caretNode().handle() << "," <<
+        // m_part->d->caretOffset() << ")" << endl;
+    } /*end if*/
 
-  d->caretViewContext()->caretMoved = true;
+    d->caretViewContext()->caretMoved = true;
 
-  bool visible_caret = placeCaret(box);
+    bool visible_caret = placeCaret(box);
 
-  // FIXME: if the old position was !visible_caret, and the new position is
-  // also, then two caretPositionChanged signals with a null Node are
-  // emitted in series.
-  if (posChanged) {
-    m_part->emitCaretPositionChanged(visible_caret ? node : 0, offset);
-  }/*end if*/
+    // FIXME: if the old position was !visible_caret, and the new position is
+    // also, then two caretPositionChanged signals with a null Node are
+    // emitted in series.
+    if(posChanged)
+    {
+        m_part->emitCaretPositionChanged(visible_caret ? node : 0, offset);
+    } /*end if*/
 
-  return selChanged;
+    return selChanged;
 }
 
 void KHTMLView::moveCaretByLine(bool next, int count)
 {
-  Node &caretNodeRef = m_part->d->caretNode();
-  if (caretNodeRef.isNull()) return;
+    Node &caretNodeRef = m_part->d->caretNode();
+    if(caretNodeRef.isNull())
+        return;
 
-  NodeImpl *caretNode = caretNodeRef.handle();
-//  kdDebug(6200) << ": caretNode=" << caretNode << endl;
-  long offset = m_part->d->caretOffset();
+    NodeImpl *caretNode = caretNodeRef.handle();
+    //  kdDebug(6200) << ": caretNode=" << caretNode << endl;
+    long offset = m_part->d->caretOffset();
 
-  CaretViewContext *cv = d->caretViewContext();
+    CaretViewContext *cv = d->caretViewContext();
 
-  ElementImpl *baseElem = determineBaseElement(caretNode);
-  LinearDocument ld(m_part, caretNode, offset, LeafsOnly, baseElem);
+    ElementImpl *baseElem = determineBaseElement(caretNode);
+    LinearDocument ld(m_part, caretNode, offset, LeafsOnly, baseElem);
 
-  ErgonomicEditableLineIterator it(ld.current(), cv->origX);
+    ErgonomicEditableLineIterator it(ld.current(), cv->origX);
 
-  // move count lines vertically
-  while (count > 0 && it != ld.end() && it != ld.preBegin()) {
-    count--;
-    if (next) ++it; else --it;
-  }/*wend*/
+    // move count lines vertically
+    while(count > 0 && it != ld.end() && it != ld.preBegin())
+    {
+        count--;
+        if(next)
+            ++it;
+        else
+            --it;
+    } /*wend*/
 
-  // Nothing? Then leave everything as is.
-  if (it == ld.end() || it == ld.preBegin()) return;
+    // Nothing? Then leave everything as is.
+    if(it == ld.end() || it == ld.preBegin())
+        return;
 
-  int x, absx, absy;
-  CaretBox *caretBox = nearestCaretBox(it, d->m_caretViewContext, x, absx, absy);
+    int x, absx, absy;
+    CaretBox *caretBox = nearestCaretBox(it, d->m_caretViewContext, x, absx, absy);
 
-  placeCaretOnLine(caretBox, x, absx, absy);
+    placeCaretOnLine(caretBox, x, absx, absy);
 }
 
 void KHTMLView::placeCaretOnLine(CaretBox *caretBox, int x, int absx, int absy)
 {
-  // paranoia sanity check
-  if (!caretBox) return;
+    // paranoia sanity check
+    if(!caretBox)
+        return;
 
-  RenderObject *caretRender = caretBox->object();
+    RenderObject *caretRender = caretBox->object();
 
 #if DEBUG_CARETMODE > 0
-  kdDebug(6200) << "got valid caretBox " << caretBox << endl;
-  kdDebug(6200) << "xPos: " << caretBox->xPos() << " yPos: " << caretBox->yPos()
-  		<< " width: " << caretBox->width() << " height: " << caretBox->height() << endl;
-  InlineTextBox *tb = static_cast<InlineTextBox *>(caretBox->inlineBox());
-  if (caretBox->isInlineTextBox()) { kdDebug(6200) << "contains \"" << QString(static_cast<RenderText *>(tb->object())->str->s + tb->m_start, tb->m_len) << "\"" << endl;}
+    kdDebug(6200) << "got valid caretBox " << caretBox << endl;
+    kdDebug(6200) << "xPos: " << caretBox->xPos() << " yPos: " << caretBox->yPos() << " width: " << caretBox->width()
+                  << " height: " << caretBox->height() << endl;
+    InlineTextBox *tb = static_cast< InlineTextBox * >(caretBox->inlineBox());
+    if(caretBox->isInlineTextBox())
+    {
+        kdDebug(6200) << "contains \"" << QString(static_cast< RenderText * >(tb->object())->str->s + tb->m_start, tb->m_len) << "\"" << endl;
+    }
 #endif
-  // inquire height of caret
-  int caretHeight = caretBox->height();
-  bool isText = caretBox->isInlineTextBox();
-  int yOfs = 0;		// y-offset for text nodes
-  if (isText) {
-    // text boxes need extrawurst
-    RenderText *t = static_cast<RenderText *>(caretRender);
-    const QFontMetrics &fm = t->metrics(caretBox->inlineBox()->m_firstLine);
-    caretHeight = fm.height();
-    yOfs = caretBox->inlineBox()->baseline() - fm.ascent();
-  }/*end if*/
+    // inquire height of caret
+    int caretHeight = caretBox->height();
+    bool isText = caretBox->isInlineTextBox();
+    int yOfs = 0; // y-offset for text nodes
+    if(isText)
+    {
+        // text boxes need extrawurst
+        RenderText *t = static_cast< RenderText * >(caretRender);
+        const QFontMetrics &fm = t->metrics(caretBox->inlineBox()->m_firstLine);
+        caretHeight = fm.height();
+        yOfs = caretBox->inlineBox()->baseline() - fm.ascent();
+    } /*end if*/
 
-  caretOff();
+    caretOff();
 
-  // set new caret node
-  NodeImpl *caretNode;
-  long &offset = m_part->d->caretOffset();
-  mapRenderPosToDOMPos(caretRender, offset, caretBox->isOutside(),
-  		caretBox->isOutsideEnd(), caretNode, offset);
+    // set new caret node
+    NodeImpl *caretNode;
+    long &offset = m_part->d->caretOffset();
+    mapRenderPosToDOMPos(caretRender, offset, caretBox->isOutside(), caretBox->isOutsideEnd(), caretNode, offset);
 
-  // set all variables not needing special treatment
-  d->m_caretViewContext->y = caretBox->yPos() + yOfs;
-  d->m_caretViewContext->height = caretHeight;
-  d->m_caretViewContext->width = 1; // FIXME: regard override
+    // set all variables not needing special treatment
+    d->m_caretViewContext->y = caretBox->yPos() + yOfs;
+    d->m_caretViewContext->height = caretHeight;
+    d->m_caretViewContext->width = 1; // FIXME: regard override
 
-  int xPos = caretBox->xPos();
-  int caretBoxWidth = caretBox->width();
-  d->m_caretViewContext->x = xPos;
+    int xPos = caretBox->xPos();
+    int caretBoxWidth = caretBox->width();
+    d->m_caretViewContext->x = xPos;
 
-  if (!caretBox->isOutside()) {
-    // before or at beginning of inline box -> place at beginning
-    long r_ofs = 0;
-    if (x <= xPos) {
-      r_ofs = caretBox->minOffset();
-  // somewhere within this block
-    } else if (x > xPos && x <= xPos + caretBoxWidth) {
-      if (isText) { // find out where exactly
-        r_ofs = static_cast<InlineTextBox *>(caretBox->inlineBox())
-      		->offsetForPoint(x, d->m_caretViewContext->x);
+    if(!caretBox->isOutside())
+    {
+        // before or at beginning of inline box -> place at beginning
+        long r_ofs = 0;
+        if(x <= xPos)
+        {
+            r_ofs = caretBox->minOffset();
+            // somewhere within this block
+        }
+        else if(x > xPos && x <= xPos + caretBoxWidth)
+        {
+            if(isText)
+            { // find out where exactly
+                r_ofs = static_cast< InlineTextBox * >(caretBox->inlineBox())->offsetForPoint(x, d->m_caretViewContext->x);
 #if DEBUG_CARETMODE > 2
-        kdDebug(6200) << "deviation from origX " << d->m_caretViewContext->x - x << endl;
+                kdDebug(6200) << "deviation from origX " << d->m_caretViewContext->x - x << endl;
 #endif
 #if 0
       } else {	// snap to nearest end
@@ -4239,225 +4458,249 @@ void KHTMLView::placeCaretOnLine(CaretBox *caretBox, int x, int absx, int absy)
           r_ofs = caretNode ? caretNode->minOffset() : 0;
         }/*end if*/
 #endif
-      }/*end if*/
-    } else {		// after the inline box -> place at end
-      d->m_caretViewContext->x = xPos + caretBoxWidth;
-      r_ofs = caretBox->maxOffset();
-    }/*end if*/
-    offset = r_ofs;
-  }/*end if*/
+            } /*end if*/
+        }
+        else
+        { // after the inline box -> place at end
+            d->m_caretViewContext->x = xPos + caretBoxWidth;
+            r_ofs = caretBox->maxOffset();
+        } /*end if*/
+        offset = r_ofs;
+    } /*end if*/
 #if DEBUG_CARETMODE > 0
-      kdDebug(6200) << "new offset: " << offset << endl;
+    kdDebug(6200) << "new offset: " << offset << endl;
 #endif
 
-  m_part->d->caretNode() = caretNode;
-  m_part->d->caretOffset() = offset;
+    m_part->d->caretNode() = caretNode;
+    m_part->d->caretOffset() = offset;
 
-  d->m_caretViewContext->x += absx;
-  d->m_caretViewContext->y += absy;
+    d->m_caretViewContext->x += absx;
+    d->m_caretViewContext->y += absy;
 
 #if DEBUG_CARETMODE > 1
-	kdDebug(6200) << "new caret position: x " << d->m_caretViewContext->x << " y " << d->m_caretViewContext->y << " w " << d->m_caretViewContext->width << " h " << d->m_caretViewContext->height << " absx " << absx << " absy " << absy << endl;
+    kdDebug(6200) << "new caret position: x " << d->m_caretViewContext->x << " y " << d->m_caretViewContext->y << " w "
+                  << d->m_caretViewContext->width << " h " << d->m_caretViewContext->height << " absx " << absx << " absy " << absy << endl;
 #endif
 
-  ensureVisible(d->m_caretViewContext->x, d->m_caretViewContext->y,
-  	d->m_caretViewContext->width, d->m_caretViewContext->height);
-  d->scrollBarMoved = false;
+    ensureVisible(d->m_caretViewContext->x, d->m_caretViewContext->y, d->m_caretViewContext->width, d->m_caretViewContext->height);
+    d->scrollBarMoved = false;
 
-  ensureNodeHasFocus(caretNode);
-  caretOn();
+    ensureNodeHasFocus(caretNode);
+    caretOn();
 }
 
 void KHTMLView::moveCaretToLineBoundary(bool end)
 {
-  Node &caretNodeRef = m_part->d->caretNode();
-  if (caretNodeRef.isNull()) return;
+    Node &caretNodeRef = m_part->d->caretNode();
+    if(caretNodeRef.isNull())
+        return;
 
-  NodeImpl *caretNode = caretNodeRef.handle();
-//  kdDebug(6200) << ": caretNode=" << caretNode << endl;
-  long offset = m_part->d->caretOffset();
+    NodeImpl *caretNode = caretNodeRef.handle();
+    //  kdDebug(6200) << ": caretNode=" << caretNode << endl;
+    long offset = m_part->d->caretOffset();
 
-  ElementImpl *baseElem = determineBaseElement(caretNode);
-  LinearDocument ld(m_part, caretNode, offset, LeafsOnly, baseElem);
+    ElementImpl *baseElem = determineBaseElement(caretNode);
+    LinearDocument ld(m_part, caretNode, offset, LeafsOnly, baseElem);
 
-  EditableLineIterator it = ld.current();
-  if (it == ld.end()) return;	// should not happen, but who knows
+    EditableLineIterator it = ld.current();
+    if(it == ld.end())
+        return; // should not happen, but who knows
 
-  EditableCaretBoxIterator fbit(it, end);
-  Q_ASSERT(fbit != (*it)->end() && fbit != (*it)->preBegin());
-  CaretBox *b = *fbit;
+    EditableCaretBoxIterator fbit(it, end);
+    Q_ASSERT(fbit != (*it)->end() && fbit != (*it)->preBegin());
+    CaretBox *b = *fbit;
 
-  RenderObject *cb = b->containingBlock();
-  int absx, absy;
+    RenderObject *cb = b->containingBlock();
+    int absx, absy;
 
-  if (cb) cb->absolutePosition(absx,absy);
-  else absx = absy = 0;
+    if(cb)
+        cb->absolutePosition(absx, absy);
+    else
+        absx = absy = 0;
 
-  int x = b->xPos() + (end && !b->isOutside() ? b->width() : 0);
-  d->m_caretViewContext->origX = absx + x;
-  placeCaretOnLine(b, x, absx, absy);
+    int x = b->xPos() + (end && !b->isOutside() ? b->width() : 0);
+    d->m_caretViewContext->origX = absx + x;
+    placeCaretOnLine(b, x, absx, absy);
 }
 
 void KHTMLView::moveCaretToDocumentBoundary(bool end)
 {
-  Node &caretNodeRef = m_part->d->caretNode();
-  if (caretNodeRef.isNull()) return;
+    Node &caretNodeRef = m_part->d->caretNode();
+    if(caretNodeRef.isNull())
+        return;
 
-  NodeImpl *caretNode = caretNodeRef.handle();
-//  kdDebug(6200) << ": caretNode=" << caretNode << endl;
-  long offset = m_part->d->caretOffset();
+    NodeImpl *caretNode = caretNodeRef.handle();
+    //  kdDebug(6200) << ": caretNode=" << caretNode << endl;
+    long offset = m_part->d->caretOffset();
 
-  ElementImpl *baseElem = determineBaseElement(caretNode);
-  LinearDocument ld(m_part, caretNode, offset, IndicatedFlows, baseElem);
+    ElementImpl *baseElem = determineBaseElement(caretNode);
+    LinearDocument ld(m_part, caretNode, offset, IndicatedFlows, baseElem);
 
-  EditableLineIterator it(end ? ld.preEnd() : ld.begin(), end);
-  if (it == ld.end() || it == ld.preBegin()) return;	// should not happen, but who knows
+    EditableLineIterator it(end ? ld.preEnd() : ld.begin(), end);
+    if(it == ld.end() || it == ld.preBegin())
+        return; // should not happen, but who knows
 
-  EditableCaretBoxIterator fbit = it;
-  Q_ASSERT(fbit != (*it)->end() && fbit != (*it)->preBegin());
-  CaretBox *b = *fbit;
+    EditableCaretBoxIterator fbit = it;
+    Q_ASSERT(fbit != (*it)->end() && fbit != (*it)->preBegin());
+    CaretBox *b = *fbit;
 
-  RenderObject *cb = (*it)->containingBlock();
-  int absx, absy;
+    RenderObject *cb = (*it)->containingBlock();
+    int absx, absy;
 
-  if (cb) cb->absolutePosition(absx, absy);
-  else absx = absy = 0;
+    if(cb)
+        cb->absolutePosition(absx, absy);
+    else
+        absx = absy = 0;
 
-  int x = b->xPos()/* + (end ? b->width() : 0) reactivate for rtl*/;
-  d->m_caretViewContext->origX = absx + x;
-  placeCaretOnLine(b, x, absx, absy);
+    int x = b->xPos() /* + (end ? b->width() : 0) reactivate for rtl*/;
+    d->m_caretViewContext->origX = absx + x;
+    placeCaretOnLine(b, x, absx, absy);
 }
 
 void KHTMLView::moveCaretBy(bool next, CaretMovement cmv, int count)
 {
-  if (!m_part) return;
-  Node &caretNodeRef = m_part->d->caretNode();
-  if (caretNodeRef.isNull()) return;
+    if(!m_part)
+        return;
+    Node &caretNodeRef = m_part->d->caretNode();
+    if(caretNodeRef.isNull())
+        return;
 
-  NodeImpl *caretNode = caretNodeRef.handle();
-//  kdDebug(6200) << ": caretNode=" << caretNode << endl;
-  long &offset = m_part->d->caretOffset();
+    NodeImpl *caretNode = caretNodeRef.handle();
+    //  kdDebug(6200) << ": caretNode=" << caretNode << endl;
+    long &offset = m_part->d->caretOffset();
 
-  ElementImpl *baseElem = determineBaseElement(caretNode);
-  CaretAdvancePolicy advpol = cmv != CaretByWord ? IndicatedFlows : LeafsOnly;
-  LinearDocument ld(m_part, caretNode, offset, advpol, baseElem);
+    ElementImpl *baseElem = determineBaseElement(caretNode);
+    CaretAdvancePolicy advpol = cmv != CaretByWord ? IndicatedFlows : LeafsOnly;
+    LinearDocument ld(m_part, caretNode, offset, advpol, baseElem);
 
-  EditableCharacterIterator it(&ld);
-  while (!it.isEnd() && count > 0) {
-    count--;
-    if (cmv == CaretByCharacter) {
-      if (next) ++it;
-      else --it;
-    } else if (cmv == CaretByWord) {
-      if (next) moveItToNextWord(it);
-      else moveItToPrevWord(it);
-    }/*end if*/
-//kdDebug(6200) << "movecaret" << endl;
-  }/*wend*/
-  CaretBox *hintBox = 0;	// make gcc uninit warning disappear
-  if (!it.isEnd()) {
-    NodeImpl *node = caretNodeRef.handle();
-    hintBox = it.caretBox();
-//kdDebug(6200) << "hintBox = " << hintBox << endl;
-//kdDebug(6200) << " outside " << hintBox->isOutside() << " outsideEnd " << hintBox->isOutsideEnd() << " r " << it.renderer() << " ofs " << it.offset() << " cb " << hintBox->containingBlock() << endl;
-    mapRenderPosToDOMPos(it.renderer(), it.offset(), hintBox->isOutside(),
-    		hintBox->isOutsideEnd(), node, offset);
-//kdDebug(6200) << "mapRTD" << endl;
-    caretNodeRef = node;
+    EditableCharacterIterator it(&ld);
+    while(!it.isEnd() && count > 0)
+    {
+        count--;
+        if(cmv == CaretByCharacter)
+        {
+            if(next)
+                ++it;
+            else
+                --it;
+        }
+        else if(cmv == CaretByWord)
+        {
+            if(next)
+                moveItToNextWord(it);
+            else
+                moveItToPrevWord(it);
+        }                  /*end if*/
+                           // kdDebug(6200) << "movecaret" << endl;
+    }                      /*wend*/
+    CaretBox *hintBox = 0; // make gcc uninit warning disappear
+    if(!it.isEnd())
+    {
+        NodeImpl *node = caretNodeRef.handle();
+        hintBox = it.caretBox();
+        // kdDebug(6200) << "hintBox = " << hintBox << endl;
+        // kdDebug(6200) << " outside " << hintBox->isOutside() << " outsideEnd " << hintBox->isOutsideEnd() << " r " << it.renderer() << " ofs " <<
+        // it.offset() << " cb " << hintBox->containingBlock() << endl;
+        mapRenderPosToDOMPos(it.renderer(), it.offset(), hintBox->isOutside(), hintBox->isOutsideEnd(), node, offset);
+        // kdDebug(6200) << "mapRTD" << endl;
+        caretNodeRef = node;
 #if DEBUG_CARETMODE > 2
-    kdDebug(6200) << "set by valid node " << node << " " << (node?node->nodeName().string():QString::null) << " offset: " << offset << endl;
+        kdDebug(6200) << "set by valid node " << node << " " << (node ? node->nodeName().string() : QString::null) << " offset: " << offset << endl;
 #endif
-  } else {
-    offset = next ? caretNode->maxOffset() : caretNode->minOffset();
+    }
+    else
+    {
+        offset = next ? caretNode->maxOffset() : caretNode->minOffset();
 #if DEBUG_CARETMODE > 0
-    kdDebug(6200) << "set by INvalid node. offset: " << offset << endl;
+        kdDebug(6200) << "set by INvalid node. offset: " << offset << endl;
 #endif
-  }/*end if*/
-  placeCaretOnChar(hintBox);
+    } /*end if*/
+    placeCaretOnChar(hintBox);
 }
 
 void KHTMLView::placeCaretOnChar(CaretBox *hintBox)
 {
-  caretOff();
-  recalcAndStoreCaretPos(hintBox);
-  ensureVisible(d->m_caretViewContext->x, d->m_caretViewContext->y,
-  	d->m_caretViewContext->width, d->m_caretViewContext->height);
-  d->m_caretViewContext->origX = d->m_caretViewContext->x;
-  d->scrollBarMoved = false;
+    caretOff();
+    recalcAndStoreCaretPos(hintBox);
+    ensureVisible(d->m_caretViewContext->x, d->m_caretViewContext->y, d->m_caretViewContext->width, d->m_caretViewContext->height);
+    d->m_caretViewContext->origX = d->m_caretViewContext->x;
+    d->scrollBarMoved = false;
 #if DEBUG_CARETMODE > 3
-  //if (caretNode->isTextNode())  kdDebug(6200) << "text[0] = " << (int)*((TextImpl *)caretNode)->data().unicode() << " text :\"" << ((TextImpl *)caretNode)->data().string() << "\"" << endl;
+// if (caretNode->isTextNode())  kdDebug(6200) << "text[0] = " << (int)*((TextImpl *)caretNode)->data().unicode() << " text :\"" << ((TextImpl
+// *)caretNode)->data().string() << "\"" << endl;
 #endif
-  ensureNodeHasFocus(m_part->d->caretNode().handle());
-  caretOn();
+    ensureNodeHasFocus(m_part->d->caretNode().handle());
+    caretOn();
 }
 
 void KHTMLView::moveCaretByPage(bool next)
 {
-  Node &caretNodeRef = m_part->d->caretNode();
-  if (caretNodeRef.isNull()) return;
+    Node &caretNodeRef = m_part->d->caretNode();
+    if(caretNodeRef.isNull())
+        return;
 
-  NodeImpl *caretNode = caretNodeRef.handle();
-//  kdDebug(6200) << ": caretNode=" << caretNode << endl;
-  long offset = m_part->d->caretOffset();
+    NodeImpl *caretNode = caretNodeRef.handle();
+    //  kdDebug(6200) << ": caretNode=" << caretNode << endl;
+    long offset = m_part->d->caretOffset();
 
-  int offs = (clipper()->height() < 30) ? clipper()->height() : 30;
-  // Minimum distance the caret must be moved
-  int mindist = clipper()->height() - offs;
+    int offs = (clipper()->height() < 30) ? clipper()->height() : 30;
+    // Minimum distance the caret must be moved
+    int mindist = clipper()->height() - offs;
 
-  CaretViewContext *cv = d->caretViewContext();
-//  int y = cv->y;		// we always measure the top border
+    CaretViewContext *cv = d->caretViewContext();
+    //  int y = cv->y;		// we always measure the top border
 
-  ElementImpl *baseElem = determineBaseElement(caretNode);
-  LinearDocument ld(m_part, caretNode, offset, LeafsOnly, baseElem);
+    ElementImpl *baseElem = determineBaseElement(caretNode);
+    LinearDocument ld(m_part, caretNode, offset, LeafsOnly, baseElem);
 
-  ErgonomicEditableLineIterator it(ld.current(), cv->origX);
+    ErgonomicEditableLineIterator it(ld.current(), cv->origX);
 
-  moveIteratorByPage(ld, it, mindist, next);
+    moveIteratorByPage(ld, it, mindist, next);
 
-  int x, absx, absy;
-  CaretBox *caretBox = nearestCaretBox(it, d->m_caretViewContext, x, absx, absy);
+    int x, absx, absy;
+    CaretBox *caretBox = nearestCaretBox(it, d->m_caretViewContext, x, absx, absy);
 
-  placeCaretOnLine(caretBox, x, absx, absy);
+    placeCaretOnLine(caretBox, x, absx, absy);
 }
 
 void KHTMLView::moveCaretPrevWord()
 {
-  moveCaretBy(false, CaretByWord, 1);
+    moveCaretBy(false, CaretByWord, 1);
 }
 
 void KHTMLView::moveCaretNextWord()
 {
-  moveCaretBy(true, CaretByWord, 1);
+    moveCaretBy(true, CaretByWord, 1);
 }
 
 void KHTMLView::moveCaretPrevLine(int n)
 {
-  moveCaretByLine(false, n);
+    moveCaretByLine(false, n);
 }
 
 void KHTMLView::moveCaretNextLine(int n)
 {
-  moveCaretByLine(true, n);
+    moveCaretByLine(true, n);
 }
 
 void KHTMLView::moveCaretPrevPage()
 {
-  moveCaretByPage(false);
+    moveCaretByPage(false);
 }
 
 void KHTMLView::moveCaretNextPage()
 {
-  moveCaretByPage(true);
+    moveCaretByPage(true);
 }
 
 void KHTMLView::moveCaretToLineBegin()
 {
-  moveCaretToLineBoundary(false);
+    moveCaretToLineBoundary(false);
 }
 
 void KHTMLView::moveCaretToLineEnd()
 {
-  moveCaretToLineBoundary(true);
+    moveCaretToLineBoundary(true);
 }
 
 #endif // KHTML_NO_CARET

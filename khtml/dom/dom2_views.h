@@ -44,12 +44,13 @@ class KHTML_EXPORT AbstractView {
     friend class MouseEvent;
     friend class MutationEvent;
     friend class Document;
+
 public:
     AbstractView();
     AbstractView(const AbstractView &other);
     virtual ~AbstractView();
 
-    AbstractView & operator = (const AbstractView &other);
+    AbstractView &operator=(const AbstractView &other);
 
     /**
      * The source DocumentView of which this is an AbstractView.
@@ -86,5 +87,5 @@ protected:
 };
 
 
-} //namespace
+} // namespace
 #endif

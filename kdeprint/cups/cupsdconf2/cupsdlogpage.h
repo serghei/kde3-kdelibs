@@ -26,19 +26,18 @@ class QDirLineEdit;
 class SizeWidget;
 class QComboBox;
 
-class CupsdLogPage : public CupsdPage
-{
+class CupsdLogPage : public CupsdPage {
 public:
-	CupsdLogPage(QWidget *parent = 0, const char *name = 0);
+    CupsdLogPage(QWidget *parent = 0, const char *name = 0);
 
-	bool loadConfig(CupsdConf*, QString&);
-	bool saveConfig(CupsdConf*, QString&);
-	void setInfos(CupsdConf*);
+    bool loadConfig(CupsdConf *, QString &);
+    bool saveConfig(CupsdConf *, QString &);
+    void setInfos(CupsdConf *);
 
 private:
-	QDirLineEdit	*accesslog_, *errorlog_, *pagelog_;
-	QComboBox	*loglevel_;
-	SizeWidget	*maxlogsize_;
+    QDirLineEdit *accesslog_, *errorlog_, *pagelog_;
+    QComboBox *loglevel_;
+    SizeWidget *maxlogsize_;
 };
 
 #endif

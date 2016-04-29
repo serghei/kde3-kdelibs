@@ -30,85 +30,88 @@ class KListBox;
 class KLineEdit;
 class KProgress;
 
-//Possible result codes
-enum KS_RESULT {
-  KS_CANCEL=     0,
-  KS_REPLACE=    1,
-  KS_REPLACEALL= 2,
-  KS_IGNORE=     3,
-  KS_IGNOREALL=  4,
-  KS_ADD=        5,
-  KS_STOP=       7,
-  KS_SUGGEST=    8,
-  KS_CONFIG=     9
+// Possible result codes
+enum KS_RESULT
+{
+    KS_CANCEL = 0,
+    KS_REPLACE = 1,
+    KS_REPLACEALL = 2,
+    KS_IGNORE = 3,
+    KS_IGNOREALL = 4,
+    KS_ADD = 5,
+    KS_STOP = 7,
+    KS_SUGGEST = 8,
+    KS_CONFIG = 9
 };
 
-class KDEUI_EXPORT KSpellDlg : public KDialogBase
-{
-  Q_OBJECT
+class KDEUI_EXPORT KSpellDlg : public KDialogBase {
+    Q_OBJECT
 
-  class KSpellDlgPrivate;
-  KSpellDlgPrivate *d;
-  KLineEdit *editbox;
-  KProgress *progbar;
-  KListBox *listbox;
-  QStringList *sugg;
-  QPushButton *qpbrep, *qpbrepa;
-  QLabel *wordlabel;
-  QString word, newword;
-  bool progressbar;
+    class KSpellDlgPrivate;
+    KSpellDlgPrivate *d;
+    KLineEdit *editbox;
+    KProgress *progbar;
+    KListBox *listbox;
+    QStringList *sugg;
+    QPushButton *qpbrep, *qpbrepa;
+    QLabel *wordlabel;
+    QString word, newword;
+    bool progressbar;
 
 public:
-  KSpellDlg( QWidget *parent, const char *name,
-	     bool _progressbar = false, bool _modal = false );
-  ~KSpellDlg();
+    KSpellDlg(QWidget *parent, const char *name, bool _progressbar = false, bool _modal = false);
+    ~KSpellDlg();
 
-  QString replacement() const
-    { return newword; }
+    QString replacement() const
+    {
+        return newword;
+    }
 
-  /**
-   * Change the misspelled word and suggested replacements
-   *  and enable the disabled buttons on the dialog box.
-   * (Buttons are disabled by standby().)
-   **/
-  void init( const QString& _word, QStringList* _sugg );
-  void init( const QString& _word, QStringList* _sugg,
-             const QString& context );
+    /**
+     * Change the misspelled word and suggested replacements
+     *  and enable the disabled buttons on the dialog box.
+     * (Buttons are disabled by standby().)
+     **/
+    void init(const QString &_word, QStringList *_sugg);
+    void init(const QString &_word, QStringList *_sugg, const QString &context);
 
-  void standby() { emit ready( false ); }
+    void standby()
+    {
+        emit ready(false);
+    }
 
-  public slots:
-  /**
-   * Adjust the progress bar to @p p percent.
-   **/
-  void slotProgress( unsigned int p );
+public slots:
+    /**
+     * Adjust the progress bar to @p p percent.
+     **/
+    void slotProgress(unsigned int p);
 
 protected:
-  virtual void closeEvent( QCloseEvent * e );
-  void done( int i );
+    virtual void closeEvent(QCloseEvent *e);
+    void done(int i);
 
- signals:
+signals:
     /**
       This signal is emitted when a button is pressed.
       */
-  void command( int );
+    void command(int);
 
-  void ready( bool );
+    void ready(bool);
 
 protected slots:
-  void ignore();
-  void add();
-  void ignoreAll();
-  void cancel();
-  void replace();
-  void replaceAll();
-  void suggest();
-  void stop();
-  void slotConfigChanged();
+    void ignore();
+    void add();
+    void ignoreAll();
+    void cancel();
+    void replace();
+    void replaceAll();
+    void suggest();
+    void stop();
+    void slotConfigChanged();
 
-  void textChanged( const QString & );
+    void textChanged(const QString &);
 
-  void slotSelectionChanged( QListViewItem* item );
+    void slotSelectionChanged(QListViewItem *item);
 };
 
 #endif

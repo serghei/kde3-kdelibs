@@ -31,24 +31,29 @@ class KOpenSSLProxy;
 class KSMIMECryptoPrivate;
 
 class KIO_EXPORT KSMIMECrypto {
- public:
+public:
     KSMIMECrypto();
     ~KSMIMECrypto();
 
-    enum algo { KSC_C_DES3_CBC = 1,
-		KSC_C_RC2_CBC_128,
-		KSC_C_RC2_CBC_64,
-		KSC_C_DES_CBC,
-		KSC_C_RC2_CBC_40 };
+    enum algo
+    {
+        KSC_C_DES3_CBC = 1,
+        KSC_C_RC2_CBC_128,
+        KSC_C_RC2_CBC_64,
+        KSC_C_DES_CBC,
+        KSC_C_RC2_CBC_40
+    };
 
-    enum rc { KSC_R_OK,        /* everything ok */
-	      KSC_R_OTHER,     /* unspecified error */
-	      KSC_R_NO_SSL,    /* No crypto lib / compiled without SSL */
-	      KSC_R_NOCIPHER,  /* encryption cipher n/a */
-	      KSC_R_NOMEM,     /* out of memory */
-	      KSC_R_FORMAT,    /* wrong input data format */
-	      KSC_R_WRONGKEY,  /* wrong decryption/signature key */
-	      KSC_R_VERIFY     /* data does not match signature */
+    enum rc
+    {
+        KSC_R_OK,       /* everything ok */
+        KSC_R_OTHER,    /* unspecified error */
+        KSC_R_NO_SSL,   /* No crypto lib / compiled without SSL */
+        KSC_R_NOCIPHER, /* encryption cipher n/a */
+        KSC_R_NOMEM,    /* out of memory */
+        KSC_R_FORMAT,   /* wrong input data format */
+        KSC_R_WRONGKEY, /* wrong decryption/signature key */
+        KSC_R_VERIFY    /* data does not match signature */
     };
 
     /**
@@ -60,11 +65,8 @@ class KIO_EXPORT KSMIMECrypto {
      * @param detached create detached or opaque signature
      * @return 0 on success
      */
-    rc signMessage(const QCString &clearText,
-		   QByteArray &cipherText,
-		   const KSSLPKCS12 &privKey,
-		   const QPtrList<KSSLCertificate> &certs,
-		   bool detached);
+    rc signMessage(const QCString &clearText, QByteArray &cipherText, const KSSLPKCS12 &privKey, const QPtrList< KSSLCertificate > &certs,
+                   bool detached);
 
     /**
      * Check a detached message signature
@@ -75,9 +77,7 @@ class KIO_EXPORT KSMIMECrypto {
      * @param foundCerts certificates found in this message
      * @return 0 on success
      */
-    rc checkDetachedSignature(const QCString &clearText,
-			      const QByteArray &signature,
-			      QPtrList<KSSLCertificate> &foundCerts);
+    rc checkDetachedSignature(const QCString &clearText, const QByteArray &signature, QPtrList< KSSLCertificate > &foundCerts);
 
     /**
      * Check an opaque signed message
@@ -88,10 +88,8 @@ class KIO_EXPORT KSMIMECrypto {
      * @param foundCerts certificates found in this mesasge
      * @return 0 on success
      */
-    rc checkOpaqueSignature(const QByteArray &signedText,
-			    QCString &clearText,
-			    QPtrList<KSSLCertificate> &foundCerts);
-    
+    rc checkOpaqueSignature(const QByteArray &signedText, QCString &clearText, QPtrList< KSSLCertificate > &foundCerts);
+
     /**
      * Encrypt a message
      * encrypts a message for the given list of recipients and the
@@ -104,10 +102,7 @@ class KIO_EXPORT KSMIMECrypto {
      * @param recip recipient certificates
      * @return 0 on success
      */
-    rc encryptMessage(const QCString &clearText,
-		      QByteArray &cipherText,
-		      algo algorithm,
-		      const QPtrList<KSSLCertificate> &recip);
+    rc encryptMessage(const QCString &clearText, QByteArray &cipherText, algo algorithm, const QPtrList< KSSLCertificate > &recip);
 
     /**
      * Decrypt a message
@@ -116,11 +111,9 @@ class KIO_EXPORT KSMIMECrypto {
      * @param privKey private key to use
      * @return 0 on success
      */
-    rc decryptMessage(const QByteArray &cipherText,
-		      QCString &clearText,
-		      const KSSLPKCS12 &privKey);
+    rc decryptMessage(const QByteArray &cipherText, QCString &clearText, const KSSLPKCS12 &privKey);
 
- private:
+private:
     KSMIMECryptoPrivate *priv;
     KOpenSSLProxy *kossl;
 };

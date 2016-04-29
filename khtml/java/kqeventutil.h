@@ -27,8 +27,8 @@
 class QEvent;
 
 class KQEventUtil {
-    public:
-        static QString getQtEventName(QEvent *e);
+public:
+    static QString getQtEventName(QEvent *e);
 };
 
 #endif

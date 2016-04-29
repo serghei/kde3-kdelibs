@@ -23,60 +23,57 @@
 
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
  * An interface for the Document class which allows the selection
  * method to be changed between selecting rectangular blocks of text and normal mode
  * (all text between the start cursor and the current cursor).
  */
-class KTEXTEDITOR_EXPORT BlockSelectionInterface
-{
-  friend class PrivateBlockSelectionInterface;
+class KTEXTEDITOR_EXPORT BlockSelectionInterface {
+    friend class PrivateBlockSelectionInterface;
 
-  public:
-    BlockSelectionInterface ();
-    virtual ~BlockSelectionInterface ();
+public:
+    BlockSelectionInterface();
+    virtual ~BlockSelectionInterface();
 
-    unsigned int blockSelectionInterfaceNumber () const;
-    
-  protected:  
-    void setBlockSelectionInterfaceDCOPSuffix (const QCString &suffix);  
+    unsigned int blockSelectionInterfaceNumber() const;
 
-  /**
-  *  slots !!!
-  */
-  public:
+protected:
+    void setBlockSelectionInterfaceDCOPSuffix(const QCString &suffix);
+
+    /**
+    *  slots !!!
+    */
+public:
     /**
     * Returns the status of the selection mode - true indicates block selection mode is on.
     * If this is true, selections applied via the SelectionInterface are handled as
     * blockselections and the paste functions of the ClipboardInterface works on
     * rectangular blocks of text rather than normal. (copy too, but thats clear I hope ;)
     */
-    virtual bool blockSelectionMode () = 0;
+    virtual bool blockSelectionMode() = 0;
 
     /**
     * Set block selection mode to state "on"
     */
-    virtual bool setBlockSelectionMode (bool on) = 0;
+    virtual bool setBlockSelectionMode(bool on) = 0;
 
     /**
     * toggle block seletion mode
     */
-    virtual bool toggleBlockSelectionMode () = 0;
+    virtual bool toggleBlockSelectionMode() = 0;
 
-    private:
-      class PrivateBlockSelectionInterface *d;
-      static unsigned int globalBlockSelectionInterfaceNumber;
-      unsigned int myBlockSelectionInterfaceNumber;
+private:
+    class PrivateBlockSelectionInterface *d;
+    static unsigned int globalBlockSelectionInterfaceNumber;
+    unsigned int myBlockSelectionInterfaceNumber;
 };
 
 /**
  * Access the block selection interface of document @param doc
  */
-KTEXTEDITOR_EXPORT BlockSelectionInterface *blockSelectionInterface (class Document *doc);
-
+KTEXTEDITOR_EXPORT BlockSelectionInterface *blockSelectionInterface(class Document *doc);
 }
 
 #endif

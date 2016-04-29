@@ -33,9 +33,9 @@ namespace KABC {
 
 struct FormatInfo
 {
-  QString library;
-  QString nameLabel;
-  QString descriptionLabel;
+    QString library;
+    QString nameLabel;
+    QString descriptionLabel;
 };
 
 /**
@@ -54,10 +54,8 @@ struct FormatInfo
  * }
  * \endcode
  */
-class KABC_EXPORT FormatFactory
-{
-  public:
-    
+class KABC_EXPORT FormatFactory {
+public:
     /**
       Destructor.
      */
@@ -74,7 +72,7 @@ class KABC_EXPORT FormatFactory
      *
      * @param type   The type of the format, returned by formats()
      */
-    FormatPlugin *format( const QString &type );
+    FormatPlugin *format(const QString &type);
 
     /**
      * Returns a list of all available format types.
@@ -84,18 +82,17 @@ class KABC_EXPORT FormatFactory
     /**
      * Returns the info structure for a special type.
      */
-    FormatInfo *info( const QString &type );
+    FormatInfo *info(const QString &type);
 
-  protected:
+protected:
     FormatFactory();
 
-  private:
-    KLibrary *openLibrary( const QString& libName );
+private:
+    KLibrary *openLibrary(const QString &libName);
 
     static FormatFactory *mSelf;
 
-    QDict<FormatInfo> mFormatList;
+    QDict< FormatInfo > mFormatList;
 };
-
 }
 #endif

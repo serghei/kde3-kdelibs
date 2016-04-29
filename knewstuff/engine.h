@@ -27,7 +27,9 @@
 #include "entry.h"
 #include "provider.h"
 
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
 class KNewStuff;
 
@@ -48,11 +50,11 @@ class ProviderDialog;
  * \par Maintainer:
  * Josef Spillner (spillner@kde.org)
  */
-class KDE_EXPORT Engine : public QObject
-{
+class KDE_EXPORT Engine : public QObject {
     Q_OBJECT
     struct Private;
-  public:
+
+public:
     /**
       Constructor.
 
@@ -60,7 +62,7 @@ class KDE_EXPORT Engine : public QObject
       @param type the Hotstuff data type such as "korganizer/calendar"
       @param parentWidget the parent window
     */
-    Engine( KNewStuff *newStuff, const QString &type, QWidget *parentWidget = 0 );
+    Engine(KNewStuff *newStuff, const QString &type, QWidget *parentWidget = 0);
     /**
       Constructor.
 
@@ -69,7 +71,7 @@ class KDE_EXPORT Engine : public QObject
       @param providerList the URL of the provider list
       @param parentWidget the parent window
     */
-    Engine( KNewStuff *newStuff, const QString &type, const QString &providerList, QWidget *parentWidget = 0 );
+    Engine(KNewStuff *newStuff, const QString &type, const QString &providerList, QWidget *parentWidget = 0);
 
     /**
       Destructor.
@@ -81,14 +83,20 @@ class KDE_EXPORT Engine : public QObject
 
       @return the Hotstuff data type
     */
-    QString type() const { return mType; }
+    QString type() const
+    {
+        return mType;
+    }
 
     /**
       Returns the previously set parent widget.
 
       @return parent widget
     */
-    QWidget *parentWidget() const { return mParentWidget; }
+    QWidget *parentWidget() const
+    {
+        return mParentWidget;
+    }
 
     /**
       Initiates the download process, retrieving provider lists and invoking
@@ -103,14 +111,14 @@ class KDE_EXPORT Engine : public QObject
       @param fileName name of the payload data file
       @param previewName name of the preview image file
     */
-    void upload( const QString &fileName = QString::null, const QString &previewName = QString::null );
+    void upload(const QString &fileName = QString::null, const QString &previewName = QString::null);
 
     /**
       Downloads the specified data file.
 
       @param entry the Hotstuff data object to be downloaded
     */
-    void download( Entry *entry );
+    void download(Entry *entry);
 
     /**
       Asynchronous lookup of provider information such as upload and
@@ -118,52 +126,52 @@ class KDE_EXPORT Engine : public QObject
 
       @param provider the Hotstuff provider to request information from
     */
-    void requestMetaInformation( Provider *provider );
+    void requestMetaInformation(Provider *provider);
 
     /**
       Uploads the specified data file to the provider-dependent location.
 
       @param entry the Hotstuff data object to be uploaded
     */
-    void upload( Entry *entry );
-    
+    void upload(Entry *entry);
+
     /**
     Ignores the return value of the install method. Used internally to
     avoid showing of the success/failure dialog when installation is done
     in another place, like in @ref KNewStuffSecure
      */
-    void ignoreInstallResult(bool ignore);   
+    void ignoreInstallResult(bool ignore);
 
-  signals:
+signals:
     /** Emitted when the upload has finished.
       @param result indicates the success/failure of the upload
     */
-    void uploadFinished( bool result );
-  protected slots:
-    void getMetaInformation( Provider::List *providers );
-    void selectUploadProvider( Provider::List *providers );
+    void uploadFinished(bool result);
+protected slots:
+    void getMetaInformation(Provider::List *providers);
+    void selectUploadProvider(Provider::List *providers);
 
-    void slotNewStuffJobData( KIO::Job *job, const QByteArray &data );
-    void slotNewStuffJobResult( KIO::Job *job );
+    void slotNewStuffJobData(KIO::Job *job, const QByteArray &data);
+    void slotNewStuffJobResult(KIO::Job *job);
 
-    void slotDownloadJobResult( KIO::Job *job );
+    void slotDownloadJobResult(KIO::Job *job);
 
-    void slotUploadPayloadJobResult( KIO::Job *job );
-    void slotUploadPreviewJobResult (KIO::Job *job );
-    void slotUploadMetaJobResult( KIO::Job *job );
+    void slotUploadPayloadJobResult(KIO::Job *job);
+    void slotUploadPreviewJobResult(KIO::Job *job);
+    void slotUploadMetaJobResult(KIO::Job *job);
 
-  protected:
-    bool createMetaFile( Entry * );
-    
-  private:
+protected:
+    bool createMetaFile(Entry *);
+
+private:
     QWidget *mParentWidget;
 
     ProviderLoader *mProviderLoader;
 
-    QMap<KIO::Job *,QString> mNewStuffJobData;
-    QMap<KIO::Job *,Provider *> mProviderJobs;
+    QMap< KIO::Job *, QString > mNewStuffJobData;
+    QMap< KIO::Job *, Provider * > mProviderJobs;
 
-    QPtrList<Entry> mNewStuffList;
+    QPtrList< Entry > mNewStuffList;
 
     DownloadDialog *mDownloadDialog;
     UploadDialog *mUploadDialog;
@@ -178,11 +186,10 @@ class KDE_EXPORT Engine : public QObject
     QString mPreviewFile;
     QString mProviderList;
 
-    Private* d;
+    Private *d;
 
     QString mType;
 };
-
 }
 
 #endif

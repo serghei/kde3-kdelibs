@@ -36,8 +36,7 @@
 /*!
  * This KFileView is an empbedded preview for some file types.
  */
-class KIO_EXPORT KFilePreview : public QSplitter, public KFileView
-{
+class KIO_EXPORT KFilePreview : public QSplitter, public KFileView {
     Q_OBJECT
 
 public:
@@ -45,7 +44,10 @@ public:
     KFilePreview(KFileView *view, QWidget *parent, const char *name);
     virtual ~KFilePreview();
 
-    virtual QWidget *widget() { return this; }
+    virtual QWidget *widget()
+    {
+        return this;
+    }
     virtual void clearView();
 
     /**
@@ -57,17 +59,20 @@ public:
     /**
      * @returns the current fileview
      */
-    KFileView* fileView() const { return left; }
+    KFileView *fileView() const
+    {
+        return left;
+    }
 
-    virtual void updateView( bool );
-    virtual void updateView(const KFileItem*);
-    virtual void removeItem(const KFileItem*);
+    virtual void updateView(bool);
+    virtual void updateView(const KFileItem *);
+    virtual void removeItem(const KFileItem *);
     virtual void listingCompleted();
 
-    virtual void setSelectionMode( KFile::SelectionMode sm );
+    virtual void setSelectionMode(KFile::SelectionMode sm);
 
     virtual void setSelected(const KFileItem *, bool);
-    virtual bool isSelected( const KFileItem * ) const;
+    virtual bool isSelected(const KFileItem *) const;
     virtual void clearSelection();
     virtual void selectAll();
     virtual void invertSelection();
@@ -75,16 +80,16 @@ public:
     virtual void insertItem(KFileItem *);
     virtual void clear();
 
-    virtual void setCurrentItem( const KFileItem * );
-    virtual KFileItem * currentFileItem() const;
-    virtual KFileItem * firstFileItem() const;
-    virtual KFileItem * nextItem( const KFileItem * ) const;
-    virtual KFileItem * prevItem( const KFileItem * ) const;
+    virtual void setCurrentItem(const KFileItem *);
+    virtual KFileItem *currentFileItem() const;
+    virtual KFileItem *firstFileItem() const;
+    virtual KFileItem *nextItem(const KFileItem *) const;
+    virtual KFileItem *prevItem(const KFileItem *) const;
 
-    virtual void setSorting( QDir::SortSpec sort );
+    virtual void setSorting(QDir::SortSpec sort);
 
-    virtual void readConfig( KConfig *, const QString& group = QString::null );
-    virtual void writeConfig( KConfig *, const QString& group = QString::null);
+    virtual void readConfig(KConfig *, const QString &group = QString::null);
+    virtual void writeConfig(KConfig *, const QString &group = QString::null);
 
     /**
      * This overrides KFileView::actionCollection() by returning
@@ -92,21 +97,21 @@ public:
      * This means that KFilePreview will never create a KActionCollection
      * object of its own.
      */
-    virtual KActionCollection * actionCollection() const;
+    virtual KActionCollection *actionCollection() const;
 
     void ensureItemVisible(const KFileItem *);
 
     void setPreviewWidget(const QWidget *w, const KURL &u);
 
 protected slots:
-    virtual void slotHighlighted( const KFileItem * );
+    virtual void slotHighlighted(const KFileItem *);
 
 signals:
     void showPreview(const KURL &);
     void clearPreview();
 
 private:
-    void init( KFileView *view );
+    void init(KFileView *view);
 
     KFileView *left;
     QWidget *preview;
@@ -114,7 +119,8 @@ private:
 
 protected:
     /** \internal */
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KFilePreviewPrivate;
     KFilePreviewPrivate *d;

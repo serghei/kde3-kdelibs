@@ -16,7 +16,7 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- */ 
+ */
 
 
 #ifndef _KSSLKEYGEN_H
@@ -42,54 +42,56 @@ class KGWizardPage2;
  * @short KDE Key Generation Dialog
  */
 class KIO_EXPORT KSSLKeyGen : public KWizard {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	/**
-	 *  Construct a keygen dialog.
-	 *  @param parent the parent widget
-	 *  @param name the internal name of this instance
-	 *  @param modal true if the dialog should be modal
-	 */
-	KSSLKeyGen(QWidget *parent=0L, const char *name=0L, bool modal=false);
+    /**
+     *  Construct a keygen dialog.
+     *  @param parent the parent widget
+     *  @param name the internal name of this instance
+     *  @param modal true if the dialog should be modal
+     */
+    KSSLKeyGen(QWidget *parent = 0L, const char *name = 0L, bool modal = false);
 
-	/**
-	 *  Destroy this dialog.
-	 */
-	virtual ~KSSLKeyGen();
+    /**
+     *  Destroy this dialog.
+     */
+    virtual ~KSSLKeyGen();
 
-	/**
-	 *  List the supported key sizes.
-	 *  @return the supported key sizes
-	 */
-	static QStringList supportedKeySizes();
+    /**
+     *  List the supported key sizes.
+     *  @return the supported key sizes
+     */
+    static QStringList supportedKeySizes();
 
-	/**
-	 *  Generate the certificate signing request.
-	 *  @param name the name for the certificate
-	 *  @param pass the password for the request
-	 *  @param bits the bitsize for the key
-	 *  @param e the value of the "e" parameter in RSA
-	 *  @return 0 on success, non-zero on error
-	 */
-	int generateCSR(const QString& name, const QString& pass, int bits, int e = 0x10001);
+    /**
+     *  Generate the certificate signing request.
+     *  @param name the name for the certificate
+     *  @param pass the password for the request
+     *  @param bits the bitsize for the key
+     *  @param e the value of the "e" parameter in RSA
+     *  @return 0 on success, non-zero on error
+     */
+    int generateCSR(const QString &name, const QString &pass, int bits, int e = 0x10001);
 
-	/**
-	 *  Set the key size.
-	 *  @param idx an index into supportedKeySizes()
-	 */
-	void setKeySize(int idx) { _idx = idx; }
+    /**
+     *  Set the key size.
+     *  @param idx an index into supportedKeySizes()
+     */
+    void setKeySize(int idx)
+    {
+        _idx = idx;
+    }
 
 private slots:
-	void slotPassChanged();
-	void slotGenerate();
+    void slotPassChanged();
+    void slotGenerate();
 
 private:
-	class KSSLKeyGenPrivate;
-	KSSLKeyGenPrivate *d;
-	int _idx;
-	KGWizardPage1 *page1;
-	KGWizardPage2 *page2;
+    class KSSLKeyGenPrivate;
+    KSSLKeyGenPrivate *d;
+    int _idx;
+    KGWizardPage1 *page1;
+    KGWizardPage2 *page2;
 };
 
 #endif
-

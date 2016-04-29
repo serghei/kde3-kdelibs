@@ -23,10 +23,9 @@
 
 #include <klocale.h>
 
-KMExtUiManager::KMExtUiManager(QObject *parent, const char *name, const QStringList & /*args*/)
-: KMUiManager(parent,name)
+KMExtUiManager::KMExtUiManager(QObject *parent, const char *name, const QStringList & /*args*/) : KMUiManager(parent, name)
 {
-	m_printdialogflags |= KMUiManager::PrintCommand;
+    m_printdialogflags |= KMUiManager::PrintCommand;
 }
 
 KMExtUiManager::~KMExtUiManager()
@@ -35,10 +34,10 @@ KMExtUiManager::~KMExtUiManager()
 
 int KMExtUiManager::pluginPageCap()
 {
-	return KMUiManager::NoAutoCollate;
+    return KMUiManager::NoAutoCollate;
 }
 
-void KMExtUiManager::setupPrinterPropertyDialog( KPrinterPropertyDialog *dlg )
+void KMExtUiManager::setupPrinterPropertyDialog(KPrinterPropertyDialog *dlg)
 {
-	dlg->addPage( new KPQtPage( dlg, "QtPage" ) );
+    dlg->addPage(new KPQtPage(dlg, "QtPage"));
 }

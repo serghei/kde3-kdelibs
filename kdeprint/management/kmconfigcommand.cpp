@@ -27,27 +27,26 @@
 #include <klocale.h>
 #include <kdialog.h>
 
-KMConfigCommand::KMConfigCommand(QWidget *parent, const char *name)
-: KMConfigPage(parent, name)
+KMConfigCommand::KMConfigCommand(QWidget *parent, const char *name) : KMConfigPage(parent, name)
 {
-	setPageName(i18n("Commands"));
-	setPageHeader(i18n("Command Settings"));
-	setPagePixmap("exec");
+    setPageName(i18n("Commands"));
+    setPageHeader(i18n("Command Settings"));
+    setPagePixmap("exec");
 
-	QGroupBox	*gb = new QGroupBox(0, Qt::Horizontal, i18n("Edit/Create Commands"), this);
-	QLabel	*lab = new QLabel(i18n(
-				"<p>Command objects perform a conversion from input to output.<br>"
-                "They are used as the basis to build both print filters "
-				"and special printers. They are described by a command string, a "
-				"set of options, a set of requirements and associated mime types. "
-				"Here you can create new command objects and edit existing ones. All "
-				"changes will only be effective for you."), gb);
-	KXmlCommandSelector	*sel = new KXmlCommandSelector(false, gb);
+    QGroupBox *gb = new QGroupBox(0, Qt::Horizontal, i18n("Edit/Create Commands"), this);
+    QLabel *lab = new QLabel(i18n("<p>Command objects perform a conversion from input to output.<br>"
+                                  "They are used as the basis to build both print filters "
+                                  "and special printers. They are described by a command string, a "
+                                  "set of options, a set of requirements and associated mime types. "
+                                  "Here you can create new command objects and edit existing ones. All "
+                                  "changes will only be effective for you."),
+                             gb);
+    KXmlCommandSelector *sel = new KXmlCommandSelector(false, gb);
 
-	QVBoxLayout	*l0 = new QVBoxLayout(this, 0, KDialog::spacingHint());
-	l0->addWidget(gb);
-	l0->addStretch(1);
-	QVBoxLayout	*l2 = new QVBoxLayout(gb->layout(), KDialog::spacingHint());
-	l2->addWidget(lab);
-	l2->addWidget(sel);
+    QVBoxLayout *l0 = new QVBoxLayout(this, 0, KDialog::spacingHint());
+    l0->addWidget(gb);
+    l0->addStretch(1);
+    QVBoxLayout *l2 = new QVBoxLayout(gb->layout(), KDialog::spacingHint());
+    l2->addWidget(lab);
+    l2->addWidget(sel);
 }

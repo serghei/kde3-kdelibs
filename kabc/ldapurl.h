@@ -34,77 +34,103 @@ namespace KABC {
 
  * LDAPUrl implements an RFC 2255 compliant LDAP Url parser, with minimal
  * differences. LDAP Urls implemented by this class has the following format:
- * ldap[s]://[user[:password]@]hostname[:port]["/" [dn ["?" [attributes] 
+ * ldap[s]://[user[:password]@]hostname[:port]["/" [dn ["?" [attributes]
  * ["?" [scope] ["?" [filter] ["?" extensions]]]]]]
  */
 
 
-  class KABC_EXPORT LDAPUrl : public KURL
-  {
-  public:
-
-    struct Extension {
-      QString value;
-      bool critical;
+class KABC_EXPORT LDAPUrl : public KURL {
+public:
+    struct Extension
+    {
+        QString value;
+        bool critical;
     };
-    
-    enum Scope { Base, One, Sub };
+
+    enum Scope
+    {
+        Base,
+        One,
+        Sub
+    };
 
     /** Constructs an empty KLDAPUrl. */
     LDAPUrl();
     /** Constructs a KLDAPUrl from a KURL. */
-    LDAPUrl( const KURL &url );
-  
+    LDAPUrl(const KURL &url);
+
     /**
      * Returns the dn part of the LDAP Url (same as path(), but slash removed
      * from the beginning).
      */
-    const QString& dn() const { return m_dn; }
-    /** Sets the the dn part of the LDAP Url. */ 
-    void setDn( const QString &dn );
+    const QString &dn() const
+    {
+        return m_dn;
+    }
+    /** Sets the the dn part of the LDAP Url. */
+    void setDn(const QString &dn);
 
     /** Returns the attributes part of the LDAP Url */
-    const QStringList &attributes() { return m_attributes; }
+    const QStringList &attributes()
+    {
+        return m_attributes;
+    }
     /** Sets the attributes part of the LDAP Url */
-    void setAttributes( const QStringList &attributes ) 
-      { m_attributes=attributes; updateQuery(); }
+    void setAttributes(const QStringList &attributes)
+    {
+        m_attributes = attributes;
+        updateQuery();
+    }
 
     /** Returns the scope part of the LDAP Url */
-    Scope scope() const { return m_scope; }
+    Scope scope() const
+    {
+        return m_scope;
+    }
     /** Sets the scope part of the LDAP Url */
-    void setScope(Scope scope) { m_scope = scope; updateQuery(); }
+    void setScope(Scope scope)
+    {
+        m_scope = scope;
+        updateQuery();
+    }
 
     /** Returns the filter part of the LDAP Url */
-    const QString &filter() const { return m_filter; }
+    const QString &filter() const
+    {
+        return m_filter;
+    }
     /** Sets the filter part of the LDAP Url */
-    void setFilter( QString filter ) { m_filter = filter; updateQuery(); }
+    void setFilter(QString filter)
+    {
+        m_filter = filter;
+        updateQuery();
+    }
 
     /** Returns if the specified extension exists in the LDAP Url */
-    bool hasExtension( const QString &key ) const;
+    bool hasExtension(const QString &key) const;
     /** Returns the specified extension */
-    Extension extension( const QString &key ) const;
+    Extension extension(const QString &key) const;
     /** Returns the specified extension */
-    QString extension( const QString &key, bool &critical ) const;
+    QString extension(const QString &key, bool &critical) const;
     /** Sets the specified extension key with the value and criticality in ext */
-    void setExtension( const QString &key, const Extension &ext );
+    void setExtension(const QString &key, const Extension &ext);
     /** Sets the specified extension key with the value and criticality specified */
-    void setExtension( const QString &key, const QString &value, bool critical = false );
+    void setExtension(const QString &key, const QString &value, bool critical = false);
     /** Removes the specified extension */
-    void removeExtension( const QString &key );
+    void removeExtension(const QString &key);
     /** Updates the query component from the attributes, scope, filter and extensions */
     void updateQuery();
-    
-  protected:
+
+protected:
     void parseQuery();
 
-  private:
-
-    QMap<QString, Extension> m_extensions;
+private:
+    QMap< QString, Extension > m_extensions;
     QString m_dn;
     QStringList m_attributes;
     Scope m_scope;
     QString m_filter;
-  };
+};
 }
 
 #endif

@@ -17,49 +17,56 @@
  *  Boston, MA 02110-1301, USA.
  **/
 
-#ifndef	MARGINPREVIEW_H
-#define	MARGINPREVIEW_H
+#ifndef MARGINPREVIEW_H
+#define MARGINPREVIEW_H
 
 #include <qwidget.h>
 
-class MarginPreview : public QWidget
-{
-	Q_OBJECT
+class MarginPreview : public QWidget {
+    Q_OBJECT
 
 public:
-	MarginPreview(QWidget *parent = 0, const char *name = 0);
-	~MarginPreview();
-	// note : unit -> points (1/72th in)
-	void setPageSize(float w, float h);
-	void setMargins(float t, float b, float l, float r);
-	void setNoPreview(bool on);
-	void setSymetric(bool on);
-	enum	StateType { Fixed = -1, None = 0, TMoving, BMoving, LMoving, RMoving };
+    MarginPreview(QWidget *parent = 0, const char *name = 0);
+    ~MarginPreview();
+    // note : unit -> points (1/72th in)
+    void setPageSize(float w, float h);
+    void setMargins(float t, float b, float l, float r);
+    void setNoPreview(bool on);
+    void setSymetric(bool on);
+    enum StateType
+    {
+        Fixed = -1,
+        None = 0,
+        TMoving,
+        BMoving,
+        LMoving,
+        RMoving
+    };
 
 public slots:
-	void enableRubberBand(bool on);
+    void enableRubberBand(bool on);
 
 signals:
-	void marginChanged(int type, float value);
+    void marginChanged(int type, float value);
 
 protected:
-	void paintEvent(QPaintEvent *);
-	void resizeEvent(QResizeEvent *);
-	void mouseMoveEvent(QMouseEvent *);
-	void mousePressEvent(QMouseEvent *);
-	void mouseReleaseEvent(QMouseEvent *);
-	int locateMouse(const QPoint& p);
-	void drawTempLine(QPainter*);
+    void paintEvent(QPaintEvent *);
+    void resizeEvent(QResizeEvent *);
+    void mouseMoveEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+    int locateMouse(const QPoint &p);
+    void drawTempLine(QPainter *);
 
 private:
-	float	width_, height_;
-	float	top_, bottom_, left_, right_;
-	QRect	box_, margbox_;
-	float	zoom_;
-	bool	nopreview_;
-	int	state_;
-	int	oldpos_;
-	bool	symetric_;
+    float width_, height_;
+    float top_, bottom_, left_, right_;
+    QRect box_, margbox_;
+    float zoom_;
+    bool nopreview_;
+    int state_;
+    int oldpos_;
+    bool symetric_;
 };
 
 #endif

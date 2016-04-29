@@ -24,18 +24,18 @@
 
 #include <kgenericfactory.h>
 #include <scriptclientinterface.h>
-//using namespace KScriptInterface;
-typedef KGenericFactory<ShellScript, KScriptClientInterface> ShellScriptFactory;
-K_EXPORT_COMPONENT_FACTORY( libshellscript, ShellScriptFactory( "ShellScript" ) )
+// using namespace KScriptInterface;
+typedef KGenericFactory< ShellScript, KScriptClientInterface > ShellScriptFactory;
+K_EXPORT_COMPONENT_FACTORY(libshellscript, ShellScriptFactory("ShellScript"))
 
-ShellScript::ShellScript(KScriptClientInterface *parent, const char *, const QStringList & ) : ScriptClientInterface(parent)
+ShellScript::ShellScript(KScriptClientInterface *parent, const char *, const QStringList &) : ScriptClientInterface(parent)
 {
-	m_script =  new KProcess();
-	connect ( m_script, SIGNAL(processExited(KProcess *)), SLOT(Exit(KProcess *)));
-	connect ( m_script, SIGNAL(receivedStdout(KProcess *, char *, int)), SLOT(stdOut(KProcess *, char *, int )));
-	connect ( m_script, SIGNAL(receivedStderr(KProcess *, char *, int)), SLOT(stdErr(KProcess *, char *, int )));
-	// Connect feedback signals and slots
-	//kdDebug() << "Building new script engine" << endl;
+    m_script = new KProcess();
+    connect(m_script, SIGNAL(processExited(KProcess *)), SLOT(Exit(KProcess *)));
+    connect(m_script, SIGNAL(receivedStdout(KProcess *, char *, int)), SLOT(stdOut(KProcess *, char *, int)));
+    connect(m_script, SIGNAL(receivedStderr(KProcess *, char *, int)), SLOT(stdErr(KProcess *, char *, int)));
+    // Connect feedback signals and slots
+    // kdDebug() << "Building new script engine" << endl;
 }
 
 ShellScript::~ShellScript()
@@ -44,42 +44,42 @@ ShellScript::~ShellScript()
 
 QString ShellScript::script() const
 {
-	return m_scriptName;
+    return m_scriptName;
 }
 
-void ShellScript::setScript( const QString &scriptFile  )
+void ShellScript::setScript(const QString &scriptFile)
 {
-	m_scriptName = scriptFile;
-	*m_script << "sh" << m_scriptName << kapp->dcopClient()->appId();
+    m_scriptName = scriptFile;
+    *m_script << "sh" << m_scriptName << kapp->dcopClient()->appId();
 }
 
-void ShellScript::setScript( const QString &, const QString & )
+void ShellScript::setScript(const QString &, const QString &)
 {
     // ### what is this?
 }
 
 void ShellScript::run(QObject *, const QVariant &)
 {
-	 m_script->start(KProcess::NotifyOnExit,KProcess::All);
+    m_script->start(KProcess::NotifyOnExit, KProcess::All);
 }
 void ShellScript::kill()
 {
-	if (!m_script->kill())		// Kill the process
-		m_script->kill(9);	// Kill it harder
+    if(!m_script->kill())  // Kill the process
+        m_script->kill(9); // Kill it harder
 }
 
 void ShellScript::Exit(KProcess *proc)
 {
-	ScriptClientInterface->done((KScriptClientInterface::Result)proc->exitStatus(), "");
+    ScriptClientInterface->done((KScriptClientInterface::Result)proc->exitStatus(), "");
 }
 
 void ShellScript::stdErr(KProcess *, char *buffer, int)
 {
-	ScriptClientInterface->error(buffer);
+    ScriptClientInterface->error(buffer);
 }
 void ShellScript::stdOut(KProcess *, char *buffer, int)
 {
-	ScriptClientInterface->output(buffer);
+    ScriptClientInterface->output(buffer);
 }
 
 #include "shellscript.moc"

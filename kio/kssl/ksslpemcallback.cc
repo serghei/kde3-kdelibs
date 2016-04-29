@@ -26,36 +26,37 @@
 #include <klocale.h>
 #include "ksslpemcallback.h"
 
-int KSSLPemCallback(char *buf, int size, int rwflag, void *userdata) {
+int KSSLPemCallback(char *buf, int size, int rwflag, void *userdata)
+{
 #ifdef KSSL_HAVE_SSL
-	QCString pass;
-	Q_UNUSED(userdata);
-	Q_UNUSED(rwflag);
+    QCString pass;
+    Q_UNUSED(userdata);
+    Q_UNUSED(rwflag);
 
-	if (!buf) return -1;
-	int rc = KPasswordDialog::getPassword(pass, i18n("Certificate password"));
-	if (rc != KPasswordDialog::Accepted) return -1;
+    if(!buf)
+        return -1;
+    int rc = KPasswordDialog::getPassword(pass, i18n("Certificate password"));
+    if(rc != KPasswordDialog::Accepted)
+        return -1;
 
-	const uint passlen = pass.length();
-	if (passlen > (unsigned int)size-1)
-		pass.truncate((unsigned int)size-1);
+    const uint passlen = pass.length();
+    if(passlen > (unsigned int)size - 1)
+        pass.truncate((unsigned int)size - 1);
 
-	qstrncpy(buf, pass.data(), size-1);
-    
-	for (unsigned int i = 0; i < passlen; i++)
-		pass[i] = 0;
-	// To be sure that it doesn't optimise the previous loop away
-	for (unsigned int i = 0; i < passlen; i++)
-		pass[i] = pass[i];
-	buf[size-1] = 0;
-	return (int)passlen;
+    qstrncpy(buf, pass.data(), size - 1);
+
+    for(unsigned int i = 0; i < passlen; i++)
+        pass[i] = 0;
+    // To be sure that it doesn't optimise the previous loop away
+    for(unsigned int i = 0; i < passlen; i++)
+        pass[i] = pass[i];
+    buf[size - 1] = 0;
+    return (int)passlen;
 #else
-	Q_UNUSED(buf);
-	Q_UNUSED(size);
-	Q_UNUSED(rwflag);
-	Q_UNUSED(userdata);
-	return -1;
+    Q_UNUSED(buf);
+    Q_UNUSED(size);
+    Q_UNUSED(rwflag);
+    Q_UNUSED(userdata);
+    return -1;
 #endif
 }
-
-

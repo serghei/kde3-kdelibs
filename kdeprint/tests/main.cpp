@@ -15,27 +15,25 @@
 #include <stdlib.h>
 
 
-int main( int argc, char ** argv )
+int main(int argc, char **argv)
 {
     KApplication a(argc, argv, "helpviewer");
 
     QString home;
-    if (argc > 1)
+    if(argc > 1)
         home = argv[1];
     else
         home = QString(getenv("QTDIR")) + "/doc/html/index.html";
 
-    
+
     HelpWindow *help = new HelpWindow(home, ".", 0, "help viewer");
 
-    if ( QApplication::desktop()->width() > 400
-	 && QApplication::desktop()->height() > 500 )
-	help->show();
+    if(QApplication::desktop()->width() > 400 && QApplication::desktop()->height() > 500)
+        help->show();
     else
-	help->showMaximized();
+        help->showMaximized();
 
-    QObject::connect( &a, SIGNAL(lastWindowClosed()),
-                      &a, SLOT(quit()) );
+    QObject::connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
 
     return a.exec();
 }

@@ -24,40 +24,37 @@
 class QString;
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 *  This is an interface to the text encoding of a Document class.
 */
-class KTEXTEDITOR_EXPORT EncodingInterface
-{
-  friend class PrivateEncodingInterface;
+class KTEXTEDITOR_EXPORT EncodingInterface {
+    friend class PrivateEncodingInterface;
 
-  public:
+public:
     EncodingInterface();
     virtual ~EncodingInterface();
 
-    unsigned int encodingInterfaceNumber () const;
-    
-  protected:  
-    void setEncodingInterfaceDCOPSuffix (const QCString &suffix);  
+    unsigned int encodingInterfaceNumber() const;
 
-  //
-  // slots !!!
-  //  
-  public:
-    virtual void setEncoding (const class QString &e) = 0;
+protected:
+    void setEncodingInterfaceDCOPSuffix(const QCString &suffix);
+
+    //
+    // slots !!!
+    //
+public:
+    virtual void setEncoding(const class QString &e) = 0;
     virtual class QString encoding() const = 0;
 
-  private:
+private:
     class PrivateEncodingInterface *d;
     static unsigned int globalEncodingInterfaceNumber;
     unsigned int myEncodingInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT EncodingInterface *encodingInterface (class Document *doc);
-
+KTEXTEDITOR_EXPORT EncodingInterface *encodingInterface(class Document *doc);
 }
 
 #endif

@@ -28,30 +28,28 @@
 
 namespace KABC {
 
-class KABC_EXPORT ResourceFileConfig : public KRES::ConfigWidget
-{ 
-  Q_OBJECT
+class KABC_EXPORT ResourceFileConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
 public:
-  ResourceFileConfig( QWidget* parent = 0, const char* name = 0 );
+    ResourceFileConfig(QWidget *parent = 0, const char *name = 0);
 
-  void setEditMode( bool value );
+    void setEditMode(bool value);
 
 public slots:
-  void loadSettings( KRES::Resource *resource );
-  void saveSettings( KRES::Resource *resource );
+    void loadSettings(KRES::Resource *resource);
+    void saveSettings(KRES::Resource *resource);
 
 protected slots:
-  void checkFilePermissions( const QString& fileName );
+    void checkFilePermissions(const QString &fileName);
 
 private:
-  KComboBox* mFormatBox;
-  KURLRequester* mFileNameEdit;
-  bool mInEditMode;
+    KComboBox *mFormatBox;
+    KURLRequester *mFileNameEdit;
+    bool mInEditMode;
 
-  QStringList mFormatTypes;
+    QStringList mFormatTypes;
 };
-
 }
 
 #endif

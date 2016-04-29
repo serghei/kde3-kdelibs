@@ -42,77 +42,79 @@ class KLineEdit;
 
 namespace KABC {
 
-class KABC_EXPORT ResourceLDAPKIOConfig : public KRES::ConfigWidget
-{ 
-  Q_OBJECT
+class KABC_EXPORT ResourceLDAPKIOConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
-  public:
-    ResourceLDAPKIOConfig( QWidget* parent = 0, const char* name = 0 );
+public:
+    ResourceLDAPKIOConfig(QWidget *parent = 0, const char *name = 0);
 
-  public slots:
-    void loadSettings( KRES::Resource* );
-    void saveSettings( KRES::Resource* );
+public slots:
+    void loadSettings(KRES::Resource *);
+    void saveSettings(KRES::Resource *);
 
-  private slots:
+private slots:
     void editAttributes();
     void editCache();
-  private:
+
+private:
     QPushButton *mEditButton, *mCacheButton;
     LdapConfigWidget *cfg;
     QCheckBox *mSubTree;
-    QMap<QString, QString> mAttributes;
+    QMap< QString, QString > mAttributes;
     int mRDNPrefix, mCachePolicy;
     bool mAutoCache;
     QString mCacheDst;
 };
 
-class AttributesDialog : public KDialogBase
-{
-  Q_OBJECT
+class AttributesDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    AttributesDialog( const QMap<QString, QString> &attributes, int rdnprefix,
-                      QWidget *parent, const char *name = 0 );
+public:
+    AttributesDialog(const QMap< QString, QString > &attributes, int rdnprefix, QWidget *parent, const char *name = 0);
     ~AttributesDialog();
 
-    QMap<QString, QString> attributes() const;
+    QMap< QString, QString > attributes() const;
     int rdnprefix() const;
 
-  private slots:
-    void mapChanged( int pos );
+private slots:
+    void mapChanged(int pos);
 
-  private:
-    enum { UserMap, KolabMap, NetscapeMap, EvolutionMap, OutlookMap };
+private:
+    enum
+    {
+        UserMap,
+        KolabMap,
+        NetscapeMap,
+        EvolutionMap,
+        OutlookMap
+    };
 
     KComboBox *mMapCombo, *mRDNCombo;
-    QValueList< QMap<QString, QString> > mMapList;
-    QMap<QString, QString> mDefaultMap;
-    QDict<KLineEdit> mLineEditDict;
-    QDict<QString> mNameDict;
+    QValueList< QMap< QString, QString > > mMapList;
+    QMap< QString, QString > mDefaultMap;
+    QDict< KLineEdit > mLineEditDict;
+    QDict< QString > mNameDict;
 };
 
-class OfflineDialog : public KDialogBase
-{
-  Q_OBJECT
+class OfflineDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    OfflineDialog( bool autoCache, int cachePolicy, const KURL &src, 
-      const QString &dst, QWidget *parent, const char *name = 0 );
+public:
+    OfflineDialog(bool autoCache, int cachePolicy, const KURL &src, const QString &dst, QWidget *parent, const char *name = 0);
     ~OfflineDialog();
 
     int cachePolicy() const;
     bool autoCache() const;
 
-  private slots:
+private slots:
     void loadCache();
 
-  private:
+private:
     KURL mSrc;
     QString mDst;
     QButtonGroup *mCacheGroup;
     QCheckBox *mAutoCache;
 };
-
 }
 
 #endif

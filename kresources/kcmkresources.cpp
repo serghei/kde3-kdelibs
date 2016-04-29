@@ -29,40 +29,36 @@
 
 #include "kcmkresources.h"
 
-typedef KGenericFactory<KCMKResources, QWidget> ResourcesFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_kresources, ResourcesFactory( "kcmkresources" ) )
+typedef KGenericFactory< KCMKResources, QWidget > ResourcesFactory;
+K_EXPORT_COMPONENT_FACTORY(kcm_kresources, ResourcesFactory("kcmkresources"))
 
-KCMKResources::KCMKResources( QWidget *parent, const char *name, const QStringList& )
-  : KCModule( ResourcesFactory::instance(), parent, name )
+KCMKResources::KCMKResources(QWidget *parent, const char *name, const QStringList &) : KCModule(ResourcesFactory::instance(), parent, name)
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  mConfigPage = new KRES::ConfigPage( this );
-  layout->addWidget( mConfigPage );
-  connect( mConfigPage, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );
-  setButtons( Help | Apply );
-  KAboutData *about =
-   new KAboutData( I18N_NOOP( "kcmkresources" ),
-                   I18N_NOOP( "KDE Resources configuration module" ),
-                   0, 0, KAboutData::License_GPL,
-                   I18N_NOOP( "(c) 2003 Tobias Koenig" ) );
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    mConfigPage = new KRES::ConfigPage(this);
+    layout->addWidget(mConfigPage);
+    connect(mConfigPage, SIGNAL(changed(bool)), SIGNAL(changed(bool)));
+    setButtons(Help | Apply);
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmkresources"), I18N_NOOP("KDE Resources configuration module"), 0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c) 2003 Tobias Koenig"));
 
-  about->addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
-  setAboutData(about);
+    about->addAuthor("Tobias Koenig", 0, "tokoe@kde.org");
+    setAboutData(about);
 }
 
 void KCMKResources::load()
 {
-  mConfigPage->load();
+    mConfigPage->load();
 }
 
 void KCMKResources::save()
 {
-  mConfigPage->save();
+    mConfigPage->save();
 }
 
 void KCMKResources::defaults()
 {
-  mConfigPage->defaults();
+    mConfigPage->defaults();
 }
 
 #include "kcmkresources.moc"

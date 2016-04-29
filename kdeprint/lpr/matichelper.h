@@ -24,6 +24,6 @@
 
 class PrintcapEntry;
 
-QString maticFile(PrintcapEntry*);
+QString maticFile(PrintcapEntry *);
 
 #endif

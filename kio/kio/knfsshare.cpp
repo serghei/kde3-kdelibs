@@ -27,23 +27,22 @@
 
 #include "knfsshare.h"
 
-class KNFSSharePrivate
-{
+class KNFSSharePrivate {
 public:
-  KNFSSharePrivate();
-  
-  bool readExportsFile();
-  bool findExportsFile();
-  
-  QDict<bool> sharedPaths;
-  QString exportsFile;
+    KNFSSharePrivate();
+
+    bool readExportsFile();
+    bool findExportsFile();
+
+    QDict< bool > sharedPaths;
+    QString exportsFile;
 };
 
-KNFSSharePrivate::KNFSSharePrivate() 
+KNFSSharePrivate::KNFSSharePrivate()
 {
-  if (findExportsFile())
-      readExportsFile();
-}  
+    if(findExportsFile())
+        readExportsFile();
+}
 
 /**
  * Try to find the nfs config file path
@@ -51,169 +50,180 @@ KNFSSharePrivate::KNFSSharePrivate()
  * several well-known paths
  * @return wether an 'exports' file was found.
  **/
-bool KNFSSharePrivate::findExportsFile() {
-  KConfig config("knfsshare");
-  config.setGroup("General");
-  exportsFile = config.readPathEntry("exportsFile");
+bool KNFSSharePrivate::findExportsFile()
+{
+    KConfig config("knfsshare");
+    config.setGroup("General");
+    exportsFile = config.readPathEntry("exportsFile");
 
-  if ( QFile::exists(exportsFile) )
+    if(QFile::exists(exportsFile))
+        return true;
+
+    if(QFile::exists("/etc/exports"))
+        exportsFile = "/etc/exports";
+    else
+    {
+        kdDebug(7000) << "KNFSShare: Could not found exports file!" << endl;
+        return false;
+    }
+
+    config.writeEntry("exportsFile", exportsFile);
     return true;
-
-  if ( QFile::exists("/etc/exports") )
-    exportsFile = "/etc/exports";
-  else {
-    kdDebug(7000) << "KNFSShare: Could not found exports file!" << endl;
-    return false;
-  }
-      
-  config.writeEntry("exportsFile",exportsFile);
-  return true;
 }
 
 /**
  * Reads all paths from the exports file
  * and fills the sharedPaths dict with the values
  */
-bool KNFSSharePrivate::readExportsFile() {
-  QFile f(exportsFile);
+bool KNFSSharePrivate::readExportsFile()
+{
+    QFile f(exportsFile);
 
-  kdDebug(7000) << "KNFSShare::readExportsFile " << exportsFile << endl;
-  
-  if (!f.open(IO_ReadOnly)) {
-    kdError() << "KNFSShare: Could not open " << exportsFile << endl;
-    return false;
-  }
-  
- 
-  sharedPaths.clear();
+    kdDebug(7000) << "KNFSShare::readExportsFile " << exportsFile << endl;
 
-  QTextStream s( &f );
-  
-  bool continuedLine = false; // is true if the line before ended with a backslash
-  QString completeLine;
-  
-  while ( !s.eof() )
-  {
-    QString currentLine = s.readLine().stripWhiteSpace();
-
-    if (continuedLine) {
-      completeLine += currentLine;
-      continuedLine = false;
-    }      
-    else
-      completeLine = currentLine;
-
-    // is the line continued in the next line ?
-    if ( completeLine[completeLine.length()-1] == '\\' )
+    if(!f.open(IO_ReadOnly))
     {
-      continuedLine = true;
-      // remove the ending backslash
-      completeLine.truncate( completeLine.length()-1 ); 
-      continue;
-    }
-    
-    // comments or empty lines
-    if (completeLine.isEmpty() ||
-        '#' == completeLine[0])
-    {
-      continue;
+        kdError() << "KNFSShare: Could not open " << exportsFile << endl;
+        return false;
     }
 
-    QString path;
-    
-    // Handle quotation marks
-    if ( completeLine[0] == '"' ) {
-      int i = completeLine.find('"',1);
-      if (i == -1) {
-        kdError() << "KNFSShare: Parse error: Missing quotation mark: " << completeLine << endl;   
-        continue;
-      }
-      path = completeLine.mid(1,i-1);
-      
-    } else { // no quotation marks
-      int i = completeLine.find(' ');
-      if (i == -1)
-          i = completeLine.find('\t');
-          
-      if (i == -1) 
-        path = completeLine;
-      else 
-        path = completeLine.left(i);
-      
-    }        
-    
-    kdDebug(7000) << "KNFSShare: Found path: " << path << endl;
-    
-    // normalize path
-    if ( path[path.length()-1] != '/' )
-             path += '/';
-    
-    bool b = true;             
-    sharedPaths.insert(path,&b);             
-  }
 
-  f.close();
+    sharedPaths.clear();
 
-  return true;  
+    QTextStream s(&f);
 
+    bool continuedLine = false; // is true if the line before ended with a backslash
+    QString completeLine;
+
+    while(!s.eof())
+    {
+        QString currentLine = s.readLine().stripWhiteSpace();
+
+        if(continuedLine)
+        {
+            completeLine += currentLine;
+            continuedLine = false;
+        }
+        else
+            completeLine = currentLine;
+
+        // is the line continued in the next line ?
+        if(completeLine[completeLine.length() - 1] == '\\')
+        {
+            continuedLine = true;
+            // remove the ending backslash
+            completeLine.truncate(completeLine.length() - 1);
+            continue;
+        }
+
+        // comments or empty lines
+        if(completeLine.isEmpty() || '#' == completeLine[0])
+        {
+            continue;
+        }
+
+        QString path;
+
+        // Handle quotation marks
+        if(completeLine[0] == '"')
+        {
+            int i = completeLine.find('"', 1);
+            if(i == -1)
+            {
+                kdError() << "KNFSShare: Parse error: Missing quotation mark: " << completeLine << endl;
+                continue;
+            }
+            path = completeLine.mid(1, i - 1);
+        }
+        else
+        { // no quotation marks
+            int i = completeLine.find(' ');
+            if(i == -1)
+                i = completeLine.find('\t');
+
+            if(i == -1)
+                path = completeLine;
+            else
+                path = completeLine.left(i);
+        }
+
+        kdDebug(7000) << "KNFSShare: Found path: " << path << endl;
+
+        // normalize path
+        if(path[path.length() - 1] != '/')
+            path += '/';
+
+        bool b = true;
+        sharedPaths.insert(path, &b);
+    }
+
+    f.close();
+
+    return true;
 }
 
-KNFSShare::KNFSShare() {
-  d = new KNFSSharePrivate();
-  if (QFile::exists(d->exportsFile)) {
-    KDirWatch::self()->addFile(d->exportsFile);
-    connect(KDirWatch::self(), SIGNAL(dirty (const QString&)),this,
-   	        SLOT(slotFileChange(const QString&)));
-  }
+KNFSShare::KNFSShare()
+{
+    d = new KNFSSharePrivate();
+    if(QFile::exists(d->exportsFile))
+    {
+        KDirWatch::self()->addFile(d->exportsFile);
+        connect(KDirWatch::self(), SIGNAL(dirty(const QString &)), this, SLOT(slotFileChange(const QString &)));
+    }
 }
 
-KNFSShare::~KNFSShare() {
-  if (QFile::exists(d->exportsFile)) {
-    KDirWatch::self()->removeFile(d->exportsFile);
-  }
-  delete d;
-}
-
-
-bool KNFSShare::isDirectoryShared( const QString & path ) const {
-  QString fixedPath = path;
-  if ( path[path.length()-1] != '/' )
-       fixedPath += '/';
-  
-  return d->sharedPaths.find(fixedPath) != 0;
-}
-
-QStringList KNFSShare::sharedDirectories() const {
-  QStringList result;
-  QDictIterator<bool> it(d->sharedPaths);
-  for( ; it.current(); ++it )
-      result << it.currentKey();
-      
-  return result;       
-}
-
-QString KNFSShare::exportsPath() const {
-  return d->exportsFile;
+KNFSShare::~KNFSShare()
+{
+    if(QFile::exists(d->exportsFile))
+    {
+        KDirWatch::self()->removeFile(d->exportsFile);
+    }
+    delete d;
 }
 
 
+bool KNFSShare::isDirectoryShared(const QString &path) const
+{
+    QString fixedPath = path;
+    if(path[path.length() - 1] != '/')
+        fixedPath += '/';
 
-void KNFSShare::slotFileChange( const QString & path ) {
-  if (path == d->exportsFile)
-     d->readExportsFile();
-     
-  emit changed();     
+    return d->sharedPaths.find(fixedPath) != 0;
 }
 
-KNFSShare* KNFSShare::_instance = 0L; 
-static KStaticDeleter<KNFSShare> ksdNFSShare;
+QStringList KNFSShare::sharedDirectories() const
+{
+    QStringList result;
+    QDictIterator< bool > it(d->sharedPaths);
+    for(; it.current(); ++it)
+        result << it.currentKey();
 
-KNFSShare* KNFSShare::instance() {
-  if (! _instance ) 
-      _instance = ksdNFSShare.setObject(_instance, new KNFSShare());
-      
-  return _instance;      
+    return result;
+}
+
+QString KNFSShare::exportsPath() const
+{
+    return d->exportsFile;
+}
+
+
+void KNFSShare::slotFileChange(const QString &path)
+{
+    if(path == d->exportsFile)
+        d->readExportsFile();
+
+    emit changed();
+}
+
+KNFSShare *KNFSShare::_instance = 0L;
+static KStaticDeleter< KNFSShare > ksdNFSShare;
+
+KNFSShare *KNFSShare::instance()
+{
+    if(!_instance)
+        _instance = ksdNFSShare.setObject(_instance, new KNFSShare());
+
+    return _instance;
 }
 
 #include "knfsshare.moc"
-

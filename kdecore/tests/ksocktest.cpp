@@ -39,71 +39,72 @@
 
 bool check(QString txt, QString a, QString b)
 {
-  if (a.isEmpty())
-     a = QString::null;
-  if (b.isEmpty())
-     b = QString::null;
-  if (a == b) {
-    kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "ok" << endl;
-  }
-  else {
-    kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "KO !" << endl;
-    exit(1);
-  }
-  return true;
+    if(a.isEmpty())
+        a = QString::null;
+    if(b.isEmpty())
+        b = QString::null;
+    if(a == b)
+    {
+        kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... "
+                  << "ok" << endl;
+    }
+    else
+    {
+        kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... "
+                  << "KO !" << endl;
+        exit(1);
+    }
+    return true;
 }
 
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-   KAboutData about("socktest", "SockTest", "version");
-   KCmdLineArgs::init(argc, argv, &about);
-   KApplication::addCmdLineOptions();
+    KAboutData about("socktest", "SockTest", "version");
+    KCmdLineArgs::init(argc, argv, &about);
+    KApplication::addCmdLineOptions();
 
-   KApplication app;
+    KApplication app;
 
-   QString host, port;
+    QString host, port;
 
-   KInetSocketAddress host_address("213.203.58.36", 80);
+    KInetSocketAddress host_address("213.203.58.36", 80);
 
-   check("KInetSocketAddress(\"213.203.58.36\", 80)", host_address.pretty(), "213.203.58.36 port 80");
+    check("KInetSocketAddress(\"213.203.58.36\", 80)", host_address.pretty(), "213.203.58.36 port 80");
 
-   int result = KExtendedSocket::resolve(&host_address, host, port, NI_NAMEREQD);
-   printf( "resolve result: %d\n", result );
-   check("KExtendedSocket::resolve() host=", host, "www.kde.org");
-//   check("KExtendedSocket::resolve() port=", port, "http");
-   QPtrList<KAddressInfo> list;
-   list = KExtendedSocket::lookup("www.kde.org", "http", KExtendedSocket::inetSocket);
-   for(KAddressInfo *info = list.first(); info; info = list.next())
-   {
-      qWarning("Lookup: %s %s %s", info->address()->pretty().latin1(),
-		                   info->address()->isEqual(KInetSocketAddress("213.203.58.36", 80)) ?
-				   "is equal to" : "is NOT equal to",
-				   "213.203.58.36 port 80");
-   }
-   check("KExtendedSocket::lookup()", list.first()->address()->pretty(), "213.203.58.36 port 80");
+    int result = KExtendedSocket::resolve(&host_address, host, port, NI_NAMEREQD);
+    printf("resolve result: %d\n", result);
+    check("KExtendedSocket::resolve() host=", host, "www.kde.org");
+    //   check("KExtendedSocket::resolve() port=", port, "http");
+    QPtrList< KAddressInfo > list;
+    list = KExtendedSocket::lookup("www.kde.org", "http", KExtendedSocket::inetSocket);
+    for(KAddressInfo *info = list.first(); info; info = list.next())
+    {
+        qWarning("Lookup: %s %s %s", info->address()->pretty().latin1(),
+                 info->address()->isEqual(KInetSocketAddress("213.203.58.36", 80)) ? "is equal to" : "is NOT equal to", "213.203.58.36 port 80");
+    }
+    check("KExtendedSocket::lookup()", list.first()->address()->pretty(), "213.203.58.36 port 80");
 
 
+    int err;
 
-   int err;
-
-   QPtrList<KAddressInfo> cns = KExtendedSocket::lookup("www.kde.org", 0, KExtendedSocket::canonName, &err);
-   for (KAddressInfo *x = cns.first(); x; x = cns.next()) {
+    QPtrList< KAddressInfo > cns = KExtendedSocket::lookup("www.kde.org", 0, KExtendedSocket::canonName, &err);
+    for(KAddressInfo *x = cns.first(); x; x = cns.next())
+    {
         const char *canon = x->canonname();
-        qWarning( "Lookup: %s", canon ? canon : "<Null>");
-   }
-   check("KExtendedSocket::lookup() canonical", cns.first()->canonname(), "www.kde.org");
+        qWarning("Lookup: %s", canon ? canon : "<Null>");
+    }
+    check("KExtendedSocket::lookup() canonical", cns.first()->canonname(), "www.kde.org");
 
-   KExtendedSocket * sock2 = new KExtendedSocket( "www.kde.org", 80 );
-   check( "KExtendedSocket ctor / connect", QString::number( sock2->connect() ), "0" );
+    KExtendedSocket *sock2 = new KExtendedSocket("www.kde.org", 80);
+    check("KExtendedSocket ctor / connect", QString::number(sock2->connect()), "0");
 
-   printf("FD %d\n", sock2->fd());
+    printf("FD %d\n", sock2->fd());
 
-   KSocketAddress* addr = KExtendedSocket::peerAddress( sock2->fd() );
-   check( "peerAddress:", addr->nodeName().latin1(), "213.203.58.36" );
+    KSocketAddress *addr = KExtendedSocket::peerAddress(sock2->fd());
+    check("peerAddress:", addr->nodeName().latin1(), "213.203.58.36");
 
-   check( "isEqual:", addr->isEqual(KInetSocketAddress("213.203.58.36", 80)) ? "TRUE" : "FALSE", "TRUE");
-   check( "isEqual:", addr->isEqual(KInetSocketAddress("213.203.58.36", 8080)) ? "TRUE" : "FALSE", "FALSE");
-   check( "isEqual:", addr->isCoreEqual(KInetSocketAddress("213.203.58.36", 8080)) ? "TRUE" : "FALSE", "TRUE");
+    check("isEqual:", addr->isEqual(KInetSocketAddress("213.203.58.36", 80)) ? "TRUE" : "FALSE", "TRUE");
+    check("isEqual:", addr->isEqual(KInetSocketAddress("213.203.58.36", 8080)) ? "TRUE" : "FALSE", "FALSE");
+    check("isEqual:", addr->isCoreEqual(KInetSocketAddress("213.203.58.36", 8080)) ? "TRUE" : "FALSE", "TRUE");
 }

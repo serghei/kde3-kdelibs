@@ -19,7 +19,7 @@
 #include "domtreeview.moc"
 #include "xml/dom_nodeimpl.h"
 
-DOMTreeView::DOMTreeView(QWidget *parent, KHTMLPart *currentpart, const char * name) : KListView(parent, name)
+DOMTreeView::DOMTreeView(QWidget *parent, KHTMLPart *currentpart, const char *name) : KListView(parent, name)
 {
     setCaption(name);
     setRootIsDecorated(true);
@@ -42,15 +42,15 @@ void DOMTreeView::showTree(const DOM::Node &pNode)
 {
     if(pNode.isNull() || document != pNode.ownerDocument())
     {
-	clear();
-	m_itemdict.clear();
-	m_nodedict.clear();
-	if(pNode.isNull())
-	    return;
-	else if(pNode.ownerDocument().isNull())
-	    recursive(0, pNode);
-	else
-	    recursive(0, pNode.ownerDocument());
+        clear();
+        m_itemdict.clear();
+        m_nodedict.clear();
+        if(pNode.isNull())
+            return;
+        else if(pNode.ownerDocument().isNull())
+            recursive(0, pNode);
+        else
+            recursive(0, pNode.ownerDocument());
     }
     setCurrentItem(m_itemdict[pNode.handle()]);
     ensureItemVisible(m_itemdict[pNode.handle()]);
@@ -61,37 +61,39 @@ void DOMTreeView::recursive(const DOM::Node &pNode, const DOM::Node &node)
     QListViewItem *cur_item;
     if(pNode.ownerDocument() != document)
     {
-	QString val = node.nodeValue().string();
-	if ( val.length() > 20 )
-	    val.truncate( 20 );
-	cur_item = new QListViewItem(static_cast<QListView *>(this), node.nodeName().string(), val );
-	document = pNode.ownerDocument();
+        QString val = node.nodeValue().string();
+        if(val.length() > 20)
+            val.truncate(20);
+        cur_item = new QListViewItem(static_cast< QListView * >(this), node.nodeName().string(), val);
+        document = pNode.ownerDocument();
     }
-    else {
-	QString val = node.nodeValue().string();
-	if ( val.length() > 20 )
-	    val.truncate( 20 );
-	cur_item = new QListViewItem(m_itemdict[pNode.handle()], node.nodeName().string(), val);
+    else
+    {
+        QString val = node.nodeValue().string();
+        if(val.length() > 20)
+            val.truncate(20);
+        cur_item = new QListViewItem(m_itemdict[pNode.handle()], node.nodeName().string(), val);
     }
 
     if(node.handle())
     {
-	m_itemdict.insert(node.handle(), cur_item);
-	m_nodedict.insert(cur_item, new DOM::Node(node));
+        m_itemdict.insert(node.handle(), cur_item);
+        m_nodedict.insert(cur_item, new DOM::Node(node));
     }
 
     DOM::Node cur_child = node.lastChild();
     while(!cur_child.isNull())
     {
-	recursive(node, cur_child);
-	cur_child = cur_child.previousSibling();
+        recursive(node, cur_child);
+        cur_child = cur_child.previousSibling();
     }
 }
 
 void DOMTreeView::slotItemClicked(QListViewItem *cur_item)
 {
     DOM::Node *handle = m_nodedict[cur_item];
-    if(handle) {
-	emit part->setActiveNode(*handle);
+    if(handle)
+    {
+        emit part->setActiveNode(*handle);
     }
 }

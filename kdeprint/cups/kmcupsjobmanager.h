@@ -26,28 +26,27 @@
 
 class KMPrinter;
 
-class KMCupsJobManager : public KMJobManager
-{
-	Q_OBJECT
+class KMCupsJobManager : public KMJobManager {
+    Q_OBJECT
 
 public:
-	KMCupsJobManager(QObject *parent, const char *name, const QStringList &/*args*/);
-	virtual ~KMCupsJobManager();
+    KMCupsJobManager(QObject *parent, const char *name, const QStringList & /*args*/);
+    virtual ~KMCupsJobManager();
 
-	int actions();
-	QValueList<KAction*> createPluginActions(KActionCollection*);
-	void validatePluginActions(KActionCollection*, const QPtrList<KMJob>&);
-	bool doPluginAction(int, const QPtrList<KMJob>&);
-
-protected:
-	bool jobIppReport(KMJob*);
-	bool changePriority(const QPtrList<KMJob>&, bool);
-	bool editJobAttributes(KMJob*);
+    int actions();
+    QValueList< KAction * > createPluginActions(KActionCollection *);
+    void validatePluginActions(KActionCollection *, const QPtrList< KMJob > &);
+    bool doPluginAction(int, const QPtrList< KMJob > &);
 
 protected:
-	bool listJobs(const QString&, JobType, int = 0);
-	bool sendCommandSystemJob(const QPtrList<KMJob>& jobs, int action, const QString& arg = QString::null);
-	void parseListAnswer(IppRequest& req, KMPrinter *pr);
+    bool jobIppReport(KMJob *);
+    bool changePriority(const QPtrList< KMJob > &, bool);
+    bool editJobAttributes(KMJob *);
+
+protected:
+    bool listJobs(const QString &, JobType, int = 0);
+    bool sendCommandSystemJob(const QPtrList< KMJob > &jobs, int action, const QString &arg = QString::null);
+    void parseListAnswer(IppRequest &req, KMPrinter *pr);
 };
 
 #endif

@@ -28,55 +28,68 @@
 class KArtsServer;
 class KAudioManagerPlay;
 namespace Arts {
-	class Synth_AMAN_PLAY;
-	class StereoEffectStack;
-	class ByteStreamToAudio;
+class Synth_AMAN_PLAY;
+class StereoEffectStack;
+class ByteStreamToAudio;
 }
 
 class KAudioPlayStream;
 class KByteSoundProducer;
 
 class KAudioPlayStreamPrivate : public QObject {
-   Q_OBJECT
+    Q_OBJECT
 public:
-	KAudioPlayStreamPrivate( KArtsServer*, const QString title, QObject*, const char* =0 );
-	~KAudioPlayStreamPrivate();
+    KAudioPlayStreamPrivate(KArtsServer *, const QString title, QObject *, const char * = 0);
+    ~KAudioPlayStreamPrivate();
 
-	KArtsServer* _server;
-	KAudioManagerPlay* _play;
-	Arts::StereoEffectStack _effectrack;
-	Arts::ByteStreamToAudio _bs2a;
-	KByteSoundProducer* _sender;
-	Arts::ByteSoundProducerV2 _artssender;
-	bool _polling, _attached, _effects;
+    KArtsServer *_server;
+    KAudioManagerPlay *_play;
+    Arts::StereoEffectStack _effectrack;
+    Arts::ByteStreamToAudio _bs2a;
+    KByteSoundProducer *_sender;
+    Arts::ByteSoundProducerV2 _artssender;
+    bool _polling, _attached, _effects;
 
 public slots:
-	void initaRts();
+    void initaRts();
 };
 
-class KByteSoundProducer : virtual public Arts::ByteSoundProducerV2_skel
-                         , virtual public Arts::StdSynthModule
-{
+class KByteSoundProducer : virtual public Arts::ByteSoundProducerV2_skel, virtual public Arts::StdSynthModule {
 public:
-	KByteSoundProducer( KAudioPlayStream*, float minBufferTime, int rate, int bits, int channels, const char * title );
-	~KByteSoundProducer();
+    KByteSoundProducer(KAudioPlayStream *, float minBufferTime, int rate, int bits, int channels, const char *title);
+    ~KByteSoundProducer();
 
-	long samplingRate() { return _samplingRate; }
-	long channels() { return _channels; }
-	long bits() { return _bits; }
-	std::string title() { return _title; }
+    long samplingRate()
+    {
+        return _samplingRate;
+    }
+    long channels()
+    {
+        return _channels;
+    }
+    long bits()
+    {
+        return _bits;
+    }
+    std::string title()
+    {
+        return _title;
+    }
 
-	void streamStart();
-	void streamEnd();
+    void streamStart();
+    void streamEnd();
 
 protected:
-	void request_outdata( Arts::DataPacket<Arts::mcopbyte> *packet );
+    void request_outdata(Arts::DataPacket< Arts::mcopbyte > *packet);
 
 private:
-	long _samplingRate, _channels, _bits, _packets;
-	std::string _title;
-	enum { packetCapacity = 4096 };
-	KAudioPlayStream* _impl;
+    long _samplingRate, _channels, _bits, _packets;
+    std::string _title;
+    enum
+    {
+        packetCapacity = 4096
+    };
+    KAudioPlayStream *_impl;
 };
 
 #endif // KAUDIOPLAYSTREAM_P_H

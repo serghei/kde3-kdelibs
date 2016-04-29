@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,40 +21,48 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  AGENTPARAM_H
-#define  AGENTPARAM_H
+#ifndef AGENTPARAM_H
+#define AGENTPARAM_H
 
 #include <qcstring.h>
 
 #include <VCardParam.h>
 #include <VCardURIValue.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT AgentParam : public Param
-{
-	
+class KVCARD_EXPORT AgentParam : public Param {
+
 #include "AgentParam-generated.h"
-	
-	bool refer()
-	{ parse(); return refer_; }
-	
-	URIValue uri()
-	{ parse(); return uri_; }
-	
-	void setRefer(bool b)
-	{ refer_ = b; assembled_ = false; }
 
-	void setURI(const QCString & s)
-	{ uri_ = s; assembled_ = false; }
-	
-	private:
-		
-		bool		refer_;
-		URIValue	uri_;
+    bool refer()
+    {
+        parse();
+        return refer_;
+    }
+
+    URIValue uri()
+    {
+        parse();
+        return uri_;
+    }
+
+    void setRefer(bool b)
+    {
+        refer_ = b;
+        assembled_ = false;
+    }
+
+    void setURI(const QCString &s)
+    {
+        uri_ = s;
+        assembled_ = false;
+    }
+
+private:
+    bool refer_;
+    URIValue uri_;
 };
-
 }
 
 #endif

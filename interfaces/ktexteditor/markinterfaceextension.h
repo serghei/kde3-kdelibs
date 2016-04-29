@@ -27,8 +27,7 @@
 
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 
 /**
@@ -36,48 +35,45 @@ namespace KTextEditor
 *  It allows the developer to set pixmaps for custom marks and to indicate which
 *  marks are settable by the user, for example (in kate), as actions in the iconborder's popup menu.
 */
-class KTEXTEDITOR_EXPORT MarkInterfaceExtension
-{
-  friend class PrivateMarkInterfaceExtension;
-  
-  public:
-    MarkInterfaceExtension ();
-    virtual ~MarkInterfaceExtension ();
+class KTEXTEDITOR_EXPORT MarkInterfaceExtension {
+    friend class PrivateMarkInterfaceExtension;
 
-    unsigned int markInterfaceExtensionNumber () const;
-  
-  protected:  
-    void setMarkInterfaceExtensionDCOPSuffix (const QCString &suffix);    
-    
-  public:
-    virtual void setPixmap(MarkInterface::MarkTypes, const QPixmap &)=0;
-    virtual void setDescription(MarkInterface::MarkTypes, const QString &)=0;
-    virtual void setMarksUserChangable(uint markMask)=0;
+public:
+    MarkInterfaceExtension();
+    virtual ~MarkInterfaceExtension();
 
-    enum MarkChangeAction {
-		MarkAdded=0,
-		MarkRemoved=1
-	};
-  //
-  // slots !!!
-  //
-  public:
+    unsigned int markInterfaceExtensionNumber() const;
 
-  //
-  // signals !!!
-  //
-  public:
-    virtual void markChanged (KTextEditor::Mark mark, 
-                              KTextEditor::MarkInterfaceExtension::MarkChangeAction action) = 0;
-  
-  private:
+protected:
+    void setMarkInterfaceExtensionDCOPSuffix(const QCString &suffix);
+
+public:
+    virtual void setPixmap(MarkInterface::MarkTypes, const QPixmap &) = 0;
+    virtual void setDescription(MarkInterface::MarkTypes, const QString &) = 0;
+    virtual void setMarksUserChangable(uint markMask) = 0;
+
+    enum MarkChangeAction
+    {
+        MarkAdded = 0,
+        MarkRemoved = 1
+    };
+    //
+    // slots !!!
+    //
+public:
+    //
+    // signals !!!
+    //
+public:
+    virtual void markChanged(KTextEditor::Mark mark, KTextEditor::MarkInterfaceExtension::MarkChangeAction action) = 0;
+
+private:
     class PrivateMarkInterfaceExtension *d;
     static unsigned int globalMarkInterfaceExtensionNumber;
     unsigned int myMarkInterfaceExtensionNumber;
 };
 
-KTEXTEDITOR_EXPORT MarkInterfaceExtension *markInterfaceExtension (class Document *doc);
-
+KTEXTEDITOR_EXPORT MarkInterfaceExtension *markInterfaceExtension(class Document *doc);
 }
 
 #endif

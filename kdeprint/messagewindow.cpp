@@ -28,94 +28,94 @@
 #include <kapplication.h>
 #include <kdebug.h>
 
-QPtrDict<MessageWindow> MessageWindow::m_windows;
+QPtrDict< MessageWindow > MessageWindow::m_windows;
 
-MessageWindow::MessageWindow( const QString& txt, int delay, QWidget *parent, const char *name )
-	: QWidget( parent, name, WStyle_Customize|WStyle_NoBorder|WShowModal|WType_Dialog|WDestructiveClose )
+MessageWindow::MessageWindow(const QString &txt, int delay, QWidget *parent, const char *name)
+    : QWidget(parent, name, WStyle_Customize | WStyle_NoBorder | WShowModal | WType_Dialog | WDestructiveClose)
 {
-	QHBox *box = new QHBox( this );
-	box->setFrameStyle( QFrame::Panel|QFrame::Raised );
-	box->setLineWidth( 1 );
-	box->setSpacing( 10 );
-	box->setMargin( 5 );
-	QLabel *pix = new QLabel( box );
-	pix->setPixmap( DesktopIcon( "kdeprint_printer" ) );
-	m_text = new QLabel( txt, box );
+    QHBox *box = new QHBox(this);
+    box->setFrameStyle(QFrame::Panel | QFrame::Raised);
+    box->setLineWidth(1);
+    box->setSpacing(10);
+    box->setMargin(5);
+    QLabel *pix = new QLabel(box);
+    pix->setPixmap(DesktopIcon("kdeprint_printer"));
+    m_text = new QLabel(txt, box);
 
-	QHBoxLayout *l0 = new QHBoxLayout( this, 0, 0 );
-	l0->addWidget( box );
+    QHBoxLayout *l0 = new QHBoxLayout(this, 0, 0);
+    l0->addWidget(box);
 
-	m_windows.insert( parent, this );
+    m_windows.insert(parent, this);
 
-	if ( delay == 0 )
-		slotTimer();
-	else
-		QTimer::singleShot( delay, this, SLOT( slotTimer() ) );
+    if(delay == 0)
+        slotTimer();
+    else
+        QTimer::singleShot(delay, this, SLOT(slotTimer()));
 }
 
 MessageWindow::~MessageWindow()
 {
-	m_windows.remove( parentWidget() );
+    m_windows.remove(parentWidget());
 }
 
 void MessageWindow::slotTimer()
 {
-	QSize psz = parentWidget()->size(), sz = sizeHint();
-	move( parentWidget()->mapToGlobal( QPoint( (psz.width()-sz.width())/2, (psz.height()-sz.height())/2 ) ) );
-	if ( !isVisible() )
-	{
-		show();
-		kapp->processEvents();
-	}
+    QSize psz = parentWidget()->size(), sz = sizeHint();
+    move(parentWidget()->mapToGlobal(QPoint((psz.width() - sz.width()) / 2, (psz.height() - sz.height()) / 2)));
+    if(!isVisible())
+    {
+        show();
+        kapp->processEvents();
+    }
 }
 
 QString MessageWindow::text() const
 {
-	return m_text->text();
+    return m_text->text();
 }
 
-void MessageWindow::setText( const QString& txt )
+void MessageWindow::setText(const QString &txt)
 {
-	m_text->setText( txt );
+    m_text->setText(txt);
 }
 
-void MessageWindow::add( QWidget *parent, const QString& txt, int delay )
+void MessageWindow::add(QWidget *parent, const QString &txt, int delay)
 {
-	if ( !parent )
-		kdWarning( 500 ) << "Cannot add a message window to a null parent" << endl;
-	else
-	{
-		MessageWindow *w = m_windows.find( parent );
-		if ( w )
-			w->setText( txt );
-		else
-			new MessageWindow( txt, delay, parent, "MessageWindow" );
-	}
+    if(!parent)
+        kdWarning(500) << "Cannot add a message window to a null parent" << endl;
+    else
+    {
+        MessageWindow *w = m_windows.find(parent);
+        if(w)
+            w->setText(txt);
+        else
+            new MessageWindow(txt, delay, parent, "MessageWindow");
+    }
 }
 
-void MessageWindow::remove( QWidget *parent )
+void MessageWindow::remove(QWidget *parent)
 {
-	if ( parent )
-		delete m_windows.find( parent );
+    if(parent)
+        delete m_windows.find(parent);
 }
 
-void MessageWindow::change( QWidget *parent, const QString& txt )
+void MessageWindow::change(QWidget *parent, const QString &txt)
 {
-	if ( parent )
-	{
-		MessageWindow *w = m_windows.find( parent );
-		if ( w )
-			w->setText( txt );
-		else
-			kdWarning( 500 ) << "MessageWindow::change, no message window found" << endl;
-	}
+    if(parent)
+    {
+        MessageWindow *w = m_windows.find(parent);
+        if(w)
+            w->setText(txt);
+        else
+            kdWarning(500) << "MessageWindow::change, no message window found" << endl;
+    }
 }
 
 void MessageWindow::removeAll()
 {
-	QPtrDictIterator<MessageWindow> it( m_windows );
-	while ( it.current() )
-		delete it.current();
+    QPtrDictIterator< MessageWindow > it(m_windows);
+    while(it.current())
+        delete it.current();
 }
 
 #include "messagewindow.moc"

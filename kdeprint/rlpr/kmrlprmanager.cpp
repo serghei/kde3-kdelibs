@@ -28,11 +28,10 @@
 #include <kstandarddirs.h>
 #include <klocale.h>
 
-KMRlprManager::KMRlprManager(QObject *parent, const char *name, const QStringList & /*args*/)
-: KMManager(parent,name)
+KMRlprManager::KMRlprManager(QObject *parent, const char *name, const QStringList & /*args*/) : KMManager(parent, name)
 {
-	setHasManagement(true);
-	setPrinterOperationMask(KMManager::PrinterCreation|KMManager::PrinterRemoval|KMManager::PrinterTesting);
+    setHasManagement(true);
+    setPrinterOperationMask(KMManager::PrinterCreation | KMManager::PrinterRemoval | KMManager::PrinterTesting);
 }
 
 KMRlprManager::~KMRlprManager()
@@ -41,118 +40,119 @@ KMRlprManager::~KMRlprManager()
 
 bool KMRlprManager::createPrinter(KMPrinter *p)
 {
-	if (p->name().isEmpty())
-		setErrorMsg(i18n("Empty printer name."));
-	else if (p->option("host").isEmpty())
-		setErrorMsg(i18n("Empty host name."));
-	else if (p->option("queue").isEmpty())
-		setErrorMsg(i18n("Empty queue name."));
-	else
-	{
-		KMPrinter	*pr = new KMPrinter(*p);
-		addPrinter(pr);
-		savePrinters();
-		return true;
-	}
-	return false;
+    if(p->name().isEmpty())
+        setErrorMsg(i18n("Empty printer name."));
+    else if(p->option("host").isEmpty())
+        setErrorMsg(i18n("Empty host name."));
+    else if(p->option("queue").isEmpty())
+        setErrorMsg(i18n("Empty queue name."));
+    else
+    {
+        KMPrinter *pr = new KMPrinter(*p);
+        addPrinter(pr);
+        savePrinters();
+        return true;
+    }
+    return false;
 }
 
 bool KMRlprManager::removePrinter(KMPrinter *p)
 {
-	if (m_printers.findRef(p) == -1)
-		setErrorMsg(i18n("Printer not found."));
-	else
-	{
-		m_printers.removeRef(p);
-		savePrinters();
-		return true;
-	}
-	return false;
+    if(m_printers.findRef(p) == -1)
+        setErrorMsg(i18n("Printer not found."));
+    else
+    {
+        m_printers.removeRef(p);
+        savePrinters();
+        return true;
+    }
+    return false;
 }
 
 bool KMRlprManager::testPrinter(KMPrinter *)
 {
-	setErrorMsg(i18n("Not implemented yet."));
-	return false;
+    setErrorMsg(i18n("Not implemented yet."));
+    return false;
 }
 
 void KMRlprManager::listPrinters()
 {
-	QFileInfo	pfi(printerFile());
-	if (pfi.exists() && (!m_checktime.isValid() || m_checktime < pfi.lastModified()))
-	{
-		loadPrintersConf(pfi.absFilePath());
-		m_checktime = pfi.lastModified();
-	}
-	else
-		discardAllPrinters(false);
+    QFileInfo pfi(printerFile());
+    if(pfi.exists() && (!m_checktime.isValid() || m_checktime < pfi.lastModified()))
+    {
+        loadPrintersConf(pfi.absFilePath());
+        m_checktime = pfi.lastModified();
+    }
+    else
+        discardAllPrinters(false);
 }
 
-void KMRlprManager::loadPrintersConf(const QString& filename)
+void KMRlprManager::loadPrintersConf(const QString &filename)
 {
-	QFile	f(filename);
-	if (f.exists() && f.open(IO_ReadOnly))
-	{
-		QTextStream	t(&f);
-		QString		line;
-		while (!t.eof())
-		{
-			line = t.readLine().stripWhiteSpace();
-			if (line.isEmpty() || line[0] == '#')
-				continue;
-			QStringList	w = QStringList::split('\t',line,true);
-			if (w.count() < 3)
-				continue;
+    QFile f(filename);
+    if(f.exists() && f.open(IO_ReadOnly))
+    {
+        QTextStream t(&f);
+        QString line;
+        while(!t.eof())
+        {
+            line = t.readLine().stripWhiteSpace();
+            if(line.isEmpty() || line[0] == '#')
+                continue;
+            QStringList w = QStringList::split('\t', line, true);
+            if(w.count() < 3)
+                continue;
 
-			KMPrinter	*printer = new KMPrinter;
-			printer->setName(w[0]);
-			printer->setPrinterName(w[0]);
-			printer->setType(KMPrinter::Printer);
-			printer->setOption("host",w[1]);
-			printer->setOption("queue",w[2]);
-			if (w.count() > 3)
-			{
-				printer->setDescription(w[3]);
-				if (w.count() > 4) printer->setLocation(w[4]);
-			}
-			printer->setState(KMPrinter::Idle);
-			printer->setDevice(QString::fromLatin1("lpd://%1/%2").arg(w[1]).arg(w[2]));
+            KMPrinter *printer = new KMPrinter;
+            printer->setName(w[0]);
+            printer->setPrinterName(w[0]);
+            printer->setType(KMPrinter::Printer);
+            printer->setOption("host", w[1]);
+            printer->setOption("queue", w[2]);
+            if(w.count() > 3)
+            {
+                printer->setDescription(w[3]);
+                if(w.count() > 4)
+                    printer->setLocation(w[4]);
+            }
+            printer->setState(KMPrinter::Idle);
+            printer->setDevice(QString::fromLatin1("lpd://%1/%2").arg(w[1]).arg(w[2]));
 
-			addPrinter(printer);
-		}
-	}
+            addPrinter(printer);
+        }
+    }
 }
 
 void KMRlprManager::savePrinters()
 {
-	savePrintersConf(printerFile());
+    savePrintersConf(printerFile());
 }
 
-void KMRlprManager::savePrintersConf(const QString& filename)
+void KMRlprManager::savePrintersConf(const QString &filename)
 {
-	QFile	f(filename);
-	if (f.open(IO_WriteOnly))
-	{
-		QTextStream	t(&f);
-		t << "# File generated by KDE print system. Don't edit by hand." << endl;
-		QPtrListIterator<KMPrinter>	it(m_printers);
-		for (;it.current();++it)
-		{
-			if (!it.current()->name().isEmpty() && it.current()->instanceName().isEmpty())
-			{
-				QString	host = it.current()->option("host");
-				QString	queue = it.current()->option("queue");
-				if (!host.isEmpty() && !queue.isEmpty())
-				{
-					t << it.current()->name() << '\t' << host << '\t' << queue;
-					t << '\t' << it.current()->description() << '\t' << it.current()->location() << endl;
-				}
-			}
-		}
-	}
+    QFile f(filename);
+    if(f.open(IO_WriteOnly))
+    {
+        QTextStream t(&f);
+        t << "# File generated by KDE print system. Don't edit by hand." << endl;
+        QPtrListIterator< KMPrinter > it(m_printers);
+        for(; it.current(); ++it)
+        {
+            if(!it.current()->name().isEmpty() && it.current()->instanceName().isEmpty())
+            {
+                QString host = it.current()->option("host");
+                QString queue = it.current()->option("queue");
+                if(!host.isEmpty() && !queue.isEmpty())
+                {
+                    t << it.current()->name() << '\t' << host << '\t' << queue;
+                    t << '\t' << it.current()->description() << '\t' << it.current()->location() << endl;
+                }
+            }
+        }
+    }
 }
 
 QString KMRlprManager::printerFile()
 {
-	return locateLocal("data","kdeprint/printers.conf");
+    return locateLocal("data", "kdeprint/printers.conf");
 }

@@ -36,122 +36,141 @@ CSSStyleDeclaration::CSSStyleDeclaration()
 CSSStyleDeclaration::CSSStyleDeclaration(const CSSStyleDeclaration &other)
 {
     impl = other.impl;
-    if(impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
 CSSStyleDeclaration::CSSStyleDeclaration(CSSStyleDeclarationImpl *i)
 {
     impl = i;
-    if(impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
-CSSStyleDeclaration &CSSStyleDeclaration::operator = (const CSSStyleDeclaration &other)
+CSSStyleDeclaration &CSSStyleDeclaration::operator=(const CSSStyleDeclaration &other)
 {
-    if ( impl != other.impl ) {
-        if(impl) impl->deref();
+    if(impl != other.impl)
+    {
+        if(impl)
+            impl->deref();
         impl = other.impl;
-        if(impl) impl->ref();
+        if(impl)
+            impl->ref();
     }
     return *this;
 }
 
 CSSStyleDeclaration::~CSSStyleDeclaration()
 {
-    if(impl) impl->deref();
+    if(impl)
+        impl->deref();
 }
 
 DOMString CSSStyleDeclaration::cssText() const
 {
-    if(!impl) return DOMString();
-    return static_cast<CSSStyleDeclarationImpl *>(impl)->cssText();
+    if(!impl)
+        return DOMString();
+    return static_cast< CSSStyleDeclarationImpl * >(impl)->cssText();
 }
 
-void CSSStyleDeclaration::setCssText( const DOMString &value )
+void CSSStyleDeclaration::setCssText(const DOMString &value)
 {
-    if(!impl) return;
+    if(!impl)
+        return;
     impl->setCssText(value);
 }
 
-DOMString CSSStyleDeclaration::getPropertyValue( const DOMString &propertyName )
+DOMString CSSStyleDeclaration::getPropertyValue(const DOMString &propertyName)
 {
-    return const_cast<const CSSStyleDeclaration*>( this )->getPropertyValue( propertyName );
+    return const_cast< const CSSStyleDeclaration * >(this)->getPropertyValue(propertyName);
 }
 
-DOMString CSSStyleDeclaration::getPropertyValue( const DOMString &propertyName ) const
+DOMString CSSStyleDeclaration::getPropertyValue(const DOMString &propertyName) const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     int id = getPropertyID(propertyName.string().ascii(), propertyName.length());
-    if (!id) return DOMString();
-    return static_cast<CSSStyleDeclarationImpl *>(impl)->getPropertyValue(id);
+    if(!id)
+        return DOMString();
+    return static_cast< CSSStyleDeclarationImpl * >(impl)->getPropertyValue(id);
 }
 
-CSSValue CSSStyleDeclaration::getPropertyCSSValue( const DOMString &propertyName )
+CSSValue CSSStyleDeclaration::getPropertyCSSValue(const DOMString &propertyName)
 {
-    return const_cast<const CSSStyleDeclaration*>( this )->getPropertyCSSValue( propertyName );
+    return const_cast< const CSSStyleDeclaration * >(this)->getPropertyCSSValue(propertyName);
 }
 
-CSSValue CSSStyleDeclaration::getPropertyCSSValue( const DOMString &propertyName ) const
+CSSValue CSSStyleDeclaration::getPropertyCSSValue(const DOMString &propertyName) const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     int id = getPropertyID(propertyName.string().ascii(), propertyName.length());
-    if (!id) return 0;
-    return static_cast<CSSStyleDeclarationImpl *>(impl)->getPropertyCSSValue(id);
+    if(!id)
+        return 0;
+    return static_cast< CSSStyleDeclarationImpl * >(impl)->getPropertyCSSValue(id);
 }
 
-DOMString CSSStyleDeclaration::removeProperty( const DOMString &property )
+DOMString CSSStyleDeclaration::removeProperty(const DOMString &property)
 {
     int id = getPropertyID(property.string().ascii(), property.length());
-    if(!impl || !id) return DOMString();
-    return static_cast<CSSStyleDeclarationImpl *>(impl)->removeProperty( id );
+    if(!impl || !id)
+        return DOMString();
+    return static_cast< CSSStyleDeclarationImpl * >(impl)->removeProperty(id);
 }
 
-DOMString CSSStyleDeclaration::getPropertyPriority( const DOMString &propertyName )
+DOMString CSSStyleDeclaration::getPropertyPriority(const DOMString &propertyName)
 {
-    return const_cast<const CSSStyleDeclaration*>( this )->getPropertyPriority( propertyName );
+    return const_cast< const CSSStyleDeclaration * >(this)->getPropertyPriority(propertyName);
 }
 
-DOMString CSSStyleDeclaration::getPropertyPriority( const DOMString &propertyName ) const
+DOMString CSSStyleDeclaration::getPropertyPriority(const DOMString &propertyName) const
 {
     int id = getPropertyID(propertyName.string().ascii(), propertyName.length());
-    if(!impl || !id) return DOMString();
-    if (impl->getPropertyPriority(id))
+    if(!impl || !id)
+        return DOMString();
+    if(impl->getPropertyPriority(id))
         return DOMString("important");
     return DOMString();
 }
 
-void CSSStyleDeclaration::setProperty( const DOMString &propName, const DOMString &value, const DOMString &priority )
+void CSSStyleDeclaration::setProperty(const DOMString &propName, const DOMString &value, const DOMString &priority)
 {
-    if(!impl) return;
+    if(!impl)
+        return;
     int id = getPropertyID(propName.string().lower().ascii(), propName.length());
-    if (!id) return;
+    if(!id)
+        return;
     bool important = false;
     QString str = priority.string();
-    if (str.find("important", 0, false) != -1)
+    if(str.find("important", 0, false) != -1)
         important = true;
 
-    static_cast<CSSStyleDeclarationImpl *>(impl)->setProperty( id, value, important );
+    static_cast< CSSStyleDeclarationImpl * >(impl)->setProperty(id, value, important);
 }
 
 unsigned long CSSStyleDeclaration::length() const
 {
-    if(!impl) return 0;
-    return static_cast<CSSStyleDeclarationImpl *>(impl)->length();
+    if(!impl)
+        return 0;
+    return static_cast< CSSStyleDeclarationImpl * >(impl)->length();
 }
 
-DOMString CSSStyleDeclaration::item( unsigned long index )
+DOMString CSSStyleDeclaration::item(unsigned long index)
 {
-    return const_cast<const CSSStyleDeclaration*>( this )->item( index );
+    return const_cast< const CSSStyleDeclaration * >(this)->item(index);
 }
 
-DOMString CSSStyleDeclaration::item( unsigned long index ) const
+DOMString CSSStyleDeclaration::item(unsigned long index) const
 {
-    if(!impl) return DOMString();
-    return static_cast<CSSStyleDeclarationImpl *>(impl)->item( index );
+    if(!impl)
+        return DOMString();
+    return static_cast< CSSStyleDeclarationImpl * >(impl)->item(index);
 }
 CSSRule CSSStyleDeclaration::parentRule() const
 {
-    if(!impl) return 0;
-    return static_cast<CSSStyleDeclarationImpl *>(impl)->parentRule();
+    if(!impl)
+        return 0;
+    return static_cast< CSSStyleDeclarationImpl * >(impl)->parentRule();
 }
 
 CSSStyleDeclarationImpl *CSSStyleDeclaration::handle() const
@@ -174,57 +193,68 @@ CSSValue::CSSValue()
 CSSValue::CSSValue(const CSSValue &other)
 {
     impl = other.impl;
-    if(impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
 CSSValue::CSSValue(CSSValueImpl *i)
 {
     impl = i;
-    if(impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
-CSSValue &CSSValue::operator = (const CSSValue &other)
+CSSValue &CSSValue::operator=(const CSSValue &other)
 {
-    if ( impl != other.impl ) {
-        if(impl) impl->deref();
+    if(impl != other.impl)
+    {
+        if(impl)
+            impl->deref();
         impl = other.impl;
-        if(impl) impl->ref();
+        if(impl)
+            impl->ref();
     }
     return *this;
 }
 
 CSSValue::~CSSValue()
 {
-    if(impl) impl->deref();
+    if(impl)
+        impl->deref();
 }
 
 DOMString CSSValue::cssText() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((CSSValueImpl *)impl)->cssText();
 }
 
-void CSSValue::setCssText( const DOMString &/*value*/ )
+void CSSValue::setCssText(const DOMString & /*value*/)
 {
-    if(!impl) return;
+    if(!impl)
+        return;
     ((CSSValueImpl *)impl)->cssText();
 }
 
 unsigned short CSSValue::cssValueType() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((CSSValueImpl *)impl)->cssValueType();
 }
 
 bool CSSValue::isCSSValueList() const
 {
-    if(!impl) return false;
+    if(!impl)
+        return false;
     return ((CSSValueImpl *)impl)->isValueList();
 }
 
 bool CSSValue::isCSSPrimitiveValue() const
 {
-    if(!impl) return false;
+    if(!impl)
+        return false;
     return ((CSSValueImpl *)impl)->isPrimitiveValue();
 }
 
@@ -250,35 +280,44 @@ CSSValueList::CSSValueList(const CSSValueList &other) : CSSValue(other)
 
 CSSValueList::CSSValueList(const CSSValue &other)
 {
-   impl = 0;
-   operator=(other);
+    impl = 0;
+    operator=(other);
 }
 
 CSSValueList::CSSValueList(CSSValueListImpl *impl) : CSSValue(impl)
 {
 }
 
-CSSValueList &CSSValueList::operator = (const CSSValueList &other)
+CSSValueList &CSSValueList::operator=(const CSSValueList &other)
 {
-    if ( impl != other.impl ) {
-        if (impl) impl->deref();
+    if(impl != other.impl)
+    {
+        if(impl)
+            impl->deref();
         impl = other.handle();
-        if (impl) impl->ref();
+        if(impl)
+            impl->ref();
     }
     return *this;
 }
 
-CSSValueList &CSSValueList::operator = (const CSSValue &other)
+CSSValueList &CSSValueList::operator=(const CSSValue &other)
 {
-    CSSValueImpl *ohandle = other.handle() ;
-    if ( impl != ohandle ) {
-        if (impl) impl->deref();
-        if (!other.isNull() && !other.isCSSValueList()) {
+    CSSValueImpl *ohandle = other.handle();
+    if(impl != ohandle)
+    {
+        if(impl)
+            impl->deref();
+        if(!other.isNull() && !other.isCSSValueList())
+        {
             impl = 0;
-	} else {
-	    impl = ohandle;
-            if (impl) impl->ref();
-	}
+        }
+        else
+        {
+            impl = ohandle;
+            if(impl)
+                impl->ref();
+        }
     }
     return *this;
 }
@@ -289,14 +328,16 @@ CSSValueList::~CSSValueList()
 
 unsigned long CSSValueList::length() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((CSSValueListImpl *)impl)->length();
 }
 
-CSSValue CSSValueList::item( unsigned long index )
+CSSValue CSSValueList::item(unsigned long index)
 {
-    if(!impl) return 0;
-    return ((CSSValueListImpl *)impl)->item( index );
+    if(!impl)
+        return 0;
+    return ((CSSValueListImpl *)impl)->item(index);
 }
 
 // ----------------------------------------------------------
@@ -319,27 +360,36 @@ CSSPrimitiveValue::CSSPrimitiveValue(CSSPrimitiveValueImpl *impl) : CSSValue(imp
 {
 }
 
-CSSPrimitiveValue &CSSPrimitiveValue::operator = (const CSSPrimitiveValue &other)
+CSSPrimitiveValue &CSSPrimitiveValue::operator=(const CSSPrimitiveValue &other)
 {
-    if ( impl != other.impl ) {
-        if (impl) impl->deref();
+    if(impl != other.impl)
+    {
+        if(impl)
+            impl->deref();
         impl = other.handle();
-        if (impl) impl->ref();
+        if(impl)
+            impl->ref();
     }
     return *this;
 }
 
-CSSPrimitiveValue &CSSPrimitiveValue::operator = (const CSSValue &other)
+CSSPrimitiveValue &CSSPrimitiveValue::operator=(const CSSValue &other)
 {
     CSSValueImpl *ohandle = other.handle();
-    if ( impl != ohandle ) {
-        if (impl) impl->deref();
-        if (!other.isNull() && !other.isCSSPrimitiveValue()) {
+    if(impl != ohandle)
+    {
+        if(impl)
+            impl->deref();
+        if(!other.isNull() && !other.isCSSPrimitiveValue())
+        {
             impl = 0;
-	} else {
-	    impl = ohandle;
-            if (impl) impl->ref();
-	}
+        }
+        else
+        {
+            impl = ohandle;
+            if(impl)
+                impl->ref();
+        }
     }
     return *this;
 }
@@ -350,66 +400,71 @@ CSSPrimitiveValue::~CSSPrimitiveValue()
 
 unsigned short CSSPrimitiveValue::primitiveType() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((CSSPrimitiveValueImpl *)impl)->primitiveType();
 }
 
-void CSSPrimitiveValue::setFloatValue( unsigned short unitType, float floatValue )
+void CSSPrimitiveValue::setFloatValue(unsigned short unitType, float floatValue)
 {
-    if(!impl) return;
+    if(!impl)
+        return;
     int exceptioncode = 0;
-    ((CSSPrimitiveValueImpl *)impl)->setFloatValue( unitType, floatValue, exceptioncode );
-    if ( exceptioncode >= CSSException::_EXCEPTION_OFFSET )
-	throw CSSException( exceptioncode - CSSException::_EXCEPTION_OFFSET );
-    if ( exceptioncode )
-	throw DOMException( exceptioncode );
+    ((CSSPrimitiveValueImpl *)impl)->setFloatValue(unitType, floatValue, exceptioncode);
+    if(exceptioncode >= CSSException::_EXCEPTION_OFFSET)
+        throw CSSException(exceptioncode - CSSException::_EXCEPTION_OFFSET);
+    if(exceptioncode)
+        throw DOMException(exceptioncode);
 }
 
-float CSSPrimitiveValue::getFloatValue( unsigned short unitType )
+float CSSPrimitiveValue::getFloatValue(unsigned short unitType)
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     // ### add unit conversion
     if(primitiveType() != unitType)
-	throw CSSException(CSSException::SYNTAX_ERR);
-    return ((CSSPrimitiveValueImpl *)impl)->floatValue( unitType );
+        throw CSSException(CSSException::SYNTAX_ERR);
+    return ((CSSPrimitiveValueImpl *)impl)->floatValue(unitType);
 }
 
-void CSSPrimitiveValue::setStringValue( unsigned short stringType, const DOMString &stringValue )
+void CSSPrimitiveValue::setStringValue(unsigned short stringType, const DOMString &stringValue)
 {
     int exceptioncode = 0;
     if(impl)
-        ((CSSPrimitiveValueImpl *)impl)->setStringValue( stringType, stringValue, exceptioncode );
-    if ( exceptioncode >= CSSException::_EXCEPTION_OFFSET )
-	throw CSSException( exceptioncode - CSSException::_EXCEPTION_OFFSET );
-    if ( exceptioncode )
-	throw DOMException( exceptioncode );
-
+        ((CSSPrimitiveValueImpl *)impl)->setStringValue(stringType, stringValue, exceptioncode);
+    if(exceptioncode >= CSSException::_EXCEPTION_OFFSET)
+        throw CSSException(exceptioncode - CSSException::_EXCEPTION_OFFSET);
+    if(exceptioncode)
+        throw DOMException(exceptioncode);
 }
 
-DOMString CSSPrimitiveValue::getStringValue(  )
+DOMString CSSPrimitiveValue::getStringValue()
 {
-    if(!impl) return DOMString();
-    return ((CSSPrimitiveValueImpl *)impl)->getStringValue(  );
+    if(!impl)
+        return DOMString();
+    return ((CSSPrimitiveValueImpl *)impl)->getStringValue();
 }
 
-Counter CSSPrimitiveValue::getCounterValue(  )
+Counter CSSPrimitiveValue::getCounterValue()
 {
-    if(!impl) return Counter();
-    return ((CSSPrimitiveValueImpl *)impl)->getCounterValue(  );
+    if(!impl)
+        return Counter();
+    return ((CSSPrimitiveValueImpl *)impl)->getCounterValue();
 }
 
-Rect CSSPrimitiveValue::getRectValue(  )
+Rect CSSPrimitiveValue::getRectValue()
 {
-    if(!impl) return Rect();
-    return ((CSSPrimitiveValueImpl *)impl)->getRectValue(  );
+    if(!impl)
+        return Rect();
+    return ((CSSPrimitiveValueImpl *)impl)->getRectValue();
 }
 
-RGBColor CSSPrimitiveValue::getRGBColorValue(  )
+RGBColor CSSPrimitiveValue::getRGBColorValue()
 {
     // ###
     return RGBColor();
-    //if(!impl) return RGBColor();
-    //return ((CSSPrimitiveValueImpl *)impl)->getRGBColorValue(  );
+    // if(!impl) return RGBColor();
+    // return ((CSSPrimitiveValueImpl *)impl)->getRGBColorValue(  );
 }
 
 // -------------------------------------------------------------------
@@ -418,17 +473,20 @@ Counter::Counter()
 {
 }
 
-Counter::Counter(const Counter &/*other*/)
+Counter::Counter(const Counter & /*other*/)
 {
     impl = 0;
 }
 
-Counter &Counter::operator = (const Counter &other)
+Counter &Counter::operator=(const Counter &other)
 {
-    if ( impl != other.impl ) {
-        if (impl) impl->deref();
+    if(impl != other.impl)
+    {
+        if(impl)
+            impl->deref();
         impl = other.impl;
-        if (impl) impl->ref();
+        if(impl)
+            impl->ref();
     }
     return *this;
 }
@@ -436,30 +494,35 @@ Counter &Counter::operator = (const Counter &other)
 Counter::Counter(CounterImpl *i)
 {
     impl = i;
-    if (impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
 Counter::~Counter()
 {
-    if (impl) impl->deref();
+    if(impl)
+        impl->deref();
 }
 
 DOMString Counter::identifier() const
 {
-  if (!impl) return DOMString();
-  return impl->identifier();
+    if(!impl)
+        return DOMString();
+    return impl->identifier();
 }
 
 DOMString Counter::listStyle() const
 {
-  if (!impl) return DOMString();
-  return khtml::stringForListStyleType((khtml::EListStyleType)impl->listStyle());
+    if(!impl)
+        return DOMString();
+    return khtml::stringForListStyleType((khtml::EListStyleType)impl->listStyle());
 }
 
 DOMString Counter::separator() const
 {
-  if (!impl) return DOMString();
-  return impl->separator();
+    if(!impl)
+        return DOMString();
+    return impl->separator();
 }
 
 CounterImpl *Counter::handle() const
@@ -488,7 +551,7 @@ RGBColor::RGBColor(QRgb color)
     m_color = color;
 }
 
-RGBColor &RGBColor::operator = (const RGBColor &other)
+RGBColor &RGBColor::operator=(const RGBColor &other)
 {
     m_color = other.m_color;
     return *this;
@@ -524,51 +587,61 @@ Rect::Rect()
 Rect::Rect(const Rect &other)
 {
     impl = other.impl;
-    if (impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
 Rect::Rect(RectImpl *i)
 {
     impl = i;
-    if (impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
-Rect &Rect::operator = (const Rect &other)
+Rect &Rect::operator=(const Rect &other)
 {
-    if ( impl != other.impl ) {
-        if (impl) impl->deref();
+    if(impl != other.impl)
+    {
+        if(impl)
+            impl->deref();
         impl = other.impl;
-        if (impl) impl->ref();
+        if(impl)
+            impl->ref();
     }
     return *this;
 }
 
 Rect::~Rect()
 {
-    if (impl) impl->deref();
+    if(impl)
+        impl->deref();
 }
 
 CSSPrimitiveValue Rect::top() const
 {
-    if (!impl) return 0;
+    if(!impl)
+        return 0;
     return impl->top();
 }
 
 CSSPrimitiveValue Rect::right() const
 {
-    if (!impl) return 0;
+    if(!impl)
+        return 0;
     return impl->right();
 }
 
 CSSPrimitiveValue Rect::bottom() const
 {
-    if (!impl) return 0;
+    if(!impl)
+        return 0;
     return impl->bottom();
 }
 
 CSSPrimitiveValue Rect::left() const
 {
-    if (!impl) return 0;
+    if(!impl)
+        return 0;
     return impl->left();
 }
 
@@ -583,5 +656,3 @@ bool Rect::isNull() const
 }
 
 } // namespace
-
-

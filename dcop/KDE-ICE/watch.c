@@ -27,11 +27,10 @@ Author: Ralph Mor, X Consortium
 #include "KDE-ICE/ICElibint.h"
 #include "KDE-ICE/globals.h"
 
-Status
-IceAddConnectionWatch (watchProc, clientData)
+Status IceAddConnectionWatch(watchProc, clientData)
 
-IceWatchProc	watchProc;
-IcePointer	clientData;
+    IceWatchProc watchProc;
+IcePointer clientData;
 
 {
     /*
@@ -39,14 +38,13 @@ IcePointer	clientData;
      * created/destroyed by ICElib.
      */
 
-    _IceWatchProc	*ptr = _IceWatchProcs;
-    _IceWatchProc	*newWatchProc;
-    int			i;
+    _IceWatchProc *ptr = _IceWatchProcs;
+    _IceWatchProc *newWatchProc;
+    int i;
 
-    if ((newWatchProc = (_IceWatchProc *) malloc (
-	sizeof (_IceWatchProc))) == NULL)
+    if((newWatchProc = (_IceWatchProc *)malloc(sizeof(_IceWatchProc))) == NULL)
     {
-	return (0);
+        return (0);
     }
 
     newWatchProc->watch_proc = watchProc;
@@ -54,146 +52,134 @@ IcePointer	clientData;
     newWatchProc->watched_connections = NULL;
     newWatchProc->next = NULL;
 
-    while (ptr && ptr->next)
-	ptr = ptr->next;
+    while(ptr && ptr->next)
+        ptr = ptr->next;
 
-    if (ptr == NULL)
-	_IceWatchProcs = newWatchProc;
+    if(ptr == NULL)
+        _IceWatchProcs = newWatchProc;
     else
-	ptr->next = newWatchProc;
+        ptr->next = newWatchProc;
 
 
     /*
      * Invoke the watch proc with any previously opened ICE connections.
      */
-     
-    for (i = 0; i < _IceConnectionCount; i++)
+
+    for(i = 0; i < _IceConnectionCount; i++)
     {
-	_IceWatchedConnection *newWatchedConn = (_IceWatchedConnection *)
-	    malloc (sizeof (_IceWatchedConnection));
+        _IceWatchedConnection *newWatchedConn = (_IceWatchedConnection *)malloc(sizeof(_IceWatchedConnection));
 
-	newWatchedConn->iceConn = _IceConnectionObjs[i];
-	newWatchedConn->next = NULL;
+        newWatchedConn->iceConn = _IceConnectionObjs[i];
+        newWatchedConn->next = NULL;
 
-	newWatchProc->watched_connections = newWatchedConn;
+        newWatchProc->watched_connections = newWatchedConn;
 
-	(*newWatchProc->watch_proc) (_IceConnectionObjs[i],
-	    newWatchProc->client_data, True, &newWatchedConn->watch_data);
+        (*newWatchProc->watch_proc)(_IceConnectionObjs[i], newWatchProc->client_data, True, &newWatchedConn->watch_data);
     }
 
     return (1);
 }
 
 
-
-void
-IceRemoveConnectionWatch (watchProc, clientData)
+void IceRemoveConnectionWatch(watchProc, clientData)
 
-IceWatchProc	watchProc;
-IcePointer	clientData;
+    IceWatchProc watchProc;
+IcePointer clientData;
 
 {
-    _IceWatchProc	*currWatchProc = _IceWatchProcs;
-    _IceWatchProc	*prevWatchProc = NULL;
+    _IceWatchProc *currWatchProc = _IceWatchProcs;
+    _IceWatchProc *prevWatchProc = NULL;
 
-    while (currWatchProc && (currWatchProc->watch_proc != watchProc ||
-        currWatchProc->client_data != clientData))
+    while(currWatchProc && (currWatchProc->watch_proc != watchProc || currWatchProc->client_data != clientData))
     {
-	prevWatchProc = currWatchProc;
-	currWatchProc = currWatchProc->next;
+        prevWatchProc = currWatchProc;
+        currWatchProc = currWatchProc->next;
     }
 
-    if (currWatchProc)
+    if(currWatchProc)
     {
-	_IceWatchProc		*nextWatchProc = currWatchProc->next;
-	_IceWatchedConnection 	*watchedConn;
+        _IceWatchProc *nextWatchProc = currWatchProc->next;
+        _IceWatchedConnection *watchedConn;
 
-	watchedConn = currWatchProc->watched_connections;
-	while (watchedConn)
-	{
-	    _IceWatchedConnection *nextWatchedConn = watchedConn->next;
-	    free ((char *) watchedConn);
-	    watchedConn = nextWatchedConn;
-	}
+        watchedConn = currWatchProc->watched_connections;
+        while(watchedConn)
+        {
+            _IceWatchedConnection *nextWatchedConn = watchedConn->next;
+            free((char *)watchedConn);
+            watchedConn = nextWatchedConn;
+        }
 
-	if (prevWatchProc == NULL)
-	    _IceWatchProcs = nextWatchProc;
-	else
-	    prevWatchProc->next = nextWatchProc;
+        if(prevWatchProc == NULL)
+            _IceWatchProcs = nextWatchProc;
+        else
+            prevWatchProc->next = nextWatchProc;
 
-	free ((char *) currWatchProc);
+        free((char *)currWatchProc);
     }
 }
 
 
-
-void
-_IceConnectionOpened (iceConn)
+void _IceConnectionOpened(iceConn)
 
-IceConn	iceConn;
+    IceConn iceConn;
 
 {
     _IceWatchProc *watchProc = _IceWatchProcs;
 
-    while (watchProc)
+    while(watchProc)
     {
-	_IceWatchedConnection *newWatchedConn = (_IceWatchedConnection *)
-	    malloc (sizeof (_IceWatchedConnection));
-	_IceWatchedConnection *watchedConn;
+        _IceWatchedConnection *newWatchedConn = (_IceWatchedConnection *)malloc(sizeof(_IceWatchedConnection));
+        _IceWatchedConnection *watchedConn;
 
-	watchedConn = watchProc->watched_connections;
-	while (watchedConn && watchedConn->next)
-	    watchedConn = watchedConn->next;
+        watchedConn = watchProc->watched_connections;
+        while(watchedConn && watchedConn->next)
+            watchedConn = watchedConn->next;
 
-	newWatchedConn->iceConn = iceConn;
-	newWatchedConn->next = NULL;
+        newWatchedConn->iceConn = iceConn;
+        newWatchedConn->next = NULL;
 
-	if (watchedConn == NULL)
-	    watchProc->watched_connections = newWatchedConn;
-	else
-	    watchedConn->next = newWatchedConn;
+        if(watchedConn == NULL)
+            watchProc->watched_connections = newWatchedConn;
+        else
+            watchedConn->next = newWatchedConn;
 
-	(*watchProc->watch_proc) (iceConn,
-	    watchProc->client_data, True, &newWatchedConn->watch_data);
+        (*watchProc->watch_proc)(iceConn, watchProc->client_data, True, &newWatchedConn->watch_data);
 
-	watchProc = watchProc->next;
+        watchProc = watchProc->next;
     }
 }
 
 
-
-void
-_IceConnectionClosed (iceConn)
+void _IceConnectionClosed(iceConn)
 
-IceConn	iceConn;
+    IceConn iceConn;
 
 {
     _IceWatchProc *watchProc = _IceWatchProcs;
 
-    while (watchProc)
+    while(watchProc)
     {
-	_IceWatchedConnection *watchedConn = watchProc->watched_connections;
-	_IceWatchedConnection *prev = NULL;
+        _IceWatchedConnection *watchedConn = watchProc->watched_connections;
+        _IceWatchedConnection *prev = NULL;
 
-	while (watchedConn && watchedConn->iceConn != iceConn)
-	{
-	    prev = watchedConn;
-	    watchedConn = watchedConn->next;
-	}
+        while(watchedConn && watchedConn->iceConn != iceConn)
+        {
+            prev = watchedConn;
+            watchedConn = watchedConn->next;
+        }
 
-	if (watchedConn)
-	{
-	    (*watchProc->watch_proc) (iceConn,
-	        watchProc->client_data, False, &watchedConn->watch_data);
+        if(watchedConn)
+        {
+            (*watchProc->watch_proc)(iceConn, watchProc->client_data, False, &watchedConn->watch_data);
 
-	    if (prev == NULL)
-		watchProc->watched_connections = watchedConn->next;
-	    else
-		prev->next = watchedConn->next;
+            if(prev == NULL)
+                watchProc->watched_connections = watchedConn->next;
+            else
+                prev->next = watchedConn->next;
 
-	    free ((char *) watchedConn);
-	}
+            free((char *)watchedConn);
+        }
 
-	watchProc = watchProc->next;
+        watchProc = watchProc->next;
     }
 }

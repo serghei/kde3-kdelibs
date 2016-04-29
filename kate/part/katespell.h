@@ -30,20 +30,19 @@ class KateView;
 class KAction;
 class KSpell;
 
-class KateSpell : public QObject
-{
-  Q_OBJECT
+class KateSpell : public QObject {
+    Q_OBJECT
 
-  public:
-    KateSpell( KateView* );
+public:
+    KateSpell(KateView *);
     ~KateSpell();
 
-    void createActions( KActionCollection* );
+    void createActions(KActionCollection *);
 
-    void updateActions ();
+    void updateActions();
 
-  // spellcheck from cursor, selection
-  private slots:
+    // spellcheck from cursor, selection
+private slots:
     void spellcheckFromCursor();
 
     // defined here in anticipation of pr view selections ;)
@@ -51,23 +50,23 @@ class KateSpell : public QObject
 
     void spellcheck();
 
-      /**
-      * Spellcheck a defined portion of the text.
-      *
-      * @param from Where to start the check
-      * @param to Where to end. If this is (0,0), it will be set to the end of the document.
-      */
-    void spellcheck( const KateTextCursor &from, const KateTextCursor &to=KateTextCursor() );
+    /**
+    * Spellcheck a defined portion of the text.
+    *
+    * @param from Where to start the check
+    * @param to Where to end. If this is (0,0), it will be set to the end of the document.
+    */
+    void spellcheck(const KateTextCursor &from, const KateTextCursor &to = KateTextCursor());
 
     void ready(KSpell *);
-    void misspelling( const QString&, const QStringList&, unsigned int );
-    void corrected  ( const QString&, const QString&, unsigned int);
-    void spellResult( const QString& );
+    void misspelling(const QString &, const QStringList &, unsigned int);
+    void corrected(const QString &, const QString &, unsigned int);
+    void spellResult(const QString &);
     void spellCleanDone();
 
-    void locatePosition( uint pos, uint& line, uint& col );
+    void locatePosition(uint pos, uint &line, uint &col);
 
-  private:
+private:
     KateView *m_view;
     KAction *m_spellcheckSelection;
 

@@ -29,57 +29,57 @@ class KShellCompletionPrivate;
 
 /**
  * This class does shell-like completion of file names.
- * A string passed to makeCompletion() will be interpreted as a shell 
- * command line. Completion will be done on the last argument on the line. 
- * Returned matches consist of the first arguments (uncompleted) plus the 
+ * A string passed to makeCompletion() will be interpreted as a shell
+ * command line. Completion will be done on the last argument on the line.
+ * Returned matches consist of the first arguments (uncompleted) plus the
  * completed last argument.
  *
  * @short Shell-like completion of file names
  * @author David Smith <dsmith@algonet.se>
  */
-class KIO_EXPORT KShellCompletion : public KURLCompletion 
-{
-	Q_OBJECT
+class KIO_EXPORT KShellCompletion : public KURLCompletion {
+    Q_OBJECT
 
 public:
-        /**
-         * Constructs a KShellCompletion object.
-         */
-	KShellCompletion();
+    /**
+     * Constructs a KShellCompletion object.
+     */
+    KShellCompletion();
 
-	/**
-	 * Finds completions to the given text.
-	 * The first match is returned and emitted in the signal match().
-	 * @param text the text to complete
-	 * @return the first match, or QString::null if not found
-	 */
-	QString makeCompletion(const QString &text);
+    /**
+     * Finds completions to the given text.
+     * The first match is returned and emitted in the signal match().
+     * @param text the text to complete
+     * @return the first match, or QString::null if not found
+     */
+    QString makeCompletion(const QString &text);
 
 protected:
-	// Called by KCompletion
-	void postProcessMatch( QString *match ) const;
-	void postProcessMatches( QStringList *matches ) const;
-        void postProcessMatches( KCompletionMatches *matches ) const;
+    // Called by KCompletion
+    void postProcessMatch(QString *match) const;
+    void postProcessMatches(QStringList *matches) const;
+    void postProcessMatches(KCompletionMatches *matches) const;
 
 private:
-	// Find the part of text that should be completed
-	void splitText(const QString &text, QString &text_start, QString &text_compl) const;
-	// Insert quotes and neseccary escapes
-	bool quoteText(QString *text, bool force, bool skip_last) const;
-	QString unquote(const QString &text) const;
-		                                                                        
-	QString m_text_start; // part of the text that was not completed
-	QString m_text_compl; // part of the text that was completed (unchanged)
+    // Find the part of text that should be completed
+    void splitText(const QString &text, QString &text_start, QString &text_compl) const;
+    // Insert quotes and neseccary escapes
+    bool quoteText(QString *text, bool force, bool skip_last) const;
+    QString unquote(const QString &text) const;
+
+    QString m_text_start; // part of the text that was not completed
+    QString m_text_compl; // part of the text that was completed (unchanged)
 
     QChar m_word_break_char;
-	QChar m_quote_char1;
-	QChar m_quote_char2;
-	QChar m_escape_char;  
-				
+    QChar m_quote_char1;
+    QChar m_quote_char2;
+    QChar m_escape_char;
+
 protected:
-	virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-	KShellCompletionPrivate *d;
+    KShellCompletionPrivate *d;
 };
 
 #endif // KSHELLCOMPLETION_H

@@ -336,13 +336,13 @@ using namespace std;
  *
  * @code CHECK( numberOfErrors(), 0 ); @endcode
  */
-#define CHECK( x, y ) check( __FILE__, __LINE__, #x, x, y, false )
+#define CHECK(x, y) check(__FILE__, __LINE__, #x, x, y, false)
 
 /// for source-compat with qttestlib: use COMPARE(x,y) if you plan to port to qttestlib later.
 #define COMPARE CHECK
 
 /// for source-compat with qttestlib: use VERIFY(x) if you plan to port to qttestlib later.
-#define VERIFY( x ) CHECK( x, true )
+#define VERIFY(x) CHECK(x, true)
 
 /*! @def XFAIL(x,y)
  * Use this macro to perform a check you expect to fail. For example
@@ -352,63 +352,64 @@ using namespace std;
  * If the test fails, it will be counted as such, however it will
  * also be registered separately.
  */
-#define XFAIL( x, y ) check( __FILE__, __LINE__, #x, x, y, true )
+#define XFAIL(x, y) check(__FILE__, __LINE__, #x, x, y, true)
 
 /*! @def SKIP(x)
  * Use this macro to indicate that a test is skipped.
  *
  * @code SKIP("Test skipped because of lack of foo support."); @endcode
  */
-#define SKIP( x ) skip( __FILE__, __LINE__, QString::fromLatin1(#x))
+#define SKIP(x) skip(__FILE__, __LINE__, QString::fromLatin1(#x))
 
 /*!
  * A macro testing that @p expression throws an exception that is catched
  * with @p exceptionCatch. Use it to test that an expression, such as a function call,
  * throws a certain exception.
- * 
+ *
  * @note this macro assumes it's used in a function which is a sub-class of the Tester class.
  */
-#define CHECK_EXCEPTION(exceptionCatch, expression) \
-    try \
-    { \
-        expression; \
-    } \
-    catch(exceptionCatch) \
-    { \
-        setExceptionRaised(true); \
-    } \
-    if(exceptionRaised()) \
-    { \
-        success(QString(__FILE__) + "[" + QString::number(__LINE__) + "]: passed " + #expression); \
-    } \
-    else \
-    { \
-        failure(QString(__FILE__) + "[" + QString::number(__LINE__) + QString("]: failed to throw " \
-                "an exception on: ") + #expression); \
-    } \
+#define CHECK_EXCEPTION(exceptionCatch, expression)                                                                                                  \
+    try                                                                                                                                              \
+    {                                                                                                                                                \
+        expression;                                                                                                                                  \
+    }                                                                                                                                                \
+    catch(exceptionCatch)                                                                                                                            \
+    {                                                                                                                                                \
+        setExceptionRaised(true);                                                                                                                    \
+    }                                                                                                                                                \
+    if(exceptionRaised())                                                                                                                            \
+    {                                                                                                                                                \
+        success(QString(__FILE__) + "[" + QString::number(__LINE__) + "]: passed " + #expression);                                                   \
+    }                                                                                                                                                \
+    else                                                                                                                                             \
+    {                                                                                                                                                \
+        failure(QString(__FILE__) + "[" + QString::number(__LINE__) + QString("]: failed to throw "                                                  \
+                                                                              "an exception on: ")                                                   \
+                + #expression);                                                                                                                      \
+    }                                                                                                                                                \
     setExceptionRaised(false);
 
 /*!
  * This macro is similar to XFAIL, but is for exceptions instead. Flags @p expression
  * as being expected to fail to throw an exception that @p exceptionCatch is supposed to catch.
  */
-#define XFAIL_EXCEPTION(exceptionCatch, expression) \
-    try \
-    { \
-        expression; \
-    } \
-    catch(exceptionCatch) \
-    { \
-        setExceptionRaised(true); \
-    } \
-    if(exceptionRaised()) \
-    { \
-        unexpectedSuccess(QString(__FILE__) + "[" + QString::number(__LINE__) + "]: unexpectedly threw an exception and passed: " + #expression); \
-    }\
-    else \
-    { \
-        expectedFailure(QString(__FILE__) + "[" + QString::number(__LINE__) + QString("]: failed to throw an exception on: ") + #expression); \
-    } \
+#define XFAIL_EXCEPTION(exceptionCatch, expression)                                                                                                  \
+    try                                                                                                                                              \
+    {                                                                                                                                                \
+        expression;                                                                                                                                  \
+    }                                                                                                                                                \
+    catch(exceptionCatch)                                                                                                                            \
+    {                                                                                                                                                \
+        setExceptionRaised(true);                                                                                                                    \
+    }                                                                                                                                                \
+    if(exceptionRaised())                                                                                                                            \
+    {                                                                                                                                                \
+        unexpectedSuccess(QString(__FILE__) + "[" + QString::number(__LINE__) + "]: unexpectedly threw an exception and passed: " + #expression);    \
+    }                                                                                                                                                \
+    else                                                                                                                                             \
+    {                                                                                                                                                \
+        expectedFailure(QString(__FILE__) + "[" + QString::number(__LINE__) + QString("]: failed to throw an exception on: ") + #expression);        \
+    }                                                                                                                                                \
     setExceptionRaised(false);
 
 /*!
@@ -416,250 +417,305 @@ using namespace std;
  * and the @p exceptionCatch which is supposed to catch the exception, and register the test
  * as being skipped.
  */
-#define SKIP_EXCEPTION(exceptionCatch, expression) \
-	skip( __FILE__, __LINE__, QString("Exception catch: ")\
-			.arg(QString(#exceptionCatch)).arg(QString(" Test expression: ")).arg(QString(#expression)))
+#define SKIP_EXCEPTION(exceptionCatch, expression)                                                                                                   \
+    skip(__FILE__, __LINE__, QString("Exception catch: ").arg(QString(#exceptionCatch)).arg(QString(" Test expression: ")).arg(QString(#expression)))
 
 /**
  * Namespace for Unit testing classes
  */
-namespace KUnitTest
-{
-    /*! A simple class that encapsulates a test result. A Tester class usually
-     * has a single TestResults instance associated with it, however the SlotTester
-     * class can have more TestResults instances (one for each test slot in fact).
-     */
-    class KUNITTEST_EXPORT TestResults
+namespace KUnitTest {
+/*! A simple class that encapsulates a test result. A Tester class usually
+ * has a single TestResults instance associated with it, however the SlotTester
+ * class can have more TestResults instances (one for each test slot in fact).
+ */
+class KUNITTEST_EXPORT TestResults {
+    friend class Tester;
+
+public:
+    TestResults() : m_tests(0)
     {
-        friend class Tester;
+    }
 
-    public:
-        TestResults() : m_tests( 0 ) {}
-
-        virtual ~TestResults() {}
-
-        /*! Clears the test results and debug info. Normally you do not need to call this.
-         */
-        virtual void clear()
-        {
-            m_errorList.clear();
-            m_xfailList.clear();
-            m_xpassList.clear();
-            m_skipList.clear();
-            m_successList.clear();
-            m_debug = "";
-            m_tests = 0;
-        }
-
-        /*! Add some debug info that can be view later. Normally you do not need to call this.
-         * @param debug The debug info.
-         */
-        virtual void addDebugInfo(const QString &debug)
-        {
-            m_debug += debug;
-        }
-
-        /*! @returns The debug info that was added to this Tester object.
-         */
-        QString debugInfo() const { return m_debug; }
-
-        /*! @returns The number of finished tests. */
-        int testsFinished() const { return m_tests; }
-
-        /*! @returns The number of failed tests. */
-        int errors() const { return m_errorList.count(); }
-
-        /*! @returns The number of expected failures. */
-        int xfails() const { return m_xfailList.count(); }
-
-        /*! @returns The number of unexpected successes. */
-        int xpasses() const { return m_xpassList.count(); }
-
-        /*! @returns The number of skipped tests. */
-        int skipped() const { return m_skipList.count(); }
-
-        /*! @returns The number of passed tests. */
-        int passed() const { return m_successList.count(); }
-
-        /*! @returns Details about the failed tests. */
-        QStringList errorList() const { return m_errorList; }
-
-        /*! @returns Details about tests that failed expectedly. */
-        QStringList xfailList() const { return m_xfailList; }
-
-        /*! @returns Details about tests that succeeded unexpectedly. */
-        QStringList xpassList() const { return m_xpassList; }
-
-        /*! @returns Details about which tests were skipped. */
-        QStringList skipList() const { return m_skipList; }
-
-        /*! @returns Details about the succeeded tests. */
-        QStringList successList() const { return m_successList; }
-
-    private:
-        QStringList m_errorList;
-        QStringList m_xfailList;
-        QStringList m_xpassList;
-        QStringList m_skipList;
-        QStringList m_successList;
-        QString     m_debug;
-        int         m_tests;
-    };
-
-    typedef QAsciiDict<TestResults> TestResultsListType;
-
-    /*! A type that can be used to iterate through the registry. */
-    typedef QAsciiDictIterator<TestResults> TestResultsListIteratorType;
-
-    /*! The abstract Tester class forms the base class for all test cases. Users must
-     * implement the void Tester::allTests() method. This method contains the actual test.
-     *
-     * Use the CHECK(x,y), XFAIL(x,y) and SKIP(x) macros in the allTests() method
-     * to perform the tests.
-     *
-     * @see CHECK, XFAIL, SKIP
-     */
-    class KUNITTEST_EXPORT Tester : public QObject
+    virtual ~TestResults()
     {
-    public:
-        Tester(const char *name = 0L)
-        : QObject(0L, name), m_results(new TestResults()), m_exceptionState(false)
-        {}
+    }
 
-        virtual ~Tester() { delete m_results; }
+    /*! Clears the test results and debug info. Normally you do not need to call this.
+     */
+    virtual void clear()
+    {
+        m_errorList.clear();
+        m_xfailList.clear();
+        m_xpassList.clear();
+        m_skipList.clear();
+        m_successList.clear();
+        m_debug = "";
+        m_tests = 0;
+    }
 
-    public:
-        /*! Implement this method with the tests and checks you want to perform.
-         */
-        virtual void allTests() = 0;
+    /*! Add some debug info that can be view later. Normally you do not need to call this.
+     * @param debug The debug info.
+     */
+    virtual void addDebugInfo(const QString &debug)
+    {
+        m_debug += debug;
+    }
 
-    public:
-        /*! @return The TestResults instance.
-         */
-        virtual TestResults *results() { return m_results; }
+    /*! @returns The debug info that was added to this Tester object.
+     */
+    QString debugInfo() const
+    {
+        return m_debug;
+    }
 
-    protected:
-        /*! This is called when the SKIP(x) macro is used.
-         * @param file A C-string containing the name of the file where the skipped tests resides. Typically the __FILE__ macro is used to retrieve the filename.
-         * @param line The linenumber in the file @p file. Use the __LINE__ macro for this.
-         * @param msg The message that identifies the skipped test.
-         */
-        void skip( const char *file, int line, QString msg )
+    /*! @returns The number of finished tests. */
+    int testsFinished() const
+    {
+        return m_tests;
+    }
+
+    /*! @returns The number of failed tests. */
+    int errors() const
+    {
+        return m_errorList.count();
+    }
+
+    /*! @returns The number of expected failures. */
+    int xfails() const
+    {
+        return m_xfailList.count();
+    }
+
+    /*! @returns The number of unexpected successes. */
+    int xpasses() const
+    {
+        return m_xpassList.count();
+    }
+
+    /*! @returns The number of skipped tests. */
+    int skipped() const
+    {
+        return m_skipList.count();
+    }
+
+    /*! @returns The number of passed tests. */
+    int passed() const
+    {
+        return m_successList.count();
+    }
+
+    /*! @returns Details about the failed tests. */
+    QStringList errorList() const
+    {
+        return m_errorList;
+    }
+
+    /*! @returns Details about tests that failed expectedly. */
+    QStringList xfailList() const
+    {
+        return m_xfailList;
+    }
+
+    /*! @returns Details about tests that succeeded unexpectedly. */
+    QStringList xpassList() const
+    {
+        return m_xpassList;
+    }
+
+    /*! @returns Details about which tests were skipped. */
+    QStringList skipList() const
+    {
+        return m_skipList;
+    }
+
+    /*! @returns Details about the succeeded tests. */
+    QStringList successList() const
+    {
+        return m_successList;
+    }
+
+private:
+    QStringList m_errorList;
+    QStringList m_xfailList;
+    QStringList m_xpassList;
+    QStringList m_skipList;
+    QStringList m_successList;
+    QString m_debug;
+    int m_tests;
+};
+
+typedef QAsciiDict< TestResults > TestResultsListType;
+
+/*! A type that can be used to iterate through the registry. */
+typedef QAsciiDictIterator< TestResults > TestResultsListIteratorType;
+
+/*! The abstract Tester class forms the base class for all test cases. Users must
+ * implement the void Tester::allTests() method. This method contains the actual test.
+ *
+ * Use the CHECK(x,y), XFAIL(x,y) and SKIP(x) macros in the allTests() method
+ * to perform the tests.
+ *
+ * @see CHECK, XFAIL, SKIP
+ */
+class KUNITTEST_EXPORT Tester : public QObject {
+public:
+    Tester(const char *name = 0L) : QObject(0L, name), m_results(new TestResults()), m_exceptionState(false)
+    {
+    }
+
+    virtual ~Tester()
+    {
+        delete m_results;
+    }
+
+public:
+    /*! Implement this method with the tests and checks you want to perform.
+     */
+    virtual void allTests() = 0;
+
+public:
+    /*! @return The TestResults instance.
+     */
+    virtual TestResults *results()
+    {
+        return m_results;
+    }
+
+protected:
+    /*! This is called when the SKIP(x) macro is used.
+     * @param file A C-string containing the name of the file where the skipped tests resides. Typically the __FILE__ macro is used to retrieve the
+     * filename.
+     * @param line The linenumber in the file @p file. Use the __LINE__ macro for this.
+     * @param msg The message that identifies the skipped test.
+     */
+    void skip(const char *file, int line, QString msg)
+    {
+        QString skipEntry;
+        QTextStream ts(&skipEntry, IO_WriteOnly);
+        ts << file << "[" << line << "]: " << msg;
+        skipTest(skipEntry);
+    }
+
+    /*! This is called when the CHECK or XFAIL macro is used.
+     * @param file A C-string containing the name of the file where the skipped tests resides. Typically the __FILE__ macro is used to retrieve the
+     * filename.
+     * @param line The linenumber in the file @p file. Use the __LINE__ macro for this.
+     * @param str The message that identifies the skipped test.
+     * @param result The result of the test.
+     * @param expectedResult The expected result.
+     * @param expectedFail Indicates whether or not a failure is expected.
+     */
+    template < typename T > void check(const char *file, int line, const char *str, const T &result, const T &expectedResult, bool expectedFail)
+    {
+        cout << "check: " << file << "[" << line << "]" << endl;
+
+        if(result != expectedResult)
         {
-            QString skipEntry;
-            QTextStream ts( &skipEntry, IO_WriteOnly );
-            ts << file << "["<< line <<"]: " << msg;
-            skipTest( skipEntry );
+            QString error;
+            QTextStream ts(&error, IO_WriteOnly);
+            ts << file << "[" << line << "]: failed on \"" << str << "\" result = '" << result << "' expected = '" << expectedResult << "'";
+
+            if(expectedFail)
+                expectedFailure(error);
+            else
+                failure(error);
         }
-
-        /*! This is called when the CHECK or XFAIL macro is used.
-         * @param file A C-string containing the name of the file where the skipped tests resides. Typically the __FILE__ macro is used to retrieve the filename.
-         * @param line The linenumber in the file @p file. Use the __LINE__ macro for this.
-         * @param str The message that identifies the skipped test.
-         * @param result The result of the test.
-         * @param expectedResult The expected result.
-         * @param expectedFail Indicates whether or not a failure is expected.
-         */
-        template<typename T>
-        void check( const char *file, int line, const char *str,
-                    const T  &result, const T &expectedResult,
-                    bool expectedFail )
+        else
         {
-            cout << "check: " << file << "["<< line <<"]" << endl;
-
-            if ( result != expectedResult )
+            // then the test passed, but we want to record it if
+            // we were expecting a failure
+            if(expectedFail)
             {
-                QString error;
-                QTextStream ts( &error, IO_WriteOnly );
-                ts << file << "["<< line <<"]: failed on \"" <<  str
-                   <<"\" result = '" << result << "' expected = '" << expectedResult << "'";
-
-                if ( expectedFail )
-                    expectedFailure( error );
-                else
-                    failure( error );
-
+                QString err;
+                QTextStream ts(&err, IO_WriteOnly);
+                ts << file << "[" << line << "]: "
+                   << " unexpectedly passed on \"" << str << "\"";
+                unexpectedSuccess(err);
             }
             else
             {
-                // then the test passed, but we want to record it if
-                // we were expecting a failure
-                if (expectedFail)
-                {
-                    QString err;
-                    QTextStream ts( &err, IO_WriteOnly );
-                    ts << file << "["<< line <<"]: "
-                       <<" unexpectedly passed on \""
-                       <<  str <<"\"";
-                    unexpectedSuccess( err );
-                }
-                else
-                {
-                    QString succ;
-                    QTextStream ts( &succ, IO_WriteOnly );
-                    ts << file << "["<< line <<"]: "
-                       <<" passed \""
-                       <<  str <<"\"";
-                    success( succ );
-                }
+                QString succ;
+                QTextStream ts(&succ, IO_WriteOnly);
+                ts << file << "[" << line << "]: "
+                   << " passed \"" << str << "\"";
+                success(succ);
             }
-
-            ++m_results->m_tests;
         }
 
+        ++m_results->m_tests;
+    }
+
     /*!
-     * This function can be used to flag succeeding tests, when 
+     * This function can be used to flag succeeding tests, when
      * doing customized tests while not using the check function.
      *
-     * @param message the message describing what failed. Should be informative, 
+     * @param message the message describing what failed. Should be informative,
      * such as mentioning the expression that failed and where, the file and file number.
      */
-    void success(const QString &message) { m_results->m_successList.append(message); }
+    void success(const QString &message)
+    {
+        m_results->m_successList.append(message);
+    }
 
     /*!
-     * This function can be used to flag failing tests, when 
+     * This function can be used to flag failing tests, when
      * doing customized tests while not using the check function.
      *
-     * @param message the message describing what failed. Should be informative, 
+     * @param message the message describing what failed. Should be informative,
      * such as mentioning the expression that failed and where, the file name and file number.
      */
-    void failure(const QString &message) { m_results->m_errorList.append(message); }
+    void failure(const QString &message)
+    {
+        m_results->m_errorList.append(message);
+    }
 
     /*!
-     * This function can be used to flag expected failures, when 
+     * This function can be used to flag expected failures, when
      * doing customized tests while not using the check function.
      *
-     * @param message the message describing what failed. Should be informative, 
+     * @param message the message describing what failed. Should be informative,
      * such as mentioning the expression that failed and where, the file name and file number.
      */
-    void expectedFailure(const QString &message) { m_results->m_xfailList.append(message); }
+    void expectedFailure(const QString &message)
+    {
+        m_results->m_xfailList.append(message);
+    }
 
     /*!
-     * This function can be used to flag unexpected successes, when 
+     * This function can be used to flag unexpected successes, when
      * doing customized tests while not using the check function.
      *
-     * @param message the message describing what failed. Should be informative, 
+     * @param message the message describing what failed. Should be informative,
      * such as mentioning the expression that failed and where, the file name and file number.
      */
-    void unexpectedSuccess(const QString &message) { m_results->m_xpassList.append(message); }
+    void unexpectedSuccess(const QString &message)
+    {
+        m_results->m_xpassList.append(message);
+    }
 
     /*!
-     * This function can be used to flag a test as skipped, when 
+     * This function can be used to flag a test as skipped, when
      * doing customized tests while not using the check function.
      *
-     * @param message the message describing what failed. Should be informative, 
+     * @param message the message describing what failed. Should be informative,
      * such as mentioning the expression that failed and where, the file name and file number.
      */
-    void skipTest(const QString &message) { m_results->m_skipList.append(message); }
+    void skipTest(const QString &message)
+    {
+        m_results->m_skipList.append(message);
+    }
 
     /*!
      * exceptionRaised and exceptionState are book-keeping functions for testing for
      * exceptions. setExceptionRaised sets an internal boolean to true.
      *
      * @see exceptionRaised
-     * @param state the new 
+     * @param state the new
      */
-    void setExceptionRaised(bool state) { m_exceptionState = state; }
+    void setExceptionRaised(bool state)
+    {
+        m_exceptionState = state;
+    }
 
     /*!
      * Returns what the currently tested exception state.
@@ -668,49 +724,50 @@ namespace KUnitTest
      */
     bool exceptionRaised() const
     {
-	return m_exceptionState;
+        return m_exceptionState;
     }
 
-    protected:
-        TestResults *m_results;
+protected:
+    TestResults *m_results;
 
-    private:
+private:
+    bool m_exceptionState;
+};
 
-	bool m_exceptionState;
-    };
+/*! The SlotTester class is a special Tester class, one that will
+ * execute all slots that start with the string "test". The method
+ * void allTests() is implemented and should not be overriden.
+ */
+class KUNITTEST_EXPORT SlotTester : public Tester {
+    Q_OBJECT
 
-    /*! The SlotTester class is a special Tester class, one that will
-     * execute all slots that start with the string "test". The method
-     * void allTests() is implemented and should not be overriden.
-     */
-    class KUNITTEST_EXPORT SlotTester : public Tester
+public:
+    SlotTester(const char *name = 0L);
+
+    void allTests();
+
+    TestResults *results(const char *sl);
+
+    TestResultsListType &resultsList()
     {
-        Q_OBJECT
+        return m_resultsList;
+    }
 
-    public:
-        SlotTester(const char *name = 0L);
+signals:
+    void invoke();
 
-        void allTests();
+private:
+    void invokeMember(const QString &str);
 
-        TestResults *results(const char *sl);
-
-        TestResultsListType &resultsList() { return m_resultsList; }
-
-    signals:
-        void invoke();
-
-    private:
-        void invokeMember(const QString &str);
-
-        TestResultsListType  m_resultsList;
-        TestResults         *m_total;
-    };
+    TestResultsListType m_resultsList;
+    TestResults *m_total;
+};
 }
 
-KUNITTEST_EXPORT QTextStream& operator<<( QTextStream& str, const QRect& r );
+KUNITTEST_EXPORT QTextStream &operator<<(QTextStream &str, const QRect &r);
 
-KUNITTEST_EXPORT QTextStream& operator<<( QTextStream& str, const QPoint& r );
+KUNITTEST_EXPORT QTextStream &operator<<(QTextStream &str, const QPoint &r);
 
-KUNITTEST_EXPORT QTextStream& operator<<( QTextStream& str, const QSize& r );
+KUNITTEST_EXPORT QTextStream &operator<<(QTextStream &str, const QSize &r);
 
 #endif

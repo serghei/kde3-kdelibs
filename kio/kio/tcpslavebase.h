@@ -42,66 +42,87 @@ namespace KIO {
  *
  * A call to foo() results in a call to slotFoo() on the other end.
  */
-class KIO_EXPORT TCPSlaveBase : public SlaveBase
-{
+class KIO_EXPORT TCPSlaveBase : public SlaveBase {
 public:
-    TCPSlaveBase(unsigned short int defaultPort, const QCString &protocol,
-                 const QCString &poolSocket, const QCString &appSocket);
+    TCPSlaveBase(unsigned short int defaultPort, const QCString &protocol, const QCString &poolSocket, const QCString &appSocket);
 
-    TCPSlaveBase(unsigned short int defaultPort, const QCString &protocol,
-                 const QCString &poolSocket, const QCString &appSocket,
-                 bool useSSL);
+    TCPSlaveBase(unsigned short int defaultPort, const QCString &protocol, const QCString &poolSocket, const QCString &appSocket, bool useSSL);
 
     virtual ~TCPSlaveBase();
 
 protected:
-
 #ifndef KDE_NO_COMPAT
     /**
      * @deprecated Due to inconsistency with KDE naming convention.
      */
-    KDE_DEPRECATED ssize_t Write(const void *data, ssize_t len) { return write( data, len ); }
+    KDE_DEPRECATED ssize_t Write(const void *data, ssize_t len)
+    {
+        return write(data, len);
+    }
 
     /**
      * @deprecated Due to inconsistency with KDE naming convention.
      */
-    KDE_DEPRECATED ssize_t Read(void *data, ssize_t len) { return read( data, len ); }
+    KDE_DEPRECATED ssize_t Read(void *data, ssize_t len)
+    {
+        return read(data, len);
+    }
 
     /**
      * @deprecated Due to inconsistency with KDE naming convention.
      */
-    KDE_DEPRECATED ssize_t ReadLine(char *data, ssize_t len) { return readLine( data, len ); }
+    KDE_DEPRECATED ssize_t ReadLine(char *data, ssize_t len)
+    {
+        return readLine(data, len);
+    }
 
     /**
      * @deprecated Due to inconsistency with KDE naming convention.
      */
-    KDE_DEPRECATED unsigned short int GetPort(unsigned short int p) { return port(p); }
+    KDE_DEPRECATED unsigned short int GetPort(unsigned short int p)
+    {
+        return port(p);
+    }
 
     /**
      * @deprecated Due to inconsistency with KDE naming convention.
      */
-    KDE_DEPRECATED bool ConnectToHost( const QString &host, unsigned int port,
-                        bool sendError ) { return connectToHost( host, port, sendError ); }
+    KDE_DEPRECATED bool ConnectToHost(const QString &host, unsigned int port, bool sendError)
+    {
+        return connectToHost(host, port, sendError);
+    }
 
     /**
      * @deprecated Due to inconsistency with KDE naming convention.
      */
-    KDE_DEPRECATED void CloseDescriptor() { closeDescriptor(); }
+    KDE_DEPRECATED void CloseDescriptor()
+    {
+        closeDescriptor();
+    }
 
     /**
      * @deprecated Due to inconsistency with KDE naming convention.
      */
-    KDE_DEPRECATED bool AtEOF() { return atEnd(); }
+    KDE_DEPRECATED bool AtEOF()
+    {
+        return atEnd();
+    }
 
     /**
      * @deprecated Due to inconsistency with KDE naming convention.
      */
-    KDE_DEPRECATED bool InitializeSSL() { return initializeSSL(); }
+    KDE_DEPRECATED bool InitializeSSL()
+    {
+        return initializeSSL();
+    }
 
     /**
      * @deprecated Due to inconsistency with KDE naming convention.
      */
-    KDE_DEPRECATED void CleanSSL() { cleanSSL(); }
+    KDE_DEPRECATED void CleanSSL()
+    {
+        cleanSSL();
+    }
 #endif
 
     /**
@@ -132,7 +153,7 @@ protected:
      * Same as above except it reads data one line at a time.
      */
     ssize_t readLine(char *data, ssize_t len);
- 
+
     /**
      * Sets the maximum size of blocks read in during calls to readLine().
      * This allows a slave to optimize for the protocol which it implements.
@@ -170,8 +191,7 @@ protected:
      *         on failure, false is returned and an appropriate
      *         error message is send to the application.
      */
-    bool connectToHost( const QString &host, unsigned int port,
-                        bool sendError = true );
+    bool connectToHost(const QString &host, unsigned int port, bool sendError = true);
 
     /**
      * Are we using SSL?
@@ -180,7 +200,10 @@ protected:
      *         if not, true isn't returned.
      * @since 3.2
      */
-    bool usingSSL() const { return m_bIsSSL; }
+    bool usingSSL() const
+    {
+        return m_bIsSSL;
+    }
 
     /**
      * Are we using TLS?
@@ -293,7 +316,7 @@ protected:
      * @return true if any activity was seen on the socket before the
      *              timeout value was reached, false otherwise.
      */
-    bool waitForResponse( int t );
+    bool waitForResponse(int t);
 
     /**
      * Sets the mode of the connection to blocking or non-blocking.
@@ -304,7 +327,7 @@ protected:
      *
      * @param b true to make the connection a blocking one, false otherwise.
      */
-    void setBlockConnection( bool b );
+    void setBlockConnection(bool b);
 
     /**
      * Sets how long to wait for orignally connecting to
@@ -316,7 +339,7 @@ protected:
      *
      * @param t timeout value
      */
-    void setConnectTimeout( int t );
+    void setConnectTimeout(int t);
 
     /**
      * Returns true if SSL tunneling is enabled.
@@ -340,7 +363,7 @@ protected:
      *
      * @param enable if true SSL Tunneling will be enabled
      */
-    void setEnableSSLTunnel( bool enable );
+    void setEnableSSLTunnel(bool enable);
 
     /**
      * Sets up the the real hostname for an SSL connection
@@ -352,7 +375,7 @@ protected:
      *
      * @param realHost the actual host name we are connecting to
      */
-    void setRealHost( const QString& realHost );
+    void setRealHost(const QString &realHost);
 
     // don't use me!
     void doConstructorStuff();
@@ -375,15 +398,15 @@ protected:
     FILE *fp;
 
 private:
-    bool doSSLHandShake( bool sendError );
+    bool doSSLHandShake(bool sendError);
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class TcpSlaveBasePrivate;
     TcpSlaveBasePrivate *d;
 };
-
 }
 
 #endif

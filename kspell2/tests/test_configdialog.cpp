@@ -25,16 +25,16 @@
 #include <kdebug.h>
 using namespace KSpell2;
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
     KApplication app(argc, argv, "KSpell2Test");
 
     Broker::Ptr broker = Broker::openBroker();
-    ConfigDialog *dialog = new ConfigDialog( broker, 0 );
+    ConfigDialog *dialog = new ConfigDialog(broker, 0);
 
     dialog->show();
 
-    app.setMainWidget( dialog );
+    app.setMainWidget(dialog);
 
     return app.exec();
 }

@@ -26,40 +26,39 @@ class QRegExp;
 class QString;
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 *  This is an interface to allow searching of a Document.
 */
-class KTEXTEDITOR_EXPORT SearchInterface
-{
-  friend class PrivateSearchInterface;
+class KTEXTEDITOR_EXPORT SearchInterface {
+    friend class PrivateSearchInterface;
 
-  public:
+public:
     SearchInterface();
     virtual ~SearchInterface();
 
-    unsigned int searchInterfaceNumber () const;
+    unsigned int searchInterfaceNumber() const;
 
-  protected:  
-    void setSearchInterfaceDCOPSuffix (const QCString &suffix);  
-    
-  //
-  // slots !!!
-  //
-  public:
-    virtual bool searchText (unsigned int startLine, unsigned int startCol, const QString &text, unsigned int *foundAtLine, unsigned int *foundAtCol, unsigned int *matchLen, bool casesensitive = true, bool backwards = false) = 0;
-    virtual bool searchText (unsigned int startLine, unsigned int startCol, const QRegExp &regexp, unsigned int *foundAtLine, unsigned int *foundAtCol, unsigned int *matchLen, bool backwards = false) = 0;
+protected:
+    void setSearchInterfaceDCOPSuffix(const QCString &suffix);
 
-  private:
+    //
+    // slots !!!
+    //
+public:
+    virtual bool searchText(unsigned int startLine, unsigned int startCol, const QString &text, unsigned int *foundAtLine, unsigned int *foundAtCol,
+                            unsigned int *matchLen, bool casesensitive = true, bool backwards = false) = 0;
+    virtual bool searchText(unsigned int startLine, unsigned int startCol, const QRegExp &regexp, unsigned int *foundAtLine, unsigned int *foundAtCol,
+                            unsigned int *matchLen, bool backwards = false) = 0;
+
+private:
     class PrivateSearchInterface *d;
     static unsigned int globalSearchInterfaceNumber;
     unsigned int mySearchInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT SearchInterface *searchInterface (class Document *doc);
-
+KTEXTEDITOR_EXPORT SearchInterface *searchInterface(class Document *doc);
 }
 
 #endif

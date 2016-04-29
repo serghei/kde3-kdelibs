@@ -9,4 +9,3 @@
 #include <kcolorbutton.h>
 
 #endif
-

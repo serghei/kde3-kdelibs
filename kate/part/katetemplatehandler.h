@@ -28,41 +28,49 @@
 
 class KateDocument;
 
-class KateTemplateHandler: public QObject, public KateKeyInterceptorFunctor {
-		Q_OBJECT
-	public:
-		KateTemplateHandler(KateDocument *doc,uint line,uint column, const QString &templateString, const QMap<QString,QString> &initialValues);
-		virtual ~KateTemplateHandler();
-		inline bool initOk() {return m_initOk;}
-		virtual bool operator()(KKey key);
-	private:
-		struct KateTemplatePlaceHolder {
-			KateSuperRangeList ranges;
-			bool isCursor;
-			bool isInitialValue;
-		};
-		class KateTemplateHandlerPlaceHolderInfo{
-			public:
-				KateTemplateHandlerPlaceHolderInfo():begin(0),len(0),placeholder(""){};
-				KateTemplateHandlerPlaceHolderInfo(uint begin_,uint len_,const QString& placeholder_):begin(begin_),len(len_),placeholder(placeholder_){}
-				uint begin;
-				uint len;
-				QString placeholder;
-		};
-		class KateSuperRangeList *m_ranges;
-		class KateDocument *m_doc;
-		QPtrList<KateTemplatePlaceHolder> m_tabOrder;
-		QDict<KateTemplatePlaceHolder> m_dict;
-		void generateRangeTable(uint insertLine,uint insertCol, const QString& insertString, const QValueList<KateTemplateHandlerPlaceHolderInfo> &buildList);
-		int m_currentTabStop;
-		KateSuperRange *m_currentRange;
-		void locateRange(const KateTextCursor &cursor );
-		bool m_initOk;
-		bool m_recursion;
-	private slots:
-		void slotTextInserted(int,int);
-		void slotDocumentDestroyed();
-		void slotAboutToRemoveText(const KateTextRange &range);
-		void slotTextRemoved();
+class KateTemplateHandler : public QObject, public KateKeyInterceptorFunctor {
+    Q_OBJECT
+public:
+    KateTemplateHandler(KateDocument *doc, uint line, uint column, const QString &templateString, const QMap< QString, QString > &initialValues);
+    virtual ~KateTemplateHandler();
+    inline bool initOk()
+    {
+        return m_initOk;
+    }
+    virtual bool operator()(KKey key);
+
+private:
+    struct KateTemplatePlaceHolder
+    {
+        KateSuperRangeList ranges;
+        bool isCursor;
+        bool isInitialValue;
+    };
+    class KateTemplateHandlerPlaceHolderInfo {
+    public:
+        KateTemplateHandlerPlaceHolderInfo() : begin(0), len(0), placeholder(""){};
+        KateTemplateHandlerPlaceHolderInfo(uint begin_, uint len_, const QString &placeholder_) : begin(begin_), len(len_), placeholder(placeholder_)
+        {
+        }
+        uint begin;
+        uint len;
+        QString placeholder;
+    };
+    class KateSuperRangeList *m_ranges;
+    class KateDocument *m_doc;
+    QPtrList< KateTemplatePlaceHolder > m_tabOrder;
+    QDict< KateTemplatePlaceHolder > m_dict;
+    void generateRangeTable(uint insertLine, uint insertCol, const QString &insertString,
+                            const QValueList< KateTemplateHandlerPlaceHolderInfo > &buildList);
+    int m_currentTabStop;
+    KateSuperRange *m_currentRange;
+    void locateRange(const KateTextCursor &cursor);
+    bool m_initOk;
+    bool m_recursion;
+private slots:
+    void slotTextInserted(int, int);
+    void slotDocumentDestroyed();
+    void slotAboutToRemoveText(const KateTextRange &range);
+    void slotTextRemoved();
 };
 #endif

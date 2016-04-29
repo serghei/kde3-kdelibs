@@ -27,26 +27,25 @@ class QTimeEdit;
 class QLineEdit;
 class KIntNumInput;
 
-class KPSchedulePage : public KPrintDialogPage
-{
-	Q_OBJECT
+class KPSchedulePage : public KPrintDialogPage {
+    Q_OBJECT
 public:
-	KPSchedulePage(QWidget *parent = 0, const char *name = 0);
-	~KPSchedulePage();
+    KPSchedulePage(QWidget *parent = 0, const char *name = 0);
+    ~KPSchedulePage();
 
-	void getOptions(QMap<QString,QString>& opts, bool incldef = false);
-	void setOptions(const QMap<QString,QString>& opts);
-	bool isValid(QString& msg);
+    void getOptions(QMap< QString, QString > &opts, bool incldef = false);
+    void setOptions(const QMap< QString, QString > &opts);
+    bool isValid(QString &msg);
 
 protected slots:
-	void slotTimeChanged();
+    void slotTimeChanged();
 
 private:
-	QComboBox	*m_time;
-	QTimeEdit	*m_tedit;
-	QLineEdit	*m_billing, *m_pagelabel;
-	KIntNumInput	*m_priority;
-	int	m_gmtdiff;
+    QComboBox *m_time;
+    QTimeEdit *m_tedit;
+    QLineEdit *m_billing, *m_pagelabel;
+    KIntNumInput *m_priority;
+    int m_gmtdiff;
 };
 
 #endif

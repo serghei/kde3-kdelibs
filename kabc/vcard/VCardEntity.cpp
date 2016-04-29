@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -28,92 +28,83 @@
 
 using namespace VCARD;
 
-VCardEntity::VCardEntity()
-	:	Entity()
+VCardEntity::VCardEntity() : Entity()
 {
 }
 
-VCardEntity::VCardEntity(const VCardEntity & x)
-	:	Entity(x)
+VCardEntity::VCardEntity(const VCardEntity &x) : Entity(x)
 {
 }
 
-VCardEntity::VCardEntity(const QCString & s)
-	:	Entity(s)
+VCardEntity::VCardEntity(const QCString &s) : Entity(s)
 {
 }
 
-	VCardEntity &
-VCardEntity::operator = (VCardEntity & x)
+VCardEntity &VCardEntity::operator=(VCardEntity &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Entity::operator = (x);
-	return *this;
+    Entity::operator=(x);
+    return *this;
 }
 
-	VCardEntity &
-VCardEntity::operator = (const QCString & s)
+VCardEntity &VCardEntity::operator=(const QCString &s)
 {
-	Entity::operator = (s);
-	return *this;
+    Entity::operator=(s);
+    return *this;
 }
 
-	bool
-VCardEntity::operator == (VCardEntity & x)
+bool VCardEntity::operator==(VCardEntity &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 VCardEntity::~VCardEntity()
 {
 }
 
-	void
-VCardEntity::_parse()
+void VCardEntity::_parse()
 {
-	vDebug("parse");
-	QCString s(strRep_);
-	
-	int i = s.find(QRegExp("BEGIN:VCARD", false));
-	
-	while (i != -1) {
-		
-		i = s.find(QRegExp("BEGIN:VCARD", false), 11);
-		
-		QCString cardStr(s.left(i));
-		
-		VCard * v = new VCard(cardStr);
-		
-		cardList_.append(v);
-		
-		v->parse();
-		
-		s.remove(0, i);
-	}
+    vDebug("parse");
+    QCString s(strRep_);
+
+    int i = s.find(QRegExp("BEGIN:VCARD", false));
+
+    while(i != -1)
+    {
+
+        i = s.find(QRegExp("BEGIN:VCARD", false), 11);
+
+        QCString cardStr(s.left(i));
+
+        VCard *v = new VCard(cardStr);
+
+        cardList_.append(v);
+
+        v->parse();
+
+        s.remove(0, i);
+    }
 }
 
-	void
-VCardEntity::_assemble()
+void VCardEntity::_assemble()
 {
-	VCardListIterator it(cardList_);
-	
-	for (; it.current(); ++it)
-		strRep_ += it.current()->asString() + "\r\n"; // One CRLF for luck.
+    VCardListIterator it(cardList_);
+
+    for(; it.current(); ++it)
+        strRep_ += it.current()->asString() + "\r\n"; // One CRLF for luck.
 }
 
-	VCardList &
-VCardEntity::cardList()
+VCardList &VCardEntity::cardList()
 {
-	parse();
-	return cardList_;
+    parse();
+    return cardList_;
 }
 
-	void
-VCardEntity::setCardList(const VCardList & l)
+void VCardEntity::setCardList(const VCardList &l)
 {
-	parse();
-	cardList_ = l;
+    parse();
+    cardList_ = l;
 }
-

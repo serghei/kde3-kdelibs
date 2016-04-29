@@ -24,59 +24,63 @@
 
 using namespace KABC;
 
-TimeZone::TimeZone() :
-  mOffset( 0 ), mValid( false )
+TimeZone::TimeZone() : mOffset(0), mValid(false)
 {
 }
 
-TimeZone::TimeZone( int offset ) :
-  mOffset( offset ), mValid( true )
+TimeZone::TimeZone(int offset) : mOffset(offset), mValid(true)
 {
 }
 
-void TimeZone::setOffset( int offset )
+void TimeZone::setOffset(int offset)
 {
-  mOffset = offset;
-  mValid = true;
+    mOffset = offset;
+    mValid = true;
 }
 
 int TimeZone::offset() const
 {
-  return mOffset;
+    return mOffset;
 }
 
 bool TimeZone::isValid() const
 {
-  return mValid;
+    return mValid;
 }
 
-bool TimeZone::operator==( const TimeZone &t ) const
+bool TimeZone::operator==(const TimeZone &t) const
 {
-  if ( !t.isValid() && !isValid() ) return true;
-  if ( !t.isValid() || !isValid() ) return false;
-  if ( t.mOffset == mOffset ) return true;
-  return false;
+    if(!t.isValid() && !isValid())
+        return true;
+    if(!t.isValid() || !isValid())
+        return false;
+    if(t.mOffset == mOffset)
+        return true;
+    return false;
 }
 
-bool TimeZone::operator!=( const TimeZone &t ) const
+bool TimeZone::operator!=(const TimeZone &t) const
 {
-  if ( !t.isValid() && !isValid() ) return false;
-  if ( !t.isValid() || !isValid() ) return true;
-  if ( t.mOffset != mOffset ) return true;
-  return false;
+    if(!t.isValid() && !isValid())
+        return false;
+    if(!t.isValid() || !isValid())
+        return true;
+    if(t.mOffset != mOffset)
+        return true;
+    return false;
 }
 
 QString TimeZone::asString() const
 {
-  return QString::number( mOffset );
+    return QString::number(mOffset);
 }
 
-QDataStream &KABC::operator<<( QDataStream &s, const TimeZone &zone )
+QDataStream &KABC::operator<<(QDataStream &s, const TimeZone &zone)
 {
     return s << zone.mOffset;
 }
 
-QDataStream &KABC::operator>>( QDataStream &s, TimeZone &zone )
+QDataStream &KABC::operator>>(QDataStream &s, TimeZone &zone)
 {
     s >> zone.mOffset;
     zone.mValid = true;

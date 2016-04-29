@@ -8,12 +8,12 @@
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
- 
+
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     Library General Public License for more details.
- 
+
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -41,10 +41,9 @@
  * @short Sends MIDI events to GUS synths
  * @version 0.9.5 17/01/2000
  * @author Antonio Larrosa Jimenez <larrosa@kde.org>
- */ 
-class GUSOut : public MidiOut
-{
-  private:
+ */
+class GUSOut : public MidiOut {
+private:
     class GUSOutPrivate;
     GUSOutPrivate *di;
 
@@ -55,17 +54,17 @@ class GUSOut : public MidiOut
     VoiceManager *vm;
 
     int totalmemory; // Total memory in soundcard
-    int freememory; // Free memory
+    int freememory;  // Free memory
 
 
-    void patchesLoadingOrder(int *patchesused,int *patchesordered);
+    void patchesLoadingOrder(int *patchesused, int *patchesordered);
     const char *patchName(int pgm);
 
-  public:
+public:
     /**
      * Constructor. See MidiOut::MidiOut() for more information.
      */
-    GUSOut(int d=0,int total =12);
+    GUSOut(int d = 0, int total = 12);
 
     /**
      * Destructor.
@@ -75,58 +74,58 @@ class GUSOut : public MidiOut
     /**
      * See MidiOut::openDev()
      */
-    virtual void openDev	(int sqfd);
+    virtual void openDev(int sqfd);
 
     /**
      * See MidiOut::closeDev()
      */
-    virtual void closeDev	(void);
+    virtual void closeDev(void);
 
     /**
      * See MidiOut::initDev()
      */
-    virtual void initDev	(void);
+    virtual void initDev(void);
 
     /**
      * See MidiOut::noteOn()
      */
-    virtual void noteOn		( uchar chn, uchar note, uchar vel );
+    virtual void noteOn(uchar chn, uchar note, uchar vel);
 
     /**
      * See MidiOut::noteOff()
      */
-    virtual void noteOff	( uchar chn, uchar note, uchar vel );
+    virtual void noteOff(uchar chn, uchar note, uchar vel);
 
     /**
      * See MidiOut::keyPressure()
      */
-    virtual void keyPressure	( uchar chn, uchar note, uchar vel );
+    virtual void keyPressure(uchar chn, uchar note, uchar vel);
 
     /**
      * See MidiOut::chnPatchChange()
      */
-    virtual void chnPatchChange	( uchar chn, uchar patch );
+    virtual void chnPatchChange(uchar chn, uchar patch);
 
     /**
      * See MidiOut::chnPressure()
      */
-    virtual void chnPressure	( uchar chn, uchar vel );
+    virtual void chnPressure(uchar chn, uchar vel);
 
     /**
      * See MidiOut::chnPitchBender()
      */
-    virtual void chnPitchBender	( uchar chn, uchar lsb,  uchar msb );
+    virtual void chnPitchBender(uchar chn, uchar lsb, uchar msb);
 
     /**
      * See MidiOut::chnController()
      */
-    virtual void chnController	( uchar chn, uchar ctl , uchar v ); 
+    virtual void chnController(uchar chn, uchar ctl, uchar v);
 
     /**
      * It's an empty function, as GUS synths don't support System Exclusive
      * messages
      */
-    virtual void sysex		( uchar *data,ulong size);
+    virtual void sysex(uchar *data, ulong size);
 
     /**
      * See DeviceManager::setPatchesToUse() . All the information about this
@@ -149,7 +148,7 @@ class GUSOut : public MidiOut
      * @see patch()
      * @see setPatchesToUse()
      */
-    int loadPatch  (int pgm);
+    int loadPatch(int pgm);
 
     /**
      * Returns p if the patch with number p has been correctly loaded.
@@ -159,22 +158,21 @@ class GUSOut : public MidiOut
      * @see loadPatch()
      * @see setPatchesToUse()
      */
-    int patch(int p); 
+    int patch(int p);
 
-  private:
+private:
     static const char *GUS_patches_directory;
     static int delete_GUS_patches_directory;
 
-  public:
+public:
     /**
      * Sets the directory where the GUS patches are stored, that is, where the
      * acpiano.pat, ... files can be found.
      *
      * It will store a copy of the parameter, so you should delete the memory
      * used by the parameter you passed.
-     */ 
+     */
     static void setGUSPatchesDirectory(const char *dir);
-
 };
 
 #endif

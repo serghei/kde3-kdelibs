@@ -30,12 +30,10 @@
 /**
  * The KApplication instance for kcmshell.
  */
-class KCMShell : public KApplication
-{
+class KCMShell : public KApplication {
     Q_OBJECT
 
 public:
-
     /**
      * Sets m_dcopName basically to @p dcopName,
      * and then registers with DCOP.
@@ -43,7 +41,7 @@ public:
      * @param dcopName name to set the DCOP name to
      * @param rootMode true if the kcmshell is embedding
      */
-    void setDCOPName(const QCString &dcopName, bool rootMode );
+    void setDCOPName(const QCString &dcopName, bool rootMode);
 
     /**
      * Waits until the last instance of kcmshell with the same
@@ -60,16 +58,14 @@ private slots:
 
     /**
      */
-    void appExit( const QCString &appId );
+    void appExit(const QCString &appId);
 
 private:
-
     /**
      * The DCOP name which actually is registered.
      * For example "kcmshell_mouse".
      */
     QCString m_dcopName;
-
 };
 
 
@@ -79,24 +75,21 @@ private:
  *
  * @author Waldo Bastian <bastian@kde.org>
  */
-class KCMShellMultiDialog : public KCMultiDialog, public DCOPObject
-{
+class KCMShellMultiDialog : public KCMultiDialog, public DCOPObject {
     Q_OBJECT
     K_DCOP
 
 public:
-
     /**
      */
-    KCMShellMultiDialog( int dialogFace, const QString& caption,
-            QWidget *parent=0, const char *name=0, bool modal=false);
+    KCMShellMultiDialog(int dialogFace, const QString &caption, QWidget *parent = 0, const char *name = 0, bool modal = false);
 
-k_dcop:
+    k_dcop :
 
-    /**
-     */
-    virtual void activate( QCString asn_id );
-
+        /**
+         */
+        virtual void
+        activate(QCString asn_id);
 };
 
 

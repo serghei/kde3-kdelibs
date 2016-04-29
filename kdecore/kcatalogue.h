@@ -33,97 +33,96 @@ class KCataloguePrivate;
  *
  * @see KLocale
  */
-//REVISED: hausmann
-class KDECORE_EXPORT KCatalogue
-{
+// REVISED: hausmann
+class KDECORE_EXPORT KCatalogue {
 public:
-  /**
-   * Constructor.
-   *
-   * @param name The name of the catalog
-   * @param language The language of this catalog
-   */
-  explicit KCatalogue(const QString & name = QString::null, const QString & language = QString::null);
+    /**
+     * Constructor.
+     *
+     * @param name The name of the catalog
+     * @param language The language of this catalog
+     */
+    explicit KCatalogue(const QString &name = QString::null, const QString &language = QString::null);
 
-  /**
-   * Copy constructor.
-   */
-  KCatalogue(const KCatalogue & rhs);
+    /**
+     * Copy constructor.
+     */
+    KCatalogue(const KCatalogue &rhs);
 
-  /**
-   * Assignment operator.
-   */
-  KCatalogue & operator = ( const KCatalogue & rhs);
+    /**
+     * Assignment operator.
+     */
+    KCatalogue &operator=(const KCatalogue &rhs);
 
-  /**
-   * Destructor.
-   */
-  virtual ~KCatalogue();
+    /**
+     * Destructor.
+     */
+    virtual ~KCatalogue();
 
-  /**
-   * Returns the name of the catalog.
-   *
-   * @return The name of the catalog
-   */
-  QString name() const;
+    /**
+     * Returns the name of the catalog.
+     *
+     * @return The name of the catalog
+     */
+    QString name() const;
 
-  /**
-   * Returns the language of the catalog.
-   *
-   * @return The language of the catalog
-   */
-  QString language() const;
-  
-  /**
-   * Returns the plural type for the catalog. This type is based on the language of the catalog
-   and is cached for performance.
-   *
-   * @return The plural type for the catalog
-   */
-  int pluralType() const;
-  
-  /**
-   * Sets the plural type for the catalog. The caller has probably looked it up in a kdelibs.mo-catalog 
-   * for the appropriate language
-   *
-   * @return The plural type for the catalog
-   */
-  void setPluralType( int pluralType );
-  
+    /**
+     * Returns the language of the catalog.
+     *
+     * @return The language of the catalog
+     */
+    QString language() const;
 
-  /**
-   * Retrieves a translation of the specified message id.
-   *
-   * Do not pass 0 or "" strings as message ids.
-   *
-   * @param msgid The message id
-   *
-   * @return The translated message, in utf8 encoding, or 0 if not found
-   */
-  const char * translate( const char * msgid ) const;
+    /**
+     * Returns the plural type for the catalog. This type is based on the language of the catalog
+     and is cached for performance.
+     *
+     * @return The plural type for the catalog
+     */
+    int pluralType() const;
 
-private:
-  /**
-   * @internal Changes the current file name.
-   *
-   * @param fileName The new file name
-   */
+    /**
+     * Sets the plural type for the catalog. The caller has probably looked it up in a kdelibs.mo-catalog
+     * for the appropriate language
+     *
+     * @return The plural type for the catalog
+     */
+    void setPluralType(int pluralType);
 
-  void setFileName( const QString & fileName );
-  /**
-   * @internal Retrieves the current file name.
-   *
-   * @return The current file name, if any.
-   */
-  QString fileName() const;
 
-  /**
-   * @internal Unloads the current file.
-   */
-  void doUnload();
+    /**
+     * Retrieves a translation of the specified message id.
+     *
+     * Do not pass 0 or "" strings as message ids.
+     *
+     * @param msgid The message id
+     *
+     * @return The translated message, in utf8 encoding, or 0 if not found
+     */
+    const char *translate(const char *msgid) const;
 
 private:
-  KCataloguePrivate * d;
+    /**
+     * @internal Changes the current file name.
+     *
+     * @param fileName The new file name
+     */
+
+    void setFileName(const QString &fileName);
+    /**
+     * @internal Retrieves the current file name.
+     *
+     * @return The current file name, if any.
+     */
+    QString fileName() const;
+
+    /**
+     * @internal Unloads the current file.
+     */
+    void doUnload();
+
+private:
+    KCataloguePrivate *d;
 };
 
 #endif

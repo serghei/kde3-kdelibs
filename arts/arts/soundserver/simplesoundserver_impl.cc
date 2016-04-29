@@ -1,31 +1,31 @@
-    /*
+/*
 
-    Copyright (C) 1999-2001 Stefan Westerfeld
-                            stefan@space.twc.de
-		       2001 Matthias Kretz
-			    kretz@kde.org
-		       2003 Allan Sandfeld Jensen
-			    kde@carewolf.com
+Copyright (C) 1999-2001 Stefan Westerfeld
+                        stefan@space.twc.de
+           2001 Matthias Kretz
+            kretz@kde.org
+           2003 Allan Sandfeld Jensen
+            kde@carewolf.com
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-    Permission is also granted to link this program with the Qt
-    library, treating Qt like a library that normally accompanies the
-    operating system kernel, whether or not that is in fact the case.
+Permission is also granted to link this program with the Qt
+library, treating Qt like a library that normally accompanies the
+operating system kernel, whether or not that is in fact the case.
 
-    */
+*/
 
 #include "simplesoundserver_impl.h"
 #include "artsflow.h"
@@ -41,155 +41,148 @@
 using namespace std;
 using namespace Arts;
 
-void SoundServerJob::detach(const Object&)
+void SoundServerJob::detach(const Object &)
 {
-	// nothing by default
+    // nothing by default
 }
 
 SoundServerJob::~SoundServerJob()
 {
-	// virtual destructor, since we've got virtual functions
+    // virtual destructor, since we've got virtual functions
 }
 
-PlayWavJob::PlayWavJob(const string& filename) :terminated(false)
+PlayWavJob::PlayWavJob(const string &filename) : terminated(false)
 {
-	arts_debug("play '%s'!",filename.c_str());
+    arts_debug("play '%s'!", filename.c_str());
 
-	connect(wav,out);
-	wav.filename(filename);
-	wav.start();
-	out.start();
+    connect(wav, out);
+    wav.filename(filename);
+    wav.start();
+    out.start();
 }
 
 void PlayWavJob::terminate()
 {
-	terminated = true;
+    terminated = true;
 }
 
 bool PlayWavJob::done()
 {
-	return terminated || wav.finished();
+    return terminated || wav.finished();
 }
 
-PlayObjectJob::PlayObjectJob(PlayObject newPlob) 
-		: plob(newPlob), terminated(false)
+PlayObjectJob::PlayObjectJob(PlayObject newPlob) : plob(newPlob), terminated(false)
 {
-	plob.play();
+    plob.play();
 }
 
 void PlayObjectJob::terminate()
 {
-	terminated = true;
-	plob.halt();
+    terminated = true;
+    plob.halt();
 }
 
 bool PlayObjectJob::done()
 {
-	return terminated || (plob.state() == posIdle);
+    return terminated || (plob.state() == posIdle);
 }
 
 PlayStreamJob::PlayStreamJob(ByteSoundProducer bsp) : sender(bsp)
 {
-	int samplingRate = bsp.samplingRate();
-	int channels = bsp.channels();
-	int bits = bsp.bits();
+    int samplingRate = bsp.samplingRate();
+    int channels = bsp.channels();
+    int bits = bsp.bits();
 
-	arts_debug("incoming stream, parameters: rate=%d, %d bit, %d channels",
-		samplingRate, bits, channels);
+    arts_debug("incoming stream, parameters: rate=%d, %d bit, %d channels", samplingRate, bits, channels);
 
-	if((samplingRate < 500 || samplingRate > 2000000)
-	|| (channels != 1 && channels != 2) || (bits != 8 && bits != 16))
-	{
-		arts_warning("invalid stream parameters: rate=%d, %d bit, %d channels",
-						samplingRate, bits, channels);
-		terminate();
-		return;
-	}
+    if((samplingRate < 500 || samplingRate > 2000000) || (channels != 1 && channels != 2) || (bits != 8 && bits != 16))
+    {
+        arts_warning("invalid stream parameters: rate=%d, %d bit, %d channels", samplingRate, bits, channels);
+        terminate();
+        return;
+    }
 
-	convert.samplingRate(samplingRate);
-	convert.channels(channels);
-	convert.bits(bits);
-	ByteSoundProducerV2 senderv2 = DynamicCast(sender);
-	if(!senderv2.isNull())
-		out.title(senderv2.title());
+    convert.samplingRate(samplingRate);
+    convert.channels(channels);
+    convert.bits(bits);
+    ByteSoundProducerV2 senderv2 = DynamicCast(sender);
+    if(!senderv2.isNull())
+        out.title(senderv2.title());
 
-	connect(sender,"outdata",convert,"indata");
-	connect(convert,out);
+    connect(sender, "outdata", convert, "indata");
+    connect(convert, out);
 
-	convert.start();
-	out.start();
+    convert.start();
+    out.start();
 }
 
-void PlayStreamJob::detach(const Object& object)
+void PlayStreamJob::detach(const Object &object)
 {
-	if(object._isEqual(sender))
-		terminate();
+    if(object._isEqual(sender))
+        terminate();
 }
 
 void PlayStreamJob::terminate()
 {
-	sender = ByteSoundProducer::null();
+    sender = ByteSoundProducer::null();
 }
 
 bool PlayStreamJob::done()
 {
-	// when the sender is not alive any longer, assign a null object
-	if(!sender.isNull() && sender.error())
-		sender = ByteSoundProducer::null();
+    // when the sender is not alive any longer, assign a null object
+    if(!sender.isNull() && sender.error())
+        sender = ByteSoundProducer::null();
 
-	return sender.isNull() && !convert.running();
+    return sender.isNull() && !convert.running();
 }
 
 RecordStreamJob::RecordStreamJob(ByteSoundReceiver bsr) : receiver(bsr)
 {
-	int samplingRate = bsr.samplingRate();
-	int channels = bsr.channels();
-	int bits = bsr.bits();
+    int samplingRate = bsr.samplingRate();
+    int channels = bsr.channels();
+    int bits = bsr.bits();
 
-	arts_debug("outgoing stream, parameters: rate=%d, %d bit, %d channels",
-		samplingRate, bits, channels);
+    arts_debug("outgoing stream, parameters: rate=%d, %d bit, %d channels", samplingRate, bits, channels);
 
-	if((samplingRate < 500 || samplingRate > 2000000)
-	|| (channels != 1 && channels != 2) || (bits != 8 && bits != 16))
-	{
-		arts_warning("invalid stream parameters: rate=%d, %d bit, %d channels",
-						samplingRate, bits, channels);
-		terminate();
-		return;
-	}
+    if((samplingRate < 500 || samplingRate > 2000000) || (channels != 1 && channels != 2) || (bits != 8 && bits != 16))
+    {
+        arts_warning("invalid stream parameters: rate=%d, %d bit, %d channels", samplingRate, bits, channels);
+        terminate();
+        return;
+    }
 
-	convert.samplingRate(samplingRate);
-	convert.channels(channels);
-	convert.bits(bits);
-	in.title(receiver.title());
+    convert.samplingRate(samplingRate);
+    convert.channels(channels);
+    convert.bits(bits);
+    in.title(receiver.title());
 
-	connect(in,convert);
-	connect(convert,"outdata",receiver,"indata");
+    connect(in, convert);
+    connect(convert, "outdata", receiver, "indata");
 
-	in.start();
-	convert.start();
+    in.start();
+    convert.start();
 }
 
-void RecordStreamJob::detach(const Object& object)
+void RecordStreamJob::detach(const Object &object)
 {
-	if(object._isEqual(receiver))
-		terminate();
+    if(object._isEqual(receiver))
+        terminate();
 }
 
 void RecordStreamJob::terminate()
 {
-	receiver = ByteSoundReceiver::null();
-	convert.stop();
-	in.stop();
+    receiver = ByteSoundReceiver::null();
+    convert.stop();
+    in.stop();
 }
 
 bool RecordStreamJob::done()
 {
-	// when the sender is not alive any longer, assign a null object
-	if(!receiver.isNull() && receiver.error())
-		receiver = ByteSoundReceiver::null();
+    // when the sender is not alive any longer, assign a null object
+    if(!receiver.isNull() && receiver.error())
+        receiver = ByteSoundReceiver::null();
 
-	return receiver.isNull();
+    return receiver.isNull();
 }
 
 /*
@@ -213,233 +206,230 @@ bool RecordStreamJob::done()
  */
 SimpleSoundServer_impl::SimpleSoundServer_impl() : autoSuspendTime(0), bufferMultiplier(1)
 {
-	soundcardBus.busname("out_soundcard");
-	connect(soundcardBus,_outstack);
-	connect(_outstack,_outVolume);
-	connect(_outVolume,playSound);
+    soundcardBus.busname("out_soundcard");
+    connect(soundcardBus, _outstack);
+    connect(_outstack, _outVolume);
+    connect(_outVolume, playSound);
 
-	if(AudioSubSystem::the()->fullDuplex())
-	{
-		recordBus.busname("in_soundcard");
-		connect(recordSound,recordBus);
+    if(AudioSubSystem::the()->fullDuplex())
+    {
+        recordBus.busname("in_soundcard");
+        connect(recordSound, recordBus);
 
-		recordBus.start();
-		recordSound.start();
-	}
+        recordBus.start();
+        recordSound.start();
+    }
 
-	soundcardBus.start();
-	_outVolume.start();
-	playSound.start();
+    soundcardBus.start();
+    _outVolume.start();
+    playSound.start();
 
-	asCount = 0; // AutoSuspend
-	Dispatcher::the()->ioManager()->addTimer(200,this);
+    asCount = 0; // AutoSuspend
+    Dispatcher::the()->ioManager()->addTimer(200, this);
 
-	// load Arts::MidiManager when installed
-	TraderQuery query;
-	query.supports("InterfaceName","Arts::MidiManager");
+    // load Arts::MidiManager when installed
+    TraderQuery query;
+    query.supports("InterfaceName", "Arts::MidiManager");
 
-	vector<TraderOffer> *offers = query.query();
-	if(offers->size())
-		_addChild(Arts::SubClass("Arts::MidiManager"),
-					"Extension_Arts::MidiManager");
-	delete offers;
+    vector< TraderOffer > *offers = query.query();
+    if(offers->size())
+        _addChild(Arts::SubClass("Arts::MidiManager"), "Extension_Arts::MidiManager");
+    delete offers;
 }
 
 SimpleSoundServer_impl::~SimpleSoundServer_impl()
 {
-	/*
-	 * we don't need to care about the flow system nodes we started, since
-	 * we have put them into Object_var's, which means that they will be
-	 * freed automatically here
-	 */
-	Dispatcher::the()->ioManager()->removeTimer(this);
+    /*
+     * we don't need to care about the flow system nodes we started, since
+     * we have put them into Object_var's, which means that they will be
+     * freed automatically here
+     */
+    Dispatcher::the()->ioManager()->removeTimer(this);
 }
 
-long SimpleSoundServer_impl::play(const string& filename)
+long SimpleSoundServer_impl::play(const string &filename)
 {
-	PlayObject tmp( createPlayObject( filename ) );
-	if ( tmp.isNull() )
-		return 0; // No success creating the PlayObject and playing the file...
-	jobs.push_back(new PlayObjectJob(tmp));
-	return 1;
+    PlayObject tmp(createPlayObject(filename));
+    if(tmp.isNull())
+        return 0; // No success creating the PlayObject and playing the file...
+    jobs.push_back(new PlayObjectJob(tmp));
+    return 1;
 }
 
 float SimpleSoundServer_impl::serverBufferTime()
 {
-	float hardwareBuffer = AudioSubSystem::the()->fragmentSize()
-						 * AudioSubSystem::the()->fragmentCount();
+    float hardwareBuffer = AudioSubSystem::the()->fragmentSize() * AudioSubSystem::the()->fragmentCount();
 
-	float playSpeed = AudioSubSystem::the()->channels()
-	                * AudioSubSystem::the()->samplingRate()
-					* (AudioSubSystem::the()->bits() / 8);
+    float playSpeed = AudioSubSystem::the()->channels() * AudioSubSystem::the()->samplingRate() * (AudioSubSystem::the()->bits() / 8);
 
-	return 1000.0 * hardwareBuffer / playSpeed;
+    return 1000.0 * hardwareBuffer / playSpeed;
 }
 
 float SimpleSoundServer_impl::minStreamBufferTime()
 {
-	/*
-	 * It is sane to assume that client side stream buffers must be >= server
-	 * side hardware buffers (or it can come to dropouts during hardware
-	 * buffer refill). The buffer size can be increased using the multiplier.
-	 */
-	return bufferMultiplier * serverBufferTime();
+    /*
+     * It is sane to assume that client side stream buffers must be >= server
+     * side hardware buffers (or it can come to dropouts during hardware
+     * buffer refill). The buffer size can be increased using the multiplier.
+     */
+    return bufferMultiplier * serverBufferTime();
 }
 
 void SimpleSoundServer_impl::attach(ByteSoundProducer bsp)
 {
-	arts_return_if_fail(!bsp.isNull());
+    arts_return_if_fail(!bsp.isNull());
 
-	jobs.push_back(new PlayStreamJob(bsp));
+    jobs.push_back(new PlayStreamJob(bsp));
 }
 
 void SimpleSoundServer_impl::detach(ByteSoundProducer bsp)
 {
-	arts_return_if_fail(!bsp.isNull());
-	arts_debug("detach incoming stream");
+    arts_return_if_fail(!bsp.isNull());
+    arts_debug("detach incoming stream");
 
-	list<SoundServerJob *>::iterator j;
+    list< SoundServerJob * >::iterator j;
 
-	for(j = jobs.begin();j != jobs.end();j++)
-		(*j)->detach(bsp);
+    for(j = jobs.begin(); j != jobs.end(); j++)
+        (*j)->detach(bsp);
 }
 
 void SimpleSoundServer_impl::attachRecorder(ByteSoundReceiver bsr)
 {
-	arts_return_if_fail(!bsr.isNull());
-	jobs.push_back(new RecordStreamJob(bsr));
+    arts_return_if_fail(!bsr.isNull());
+    jobs.push_back(new RecordStreamJob(bsr));
 }
 
 void SimpleSoundServer_impl::detachRecorder(ByteSoundReceiver bsr)
 {
-	arts_return_if_fail(!bsr.isNull());
-	arts_debug("detach outgoing stream");
+    arts_return_if_fail(!bsr.isNull());
+    arts_debug("detach outgoing stream");
 
-	list<SoundServerJob *>::iterator j;
+    list< SoundServerJob * >::iterator j;
 
-	for(j = jobs.begin();j != jobs.end();j++)
-		(*j)->detach(bsr);
+    for(j = jobs.begin(); j != jobs.end(); j++)
+        (*j)->detach(bsr);
 }
 
 StereoEffectStack SimpleSoundServer_impl::outstack()
 {
-	return _outstack;
+    return _outstack;
 }
 
-Object SimpleSoundServer_impl::createObject(const string& name)
+Object SimpleSoundServer_impl::createObject(const string &name)
 {
-	// don't use SubClass(name) as this will abort if the object is not found
-	return Object::_from_base(ObjectManager::the()->create(name));
+    // don't use SubClass(name) as this will abort if the object is not found
+    return Object::_from_base(ObjectManager::the()->create(name));
 }
 
 void SimpleSoundServer_impl::notifyTime()
 {
-	static long lock = 0;
-	assert(!lock);		// paranoid reentrancy check (remove me later)
-	lock++;
-	/*
-	 * Three times the same game: look if a certain object is still
-	 * active - if yes, keep, if no, remove
-	 */
+    static long lock = 0;
+    assert(!lock); // paranoid reentrancy check (remove me later)
+    lock++;
+    /*
+     * Three times the same game: look if a certain object is still
+     * active - if yes, keep, if no, remove
+     */
 
-	/* look for jobs which may have terminated by now */
-	list<SoundServerJob *>::iterator i;
+    /* look for jobs which may have terminated by now */
+    list< SoundServerJob * >::iterator i;
 
-	i = jobs.begin();
-	while(i != jobs.end())
-	{
-		SoundServerJob *job = *i;
+    i = jobs.begin();
+    while(i != jobs.end())
+    {
+        SoundServerJob *job = *i;
 
-		if(job->done())
-		{
-			delete job;
-			jobs.erase(i);
-			arts_debug("job finished");
-			i = jobs.begin();
-		}
-		else i++;
-	}
+        if(job->done())
+        {
+            delete job;
+            jobs.erase(i);
+            arts_debug("job finished");
+            i = jobs.begin();
+        }
+        else
+            i++;
+    }
 
-/*
- * AutoSuspend
- */
-	if(Dispatcher::the()->flowSystem()->suspendable() &&
-	  !Dispatcher::the()->flowSystem()->suspended() &&
-	   autoSuspendTime != 0)
-	{
-		asCount++;
-		if(asCount > autoSuspendTime*5)
-		{
-			Dispatcher::the()->flowSystem()->suspend();
-			arts_info("sound server suspended");
-		}
-	}
-	else
-		asCount = 0;
-	lock--;
+    /*
+     * AutoSuspend
+     */
+    if(Dispatcher::the()->flowSystem()->suspendable() && !Dispatcher::the()->flowSystem()->suspended() && autoSuspendTime != 0)
+    {
+        asCount++;
+        if(asCount > autoSuspendTime * 5)
+        {
+            Dispatcher::the()->flowSystem()->suspend();
+            arts_info("sound server suspended");
+        }
+    }
+    else
+        asCount = 0;
+    lock--;
 }
 
-PlayObject SimpleSoundServer_impl::createPlayObject(const string& filename)
+PlayObject SimpleSoundServer_impl::createPlayObject(const string &filename)
 {
-	string objectType = "";
+    string objectType = "";
 
-	/*
-	 * figure out extension (as lowercased letters)
-	 */
-	string extension = "";
-	bool extensionok = false;
-	string::const_reverse_iterator i;
-	for(i = filename.rbegin(); i != filename.rend() && !extensionok; i++)
-	{
-		if(*i == '.')
-			extensionok = true;
-		else
-			extension.insert(extension.begin(), (char)tolower(*i));
-	}
+    /*
+     * figure out extension (as lowercased letters)
+     */
+    string extension = "";
+    bool extensionok = false;
+    string::const_reverse_iterator i;
+    for(i = filename.rbegin(); i != filename.rend() && !extensionok; i++)
+    {
+        if(*i == '.')
+            extensionok = true;
+        else
+            extension.insert(extension.begin(), (char)tolower(*i));
+    }
 
-	/*
-	 * query trader for PlayObjects which support this
-	 */
-	if(extensionok)
-	{
-		arts_debug("search playobject, extension = %s",extension.c_str());
+    /*
+     * query trader for PlayObjects which support this
+     */
+    if(extensionok)
+    {
+        arts_debug("search playobject, extension = %s", extension.c_str());
 
-		TraderQuery query;
-		query.supports("Interface","Arts::PlayObject");
-		query.supports("Extension",extension);
+        TraderQuery query;
+        query.supports("Interface", "Arts::PlayObject");
+        query.supports("Extension", extension);
 
-		vector<TraderOffer> *offers = query.query();
-		if(!offers->empty())
-			objectType = offers->front().interfaceName();	// first offer
+        vector< TraderOffer > *offers = query.query();
+        if(!offers->empty())
+            objectType = offers->front().interfaceName(); // first offer
 
-		delete offers;
-	}
+        delete offers;
+    }
 
-	/*
-	 * create a PlayObject and connect it
-	 */
-	if(!objectType.empty())
-	{
-		arts_debug("creating %s to play file %s", objectType.c_str(), filename.c_str() );
+    /*
+     * create a PlayObject and connect it
+     */
+    if(!objectType.empty())
+    {
+        arts_debug("creating %s to play file %s", objectType.c_str(), filename.c_str());
 
-		PlayObject result = SubClass(objectType);
-		if(result.loadMedia(filename))
-		{
-			// TODO: check for existence of left & right streams
-			Synth_BUS_UPLINK uplink;
-			uplink.busname("out_soundcard");
-			connect(result,"left",uplink,"left");
-			connect(result,"right",uplink,"right");
-			uplink.start();
-			result._node()->start();
-			result._addChild(uplink,"uplink");
-			return result;
-		}
-		else arts_warning("couldn't load file %s", filename.c_str());
-	}
-	else arts_warning("file format extension %s unsupported",extension.c_str());
+        PlayObject result = SubClass(objectType);
+        if(result.loadMedia(filename))
+        {
+            // TODO: check for existence of left & right streams
+            Synth_BUS_UPLINK uplink;
+            uplink.busname("out_soundcard");
+            connect(result, "left", uplink, "left");
+            connect(result, "right", uplink, "right");
+            uplink.start();
+            result._node()->start();
+            result._addChild(uplink, "uplink");
+            return result;
+        }
+        else
+            arts_warning("couldn't load file %s", filename.c_str());
+    }
+    else
+        arts_warning("file format extension %s unsupported", extension.c_str());
 
-	return PlayObject::null();
+    return PlayObject::null();
 }
 
 #ifndef __SUNPRO_CC

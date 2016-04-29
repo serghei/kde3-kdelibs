@@ -34,32 +34,55 @@
  *
  * @author Holger Freyther <freyther@kde.org>
  */
-class KDEUI_EXPORT KStdGuiItem
-{
+class KDEUI_EXPORT KStdGuiItem {
 public:
     /**
      * The back and forward items by default use the RTL settings for Hebrew
      * and Arab countries. If you want those actions to ignore the RTL value
      * and force 'Western' behavior instead, use the IgnoreRTL value instead.
      */
-    enum BidiMode { UseRTL = 0, IgnoreRTL };
+    enum BidiMode
+    {
+        UseRTL = 0,
+        IgnoreRTL
+    };
 
     enum StdItem
     {
-        Ok=1, Cancel, Yes, No, Discard, Save, DontSave, SaveAs,
-        Apply, Clear, Help, Defaults, Close, Back, Forward, Print,
-        Continue, Open, Quit, AdminMode, Reset, Delete, Insert,
-	Configure,    ///< @since 3.4
-        Find,         ///< @since 3.4
-	Stop,         ///< @since 3.4
-	Add,          ///< @since 3.4
-	Remove,       ///< @since 3.4
-	Test,         ///< @since 3.4
-	Properties,   ///< @since 3.4
-	Overwrite     ///< @since 3.5
+        Ok = 1,
+        Cancel,
+        Yes,
+        No,
+        Discard,
+        Save,
+        DontSave,
+        SaveAs,
+        Apply,
+        Clear,
+        Help,
+        Defaults,
+        Close,
+        Back,
+        Forward,
+        Print,
+        Continue,
+        Open,
+        Quit,
+        AdminMode,
+        Reset,
+        Delete,
+        Insert,
+        Configure,  ///< @since 3.4
+        Find,       ///< @since 3.4
+        Stop,       ///< @since 3.4
+        Add,        ///< @since 3.4
+        Remove,     ///< @since 3.4
+        Test,       ///< @since 3.4
+        Properties, ///< @since 3.4
+        Overwrite   ///< @since 3.5
     };
-    static KGuiItem guiItem ( StdItem ui_enum );
-    static QString  stdItem ( StdItem ui_enum );
+    static KGuiItem guiItem(StdItem ui_enum);
+    static QString stdItem(StdItem ui_enum);
     static KGuiItem ok();
     static KGuiItem cancel();
     static KGuiItem yes();
@@ -115,7 +138,7 @@ public:
      * GUI item if you also want the 'forward' item. Those two are available
      * in the separate backAndForward() method.
      */
-    static KGuiItem back( BidiMode useBidi = IgnoreRTL );
+    static KGuiItem back(BidiMode useBidi = IgnoreRTL);
 
     /**
      * Return a GUI item for a 'forward' action, like Konqueror's forward
@@ -127,7 +150,7 @@ public:
      * GUI item if you also want the 'back' item. Those two are available
      * in the separate backAndForward() method.
      */
-    static KGuiItem forward( BidiMode useBidi = IgnoreRTL );
+    static KGuiItem forward(BidiMode useBidi = IgnoreRTL);
 
     /**
      * Returns a "configure" item.
@@ -141,7 +164,7 @@ public:
      * locales. If you have a reason for wanting the 'Western' back/forward
      * buttons, please use the back() and forward() items instead.
      */
-    static QPair<KGuiItem, KGuiItem> backAndForward();
+    static QPair< KGuiItem, KGuiItem > backAndForward();
 
     static KGuiItem quit();
 
@@ -174,10 +197,8 @@ public:
     * @since 3.4
     */
     static KGuiItem test();
-
 };
 
 #endif
 
 // vim: set et ts=4 sw=4 sts=4:
-

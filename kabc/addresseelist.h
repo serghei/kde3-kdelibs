@@ -41,44 +41,39 @@ class SortMode;
  * If you want to implement reverse sorting, you do not have to write another
  * trait, as AddresseeList takes care of that.
  */
-namespace SortingTraits
-{
+namespace SortingTraits {
 
-class KABC_EXPORT Uid
-{
-  public:
-    static bool eq( const Addressee &, const Addressee & );
-    static bool lt( const Addressee &, const Addressee & );
-};
+    class KABC_EXPORT Uid {
+    public:
+        static bool eq(const Addressee &, const Addressee &);
+        static bool lt(const Addressee &, const Addressee &);
+    };
 
-class KABC_EXPORT Name
-{
-  public:
-    static bool eq( const Addressee &, const Addressee & );
-    static bool lt( const Addressee &, const Addressee & );
-};
+    class KABC_EXPORT Name {
+    public:
+        static bool eq(const Addressee &, const Addressee &);
+        static bool lt(const Addressee &, const Addressee &);
+    };
 
-class KABC_EXPORT FormattedName
-{
-  public:
-    static bool eq( const Addressee &, const Addressee & );
-    static bool lt( const Addressee &, const Addressee & );
-};
+    class KABC_EXPORT FormattedName {
+    public:
+        static bool eq(const Addressee &, const Addressee &);
+        static bool lt(const Addressee &, const Addressee &);
+    };
 
-class KABC_EXPORT FamilyName // fallback to given name
-{
-  public:
-    static bool eq( const Addressee &, const Addressee & );
-    static bool lt( const Addressee &, const Addressee & );
-};
+    class KABC_EXPORT FamilyName // fallback to given name
+    {
+    public:
+        static bool eq(const Addressee &, const Addressee &);
+        static bool lt(const Addressee &, const Addressee &);
+    };
 
-class KABC_EXPORT GivenName  // fallback to family name
-{
-  public:
-    static bool eq( const Addressee &, const Addressee & );
-    static bool lt( const Addressee &, const Addressee & );
-};
-
+    class KABC_EXPORT GivenName // fallback to family name
+    {
+    public:
+        static bool eq(const Addressee &, const Addressee &);
+        static bool lt(const Addressee &, const Addressee &);
+    };
 }
 
 /**
@@ -109,13 +104,12 @@ typedef enum { Uid, Name, FormattedName, FamilyName, GivenName } SortingCriterio
  *
  * @author Jost Schenck jost@schenck.de
  */
-class KABC_EXPORT AddresseeList : public QValueList<Addressee>
-{
-  public:
+class KABC_EXPORT AddresseeList : public QValueList< Addressee > {
+public:
     AddresseeList();
     ~AddresseeList();
-    AddresseeList( const AddresseeList & );
-    AddresseeList( const QValueList<Addressee> & );
+    AddresseeList(const AddresseeList &);
+    AddresseeList(const QValueList< Addressee > &);
 
     /**
      * Debug output.
@@ -127,33 +121,39 @@ class KABC_EXPORT AddresseeList : public QValueList<Addressee>
      * will <em>not</em> automatically be resorted.
      * @param r   <tt>true</tt> if sorting should be done reverse, <tt>false</tt> otherwise
      */
-    void setReverseSorting( bool r = true ) { mReverseSorting = r; }
+    void setReverseSorting(bool r = true)
+    {
+        mReverseSorting = r;
+    }
 
     /**
      * Returns the direction of sorting.
      * @return    <tt>true</tt> if sorting is done reverse, <tt>false</tt> otherwise
      */
-    bool reverseSorting() const { return mReverseSorting; }
+    bool reverseSorting() const
+    {
+        return mReverseSorting;
+    }
 
     /**
      * Sorts this list by a specific criterion.
      * @param c    the criterion by which should be sorted
      */
-    void sortBy( SortingCriterion c );
+    void sortBy(SortingCriterion c);
 
     /**
      * Sorts this list by a specific field. If no parameter is given, the
      * last used Field object will be used.
      * @param field    pointer to the Field object to be sorted by
      */
-    void sortByField( Field *field = 0 );
+    void sortByField(Field *field = 0);
 
     /**
      * Sorts this list by a specific sorting mode.
      * @param mode    pointer to the sorting mode object to be sorted by
      * @since 3.4
     */
-    void sortByMode( SortMode *mode = 0 );
+    void sortByMode(SortMode *mode = 0);
 
     /**
      * Sorts this list by its active sorting criterion. This normally is the
@@ -193,13 +193,16 @@ class KABC_EXPORT AddresseeList : public QValueList<Addressee>
      * Right now this method uses the bubble sort algorithm. This should be
      * replaced for a better one when I have time.
      */
-    template<class Trait> void sortByTrait();
+    template < class Trait > void sortByTrait();
 
     /**
      * Returns the active sorting criterion, ie the sorting criterion that
      * will be used by a {@link #sort} call.
      */
-    SortingCriterion sortingCriterion() const { return mActiveSortingCriterion; }
+    SortingCriterion sortingCriterion() const
+    {
+        return mActiveSortingCriterion;
+    }
 
     /**
      * Returns the active sorting field, ie a pointer to the Field object
@@ -208,14 +211,13 @@ class KABC_EXPORT AddresseeList : public QValueList<Addressee>
      * the class specific one.
      * You're a lot better off by keeping track of this locally.
      */
-    Field* sortingField() const;
+    Field *sortingField() const;
 
-  private:
+private:
     bool mReverseSorting;
     SortingCriterion mActiveSortingCriterion;
-    //KDE 4.0 - add a d-pointer here!
+    // KDE 4.0 - add a d-pointer here!
 };
-
 }
 
 #endif

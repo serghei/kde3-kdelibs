@@ -16,7 +16,7 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- */ 
+ */
 
 // WARNING: THIS CODE IS INCOMPLETE AND MAY CHANGE WITHOUT NOTICE
 
@@ -27,24 +27,20 @@
 
 class KSSLCertificate;
 
-typedef enum {KEYTYPE_UNKNOWN, KEYTYPE_RSA, KEYTYPE_DSA} KSSLKeyType;
+typedef enum { KEYTYPE_UNKNOWN, KEYTYPE_RSA, KEYTYPE_DSA } KSSLKeyType;
 
 class KIO_EXPORT KSSLCertificateFactory {
- 
-public:
 
-  static KSSLCertificate* generateSelfSigned(KSSLKeyType keytype);
-  //  static KSSLCertificate* generateSigned();
-  //  static bool generateRequest();
+public:
+    static KSSLCertificate *generateSelfSigned(KSSLKeyType keytype);
+    //  static KSSLCertificate* generateSigned();
+    //  static bool generateRequest();
 
 private:
- 
-  class KSSLCertificateFactoryPrivate;
-  KSSLCertificateFactoryPrivate *d;
- 
-protected:
+    class KSSLCertificateFactoryPrivate;
+    KSSLCertificateFactoryPrivate *d;
 
+protected:
 };
 
 #endif
-

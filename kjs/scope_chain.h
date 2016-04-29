@@ -26,53 +26,80 @@
 
 namespace KJS {
 
-    class ObjectImp;
+class ObjectImp;
 
 /**
 * A scope chain node.
 */
-    class KJS_EXPORT ScopeChainNode {
-    public:
-        ScopeChainNode(ScopeChainNode *n, ObjectImp *o)
-            : next(n), object(o), refCount(1) { }
+class KJS_EXPORT ScopeChainNode {
+public:
+    ScopeChainNode(ScopeChainNode *n, ObjectImp *o) : next(n), object(o), refCount(1)
+    {
+    }
 
-        ScopeChainNode *next;
-        ObjectImp *object;
-        int refCount;
-    };
+    ScopeChainNode *next;
+    ObjectImp *object;
+    int refCount;
+};
 
 /**
 * A scope chain object.
 */
-    class KJS_EXPORT ScopeChain {
-    public:
-        ScopeChain() : _node(0) { }
-        ~ScopeChain() { deref(); }
+class KJS_EXPORT ScopeChain {
+public:
+    ScopeChain() : _node(0)
+    {
+    }
+    ~ScopeChain()
+    {
+        deref();
+    }
 
-        ScopeChain(const ScopeChain &c) : _node(c._node)
-            { if (_node) ++_node->refCount; }
-        ScopeChain &operator=(const ScopeChain &);
+    ScopeChain(const ScopeChain &c) : _node(c._node)
+    {
+        if(_node)
+            ++_node->refCount;
+    }
+    ScopeChain &operator=(const ScopeChain &);
 
-        bool isEmpty() const { return !_node; }
-        ObjectImp *top() const { return _node->object; }
-        ObjectImp *bottom() const { const ScopeChainNode *n = _node;
-				    while (n->next) n = n->next;
-				    return n->object; }
+    bool isEmpty() const
+    {
+        return !_node;
+    }
+    ObjectImp *top() const
+    {
+        return _node->object;
+    }
+    ObjectImp *bottom() const
+    {
+        const ScopeChainNode *n = _node;
+        while(n->next)
+            n = n->next;
+        return n->object;
+    }
 
-        void clear() { deref(); _node = 0; }
-        void push(ObjectImp *);
-        void pop();
+    void clear()
+    {
+        deref();
+        _node = 0;
+    }
+    void push(ObjectImp *);
+    void pop();
 
-        void mark();
+    void mark();
 
-    private:
-        ScopeChainNode *_node;
+private:
+    ScopeChainNode *_node;
 
-        void deref() { if (_node && --_node->refCount == 0) release(); }
-        void ref() const;
+    void deref()
+    {
+        if(_node && --_node->refCount == 0)
+            release();
+    }
+    void ref() const;
 
-        void release();
-    };
+    void release();
+};
 
 } // namespace KJS
 

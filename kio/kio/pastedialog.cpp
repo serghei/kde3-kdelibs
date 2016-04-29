@@ -28,42 +28,39 @@
 #include <qapplication.h>
 #include <qclipboard.h>
 
-KIO::PasteDialog::PasteDialog( const QString &caption, const QString &label,
-                               const QString &value, const QStringList& items,
-                               QWidget *parent,
-                               bool clipboard )
-    : KDialogBase( parent, 0 /*name*/, true, caption, Ok|Cancel, Ok, true )
+KIO::PasteDialog::PasteDialog(const QString &caption, const QString &label, const QString &value, const QStringList &items, QWidget *parent,
+                              bool clipboard)
+    : KDialogBase(parent, 0 /*name*/, true, caption, Ok | Cancel, Ok, true)
 {
     QFrame *frame = makeMainWidget();
-    QVBoxLayout *layout = new QVBoxLayout( frame, 0, spacingHint() );
+    QVBoxLayout *layout = new QVBoxLayout(frame, 0, spacingHint());
 
-    m_label = new QLabel( label, frame );
-    layout->addWidget( m_label );
+    m_label = new QLabel(label, frame);
+    layout->addWidget(m_label);
 
-    m_lineEdit = new KLineEdit( value, frame );
-    layout->addWidget( m_lineEdit );
+    m_lineEdit = new KLineEdit(value, frame);
+    layout->addWidget(m_lineEdit);
 
     m_lineEdit->setFocus();
-    m_label->setBuddy( m_lineEdit );
+    m_label->setBuddy(m_lineEdit);
 
-    layout->addWidget( new QLabel( i18n( "Data format:" ), frame ) );
-    m_comboBox = new QComboBox( frame );
-    m_comboBox->insertStringList( items );
-    layout->addWidget( m_comboBox );
+    layout->addWidget(new QLabel(i18n("Data format:"), frame));
+    m_comboBox = new QComboBox(frame);
+    m_comboBox->insertStringList(items);
+    layout->addWidget(m_comboBox);
 
     layout->addStretch();
 
-    //connect( m_lineEdit, SIGNAL( textChanged( const QString & ) ),
+    // connect( m_lineEdit, SIGNAL( textChanged( const QString & ) ),
     //    SLOT( slotEditTextChanged( const QString & ) ) );
-    //connect( this, SIGNAL( user1Clicked() ), m_lineEdit, SLOT( clear() ) );
+    // connect( this, SIGNAL( user1Clicked() ), m_lineEdit, SLOT( clear() ) );
 
-    //slotEditTextChanged( value );
-    setMinimumWidth( 350 );
+    // slotEditTextChanged( value );
+    setMinimumWidth(350);
 
     m_clipboardChanged = false;
-    if ( clipboard )
-        connect( QApplication::clipboard(), SIGNAL( dataChanged() ),
-                 this, SLOT( slotClipboardDataChanged() ) );
+    if(clipboard)
+        connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SLOT(slotClipboardDataChanged()));
 }
 
 void KIO::PasteDialog::slotClipboardDataChanged()

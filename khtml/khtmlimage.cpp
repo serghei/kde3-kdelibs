@@ -34,13 +34,13 @@
 #include <kmimetype.h>
 #include <klocale.h>
 
-K_EXPORT_COMPONENT_FACTORY( khtmlimagefactory /*NOT the part name, see Makefile.am*/, KHTMLImageFactory )
+K_EXPORT_COMPONENT_FACTORY(khtmlimagefactory /*NOT the part name, see Makefile.am*/, KHTMLImageFactory)
 
 KInstance *KHTMLImageFactory::s_instance = 0;
 
 KHTMLImageFactory::KHTMLImageFactory()
 {
-    s_instance = new KInstance( "khtmlimage" );
+    s_instance = new KInstance("khtmlimage");
 }
 
 KHTMLImageFactory::~KHTMLImageFactory()
@@ -48,53 +48,51 @@ KHTMLImageFactory::~KHTMLImageFactory()
     delete s_instance;
 }
 
-KParts::Part *KHTMLImageFactory::createPartObject( QWidget *parentWidget, const char *widgetName,
-                                                   QObject *parent, const char *name,
-                                                   const char *className, const QStringList & )
+KParts::Part *KHTMLImageFactory::createPartObject(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name,
+                                                  const char *className, const QStringList &)
 {
-  KHTMLPart::GUIProfile prof = KHTMLPart::DefaultGUI;
-  if ( strcmp( className, "Browser/View" ) == 0 )
-    prof = KHTMLPart::BrowserViewGUI;
-  return new KHTMLImage( parentWidget, widgetName, parent, name, prof );
+    KHTMLPart::GUIProfile prof = KHTMLPart::DefaultGUI;
+    if(strcmp(className, "Browser/View") == 0)
+        prof = KHTMLPart::BrowserViewGUI;
+    return new KHTMLImage(parentWidget, widgetName, parent, name, prof);
 }
 
-KHTMLImage::KHTMLImage( QWidget *parentWidget, const char *widgetName,
-                        QObject *parent, const char *name, KHTMLPart::GUIProfile prof )
-    : KParts::ReadOnlyPart( parent, name ), m_image( 0 )
+KHTMLImage::KHTMLImage(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, KHTMLPart::GUIProfile prof)
+    : KParts::ReadOnlyPart(parent, name), m_image(0)
 {
-    KHTMLPart* parentPart = ::qt_cast<KHTMLPart *>( parent );
-    setInstance( KHTMLImageFactory::instance(), prof == KHTMLPart::BrowserViewGUI && !parentPart );
+    KHTMLPart *parentPart = ::qt_cast< KHTMLPart * >(parent);
+    setInstance(KHTMLImageFactory::instance(), prof == KHTMLPart::BrowserViewGUI && !parentPart);
 
-    QVBox *box = new QVBox( parentWidget, widgetName );
+    QVBox *box = new QVBox(parentWidget, widgetName);
 
-    m_khtml = new KHTMLPart( box, widgetName, this, "htmlimagepart", prof );
-    m_khtml->setAutoloadImages( true );
+    m_khtml = new KHTMLPart(box, widgetName, this, "htmlimagepart", prof);
+    m_khtml->setAutoloadImages(true);
     m_khtml->widget()->installEventFilter(this);
-    connect( m_khtml->view(), SIGNAL( finishedLayout() ), this, SLOT( restoreScrollPosition() ) );
+    connect(m_khtml->view(), SIGNAL(finishedLayout()), this, SLOT(restoreScrollPosition()));
 
-    setWidget( box );
+    setWidget(box);
 
     // VBox can't take focus, so pass it on to sub-widget
-    box->setFocusProxy( m_khtml->widget() );
+    box->setFocusProxy(m_khtml->widget());
 
-    m_ext = new KHTMLImageBrowserExtension( this, "be" );
+    m_ext = new KHTMLImageBrowserExtension(this, "be");
 
     // Remove unnecessary actions.
-    KAction *encodingAction = actionCollection()->action( "setEncoding" );
-    if ( encodingAction )
+    KAction *encodingAction = actionCollection()->action("setEncoding");
+    if(encodingAction)
     {
         encodingAction->unplugAll();
         delete encodingAction;
     }
-    KAction *viewSourceAction= actionCollection()->action( "viewDocumentSource" );
-    if ( viewSourceAction )
+    KAction *viewSourceAction = actionCollection()->action("viewDocumentSource");
+    if(viewSourceAction)
     {
         viewSourceAction->unplugAll();
         delete viewSourceAction;
     }
 
-    KAction *selectAllAction= actionCollection()->action( "selectAll" );
-    if ( selectAllAction )
+    KAction *selectAllAction = actionCollection()->action("selectAll");
+    if(selectAllAction)
     {
         selectAllAction->unplugAll();
         delete selectAllAction;
@@ -103,19 +101,19 @@ KHTMLImage::KHTMLImage( QWidget *parentWidget, const char *widgetName,
     // forward important signals from the khtml part
 
     // forward opening requests to parent frame (if existing)
-    KHTMLPart *p = ::qt_cast<KHTMLPart *>(parent);
+    KHTMLPart *p = ::qt_cast< KHTMLPart * >(parent);
     KParts::BrowserExtension *be = p ? p->browserExtension() : m_ext;
-    connect(m_khtml->browserExtension(), SIGNAL(openURLRequestDelayed(const KURL &, const KParts::URLArgs &)),
-    		be, SIGNAL(openURLRequestDelayed(const KURL &, const KParts::URLArgs &)));
+    connect(m_khtml->browserExtension(), SIGNAL(openURLRequestDelayed(const KURL &, const KParts::URLArgs &)), be,
+            SIGNAL(openURLRequestDelayed(const KURL &, const KParts::URLArgs &)));
 
-    connect( m_khtml->browserExtension(), SIGNAL( popupMenu( KXMLGUIClient *, const QPoint &, const KURL &,
-             const KParts::URLArgs &, KParts::BrowserExtension::PopupFlags, mode_t) ), m_ext, SIGNAL( popupMenu( KXMLGUIClient *, const QPoint &, const KURL &,
-             const KParts::URLArgs &, KParts::BrowserExtension::PopupFlags, mode_t) ) );
+    connect(m_khtml->browserExtension(),
+            SIGNAL(popupMenu(KXMLGUIClient *, const QPoint &, const KURL &, const KParts::URLArgs &, KParts::BrowserExtension::PopupFlags, mode_t)),
+            m_ext,
+            SIGNAL(popupMenu(KXMLGUIClient *, const QPoint &, const KURL &, const KParts::URLArgs &, KParts::BrowserExtension::PopupFlags, mode_t)));
 
-    connect( m_khtml->browserExtension(), SIGNAL( enableAction( const char *, bool ) ),
-             m_ext, SIGNAL( enableAction( const char *, bool ) ) );
+    connect(m_khtml->browserExtension(), SIGNAL(enableAction(const char *, bool)), m_ext, SIGNAL(enableAction(const char *, bool)));
 
-    m_ext->setURLDropHandlingEnabled( true );
+    m_ext->setURLDropHandlingEnabled(true);
 }
 
 KHTMLImage::~KHTMLImage()
@@ -129,43 +127,44 @@ KHTMLImage::~KHTMLImage()
     // ### additional note: it _can_ be that the part has been deleted before:
     // when we're in a html frameset and the view dies first, then it will also
     // kill the htmlpart
-    if ( m_khtml )
-        delete static_cast<KHTMLPart *>( m_khtml );
+    if(m_khtml)
+        delete static_cast< KHTMLPart * >(m_khtml);
 }
 
-bool KHTMLImage::openURL( const KURL &url )
+bool KHTMLImage::openURL(const KURL &url)
 {
-    static const QString &html = KGlobal::staticQString( "<html><body><img src=\"%1\"></body></html>" );
+    static const QString &html = KGlobal::staticQString("<html><body><img src=\"%1\"></body></html>");
 
     disposeImage();
 
     m_url = url;
 
-    emit started( 0 );
+    emit started(0);
 
     KParts::URLArgs args = m_ext->urlArgs();
     m_mimeType = args.serviceType;
 
-    emit setWindowCaption( url.prettyURL() );
+    emit setWindowCaption(url.prettyURL());
 
     // Need to keep a copy of the offsets since they are cleared when emitting completed
     m_xOffset = args.xOffset;
     m_yOffset = args.yOffset;
 
-    m_khtml->begin( m_url );
-    m_khtml->setAutoloadImages( true );
+    m_khtml->begin(m_url);
+    m_khtml->setAutoloadImages(true);
 
-    DOM::DocumentImpl *impl = dynamic_cast<DOM::DocumentImpl *>( m_khtml->document().handle() ); // ### hack ;-)
-    if (!impl) return false;
-    if ( m_ext->urlArgs().reload )
-        impl->docLoader()->setCachePolicy( KIO::CC_Reload );
+    DOM::DocumentImpl *impl = dynamic_cast< DOM::DocumentImpl * >(m_khtml->document().handle()); // ### hack ;-)
+    if(!impl)
+        return false;
+    if(m_ext->urlArgs().reload)
+        impl->docLoader()->setCachePolicy(KIO::CC_Reload);
 
     khtml::DocLoader *dl = impl->docLoader();
-    m_image = dl->requestImage( m_url.url() );
-    if ( m_image )
-        m_image->ref( this );
+    m_image = dl->requestImage(m_url.url());
+    if(m_image)
+        m_image->ref(this);
 
-    m_khtml->write( html.arg( m_url.url() ) );
+    m_khtml->write(html.arg(m_url.url()));
     m_khtml->end();
 
     /*
@@ -182,51 +181,60 @@ bool KHTMLImage::closeURL()
 }
 
 // This can happen after openURL returns, or directly from m_image->ref()
-void KHTMLImage::notifyFinished( khtml::CachedObject *o )
+void KHTMLImage::notifyFinished(khtml::CachedObject *o)
 {
-    if ( !m_image || o != m_image )
+    if(!m_image || o != m_image)
         return;
 
     const QPixmap &pix = m_image->pixmap();
     QString caption;
 
     KMimeType::Ptr mimeType;
-    if ( !m_mimeType.isEmpty() )
-        mimeType = KMimeType::mimeType( m_mimeType );
+    if(!m_mimeType.isEmpty())
+        mimeType = KMimeType::mimeType(m_mimeType);
 
-    if ( mimeType ) {
-        if (m_image && !m_image->suggestedTitle().isEmpty()) {
-            caption = i18n( "%1 (%2 - %3x%4 Pixels)" ).arg( m_image->suggestedTitle(), mimeType->comment() ).arg( pix.width() ).arg( pix.height() );
-        } else {
-            caption = i18n( "%1 - %2x%3 Pixels" ).arg( mimeType->comment() )
-                .arg( pix.width() ).arg( pix.height() );
+    if(mimeType)
+    {
+        if(m_image && !m_image->suggestedTitle().isEmpty())
+        {
+            caption = i18n("%1 (%2 - %3x%4 Pixels)").arg(m_image->suggestedTitle(), mimeType->comment()).arg(pix.width()).arg(pix.height());
         }
-    } else {
-        if (m_image && !m_image->suggestedTitle().isEmpty()) {
-            caption = i18n( "%1 (%2x%3 Pixels)" ).arg(m_image->suggestedTitle()).arg( pix.width() ).arg( pix.height() );
-        } else {
-            caption = i18n( "Image - %1x%2 Pixels" ).arg( pix.width() ).arg( pix.height() );
+        else
+        {
+            caption = i18n("%1 - %2x%3 Pixels").arg(mimeType->comment()).arg(pix.width()).arg(pix.height());
+        }
+    }
+    else
+    {
+        if(m_image && !m_image->suggestedTitle().isEmpty())
+        {
+            caption = i18n("%1 (%2x%3 Pixels)").arg(m_image->suggestedTitle()).arg(pix.width()).arg(pix.height());
+        }
+        else
+        {
+            caption = i18n("Image - %1x%2 Pixels").arg(pix.width()).arg(pix.height());
         }
     }
 
-    emit setWindowCaption( caption );
+    emit setWindowCaption(caption);
     emit completed();
     emit setStatusBarText(i18n("Done."));
 }
 
 void KHTMLImage::restoreScrollPosition()
 {
-    if ( m_khtml->view()->contentsY() == 0 ) {
-        m_khtml->view()->setContentsPos( m_xOffset, m_yOffset );
+    if(m_khtml->view()->contentsY() == 0)
+    {
+        m_khtml->view()->setContentsPos(m_xOffset, m_yOffset);
     }
 }
 
-void KHTMLImage::guiActivateEvent( KParts::GUIActivateEvent *e )
+void KHTMLImage::guiActivateEvent(KParts::GUIActivateEvent *e)
 {
     // prevent the base implementation from emitting setWindowCaption with
     // our url. It destroys our pretty, previously caption. Konq saves/restores
     // the caption for us anyway.
-    if ( e->activated() )
+    if(e->activated())
         return;
     KParts::ReadOnlyPart::guiActivateEvent(e);
 }
@@ -289,35 +297,37 @@ void KHTMLImage::updateWindowCaption()
 
 void KHTMLImage::disposeImage()
 {
-    if ( !m_image )
+    if(!m_image)
         return;
 
-    m_image->deref( this );
+    m_image->deref(this);
     m_image = 0;
 }
 
-bool KHTMLImage::eventFilter(QObject *, QEvent *e) {
-    switch (e->type()) {
-      case QEvent::DragEnter:
-      case QEvent::DragMove:
-      case QEvent::DragLeave:
-      case QEvent::Drop: {
-        // find out if this part is embedded in a frame, and send the
-	// event to its outside widget
-	KHTMLPart *p = ::qt_cast<KHTMLPart *>(parent());
-	if (p)
-	    return QApplication::sendEvent(p->widget(), e);
-        // otherwise simply forward all dnd events to the part widget,
-	// konqueror will handle them properly there
-        return QApplication::sendEvent(widget(), e);
-      }
-      default: ;
+bool KHTMLImage::eventFilter(QObject *, QEvent *e)
+{
+    switch(e->type())
+    {
+        case QEvent::DragEnter:
+        case QEvent::DragMove:
+        case QEvent::DragLeave:
+        case QEvent::Drop:
+        {
+            // find out if this part is embedded in a frame, and send the
+            // event to its outside widget
+            KHTMLPart *p = ::qt_cast< KHTMLPart * >(parent());
+            if(p)
+                return QApplication::sendEvent(p->widget(), e);
+            // otherwise simply forward all dnd events to the part widget,
+            // konqueror will handle them properly there
+            return QApplication::sendEvent(widget(), e);
+        }
+        default:;
     }
     return false;
 }
 
-KHTMLImageBrowserExtension::KHTMLImageBrowserExtension( KHTMLImage *parent, const char *name )
-    : KParts::BrowserExtension( parent, name )
+KHTMLImageBrowserExtension::KHTMLImageBrowserExtension(KHTMLImage *parent, const char *name) : KParts::BrowserExtension(parent, name)
 {
     m_imgPart = parent;
 }
@@ -334,19 +344,19 @@ int KHTMLImageBrowserExtension::yOffset()
 
 void KHTMLImageBrowserExtension::print()
 {
-    static_cast<KHTMLPartBrowserExtension *>( m_imgPart->doc()->browserExtension() )->print();
+    static_cast< KHTMLPartBrowserExtension * >(m_imgPart->doc()->browserExtension())->print();
 }
 
 void KHTMLImageBrowserExtension::reparseConfiguration()
 {
-    static_cast<KHTMLPartBrowserExtension *>( m_imgPart->doc()->browserExtension() )->reparseConfiguration();
-    m_imgPart->doc()->setAutoloadImages( true );
+    static_cast< KHTMLPartBrowserExtension * >(m_imgPart->doc()->browserExtension())->reparseConfiguration();
+    m_imgPart->doc()->setAutoloadImages(true);
 }
 
 
 void KHTMLImageBrowserExtension::disableScrolling()
 {
-    static_cast<KHTMLPartBrowserExtension *>( m_imgPart->doc()->browserExtension() )->disableScrolling();
+    static_cast< KHTMLPartBrowserExtension * >(m_imgPart->doc()->browserExtension())->disableScrolling();
 }
 
 using namespace KParts;

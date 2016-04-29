@@ -23,52 +23,49 @@
 
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 * This is an interface for accessing the clipboard through the View class.
 */
-class KTEXTEDITOR_EXPORT ClipboardInterface
-{
-  friend class PrivateClipboardInterface;
+class KTEXTEDITOR_EXPORT ClipboardInterface {
+    friend class PrivateClipboardInterface;
 
-  public:
+public:
     ClipboardInterface();
     virtual ~ClipboardInterface();
-    
-    unsigned int clipboardInterfaceNumber () const;
-    
-  protected:  
-    void setClipboardInterfaceDCOPSuffix (const QCString &suffix); 
-        
-  /**
-  * slots !!!
-  */
-  public:
+
+    unsigned int clipboardInterfaceNumber() const;
+
+protected:
+    void setClipboardInterfaceDCOPSuffix(const QCString &suffix);
+
+    /**
+    * slots !!!
+    */
+public:
     /**
     * copies selected text
     */
-    virtual void copy ( ) const = 0;
+    virtual void copy() const = 0;
 
     /**
     * copies selected text
     */
-    virtual void cut ( ) = 0;
+    virtual void cut() = 0;
 
     /**
     * copies selected text
     */
-    virtual void paste ( ) = 0;
+    virtual void paste() = 0;
 
-  private:
+private:
     class PrivateClipboardInterface *d;
     static unsigned int globalClipboardInterfaceNumber;
     unsigned int myClipboardInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT ClipboardInterface *clipboardInterface (class View *view);
-
+KTEXTEDITOR_EXPORT ClipboardInterface *clipboardInterface(class View *view);
 }
 
 #endif

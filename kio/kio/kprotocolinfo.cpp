@@ -17,7 +17,7 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifdef MAKE_KDECORE_LIB //needed for proper linkage (win32)
+#ifdef MAKE_KDECORE_LIB // needed for proper linkage (win32)
 #undef KIO_EXPORT
 #define KIO_EXPORT KDE_EXPORT
 #endif
@@ -30,228 +30,227 @@
 // This file only contains a few static class-functions that depend on
 // KProtocolManager
 
-KProtocolInfo* KProtocolInfo::findProtocol(const KURL &url)
+KProtocolInfo *KProtocolInfo::findProtocol(const KURL &url)
 {
 #ifdef MAKE_KDECORE_LIB
-   return 0;
+    return 0;
 #else
-   QString protocol = url.protocol();
+    QString protocol = url.protocol();
 
-   if ( !KProtocolInfo::proxiedBy( protocol ).isEmpty() )
-   {
-      QString dummy;
-      protocol = KProtocolManager::slaveProtocol(url, dummy);
-   }
+    if(!KProtocolInfo::proxiedBy(protocol).isEmpty())
+    {
+        QString dummy;
+        protocol = KProtocolManager::slaveProtocol(url, dummy);
+    }
 
-   return KProtocolInfoFactory::self()->findProtocol(protocol);
+    return KProtocolInfoFactory::self()->findProtocol(protocol);
 #endif
 }
 
 
-KProtocolInfo::Type KProtocolInfo::inputType( const KURL &url )
+KProtocolInfo::Type KProtocolInfo::inputType(const KURL &url)
 {
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return T_NONE;
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return T_NONE;
 
-  return prot->m_inputType;
+    return prot->m_inputType;
 }
 
-KProtocolInfo::Type KProtocolInfo::outputType( const KURL &url )
+KProtocolInfo::Type KProtocolInfo::outputType(const KURL &url)
 {
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return T_NONE;
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return T_NONE;
 
-  return prot->m_outputType;
-}
-
-
-bool KProtocolInfo::isSourceProtocol( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
-
-  return prot->m_isSourceProtocol;
-}
-
-bool KProtocolInfo::isFilterProtocol( const KURL &url )
-{
-  return isFilterProtocol (url.protocol());
-}
-
-bool KProtocolInfo::isFilterProtocol( const QString &protocol )
-{
-  // We call the findProtocol (const QString&) to bypass any proxy settings.
-  KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
-  if ( !prot )
-    return false;
-
-  return !prot->m_isSourceProtocol;
-}
-
-bool KProtocolInfo::isHelperProtocol( const KURL &url )
-{
-  return isHelperProtocol (url.protocol());
-}
-
-bool KProtocolInfo::isHelperProtocol( const QString &protocol )
-{
-  // We call the findProtocol (const QString&) to bypass any proxy settings.
-  KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
-  if ( !prot )
-    return false;
-
-  return prot->m_isHelperProtocol;
-}
-
-bool KProtocolInfo::isKnownProtocol( const KURL &url )
-{
-  return isKnownProtocol (url.protocol());
-}
-
-bool KProtocolInfo::isKnownProtocol( const QString &protocol )
-{
-  // We call the findProtocol (const QString&) to bypass any proxy settings.
-  KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
-  return ( prot != 0);
-}
-
-bool KProtocolInfo::supportsListing( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
-
-  return prot->m_supportsListing;
-}
-
-QStringList KProtocolInfo::listing( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return QStringList();
-
-  return prot->m_listing;
-}
-
-bool KProtocolInfo::supportsReading( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
-
-  return prot->m_supportsReading;
-}
-
-bool KProtocolInfo::supportsWriting( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
-
-  return prot->m_supportsWriting;
-}
-
-bool KProtocolInfo::supportsMakeDir( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
-
-  return prot->m_supportsMakeDir;
-}
-
-bool KProtocolInfo::supportsDeleting( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
-
-  return prot->m_supportsDeleting;
-}
-
-bool KProtocolInfo::supportsLinking( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
-
-  return prot->m_supportsLinking;
-}
-
-bool KProtocolInfo::supportsMoving( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
-
-  return prot->m_supportsMoving;
-}
-
-bool KProtocolInfo::canCopyFromFile( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
-
-  return prot->m_canCopyFromFile;
+    return prot->m_outputType;
 }
 
 
-bool KProtocolInfo::canCopyToFile( const KURL &url )
+bool KProtocolInfo::isSourceProtocol(const KURL &url)
 {
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
 
-  return prot->m_canCopyToFile;
+    return prot->m_isSourceProtocol;
 }
 
-bool KProtocolInfo::canRenameFromFile( const KURL &url )
+bool KProtocolInfo::isFilterProtocol(const KURL &url)
 {
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
+    return isFilterProtocol(url.protocol());
+}
 
-  return prot->canRenameFromFile();
+bool KProtocolInfo::isFilterProtocol(const QString &protocol)
+{
+    // We call the findProtocol (const QString&) to bypass any proxy settings.
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if(!prot)
+        return false;
+
+    return !prot->m_isSourceProtocol;
+}
+
+bool KProtocolInfo::isHelperProtocol(const KURL &url)
+{
+    return isHelperProtocol(url.protocol());
+}
+
+bool KProtocolInfo::isHelperProtocol(const QString &protocol)
+{
+    // We call the findProtocol (const QString&) to bypass any proxy settings.
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if(!prot)
+        return false;
+
+    return prot->m_isHelperProtocol;
+}
+
+bool KProtocolInfo::isKnownProtocol(const KURL &url)
+{
+    return isKnownProtocol(url.protocol());
+}
+
+bool KProtocolInfo::isKnownProtocol(const QString &protocol)
+{
+    // We call the findProtocol (const QString&) to bypass any proxy settings.
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    return (prot != 0);
+}
+
+bool KProtocolInfo::supportsListing(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
+
+    return prot->m_supportsListing;
+}
+
+QStringList KProtocolInfo::listing(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return QStringList();
+
+    return prot->m_listing;
+}
+
+bool KProtocolInfo::supportsReading(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
+
+    return prot->m_supportsReading;
+}
+
+bool KProtocolInfo::supportsWriting(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
+
+    return prot->m_supportsWriting;
+}
+
+bool KProtocolInfo::supportsMakeDir(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
+
+    return prot->m_supportsMakeDir;
+}
+
+bool KProtocolInfo::supportsDeleting(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
+
+    return prot->m_supportsDeleting;
+}
+
+bool KProtocolInfo::supportsLinking(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
+
+    return prot->m_supportsLinking;
+}
+
+bool KProtocolInfo::supportsMoving(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
+
+    return prot->m_supportsMoving;
+}
+
+bool KProtocolInfo::canCopyFromFile(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
+
+    return prot->m_canCopyFromFile;
 }
 
 
-bool KProtocolInfo::canRenameToFile( const KURL &url )
+bool KProtocolInfo::canCopyToFile(const KURL &url)
 {
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
 
-  return prot->canRenameToFile();
+    return prot->m_canCopyToFile;
 }
 
-bool KProtocolInfo::canDeleteRecursive( const KURL &url )
+bool KProtocolInfo::canRenameFromFile(const KURL &url)
 {
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return false;
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
 
-  return prot->canDeleteRecursive();
+    return prot->canRenameFromFile();
 }
 
-KProtocolInfo::FileNameUsedForCopying KProtocolInfo::fileNameUsedForCopying( const KURL &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return FromURL;
 
-  return prot->fileNameUsedForCopying();
+bool KProtocolInfo::canRenameToFile(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
+
+    return prot->canRenameToFile();
 }
 
-QString KProtocolInfo::defaultMimetype( const KURL &url )
+bool KProtocolInfo::canDeleteRecursive(const KURL &url)
 {
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return QString::null;
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return false;
 
-  return prot->m_defaultMimetype;
+    return prot->canDeleteRecursive();
 }
 
+KProtocolInfo::FileNameUsedForCopying KProtocolInfo::fileNameUsedForCopying(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return FromURL;
+
+    return prot->fileNameUsedForCopying();
+}
+
+QString KProtocolInfo::defaultMimetype(const KURL &url)
+{
+    KProtocolInfo::Ptr prot = findProtocol(url);
+    if(!prot)
+        return QString::null;
+
+    return prot->m_defaultMimetype;
+}

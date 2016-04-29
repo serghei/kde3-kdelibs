@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -28,77 +28,73 @@
 
 using namespace VCARD;
 
-TextBinValue::TextBinValue()
-	:	Value()
+TextBinValue::TextBinValue() : Value()
 {
 }
 
-TextBinValue::TextBinValue(const TextBinValue & x)
-	:	Value(x)
+TextBinValue::TextBinValue(const TextBinValue &x) : Value(x)
 {
-  mIsBinary_ = x.mIsBinary_;
-  mData_ = x.mData_;
-  mUrl_ = x.mUrl_;
+    mIsBinary_ = x.mIsBinary_;
+    mData_ = x.mData_;
+    mUrl_ = x.mUrl_;
 }
 
-TextBinValue::TextBinValue(const QCString & s)
-	:	Value(s)
+TextBinValue::TextBinValue(const QCString &s) : Value(s)
 {
 }
 
-	TextBinValue &
-TextBinValue::operator = (TextBinValue & x)
+TextBinValue &TextBinValue::operator=(TextBinValue &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-  mIsBinary_ = x.mIsBinary_;
-  mData_ = x.mData_;
-  mUrl_ = x.mUrl_;
+    mIsBinary_ = x.mIsBinary_;
+    mData_ = x.mData_;
+    mUrl_ = x.mUrl_;
 
-	Value::operator = (x);
-	return *this;
+    Value::operator=(x);
+    return *this;
 }
 
-	TextBinValue &
-TextBinValue::operator = (const QCString & s)
+TextBinValue &TextBinValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-TextBinValue::operator == (TextBinValue & x)
+bool TextBinValue::operator==(TextBinValue &x)
 {
-	x.parse();
+    x.parse();
 
-  if ( mIsBinary_ != x.mIsBinary_ ) return false;
-  if ( mData_ != x.mData_ ) return false;
-  if ( mUrl_ != x.mUrl_ ) return false;
+    if(mIsBinary_ != x.mIsBinary_)
+        return false;
+    if(mData_ != x.mData_)
+        return false;
+    if(mUrl_ != x.mUrl_)
+        return false;
 
-	return true;
+    return true;
 }
 
 TextBinValue::~TextBinValue()
 {
 }
 
-  TextBinValue *
-TextBinValue::clone()
+TextBinValue *TextBinValue::clone()
 {
-  return new TextBinValue( *this );
+    return new TextBinValue(*this);
 }
 
-	void
-TextBinValue::_parse()
+void TextBinValue::_parse()
 {
 }
 
-	void
-TextBinValue::_assemble()
+void TextBinValue::_assemble()
 {
-  if ( mIsBinary_ ) {
-    strRep_ = KCodecs::base64Encode( mData_ );
-  } else
-    strRep_ = mUrl_.utf8();
+    if(mIsBinary_)
+    {
+        strRep_ = KCodecs::base64Encode(mData_);
+    }
+    else
+        strRep_ = mUrl_.utf8();
 }
-

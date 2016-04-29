@@ -27,29 +27,28 @@ class QCheckBox;
 class EditList;
 class QComboBox;
 
-class CupsdBrowsingPage : public CupsdPage
-{
-	Q_OBJECT
+class CupsdBrowsingPage : public CupsdPage {
+    Q_OBJECT
 
 public:
-	CupsdBrowsingPage(QWidget *parent = 0, const char *name = 0);
+    CupsdBrowsingPage(QWidget *parent = 0, const char *name = 0);
 
-	bool loadConfig(CupsdConf*, QString&);
-	bool saveConfig(CupsdConf*, QString&);
-	void setInfos(CupsdConf*);
+    bool loadConfig(CupsdConf *, QString &);
+    bool saveConfig(CupsdConf *, QString &);
+    void setInfos(CupsdConf *);
 
 protected slots:
-	void slotAdd();
-	void slotEdit(int);
-	void slotDefaultList();
-	void intervalChanged(int);
+    void slotAdd();
+    void slotEdit(int);
+    void slotDefaultList();
+    void intervalChanged(int);
 
 private:
-	KIntNumInput	*browseport_, *browseinterval_, *browsetimeout_;
-	EditList	*browseaddresses_;
-	QComboBox	*browseorder_;
-	QCheckBox	*browsing_, *cups_, *slp_;
-	QCheckBox	*useimplicitclasses_, *hideimplicitmembers_, *useshortnames_, *useanyclasses_;
+    KIntNumInput *browseport_, *browseinterval_, *browsetimeout_;
+    EditList *browseaddresses_;
+    QComboBox *browseorder_;
+    QCheckBox *browsing_, *cups_, *slp_;
+    QCheckBox *useimplicitclasses_, *hideimplicitmembers_, *useshortnames_, *useanyclasses_;
 };
 
 #endif

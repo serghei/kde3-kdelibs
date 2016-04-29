@@ -26,9 +26,8 @@
 /**
  * Information about each syntax hl Mode
  */
-class KateSyntaxModeListItem
-{
-  public:
+class KateSyntaxModeListItem {
+public:
     QString name;
     QString nameTranslated;
     QString section;
@@ -45,14 +44,13 @@ class KateSyntaxModeListItem
 /**
  * List of the KateSyntaxModeListItems holding all the syntax mode list items
  */
-typedef QValueList<KateSyntaxModeListItem*> KateSyntaxModeList;
+typedef QValueList< KateSyntaxModeListItem * > KateSyntaxModeList;
 
 /**
  * Class holding the data around the current QDomElement
  */
-class KateSyntaxContextData
-{
-  public:
+class KateSyntaxContextData {
+public:
     QDomElement parent;
     QDomElement currentGroup;
     QDomElement item;
@@ -61,9 +59,8 @@ class KateSyntaxContextData
 /**
  * Store and manage the information about Syntax Highlighting.
  */
-class KateSyntaxDocument : public QDomDocument
-{
-  public:
+class KateSyntaxDocument : public QDomDocument {
+public:
     /**
      * Constructor
      * Sets the current file to nothing and build the ModeList (katesyntaxhighlightingrc)
@@ -82,55 +79,58 @@ class KateSyntaxDocument : public QDomDocument
      * @param identifier file name and path of the new xml needed
      * @return success
      */
-    bool setIdentifier(const QString& identifier);
+    bool setIdentifier(const QString &identifier);
 
     /**
      * Get the mode list
      * @return mode list
      */
-    const KateSyntaxModeList &modeList() { return myModeList; }
+    const KateSyntaxModeList &modeList()
+    {
+        return myModeList;
+    }
 
     /**
      * Jump to the next group, KateSyntaxContextData::currentGroup will point to the next group
      * @param data context
      * @return success
      */
-    bool nextGroup(KateSyntaxContextData* data);
+    bool nextGroup(KateSyntaxContextData *data);
 
     /**
      * Jump to the next item, KateSyntaxContextData::item will point to the next item
      * @param data context
      * @return success
      */
-    bool nextItem(KateSyntaxContextData* data);
+    bool nextItem(KateSyntaxContextData *data);
 
     /**
      * This function is used to fetch the atributes of the tags.
      */
-    QString groupItemData(const KateSyntaxContextData* data,const QString& name);
-    QString groupData(const KateSyntaxContextData* data,const QString& name);
+    QString groupItemData(const KateSyntaxContextData *data, const QString &name);
+    QString groupData(const KateSyntaxContextData *data, const QString &name);
 
-    void freeGroupInfo(KateSyntaxContextData* data);
-    KateSyntaxContextData* getSubItems(KateSyntaxContextData* data);
+    void freeGroupInfo(KateSyntaxContextData *data);
+    KateSyntaxContextData *getSubItems(KateSyntaxContextData *data);
 
     /**
      * Get the KateSyntaxContextData of the DomElement Config inside mainGroupName
      * It just fills KateSyntaxContextData::item
      */
-    KateSyntaxContextData* getConfig(const QString& mainGroupName, const QString &config);
+    KateSyntaxContextData *getConfig(const QString &mainGroupName, const QString &config);
 
     /**
      * Get the KateSyntaxContextData of the QDomElement Config inside mainGroupName
      * KateSyntaxContextData::parent will contain the QDomElement found
      */
-    KateSyntaxContextData* getGroupInfo(const QString& mainGroupName, const QString &group);
+    KateSyntaxContextData *getGroupInfo(const QString &mainGroupName, const QString &group);
 
     /**
      * Returns a list with all the keywords inside the list type
      */
-    QStringList& finddata(const QString& mainGroup,const QString& type,bool clearList=true);
+    QStringList &finddata(const QString &mainGroup, const QString &type, bool clearList = true);
 
-  private:
+private:
     /**
      * Generate the list of hl modes, store them in myModeList
      * @param force if true forces to rebuild the Mode List from the xml files (instead of katesyntax...rc)
@@ -141,7 +141,7 @@ class KateSyntaxDocument : public QDomDocument
      * Used by getConfig and getGroupInfo to traverse the xml nodes and
      * evenually return the found element
      */
-    bool getElement (QDomElement &element, const QString &mainGroupName, const QString &config);
+    bool getElement(QDomElement &element, const QString &mainGroupName, const QString &config);
 
     /**
      * List of mode items

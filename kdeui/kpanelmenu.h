@@ -50,8 +50,7 @@ class KPanelMenuPrivate;
  *
  * @author The kicker maintainers, Michael Goffioul <kdeprint@swing.be>
  */
-class KDEUI_EXPORT KPanelMenu : public KPopupMenu
-{
+class KDEUI_EXPORT KPanelMenu : public KPopupMenu {
     Q_OBJECT
 
 public:
@@ -59,7 +58,7 @@ public:
      * Construct a KPanelMenu object. This is the normal constructor to use when
      * building extrernal menu entries.
      */
-    KPanelMenu(QWidget *parent=0, const char *name=0);
+    KPanelMenu(QWidget *parent = 0, const char *name = 0);
     /**
      * Constructor used internally by Kicker. You don't really want to use it.
      * @param startDir a directory to associate with this menu
@@ -67,7 +66,7 @@ public:
      * @param name name of the object
      * @see path(), setPath()
      */
-    KPanelMenu(const QString &startDir, QWidget *parent=0, const char *name=0);
+    KPanelMenu(const QString &startDir, QWidget *parent = 0, const char *name = 0);
     /**
      * Destructor.
      */
@@ -79,7 +78,7 @@ public:
      * @return the associated directory path
      * @see setPath()
      */
-    const QString& path() const;
+    const QString &path() const;
     /**
      * Set a directory path to be associated with this menu.
      * @param p the directory path
@@ -165,18 +164,17 @@ protected:
     /**
      * For internal use only. Used by constructors.
      */
-    void init(const QString& path = QString::null);
+    void init(const QString &path = QString::null);
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     void internalInitialize();
     KPanelMenuPrivate *d;
 };
 
-#define K_EXPORT_KICKER_MENUEXT( libname, classname )                       \
-    K_EXPORT_COMPONENT_FACTORY(                                             \
-        kickermenu_##libname,                                               \
-        KGenericFactory<classname>("libkickermenu_" #libname) )
+#define K_EXPORT_KICKER_MENUEXT(libname, classname)                                                                                                  \
+    K_EXPORT_COMPONENT_FACTORY(kickermenu_##libname, KGenericFactory< classname >("libkickermenu_" #libname))
 
 #endif

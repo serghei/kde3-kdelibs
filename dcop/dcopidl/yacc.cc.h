@@ -25,75 +25,76 @@
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     T_UNIMPORTANT = 258,
-     T_CHARACTER_LITERAL = 259,
-     T_DOUBLE_LITERAL = 260,
-     T_IDENTIFIER = 261,
-     T_INTEGER_LITERAL = 262,
-     T_STRING_LITERAL = 263,
-     T_INCLUDE = 264,
-     T_CLASS = 265,
-     T_STRUCT = 266,
-     T_LEFT_CURLY_BRACKET = 267,
-     T_LEFT_PARANTHESIS = 268,
-     T_RIGHT_CURLY_BRACKET = 269,
-     T_RIGHT_PARANTHESIS = 270,
-     T_COLON = 271,
-     T_SEMICOLON = 272,
-     T_PUBLIC = 273,
-     T_PROTECTED = 274,
-     T_TRIPE_DOT = 275,
-     T_PRIVATE = 276,
-     T_VIRTUAL = 277,
-     T_CONST = 278,
-     T_INLINE = 279,
-     T_FRIEND = 280,
-     T_RETURN = 281,
-     T_SIGNAL = 282,
-     T_SLOT = 283,
-     T_TYPEDEF = 284,
-     T_PLUS = 285,
-     T_MINUS = 286,
-     T_COMMA = 287,
-     T_ASTERISK = 288,
-     T_TILDE = 289,
-     T_LESS = 290,
-     T_GREATER = 291,
-     T_AMPERSAND = 292,
-     T_EXTERN = 293,
-     T_EXTERN_C = 294,
-     T_ACCESS = 295,
-     T_ENUM = 296,
-     T_NAMESPACE = 297,
-     T_USING = 298,
-     T_UNKNOWN = 299,
-     T_TRIPLE_DOT = 300,
-     T_TRUE = 301,
-     T_FALSE = 302,
-     T_STATIC = 303,
-     T_MUTABLE = 304,
-     T_EQUAL = 305,
-     T_SCOPE = 306,
-     T_NULL = 307,
-     T_INT = 308,
-     T_ARRAY_OPEN = 309,
-     T_ARRAY_CLOSE = 310,
-     T_CHAR = 311,
-     T_DCOP = 312,
-     T_DCOP_AREA = 313,
-     T_DCOP_SIGNAL_AREA = 314,
-     T_SIGNED = 315,
-     T_UNSIGNED = 316,
-     T_LONG = 317,
-     T_SHORT = 318,
-     T_FUNOPERATOR = 319,
-     T_MISCOPERATOR = 320,
-     T_SHIFT = 321
-   };
+#define YYTOKENTYPE
+/* Put the tokens into the symbol table, so that GDB and other debuggers
+   know about them.  */
+enum yytokentype
+{
+    T_UNIMPORTANT = 258,
+    T_CHARACTER_LITERAL = 259,
+    T_DOUBLE_LITERAL = 260,
+    T_IDENTIFIER = 261,
+    T_INTEGER_LITERAL = 262,
+    T_STRING_LITERAL = 263,
+    T_INCLUDE = 264,
+    T_CLASS = 265,
+    T_STRUCT = 266,
+    T_LEFT_CURLY_BRACKET = 267,
+    T_LEFT_PARANTHESIS = 268,
+    T_RIGHT_CURLY_BRACKET = 269,
+    T_RIGHT_PARANTHESIS = 270,
+    T_COLON = 271,
+    T_SEMICOLON = 272,
+    T_PUBLIC = 273,
+    T_PROTECTED = 274,
+    T_TRIPE_DOT = 275,
+    T_PRIVATE = 276,
+    T_VIRTUAL = 277,
+    T_CONST = 278,
+    T_INLINE = 279,
+    T_FRIEND = 280,
+    T_RETURN = 281,
+    T_SIGNAL = 282,
+    T_SLOT = 283,
+    T_TYPEDEF = 284,
+    T_PLUS = 285,
+    T_MINUS = 286,
+    T_COMMA = 287,
+    T_ASTERISK = 288,
+    T_TILDE = 289,
+    T_LESS = 290,
+    T_GREATER = 291,
+    T_AMPERSAND = 292,
+    T_EXTERN = 293,
+    T_EXTERN_C = 294,
+    T_ACCESS = 295,
+    T_ENUM = 296,
+    T_NAMESPACE = 297,
+    T_USING = 298,
+    T_UNKNOWN = 299,
+    T_TRIPLE_DOT = 300,
+    T_TRUE = 301,
+    T_FALSE = 302,
+    T_STATIC = 303,
+    T_MUTABLE = 304,
+    T_EQUAL = 305,
+    T_SCOPE = 306,
+    T_NULL = 307,
+    T_INT = 308,
+    T_ARRAY_OPEN = 309,
+    T_ARRAY_CLOSE = 310,
+    T_CHAR = 311,
+    T_DCOP = 312,
+    T_DCOP_AREA = 313,
+    T_DCOP_SIGNAL_AREA = 314,
+    T_SIGNED = 315,
+    T_UNSIGNED = 316,
+    T_LONG = 317,
+    T_SHORT = 318,
+    T_FUNOPERATOR = 319,
+    T_MISCOPERATOR = 320,
+    T_SHIFT = 321
+};
 #endif
 #define T_UNIMPORTANT 258
 #define T_CHARACTER_LITERAL 259
@@ -161,24 +162,19 @@
 #define T_SHIFT 321
 
 
-
-
-#if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
+#if !defined(YYSTYPE) && !defined(YYSTYPE_IS_DECLARED)
 #line 67 "yacc.yy"
 typedef union YYSTYPE {
-  long   _int;
-  QString        *_str;
-  unsigned short          _char;
-  double _float;
+    long _int;
+    QString *_str;
+    unsigned short _char;
+    double _float;
 } YYSTYPE;
 /* Line 1285 of yacc.c.  */
 #line 176 "yacc.hh"
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
-# define YYSTYPE_IS_DECLARED 1
-# define YYSTYPE_IS_TRIVIAL 1
+#define yystype YYSTYPE /* obsolescent; will be withdrawn */
+#define YYSTYPE_IS_DECLARED 1
+#define YYSTYPE_IS_TRIVIAL 1
 #endif
 
 extern YYSTYPE yylval;
-
-
-

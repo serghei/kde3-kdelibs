@@ -61,57 +61,55 @@ typedef unsigned long uword;
 
 namespace khtml {
 
-struct Arena {
-    Arena* next; 	// next arena
-    uword base;		// aligned base address
-    uword limit;	// end of arena (1+last byte)
-    uword avail;	// points to next available byte in arena
+struct Arena
+{
+    Arena *next; // next arena
+    uword base;  // aligned base address
+    uword limit; // end of arena (1+last byte)
+    uword avail; // points to next available byte in arena
 };
 
-struct ArenaPool {
-    Arena first;	// first arena in pool list.
-    Arena* current;     // current arena.
+struct ArenaPool
+{
+    Arena first;    // first arena in pool list.
+    Arena *current; // current arena.
     unsigned int arenasize;
     unsigned int largealloc; // threshold for fractional allocation strategy
-    unsigned int cumul; // total bytes in pool.
-    uword mask; 	// Mask (power-of-2 - 1)
+    unsigned int cumul;      // total bytes in pool.
+    uword mask;              // Mask (power-of-2 - 1)
 };
 
-void InitArenaPool(ArenaPool *pool, const char *name,
-                   unsigned int size, unsigned int align);
+void InitArenaPool(ArenaPool *pool, const char *name, unsigned int size, unsigned int align);
 void FinishArenaPool(ArenaPool *pool);
 void FreeArenaPool(ArenaPool *pool);
-void* ArenaAllocate(ArenaPool *pool, unsigned int nb);
+void *ArenaAllocate(ArenaPool *pool, unsigned int nb);
 void ArenaFinish(void);
 
 #define ARENA_ALIGN(pool, n) (((uword)(n) + ARENA_ALIGN_MASK) & ~ARENA_ALIGN_MASK)
-#define INIT_ARENA_POOL(pool, name, size) \
-        InitArenaPool(pool, name, size, ARENA_ALIGN_MASK + 1)
+#define INIT_ARENA_POOL(pool, name, size) InitArenaPool(pool, name, size, ARENA_ALIGN_MASK + 1)
 
-#define ARENA_ALLOCATE(p, pool, nb) \
-        Arena *_a = (pool)->current; \
-        unsigned int _nb = ARENA_ALIGN(pool, nb); \
-        uword _p = _a->avail; \
-        uword _q = _p + _nb; \
-        if (_q > _a->limit) \
-            _p = (uword)ArenaAllocate(pool, _nb); \
-        else { \
-            VALGRIND_MEMPOOL_ALLOC(_a->base, p, nb); \
-            _a->avail = _q; \
-        } \
-        p = (void *)_p;
+#define ARENA_ALLOCATE(p, pool, nb)                                                                                                                  \
+    Arena *_a = (pool)->current;                                                                                                                     \
+    unsigned int _nb = ARENA_ALIGN(pool, nb);                                                                                                        \
+    uword _p = _a->avail;                                                                                                                            \
+    uword _q = _p + _nb;                                                                                                                             \
+    if(_q > _a->limit)                                                                                                                               \
+        _p = (uword)ArenaAllocate(pool, _nb);                                                                                                        \
+    else                                                                                                                                             \
+    {                                                                                                                                                \
+        VALGRIND_MEMPOOL_ALLOC(_a->base, p, nb);                                                                                                     \
+        _a->avail = _q;                                                                                                                              \
+    }                                                                                                                                                \
+    p = (void *)_p;
 
 
-#define ARENA_MARK(pool) ((void *) (pool)->current->avail)
-#define UPTRDIFF(p,q) ((uword)(p) - (uword)(q))
+#define ARENA_MARK(pool) ((void *)(pool)->current->avail)
+#define UPTRDIFF(p, q) ((uword)(p) - (uword)(q))
 
 #ifdef DEBUG
 #define FREE_PATTERN 0xDA
-#define CLEAR_UNUSED(a) (assert((a)->avail <= (a)->limit), \
-                           memset((void*)(a)->avail, FREE_PATTERN, \
-                            (a)->limit - (a)->avail))
-#define CLEAR_ARENA(a)  memset((void*)(a), FREE_PATTERN, \
-                            (a)->limit - (uword)(a))
+#define CLEAR_UNUSED(a) (assert((a)->avail <= (a)->limit), memset((void *)(a)->avail, FREE_PATTERN, (a)->limit - (a)->avail))
+#define CLEAR_ARENA(a) memset((void *)(a), FREE_PATTERN, (a)->limit - (uword)(a))
 #else
 #define CLEAR_UNUSED(a)
 #define CLEAR_ARENA(a)

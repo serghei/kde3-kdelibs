@@ -35,8 +35,7 @@
  * @author Holger Freyther <freyher@yahoo.com>
  * @see KStdGuiItem
  */
-class KDEUI_EXPORT KGuiItem
-{
+class KDEUI_EXPORT KGuiItem {
 public:
     KGuiItem();
 
@@ -44,27 +43,26 @@ public:
     // subtle bugs otherwise - the icon name, tooltip and whatsthis text
     // get changed behind your back if you do 'setButtonFoo( "Bar" );'
     // It gives the wrong impression that you just change the text.
-    KGuiItem( const QString &text, 
-              const QString &iconName  = QString::null,
-              const QString &toolTip   = QString::null, 
-              const QString &whatsThis = QString::null );
+    KGuiItem(const QString &text, const QString &iconName = QString::null, const QString &toolTip = QString::null,
+             const QString &whatsThis = QString::null);
 
-    KGuiItem( const QString &text, const QIconSet &iconSet, 
-              const QString &toolTip   = QString::null, 
-              const QString &whatsThis = QString::null );
+    KGuiItem(const QString &text, const QIconSet &iconSet, const QString &toolTip = QString::null, const QString &whatsThis = QString::null);
 
-    KGuiItem( const KGuiItem &rhs );
-    KGuiItem &operator=( const KGuiItem &rhs );
+    KGuiItem(const KGuiItem &rhs);
+    KGuiItem &operator=(const KGuiItem &rhs);
 
     ~KGuiItem();
 
     QString text() const;
     QString plainText() const;
 #ifndef KDE_NO_COMPAT
-    QIconSet iconSet( KIcon::Group, int size = 0, KInstance* instance = KGlobal::instance()) const;
-    QIconSet iconSet() const { return iconSet( KIcon::Small ); }
+    QIconSet iconSet(KIcon::Group, int size = 0, KInstance *instance = KGlobal::instance()) const;
+    QIconSet iconSet() const
+    {
+        return iconSet(KIcon::Small);
+    }
 #else
-    QIconSet iconSet( KIcon::Group=KIcon::Small, int size = 0, KInstance* instance = KGlobal::instance()) const;
+    QIconSet iconSet(KIcon::Group = KIcon::Small, int size = 0, KInstance *instance = KGlobal::instance()) const;
 #endif
 
     QString iconName() const;
@@ -76,15 +74,18 @@ public:
      */
     bool hasIcon() const;
 #ifndef KDE_NO_COMPAT
-    bool hasIconSet() const { return hasIcon(); }
+    bool hasIconSet() const
+    {
+        return hasIcon();
+    }
 #endif
 
-    void setText( const QString &text );
-    void setIconSet( const QIconSet &iconset );
-    void setIconName( const QString &iconName );
-    void setToolTip( const QString &tooltip );
-    void setWhatsThis( const QString &whatsThis );
-    void setEnabled( bool enable );
+    void setText(const QString &text);
+    void setIconSet(const QIconSet &iconset);
+    void setIconName(const QString &iconName);
+    void setToolTip(const QString &tooltip);
+    void setWhatsThis(const QString &whatsThis);
+    void setEnabled(bool enable);
 
 private:
     class KGuiItemPrivate;
@@ -95,4 +96,3 @@ private:
  */
 
 #endif
-

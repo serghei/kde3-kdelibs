@@ -36,104 +36,135 @@
 
 //----------------------------------------------------
 
-KGlobalAccel::KGlobalAccel( QObject* pParent, const char* psName )
-: QObject( pParent, psName )
+KGlobalAccel::KGlobalAccel(QObject *pParent, const char *psName) : QObject(pParent, psName)
 {
-	kdDebug(125) << "KGlobalAccel(): this = " << this << endl;
-	d = new KGlobalAccelPrivate();
+    kdDebug(125) << "KGlobalAccel(): this = " << this << endl;
+    d = new KGlobalAccelPrivate();
 }
 
 KGlobalAccel::~KGlobalAccel()
 {
-	kdDebug(125) << "~KGlobalAccel(): this = " << this << endl;
-	delete d;
+    kdDebug(125) << "~KGlobalAccel(): this = " << this << endl;
+    delete d;
 }
 
 /*
 void KGlobalAccel::clear()
-	{ d->clearActions(); }
+    { d->clearActions(); }
 */
-KAccelActions& KGlobalAccel::actions()
-	{ return d->actions(); }
+KAccelActions &KGlobalAccel::actions()
+{
+    return d->actions();
+}
 
-const KAccelActions& KGlobalAccel::actions() const
-	{ return d->actions(); }
+const KAccelActions &KGlobalAccel::actions() const
+{
+    return d->actions();
+}
 
 bool KGlobalAccel::isEnabled()
-	{ return ((KAccelBase*)d)->isEnabled(); }
-
-void KGlobalAccel::setEnabled( bool bEnabled )
-	{ d->setEnabled( bEnabled ); }
-
-void KGlobalAccel::suspend( bool s )
-	{ d->suspend( s ); }
-
-void KGlobalAccel::blockShortcuts( bool block )
-        { KGlobalAccelPrivate::blockShortcuts( block ); }
-
-void KGlobalAccel::disableBlocking( bool disable )
-        { d->disableBlocking( disable ); }
-
-KAccelAction* KGlobalAccel::insert( const QString& sAction, const QString& sDesc, const QString& sHelp,
-		const KShortcut& cutDef3, const KShortcut& cutDef4,
-		const QObject* pObjSlot, const char* psMethodSlot,
-		bool bConfigurable, bool bEnabled )
 {
-	return d->insert( sAction, sDesc, sHelp,
-		cutDef3, cutDef4,
-		pObjSlot, psMethodSlot,
-		bConfigurable, bEnabled );
+    return ((KAccelBase *)d)->isEnabled();
 }
 
-KAccelAction* KGlobalAccel::insert( const QString& sName, const QString& sDesc )
-	{ return d->insert( sName, sDesc ); }
+void KGlobalAccel::setEnabled(bool bEnabled)
+{
+    d->setEnabled(bEnabled);
+}
+
+void KGlobalAccel::suspend(bool s)
+{
+    d->suspend(s);
+}
+
+void KGlobalAccel::blockShortcuts(bool block)
+{
+    KGlobalAccelPrivate::blockShortcuts(block);
+}
+
+void KGlobalAccel::disableBlocking(bool disable)
+{
+    d->disableBlocking(disable);
+}
+
+KAccelAction *KGlobalAccel::insert(const QString &sAction, const QString &sDesc, const QString &sHelp, const KShortcut &cutDef3,
+                                   const KShortcut &cutDef4, const QObject *pObjSlot, const char *psMethodSlot, bool bConfigurable, bool bEnabled)
+{
+    return d->insert(sAction, sDesc, sHelp, cutDef3, cutDef4, pObjSlot, psMethodSlot, bConfigurable, bEnabled);
+}
+
+KAccelAction *KGlobalAccel::insert(const QString &sName, const QString &sDesc)
+{
+    return d->insert(sName, sDesc);
+}
 bool KGlobalAccel::updateConnections()
-	{ return d->updateConnections(); }
-
-bool KGlobalAccel::remove( const QString& sAction )
-        { return d->remove( sAction ); }
-
-const KShortcut& KGlobalAccel::shortcut( const QString& sAction ) const
 {
-	const KAccelAction* pAction = d->actions().actionPtr( sAction );
-	return (pAction) ? pAction->shortcut() : KShortcut::null();
+    return d->updateConnections();
 }
 
-bool KGlobalAccel::setShortcut( const QString& sAction, const KShortcut& cut )
-	{ return d->setShortcut( sAction, cut ); }
-bool KGlobalAccel::setSlot( const QString& sAction, const QObject* pObjSlot, const char* psMethodSlot )
-	{ return d->setActionSlot( sAction, pObjSlot, psMethodSlot ); }
-QString KGlobalAccel::label( const QString& sAction ) const
+bool KGlobalAccel::remove(const QString &sAction)
 {
-	const KAccelAction* pAction = d->actions().actionPtr( sAction );
-	return (pAction) ? pAction->label() : QString();
-}
-bool KGlobalAccel::setActionEnabled( const QString& sAction, bool bEnable )
-{
-        return d->setActionEnabled( sAction, bEnable );
+    return d->remove(sAction);
 }
 
-const QString& KGlobalAccel::configGroup() const
-	{ return d->configGroup(); }
+const KShortcut &KGlobalAccel::shortcut(const QString &sAction) const
+{
+    const KAccelAction *pAction = d->actions().actionPtr(sAction);
+    return (pAction) ? pAction->shortcut() : KShortcut::null();
+}
+
+bool KGlobalAccel::setShortcut(const QString &sAction, const KShortcut &cut)
+{
+    return d->setShortcut(sAction, cut);
+}
+bool KGlobalAccel::setSlot(const QString &sAction, const QObject *pObjSlot, const char *psMethodSlot)
+{
+    return d->setActionSlot(sAction, pObjSlot, psMethodSlot);
+}
+QString KGlobalAccel::label(const QString &sAction) const
+{
+    const KAccelAction *pAction = d->actions().actionPtr(sAction);
+    return (pAction) ? pAction->label() : QString();
+}
+bool KGlobalAccel::setActionEnabled(const QString &sAction, bool bEnable)
+{
+    return d->setActionEnabled(sAction, bEnable);
+}
+
+const QString &KGlobalAccel::configGroup() const
+{
+    return d->configGroup();
+}
 // for kdemultimedia/kmix
-void KGlobalAccel::setConfigGroup( const QString& s )
-	{ d->setConfigGroup( s ); }
-
-bool KGlobalAccel::readSettings( KConfigBase* pConfig )
-	{ d->readSettings( pConfig ); return true; }
-bool KGlobalAccel::writeSettings( KConfigBase* pConfig ) const
-	{ d->writeSettings( pConfig ); return true; }
-bool KGlobalAccel::writeSettings( KConfigBase* pConfig, bool bGlobal ) const
+void KGlobalAccel::setConfigGroup(const QString &s)
 {
-	d->setConfigGlobal( bGlobal );
-	d->writeSettings( pConfig );
-	return true;
+    d->setConfigGroup(s);
+}
+
+bool KGlobalAccel::readSettings(KConfigBase *pConfig)
+{
+    d->readSettings(pConfig);
+    return true;
+}
+bool KGlobalAccel::writeSettings(KConfigBase *pConfig) const
+{
+    d->writeSettings(pConfig);
+    return true;
+}
+bool KGlobalAccel::writeSettings(KConfigBase *pConfig, bool bGlobal) const
+{
+    d->setConfigGlobal(bGlobal);
+    d->writeSettings(pConfig);
+    return true;
 }
 
 bool KGlobalAccel::useFourModifierKeys()
-	{ return KAccelAction::useFourModifierKeys(); }
+{
+    return KAccelAction::useFourModifierKeys();
+}
 
-void KGlobalAccel::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KGlobalAccel::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kglobalaccel.moc"

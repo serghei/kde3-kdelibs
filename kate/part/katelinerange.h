@@ -22,28 +22,27 @@
 
 #include "katecursor.h"
 
-class KateLineRange
-{
-  public:
+class KateLineRange {
+public:
     KateLineRange();
-    virtual ~KateLineRange ();
+    virtual ~KateLineRange();
 
     void clear();
 
-    inline bool includesCursor (const KateTextCursor& realCursor) const
+    inline bool includesCursor(const KateTextCursor &realCursor) const
     {
-      return realCursor.line() == line && realCursor.col() >= startCol && (!wrap || realCursor.col() < endCol);
+        return realCursor.line() == line && realCursor.col() >= startCol && (!wrap || realCursor.col() < endCol);
     }
 
-    inline int xOffset () const
+    inline int xOffset() const
     {
-      return startX ? shiftX : 0;
+        return startX ? shiftX : 0;
     }
 
-    friend bool operator> (const KateLineRange& r, const KateTextCursor& c);
-    friend bool operator>= (const KateLineRange& r, const KateTextCursor& c);
-    friend bool operator< (const KateLineRange& r, const KateTextCursor& c);
-    friend bool operator<= (const KateLineRange& r, const KateTextCursor& c);
+    friend bool operator>(const KateLineRange &r, const KateTextCursor &c);
+    friend bool operator>=(const KateLineRange &r, const KateTextCursor &c);
+    friend bool operator<(const KateLineRange &r, const KateTextCursor &c);
+    friend bool operator<=(const KateLineRange &r, const KateTextCursor &c);
 
     int line;
     int virtualLine;

@@ -22,72 +22,70 @@
 #include <kstringhandler.h>
 #include "kremoteencoding.h"
 
-KRemoteEncoding::KRemoteEncoding(const char *name)
-  : codec(0L), d(0L)
+KRemoteEncoding::KRemoteEncoding(const char *name) : codec(0L), d(0L)
 {
-  setEncoding(name);
+    setEncoding(name);
 }
 
 KRemoteEncoding::~KRemoteEncoding()
 {
-  // delete d;		// not necessary yet
+    // delete d;		// not necessary yet
 }
 
-QString KRemoteEncoding::decode(const QCString& name) const
+QString KRemoteEncoding::decode(const QCString &name) const
 {
 #ifdef CHECK_UTF8
-  if (codec->mibEnum() == 106 && !KStringHandler::isUtf8(name))
-    return QString::fromLatin1(name);
+    if(codec->mibEnum() == 106 && !KStringHandler::isUtf8(name))
+        return QString::fromLatin1(name);
 #endif
 
-  QString result = codec->toUnicode(name);
-  if (codec->fromUnicode(result) != name)
-    // fallback in case of decoding failure
-    return QString::fromLatin1(name);
+    QString result = codec->toUnicode(name);
+    if(codec->fromUnicode(result) != name)
+        // fallback in case of decoding failure
+        return QString::fromLatin1(name);
 
-  return result;
+    return result;
 }
 
-QCString KRemoteEncoding::encode(const QString& name) const
+QCString KRemoteEncoding::encode(const QString &name) const
 {
-  QCString result = codec->fromUnicode(name);
-  if (codec->toUnicode(result) != name)
-    return name.latin1();
- 
-  return result;
+    QCString result = codec->fromUnicode(name);
+    if(codec->toUnicode(result) != name)
+        return name.latin1();
+
+    return result;
 }
 
-QCString KRemoteEncoding::encode(const KURL& url) const
+QCString KRemoteEncoding::encode(const KURL &url) const
 {
-  return encode(url.path());
+    return encode(url.path());
 }
 
-QCString KRemoteEncoding::directory(const KURL& url, bool ignore_trailing_slash) const
+QCString KRemoteEncoding::directory(const KURL &url, bool ignore_trailing_slash) const
 {
-  QString dir = url.directory(true, ignore_trailing_slash);
+    QString dir = url.directory(true, ignore_trailing_slash);
 
-  return encode(dir);
+    return encode(dir);
 }
 
-QCString KRemoteEncoding::fileName(const KURL& url) const
+QCString KRemoteEncoding::fileName(const KURL &url) const
 {
-  return encode(url.fileName());
+    return encode(url.fileName());
 }
 
 void KRemoteEncoding::setEncoding(const char *name)
 {
-  // don't delete codecs
+    // don't delete codecs
 
-  if (name)
-    codec = QTextCodec::codecForName(name);
+    if(name)
+        codec = QTextCodec::codecForName(name);
 
-  if (codec == 0L)
-    codec = QTextCodec::codecForMib(1);
+    if(codec == 0L)
+        codec = QTextCodec::codecForMib(1);
 
-  kdDebug() << k_funcinfo << "setting encoding " << codec->name() 
-	    << " for name=" << name << endl;
+    kdDebug() << k_funcinfo << "setting encoding " << codec->name() << " for name=" << name << endl;
 }
 
-void KRemoteEncoding::virtual_hook(int, void*)
+void KRemoteEncoding::virtual_hook(int, void *)
 {
 }

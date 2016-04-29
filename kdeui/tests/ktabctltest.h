@@ -10,12 +10,11 @@ class KTabCtl;
 class QPushButton;
 class QMultiLineEdit;
 
-class TopLevel : public QWidget
-{
+class TopLevel : public QWidget {
     Q_OBJECT
 public:
+    TopLevel(QWidget *parent = 0, const char *name = 0);
 
-    TopLevel( QWidget *parent=0, const char *name=0 );
 protected:
     void resizeEvent(QResizeEvent *);
     KTabCtl *test;

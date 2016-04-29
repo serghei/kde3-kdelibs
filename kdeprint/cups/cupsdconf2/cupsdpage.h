@@ -18,37 +18,56 @@
  **/
 
 #ifndef CUPSDPAGE_H
-#define	CUPSDPAGE_H
+#define CUPSDPAGE_H
 
 #include <qwidget.h>
 
 struct CupsdConf;
 
-class CupsdPage : public QWidget
-{
-	Q_OBJECT
+class CupsdPage : public QWidget {
+    Q_OBJECT
 public:
-	CupsdPage(QWidget *parent = 0, const char *name = 0);
-	virtual ~CupsdPage();
+    CupsdPage(QWidget *parent = 0, const char *name = 0);
+    virtual ~CupsdPage();
 
-	virtual bool loadConfig(CupsdConf *conf, QString& msg) = 0;
-	virtual bool saveConfig(CupsdConf *conf, QString& msg) = 0;
-        virtual void setInfos(CupsdConf*) {}
-	
-	QString pageLabel() const	{ return label_; }
-	QString header() const		{ return header_; }
-	QString pixmap() const		{ return pixmap_; }
+    virtual bool loadConfig(CupsdConf *conf, QString &msg) = 0;
+    virtual bool saveConfig(CupsdConf *conf, QString &msg) = 0;
+    virtual void setInfos(CupsdConf *)
+    {
+    }
+
+    QString pageLabel() const
+    {
+        return label_;
+    }
+    QString header() const
+    {
+        return header_;
+    }
+    QString pixmap() const
+    {
+        return pixmap_;
+    }
 
 protected:
-	void setPageLabel(const QString& s)	{ label_ = s; }
-	void setHeader(const QString& s)	{ header_ = s; }
-	void setPixmap(const QString& s)	{ pixmap_ = s; }
+    void setPageLabel(const QString &s)
+    {
+        label_ = s;
+    }
+    void setHeader(const QString &s)
+    {
+        header_ = s;
+    }
+    void setPixmap(const QString &s)
+    {
+        pixmap_ = s;
+    }
 
 protected:
-	CupsdConf	*conf_;
-	QString		label_;
-	QString		header_;
-	QString		pixmap_;
+    CupsdConf *conf_;
+    QString label_;
+    QString header_;
+    QString pixmap_;
 };
 
 #endif

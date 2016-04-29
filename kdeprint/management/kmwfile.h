@@ -24,16 +24,15 @@
 
 class KURLRequester;
 
-class KMWFile : public KMWizardPage
-{
+class KMWFile : public KMWizardPage {
 public:
-	KMWFile(QWidget *parent = 0, const char *name = 0);
+    KMWFile(QWidget *parent = 0, const char *name = 0);
 
-	bool isValid(QString&);
-	void updatePrinter(KMPrinter*);
+    bool isValid(QString &);
+    void updatePrinter(KMPrinter *);
 
 private:
-	KURLRequester	*m_url;
+    KURLRequester *m_url;
 };
 
 #endif

@@ -33,11 +33,14 @@ class RenderTableCell;
 
 // -------------------------------------------------------------------------
 
-class TableLayout
-{
+class TableLayout {
 public:
-    TableLayout( RenderTable *t ) : table( t ) {}
-    virtual ~TableLayout() {}
+    TableLayout(RenderTable *t) : table(t)
+    {
+    }
+    virtual ~TableLayout()
+    {
+    }
 
     virtual void calcMinMaxWidth() = 0;
     virtual void layout() = 0;
@@ -48,10 +51,9 @@ protected:
 
 // -------------------------------------------------------------------------
 
-class FixedTableLayout : public TableLayout
-{
+class FixedTableLayout : public TableLayout {
 public:
-    FixedTableLayout( RenderTable *table );
+    FixedTableLayout(RenderTable *table);
     ~FixedTableLayout();
 
     void calcMinMaxWidth();
@@ -60,15 +62,14 @@ public:
 protected:
     int calcWidthArray();
 
-    QMemArray<Length> width;
+    QMemArray< Length > width;
 };
 
 // -------------------------------------------------------------------------
 
-class AutoTableLayout : public TableLayout
-{
+class AutoTableLayout : public TableLayout {
 public:
-    AutoTableLayout( RenderTable *table );
+    AutoTableLayout(RenderTable *table);
     ~AutoTableLayout();
 
     void calcMinMaxWidth();
@@ -77,36 +78,37 @@ public:
 
 protected:
     void fullRecalc();
-    void recalcColumn( int effCol );
-    int totalPercent() const {
-	if ( percentagesDirty )
-	    calcPercentages();
-	return total_percent;
+    void recalcColumn(int effCol);
+    int totalPercent() const
+    {
+        if(percentagesDirty)
+            calcPercentages();
+        return total_percent;
     }
     void calcPercentages() const;
     int calcEffectiveWidth();
-    void insertSpanCell( RenderTableCell *cell );
+    void insertSpanCell(RenderTableCell *cell);
 
-    struct Layout {
-	Layout() : minWidth( 1 ), maxWidth( 1 ),
-		   effMinWidth( 0 ), effMaxWidth( 0 ),
-		   calcWidth( 0 ) {}
-	Length width;
-	Length effWidth;
-	short minWidth;
-	int maxWidth;
-	short effMinWidth;
-	int effMaxWidth;
-	short calcWidth;
+    struct Layout
+    {
+        Layout() : minWidth(1), maxWidth(1), effMinWidth(0), effMaxWidth(0), calcWidth(0)
+        {
+        }
+        Length width;
+        Length effWidth;
+        short minWidth;
+        int maxWidth;
+        short effMinWidth;
+        int effMaxWidth;
+        short calcWidth;
     };
 
-    QMemArray<Layout> layoutStruct;
-    QMemArray<RenderTableCell *>spanCells;
+    QMemArray< Layout > layoutStruct;
+    QMemArray< RenderTableCell * > spanCells;
     bool hasPercent : 1;
     mutable bool percentagesDirty : 1;
     mutable bool effWidthDirty : 1;
     mutable unsigned short total_percent;
 };
-
 }
 #endif

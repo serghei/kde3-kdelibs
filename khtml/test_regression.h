@@ -36,14 +36,13 @@ class QTimer;
 /**
  * @internal
  */
-class PartMonitor : public QObject
-{
-  Q_OBJECT
+class PartMonitor : public QObject {
+    Q_OBJECT
 public:
     PartMonitor(KHTMLPart *_part);
     ~PartMonitor();
     void waitForCompletion();
-    static PartMonitor* sm_highestMonitor;
+    static PartMonitor *sm_highestMonitor;
     bool m_completed;
     KHTMLPart *m_part;
     int m_timer_waits;
@@ -57,8 +56,7 @@ public slots:
 /**
  * @internal
  */
-class RegTestObject : public KJS::ObjectImp
-{
+class RegTestObject : public KJS::ObjectImp {
 public:
     RegTestObject(KJS::ExecState *exec, RegressionTest *_regTest);
 
@@ -69,15 +67,20 @@ private:
 /**
  * @internal
  */
-class RegTestFunction : public KJS::ObjectImp
-{
+class RegTestFunction : public KJS::ObjectImp {
 public:
     RegTestFunction(KJS::ExecState *exec, RegressionTest *_regTest, int _id, int length);
 
     bool implementsCall() const;
     KJS::Value call(KJS::ExecState *exec, KJS::Object &thisObj, const KJS::List &args);
 
-    enum { Print, ReportResult, CheckOutput, Quit };
+    enum
+    {
+        Print,
+        ReportResult,
+        CheckOutput,
+        Quit
+    };
 
 private:
     RegressionTest *m_regTest;
@@ -87,8 +90,7 @@ private:
 /**
  * @internal
  */
-class KHTMLPartObject : public KJS::ObjectImp
-{
+class KHTMLPartObject : public KJS::ObjectImp {
 public:
     KHTMLPartObject(KJS::ExecState *exec, KHTMLPart *_part);
 
@@ -101,15 +103,24 @@ private:
 /**
  * @internal
  */
-class KHTMLPartFunction : public KJS::ObjectImp
-{
+class KHTMLPartFunction : public KJS::ObjectImp {
 public:
     KHTMLPartFunction(KJS::ExecState *exec, KHTMLPart *_part, int _id, int length);
 
     bool implementsCall() const;
     KJS::Value call(KJS::ExecState *exec, KJS::Object &thisObj, const KJS::List &args);
 
-    enum { OpenPage, OpenPageAsUrl, Begin, Write, End, ExecuteScript, ProcessEvents };
+    enum
+    {
+        OpenPage,
+        OpenPageAsUrl,
+        Begin,
+        Write,
+        End,
+        ExecuteScript,
+        ProcessEvents
+    };
+
 private:
     KHTMLPart *m_part;
     int id;
@@ -122,35 +133,49 @@ class ScriptInterpreter;
 /**
  * @internal
  */
-class RegressionTest : public QObject
-{
-  Q_OBJECT
+class RegressionTest : public QObject {
+    Q_OBJECT
 public:
-
-    RegressionTest(KHTMLPart *part, const QString &baseDir, const QString &outputDir,
-		   bool _genOutput, bool runJS, bool runHTML);
+    RegressionTest(KHTMLPart *part, const QString &baseDir, const QString &outputDir, bool _genOutput, bool runJS, bool runHTML);
     ~RegressionTest();
 
-    enum OutputType { DOMTree, RenderTree };
-    QString getPartOutput( OutputType type );
-    void getPartDOMOutput( QTextStream &outputStream, KHTMLPart* part, uint indent );
-    void dumpRenderTree( QTextStream &outputStream, KHTMLPart* part );
-    void testStaticFile(const QString& filename);
-    void testJSFile(const QString& filename);
-    enum CheckResult { Failure = 0, Success = 1, Ignored = 2 };
-    CheckResult checkOutput(const QString& againstFilename);
-    CheckResult checkPaintdump( const QString& againstFilename);
-    enum FailureType { NoFailure = 0, AllFailure = 1, RenderFailure = 2, DomFailure = 4, PaintFailure = 8, JSFailure = 16};
+    enum OutputType
+    {
+        DOMTree,
+        RenderTree
+    };
+    QString getPartOutput(OutputType type);
+    void getPartDOMOutput(QTextStream &outputStream, KHTMLPart *part, uint indent);
+    void dumpRenderTree(QTextStream &outputStream, KHTMLPart *part);
+    void testStaticFile(const QString &filename);
+    void testJSFile(const QString &filename);
+    enum CheckResult
+    {
+        Failure = 0,
+        Success = 1,
+        Ignored = 2
+    };
+    CheckResult checkOutput(const QString &againstFilename);
+    CheckResult checkPaintdump(const QString &againstFilename);
+    enum FailureType
+    {
+        NoFailure = 0,
+        AllFailure = 1,
+        RenderFailure = 2,
+        DomFailure = 4,
+        PaintFailure = 8,
+        JSFailure = 16
+    };
     bool runTests(QString relPath = QString::null, bool mustExist = false, int known_failure = NoFailure);
-    bool reportResult( bool passed, const QString & description = QString::null );
-    bool reportResult(CheckResult result, const QString & description = QString::null );
+    bool reportResult(bool passed, const QString &description = QString::null);
+    bool reportResult(CheckResult result, const QString &description = QString::null);
     void createMissingDirs(const QString &path);
 
     QImage renderToImage();
-    bool imageEqual( const QImage &lhs, const QImage &rhs );
-    void createLink( const QString& test, int failures );
-    void doJavascriptReport( const QString &test );
-    void doFailureReport( const QString& test, int failures );
+    bool imageEqual(const QImage &lhs, const QImage &rhs);
+    void createLink(const QString &test, int failures);
+    void doJavascriptReport(const QString &test);
+    void doFailureReport(const QString &test, int failures);
 
     KHTMLPart *m_part;
     QString m_baseDir;
@@ -161,7 +186,7 @@ public:
     QString m_currentOutput;
     QString m_currentCategory;
     QString m_currentTest;
-    QPixmap* m_paintBuffer;
+    QPixmap *m_paintBuffer;
 
     bool m_getOutput;
     bool m_runJS;
@@ -178,17 +203,16 @@ public:
     static RegressionTest *curr;
 
 private:
-    void printDescription(const QString& description);
+    void printDescription(const QString &description);
 
-    static bool svnIgnored( const QString &filename );
+    static bool svnIgnored(const QString &filename);
 
 private:
-    void evalJS( KJS::ScriptInterpreter &interp, const QString &filename, bool report ); // used by testJS
+    void evalJS(KJS::ScriptInterpreter &interp, const QString &filename, bool report); // used by testJS
 
 private slots:
     void slotOpenURL(const KURL &url, const KParts::URLArgs &args);
-    void resizeTopLevelWidget( int, int );
-
+    void resizeTopLevelWidget(int, int);
 };
 
 #endif

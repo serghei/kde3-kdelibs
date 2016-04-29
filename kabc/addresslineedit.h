@@ -47,77 +47,77 @@ class LdapSearch;
  *
  * @see AddressLineEdit::enableCompletion()
  */
-class KABC_EXPORT AddressLineEdit : public KLineEdit
-{
-  Q_OBJECT
+class KABC_EXPORT AddressLineEdit : public KLineEdit {
+    Q_OBJECT
 public:
-  AddressLineEdit(QWidget* parent, bool useCompletion = true,
-		const char *name = 0L);
-  virtual ~AddressLineEdit();
+    AddressLineEdit(QWidget *parent, bool useCompletion = true, const char *name = 0L);
+    virtual ~AddressLineEdit();
 
-  /**
-   * Reimplented for internal reasons.
-   * @ see KLineEdit::setFont()
-   */
-  virtual void setFont( const QFont& );
+    /**
+     * Reimplented for internal reasons.
+     * @ see KLineEdit::setFont()
+     */
+    virtual void setFont(const QFont &);
 
-  static KConfig *config();
+    static KConfig *config();
 
 public slots:
-  /**
-   * Set cursor to end of line.
-   */
-  void cursorAtEnd();
-  /**
-   * Toggle completion.
-   */
-  void enableCompletion( bool enable );
+    /**
+     * Set cursor to end of line.
+     */
+    void cursorAtEnd();
+    /**
+     * Toggle completion.
+     */
+    void enableCompletion(bool enable);
 
 protected:
-  /**
-   * Always call AddressLineEdit::loadAddresses() as the first thing.
-   * Use addAddress() to add addresses.
-   */
-  virtual void loadAddresses();
-  void addAddress( const QString& );
-  virtual void keyPressEvent(QKeyEvent*);
-  virtual void dropEvent(QDropEvent *e);
-  virtual void paste();
-  virtual void insert(const QString &t);
-  virtual void mouseReleaseEvent( QMouseEvent * e );
-  void doCompletion(bool ctrlT);
+    /**
+     * Always call AddressLineEdit::loadAddresses() as the first thing.
+     * Use addAddress() to add addresses.
+     */
+    virtual void loadAddresses();
+    void addAddress(const QString &);
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual void dropEvent(QDropEvent *e);
+    virtual void paste();
+    virtual void insert(const QString &t);
+    virtual void mouseReleaseEvent(QMouseEvent *e);
+    void doCompletion(bool ctrlT);
 
 private slots:
-  void slotCompletion() { doCompletion(false); }
-  void slotPopupCompletion( const QString& );
-  void slotStartLDAPLookup();
-  void slotLDAPSearchData( const QStringList& );
+    void slotCompletion()
+    {
+        doCompletion(false);
+    }
+    void slotPopupCompletion(const QString &);
+    void slotStartLDAPLookup();
+    void slotLDAPSearchData(const QStringList &);
 
 private:
-  void init();
-  void startLoadingLDAPEntries();
-  void stopLDAPLookup();
-  QStringList addresses();
-  QStringList removeMailDupes( const QStringList& adrs );
+    void init();
+    void startLoadingLDAPEntries();
+    void stopLDAPLookup();
+    QStringList addresses();
+    QStringList removeMailDupes(const QStringList &adrs);
 
-  QString m_previousAddresses;
-  bool m_useCompletion;
-  bool m_completionInitialized;
-  bool m_smartPaste;
-  QString m_typedText; // unused
+    QString m_previousAddresses;
+    bool m_useCompletion;
+    bool m_completionInitialized;
+    bool m_smartPaste;
+    QString m_typedText; // unused
 
-  static bool s_addressesDirty;
-  static KCompletion *s_completion;
-  static QTimer *s_LDAPTimer;
-  static LdapSearch *s_LDAPSearch;
-  static QString *s_LDAPText;
-  static AddressLineEdit *s_LDAPLineEdit;
-  static KConfig *s_config;
+    static bool s_addressesDirty;
+    static KCompletion *s_completion;
+    static QTimer *s_LDAPTimer;
+    static LdapSearch *s_LDAPSearch;
+    static QString *s_LDAPText;
+    static AddressLineEdit *s_LDAPLineEdit;
+    static KConfig *s_config;
 
 private:
-  class AddressLineEditPrivate* d;
+    class AddressLineEditPrivate *d;
 };
-
 }
 
-#endif		/* KABC_ADDRESSLINEEDIT_H */
+#endif /* KABC_ADDRESSLINEEDIT_H */

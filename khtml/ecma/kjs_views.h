@@ -27,26 +27,37 @@
 namespace KJS {
 
 
-  class DOMAbstractView : public DOMObject {
-  public:
+class DOMAbstractView : public DOMObject {
+public:
     DOMAbstractView(ExecState *, DOM::AbstractView av);
     ~DOMAbstractView();
-    virtual Value tryGet(ExecState *exec,const Identifier &p) const;
+    virtual Value tryGet(ExecState *exec, const Identifier &p) const;
     // no put - all read-only
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    virtual DOM::AbstractView toAbstractView() const { return abstractView; }
-    enum { Document, GetComputedStyle };
-  protected:
+    virtual DOM::AbstractView toAbstractView() const
+    {
+        return abstractView;
+    }
+    enum
+    {
+        Document,
+        GetComputedStyle
+    };
+
+protected:
     DOM::AbstractView abstractView;
-  };
+};
 
-  Value getDOMAbstractView(ExecState *exec, DOM::AbstractView av);
+Value getDOMAbstractView(ExecState *exec, DOM::AbstractView av);
 
-  /**
-   * Convert an object to an AbstractView. Returns a null Node if not possible.
-   */
-  DOM::AbstractView toAbstractView(const Value&);
+/**
+ * Convert an object to an AbstractView. Returns a null Node if not possible.
+ */
+DOM::AbstractView toAbstractView(const Value &);
 
 } // namespace
 

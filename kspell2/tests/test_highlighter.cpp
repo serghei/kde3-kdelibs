@@ -27,14 +27,14 @@
 
 #include <qtextedit.h>
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
     KApplication app(argc, argv, "KSpell2Test");
 
     QTextEdit *test = new QTextEdit();
-    KSpell2::Highlighter *hl = new KSpell2::Highlighter( test );
-    Q_UNUSED( hl );
-    app.setMainWidget( test );
+    KSpell2::Highlighter *hl = new KSpell2::Highlighter(test);
+    Q_UNUSED(hl);
+    app.setMainWidget(test);
     test->show();
 
     return app.exec();

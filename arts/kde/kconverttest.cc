@@ -18,11 +18,7 @@
 using namespace std;
 using namespace Arts;
 
-static KCmdLineOptions options[] =
-{
-    { "+[URL]", I18N_NOOP("URL to open"), 0 },
-    KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"+[URL]", I18N_NOOP("URL to open"), 0}, KCmdLineLastOption};
 
 KConvertTest::KConvertTest()
 {
@@ -30,67 +26,66 @@ KConvertTest::KConvertTest()
 
 void KConvertTest::slotRawStreamStart()
 {
-//	cout << "[START]\n\n" << endl;
+    //	cout << "[START]\n\n" << endl;
 }
 
 void KConvertTest::slotNewBlockSize(long blockSize)
 {
-	m_blockSize = blockSize;
+    m_blockSize = blockSize;
 }
 
 void KConvertTest::slotNewBlockPointer(long blockPointer)
 {
-	m_blockPointer = blockPointer;
+    m_blockPointer = blockPointer;
 }
 
 void KConvertTest::slotNewData()
 {
-	fwrite((void *) m_blockPointer, 1, m_blockSize, stdout);
+    fwrite((void *)m_blockPointer, 1, m_blockSize, stdout);
 }
 
 void KConvertTest::slotRawStreamFinished()
 {
-//	cout << "\n\n[END]" << endl;
+    //	cout << "\n\n[END]" << endl;
 }
 
 int main(int argc, char **argv)
 {
-	KAboutData aboutData("kconverttest", I18N_NOOP("KConvertTest"), I18N_NOOP("0.1"), "", KAboutData::License_GPL, "");
-							  
-	KCmdLineArgs::init(argc, argv, &aboutData);
-	KCmdLineArgs::addCmdLineOptions(options); 	
-	KApplication app;
+    KAboutData aboutData("kconverttest", I18N_NOOP("KConvertTest"), I18N_NOOP("0.1"), "", KAboutData::License_GPL, "");
 
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
+    KApplication app;
 
-	KURL url;
-	
-	if(args->count())
-		url = args->arg(0);
-	else
-		exit(1);
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-	args->clear();
+    KURL url;
 
-	KConvertTest *get = new KConvertTest();
+    if(args->count())
+        url = args->arg(0);
+    else
+        exit(1);
 
-	KArtsDispatcher dispatcher;
-	KAudioConverter converter;
+    args->clear();
 
-	// FIXME: crashes
-	// converter.setup(44100);
-	converter.requestPlayObject(url);
+    KConvertTest *get = new KConvertTest();
 
-	QObject::connect(&converter, SIGNAL(rawStreamStart()), get, SLOT(slotRawStreamStart()));
+    KArtsDispatcher dispatcher;
+    KAudioConverter converter;
 
-	QObject::connect(&converter, SIGNAL(newBlockSize(long)), get, SLOT(slotNewBlockSize(long)));
-	QObject::connect(&converter, SIGNAL(newBlockPointer(long)), get, SLOT(slotNewBlockPointer(long)));
-	QObject::connect(&converter, SIGNAL(newData()), get, SLOT(slotNewData()));
-	
-	QObject::connect(&converter, SIGNAL(rawStreamFinished()), get, SLOT(slotRawStreamFinished()));
+    // FIXME: crashes
+    // converter.setup(44100);
+    converter.requestPlayObject(url);
 
-	converter.start();
+    QObject::connect(&converter, SIGNAL(rawStreamStart()), get, SLOT(slotRawStreamStart()));
 
-	app.exec();
+    QObject::connect(&converter, SIGNAL(newBlockSize(long)), get, SLOT(slotNewBlockSize(long)));
+    QObject::connect(&converter, SIGNAL(newBlockPointer(long)), get, SLOT(slotNewBlockPointer(long)));
+    QObject::connect(&converter, SIGNAL(newData()), get, SLOT(slotNewData()));
+
+    QObject::connect(&converter, SIGNAL(rawStreamFinished()), get, SLOT(slotRawStreamFinished()));
+
+    converter.start();
+
+    app.exec();
 }
-

@@ -10,24 +10,25 @@
 
 using namespace KABC;
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KAboutData aboutData("testdb","TestKabcDB","0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
+    KAboutData aboutData("testdb", "TestKabcDB", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-//  KApplication app( false, false );
-  KApplication app;
+    //  KApplication app( false, false );
+    KApplication app;
 
-  AddressBook ab;
-  
-  ResourceSql r( &ab, "root", "kde4ever", "localhost" );
-  if ( ! r.open() ) {
-    kdDebug() << "Failed to open resource." << endl;
-  }
-  
-  r.load( &ab );
-  
-  r.close();
-  
-  ab.dump();
+    AddressBook ab;
+
+    ResourceSql r(&ab, "root", "kde4ever", "localhost");
+    if(!r.open())
+    {
+        kdDebug() << "Failed to open resource." << endl;
+    }
+
+    r.load(&ab);
+
+    r.close();
+
+    ab.dump();
 }

@@ -28,28 +28,29 @@ class QPainter;
 #include <qfont.h>
 
 
+namespace khtml {
+class RenderObject;
+const QRgb transparentColor = 0x00000000;
+const QRgb invertedColor = 0x00000002;
 
-namespace khtml
+extern QPainter *printpainter;
+void setPrintPainter(QPainter *printer);
+
+bool hasSufficientContrast(const QColor &c1, const QColor &c2);
+QColor retrieveBackgroundColor(const RenderObject *obj);
+QRgb qRgbaFromHsla(double h, double s, double l, double a);
+
+// enumerator for findSelectionNode
+enum FindSelectionResult
 {
-    class RenderObject;
-     const QRgb transparentColor = 0x00000000;
-     const QRgb invertedColor    = 0x00000002;
-
-    extern QPainter *printpainter;
-    void setPrintPainter( QPainter *printer );
-    
-    bool hasSufficientContrast(const QColor &c1, const QColor &c2);
-    QColor retrieveBackgroundColor(const RenderObject *obj);
-    QRgb qRgbaFromHsla(double h, double s, double l, double a);
-
-    //enumerator for findSelectionNode
-    enum FindSelectionResult { SelectionPointBefore,
-			       SelectionPointAfter,
-			       SelectionPointInside,
-			       // the next two are only used inside one line in RenderText
-			       // to get BiDi contexts right.
-			       SelectionPointBeforeInLine,
-			       SelectionPointAfterInLine };
+    SelectionPointBefore,
+    SelectionPointAfter,
+    SelectionPointInside,
+    // the next two are only used inside one line in RenderText
+    // to get BiDi contexts right.
+    SelectionPointBeforeInLine,
+    SelectionPointAfterInLine
+};
 }
 
 #endif

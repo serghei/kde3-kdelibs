@@ -35,21 +35,21 @@ class KHTMLSettingsPrivate;
 /**
  * Settings for the HTML view.
  */
-class KHTML_EXPORT KHTMLSettings
-{
+class KHTML_EXPORT KHTMLSettings {
 public:
-
     /**
      * This enum specifies whether Java/JavaScript execution is allowed.
      */
-    enum KJavaScriptAdvice {
-	KJavaScriptDunno=0,
-	KJavaScriptAccept,
-	KJavaScriptReject
+    enum KJavaScriptAdvice
+    {
+        KJavaScriptDunno = 0,
+        KJavaScriptAccept,
+        KJavaScriptReject
     };
 
-    enum KAnimationAdvice {
-        KAnimationDisabled=0,
+    enum KAnimationAdvice
+    {
+        KAnimationDisabled = 0,
         KAnimationLoopOnce,
         KAnimationEnabled
     };
@@ -57,43 +57,48 @@ public:
     /**
      * This enum specifies the policy for window.open
      */
-    enum KJSWindowOpenPolicy {
-    	KJSWindowOpenAllow=0,
-    	KJSWindowOpenAsk,
-    	KJSWindowOpenDeny,
-    	KJSWindowOpenSmart
+    enum KJSWindowOpenPolicy
+    {
+        KJSWindowOpenAllow = 0,
+        KJSWindowOpenAsk,
+        KJSWindowOpenDeny,
+        KJSWindowOpenSmart
     };
 
     /**
      * This enum specifies the policy for window.status and .defaultStatus
      */
-    enum KJSWindowStatusPolicy {
-    	KJSWindowStatusAllow=0,
-    	KJSWindowStatusIgnore
+    enum KJSWindowStatusPolicy
+    {
+        KJSWindowStatusAllow = 0,
+        KJSWindowStatusIgnore
     };
 
     /**
      * This enum specifies the policy for window.moveBy and .moveTo
      */
-    enum KJSWindowMovePolicy {
-    	KJSWindowMoveAllow=0,
-    	KJSWindowMoveIgnore
+    enum KJSWindowMovePolicy
+    {
+        KJSWindowMoveAllow = 0,
+        KJSWindowMoveIgnore
     };
 
     /**
      * This enum specifies the policy for window.resizeBy and .resizeTo
      */
-    enum KJSWindowResizePolicy {
-    	KJSWindowResizeAllow=0,
-    	KJSWindowResizeIgnore
+    enum KJSWindowResizePolicy
+    {
+        KJSWindowResizeAllow = 0,
+        KJSWindowResizeIgnore
     };
 
     /**
      * This enum specifies the policy for window.focus
      */
-    enum KJSWindowFocusPolicy {
-    	KJSWindowFocusAllow=0,
-    	KJSWindowFocusIgnore
+    enum KJSWindowFocusPolicy
+    {
+        KJSWindowFocusAllow = 0,
+        KJSWindowFocusIgnore
     };
 
     /**
@@ -112,7 +117,7 @@ public:
      * @param reset if true, settings are always set; if false,
      *  settings are only set if the config file has a corresponding key.
      */
-    void init( KConfig * config, bool reset = true );
+    void init(KConfig *config, bool reset = true);
 
     /**
      * Destructor. Don't delete any instance by yourself.
@@ -150,10 +155,10 @@ public:
     bool followSystemColors() const;
 
     // Color settings
-    const QColor& textColor() const;
-    const QColor& baseColor() const;
-    const QColor& linkColor() const;
-    const QColor& vLinkColor() const;
+    const QColor &textColor() const;
+    const QColor &baseColor() const;
+    const QColor &linkColor() const;
+    const QColor &vLinkColor() const;
 
     // Autoload images
     bool autoLoadImages() const;
@@ -164,32 +169,31 @@ public:
 
     // Java and JavaScript
     // ### BIC make these const
-    bool isJavaEnabled( const QString& hostname = QString::null );
-    bool isJavaScriptEnabled( const QString& hostname = QString::null );
-    bool isJavaScriptDebugEnabled( const QString& hostname = QString::null );
-    bool isJavaScriptErrorReportingEnabled( const QString& hostname = QString::null ) const;
-    bool isPluginsEnabled( const QString& hostname = QString::null );
+    bool isJavaEnabled(const QString &hostname = QString::null);
+    bool isJavaScriptEnabled(const QString &hostname = QString::null);
+    bool isJavaScriptDebugEnabled(const QString &hostname = QString::null);
+    bool isJavaScriptErrorReportingEnabled(const QString &hostname = QString::null) const;
+    bool isPluginsEnabled(const QString &hostname = QString::null);
 
     // AdBlocK Filtering
-    bool isAdFiltered( const QString &url ) const;
+    bool isAdFiltered(const QString &url) const;
     bool isAdFilterEnabled() const;
     bool isHideAdsEnabled() const;
-    void addAdFilter( const QString &url );
+    void addAdFilter(const QString &url);
 
     // Access Keys
     bool accessKeysEnabled() const;
 
-    KJSWindowOpenPolicy windowOpenPolicy( const QString& hostname = QString::null ) const;
-    KJSWindowMovePolicy windowMovePolicy( const QString& hostname = QString::null ) const;
-    KJSWindowResizePolicy windowResizePolicy( const QString& hostname = QString::null ) const;
-    KJSWindowStatusPolicy windowStatusPolicy( const QString& hostname = QString::null ) const;
-    KJSWindowFocusPolicy windowFocusPolicy( const QString& hostname = QString::null ) const;
+    KJSWindowOpenPolicy windowOpenPolicy(const QString &hostname = QString::null) const;
+    KJSWindowMovePolicy windowMovePolicy(const QString &hostname = QString::null) const;
+    KJSWindowResizePolicy windowResizePolicy(const QString &hostname = QString::null) const;
+    KJSWindowStatusPolicy windowStatusPolicy(const QString &hostname = QString::null) const;
+    KJSWindowFocusPolicy windowFocusPolicy(const QString &hostname = QString::null) const;
 
     // helpers for parsing domain-specific configuration, used in KControl module as well
-    static KJavaScriptAdvice strToAdvice(const QString& _str);
-    static void splitDomainAdvice(const QString& configStr, QString &domain,
-				  KJavaScriptAdvice &javaAdvice, KJavaScriptAdvice& javaScriptAdvice);
-    static const char* adviceToStr(KJavaScriptAdvice _advice);
+    static KJavaScriptAdvice strToAdvice(const QString &_str);
+    static void splitDomainAdvice(const QString &configStr, QString &domain, KJavaScriptAdvice &javaAdvice, KJavaScriptAdvice &javaScriptAdvice);
+    static const char *adviceToStr(KJavaScriptAdvice _advice);
 
     /** reads from @p config's current group, forcing initialization
       * if @p reset is true.
@@ -199,8 +203,7 @@ public:
       * @param pd_settings will be initialised with the computed (inherited)
       *		settings.
       */
-    void readDomainSettings(KConfig *config, bool reset,
-			bool global, KPerDomainSettings &pd_settings);
+    void readDomainSettings(KConfig *config, bool reset, bool global, KPerDomainSettings &pd_settings);
 
     QString settingsToCSS() const;
     static const QString &availableFamilies();
@@ -212,7 +215,7 @@ public:
     int maxFormCompletionItems() const;
 
     // Meta refresh/redirect (http-equiv)
-    bool isAutoDelayedActionsEnabled () const;
+    bool isAutoDelayedActionsEnabled() const;
 
     QValueList< QPair< QString, QChar > > fallbackAccessKeysAssignments() const;
 

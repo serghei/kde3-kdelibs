@@ -27,87 +27,86 @@
 #include "kprotocolinfofactory.h"
 
 
-KProtocolInfoFactory* KProtocolInfoFactory::_self = 0;
+KProtocolInfoFactory *KProtocolInfoFactory::_self = 0;
 
-KProtocolInfoFactory::KProtocolInfoFactory() : KSycocaFactory( KST_KProtocolInfoFactory )
+KProtocolInfoFactory::KProtocolInfoFactory() : KSycocaFactory(KST_KProtocolInfoFactory)
 {
-  _self = this;
+    _self = this;
 }
 
 KProtocolInfoFactory::~KProtocolInfoFactory()
 {
-  _self = 0;
+    _self = 0;
 }
 
 
-KProtocolInfo*
-KProtocolInfoFactory::createEntry(int offset)
+KProtocolInfo *KProtocolInfoFactory::createEntry(int offset)
 {
-   KProtocolInfo *info = 0;
-   KSycocaType type;
-   QDataStream *str = KSycoca::self()->findEntry(offset, type);
-   switch (type)
-   {
-     case KST_KProtocolInfo:
-       info = new KProtocolInfo(*str, offset);
-       break;
-     default:
-       return 0;
-   }
-   if (!info->isValid())
-   {
-      delete info;
-      info = 0;
-   }
-   return info;
+    KProtocolInfo *info = 0;
+    KSycocaType type;
+    QDataStream *str = KSycoca::self()->findEntry(offset, type);
+    switch(type)
+    {
+        case KST_KProtocolInfo:
+            info = new KProtocolInfo(*str, offset);
+            break;
+        default:
+            return 0;
+    }
+    if(!info->isValid())
+    {
+        delete info;
+        info = 0;
+    }
+    return info;
 }
 
 
 QStringList KProtocolInfoFactory::protocols()
 {
-  QStringList res;
+    QStringList res;
 
-  KSycocaEntry::List list = allEntries();
-  for( KSycocaEntry::List::Iterator it = list.begin();
-       it != list.end();
-       ++it)
-  {
-     KSycocaEntry *entry = (*it).data();
-     KProtocolInfo *info = static_cast<KProtocolInfo *>(entry);
+    KSycocaEntry::List list = allEntries();
+    for(KSycocaEntry::List::Iterator it = list.begin(); it != list.end(); ++it)
+    {
+        KSycocaEntry *entry = (*it).data();
+        KProtocolInfo *info = static_cast< KProtocolInfo * >(entry);
 
-     res.append( info->name() );
-  }
+        res.append(info->name());
+    }
 
-  return res;
+    return res;
 }
 
-KProtocolInfo *
-KProtocolInfoFactory::findProtocol(const QString &protocol)
+KProtocolInfo *KProtocolInfoFactory::findProtocol(const QString &protocol)
 {
-  if (!m_sycocaDict) return 0; // Error!
+    if(!m_sycocaDict)
+        return 0; // Error!
 
-  QMap<QString,KProtocolInfo::Ptr>::iterator it = m_cache.find(protocol);
-  if (it != m_cache.end())
-     return (*it);
+    QMap< QString, KProtocolInfo::Ptr >::iterator it = m_cache.find(protocol);
+    if(it != m_cache.end())
+        return (*it);
 
-  int offset;
+    int offset;
 
-  offset = m_sycocaDict->find_string( protocol );
+    offset = m_sycocaDict->find_string(protocol);
 
-  if (!offset) return 0; // Not found;
+    if(!offset)
+        return 0; // Not found;
 
-  KProtocolInfo *info = createEntry(offset);
+    KProtocolInfo *info = createEntry(offset);
 
-  if (info && (info->name() != protocol))
-  {
-     // No it wasn't...
-     delete info;
-     info = 0; // Not found
-  }
-  m_cache.insert(protocol,info);
-  return info;
+    if(info && (info->name() != protocol))
+    {
+        // No it wasn't...
+        delete info;
+        info = 0; // Not found
+    }
+    m_cache.insert(protocol, info);
+    return info;
 }
 
-void KProtocolInfoFactory::virtual_hook( int id, void* data )
-{ KSycocaFactory::virtual_hook( id, data ); }
-
+void KProtocolInfoFactory::virtual_hook(int id, void *data)
+{
+    KSycocaFactory::virtual_hook(id, data);
+}

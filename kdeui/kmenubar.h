@@ -39,14 +39,12 @@
  * @version $Id: kmenubar.h 465272 2005-09-29 09:47:40Z mueller $
 */
 
-class KDEUI_EXPORT KMenuBar : public QMenuBar
-{
+class KDEUI_EXPORT KMenuBar : public QMenuBar {
     Q_OBJECT
 
 public:
-
-    KMenuBar (QWidget *parent=0, const char *name=0);
-    ~KMenuBar ();
+    KMenuBar(QWidget *parent = 0, const char *name = 0);
+    ~KMenuBar();
 
     /**
      * This controls whether or not this menubar will be a top-level
@@ -75,37 +73,44 @@ public:
     bool isTopLevelMenu() const;
 
     // TT are overloading virtuals :(
-    virtual void setGeometry( const QRect &r );
-    virtual void setGeometry( int x, int y, int w, int h );
-    virtual void resize( int w, int h );
-    void resize( const QSize& s ) { QMenuBar::resize( s ); }
+    virtual void setGeometry(const QRect &r);
+    virtual void setGeometry(int x, int y, int w, int h);
+    virtual void resize(int w, int h);
+    void resize(const QSize &s)
+    {
+        QMenuBar::resize(s);
+    }
 
     virtual void show();
-    virtual void setFrameStyle( int );
-    virtual void setLineWidth( int );
-    virtual void setMargin( int );
+    virtual void setFrameStyle(int);
+    virtual void setLineWidth(int);
+    virtual void setMargin(int);
     virtual QSize sizeHint() const;
 protected slots:
     void slotReadConfig();
+
 protected:
-    virtual void showEvent( QShowEvent* );
-    virtual void resizeEvent( QResizeEvent* );
+    virtual void showEvent(QShowEvent *);
+    virtual void resizeEvent(QResizeEvent *);
     virtual bool eventFilter(QObject *, QEvent *);
 #ifdef Q_WS_X11
-    virtual bool x11Event( XEvent* );
+    virtual bool x11Event(XEvent *);
 #endif
-    virtual void closeEvent( QCloseEvent* );
-    virtual void drawContents( QPainter* );
+    virtual void closeEvent(QCloseEvent *);
+    virtual void drawContents(QPainter *);
 private slots:
     void updateFallbackSize();
     void selectionTimeout();
+
 private:
     void setTopLevelMenuInternal(bool top_level);
     void updateMenuBarSize();
-    void checkSize( int& w, int& h );
+    void checkSize(int &w, int &h);
     static int block_resize;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KMenuBarPrivate;
     KMenuBarPrivate *d;

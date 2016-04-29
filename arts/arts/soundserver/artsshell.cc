@@ -130,7 +130,8 @@ const char *filename = 0;
 
 using namespace std;
 
-const char* commandsmessage = "\
+const char *commandsmessage =
+    "\
 Commands:\n\
   suspend             - suspend sound server\n\
   status              - display sound server status information\n\
@@ -158,514 +159,533 @@ Commands:\n\
 
 void help()
 {
-	cout << commandsmessage << endl;
+    cout << commandsmessage << endl;
 }
 
 // Display command usage and exit
 void usage()
 {
-	cerr <<
-"usage: artsshell [options] <command> [command-options]\n\
+    cerr << "usage: artsshell [options] <command> [command-options]\n\
 \n\
 Options:\n\
   -q                  - suppress all output\n\
   -h                  - display command usage\n\
   -v                  - show version\n\
-  -f <filename>       - execute commands from <filename>\n\n" << commandsmessage << endl;
-	exit(0);
+  -f <filename>       - execute commands from <filename>\n\n"
+         << commandsmessage << endl;
+    exit(0);
 }
 
 // Parse command line options
 void parseOptions(int argc, char **argv)
 {
-	int optch;
+    int optch;
 
-	if (argc == 0)
-		usage();
+    if(argc == 0)
+        usage();
 
-	while((optch = getopt(argc, argv, "qhvf:1234567890")) > 0)
-	{
-		switch(optch)
-		{
-		  case 'q': quiet = true;
-			  break;
-		  case 'v':
-			  printf("artsshell %s\n", ARTS_VERSION);
-			  exit(0);
-			  break;
-		  case 'h':
-			  usage();
-			  break;
-		  case 'f':
-			  filename = optarg;
-			  break;
-		  case '1':
-		  case '2':
-		  case '3':
-		  case '4':
-		  case '5':
-		  case '6':
-		  case '7':
-		  case '8':
-		  case '9':
-		  case '0':
-			  break;
-		  default:
-			  usage();
-			  break;
-		}
-	}
+    while((optch = getopt(argc, argv, "qhvf:1234567890")) > 0)
+    {
+        switch(optch)
+        {
+            case 'q':
+                quiet = true;
+                break;
+            case 'v':
+                printf("artsshell %s\n", ARTS_VERSION);
+                exit(0);
+                break;
+            case 'h':
+                usage();
+                break;
+            case 'f':
+                filename = optarg;
+                break;
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+            case '0':
+                break;
+            default:
+                usage();
+                break;
+        }
+    }
 }
 
 
 // Suspend sound server, if possible
 int suspend(Arts::SoundServer server)
 {
-	switch (server.secondsUntilSuspend())
-	{
-	  case 0:
-		  if (!quiet)
-			  cerr << "sound server was already suspended"  << endl;
-		  return 0;
-		  break;
-		  
-	  case -1:
-		  if (!quiet)
-			  cerr << "sound server is busy"  << endl;
-		  return 2;
-		  break;
+    switch(server.secondsUntilSuspend())
+    {
+        case 0:
+            if(!quiet)
+                cerr << "sound server was already suspended" << endl;
+            return 0;
+            break;
 
-	  default:
-		  if (server.suspend() == true)
-		  {
-			  if (!quiet)
-				  cerr << "sound server suspended"  << endl;
-			  return 0;
-		  } else {
-			  if (!quiet)
-				  cerr << "unable to suspend sound server" << endl;
-			  return 2;
-		  }
-	}
-	return 0;
+        case -1:
+            if(!quiet)
+                cerr << "sound server is busy" << endl;
+            return 2;
+            break;
+
+        default:
+            if(server.suspend() == true)
+            {
+                if(!quiet)
+                    cerr << "sound server suspended" << endl;
+                return 0;
+            }
+            else
+            {
+                if(!quiet)
+                    cerr << "unable to suspend sound server" << endl;
+                return 2;
+            }
+    }
+    return 0;
 }
 
 
 // Display server status information
 void status(Arts::SoundServerV2 server)
 {
-	Arts::RealtimeStatus rtStatus = server.realtimeStatus();
-	long seconds = server.secondsUntilSuspend();
+    Arts::RealtimeStatus rtStatus = server.realtimeStatus();
+    long seconds = server.secondsUntilSuspend();
 
-	cout << "server status: ";
-	switch (seconds)
-	{
-	  case -1:
-		  cout << "busy" << endl;
-		  break;
-	  case 0:
-		  cout << "suspended" << endl;
-		  break;
-	  case -2:
-		  cout << "running, autosuspend disabled" << endl;
-		  break;
-	  default:
-		  cout << "running, will suspend in " << seconds << " s" << endl;
-	}
+    cout << "server status: ";
+    switch(seconds)
+    {
+        case -1:
+            cout << "busy" << endl;
+            break;
+        case 0:
+            cout << "suspended" << endl;
+            break;
+        case -2:
+            cout << "running, autosuspend disabled" << endl;
+            break;
+        default:
+            cout << "running, will suspend in " << seconds << " s" << endl;
+    }
 
-	cout << "real-time status: ";
-	switch (rtStatus)
-	{
-	  case Arts::rtRealtime:
-		  cout << "real-time" << endl;
-		  break;
-	  case Arts::rtNoSupport:
-		  cout << "no real-time support" << endl;
-		  break;
-	  case Arts::rtNoWrapper:
-		  cout << "not started through real-time wrapper" << endl;
-		  break;
-	  case Arts::rtNoRealtime:
-		  cout << "not real-time" << endl;
-		  break;
-	  default:
-		  cout << "unknown" << endl;
-		  break;
-	}
+    cout << "real-time status: ";
+    switch(rtStatus)
+    {
+        case Arts::rtRealtime:
+            cout << "real-time" << endl;
+            break;
+        case Arts::rtNoSupport:
+            cout << "no real-time support" << endl;
+            break;
+        case Arts::rtNoWrapper:
+            cout << "not started through real-time wrapper" << endl;
+            break;
+        case Arts::rtNoRealtime:
+            cout << "not real-time" << endl;
+            break;
+        default:
+            cout << "unknown" << endl;
+            break;
+    }
 
-	cout << "server buffer time: " << server.serverBufferTime() << " ms" << endl;
-	cout << "buffer size multiplier: " << server.bufferSizeMultiplier() << endl;
-	cout << "minimum stream buffer time: " << server.minStreamBufferTime() << " ms" << endl;
-	cout << "auto suspend time: " << server.autoSuspendSeconds() << " s" << endl;
-	cout << "audio method: " << server.audioMethod() << endl;
-	cout << "sampling rate: " << server.samplingRate() << endl;
-	cout << "channels: " << server.channels() << endl;
-	cout << "sample size: " << server.bits() << " bits" << endl;
+    cout << "server buffer time: " << server.serverBufferTime() << " ms" << endl;
+    cout << "buffer size multiplier: " << server.bufferSizeMultiplier() << endl;
+    cout << "minimum stream buffer time: " << server.minStreamBufferTime() << " ms" << endl;
+    cout << "auto suspend time: " << server.autoSuspendSeconds() << " s" << endl;
+    cout << "audio method: " << server.audioMethod() << endl;
+    cout << "sampling rate: " << server.samplingRate() << endl;
+    cout << "channels: " << server.channels() << endl;
+    cout << "sample size: " << server.bits() << " bits" << endl;
 
-	if (server.fullDuplex())
-		cout << "duplex: full" << endl;
-	else
-		cout << "duplex: half" << endl;
-	cout << "device: " << server.audioDevice() << endl;
-	cout << "fragments: " << server.fragments() << endl;
-	cout << "fragment size: " << server.fragmentSize() << endl;
+    if(server.fullDuplex())
+        cout << "duplex: full" << endl;
+    else
+        cout << "duplex: half" << endl;
+    cout << "device: " << server.audioDevice() << endl;
+    cout << "fragments: " << server.fragments() << endl;
+    cout << "fragment size: " << server.fragmentSize() << endl;
 }
 
 // terminate the sound server
 void terminate(Arts::SoundServer server)
 {
-	if(server.terminate())
-	{
-		cout << "sound server terminated" << endl;
-		return;
-	}
-	else
-	{
-		cout << "there were problems terminating the sound server" << endl;
-		return;
-	}
+    if(server.terminate())
+    {
+        cout << "sound server terminated" << endl;
+        return;
+    }
+    else
+    {
+        cout << "there were problems terminating the sound server" << endl;
+        return;
+    }
 }
 
 
 // set autosuspend time
 void autosuspend(Arts::SoundServerV2 server, int secs)
 {
-	server.autoSuspendSeconds(secs);
+    server.autoSuspendSeconds(secs);
 }
 
 // set network buffers size
 void networkBuffers(Arts::SoundServerV2 server, int n)
 {
-	if (n > 0)
-		server.bufferSizeMultiplier(n);
+    if(n > 0)
+        server.bufferSizeMultiplier(n);
 }
 
 // set the output volume
 void setVolume(Arts::SoundServerV2 server, float volume)
 {
-	server.outVolume().scaleFactor(volume);
+    server.outVolume().scaleFactor(volume);
 }
 
 // return the output volume
 float getVolume(Arts::SoundServerV2 server)
 {
-	return server.outVolume().scaleFactor();
+    return server.outVolume().scaleFactor();
 }
 
 // set the output volume in dB
-void setDecibelVolume( Arts::SoundServerV2 server, float volume )
+void setDecibelVolume(Arts::SoundServerV2 server, float volume)
 {
-	setVolume( server, pow( 10, volume/20 ) );
+    setVolume(server, pow(10, volume / 20));
 }
 
 // get the output volume in dB
-float getDecibelVolume( Arts::SoundServerV2 server )
+float getDecibelVolume(Arts::SoundServerV2 server)
 {
-	return 20*log10( getVolume( server ) );
+    return 20 * log10(getVolume(server));
 }
 
 // stereoeffect command
 void stereoEffect(Arts::SoundServerV2 server, int argc, char **argv)
 {
-	// stereoeffect list
-	if (!strcmp(argv[0], "list"))
-	{
-		Arts::TraderQuery query = Arts::DynamicCast( server.createObject( "Arts::TraderQuery" ) );
-		if( query.isNull() )
-		{
-			cerr << "unable to create a query" << endl;
-			return;
-		}
-		query.supports("Interface", "Arts::StereoEffect");
-		vector<Arts::TraderOffer> *offers = query.query();
-		vector<Arts::TraderOffer>::iterator i;
-		for (i = offers->begin(); i != offers->end(); i++)
-			cout << i->interfaceName() << endl;
-		delete offers;
-		return;
-	}
+    // stereoeffect list
+    if(!strcmp(argv[0], "list"))
+    {
+        Arts::TraderQuery query = Arts::DynamicCast(server.createObject("Arts::TraderQuery"));
+        if(query.isNull())
+        {
+            cerr << "unable to create a query" << endl;
+            return;
+        }
+        query.supports("Interface", "Arts::StereoEffect");
+        vector< Arts::TraderOffer > *offers = query.query();
+        vector< Arts::TraderOffer >::iterator i;
+        for(i = offers->begin(); i != offers->end(); i++)
+            cout << i->interfaceName() << endl;
+        delete offers;
+        return;
+    }
 
-	// stereoeffect insert [top|bottom] <module name>
-	if (!strcmp(argv[0], "insert"))
-	{
-		if (argc < 2 || argc > 3)
-		{
-			cerr << "invalid arguments" << endl;
-			return;
-		}
+    // stereoeffect insert [top|bottom] <module name>
+    if(!strcmp(argv[0], "insert"))
+    {
+        if(argc < 2 || argc > 3)
+        {
+            cerr << "invalid arguments" << endl;
+            return;
+        }
 
-		bool bottom = true;
-		if (argc == 3)
-		{
-			if (!strcmp(argv[1], "bottom"))
-				bottom = true;
-			else if (!strcmp(argv[1], "top"))
-				bottom = false;
-			else
-			{
-				cerr << "invalid arguments" << endl;
-				return;
-			}
-		}
+        bool bottom = true;
+        if(argc == 3)
+        {
+            if(!strcmp(argv[1], "bottom"))
+                bottom = true;
+            else if(!strcmp(argv[1], "top"))
+                bottom = false;
+            else
+            {
+                cerr << "invalid arguments" << endl;
+                return;
+            }
+        }
 
-		char *name;
-		if (argc == 2)
-			name = argv[1];
-		else
-			name = argv[2];
+        char *name;
+        if(argc == 2)
+            name = argv[1];
+        else
+            name = argv[2];
 
-		// first check if the interface exists using the Trader
-		Arts::TraderQuery query = Arts::DynamicCast( server.createObject( "Arts::TraderQuery" ) );
-		if( query.isNull() )
-		{
-			cerr << "unable to create a query" << endl;
-			return;
-		}
-		query.supports("Interface", name);
-		vector<Arts::TraderOffer> *offers = query.query();
-		if (offers->empty())
-		{
-			cerr << "no such interface: " << name << endl;
-			delete offers;
-			return;
-		}
-		delete offers;
+        // first check if the interface exists using the Trader
+        Arts::TraderQuery query = Arts::DynamicCast(server.createObject("Arts::TraderQuery"));
+        if(query.isNull())
+        {
+            cerr << "unable to create a query" << endl;
+            return;
+        }
+        query.supports("Interface", name);
+        vector< Arts::TraderOffer > *offers = query.query();
+        if(offers->empty())
+        {
+            cerr << "no such interface: " << name << endl;
+            delete offers;
+            return;
+        }
+        delete offers;
 
-		Arts::Object obj = (server.createObject(name));
-		if (obj.isNull())
-		{
-			cerr << "unable to create: " << name << endl;
-			return;
-		}
-		Arts::StereoEffect effect = Arts::DynamicCast(obj);
-		if (effect.isNull())
-		{
-			cerr << "unable to load effect: " << name << endl;
-			return;
-		}
-		effect.start();
-		Arts::StereoEffectStack effectstack = server.outstack();
-		long id;
-		if (bottom)
-			id = effectstack.insertBottom(effect, name);
-		else
-			id = effectstack.insertTop(effect, name);
-		cout << id << endl;
-		return;
-	}
+        Arts::Object obj = (server.createObject(name));
+        if(obj.isNull())
+        {
+            cerr << "unable to create: " << name << endl;
+            return;
+        }
+        Arts::StereoEffect effect = Arts::DynamicCast(obj);
+        if(effect.isNull())
+        {
+            cerr << "unable to load effect: " << name << endl;
+            return;
+        }
+        effect.start();
+        Arts::StereoEffectStack effectstack = server.outstack();
+        long id;
+        if(bottom)
+            id = effectstack.insertBottom(effect, name);
+        else
+            id = effectstack.insertTop(effect, name);
+        cout << id << endl;
+        return;
+    }
 
-	// stereoeffect remove <id>
-	if (!strcmp(argv[0], "remove"))
-	{
-		if (argc != 2)
-		{
-			cerr << "invalid arguments" << endl;
-			return;
-		}
-		Arts::StereoEffectStack effectstack = server.outstack();
-		long id = atoi(argv[1]);
-		effectstack.remove(id);
-		return;
-	}
+    // stereoeffect remove <id>
+    if(!strcmp(argv[0], "remove"))
+    {
+        if(argc != 2)
+        {
+            cerr << "invalid arguments" << endl;
+            return;
+        }
+        Arts::StereoEffectStack effectstack = server.outstack();
+        long id = atoi(argv[1]);
+        effectstack.remove(id);
+        return;
+    }
 
-	cerr << "invalid arguments" << endl;
+    cerr << "invalid arguments" << endl;
 }
 
 // traderquery command
 void traderQuery(Arts::SoundServerV2 server, int argc, char **argv)
 {
-	Arts::TraderQuery query = Arts::DynamicCast( server.createObject( "Arts::TraderQuery" ) );
-	if( query.isNull() )
-	{
-		cerr << "unable to create a query" << endl;
-		return;
-	}
+    Arts::TraderQuery query = Arts::DynamicCast(server.createObject("Arts::TraderQuery"));
+    if(query.isNull())
+    {
+        cerr << "unable to create a query" << endl;
+        return;
+    }
 
-	for(int i=0;i<argc;i++)
-	{
-		char *buffer = strdup(argv[i]);
-		char *key = strtok(buffer,"=");
-		char *value = strtok(0,"\n");
+    for(int i = 0; i < argc; i++)
+    {
+        char *buffer = strdup(argv[i]);
+        char *key = strtok(buffer, "=");
+        char *value = strtok(0, "\n");
 
-		query.supports(key, value);
-	}
-	vector<Arts::TraderOffer> *offers = query.query();
-	vector<Arts::TraderOffer>::iterator i;
-	for (i = offers->begin(); i != offers->end(); i++)
-		cout << i->interfaceName() << endl;
-	delete offers;
+        query.supports(key, value);
+    }
+    vector< Arts::TraderOffer > *offers = query.query();
+    vector< Arts::TraderOffer >::iterator i;
+    for(i = offers->begin(); i != offers->end(); i++)
+        cout << i->interfaceName() << endl;
+    delete offers;
 }
 
 // tradercheck command
 void traderCheck()
 {
-	Arts::TraderCheck check;
-	check.run();
+    Arts::TraderCheck check;
+    check.run();
 }
 
 void version()
 {
-	cout << "aRts version " << ARTS_VERSION << endl;
+    cout << "aRts version " << ARTS_VERSION << endl;
 }
 
 int executeCommand(Arts::SoundServerV2 server, int argc, char **argv)
 {
-	if (!strcmp(argv[0], "help") || !strcmp(argv[0], "?")) {
-		help();
-		return 0;
-	}
+    if(!strcmp(argv[0], "help") || !strcmp(argv[0], "?"))
+    {
+        help();
+        return 0;
+    }
 
-	if (!strcmp(argv[0], "version")) {
-		version();
-		return 0;
-	}
+    if(!strcmp(argv[0], "version"))
+    {
+        version();
+        return 0;
+    }
 
-	if (!strcmp(argv[0], "suspend")) {
-		suspend(server);
-		return 0;
-	}
+    if(!strcmp(argv[0], "suspend"))
+    {
+        suspend(server);
+        return 0;
+    }
 
-	if (!strcmp(argv[0], "status")) {
-		status(server);
-		return 0;
-	}
+    if(!strcmp(argv[0], "status"))
+    {
+        status(server);
+        return 0;
+    }
 
-	if(!strcmp(argv[0], "terminate")) {
-		terminate(server);
-		return 0;
-	}
+    if(!strcmp(argv[0], "terminate"))
+    {
+        terminate(server);
+        return 0;
+    }
 
-	if(!strcmp(argv[0], "volume") && (argc == 2)) {
-		setVolume(server,atof(argv[1]));
-		return 0;
-	}
-	if(!strcmp(argv[0], "volume") && (argc == 1)) {
-		cout << getVolume(server) << endl;;
-		return 0;
-	}
+    if(!strcmp(argv[0], "volume") && (argc == 2))
+    {
+        setVolume(server, atof(argv[1]));
+        return 0;
+    }
+    if(!strcmp(argv[0], "volume") && (argc == 1))
+    {
+        cout << getVolume(server) << endl;
+        ;
+        return 0;
+    }
 
-	if ( !strcmp( argv[ 0 ],"volumedb" ) && ( argc==2 ) ) {
-		setDecibelVolume( server, atof( argv[ 1 ] ) );
-		return 0;
-	}
-	if ( !strcmp( argv[ 0 ],"volumedb" ) && ( argc==1 ) ) {
-		cout << getDecibelVolume( server ) << endl;
-		return 0;
-	}
+    if(!strcmp(argv[0], "volumedb") && (argc == 2))
+    {
+        setDecibelVolume(server, atof(argv[1]));
+        return 0;
+    }
+    if(!strcmp(argv[0], "volumedb") && (argc == 1))
+    {
+        cout << getDecibelVolume(server) << endl;
+        return 0;
+    }
 
-	if(!strcmp(argv[0], "cpuusage") && (argc == 1)) {
-		printf("%.1f\n",server.cpuUsage());
-		return 0;
-	}
+    if(!strcmp(argv[0], "cpuusage") && (argc == 1))
+    {
+        printf("%.1f\n", server.cpuUsage());
+        return 0;
+    }
 
 
-	if(!strcmp(argv[0], "autosuspend") && (argc == 2)) {
-		int secs = atoi(argv[1]);
-		autosuspend(server, secs);
-		return 0;
-	}
+    if(!strcmp(argv[0], "autosuspend") && (argc == 2))
+    {
+        int secs = atoi(argv[1]);
+        autosuspend(server, secs);
+        return 0;
+    }
 
-	if(!strcmp(argv[0], "networkbuffers") && (argc == 2)) {
-		int n = atoi(argv[1]);
-		networkBuffers(server, n);
-		return 0;
-	}
+    if(!strcmp(argv[0], "networkbuffers") && (argc == 2))
+    {
+        int n = atoi(argv[1]);
+        networkBuffers(server, n);
+        return 0;
+    }
 
-	if(!strcmp(argv[0], "stereoeffect") && (argc >= 2)) {
-		stereoEffect(server, argc-1, &argv[1]);
-		return 0;
-	}
+    if(!strcmp(argv[0], "stereoeffect") && (argc >= 2))
+    {
+        stereoEffect(server, argc - 1, &argv[1]);
+        return 0;
+    }
 
-	if(!strcmp(argv[0], "traderquery")) {
-		traderQuery(server, argc-1, &argv[1]);
-		return 0;
-	}
+    if(!strcmp(argv[0], "traderquery"))
+    {
+        traderQuery(server, argc - 1, &argv[1]);
+        return 0;
+    }
 
-	if(!strcmp(argv[0], "tradercheck")) {
-		traderCheck();
-		return 0;
-	}
+    if(!strcmp(argv[0], "tradercheck"))
+    {
+        traderCheck();
+        return 0;
+    }
 
-	return -1;
+    return -1;
 }
 
 int execute(Arts::SoundServerV2 server, const char *filename)
 {
-	char command[1024];
-	FILE *input = stdin;
-	bool prompt;
+    char command[1024];
+    FILE *input = stdin;
+    bool prompt;
 
-	if(filename)
-	{
-		input = fopen(filename,"r");
-		if(!input)
-		{
-			printf("can't open file '%s'\n", filename);
-			return 1;
-		}
-	}
+    if(filename)
+    {
+        input = fopen(filename, "r");
+        if(!input)
+        {
+            printf("can't open file '%s'\n", filename);
+            return 1;
+        }
+    }
 
-	prompt = isatty(fileno(input));
+    prompt = isatty(fileno(input));
 
-	if(prompt)
-	{
-		printf("> ");
-		fflush(stdout);
-	}
+    if(prompt)
+    {
+        printf("> ");
+        fflush(stdout);
+    }
 
-	while(fgets(command, 1024, input) != 0)
-	{
-		char **argv = 0;
-		int argc = 0;
-		while(char *arg = strtok(argc?0:command, " \t\n"))
-		{
-			argv = (char **)realloc(argv, sizeof(char *)*(argc+1));
-			argv[argc++] = arg;
-		}
-		if (argv != 0)
-		{
-			if (executeCommand(server, argc, argv) == -1)
-				cerr << "Invalid command, type 'help' for a list of commands." << endl;
-			free(argv);
-		}
+    while(fgets(command, 1024, input) != 0)
+    {
+        char **argv = 0;
+        int argc = 0;
+        while(char *arg = strtok(argc ? 0 : command, " \t\n"))
+        {
+            argv = (char **)realloc(argv, sizeof(char *) * (argc + 1));
+            argv[argc++] = arg;
+        }
+        if(argv != 0)
+        {
+            if(executeCommand(server, argc, argv) == -1)
+                cerr << "Invalid command, type 'help' for a list of commands." << endl;
+            free(argv);
+        }
 
-		if(prompt)
-		{
-			printf("> ");
-			fflush(stdout);
-		}
-	}
+        if(prompt)
+        {
+            printf("> ");
+            fflush(stdout);
+        }
+    }
 
-	if(prompt)
-		printf("\n");
-	
-	if(input != stdin)
-		fclose(input);
+    if(prompt)
+        printf("\n");
 
-	return 0;
+    if(input != stdin)
+        fclose(input);
+
+    return 0;
 }
 
 int main(int argc, char *argv[])
 {
-	Arts::Dispatcher dispatcher;
-	Arts::SoundServerV2 server(Arts::Reference("global:Arts_SoundServer"));
+    Arts::Dispatcher dispatcher;
+    Arts::SoundServerV2 server(Arts::Reference("global:Arts_SoundServer"));
 
-	parseOptions(argc, argv);
+    parseOptions(argc, argv);
 
-	if (server.isNull())
-	{
-		if (!quiet)
-			cerr << "unable to connect to sound server" << endl;
-		exit(1);
-	}
+    if(server.isNull())
+    {
+        if(!quiet)
+            cerr << "unable to connect to sound server" << endl;
+        exit(1);
+    }
 
-	if (argc == optind)
-		return execute (server, filename);
+    if(argc == optind)
+        return execute(server, filename);
 
-	if (executeCommand (server, argc-optind, &argv[optind]) == -1)
-		usage();
+    if(executeCommand(server, argc - optind, &argv[optind]) == -1)
+        usage();
 
-	return 0;
+    return 0;
 }
 
 // vim: sw=4 ts=4

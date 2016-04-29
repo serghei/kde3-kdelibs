@@ -33,24 +33,22 @@ namespace KABC {
   This interface should be reimplemented by classes which shall act as
   SortModes for KABC::AddresseeList.
 */
-class KABC_EXPORT SortMode
-{
-  public:
+class KABC_EXPORT SortMode {
+public:
     /**
       Reimplement this method and return whether the first contact is 'smaller'
       than the second.
      */
-    virtual bool lesser( const KABC::Addressee &first, const KABC::Addressee &second ) const = 0;
+    virtual bool lesser(const KABC::Addressee &first, const KABC::Addressee &second) const = 0;
 };
 
-class KABC_EXPORT NameSortMode : public SortMode
-{
-  public:
+class KABC_EXPORT NameSortMode : public SortMode {
+public:
     enum NameType
     {
-      FormattedName,
-      FamilyName,
-      GivenName
+        FormattedName,
+        FamilyName,
+        GivenName
     };
 
     /**
@@ -68,14 +66,14 @@ class KABC_EXPORT NameSortMode : public SortMode
       @param type The name type.
       @param ascending true for ascending sort, false for descending.
      */
-    NameSortMode( NameType type, bool ascending = true );
+    NameSortMode(NameType type, bool ascending = true);
 
     /**
       Returns whether the first contact is 'smaller' then the second.
      */
-    virtual bool lesser( const KABC::Addressee&, const KABC::Addressee& ) const;
+    virtual bool lesser(const KABC::Addressee &, const KABC::Addressee &) const;
 
-  private:
+private:
     NameType mNameType;
     bool mAscendingOrder;
 
@@ -83,9 +81,8 @@ class KABC_EXPORT NameSortMode : public SortMode
     NameSortModePrivate *d;
 };
 
-class KABC_EXPORT FieldSortMode : public SortMode
-{
-  public:
+class KABC_EXPORT FieldSortMode : public SortMode {
+public:
     /**
       Constructor.
 
@@ -94,21 +91,20 @@ class KABC_EXPORT FieldSortMode : public SortMode
       @param field The field.
       @param ascending true for ascending sort, false for descending.
      */
-    FieldSortMode( KABC::Field *field, bool ascending = true );
+    FieldSortMode(KABC::Field *field, bool ascending = true);
 
     /**
       Returns whether the first contact is 'smaller' then the second.
      */
-    virtual bool lesser( const KABC::Addressee&, const KABC::Addressee& ) const;
+    virtual bool lesser(const KABC::Addressee &, const KABC::Addressee &) const;
 
-  private:
+private:
     KABC::Field *mField;
     bool mAscendingOrder;
 
     class FieldSortModePrivate;
     FieldSortModePrivate *d;
 };
-
 }
 
 #endif

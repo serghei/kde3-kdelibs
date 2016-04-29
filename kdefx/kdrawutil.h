@@ -37,7 +37,7 @@
  * @c \#include @c <kdrawutil.h>
  *
  * Draws a Next-style button (solid black shadow with light and midlight highlight).
- * 
+ *
  * @param p       The painter to use for drawing the button.
  * @param r       Specifies the rect in which to draw the button.
  * @param g       Specifies the shading colors.
@@ -45,16 +45,13 @@
  * @param fill    The brush to use for filling the interior of the button.
  *                Pass @a null to prevent the button from being filled.
  */
-KDEFX_EXPORT void kDrawNextButton(QPainter *p, const QRect &r, const QColorGroup &g,
-                     bool sunken=false, const QBrush *fill=0);
+KDEFX_EXPORT void kDrawNextButton(QPainter *p, const QRect &r, const QColorGroup &g, bool sunken = false, const QBrush *fill = 0);
 
 /**
  * @relates KStyle
  * @overload
  */
-KDEFX_EXPORT void kDrawNextButton(QPainter *p, int x, int y, int w, int h,
-                     const QColorGroup &g, bool sunken=false, 
-                     const QBrush *fill=0);
+KDEFX_EXPORT void kDrawNextButton(QPainter *p, int x, int y, int w, int h, const QColorGroup &g, bool sunken = false, const QBrush *fill = 0);
 
 /**
  * @relates KStyle
@@ -69,17 +66,14 @@ KDEFX_EXPORT void kDrawNextButton(QPainter *p, int x, int y, int w, int h,
  * @param fill    The brush to use for filling the interior of the button.
  *                Pass @a null to prevent the button from being filled.
  */
-KDEFX_EXPORT void kDrawBeButton(QPainter *p, QRect &r, const QColorGroup &g,
-                   bool sunken=false, const QBrush *fill=0);
+KDEFX_EXPORT void kDrawBeButton(QPainter *p, QRect &r, const QColorGroup &g, bool sunken = false, const QBrush *fill = 0);
 
 /**
  * @relates KStyle
  * @c \#include @c <kdrawutil.h>
  * @overload
  */
-KDEFX_EXPORT void kDrawBeButton(QPainter *p, int x, int y, int w, int h,
-                   const QColorGroup &g, bool sunken=false, 
-                   const QBrush *fill=0);
+KDEFX_EXPORT void kDrawBeButton(QPainter *p, int x, int y, int w, int h, const QColorGroup &g, bool sunken = false, const QBrush *fill = 0);
 
 /**
  * @relates KStyle
@@ -93,15 +87,13 @@ KDEFX_EXPORT void kDrawBeButton(QPainter *p, int x, int y, int w, int h,
  * @param g       Specifies the shading colors.
  * @param sunken  Whether to draw the button as sunken (pressed) or not.
  */
-KDEFX_EXPORT void kDrawRoundButton(QPainter *p, const QRect &r, const QColorGroup &g,
-                      bool sunken=false);
+KDEFX_EXPORT void kDrawRoundButton(QPainter *p, const QRect &r, const QColorGroup &g, bool sunken = false);
 
 /**
  * @relates KStyle
  * @overload
  */
-KDEFX_EXPORT void kDrawRoundButton(QPainter *p, int x, int y, int w, int h,
-                      const QColorGroup &g, bool sunken=false);
+KDEFX_EXPORT void kDrawRoundButton(QPainter *p, int x, int y, int w, int h, const QColorGroup &g, bool sunken = false);
 
 /**
  * @relates KStyle
@@ -109,7 +101,7 @@ KDEFX_EXPORT void kDrawRoundButton(QPainter *p, int x, int y, int w, int h,
  *
  * Sets a region to the pixels covered by a round button of the given
  * size. You can use this to set clipping regions.
- * 
+ *
  * @param r  Reference to the region to set.
  * @param x  The X coordinate of the button.
  * @param y  The Y coordinate of the button.
@@ -135,7 +127,7 @@ KDEFX_EXPORT void kRoundMaskRegion(QRegion &r, int x, int y, int w, int h);
  * @param clear  Whether to clear the rectangle specified by @p (x, y, w, h) to
  *               Qt::color0 before drawing the mask.
  */
-KDEFX_EXPORT void kDrawRoundMask(QPainter *p, int x, int y, int w, int h, bool clear=false);
+KDEFX_EXPORT void kDrawRoundMask(QPainter *p, int x, int y, int w, int h, bool clear = false);
 
 /**
  * @relates KStyle
@@ -161,20 +153,16 @@ KDEFX_EXPORT void kDrawRoundMask(QPainter *p, int x, int y, int w, int h, bool c
  *
  * @see QColorGroup
  */
-KDEFX_EXPORT void kColorBitmaps(QPainter *p, const QColorGroup &g, int x, int y,
-                   QBitmap *lightColor=0, QBitmap *midColor=0,
-                   QBitmap *midlightColor=0, QBitmap *darkColor=0,
-                   QBitmap *blackColor=0, QBitmap *whiteColor=0);
+KDEFX_EXPORT void kColorBitmaps(QPainter *p, const QColorGroup &g, int x, int y, QBitmap *lightColor = 0, QBitmap *midColor = 0,
+                                QBitmap *midlightColor = 0, QBitmap *darkColor = 0, QBitmap *blackColor = 0, QBitmap *whiteColor = 0);
 
 /**
  * @relates KStyle
  * @c \#include @c <kdrawutil.h>
  * @overload
  */
- KDEFX_EXPORT void kColorBitmaps(QPainter *p, const QColorGroup &g, int x, int y, int w,
-                   int h, bool isXBitmaps=true, const uchar *lightColor = 0,
-                   const uchar *midColor=0, const uchar *midlightColor=0,
-                   const uchar *darkColor=0, const uchar *blackColor=0,
-                   const uchar *whiteColor=0);
+KDEFX_EXPORT void kColorBitmaps(QPainter *p, const QColorGroup &g, int x, int y, int w, int h, bool isXBitmaps = true, const uchar *lightColor = 0,
+                                const uchar *midColor = 0, const uchar *midlightColor = 0, const uchar *darkColor = 0, const uchar *blackColor = 0,
+                                const uchar *whiteColor = 0);
 
 #endif

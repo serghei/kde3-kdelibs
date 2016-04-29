@@ -87,104 +87,127 @@ class DrMain;
  * @short Base class for customized print dialog pages.
  * @see KPrinter
  */
-class KDEPRINT_EXPORT KPrintDialogPage : public QWidget
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT KPrintDialogPage : public QWidget {
+    Q_OBJECT
 public:
-	/**
-	 * Standard constructor.
-	 */
-	KPrintDialogPage(QWidget *parent = 0, const char *name = 0);
-	/**
-	 * Modified constructor. For internal use only.
-	 */
-	KPrintDialogPage(KMPrinter *pr, DrMain *dr = 0, QWidget *parent = 0, const char *name = 0);
-	/**
-	 * Destructor
-	 */
-	virtual ~KPrintDialogPage();
+    /**
+     * Standard constructor.
+     */
+    KPrintDialogPage(QWidget *parent = 0, const char *name = 0);
+    /**
+     * Modified constructor. For internal use only.
+     */
+    KPrintDialogPage(KMPrinter *pr, DrMain *dr = 0, QWidget *parent = 0, const char *name = 0);
+    /**
+     * Destructor
+     */
+    virtual ~KPrintDialogPage();
 
-	/**
-	 * This function is called to fill the structure @p opts with the selected options from this dialog
-	 * page. If @p incldef is true, include also options with default values, otherwise discard them.
-	 * Reimplement this function in subclasses.
-	 * @param opts the option set to fill
-	 * @param incldef if true, include also options with default values
-	 * @see setOptions()
-	 */
-	virtual void getOptions(QMap<QString,QString>& opts, bool incldef = false);
-	/**
-	 * This function is called to update the current page with the options contained in @p opts.
-	 * Reimplement it in subclasses.
-	 * @param opts the structure containing the options to update the page
-	 */
-	virtual void setOptions(const QMap<QString,QString>& opts);
-	/**
-	 * Returns true if options selected in the page are valid (no conflict), false otherwise.
-	 * When returning false, @p msg should contain an error message explaining what is wrong
-	 * in the selected options.
-	 * @param msg should contain an error message when returning false
-	 * @returns valid status
-	 */
-	virtual bool isValid(QString& msg);
-	/**
-	 * Get the ID of the page. Not used yet.
-	 * @returns the page ID
-	 * @see setId()
-	 */
-	int id() const 				{ return m_ID; }
-	/**
-	 * Set the ID of the page. Not used yet.
-	 * @param ID the ID number
-	 * @see id()
-	 */
-	void setId(int ID)			{ m_ID = ID; }
-	/**
-	 * Get the page title.
-	 * @returns the page title
-	 * @see setTitle()
-	 */
-	QString	title() const 			{ return m_title; }
-	/**
-	 * Set the page title. This title will be used as tab name for this page in the print
-	 * dialog.
-	 * @param txt the page title
-	 * @see title()
-	 */
-	void setTitle(const QString& txt)	{ m_title = txt; }
-	/**
-	 * Tell wether or not the page should be disable if a non real printer (special
-	 * printer) is selected in the print dialog. Returns false by default. Application
-	 * specific pages usually corresponds to printer-independent options, so the
-	 * page should be kept enabled whatever the selected printer. The default value
-	 * is then correct and your application doesn't to change anything.
-	 * @returns true if the page should be disabled for non real printers
-	 * @see setOnlyRealPrinters()
-	 */
-	bool onlyRealPrinters() const	{ return m_onlyreal; }
-	/**
-	 * Change the page state when a non real printer is selected in the print dialog.
-	 * Usually, the default value (false) is OK in most cases and you don't need to
-	 * call this function explicitly.
-	 * @param on if true, then the page will be disabled if a non real printer is selected
-	 * @see onlyRealPrinters()
-	 */
-	void setOnlyRealPrinters(bool on = true) { m_onlyreal = on; }
-	/**
-	 * For internal use only.
-	 */
-	DrMain* driver() 			{ return m_driver; }
-	/**
-	 * For internal use only
-	 */
-	KMPrinter* printer()			{ return m_printer; }
+    /**
+     * This function is called to fill the structure @p opts with the selected options from this dialog
+     * page. If @p incldef is true, include also options with default values, otherwise discard them.
+     * Reimplement this function in subclasses.
+     * @param opts the option set to fill
+     * @param incldef if true, include also options with default values
+     * @see setOptions()
+     */
+    virtual void getOptions(QMap< QString, QString > &opts, bool incldef = false);
+    /**
+     * This function is called to update the current page with the options contained in @p opts.
+     * Reimplement it in subclasses.
+     * @param opts the structure containing the options to update the page
+     */
+    virtual void setOptions(const QMap< QString, QString > &opts);
+    /**
+     * Returns true if options selected in the page are valid (no conflict), false otherwise.
+     * When returning false, @p msg should contain an error message explaining what is wrong
+     * in the selected options.
+     * @param msg should contain an error message when returning false
+     * @returns valid status
+     */
+    virtual bool isValid(QString &msg);
+    /**
+     * Get the ID of the page. Not used yet.
+     * @returns the page ID
+     * @see setId()
+     */
+    int id() const
+    {
+        return m_ID;
+    }
+    /**
+     * Set the ID of the page. Not used yet.
+     * @param ID the ID number
+     * @see id()
+     */
+    void setId(int ID)
+    {
+        m_ID = ID;
+    }
+    /**
+     * Get the page title.
+     * @returns the page title
+     * @see setTitle()
+     */
+    QString title() const
+    {
+        return m_title;
+    }
+    /**
+     * Set the page title. This title will be used as tab name for this page in the print
+     * dialog.
+     * @param txt the page title
+     * @see title()
+     */
+    void setTitle(const QString &txt)
+    {
+        m_title = txt;
+    }
+    /**
+     * Tell wether or not the page should be disable if a non real printer (special
+     * printer) is selected in the print dialog. Returns false by default. Application
+     * specific pages usually corresponds to printer-independent options, so the
+     * page should be kept enabled whatever the selected printer. The default value
+     * is then correct and your application doesn't to change anything.
+     * @returns true if the page should be disabled for non real printers
+     * @see setOnlyRealPrinters()
+     */
+    bool onlyRealPrinters() const
+    {
+        return m_onlyreal;
+    }
+    /**
+     * Change the page state when a non real printer is selected in the print dialog.
+     * Usually, the default value (false) is OK in most cases and you don't need to
+     * call this function explicitly.
+     * @param on if true, then the page will be disabled if a non real printer is selected
+     * @see onlyRealPrinters()
+     */
+    void setOnlyRealPrinters(bool on = true)
+    {
+        m_onlyreal = on;
+    }
+    /**
+     * For internal use only.
+     */
+    DrMain *driver()
+    {
+        return m_driver;
+    }
+    /**
+     * For internal use only
+     */
+    KMPrinter *printer()
+    {
+        return m_printer;
+    }
 
 protected:
-	KMPrinter	*m_printer;
-	DrMain		*m_driver;
-	int 		m_ID;
-	QString		m_title;
-	bool		m_onlyreal;
+    KMPrinter *m_printer;
+    DrMain *m_driver;
+    int m_ID;
+    QString m_title;
+    bool m_onlyreal;
 };
 
 #endif

@@ -36,18 +36,18 @@ class QXEmbedData;
  *
  * There are two different ways of using QXEmbed,
  * from the client side or from the embedder's side.
- * 
+ *
  * Embedding from the client's side requires that the client knows the
  * window identifier of the respective embedder widget. Use either
  * embedClientIntoWindow() or the high-level wrapper processClientCmdline().
  * This is only possible when the client is a Qt application.
  *
- * When using it from the embedder's side, you must know the window 
- * identifier of the window that should be embedded. Simply call embed() 
+ * When using it from the embedder's side, you must know the window
+ * identifier of the window that should be embedded. Simply call embed()
  * with this identifier as parameter.  If the client is a Qt application,
  * make sure it has called QXEmbed::initialize(). Otherwise you should
  * probably call setProtocol(XPLAIN) before embed().
- * 
+ *
  * Reimplement the change handler windowChanged() to catch embedding or
  * the destruction of embedded windows. In the latter case, the
  * embedder also emits a signal embeddedWindowDestroyed() for
@@ -55,12 +55,10 @@ class QXEmbedData;
  *
  * @short The QXEmbed widget is a graphical socket that can embed an external X-Window.
 */
-class KDEUI_EXPORT QXEmbed : public QWidget
-{
+class KDEUI_EXPORT QXEmbed : public QWidget {
     Q_OBJECT
 
 public:
-
     /**
      *
      * Constructs a xembed widget.
@@ -68,7 +66,7 @@ public:
      * The parent, name and f arguments are passed to the QFrame
      * constructor.
      */
-    QXEmbed( QWidget *parent=0, const char *name=0, WFlags f = 0 );
+    QXEmbed(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
     /**
      * Destructor. Cleans up the focus if necessary.
@@ -84,7 +82,11 @@ public:
      */
     static void initialize();
 
-    enum Protocol { XEMBED, XPLAIN };
+    enum Protocol
+    {
+        XEMBED,
+        XPLAIN
+    };
 
     /**
      * Sets the protocol used for embedding windows.
@@ -95,12 +97,12 @@ public:
      * embedded applications that do not support the XEMBED protocol.
      * The default is XEMBED.
      *
-     * Non KDE applications should be embedded with protocol XPLAIN. 
-     * This does not happen automatically yet. 
+     * Non KDE applications should be embedded with protocol XPLAIN.
+     * This does not happen automatically yet.
      * You must call setProtocol() explicitly.
      */
 
-    void setProtocol( Protocol proto );
+    void setProtocol(Protocol proto);
 
     /**
      * Returns the protocol used for embedding the current window.
@@ -122,7 +124,7 @@ public:
      * @param w the identifier of the window to embed
      * @see embeddedWinId()
      */
-    void embed( WId w );
+    void embed(WId w);
 
     /**
      * Returns the window identifier of the embedded window, or 0 if no
@@ -140,7 +142,7 @@ public:
      *
      * @short #processClientCmdline()
      */
-    static void embedClientIntoWindow( QWidget* client, WId window );
+    static void embedClientIntoWindow(QWidget *client, WId window);
 
     /**
      * A utility function for clients that embed theirselves. The widget
@@ -152,17 +154,17 @@ public:
      *
      * @see embedClientIntoWindow()
      */
-    static bool processClientCmdline( QWidget* client, int& argc, char ** argv );
+    static bool processClientCmdline(QWidget *client, int &argc, char **argv);
 
-    /** 
+    /**
      * Sends a WM_DELETE_WINDOW message to the embedded window.  This is what
      * typically happens when you click on the close button of a window
      * manager decoration.  This should cause the embedded application to
      * cleanly close the window.  Signal embeddedWindowDestroyed() can be used
      * to monitor the status of the embedded window.
      */
-    void sendDelete( void );
-    
+    void sendDelete(void);
+
     /**
      * Selects what shoud be done with the embedded window when the embedding
      * window is destroyed.  When the argument is true, the embedded window is
@@ -172,12 +174,12 @@ public:
      *
      * @see sendDelete()
      */
-    void setAutoDelete( bool );
+    void setAutoDelete(bool);
 
     /**
      * Returns the value of flag indicating what shoud be done with the
      * embedded window when the embedding window is destroyed.
-     * 
+     *
      * @see setAutoDelete()
      */
     bool autoDelete() const;
@@ -186,10 +188,10 @@ public:
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
     QSizePolicy sizePolicy() const;
-    bool eventFilter( QObject *, QEvent * );
+    bool eventFilter(QObject *, QEvent *);
     bool customWhatsThis() const;
     void enterWhatsThisMode(); // temporary, fix in Qt (Matthias, Mon Jul 17 15:20:55 CEST 2000  )
-    virtual void reparent( QWidget * parent, WFlags f, const QPoint & p, bool showIt = false );
+    virtual void reparent(QWidget *parent, WFlags f, const QPoint &p, bool showIt = false);
 
 signals:
     /**
@@ -201,14 +203,14 @@ signals:
     void embeddedWindowDestroyed();
 
 protected:
-    bool event( QEvent * );
-    void keyPressEvent( QKeyEvent * );
-    void keyReleaseEvent( QKeyEvent * );
-    void focusInEvent( QFocusEvent * );
-    void focusOutEvent( QFocusEvent * );
+    bool event(QEvent *);
+    void keyPressEvent(QKeyEvent *);
+    void keyReleaseEvent(QKeyEvent *);
+    void focusInEvent(QFocusEvent *);
+    void focusOutEvent(QFocusEvent *);
     void resizeEvent(QResizeEvent *);
-    void showEvent( QShowEvent * );
-    bool x11Event( XEvent* );
+    void showEvent(QShowEvent *);
+    bool x11Event(XEvent *);
 
     /**
      * A change handler that indicates that the embedded window has been
@@ -217,13 +219,13 @@ protected:
      *
      * @param w the handle of the window that changed
      */
-    virtual void windowChanged( WId w );
+    virtual void windowChanged(WId w);
 
-    bool focusNextPrevChild( bool next );
+    bool focusNextPrevChild(bool next);
 
 private:
     WId window;
-    QXEmbedData* d;
+    QXEmbedData *d;
     void checkGrab();
     void sendSyntheticConfigureNotifyEvent();
     void handleEmbed();

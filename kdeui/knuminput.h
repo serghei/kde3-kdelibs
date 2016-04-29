@@ -46,24 +46,24 @@ class KIntSpinBox;
  * for a different variable type
  *
  */
-class KDEUI_EXPORT KNumInput : public QWidget
-{
+class KDEUI_EXPORT KNumInput : public QWidget {
     Q_OBJECT
-    Q_PROPERTY( QString label READ label WRITE setLabel )
+    Q_PROPERTY(QString label READ label WRITE setLabel)
 public:
     /**
      * Default constructor
-     * @param parent If parent is 0, the new widget becomes a top-level window. If parent is another widget, this widget becomes a child window inside parent. The new widget is deleted when its parent is deleted.
+     * @param parent If parent is 0, the new widget becomes a top-level window. If parent is another widget, this widget becomes a child window inside
+     * parent. The new widget is deleted when its parent is deleted.
      * @param name The name is sent to the QObject constructor.
      */
-    KNumInput(QWidget* parent=0, const char* name=0);
+    KNumInput(QWidget *parent = 0, const char *name = 0);
 
     /**
      * @param below A pointer to another KNumInput.
      * @param parent parent widget
      * @param name name of the widget
      */
-    KNumInput(KNumInput* below, QWidget* parent=0, const char* name=0);
+    KNumInput(KNumInput *below, QWidget *parent = 0, const char *name = 0);
     ~KNumInput();
 
     /**
@@ -84,7 +84,7 @@ public:
      *     @li @p AlignBottom  The label is placed below the edit/slider
      *
      */
-    virtual void setLabel(const QString & label, int a = AlignLeft | AlignTop);
+    virtual void setLabel(const QString &label, int a = AlignLeft | AlignTop);
 
     /**
      * @return the text of the label.
@@ -95,7 +95,10 @@ public:
      * @return if the num input has a slider.
      * @since 3.1
      */
-    bool showSlider() const { return m_slider; }
+    bool showSlider() const
+    {
+        return m_slider;
+    }
 
     /**
      * Sets the spacing of tickmarks for the slider.
@@ -136,20 +139,21 @@ protected:
      */
     virtual void doLayout() = 0;
 
-    KNumInput* m_prev, *m_next;
+    KNumInput *m_prev, *m_next;
     int m_colw1, m_colw2;
 
-    QLabel*  m_label;
-    QSlider* m_slider;
-    QSize    m_sizeSlider, m_sizeLabel;
+    QLabel *m_label;
+    QSlider *m_slider;
+    QSize m_sizeSlider, m_sizeLabel;
 
-    int      m_alignment;
+    int m_alignment;
 
 private:
     void init();
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KNumInputPrivate;
     KNumInputPrivate *d;
@@ -184,24 +188,23 @@ private:
  * @version $Id$
  */
 
-class KDEUI_EXPORT KIntNumInput : public KNumInput
-{
+class KDEUI_EXPORT KIntNumInput : public KNumInput {
     Q_OBJECT
-    Q_PROPERTY( int value READ value WRITE setValue )
-    Q_PROPERTY( int minValue READ minValue WRITE setMinValue )
-    Q_PROPERTY( int maxValue READ maxValue WRITE setMaxValue )
-    Q_PROPERTY( int referencePoint READ referencePoint WRITE setReferencePoint )
-    Q_PROPERTY( double relativeValue READ relativeValue WRITE setRelativeValue )
-    Q_PROPERTY( QString suffix READ suffix WRITE setSuffix )
-    Q_PROPERTY( QString prefix READ prefix WRITE setPrefix )
-    Q_PROPERTY( QString specialValueText READ specialValueText WRITE setSpecialValueText )
+    Q_PROPERTY(int value READ value WRITE setValue)
+    Q_PROPERTY(int minValue READ minValue WRITE setMinValue)
+    Q_PROPERTY(int maxValue READ maxValue WRITE setMaxValue)
+    Q_PROPERTY(int referencePoint READ referencePoint WRITE setReferencePoint)
+    Q_PROPERTY(double relativeValue READ relativeValue WRITE setRelativeValue)
+    Q_PROPERTY(QString suffix READ suffix WRITE setSuffix)
+    Q_PROPERTY(QString prefix READ prefix WRITE setPrefix)
+    Q_PROPERTY(QString specialValueText READ specialValueText WRITE setSpecialValueText)
 
 public:
     /**
      * Constructs an input control for integer values
      * with base 10 and initial value 0.
      */
-    KIntNumInput(QWidget *parent=0, const char *name=0);
+    KIntNumInput(QWidget *parent = 0, const char *name = 0);
     /**
      * Constructor
      * It constructs a QSpinBox that allows the input of integer numbers
@@ -214,7 +217,7 @@ public:
      * @param parent parent QWidget
      * @param name   internal name for this widget
      */
-    KIntNumInput(int value, QWidget* parent=0, int base = 10, const char *name=0);
+    KIntNumInput(int value, QWidget *parent = 0, int base = 10, const char *name = 0);
 
     /**
      * Constructor
@@ -233,7 +236,7 @@ public:
      * @param parent parent QWidget
      * @param name   internal name for this widget
      */
-    KIntNumInput(KNumInput* below, int value, QWidget* parent=0, int base = 10, const char *name=0);
+    KIntNumInput(KNumInput *below, int value, QWidget *parent = 0, int base = 10, const char *name = 0);
 
     /**
      * Destructor
@@ -281,7 +284,7 @@ public:
      * @param step step size for the QSlider
      * @param slider whether the slider is created or not
      */
-    void setRange(int min, int max, int step=1, bool slider=true);
+    void setRange(int min, int max, int step = 1, bool slider = true);
     /**
      * Sets the minimum value.
      */
@@ -305,9 +308,9 @@ public:
      * value is equal to minVal(). Typically this is used for indicating
      * that the choice has a special (default) meaning.
      */
-    void setSpecialValueText(const QString& text);
+    void setSpecialValueText(const QString &text);
 
-    virtual void setLabel(const QString & label, int a = AlignLeft | AlignTop);
+    virtual void setLabel(const QString &label, int a = AlignLeft | AlignTop);
 
     /**
      * This method returns the minimum size necessary to display the
@@ -360,7 +363,7 @@ public slots:
      * sets focus to the edit widget and marks all text in if mark == true
      *
      */
-    void setEditFocus( bool mark = true );
+    void setEditFocus(bool mark = true);
 
 signals:
     /**
@@ -382,16 +385,17 @@ private slots:
 
 protected:
     virtual void doLayout();
-    void resizeEvent ( QResizeEvent * );
+    void resizeEvent(QResizeEvent *);
 
-    KIntSpinBox* m_spin;
-    QSize        m_sizeSpin;
+    KIntSpinBox *m_spin;
+    QSize m_sizeSpin;
 
 private:
     void init(int value, int _base);
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KIntNumInputPrivate;
     KIntNumInputPrivate *d;
@@ -429,25 +433,24 @@ class KDoubleLine;
  * @see KIntNumInput, KDoubleSpinBox
  */
 
-class KDEUI_EXPORT KDoubleNumInput : public KNumInput
-{
+class KDEUI_EXPORT KDoubleNumInput : public KNumInput {
     Q_OBJECT
-    Q_PROPERTY( double value READ value WRITE setValue )
-    Q_PROPERTY( double minValue READ minValue WRITE setMinValue )
-    Q_PROPERTY( double maxValue READ maxValue WRITE setMaxValue )
-    Q_PROPERTY( QString suffix READ suffix WRITE setSuffix )
-    Q_PROPERTY( QString prefix READ prefix WRITE setPrefix )
-    Q_PROPERTY( QString specialValueText READ specialValueText WRITE setSpecialValueText )
-    Q_PROPERTY( int precision READ precision WRITE setPrecision )
-    Q_PROPERTY( double referencePoint READ referencePoint WRITE setReferencePoint )
-    Q_PROPERTY( double relativeValue READ relativeValue  WRITE setRelativeValue )
+    Q_PROPERTY(double value READ value WRITE setValue)
+    Q_PROPERTY(double minValue READ minValue WRITE setMinValue)
+    Q_PROPERTY(double maxValue READ maxValue WRITE setMaxValue)
+    Q_PROPERTY(QString suffix READ suffix WRITE setSuffix)
+    Q_PROPERTY(QString prefix READ prefix WRITE setPrefix)
+    Q_PROPERTY(QString specialValueText READ specialValueText WRITE setSpecialValueText)
+    Q_PROPERTY(int precision READ precision WRITE setPrecision)
+    Q_PROPERTY(double referencePoint READ referencePoint WRITE setReferencePoint)
+    Q_PROPERTY(double relativeValue READ relativeValue WRITE setRelativeValue)
 
 public:
     /**
      * Constructs an input control for double values
      * with initial value 0.00.
      */
-    KDoubleNumInput(QWidget *parent=0, const char *name=0);
+    KDoubleNumInput(QWidget *parent = 0, const char *name = 0);
 
     /**
      * @deprecated (value is rounded to a multiple of 1/100)
@@ -457,7 +460,7 @@ public:
      * @param parent parent QWidget
      * @param name   internal name for this widget
      */
-    KDoubleNumInput(double value, QWidget *parent=0, const char *name=0) KDE_DEPRECATED;
+    KDoubleNumInput(double value, QWidget *parent = 0, const char *name = 0) KDE_DEPRECATED;
 
     /**
      * Constructor
@@ -471,8 +474,7 @@ public:
      * @param name   internal name for this widget
      * @since 3.1
      */
-    KDoubleNumInput(double lower, double upper, double value, double step=0.01,
-		    int precision=2, QWidget *parent=0, const char *name=0);
+    KDoubleNumInput(double lower, double upper, double value, double step = 0.01, int precision = 2, QWidget *parent = 0, const char *name = 0);
 
     /**
      * destructor
@@ -490,7 +492,7 @@ public:
      * @param  parent parent QWidget
      * @param  name   internal name for this widget
      **/
-    KDoubleNumInput(KNumInput* below, double value, QWidget* parent=0, const char* name=0) KDE_DEPRECATED;
+    KDoubleNumInput(KNumInput *below, double value, QWidget *parent = 0, const char *name = 0) KDE_DEPRECATED;
 
     /**
      * Constructor
@@ -513,9 +515,8 @@ public:
      * @param name   internal name for this widget
      * @since 3.1
      */
-    KDoubleNumInput(KNumInput* below,
-		    double lower, double upper, double value, double step=0.02,
-		    int precision=2, QWidget *parent=0, const char *name=0);
+    KDoubleNumInput(KNumInput *below, double lower, double upper, double value, double step = 0.02, int precision = 2, QWidget *parent = 0,
+                    const char *name = 0);
 
     /**
      * @return the current value.
@@ -544,15 +545,18 @@ public:
      * @return the string displayed for a special value.
      * @see setSpecialValueText()
      */
-    QString specialValueText() const { return m_specialvalue; }
+    QString specialValueText() const
+    {
+        return m_specialvalue;
+    }
 
-     /**
-     * @param min  minimum value
-     * @param max  maximum value
-     * @param step step size for the QSlider
-     * @param slider whether the slider is created or not
-     */
-    void setRange(double min, double max, double step=1, bool slider=true);
+    /**
+    * @param min  minimum value
+    * @param max  maximum value
+    * @param step step size for the QSlider
+    * @param slider whether the slider is created or not
+    */
+    void setRange(double min, double max, double step = 1, bool slider = true);
     /**
      * Sets the minimum value.
      */
@@ -593,11 +597,11 @@ public:
      * value is equal to minVal(). Typically this is used for indicating
      * that the choice has a special (default) meaning.
      */
-    void setSpecialValueText(const QString& text);
+    void setSpecialValueText(const QString &text);
 
-    virtual void setLabel(const QString & label, int a = AlignLeft | AlignTop);
+    virtual void setLabel(const QString &label, int a = AlignLeft | AlignTop);
     virtual QSize minimumSizeHint() const;
-    virtual bool eventFilter(QObject*, QEvent*);
+    virtual bool eventFilter(QObject *, QEvent *);
 
 public slots:
     /**
@@ -657,33 +661,34 @@ private slots:
 
 protected:
     virtual void doLayout();
-    void resizeEvent ( QResizeEvent * );
+    void resizeEvent(QResizeEvent *);
 
     virtual void resetEditBox();
 
     // ### no longer used, remove when BIC allowed
-    KDoubleLine*   edit;
+    KDoubleLine *edit;
 
-    bool     m_range;
-    double   m_lower, m_upper, m_step;
+    bool m_range;
+    double m_lower, m_upper, m_step;
     // ### end no longer used
 
-    QSize    m_sizeEdit;
+    QSize m_sizeEdit;
 
     friend class KDoubleLine;
+
 private:
-    void init(double value, double lower, double upper,
-	      double step, int precision);
+    void init(double value, double lower, double upper, double step, int precision);
     double mapSliderToSpin(int) const;
     void updateLegacyMembers();
     // ### no longer used, remove when BIC allowed:
-    QString  m_specialvalue, m_prefix, m_suffix;
-    double   m_value;
-    short    m_precision;
+    QString m_specialvalue, m_prefix, m_suffix;
+    double m_value;
+    short m_precision;
     // ### end remove when BIC allowed
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KDoubleNumInputPrivate;
     KDoubleNumInputPrivate *d;
@@ -701,13 +706,11 @@ private:
  *  The class provides an easy interface to use other
  *  numeric systems than the decimal.
  */
-class KDEUI_EXPORT KIntSpinBox : public QSpinBox
-{
+class KDEUI_EXPORT KIntSpinBox : public QSpinBox {
     Q_OBJECT
-    Q_PROPERTY( int base READ base WRITE setBase )
+    Q_PROPERTY(int base READ base WRITE setBase)
 
 public:
-
     /**
      *  Constructor.
      *
@@ -715,7 +718,7 @@ public:
      *  and a slider, with minimal value 0, maximal value 99, step 1, base 10
      *  and initial value 0.
      */
-    KIntSpinBox( QWidget *parent=0, const char *name=0);
+    KIntSpinBox(QWidget *parent = 0, const char *name = 0);
 
     /**
      *  Constructor.
@@ -731,8 +734,7 @@ public:
      *  @param parent The parent of the widget.
      *  @param name   The Name of the widget.
      */
-    KIntSpinBox(int lower, int upper, int step, int value, int base = 10,
-                QWidget* parent = 0, const char* name = 0);
+    KIntSpinBox(int lower, int upper, int step, int value, int base = 10, QWidget *parent = 0, const char *name = 0);
 
     /**
      *  Destructor.
@@ -754,7 +756,6 @@ public:
     void setEditFocus(bool mark);
 
 protected:
-
     /**
      *  Overloaded the method in QSpinBox
      *  to make use of the base given in the constructor.
@@ -765,12 +766,14 @@ protected:
      *  Overloaded the method in QSpinBox
      *  to make use of the base given in the constructor.
      */
-    virtual int mapTextToValue(bool*);
+    virtual int mapTextToValue(bool *);
 
 private:
     int val_base;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KIntSpinBoxPrivate;
     KIntSpinBoxPrivate *d;
@@ -832,126 +835,126 @@ private:
 **/
 
 class KDEUI_EXPORT KDoubleSpinBox : public QSpinBox {
-  Q_OBJECT
-  Q_PROPERTY( bool acceptLocalizedNumbers READ acceptLocalizedNumbers WRITE setAcceptLocalizedNumbers )
-  Q_OVERRIDE( double maxValue READ maxValue WRITE setMaxValue )
-  Q_OVERRIDE( double minValue READ minValue WRITE setMinValue )
-  Q_OVERRIDE( double lineStep READ lineStep WRITE setLineStep )
-  Q_OVERRIDE( double value READ value WRITE setValue )
-  Q_PROPERTY( int precision READ precision WRITE setPrecision )
+    Q_OBJECT
+    Q_PROPERTY(bool acceptLocalizedNumbers READ acceptLocalizedNumbers WRITE setAcceptLocalizedNumbers)
+    Q_OVERRIDE(double maxValue READ maxValue WRITE setMaxValue)
+    Q_OVERRIDE(double minValue READ minValue WRITE setMinValue)
+    Q_OVERRIDE(double lineStep READ lineStep WRITE setLineStep)
+    Q_OVERRIDE(double value READ value WRITE setValue)
+    Q_PROPERTY(int precision READ precision WRITE setPrecision)
 
 public:
-  /** Constructs a KDoubleSpinBox with parent @p parent and
-      default values for range and value (whatever QRangeControl
-      uses) and precision (2). */
-  KDoubleSpinBox( QWidget * parent=0, const char * name=0 );
+    /** Constructs a KDoubleSpinBox with parent @p parent and
+        default values for range and value (whatever QRangeControl
+        uses) and precision (2). */
+    KDoubleSpinBox(QWidget *parent = 0, const char *name = 0);
 
-  /** Constructs a KDoubleSpinBox with parent @p parent, range
-      [ @p lower, @p upper ], lineStep @p step, precision @p
-      precision and initial value @p value. */
-  KDoubleSpinBox( double lower, double upper, double step, double value,
-		  int precision=2, QWidget * parent=0, const char * name=0 );
+    /** Constructs a KDoubleSpinBox with parent @p parent, range
+        [ @p lower, @p upper ], lineStep @p step, precision @p
+        precision and initial value @p value. */
+    KDoubleSpinBox(double lower, double upper, double step, double value, int precision = 2, QWidget *parent = 0, const char *name = 0);
 
-  virtual ~KDoubleSpinBox();
+    virtual ~KDoubleSpinBox();
 
-  /** @return whether the spinbox uses localized numbers */
-  bool acceptLocalizedNumbers() const;
+    /** @return whether the spinbox uses localized numbers */
+    bool acceptLocalizedNumbers() const;
 
-  /** Sets whether to use and accept localized numbers as returned by
-      KLocale::formatNumber() */
-  virtual void setAcceptLocalizedNumbers( bool accept );
+    /** Sets whether to use and accept localized numbers as returned by
+        KLocale::formatNumber() */
+    virtual void setAcceptLocalizedNumbers(bool accept);
 
-  /** Sets a new range for the spin box values. Note that @p lower, @p
-      upper and @p step are rounded to @p precision decimal points
-      first. */
-  void setRange( double lower, double upper, double step=0.01, int precision=2 );
+    /** Sets a new range for the spin box values. Note that @p lower, @p
+        upper and @p step are rounded to @p precision decimal points
+        first. */
+    void setRange(double lower, double upper, double step = 0.01, int precision = 2);
 
-  /** @return the current number of digits displayed to the right of the
-      decimal point. */
-  int precision() const;
+    /** @return the current number of digits displayed to the right of the
+        decimal point. */
+    int precision() const;
 
-  /** Equivalent to setPrecision( @p precision, @p false ); Needed
-      since Qt's moc doesn't ignore trailing parameters with default
-      args when searching for a property setter method. */
-  void setPrecision( int precision );
+    /** Equivalent to setPrecision( @p precision, @p false ); Needed
+        since Qt's moc doesn't ignore trailing parameters with default
+        args when searching for a property setter method. */
+    void setPrecision(int precision);
 
-  /** Sets the precision (number of digits to the right of the decimal point). Note
-      that there is a tradeoff between the precision used and the available range of
-      values. See the class documentation above for more information on this.
+    /** Sets the precision (number of digits to the right of the decimal point). Note
+        that there is a tradeoff between the precision used and the available range of
+        values. See the class documentation above for more information on this.
 
-      @param precision the new precision to use
+        @param precision the new precision to use
 
-      @param force if true, disables checking of bounds violations that can
-             arise if you increase the precision so much that the
-             minimum and maximum values can't be represented
-             anymore. Disabling is useful if you were going to disable range
-             control in any case.
-  **/
-  virtual void setPrecision( int precision, bool force );
+        @param force if true, disables checking of bounds violations that can
+               arise if you increase the precision so much that the
+               minimum and maximum values can't be represented
+               anymore. Disabling is useful if you were going to disable range
+               control in any case.
+    **/
+    virtual void setPrecision(int precision, bool force);
 
-  /** @return the current value */
-  double value() const;
+    /** @return the current value */
+    double value() const;
 
-  /** @return the current lower bound */
-  double minValue() const;
+    /** @return the current lower bound */
+    double minValue() const;
 
-  /** Sets the lower bound of the range to @p value, subject to the
-      contraints that @p value is first rounded to the current
-      precision and then clipped to the maximum range interval that can
-      be handled at that precision.
-      @see maxValue, minValue, setMaxValue, setRange
-  */
-  void setMinValue( double value );
+    /** Sets the lower bound of the range to @p value, subject to the
+        contraints that @p value is first rounded to the current
+        precision and then clipped to the maximum range interval that can
+        be handled at that precision.
+        @see maxValue, minValue, setMaxValue, setRange
+    */
+    void setMinValue(double value);
 
-  /** @return the current upper bound */
-  double maxValue() const;
+    /** @return the current upper bound */
+    double maxValue() const;
 
-  /** Sets the upper bound of the range to @p value, subject to the
-      contraints that @p value is first rounded to the current
-      precision and then clipped to the maximum range interval
-      that can be handled at that precision.
-      @see minValue, maxValue, setMinValue, setRange
-  */
-  void setMaxValue( double value );
+    /** Sets the upper bound of the range to @p value, subject to the
+        contraints that @p value is first rounded to the current
+        precision and then clipped to the maximum range interval
+        that can be handled at that precision.
+        @see minValue, maxValue, setMinValue, setRange
+    */
+    void setMaxValue(double value);
 
-  /** @return the current step size */
-  double lineStep() const;
+    /** @return the current step size */
+    double lineStep() const;
 
-  /** Sets the step size for clicking the up/down buttons to @p step,
-      subject to the constraints that @p step is first rounded to the
-      current precision and then clipped to the meaningful interval
-      [ 1, @p maxValue() - @p minValue() ]. */
-  void setLineStep( double step );
+    /** Sets the step size for clicking the up/down buttons to @p step,
+        subject to the constraints that @p step is first rounded to the
+        current precision and then clipped to the meaningful interval
+        [ 1, @p maxValue() - @p minValue() ]. */
+    void setLineStep(double step);
 
-  /** Overridden to ignore any setValidator() calls. */
-  void setValidator( const QValidator * );
+    /** Overridden to ignore any setValidator() calls. */
+    void setValidator(const QValidator *);
 
 signals:
-  /** Emitted whenever QSpinBox::valueChanged( int ) is emitted. */
-  void valueChanged( double value );
+    /** Emitted whenever QSpinBox::valueChanged( int ) is emitted. */
+    void valueChanged(double value);
 
 public slots:
-  /** Sets the current value to @p value, subject to the constraints
-      that @p value is first rounded to the current precision and then
-      clipped to the interval [ @p minValue() , @p maxValue() ]. */
-  virtual void setValue( double value );
+    /** Sets the current value to @p value, subject to the constraints
+        that @p value is first rounded to the current precision and then
+        clipped to the interval [ @p minValue() , @p maxValue() ]. */
+    virtual void setValue(double value);
 
 protected:
-  virtual QString mapValueToText(int);
-  virtual int mapTextToValue(bool*);
+    virtual QString mapValueToText(int);
+    virtual int mapTextToValue(bool *);
 
 protected slots:
-  void slotValueChanged( int value );
+    void slotValueChanged(int value);
 
 protected:
- virtual void virtual_hook( int id, void* data );
-private:
-  typedef QSpinBox base;
-  void updateValidator();
-  int maxPrecision() const;
+    virtual void virtual_hook(int id, void *data);
 
-  class Private;
-  Private * d;
+private:
+    typedef QSpinBox base;
+    void updateValidator();
+    int maxPrecision() const;
+
+    class Private;
+    Private *d;
 };
 
 #endif // K_NUMINPUT_H

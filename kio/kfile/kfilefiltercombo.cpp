@@ -24,10 +24,10 @@
 
 #include "kfilefiltercombo.h"
 
-class KFileFilterCombo::KFileFilterComboPrivate
-{
+class KFileFilterCombo::KFileFilterComboPrivate {
 public:
-    KFileFilterComboPrivate() {
+    KFileFilterComboPrivate()
+    {
         hasAllSupportedFiles = false;
         defaultFilter = i18n("*|All Files");
         isMimeFilter = false;
@@ -44,14 +44,13 @@ public:
     QString defaultFilter;
 };
 
-KFileFilterCombo::KFileFilterCombo( QWidget *parent, const char *name)
-    : KComboBox(true, parent, name), d( new KFileFilterComboPrivate )
+KFileFilterCombo::KFileFilterCombo(QWidget *parent, const char *name) : KComboBox(true, parent, name), d(new KFileFilterComboPrivate)
 {
-    setTrapReturnKey( true );
+    setTrapReturnKey(true);
     setInsertionPolicy(NoInsertion);
-    connect( this, SIGNAL( activated( int )), this, SIGNAL( filterChanged() ));
-    connect( this, SIGNAL( returnPressed() ), this, SIGNAL( filterChanged() ));
-    connect( this, SIGNAL( filterChanged() ), SLOT( slotFilterChanged() ));
+    connect(this, SIGNAL(activated(int)), this, SIGNAL(filterChanged()));
+    connect(this, SIGNAL(returnPressed()), this, SIGNAL(filterChanged()));
+    connect(this, SIGNAL(filterChanged()), SLOT(slotFilterChanged()));
     m_allTypes = false;
 }
 
@@ -60,31 +59,33 @@ KFileFilterCombo::~KFileFilterCombo()
     delete d;
 }
 
-void KFileFilterCombo::setFilter(const QString& filter)
+void KFileFilterCombo::setFilter(const QString &filter)
 {
     clear();
     filters.clear();
     d->hasAllSupportedFiles = false;
 
-    if (!filter.isEmpty()) {
-	QString tmp = filter;
-	int index = tmp.find('\n');
-	while (index > 0) {
-	    filters.append(tmp.left(index));
-	    tmp = tmp.mid(index + 1);
-	    index = tmp.find('\n');
-	}
-	filters.append(tmp);
-    } 
+    if(!filter.isEmpty())
+    {
+        QString tmp = filter;
+        int index = tmp.find('\n');
+        while(index > 0)
+        {
+            filters.append(tmp.left(index));
+            tmp = tmp.mid(index + 1);
+            index = tmp.find('\n');
+        }
+        filters.append(tmp);
+    }
     else
-	filters.append( d->defaultFilter );
+        filters.append(d->defaultFilter);
 
     QStringList::ConstIterator it;
-	QStringList::ConstIterator end(filters.end());
-    for (it = filters.begin(); it != end; ++it) {
-	int tab = (*it).find('|');
-	insertItem((tab < 0) ? *it :
-		   (*it).mid(tab + 1));
+    QStringList::ConstIterator end(filters.end());
+    for(it = filters.begin(); it != end; ++it)
+    {
+        int tab = (*it).find('|');
+        insertItem((tab < 0) ? *it : (*it).mid(tab + 1));
     }
 
     d->lastFilter = currentText();
@@ -94,38 +95,39 @@ void KFileFilterCombo::setFilter(const QString& filter)
 QString KFileFilterCombo::currentFilter() const
 {
     QString f = currentText();
-    if (f == text(currentItem())) { // user didn't edit the text
-	f = *filters.at(currentItem());
-        if ( d->isMimeFilter || (currentItem() == 0 && d->hasAllSupportedFiles) ) {
+    if(f == text(currentItem()))
+    { // user didn't edit the text
+        f = *filters.at(currentItem());
+        if(d->isMimeFilter || (currentItem() == 0 && d->hasAllSupportedFiles))
+        {
             return f; // we have a mimetype as filter
         }
     }
 
     int tab = f.find('|');
-    if (tab < 0)
-	return f;
+    if(tab < 0)
+        return f;
     else
-	return f.left(tab);
+        return f.left(tab);
 }
 
-void KFileFilterCombo::setCurrentFilter( const QString& filter )
+void KFileFilterCombo::setCurrentFilter(const QString &filter)
 {
     int pos = 0;
-    for( QStringList::ConstIterator it = filters.begin();
-         it != filters.end();
-         ++it, ++pos ) {
-        if( *it == filter ) {
-            setCurrentItem( pos );
+    for(QStringList::ConstIterator it = filters.begin(); it != filters.end(); ++it, ++pos)
+    {
+        if(*it == filter)
+        {
+            setCurrentItem(pos);
             filterChanged();
             return;
         }
     }
-    setCurrentText( filter );
+    setCurrentText(filter);
     filterChanged();
 }
 
-void KFileFilterCombo::setMimeFilter( const QStringList& types, 
-                                      const QString& defaultType )
+void KFileFilterCombo::setMimeFilter(const QStringList &types, const QString &defaultType)
 {
     clear();
     filters.clear();
@@ -136,36 +138,38 @@ void KFileFilterCombo::setMimeFilter( const QStringList& types,
 
     QString allComments, allTypes;
     int i = 0;
-    for(QStringList::ConstIterator it = types.begin(); it != types.end(); ++it,  ++i)
+    for(QStringList::ConstIterator it = types.begin(); it != types.end(); ++it, ++i)
     {
-        if ( m_allTypes && it != types.begin() ) {
+        if(m_allTypes && it != types.begin())
+        {
             allComments += delim;
             allTypes += ' ';
         }
 
-	kdDebug(kfile_area) << *it << endl;
-        KMimeType::Ptr type = KMimeType::mimeType( *it );
-        filters.append( type->name() );
-        if ( m_allTypes )
+        kdDebug(kfile_area) << *it << endl;
+        KMimeType::Ptr type = KMimeType::mimeType(*it);
+        filters.append(type->name());
+        if(m_allTypes)
         {
             allTypes += type->name();
             allComments += type->comment();
         }
-        insertItem( type->comment() );
-        if ( type->name() == defaultType )
-            setCurrentItem( i );
+        insertItem(type->comment());
+        if(type->name() == defaultType)
+            setCurrentItem(i);
     }
 
-    if ( m_allTypes )
+    if(m_allTypes)
     {
-        if ( i < 3 ) // show the mime-comments of at max 3 types
-            insertItem( allComments, 0 );
-        else {
-            insertItem( i18n("All Supported Files"), 0 );
+        if(i < 3) // show the mime-comments of at max 3 types
+            insertItem(allComments, 0);
+        else
+        {
+            insertItem(i18n("All Supported Files"), 0);
             d->hasAllSupportedFiles = true;
         }
 
-        filters.prepend( allTypes );
+        filters.prepend(allTypes);
     }
 
     d->lastFilter = currentText();
@@ -177,17 +181,18 @@ void KFileFilterCombo::slotFilterChanged()
     d->lastFilter = currentText();
 }
 
-bool KFileFilterCombo::eventFilter( QObject *o, QEvent *e )
+bool KFileFilterCombo::eventFilter(QObject *o, QEvent *e)
 {
-    if ( o == lineEdit() && e->type() == QEvent::FocusOut ) {
-        if ( currentText() != d->lastFilter )
+    if(o == lineEdit() && e->type() == QEvent::FocusOut)
+    {
+        if(currentText() != d->lastFilter)
             emit filterChanged();
     }
 
-    return KComboBox::eventFilter( o, e );
+    return KComboBox::eventFilter(o, e);
 }
 
-void KFileFilterCombo::setDefaultFilter( const QString& filter )
+void KFileFilterCombo::setDefaultFilter(const QString &filter)
 {
     d->defaultFilter = filter;
 }
@@ -197,7 +202,9 @@ QString KFileFilterCombo::defaultFilter() const
     return d->defaultFilter;
 }
 
-void KFileFilterCombo::virtual_hook( int id, void* data )
-{ KComboBox::virtual_hook( id, data ); }
+void KFileFilterCombo::virtual_hook(int id, void *data)
+{
+    KComboBox::virtual_hook(id, data);
+}
 
 #include "kfilefiltercombo.moc"

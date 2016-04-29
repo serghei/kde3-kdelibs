@@ -34,66 +34,65 @@
 
 static void recentdirs_done(KConfig *config)
 {
-   if (config == KGlobal::config())
-   {
-      config->sync();
-   }
-   else
-   {
-      delete config;
-   }
+    if(config == KGlobal::config())
+    {
+        config->sync();
+    }
+    else
+    {
+        delete config;
+    }
 }
 
 static KConfig *recentdirs_readList(QString &key, QStringList &result, bool readOnly)
 {
-   KConfig *config;
-   if ((key.length() < 2) || (key[0] != ':'))
-     key = ":default";
-   if (key[1] == ':') 
-   {
-      key = key.mid(2);
-      config = new KSimpleConfig(QString::fromLatin1("krecentdirsrc"), readOnly);
-   }
-   else
-   {
-      key = key.mid(1);
-      config = KGlobal::config();
-      config->setGroup(QString::fromLatin1("Recent Dirs"));
-   }
+    KConfig *config;
+    if((key.length() < 2) || (key[0] != ':'))
+        key = ":default";
+    if(key[1] == ':')
+    {
+        key = key.mid(2);
+        config = new KSimpleConfig(QString::fromLatin1("krecentdirsrc"), readOnly);
+    }
+    else
+    {
+        key = key.mid(1);
+        config = KGlobal::config();
+        config->setGroup(QString::fromLatin1("Recent Dirs"));
+    }
 
-   result=config->readPathListEntry(key);
-   if (result.isEmpty())
-   {
-      result.append(KGlobalSettings::documentPath());
-   }
-   return config;
+    result = config->readPathListEntry(key);
+    if(result.isEmpty())
+    {
+        result.append(KGlobalSettings::documentPath());
+    }
+    return config;
 }
 
 QStringList KRecentDirs::list(const QString &fileClass)
 {
-   QString key = fileClass;
-   QStringList result;
-   recentdirs_done(recentdirs_readList(key, result, true));
-   return result;
+    QString key = fileClass;
+    QStringList result;
+    recentdirs_done(recentdirs_readList(key, result, true));
+    return result;
 }
-    
+
 QString KRecentDirs::dir(const QString &fileClass)
 {
-   QStringList result = list(fileClass);
-   return result[0];
+    QStringList result = list(fileClass);
+    return result[0];
 }
 
 void KRecentDirs::add(const QString &fileClass, const QString &directory)
 {
-   QString key = fileClass;
-   QStringList result;
-   KConfig *config = recentdirs_readList(key, result, false);
-   // make sure the dir is first in history
-   result.remove(directory);
-   result.prepend(directory);
-   while(result.count() > MAX_DIR_HISTORY)
-      result.remove(result.fromLast());
-   config->writePathEntry(key, result);
-   recentdirs_done(config);
+    QString key = fileClass;
+    QStringList result;
+    KConfig *config = recentdirs_readList(key, result, false);
+    // make sure the dir is first in history
+    result.remove(directory);
+    result.prepend(directory);
+    while(result.count() > MAX_DIR_HISTORY)
+        result.remove(result.fromLast());
+    config->writePathEntry(key, result);
+    recentdirs_done(config);
 }
-

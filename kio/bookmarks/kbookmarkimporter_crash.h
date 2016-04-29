@@ -34,40 +34,46 @@
  * A class for importing all crash sessions as bookmarks
  * @deprecated
  */
-class KIO_EXPORT_DEPRECATED KCrashBookmarkImporter : public QObject
-{
+class KIO_EXPORT_DEPRECATED KCrashBookmarkImporter : public QObject {
     Q_OBJECT
 public:
-    KCrashBookmarkImporter( const QString & fileName ) : m_fileName(fileName) {}
-    ~KCrashBookmarkImporter() {}
-    void parseCrashBookmarks( bool del = true );
-    static QString crashBookmarksDir( );
+    KCrashBookmarkImporter(const QString &fileName) : m_fileName(fileName)
+    {
+    }
+    ~KCrashBookmarkImporter()
+    {
+    }
+    void parseCrashBookmarks(bool del = true);
+    static QString crashBookmarksDir();
     static QStringList getCrashLogs(); // EMPTY!
 signals:
-    void newBookmark( const QString & text, const QCString & url, const QString & additionalInfo );
-    void newFolder( const QString & text, bool open, const QString & additionalInfo );
+    void newBookmark(const QString &text, const QCString &url, const QString &additionalInfo);
+    void newFolder(const QString &text, bool open, const QString &additionalInfo);
     void newSeparator();
     void endFolder();
+
 protected:
     QString m_fileName;
-    void parseCrashLog( QString filename, bool del ); // EMPTY!
+    void parseCrashLog(QString filename, bool del); // EMPTY!
 };
 
 /**
  * A class for importing all crash sessions as bookmarks
  * @since 3.2
  */
-class KIO_EXPORT KCrashBookmarkImporterImpl : public KBookmarkImporterBase
-{
+class KIO_EXPORT KCrashBookmarkImporterImpl : public KBookmarkImporterBase {
 public:
-    KCrashBookmarkImporterImpl() : m_shouldDelete(false) { }
+    KCrashBookmarkImporterImpl() : m_shouldDelete(false)
+    {
+    }
     void setShouldDelete(bool);
     virtual void parse();
     virtual QString findDefaultLocation(bool forSaving = false) const;
     static QStringList getCrashLogs();
+
 private:
     bool m_shouldDelete;
-    QMap<QString, QString> parseCrashLog_noemit( const QString & filename, bool del );
+    QMap< QString, QString > parseCrashLog_noemit(const QString &filename, bool del);
     class KCrashBookmarkImporterImplPrivate *d;
 };
 

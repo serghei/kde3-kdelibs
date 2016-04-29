@@ -28,31 +28,30 @@ class EditList;
 struct CupsdConf;
 struct CupsLocation;
 
-class LocationDialog : public KDialogBase
-{
-	Q_OBJECT
+class LocationDialog : public KDialogBase {
+    Q_OBJECT
 public:
-	LocationDialog(QWidget *parent = 0, const char *name = 0);
+    LocationDialog(QWidget *parent = 0, const char *name = 0);
 
-	void setInfos(CupsdConf*);
-	void fillLocation(CupsLocation*);
-	void setLocation(CupsLocation*);
+    void setInfos(CupsdConf *);
+    void fillLocation(CupsLocation *);
+    void setLocation(CupsLocation *);
 
-	static bool newLocation(CupsLocation*, QWidget *parent = 0, CupsdConf *conf = 0);
-	static bool editLocation(CupsLocation*, QWidget *parent = 0, CupsdConf *conf = 0);
+    static bool newLocation(CupsLocation *, QWidget *parent = 0, CupsdConf *conf = 0);
+    static bool editLocation(CupsLocation *, QWidget *parent = 0, CupsdConf *conf = 0);
 
 protected slots:
-	void slotTypeChanged(int);
-	void slotClassChanged(int);
-	void slotAdd();
-	void slotEdit(int);
-	void slotDefaultList();
+    void slotTypeChanged(int);
+    void slotClassChanged(int);
+    void slotAdd();
+    void slotEdit(int);
+    void slotDefaultList();
 
 private:
-	QComboBox	*resource_, *authtype_, *authclass_, *encryption_, *satisfy_, *order_;
-	QLineEdit	*authname_;
-	EditList	*addresses_;
-	CupsdConf	*conf_;
+    QComboBox *resource_, *authtype_, *authclass_, *encryption_, *satisfy_, *order_;
+    QLineEdit *authname_;
+    EditList *addresses_;
+    CupsdConf *conf_;
 };
 
 #endif

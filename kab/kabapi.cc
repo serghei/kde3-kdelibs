@@ -33,188 +33,196 @@
 
 using namespace std;
 
-KabAPI::KabAPI(QWidget* parent, const char* name)
-  : KDialogBase(parent, name),
-    book(0),
-    listbox(new KListBox(this)),
-    selection(-1)
+KabAPI::KabAPI(QWidget *parent, const char *name) : KDialogBase(parent, name), book(0), listbox(new KListBox(this)), selection(-1)
 {
-  Q_CHECK_PTR(listbox);
-  setMainWidget(listbox);
-  showButtonApply(false);
-  enableButtonSeparator(true);
-  connect(listbox, SIGNAL(highlighted(int)), SLOT(entrySelected(int)));
-  connect(listbox, SIGNAL(doubleClicked ( QListBoxItem * )),SLOT(slotDoubleClicked ( QListBoxItem * )));
+    Q_CHECK_PTR(listbox);
+    setMainWidget(listbox);
+    showButtonApply(false);
+    enableButtonSeparator(true);
+    connect(listbox, SIGNAL(highlighted(int)), SLOT(entrySelected(int)));
+    connect(listbox, SIGNAL(doubleClicked(QListBoxItem *)), SLOT(slotDoubleClicked(QListBoxItem *)));
 }
 
 
-void KabAPI::slotDoubleClicked ( QListBoxItem * )
+void KabAPI::slotDoubleClicked(QListBoxItem *)
 {
     accept();
 }
 
 int KabAPI::exec()
 {
-  QStringList names;
-  // -----
-  if(book==0)
+    QStringList names;
+    // -----
+    if(book == 0)
     {
-      kdDebug(KAB_KDEBUG_AREA)
-	<< "KabAPI::exec: you have to call init before using the API."
-	<< endl;
-      return -1;
-    } else {
-      if(book->getListOfNames(&names, true, false)==AddressBook::NoError)
-	{
-	  listbox->clear();
-	  listbox->insertStringList(names);
-	  if(names.count()>0)
-	    {
-	      listbox->setCurrentItem(0);
-	    }
-	  listbox->setMinimumSize(listbox->sizeHint());
-	  adjustSize();
-	  resize(minimumSize());
-	  return KDialogBase::exec();
-	} else {
-	  kdDebug(KAB_KDEBUG_AREA) << "KabAPI::exec: error creating interface."
-				   << endl;
-	  return -1;
-	}
+        kdDebug(KAB_KDEBUG_AREA) << "KabAPI::exec: you have to call init before using the API." << endl;
+        return -1;
+    }
+    else
+    {
+        if(book->getListOfNames(&names, true, false) == AddressBook::NoError)
+        {
+            listbox->clear();
+            listbox->insertStringList(names);
+            if(names.count() > 0)
+            {
+                listbox->setCurrentItem(0);
+            }
+            listbox->setMinimumSize(listbox->sizeHint());
+            adjustSize();
+            resize(minimumSize());
+            return KDialogBase::exec();
+        }
+        else
+        {
+            kdDebug(KAB_KDEBUG_AREA) << "KabAPI::exec: error creating interface." << endl;
+            return -1;
+        }
     }
 }
 
 AddressBook::ErrorCode KabAPI::init()
 {
-  // ############################################################################
-  book=new AddressBook(0, "KABAPI::book", true);  //change parent from "this" to "0" //dsweet
-  if(book->getState()==AddressBook::NoError)
+    // ############################################################################
+    book = new AddressBook(0, "KABAPI::book", true); // change parent from "this" to "0" //dsweet
+    if(book->getState() == AddressBook::NoError)
     {
-      connect(book, SIGNAL(setStatus(const QString&)),
-	      SLOT(setStatusSlot(const QString&)));
-      return AddressBook::NoError;
-    } else {
-      return AddressBook::InternError;
+        connect(book, SIGNAL(setStatus(const QString &)), SLOT(setStatusSlot(const QString &)));
+        return AddressBook::NoError;
     }
-  // ############################################################################
-}
-
-AddressBook::ErrorCode KabAPI::getEntry(AddressBook::Entry& entry, KabKey& key)
-{
-  // ############################################################################
-  if(book->noOfEntries()==0)
+    else
     {
-      return AddressBook::NoEntry;
+        return AddressBook::InternError;
     }
-  if(selection>=0)
+    // ############################################################################
+}
+
+AddressBook::ErrorCode KabAPI::getEntry(AddressBook::Entry &entry, KabKey &key)
+{
+    // ############################################################################
+    if(book->noOfEntries() == 0)
     {
-      if(book->getKey(selection, key)==AddressBook::NoError)
-	{
-	  if(book->getEntry(key, entry)==AddressBook::NoError)
-	    {
-	      return AddressBook::NoError;
-	    } else {
-	      return AddressBook::InternError; // this may not happen
-	    }
-	} else {
-	  return AddressBook::NoEntry;
-	}
-    } else {
-      return AddressBook::InternError;
+        return AddressBook::NoEntry;
     }
-  // ############################################################################
-}
-
-AddressBook::ErrorCode KabAPI::add(const AddressBook::Entry& entry, KabKey& key,
-				   bool update)
-{
-  // ############################################################################
-  if(book->add(entry, key, update)!=AddressBook::NoError)
+    if(selection >= 0)
     {
-      KMessageBox::sorry(this, i18n("Your new entry could not be added."));
-      return AddressBook::InternError;
-    } else {
-      return AddressBook::NoError;
+        if(book->getKey(selection, key) == AddressBook::NoError)
+        {
+            if(book->getEntry(key, entry) == AddressBook::NoError)
+            {
+                return AddressBook::NoError;
+            }
+            else
+            {
+                return AddressBook::InternError; // this may not happen
+            }
+        }
+        else
+        {
+            return AddressBook::NoEntry;
+        }
     }
-  // ############################################################################
-}
-
-AddressBook::ErrorCode KabAPI::remove(const KabKey& key)
-{
-  Q_CHECK_PTR(book);
-  // ############################################################################
-  if(book->AddressBook::remove(key)==AddressBook::NoError)
+    else
     {
-      return AddressBook::NoError;
-    } else {
-      return AddressBook::NoEntry;
+        return AddressBook::InternError;
     }
-  // ############################################################################
+    // ############################################################################
 }
 
-AddressBook::ErrorCode KabAPI::getEntryByName(const QString&,
-					 list<AddressBook::Entry>&, const int)
+AddressBook::ErrorCode KabAPI::add(const AddressBook::Entry &entry, KabKey &key, bool update)
 {
-  // ############################################################################
-  return AddressBook::NotImplemented;
-  // ############################################################################
+    // ############################################################################
+    if(book->add(entry, key, update) != AddressBook::NoError)
+    {
+        KMessageBox::sorry(this, i18n("Your new entry could not be added."));
+        return AddressBook::InternError;
+    }
+    else
+    {
+        return AddressBook::NoError;
+    }
+    // ############################################################################
 }
 
-AddressBook::ErrorCode KabAPI::getEntryByName(const AddressBook::Entry&,
-					 list<AddressBook::Entry>&, const int)
+AddressBook::ErrorCode KabAPI::remove(const KabKey &key)
 {
-  // ############################################################################
-  return AddressBook::NotImplemented;
-  // ############################################################################
+    Q_CHECK_PTR(book);
+    // ############################################################################
+    if(book->AddressBook::remove(key) == AddressBook::NoError)
+    {
+        return AddressBook::NoError;
+    }
+    else
+    {
+        return AddressBook::NoEntry;
+    }
+    // ############################################################################
 }
 
-AddressBook::ErrorCode KabAPI::getEntries(list<AddressBook::Entry>& entries)
+AddressBook::ErrorCode KabAPI::getEntryByName(const QString &, list< AddressBook::Entry > &, const int)
 {
-  kdDebug(KAB_KDEBUG_AREA) << "KabAPI::getEntries: called." << endl;
-  // ############################################################################
-  if(book->noOfEntries()==0)
+    // ############################################################################
+    return AddressBook::NotImplemented;
+    // ############################################################################
+}
+
+AddressBook::ErrorCode KabAPI::getEntryByName(const AddressBook::Entry &, list< AddressBook::Entry > &, const int)
+{
+    // ############################################################################
+    return AddressBook::NotImplemented;
+    // ############################################################################
+}
+
+AddressBook::ErrorCode KabAPI::getEntries(list< AddressBook::Entry > &entries)
+{
+    kdDebug(KAB_KDEBUG_AREA) << "KabAPI::getEntries: called." << endl;
+    // ############################################################################
+    if(book->noOfEntries() == 0)
     { // ----- database is valid, but empty:
-      kdDebug(KAB_KDEBUG_AREA) << "KabAPI::getEntries: no entries." << endl;
-      return AddressBook::NoEntry;
+        kdDebug(KAB_KDEBUG_AREA) << "KabAPI::getEntries: no entries." << endl;
+        return AddressBook::NoEntry;
     }
-  if(book->getEntries(entries)!=AddressBook::NoError)
+    if(book->getEntries(entries) != AddressBook::NoError)
     {
-      kdDebug(KAB_KDEBUG_AREA) << "KabAPI::getEntries: intern error." << endl;
-      return AddressBook::InternError;
-    } else {
-      kdDebug(KAB_KDEBUG_AREA) << "KabAPI::getEntries: done." << endl;
-      return AddressBook::NoError;
+        kdDebug(KAB_KDEBUG_AREA) << "KabAPI::getEntries: intern error." << endl;
+        return AddressBook::InternError;
     }
-  // ############################################################################
+    else
+    {
+        kdDebug(KAB_KDEBUG_AREA) << "KabAPI::getEntries: done." << endl;
+        return AddressBook::NoError;
+    }
+    // ############################################################################
 }
 
-AddressBook* KabAPI::addressbook()
+AddressBook *KabAPI::addressbook()
 {
-  // ############################################################################
-  return book;
-  // ############################################################################
+    // ############################################################################
+    return book;
+    // ############################################################################
 }
 
 AddressBook::ErrorCode KabAPI::save(bool force)
 {
-  // ############################################################################
-  if(book->save("", force)!=AddressBook::NoError)
+    // ############################################################################
+    if(book->save("", force) != AddressBook::NoError)
     {
-      return AddressBook::PermDenied;
-    } else {
-      return AddressBook::NoError;
+        return AddressBook::PermDenied;
     }
-  // ############################################################################
+    else
+    {
+        return AddressBook::NoError;
+    }
+    // ############################################################################
 }
 
 void KabAPI::entrySelected(int index)
 {
-  kdDebug(KAB_KDEBUG_AREA) << "KabAPI::entrySelected: entry " << index
-			   <<" selected." << endl;
-  selection=index;
+    kdDebug(KAB_KDEBUG_AREA) << "KabAPI::entrySelected: entry " << index << " selected." << endl;
+    selection = index;
 }
 
-void KabAPI::setStatusSlot(const QString& text)
+void KabAPI::setStatusSlot(const QString &text)
 {
-  emit(setStatus(text));
+    emit(setStatus(text));
 }

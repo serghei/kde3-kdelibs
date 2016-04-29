@@ -27,72 +27,69 @@
 #include <qwidget.h>
 #include <kdelibs_export.h>
 
-namespace KMediaPlayer
-{
+namespace KMediaPlayer {
 
 /** View is part of the user interface of a Player. */
-class KDE_EXPORT View : public QWidget
-{
-Q_OBJECT
+class KDE_EXPORT View : public QWidget {
+    Q_OBJECT
 
 public:
-	/** Your typical QWidget constructor. */
-	View(QWidget *parent, const char *name);
-	virtual ~View(void);
+    /** Your typical QWidget constructor. */
+    View(QWidget *parent, const char *name);
+    virtual ~View(void);
 
-	/** The Possible buttons that can appear in the UI. */
-	enum Button
-	{
-		/** Button that connects to Player::play */
-		Play = 1,
-		/** Button that connects to Player::stop */
-		Stop = 2,
-		/** Button that connects to Player::pause */
-		Pause = 4,
-		/** A seeker that interfaces with Player::seek */
-		Seeker = 8,
-		/** Show all buttons. */
-		All = 255
-	};
+    /** The Possible buttons that can appear in the UI. */
+    enum Button
+    {
+        /** Button that connects to Player::play */
+        Play = 1,
+        /** Button that connects to Player::stop */
+        Stop = 2,
+        /** Button that connects to Player::pause */
+        Pause = 4,
+        /** A seeker that interfaces with Player::seek */
+        Seeker = 8,
+        /** Show all buttons. */
+        All = 255
+    };
 
-	/** Return which buttons are being displayed. */
-	int buttons(void);
+    /** Return which buttons are being displayed. */
+    int buttons(void);
 
-	/** Return the QWidget in which video is displayed.
-		May Return 0L if there is none. */
-	QWidget *videoWidget();
+    /** Return the QWidget in which video is displayed.
+        May Return 0L if there is none. */
+    QWidget *videoWidget();
 
 public slots:
-	/** Set which buttons to display. See Button. */
-	void setButtons(int);
+    /** Set which buttons to display. See Button. */
+    void setButtons(int);
 
-	/** Returns if a particular button is being displayed. */
-	bool button(int);
-	/** Display a particular button. */
-	void showButton(int);
-	/** Stop displaying a particular button. */
-	void hideButton(int);
-	/** Toggle the display of a particular button. */
-	void toggleButton(int);
+    /** Returns if a particular button is being displayed. */
+    bool button(int);
+    /** Display a particular button. */
+    void showButton(int);
+    /** Stop displaying a particular button. */
+    void hideButton(int);
+    /** Toggle the display of a particular button. */
+    void toggleButton(int);
 
 signals:
-	/** Emitted when the set of displayed buttons changes. */
-	void buttonsChanged(int);
+    /** Emitted when the set of displayed buttons changes. */
+    void buttonsChanged(int);
 
 protected:
-	/** The implementing view should set the widget in which
-		the video will be displayed. KMediaPlayer users may
-		reparent() it to somewhere else, for example.
-	*/
-	void setVideoWidget(QWidget *videoWidget);
+    /** The implementing view should set the widget in which
+        the video will be displayed. KMediaPlayer users may
+        reparent() it to somewhere else, for example.
+    */
+    void setVideoWidget(QWidget *videoWidget);
 
 private:
-	int currentButtons;
+    int currentButtons;
 
-	struct Data;
-	Data *d;
+    struct Data;
+    Data *d;
 };
-
 }
 
 #endif

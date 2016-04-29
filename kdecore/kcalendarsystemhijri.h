@@ -40,59 +40,58 @@ class KCalendarSystemHijriPrivate;
  * @author Carlos Moro <cfmoro@correo.uniovi.es>
  * @since 3.2
  */
-class KDECORE_EXPORT KCalendarSystemHijri : public KCalendarSystem
-{
+class KDECORE_EXPORT KCalendarSystemHijri : public KCalendarSystem {
 public:
-  /** Constructor. Just like KCalendarSystem::KCalendarSystem(). */
-  KCalendarSystemHijri(const KLocale * locale = 0);
-  virtual ~KCalendarSystemHijri();
+    /** Constructor. Just like KCalendarSystem::KCalendarSystem(). */
+    KCalendarSystemHijri(const KLocale *locale = 0);
+    virtual ~KCalendarSystemHijri();
 
-  virtual int year (const QDate & date) const;
-  virtual int month (const QDate & date) const;
-  virtual int day (const QDate & date) const;
-  virtual int dayOfWeek (const QDate & date) const;
-  virtual int dayOfYear (const QDate & date) const;
+    virtual int year(const QDate &date) const;
+    virtual int month(const QDate &date) const;
+    virtual int day(const QDate &date) const;
+    virtual int dayOfWeek(const QDate &date) const;
+    virtual int dayOfYear(const QDate &date) const;
 
-  virtual bool setYMD(QDate & date, int y, int m, int d) const;
+    virtual bool setYMD(QDate &date, int y, int m, int d) const;
 
-  virtual QDate addYears(const QDate & date, int nyears) const;
-  virtual QDate addMonths(const QDate & date, int nmonths) const;
-  virtual QDate addDays(const QDate & date, int ndays) const;
+    virtual QDate addYears(const QDate &date, int nyears) const;
+    virtual QDate addMonths(const QDate &date, int nmonths) const;
+    virtual QDate addDays(const QDate &date, int ndays) const;
 
-  virtual int monthsInYear (const QDate & date) const;
-  virtual int daysInYear (const QDate & date) const;
-  virtual int daysInMonth (const QDate & date) const;
-  virtual int weeksInYear(int year) const;
-  virtual int weekNumber(const QDate& date, int * yearNum = 0) const;
+    virtual int monthsInYear(const QDate &date) const;
+    virtual int daysInYear(const QDate &date) const;
+    virtual int daysInMonth(const QDate &date) const;
+    virtual int weeksInYear(int year) const;
+    virtual int weekNumber(const QDate &date, int *yearNum = 0) const;
 
-  virtual QString monthName (int month, int year, bool shortName = false) const;
-  virtual QString monthName (const QDate & date, bool shortName = false ) const;
-  virtual QString monthNamePossessive(int month, int year, bool shortName = false) const;
-  virtual QString monthNamePossessive(const QDate & date, bool shortName = false ) const;
-  virtual QString weekDayName (int weekDay, bool shortName = false) const;
-  virtual QString weekDayName (const QDate & date, bool shortName = false) const;
+    virtual QString monthName(int month, int year, bool shortName = false) const;
+    virtual QString monthName(const QDate &date, bool shortName = false) const;
+    virtual QString monthNamePossessive(int month, int year, bool shortName = false) const;
+    virtual QString monthNamePossessive(const QDate &date, bool shortName = false) const;
+    virtual QString weekDayName(int weekDay, bool shortName = false) const;
+    virtual QString weekDayName(const QDate &date, bool shortName = false) const;
 
-  virtual int minValidYear () const;
-  virtual int maxValidYear () const;
-  virtual int weekDayOfPray () const;
+    virtual int minValidYear() const;
+    virtual int maxValidYear() const;
+    virtual int weekDayOfPray() const;
 
-  virtual QString calendarName() const;
+    virtual QString calendarName() const;
 
-  virtual bool isLunar() const;
-  virtual bool isLunisolar() const;
-  virtual bool isSolar() const;
+    virtual bool isLunar() const;
+    virtual bool isLunisolar() const;
+    virtual bool isSolar() const;
 
-  private:
-  /**
-   * Gets the number of days in a month for a given date
-   *
-   * @param month month number
-   * @param year given rear
-   * @return number of days in month
-   */
-  int hndays(int month, int year) const;
+private:
+    /**
+     * Gets the number of days in a month for a given date
+     *
+     * @param month month number
+     * @param year given rear
+     * @return number of days in month
+     */
+    int hndays(int month, int year) const;
 
-  KCalendarSystemHijriPrivate * d;
+    KCalendarSystemHijriPrivate *d;
 };
 
 #endif

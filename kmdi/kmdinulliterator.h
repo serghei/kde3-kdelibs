@@ -29,21 +29,31 @@
 
 #include "kmdiiterator.h"
 
-template <class Item>
-class KMdiNullIterator : public KMdiIterator<Item> {
+template < class Item > class KMdiNullIterator : public KMdiIterator< Item > {
 public:
-   KMdiNullIterator() {};
-   virtual void first() {}
-   virtual void last() {}
-   virtual void next() {}
-   virtual void prev() {}
-   virtual bool isDone() const { return true; }
-   virtual Item currentItem() const {
-   /* should really never go inside here */
-   return 0;
-   }
+    KMdiNullIterator(){};
+    virtual void first()
+    {
+    }
+    virtual void last()
+    {
+    }
+    virtual void next()
+    {
+    }
+    virtual void prev()
+    {
+    }
+    virtual bool isDone() const
+    {
+        return true;
+    }
+    virtual Item currentItem() const
+    {
+        /* should really never go inside here */
+        return 0;
+    }
 };
 
 #endif // _KMDINULLITERATOR_H_
 // kate: space-indent off; tab-width 4; replace-tabs off; indent-mode csands;
-

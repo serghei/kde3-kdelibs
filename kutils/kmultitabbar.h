@@ -53,148 +53,152 @@ class KMultiTabBarInternal;
  * should be raisable is left to the "user".
  *@author Joseph Wenninger
  */
-class KUTILS_EXPORT KMultiTabBar: public QWidget
-{
-	Q_OBJECT
+class KUTILS_EXPORT KMultiTabBar : public QWidget {
+    Q_OBJECT
 public:
-	/**
-	 * The tab bar's orientation. Also constraints the bar's position.
-	 */
-	enum KMultiTabBarMode {
-		Horizontal,  ///< Horizontal orientation (i.e. on top or bottom)
-		Vertical     ///< Vertical orientation (i.e. on the left or right hand side)
-	};
-	
-	/**
-	 * The tab bar's position
-	 */
-	enum KMultiTabBarPosition {
-		Left,   ///< Left hand side
-		Right,  ///< Right hand side
-		Top,    ///< On top
-		Bottom  ///< On bottom
-	};
+    /**
+     * The tab bar's orientation. Also constraints the bar's position.
+     */
+    enum KMultiTabBarMode
+    {
+        Horizontal, ///< Horizontal orientation (i.e. on top or bottom)
+        Vertical    ///< Vertical orientation (i.e. on the left or right hand side)
+    };
 
-	/**
-	 * The list of available styles for KMultiTabBar
-	 */
-	enum KMultiTabBarStyle {
-		VSNET=0,          ///< Visual Studio .Net like (only show the text of active tabs)
-		KDEV3=1,          ///< KDevelop 3 like (always show the text)
-		KONQSBC=2,        ///< Konqueror's classic sidebar style (unthemed) (currently disabled)
-		KDEV3ICON=3,      ///< KDevelop 3 like with icons
-		STYLELAST=0xffff  ///< Last style
-	};
+    /**
+     * The tab bar's position
+     */
+    enum KMultiTabBarPosition
+    {
+        Left,  ///< Left hand side
+        Right, ///< Right hand side
+        Top,   ///< On top
+        Bottom ///< On bottom
+    };
 
-	/**
-	 * Constructor.
-	 * @param bm The tab bar's orientation
-	 * @param parent The parent widget
-	 * @param name The widget's name
-	 */
-	KMultiTabBar(KMultiTabBarMode bm,QWidget *parent=0,const char *name=0);
-	
-	/**
-	 * Destructor.
-	 */
-	virtual ~KMultiTabBar();
+    /**
+     * The list of available styles for KMultiTabBar
+     */
+    enum KMultiTabBarStyle
+    {
+        VSNET = 0,         ///< Visual Studio .Net like (only show the text of active tabs)
+        KDEV3 = 1,         ///< KDevelop 3 like (always show the text)
+        KONQSBC = 2,       ///< Konqueror's classic sidebar style (unthemed) (currently disabled)
+        KDEV3ICON = 3,     ///< KDevelop 3 like with icons
+        STYLELAST = 0xffff ///< Last style
+    };
 
-	/**
- 	 * append  a new button to the button area. The button can later on be accessed with button(ID)
-	 * eg for connecting signals to it
-	 * @param pic a pixmap for the button
- 	 * @param id an arbitraty ID value. It will be emitted in the clicked signal for identifying the button
-	 *	if more than one button is connected to a signals.
-	 * @param popup A popup menu which should be displayed if the button is clicked
-	 * @param not_used_yet will be used for a popup text in the future
-	 */
- 	int appendButton(const QPixmap &pic,int id=-1,QPopupMenu* popup=0,const QString& not_used_yet=QString::null);
-	/** 
+    /**
+     * Constructor.
+     * @param bm The tab bar's orientation
+     * @param parent The parent widget
+     * @param name The widget's name
+     */
+    KMultiTabBar(KMultiTabBarMode bm, QWidget *parent = 0, const char *name = 0);
+
+    /**
+     * Destructor.
+     */
+    virtual ~KMultiTabBar();
+
+    /**
+     * append  a new button to the button area. The button can later on be accessed with button(ID)
+     * eg for connecting signals to it
+     * @param pic a pixmap for the button
+     * @param id an arbitraty ID value. It will be emitted in the clicked signal for identifying the button
+     *	if more than one button is connected to a signals.
+     * @param popup A popup menu which should be displayed if the button is clicked
+     * @param not_used_yet will be used for a popup text in the future
+     */
+    int appendButton(const QPixmap &pic, int id = -1, QPopupMenu *popup = 0, const QString &not_used_yet = QString::null);
+    /**
          * remove a button with the given ID
-	 */
-	void removeButton(int id);
-	/**
-	 * append a new tab to the tab area. It can be accessed lateron with tabb(id);
-	 * @param pic a bitmap for the tab
-	 * @param id an arbitrary ID which can be used later on to identify the tab
-	 * @param text if a mode with text is used it will be the tab text, otherwise a mouse over hint
-	 * @return Always zero. Can be safely ignored.
-	 */
-	int appendTab(const QPixmap &pic,int id=-1,const QString& text=QString::null);
-	/**
-	 * remove a tab with a given ID
-	 * @param id The ID of the tab to remove
-	 */
-	void removeTab(int id);
-	/**
-	 * set a tab to "raised"
-	 * @param id The ID of the tab to manipulate
-	 * @param state true == activated/raised, false == not active
-	 */
-	void setTab(int id ,bool state);
-	/**
-	 * return the state of a tab, identified by it's ID
-	 * @param id The ID of the tab to raise
-	 */
-	bool isTabRaised(int id) const;
-	/**
-	 * get a pointer to a button within the button area identified by its ID
-	 * @param id The id of the tab
-	 */
-	class KMultiTabBarButton *button(int id) const;
+     */
+    void removeButton(int id);
+    /**
+     * append a new tab to the tab area. It can be accessed lateron with tabb(id);
+     * @param pic a bitmap for the tab
+     * @param id an arbitrary ID which can be used later on to identify the tab
+     * @param text if a mode with text is used it will be the tab text, otherwise a mouse over hint
+     * @return Always zero. Can be safely ignored.
+     */
+    int appendTab(const QPixmap &pic, int id = -1, const QString &text = QString::null);
+    /**
+     * remove a tab with a given ID
+     * @param id The ID of the tab to remove
+     */
+    void removeTab(int id);
+    /**
+     * set a tab to "raised"
+     * @param id The ID of the tab to manipulate
+     * @param state true == activated/raised, false == not active
+     */
+    void setTab(int id, bool state);
+    /**
+     * return the state of a tab, identified by it's ID
+     * @param id The ID of the tab to raise
+     */
+    bool isTabRaised(int id) const;
+    /**
+     * get a pointer to a button within the button area identified by its ID
+     * @param id The id of the tab
+     */
+    class KMultiTabBarButton *button(int id) const;
 
-	/**
-	 * get a pointer to a tab within the tab area, identified by its ID
-	 */
-	class KMultiTabBarTab *tab(int id) const;
-	/**
-	 * set the real position of the widget.
-	 * @param pos if the mode is horizontal, only use top, bottom, if it is vertical use left or right
-	 */
-	void setPosition(KMultiTabBarPosition pos);
-	/**
-	 * get the tabbar position.
-	 * @return The tab bar's position
-	 */
-	KMultiTabBarPosition position() const;
-	/**
-	 * set the display style of the tabs
-	 * @param style The new display style
-	 */
-	void setStyle(KMultiTabBarStyle style);
-	/**
-	 * get the display style of the tabs
-	 * @return display style
-	 */
-	KMultiTabBarStyle tabStyle() const;
-	/**
-	 * Returns the list of pointers to the tabs of type KMultiTabBarTab.
-	 * @return The list of tabs.
-	 * @warning be careful, don't delete tabs yourself and don't delete the list itself
-	 */
-        QPtrList<KMultiTabBarTab>* tabs();
-	/**
-	 * Returns the list of pointers to the tab buttons of type KMultiTabBarButton.
-	 * @return The list of tab buttons.
-	 * @warning be careful, don't delete buttons yourself and don't delete the list itself
-	 */
-	QPtrList<KMultiTabBarButton>* buttons();
+    /**
+     * get a pointer to a tab within the tab area, identified by its ID
+     */
+    class KMultiTabBarTab *tab(int id) const;
+    /**
+     * set the real position of the widget.
+     * @param pos if the mode is horizontal, only use top, bottom, if it is vertical use left or right
+     */
+    void setPosition(KMultiTabBarPosition pos);
+    /**
+     * get the tabbar position.
+     * @return The tab bar's position
+     */
+    KMultiTabBarPosition position() const;
+    /**
+     * set the display style of the tabs
+     * @param style The new display style
+     */
+    void setStyle(KMultiTabBarStyle style);
+    /**
+     * get the display style of the tabs
+     * @return display style
+     */
+    KMultiTabBarStyle tabStyle() const;
+    /**
+     * Returns the list of pointers to the tabs of type KMultiTabBarTab.
+     * @return The list of tabs.
+     * @warning be careful, don't delete tabs yourself and don't delete the list itself
+     */
+    QPtrList< KMultiTabBarTab > *tabs();
+    /**
+     * Returns the list of pointers to the tab buttons of type KMultiTabBarButton.
+     * @return The list of tab buttons.
+     * @warning be careful, don't delete buttons yourself and don't delete the list itself
+     */
+    QPtrList< KMultiTabBarButton > *buttons();
 
-	/**
-	 * might vanish, not sure yet
-	 */
-	void showActiveTabTexts(bool show=true);
+    /**
+     * might vanish, not sure yet
+     */
+    void showActiveTabTexts(bool show = true);
+
 protected:
-	friend class KMultiTabBarButton;
-	virtual void fontChange( const QFont& );
-	void updateSeparator();
+    friend class KMultiTabBarButton;
+    virtual void fontChange(const QFont &);
+    void updateSeparator();
+
 private:
-	class KMultiTabBarInternal *m_internal;
-	QBoxLayout *m_l;
-	QFrame *m_btnTabSep;
-	QPtrList<KMultiTabBarButton> m_buttons;
-	KMultiTabBarPosition m_position;
-	KMultiTabBarPrivate *d;
+    class KMultiTabBarInternal *m_internal;
+    QBoxLayout *m_l;
+    QFrame *m_btnTabSep;
+    QPtrList< KMultiTabBarButton > m_buttons;
+    KMultiTabBarPosition m_position;
+    KMultiTabBarPrivate *d;
 };
 
 /**
@@ -202,62 +206,62 @@ private:
  * This class represents a tab bar button in a KMultiTabBarWidget.
  * This class should never be created except with the appendButton call of KMultiTabBar
  */
-class KUTILS_EXPORT KMultiTabBarButton: public QPushButton
-{
-	Q_OBJECT
+class KUTILS_EXPORT KMultiTabBarButton : public QPushButton {
+    Q_OBJECT
 public:
-	/** @internal */
-	KMultiTabBarButton(const QPixmap& pic,const QString&, QPopupMenu *popup,
-		int id,QWidget *parent, KMultiTabBar::KMultiTabBarPosition pos, KMultiTabBar::KMultiTabBarStyle style);
-	/** @internal */
-	KMultiTabBarButton(const QString&, QPopupMenu *popup,
-		int id,QWidget *parent, KMultiTabBar::KMultiTabBarPosition pos, KMultiTabBar::KMultiTabBarStyle style);
-	/**
-	 * Destructor
-	 */
-	virtual  ~KMultiTabBarButton();
-	/**
-	 * Returns the tab's ID
-	 * @return The tab's ID
-	 */
-	int id() const;
+    /** @internal */
+    KMultiTabBarButton(const QPixmap &pic, const QString &, QPopupMenu *popup, int id, QWidget *parent, KMultiTabBar::KMultiTabBarPosition pos,
+                       KMultiTabBar::KMultiTabBarStyle style);
+    /** @internal */
+    KMultiTabBarButton(const QString &, QPopupMenu *popup, int id, QWidget *parent, KMultiTabBar::KMultiTabBarPosition pos,
+                       KMultiTabBar::KMultiTabBarStyle style);
+    /**
+     * Destructor
+     */
+    virtual ~KMultiTabBarButton();
+    /**
+     * Returns the tab's ID
+     * @return The tab's ID
+     */
+    int id() const;
 
 public slots:
-	/**
-	 * this is used internaly, but can be used by the user, if (s)he wants to
-	 * It the according call of KMultiTabBar is invoked though this modifications will be overwritten
-	 */
-	void setPosition(KMultiTabBar::KMultiTabBarPosition);
-        /**
-         * this is used internaly, but can be used by the user, if (s)he wants to
-         * It the according call of KMultiTabBar is invoked though this modifications will be overwritten
-         */
-	void setStyle(KMultiTabBar::KMultiTabBarStyle);
+    /**
+     * this is used internaly, but can be used by the user, if (s)he wants to
+     * It the according call of KMultiTabBar is invoked though this modifications will be overwritten
+     */
+    void setPosition(KMultiTabBar::KMultiTabBarPosition);
+    /**
+     * this is used internaly, but can be used by the user, if (s)he wants to
+     * It the according call of KMultiTabBar is invoked though this modifications will be overwritten
+     */
+    void setStyle(KMultiTabBar::KMultiTabBarStyle);
 
-        /**
-	 * modify the text of the button
-         */
-	void setText(const QString &);
+    /**
+ * modify the text of the button
+     */
+    void setText(const QString &);
 
-	QSize sizeHint() const;
+    QSize sizeHint() const;
 
 protected:
-	KMultiTabBar::KMultiTabBarPosition m_position;
-	KMultiTabBar::KMultiTabBarStyle m_style;
-	QString m_text;
-	virtual void hideEvent( class QHideEvent*);
-	virtual void showEvent( class QShowEvent*);
+    KMultiTabBar::KMultiTabBarPosition m_position;
+    KMultiTabBar::KMultiTabBarStyle m_style;
+    QString m_text;
+    virtual void hideEvent(class QHideEvent *);
+    virtual void showEvent(class QShowEvent *);
+
 private:
-	int m_id;
-	KMultiTabBarButtonPrivate *d;
+    int m_id;
+    KMultiTabBarButtonPrivate *d;
 signals:
-	/**
-	 * this is emitted if  the button is clicked
-	 * @param id	the ID identifying the button
-	 */
-	void clicked(int id);
+    /**
+     * this is emitted if  the button is clicked
+     * @param id	the ID identifying the button
+     */
+    void clicked(int id);
 protected slots:
-	virtual void slotClicked();
+    virtual void slotClicked();
 };
 
 /**
@@ -265,52 +269,56 @@ protected slots:
  * This class represents a tab bar's tab in a KMultiTabBarWidget.
  * This class should never be created except with the appendTab call of KMultiTabBar
  */
-class KUTILS_EXPORT KMultiTabBarTab: public KMultiTabBarButton
-{
-	Q_OBJECT
+class KUTILS_EXPORT KMultiTabBarTab : public KMultiTabBarButton {
+    Q_OBJECT
 public:
-  /** @internal */
-	KMultiTabBarTab(const QPixmap& pic,const QString&,int id,QWidget *parent,
-		KMultiTabBar::KMultiTabBarPosition pos,KMultiTabBar::KMultiTabBarStyle style);
-	/**
-	 * Destructor.
-	 */
-	virtual ~KMultiTabBarTab();
-	/**
-	 * set the active state of the tab
-	 * @param  state @c true if the tab should become active, @c false otherwise
-	 */
-	void setState(bool state);
-	/**
-	 * choose if the text should always be displayed
-	 * this is only used in classic mode if at all
-	 * @param show Whether or not to show the text
-	 */
-	void showActiveTabText(bool show);
-	/**
-	 * Resized the tab to the needed size.
-	 */
-	void resize(){ setSize( neededSize() ); }
+    /** @internal */
+    KMultiTabBarTab(const QPixmap &pic, const QString &, int id, QWidget *parent, KMultiTabBar::KMultiTabBarPosition pos,
+                    KMultiTabBar::KMultiTabBarStyle style);
+    /**
+     * Destructor.
+     */
+    virtual ~KMultiTabBarTab();
+    /**
+     * set the active state of the tab
+     * @param  state @c true if the tab should become active, @c false otherwise
+     */
+    void setState(bool state);
+    /**
+     * choose if the text should always be displayed
+     * this is only used in classic mode if at all
+     * @param show Whether or not to show the text
+     */
+    void showActiveTabText(bool show);
+    /**
+     * Resized the tab to the needed size.
+     */
+    void resize()
+    {
+        setSize(neededSize());
+    }
+
 private:
-	bool m_showActiveTabText;
-	int m_expandedSize;
-	KMultiTabBarTabPrivate *d;
+    bool m_showActiveTabText;
+    int m_expandedSize;
+    KMultiTabBarTabPrivate *d;
+
 protected:
-	friend class KMultiTabBarInternal;
-	void setSize(int);
-	int neededSize();
-	void updateState();
-	virtual void drawButton(QPainter *);
-	virtual void drawButtonLabel(QPainter *);
-	void drawButtonStyled(QPainter *);
-	void drawButtonClassic(QPainter *);
+    friend class KMultiTabBarInternal;
+    void setSize(int);
+    int neededSize();
+    void updateState();
+    virtual void drawButton(QPainter *);
+    virtual void drawButtonLabel(QPainter *);
+    void drawButtonStyled(QPainter *);
+    void drawButtonClassic(QPainter *);
 protected slots:
-	virtual void slotClicked();
-	void setTabsPosition(KMultiTabBar::KMultiTabBarPosition);
+    virtual void slotClicked();
+    void setTabsPosition(KMultiTabBar::KMultiTabBarPosition);
 
 public slots:
-	virtual void setIcon(const QString&);
-	virtual void setIcon(const QPixmap&);
+    virtual void setIcon(const QString &);
+    virtual void setIcon(const QPixmap &);
 };
 
 #endif

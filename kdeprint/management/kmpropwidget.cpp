@@ -26,15 +26,15 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 
-KMPropWidget::KMPropWidget(QWidget *parent, const char *name)
-: QWidget(parent,name)
+KMPropWidget::KMPropWidget(QWidget *parent, const char *name) : QWidget(parent, name)
 {
-	m_pixmap = "folder";
-	m_title = m_header = "Title";
-	m_printer = 0;
-	m_canchange = ((KMFactory::self()->manager()->printerOperationMask() & KMManager::PrinterCreation) && KMFactory::self()->manager()->hasManagement());
+    m_pixmap = "folder";
+    m_title = m_header = "Title";
+    m_printer = 0;
+    m_canchange =
+        ((KMFactory::self()->manager()->printerOperationMask() & KMManager::PrinterCreation) && KMFactory::self()->manager()->hasManagement());
 
-	connect(this,SIGNAL(enable(bool)),this,SIGNAL(enableChange(bool)));
+    connect(this, SIGNAL(enable(bool)), this, SIGNAL(enableChange(bool)));
 }
 
 KMPropWidget::~KMPropWidget()
@@ -43,27 +43,28 @@ KMPropWidget::~KMPropWidget()
 
 void KMPropWidget::slotChange()
 {
-	KMTimer::self()->hold();
-	int	value = requestChange();
-	if (value == -1)
-	{
-		KMessageBox::error(this, i18n("<qt>Unable to change printer properties. Error received from manager:<p>%1</p></qt>").arg(KMManager::self()->errorMsg()));
-		KMManager::self()->setErrorMsg(QString::null);
-	}
-	KMTimer::self()->release((value == 1));
+    KMTimer::self()->hold();
+    int value = requestChange();
+    if(value == -1)
+    {
+        KMessageBox::error(
+            this, i18n("<qt>Unable to change printer properties. Error received from manager:<p>%1</p></qt>").arg(KMManager::self()->errorMsg()));
+        KMManager::self()->setErrorMsg(QString::null);
+    }
+    KMTimer::self()->release((value == 1));
 }
 
 void KMPropWidget::setPrinterBase(KMPrinter *p)
 {
-	m_printer = p;
-	setPrinter(p);
+    m_printer = p;
+    setPrinter(p);
 }
 
-void KMPropWidget::setPrinter(KMPrinter*)
+void KMPropWidget::setPrinter(KMPrinter *)
 {
 }
 
-void KMPropWidget::configureWizard(KMWizard*)
+void KMPropWidget::configureWizard(KMWizard *)
 {
 }
 
@@ -73,14 +74,14 @@ void KMPropWidget::configureWizard(KMWizard*)
 //    1 : success
 int KMPropWidget::requestChange()
 {
-	if (m_printer)
-	{
-		KMWizard	dlg(this);
-		configureWizard(&dlg);
-		dlg.setPrinter(m_printer);
-		if (dlg.exec())
-			return (KMFactory::self()->manager()->modifyPrinter(m_printer,dlg.printer()) ? 1 : -1);
-	}
-	return 0;
+    if(m_printer)
+    {
+        KMWizard dlg(this);
+        configureWizard(&dlg);
+        dlg.setPrinter(m_printer);
+        if(dlg.exec())
+            return (KMFactory::self()->manager()->modifyPrinter(m_printer, dlg.printer()) ? 1 : -1);
+    }
+    return 0;
 }
 #include "kmpropwidget.moc"

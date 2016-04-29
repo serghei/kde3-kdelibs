@@ -66,105 +66,107 @@
  * @see KImageIO, QPixmap, QImage, QImageIO
  * @author Sirtaj Singh Kang
  */
-class KIO_EXPORT KImageIO
-{
+class KIO_EXPORT KImageIO {
 public:
-  /**
-   * Possible image file access modes.
-   *
-   * Used in various KImageIO static function.
-   **/
-  enum Mode { Reading, Writing };
+    /**
+     * Possible image file access modes.
+     *
+     * Used in various KImageIO static function.
+     **/
+    enum Mode
+    {
+        Reading,
+        Writing
+    };
 
-  /**
-   *  Registers all KImageIO supported formats.
-   */
-  static void registerFormats();
+    /**
+     *  Registers all KImageIO supported formats.
+     */
+    static void registerFormats();
 
-  /**
-   * Checks if a special type is supported for writing.
-   * @param type the type id of the image type
-   * @return true if the image format can be written
-   */
-  static bool canWrite(const QString& type);
+    /**
+     * Checks if a special type is supported for writing.
+     * @param type the type id of the image type
+     * @return true if the image format can be written
+     */
+    static bool canWrite(const QString &type);
 
-  /**
-   * Checks if a special type is supported for reading.
-   * @param type the type id of the image type
-   * @return true if the image format can be read
-   */
-  static bool canRead(const QString& type);
+    /**
+     * Checks if a special type is supported for reading.
+     * @param type the type id of the image type
+     * @return true if the image format can be read
+     */
+    static bool canRead(const QString &type);
 
-  /**
-   * Returns a list of all KImageIO supported formats.
-   *
-   * @param mode Tells whether to retrieve modes that can be read or written.
-   * @return a list of the type ids
-   */
-  static QStringList types(Mode mode = Writing);
+    /**
+     * Returns a list of all KImageIO supported formats.
+     *
+     * @param mode Tells whether to retrieve modes that can be read or written.
+     * @return a list of the type ids
+     */
+    static QStringList types(Mode mode = Writing);
 
 
-  /**
-   * Returns a list of patterns of all KImageIO supported formats.
-   *
-   * These patterns can be passed to KFileDialog::getOpenFileName()
-   * or KFileDialog::getSaveFileName(), for example.
-   *
-   * @param mode Tells whether to retrieve modes that can be read or written.
-   * @return a space-separated list of file globs that describe the
-   * supported formats
-   */
-  static QString pattern(Mode mode = Reading);
+    /**
+     * Returns a list of patterns of all KImageIO supported formats.
+     *
+     * These patterns can be passed to KFileDialog::getOpenFileName()
+     * or KFileDialog::getSaveFileName(), for example.
+     *
+     * @param mode Tells whether to retrieve modes that can be read or written.
+     * @return a space-separated list of file globs that describe the
+     * supported formats
+     */
+    static QString pattern(Mode mode = Reading);
 
-  /**
-   * Returns the suffix of an image type.
-   * @param type the type id of the file format
-   * @return the suffix of the file format or QString::null if it does not
-   *         exist
-   */
-  static QString suffix(const QString& type);
+    /**
+     * Returns the suffix of an image type.
+     * @param type the type id of the file format
+     * @return the suffix of the file format or QString::null if it does not
+     *         exist
+     */
+    static QString suffix(const QString &type);
 
-  /**
-   * Returns the type of a MIME type.
-   * @param mimeType the MIME type to search
-   * @return type id of the MIME type or QString::null if the MIME type
-   *         is not supported
-   * @since 3.1
-   */
-  static QString typeForMime(const QString& mimeType);
+    /**
+     * Returns the type of a MIME type.
+     * @param mimeType the MIME type to search
+     * @return type id of the MIME type or QString::null if the MIME type
+     *         is not supported
+     * @since 3.1
+     */
+    static QString typeForMime(const QString &mimeType);
 
-  /**
-   * Returns the type of given filename.
-   * @param filename the filename to check
-   * @return if the file name's suffix is known the type id of the
-   *         file type, otherwise QString::null
-   */
-  static QString type(const QString& filename);
+    /**
+     * Returns the type of given filename.
+     * @param filename the filename to check
+     * @return if the file name's suffix is known the type id of the
+     *         file type, otherwise QString::null
+     */
+    static QString type(const QString &filename);
 
-  /**
-   *  Returns a list of MIME types for all KImageIO supported formats.
-   *
-   * @param mode Tells whether to retrieve modes that can be read or written.
-   * @return a list if MIME types of the supported formats
-   */
-  static QStringList mimeTypes( Mode mode = Writing );
+    /**
+     *  Returns a list of MIME types for all KImageIO supported formats.
+     *
+     * @param mode Tells whether to retrieve modes that can be read or written.
+     * @return a list if MIME types of the supported formats
+     */
+    static QStringList mimeTypes(Mode mode = Writing);
 
-  /**
-   * Test to see whether a MIME type is supported to reading/writing.
-   * @param _mimeType the MIME type to check
-   * @param _mode Tells whether to check for reading or writing capabilities
-   * @return true if the type is supported
-   **/
-  static bool isSupported( const QString& _mimeType, Mode _mode = Writing );
+    /**
+     * Test to see whether a MIME type is supported to reading/writing.
+     * @param _mimeType the MIME type to check
+     * @param _mode Tells whether to check for reading or writing capabilities
+     * @return true if the type is supported
+     **/
+    static bool isSupported(const QString &_mimeType, Mode _mode = Writing);
 
-  /**
-   * Returns the MIME type of @p _filename.
-   * @param _filename the filename to check
-   * @return the MIME type of the file, or QString::null
-   **/
-  static QString mimeType( const QString& _filename );
+    /**
+     * Returns the MIME type of @p _filename.
+     * @param _filename the filename to check
+     * @return the MIME type of the file, or QString::null
+     **/
+    static QString mimeType(const QString &_filename);
 };
 
 
 #endif
-

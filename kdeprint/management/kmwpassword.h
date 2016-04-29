@@ -25,19 +25,18 @@
 class QLineEdit;
 class QButtonGroup;
 
-class KMWPassword : public KMWizardPage
-{
+class KMWPassword : public KMWizardPage {
 public:
-	KMWPassword(QWidget *parent = 0, const char *name = 0);
+    KMWPassword(QWidget *parent = 0, const char *name = 0);
 
-	bool isValid(QString&);
-	void initPrinter( KMPrinter* );
-	void updatePrinter(KMPrinter*);
+    bool isValid(QString &);
+    void initPrinter(KMPrinter *);
+    void updatePrinter(KMPrinter *);
 
 private:
-	QLineEdit    *m_login;
-	QLineEdit    *m_password;
-	QButtonGroup *m_btngroup;
+    QLineEdit *m_login;
+    QLineEdit *m_password;
+    QButtonGroup *m_btngroup;
 };
 
 #endif

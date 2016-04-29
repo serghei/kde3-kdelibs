@@ -30,17 +30,16 @@
 
 #include "knewstuff.h"
 
-class GhnsWidget : public QWidget
-{
+class GhnsWidget : public QWidget {
     Q_OBJECT
-  public:
+public:
     GhnsWidget();
     ~GhnsWidget();
-    
-  public slots:
+
+public slots:
     void downloadWallpapers();
 
-  private:
+private:
     KNewStuff *mWallpapers;
 };
 

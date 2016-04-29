@@ -41,79 +41,85 @@ class KColorButton;
 class QPopupMenu;
 class KComboBox;
 
-class KateSchemaManager
-{
-  public:
-    KateSchemaManager ();
-    ~KateSchemaManager ();
+class KateSchemaManager {
+public:
+    KateSchemaManager();
+    ~KateSchemaManager();
 
     /**
      * Schema Config changed, update all renderers
      */
-    void update (bool readfromfile = true);
+    void update(bool readfromfile = true);
 
     /**
      * return kconfig with right group set or set to Normal if not there
      */
-    KConfig *schema (uint number);
+    KConfig *schema(uint number);
 
-    void addSchema (const QString &t);
+    void addSchema(const QString &t);
 
-    void removeSchema (uint number);
+    void removeSchema(uint number);
 
     /**
      * is this schema valid ? (does it exist ?)
      */
-    bool validSchema (uint number);
+    bool validSchema(uint number);
 
     /**
      * if not found, defaults to 0
      */
-    uint number (const QString &name);
+    uint number(const QString &name);
 
     /**
      * group names in the end, no i18n involved
      */
-    QString name (uint number);
+    QString name(uint number);
 
     /**
      * Don't modify, list with the names of the schemas (i18n name for the default ones)
      */
-    const QStringList &list () { return m_schemas; }
+    const QStringList &list()
+    {
+        return m_schemas;
+    }
 
-    static QString normalSchema ();
-    static QString printingSchema ();
+    static QString normalSchema();
+    static QString printingSchema();
 
-  private:
+private:
     KConfig m_config;
     QStringList m_schemas;
 };
 
 
-class KateViewSchemaAction : public KActionMenu
-{
-  Q_OBJECT
+class KateViewSchemaAction : public KActionMenu {
+    Q_OBJECT
 
-  public:
-    KateViewSchemaAction(const QString& text, QObject* parent = 0, const char* name = 0)
-       : KActionMenu(text, parent, name) { init(); };
+public:
+    KateViewSchemaAction(const QString &text, QObject *parent = 0, const char *name = 0) : KActionMenu(text, parent, name)
+    {
+        init();
+    };
 
-    ~KateViewSchemaAction(){;};
+    ~KateViewSchemaAction()
+    {
+        ;
+    };
 
-    void updateMenu (KateView *view);
+    void updateMenu(KateView *view);
 
-  private:
+private:
     void init();
 
-    QGuardedPtr<KateView> m_view;
+    QGuardedPtr< KateView > m_view;
     QStringList names;
     int last;
 
-  public  slots:
+public slots:
     void slotAboutToShow();
 
-  private slots:
-    void setSchema (int mode);
+private slots:
+    void setSchema(int mode);
 };
 
 //
@@ -125,50 +131,60 @@ class KateViewSchemaAction : public KActionMenu
     popup menu and a slot to edit a style using the keyboard.
     Added by anders, jan 23 2002.
 */
-class KateStyleListView : public QListView
-{
-  Q_OBJECT
+class KateStyleListView : public QListView {
+    Q_OBJECT
 
-  friend class KateStyleListItem;
+    friend class KateStyleListItem;
 
-  public:
-    KateStyleListView( QWidget *parent=0, bool showUseDefaults=false);
-    ~KateStyleListView() {};
+public:
+    KateStyleListView(QWidget *parent = 0, bool showUseDefaults = false);
+    ~KateStyleListView(){};
     /* Display a popupmenu for item i at the specified global position, eventually with a title,
        promoting the context name of that item */
-    void showPopupMenu( KateStyleListItem *i, const QPoint &globalPos, bool showtitle=false );
-    void emitChanged() { emit changed(); };
+    void showPopupMenu(KateStyleListItem *i, const QPoint &globalPos, bool showtitle = false);
+    void emitChanged()
+    {
+        emit changed();
+    };
 
-    void setBgCol( const QColor &c ) { bgcol = c; }
-    void setSelCol( const QColor &c ) { selcol = c; }
-    void setNormalCol( const QColor &c ) { normalcol = c; }
+    void setBgCol(const QColor &c)
+    {
+        bgcol = c;
+    }
+    void setSelCol(const QColor &c)
+    {
+        selcol = c;
+    }
+    void setNormalCol(const QColor &c)
+    {
+        normalcol = c;
+    }
 
-  private slots:
+private slots:
     /* Display a popupmenu for item i at item position */
-    void showPopupMenu( QListViewItem *i, const QPoint &globalPos );
+    void showPopupMenu(QListViewItem *i, const QPoint &globalPos);
     /* call item to change a property, or display a menu */
-    void slotMousePressed( int, QListViewItem*, const QPoint&, int );
+    void slotMousePressed(int, QListViewItem *, const QPoint &, int);
     /* asks item to change the property in q */
-    void mSlotPopupHandler( int z );
-    void unsetColor( int );
+    void mSlotPopupHandler(int z);
+    void unsetColor(int);
 
-  signals:
+signals:
     void changed();
 
-  private:
+private:
     QColor bgcol, selcol, normalcol;
     QFont docfont;
 };
 
-class KateSchemaConfigColorTab : public QWidget
-{
-  Q_OBJECT
+class KateSchemaConfigColorTab : public QWidget {
+    Q_OBJECT
 
-  public:
-    KateSchemaConfigColorTab( QWidget *parent = 0, const char *name = 0 );
+public:
+    KateSchemaConfigColorTab(QWidget *parent = 0, const char *name = 0);
     ~KateSchemaConfigColorTab();
 
-  private:
+private:
     KColorButton *m_back;
     KColorButton *m_selected;
     KColorButton *m_current;
@@ -178,99 +194,96 @@ class KateSchemaConfigColorTab : public QWidget
     KColorButton *m_tmarker;
     KColorButton *m_linenumber;
 
-    KColorButton *m_markers;           // bg color for current selected marker
-    KComboBox* m_combobox;             // switch marker type
+    KColorButton *m_markers; // bg color for current selected marker
+    KComboBox *m_combobox;   // switch marker type
 
     // Class for storing the properties on 1 schema.
     class SchemaColors {
-      public:
+    public:
         QColor back, selected, current, bracket, wwmarker, iconborder, tmarker, linenumber;
-        QMap<int, QColor> markerColors;  // stores all markerColors
+        QMap< int, QColor > markerColors; // stores all markerColors
     };
 
     // schemaid=data, created when a schema is entered
-    QMap<int,SchemaColors> m_schemas;
+    QMap< int, SchemaColors > m_schemas;
     // current schema
     int m_schema;
 
-  public slots:
+public slots:
     void apply();
-    void schemaChanged( int newSchema );
+    void schemaChanged(int newSchema);
 
-  signals:
+signals:
     void changed(); // connected to parentWidget()->parentWidget() SLOT(slotChanged)
 
-  protected slots:
-    void slotMarkerColorChanged(const QColor&);
+protected slots:
+    void slotMarkerColorChanged(const QColor &);
     void slotComboBoxChanged(int index);
 };
 
-typedef QMap<int,QFont> FontMap; // ### remove it
+typedef QMap< int, QFont > FontMap; // ### remove it
 
-class KateSchemaConfigFontTab : public QWidget
-{
-  Q_OBJECT
+class KateSchemaConfigFontTab : public QWidget {
+    Q_OBJECT
 
-  public:
-    KateSchemaConfigFontTab( QWidget *parent = 0, const char *name = 0 );
+public:
+    KateSchemaConfigFontTab(QWidget *parent = 0, const char *name = 0);
     ~KateSchemaConfigFontTab();
 
-  public:
-    void readConfig (KConfig *config);
+public:
+    void readConfig(KConfig *config);
 
-  public slots:
+public slots:
     void apply();
-    void schemaChanged( int newSchema );
+    void schemaChanged(int newSchema);
 
-  signals:
+signals:
     void changed(); // connected to parentWidget()->parentWidget() SLOT(slotChanged)
 
-  private:
+private:
     class KFontChooser *m_fontchooser;
     FontMap m_fonts;
     int m_schema;
 
-  private slots:
-    void slotFontSelected( const QFont &font );
+private slots:
+    void slotFontSelected(const QFont &font);
 };
 
-class KateSchemaConfigFontColorTab : public QWidget
-{
-  Q_OBJECT
+class KateSchemaConfigFontColorTab : public QWidget {
+    Q_OBJECT
 
-  public:
-    KateSchemaConfigFontColorTab( QWidget *parent = 0, const char *name = 0 );
+public:
+    KateSchemaConfigFontColorTab(QWidget *parent = 0, const char *name = 0);
     ~KateSchemaConfigFontColorTab();
 
-  public:
-    void schemaChanged (uint schema);
-    void reload ();
-    void apply ();
+public:
+    void schemaChanged(uint schema);
+    void reload();
+    void apply();
 
-    KateAttributeList *attributeList (uint schema);
+    KateAttributeList *attributeList(uint schema);
 
-  private:
+private:
     KateStyleListView *m_defaultStyles;
-    QIntDict<KateAttributeList> m_defaultStyleLists;
+    QIntDict< KateAttributeList > m_defaultStyleLists;
 };
 
-class KateSchemaConfigHighlightTab : public QWidget
-{
-  Q_OBJECT
+class KateSchemaConfigHighlightTab : public QWidget {
+    Q_OBJECT
 
-  public:
-    KateSchemaConfigHighlightTab( QWidget *parent = 0, const char *name = 0, KateSchemaConfigFontColorTab *page = 0, uint hl = 0 );
+public:
+    KateSchemaConfigHighlightTab(QWidget *parent = 0, const char *name = 0, KateSchemaConfigFontColorTab *page = 0, uint hl = 0);
     ~KateSchemaConfigHighlightTab();
 
-  public:
-    void schemaChanged (uint schema);
-    void reload ();
-    void apply ();
+public:
+    void schemaChanged(uint schema);
+    void reload();
+    void apply();
 
-  protected slots:
+protected slots:
     void hlChanged(int z);
 
-  private:
+private:
     KateSchemaConfigFontColorTab *m_defaults;
 
     QComboBox *hlCombo;
@@ -279,32 +292,31 @@ class KateSchemaConfigHighlightTab : public QWidget
     uint m_schema;
     int m_hl;
 
-    QIntDict< QIntDict<KateHlItemDataList> > m_hlDict;
+    QIntDict< QIntDict< KateHlItemDataList > > m_hlDict;
 };
 
-class KateSchemaConfigPage : public KateConfigPage
-{
-  Q_OBJECT
+class KateSchemaConfigPage : public KateConfigPage {
+    Q_OBJECT
 
-  public:
-    KateSchemaConfigPage ( QWidget *parent, class KateDocument *doc=0 );
-    ~KateSchemaConfigPage ();
+public:
+    KateSchemaConfigPage(QWidget *parent, class KateDocument *doc = 0);
+    ~KateSchemaConfigPage();
 
-  public slots:
+public slots:
     void apply();
     void reload();
     void reset();
     void defaults();
 
-  private slots:
-    void update ();
-    void deleteSchema ();
-    void newSchema ();
-    void schemaChanged (int schema);
+private slots:
+    void update();
+    void deleteSchema();
+    void newSchema();
+    void schemaChanged(int schema);
 
-    void newCurrentPage (QWidget *w);
+    void newCurrentPage(QWidget *w);
 
-  private:
+private:
     int m_lastSchema;
     int m_defaultSchema;
 

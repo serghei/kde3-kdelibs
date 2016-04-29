@@ -46,16 +46,15 @@ using namespace KXMLGUI;
  * TODO:     - make more use of QValueList instead of QPtrList
  */
 
-class KXMLGUIFactoryPrivate : public BuildState
-{
+class KXMLGUIFactoryPrivate : public BuildState {
 public:
     KXMLGUIFactoryPrivate()
     {
-        static const QString &defaultMergingName = KGlobal::staticQString( "<default>" );
-        static const QString &actionList = KGlobal::staticQString( "actionlist" );
-        static const QString &name = KGlobal::staticQString( "name" );
+        static const QString &defaultMergingName = KGlobal::staticQString("<default>");
+        static const QString &actionList = KGlobal::staticQString("actionlist");
+        static const QString &name = KGlobal::staticQString("name");
 
-        m_rootNode = new ContainerNode( 0L, QString::null, 0L );
+        m_rootNode = new ContainerNode(0L, QString::null, 0L);
         m_defaultMergingName = defaultMergingName;
         tagActionList = actionList;
         attrName = name;
@@ -67,12 +66,12 @@ public:
 
     void pushState()
     {
-        m_stateStack.push( *this );
+        m_stateStack.push(*this);
     }
 
     void popState()
     {
-        BuildState::operator=( m_stateStack.pop() );
+        BuildState::operator=(m_stateStack.pop());
     }
 
     ContainerNode *m_rootNode;
@@ -87,7 +86,7 @@ public:
     /*
      * List of all clients
      */
-    QPtrList<KXMLGUIClient> m_clients;
+    QPtrList< KXMLGUIClient > m_clients;
 
     QString tagActionList;
 
@@ -96,31 +95,31 @@ public:
     BuildStateStack m_stateStack;
 };
 
-QString KXMLGUIFactory::readConfigFile( const QString &filename, const KInstance *instance )
+QString KXMLGUIFactory::readConfigFile(const QString &filename, const KInstance *instance)
 {
-    return readConfigFile( filename, false, instance );
+    return readConfigFile(filename, false, instance);
 }
 
-QString KXMLGUIFactory::readConfigFile( const QString &filename, bool never_null, const KInstance *_instance )
+QString KXMLGUIFactory::readConfigFile(const QString &filename, bool never_null, const KInstance *_instance)
 {
     const KInstance *instance = _instance ? _instance : KGlobal::instance();
     QString xml_file;
 
-    if (!QDir::isRelativePath(filename))
+    if(!QDir::isRelativePath(filename))
         xml_file = filename;
     else
     {
-        xml_file = locate("data", QString::fromLatin1(instance->instanceName() + '/' ) + filename);
-        if ( !QFile::exists( xml_file ) )
-          xml_file = locate( "data", filename );
+        xml_file = locate("data", QString::fromLatin1(instance->instanceName() + '/') + filename);
+        if(!QFile::exists(xml_file))
+            xml_file = locate("data", filename);
     }
 
-    QFile file( xml_file );
-    if ( !file.open( IO_ReadOnly ) )
+    QFile file(xml_file);
+    if(!file.open(IO_ReadOnly))
     {
         kdError(240) << "No such XML file " << filename << endl;
-        if ( never_null )
-            return QString::fromLatin1( "<!DOCTYPE kpartgui>\n<kpartgui name=\"empty\">\n</kpartgui>" );
+        if(never_null)
+            return QString::fromLatin1("<!DOCTYPE kpartgui>\n<kpartgui name=\"empty\">\n</kpartgui>");
         else
             return QString::null;
     }
@@ -130,7 +129,7 @@ QString KXMLGUIFactory::readConfigFile( const QString &filename, bool never_null
     QByteArray buffer(file.size() + 1);
     buffer = file.readAll();
     if(!buffer.isEmpty())
-        buffer[ buffer.size() - 1 ] = '\0';
+        buffer[buffer.size() - 1] = '\0';
     else
         return QString::null;
 #else
@@ -139,18 +138,16 @@ QString KXMLGUIFactory::readConfigFile( const QString &filename, bool never_null
     return QString::fromUtf8(buffer.data(), buffer.size());
 }
 
-bool KXMLGUIFactory::saveConfigFile( const QDomDocument& doc,
-                                     const QString& filename, const KInstance *_instance )
+bool KXMLGUIFactory::saveConfigFile(const QDomDocument &doc, const QString &filename, const KInstance *_instance)
 {
     const KInstance *instance = _instance ? _instance : KGlobal::instance();
     QString xml_file(filename);
 
-    if (QDir::isRelativePath(xml_file))
-        xml_file = locateLocal("data", QString::fromLatin1( instance->instanceName() + '/' )
-                               + filename);
+    if(QDir::isRelativePath(xml_file))
+        xml_file = locateLocal("data", QString::fromLatin1(instance->instanceName() + '/') + filename);
 
-    QFile file( xml_file );
-    if ( !file.open( IO_WriteOnly ) )
+    QFile file(xml_file);
+    if(!file.open(IO_WriteOnly))
     {
         kdError(240) << "Could not write to " << filename << endl;
         return false;
@@ -158,58 +155,57 @@ bool KXMLGUIFactory::saveConfigFile( const QDomDocument& doc,
 
     // write out our document
     QTextStream ts(&file);
-    ts.setEncoding( QTextStream::UnicodeUTF8 );
+    ts.setEncoding(QTextStream::UnicodeUTF8);
     ts << doc;
 
     file.close();
     return true;
 }
 
-QString KXMLGUIFactory::documentToXML( const QDomDocument& doc )
+QString KXMLGUIFactory::documentToXML(const QDomDocument &doc)
 {
     QString str;
     QTextStream ts(&str, IO_WriteOnly);
-    ts.setEncoding( QTextStream::UnicodeUTF8 );
+    ts.setEncoding(QTextStream::UnicodeUTF8);
     ts << doc;
     return str;
 }
 
-QString KXMLGUIFactory::elementToXML( const QDomElement& elem )
+QString KXMLGUIFactory::elementToXML(const QDomElement &elem)
 {
     QString str;
     QTextStream ts(&str, IO_WriteOnly);
-    ts.setEncoding( QTextStream::UnicodeUTF8 );
+    ts.setEncoding(QTextStream::UnicodeUTF8);
     ts << elem;
     return str;
 }
 
-void KXMLGUIFactory::removeDOMComments( QDomNode &node )
+void KXMLGUIFactory::removeDOMComments(QDomNode &node)
 {
     QDomNode n = node.firstChild();
-    while ( !n.isNull() )
+    while(!n.isNull())
     {
-        if ( n.nodeType() == QDomNode::CommentNode )
+        if(n.nodeType() == QDomNode::CommentNode)
         {
             QDomNode tmp = n;
             n = n.nextSibling();
-            node.removeChild( tmp );
+            node.removeChild(tmp);
         }
         else
         {
             QDomNode tmp = n;
             n = n.nextSibling();
-            removeDOMComments( tmp );
+            removeDOMComments(tmp);
         }
     }
 }
 
-KXMLGUIFactory::KXMLGUIFactory( KXMLGUIBuilder *builder, QObject *parent, const char *name )
-    : QObject( parent, name )
+KXMLGUIFactory::KXMLGUIFactory(KXMLGUIBuilder *builder, QObject *parent, const char *name) : QObject(parent, name)
 {
     d = new KXMLGUIFactoryPrivate;
     d->builder = builder;
     d->guiClient = 0;
-    if ( d->builder )
+    if(d->builder)
     {
         d->builderContainerTags = d->builder->containerTags();
         d->builderCustomTags = d->builder->customTags();
@@ -221,40 +217,41 @@ KXMLGUIFactory::~KXMLGUIFactory()
     delete d;
 }
 
-void KXMLGUIFactory::addClient( KXMLGUIClient *client )
+void KXMLGUIFactory::addClient(KXMLGUIClient *client)
 {
     kdDebug(1002) << "KXMLGUIFactory::addClient( " << client << " )" << endl; // ellis
-    static const QString &actionPropElementName = KGlobal::staticQString( "ActionProperties" );
+    static const QString &actionPropElementName = KGlobal::staticQString("ActionProperties");
 
-    if ( client->factory() ) {
-        if ( client->factory() == this )
+    if(client->factory())
+    {
+        if(client->factory() == this)
             return;
         else
-            client->factory()->removeClient( client ); //just in case someone does stupid things ;-)
+            client->factory()->removeClient(client); // just in case someone does stupid things ;-)
     }
 
     d->pushState();
 
-//    QTime dt; dt.start();
+    //    QTime dt; dt.start();
 
     d->guiClient = client;
 
     // add this client to our client list
-    if ( !d->m_clients.containsRef( client ) )
-        d->m_clients.append( client );
+    if(!d->m_clients.containsRef(client))
+        d->m_clients.append(client);
     else
         kdDebug(1002) << "XMLGUI client already added " << client << endl;
 
     // Tell the client that plugging in is process and
     //  let it know what builder widget its mainwindow shortcuts
     //  should be attached to.
-    client->beginXMLPlug( d->builder->widget() );
+    client->beginXMLPlug(d->builder->widget());
 
     // try to use the build document for building the client's GUI, as the build document
     // contains the correct container state information (like toolbar positions, sizes, etc.) .
     // if there is non available, then use the "real" document.
     QDomDocument doc = client->xmlguiBuildDocument();
-    if ( doc.documentElement().isNull() )
+    if(doc.documentElement().isNull())
         doc = client->domDocument();
 
     QDomElement docElement = doc.documentElement();
@@ -263,10 +260,10 @@ void KXMLGUIFactory::addClient( KXMLGUIClient *client )
 
     // cache some variables
 
-    d->clientName = docElement.attribute( d->attrName );
+    d->clientName = docElement.attribute(d->attrName);
     d->clientBuilder = client->clientBuilder();
 
-    if ( d->clientBuilder )
+    if(d->clientBuilder)
     {
         d->clientBuilderContainerTags = d->clientBuilder->containerTags();
         d->clientBuilderCustomTags = d->clientBuilder->customTags();
@@ -279,23 +276,23 @@ void KXMLGUIFactory::addClient( KXMLGUIClient *client )
 
     // process a possibly existing actionproperties section
 
-    QDomElement actionPropElement = docElement.namedItem( actionPropElementName ).toElement();
-    if ( actionPropElement.isNull() )
-        actionPropElement = docElement.namedItem( actionPropElementName.lower() ).toElement();
+    QDomElement actionPropElement = docElement.namedItem(actionPropElementName).toElement();
+    if(actionPropElement.isNull())
+        actionPropElement = docElement.namedItem(actionPropElementName.lower()).toElement();
 
-    if ( !actionPropElement.isNull() )
-        applyActionProperties( actionPropElement );
+    if(!actionPropElement.isNull())
+        applyActionProperties(actionPropElement);
 
-    BuildHelper( *d, d->m_rootNode ).build( docElement );
+    BuildHelper(*d, d->m_rootNode).build(docElement);
 
     // let the client know that we built its GUI.
-    client->setFactory( this );
+    client->setFactory(this);
 
     // call the finalizeGUI method, to fix up the positions of toolbars for example.
     // ### FIXME : obey client builder
     // --- Well, toolbars have a bool "positioned", so it doesn't really matter,
     // if we call positionYourself on all of them each time. (David)
-    d->builder->finalizeGUI( d->guiClient );
+    d->builder->finalizeGUI(d->guiClient);
 
     // reset some variables, for safety
     d->BuildState::reset();
@@ -304,39 +301,39 @@ void KXMLGUIFactory::addClient( KXMLGUIClient *client )
 
     d->popState();
 
-    emit clientAdded( client );
+    emit clientAdded(client);
 
     // build child clients
-    if ( client->childClients()->count() > 0 )
+    if(client->childClients()->count() > 0)
     {
-        const QPtrList<KXMLGUIClient> *children = client->childClients();
-        QPtrListIterator<KXMLGUIClient> childIt( *children );
-        for (; childIt.current(); ++childIt )
-            addClient( childIt.current() );
+        const QPtrList< KXMLGUIClient > *children = client->childClients();
+        QPtrListIterator< KXMLGUIClient > childIt(*children);
+        for(; childIt.current(); ++childIt)
+            addClient(childIt.current());
     }
 
-//    kdDebug() << "addClient took " << dt.elapsed() << endl;
+    //    kdDebug() << "addClient took " << dt.elapsed() << endl;
 }
 
-void KXMLGUIFactory::removeClient( KXMLGUIClient *client )
+void KXMLGUIFactory::removeClient(KXMLGUIClient *client)
 {
     kdDebug(1002) << "KXMLGUIFactory::removeClient( " << client << " )" << endl; // ellis
 
     // don't try to remove the client's GUI if we didn't build it
-    if ( !client || client->factory() != this )
+    if(!client || client->factory() != this)
         return;
 
     // remove this client from our client list
-    d->m_clients.removeRef( client );
+    d->m_clients.removeRef(client);
 
     // remove child clients first
-    if ( client->childClients()->count() > 0 )
+    if(client->childClients()->count() > 0)
     {
-        const QPtrList<KXMLGUIClient> *children = client->childClients();
-        QPtrListIterator<KXMLGUIClient> childIt( *children );
+        const QPtrList< KXMLGUIClient > *children = client->childClients();
+        QPtrListIterator< KXMLGUIClient > childIt(*children);
         childIt.toLast();
-        for (; childIt.current(); --childIt )
-            removeClient( childIt.current() );
+        for(; childIt.current(); --childIt)
+            removeClient(childIt.current());
     }
 
     kdDebug(1002) << "KXMLGUIFactory::removeServant, calling removeRecursive" << endl;
@@ -346,49 +343,48 @@ void KXMLGUIFactory::removeClient( KXMLGUIClient *client )
     // cache some variables
 
     d->guiClient = client;
-    d->clientName = client->domDocument().documentElement().attribute( d->attrName );
+    d->clientName = client->domDocument().documentElement().attribute(d->attrName);
     d->clientBuilder = client->clientBuilder();
 
-    client->setFactory( 0L );
+    client->setFactory(0L);
 
     // if we don't have a build document for that client, yet, then create one by
     // cloning the original document, so that saving container information in the
     // DOM tree does not touch the original document.
     QDomDocument doc = client->xmlguiBuildDocument();
-    if ( doc.documentElement().isNull() )
+    if(doc.documentElement().isNull())
     {
-        doc = client->domDocument().cloneNode( true ).toDocument();
-        client->setXMLGUIBuildDocument( doc );
+        doc = client->domDocument().cloneNode(true).toDocument();
+        client->setXMLGUIBuildDocument(doc);
     }
 
-    d->m_rootNode->destruct( doc.documentElement(), *d );
+    d->m_rootNode->destruct(doc.documentElement(), *d);
 
-    d->builder->finalizeGUI( d->guiClient ); //JoWenn
+    d->builder->finalizeGUI(d->guiClient); // JoWenn
 
     // reset some variables
     d->BuildState::reset();
 
     // This will destruct the KAccel object built around the given widget.
-    client->prepareXMLUnplug( d->builder->widget() );
+    client->prepareXMLUnplug(d->builder->widget());
 
     d->popState();
 
-    emit clientRemoved( client );
+    emit clientRemoved(client);
 }
 
-QPtrList<KXMLGUIClient> KXMLGUIFactory::clients() const
+QPtrList< KXMLGUIClient > KXMLGUIFactory::clients() const
 {
     return d->m_clients;
 }
 
-QWidget *KXMLGUIFactory::container( const QString &containerName, KXMLGUIClient *client,
-                                    bool useTagName )
+QWidget *KXMLGUIFactory::container(const QString &containerName, KXMLGUIClient *client, bool useTagName)
 {
     d->pushState();
     d->m_containerName = containerName;
     d->guiClient = client;
 
-    QWidget *result = findRecursive( d->m_rootNode, useTagName );
+    QWidget *result = findRecursive(d->m_rootNode, useTagName);
 
     d->guiClient = 0L;
     d->m_containerName = QString::null;
@@ -398,9 +394,9 @@ QWidget *KXMLGUIFactory::container( const QString &containerName, KXMLGUIClient 
     return result;
 }
 
-QPtrList<QWidget> KXMLGUIFactory::containers( const QString &tagName )
+QPtrList< QWidget > KXMLGUIFactory::containers(const QString &tagName)
 {
-    return findRecursive( d->m_rootNode, tagName );
+    return findRecursive(d->m_rootNode, tagName);
 }
 
 void KXMLGUIFactory::reset()
@@ -410,203 +406,205 @@ void KXMLGUIFactory::reset()
     d->m_rootNode->clearChildren();
 }
 
-void KXMLGUIFactory::resetContainer( const QString &containerName, bool useTagName )
+void KXMLGUIFactory::resetContainer(const QString &containerName, bool useTagName)
 {
-    if ( containerName.isEmpty() )
+    if(containerName.isEmpty())
         return;
 
-    ContainerNode *container = d->m_rootNode->findContainer( containerName, useTagName );
+    ContainerNode *container = d->m_rootNode->findContainer(containerName, useTagName);
 
-    if ( !container )
+    if(!container)
         return;
 
     ContainerNode *parent = container->parent;
-    if ( !parent )
+    if(!parent)
         return;
 
     //  resetInternal( container );
 
-    parent->removeChild( container );
+    parent->removeChild(container);
 }
 
-QWidget *KXMLGUIFactory::findRecursive( KXMLGUI::ContainerNode *node, bool tag )
+QWidget *KXMLGUIFactory::findRecursive(KXMLGUI::ContainerNode *node, bool tag)
 {
-    if ( ( ( !tag && node->name == d->m_containerName ) ||
-           ( tag && node->tagName == d->m_containerName ) ) &&
-         ( !d->guiClient || node->client == d->guiClient ) )
+    if(((!tag && node->name == d->m_containerName) || (tag && node->tagName == d->m_containerName))
+       && (!d->guiClient || node->client == d->guiClient))
         return node->container;
 
-    QPtrListIterator<ContainerNode> it( node->children );
-    for (; it.current(); ++it )
+    QPtrListIterator< ContainerNode > it(node->children);
+    for(; it.current(); ++it)
     {
-        QWidget *cont = findRecursive( it.current(), tag );
-        if ( cont )
+        QWidget *cont = findRecursive(it.current(), tag);
+        if(cont)
             return cont;
     }
 
     return 0L;
 }
 
-QPtrList<QWidget> KXMLGUIFactory::findRecursive( KXMLGUI::ContainerNode *node,
-                                                 const QString &tagName )
+QPtrList< QWidget > KXMLGUIFactory::findRecursive(KXMLGUI::ContainerNode *node, const QString &tagName)
 {
-    QPtrList<QWidget> res;
+    QPtrList< QWidget > res;
 
-    if ( node->tagName == tagName.lower() )
-        res.append( node->container );
+    if(node->tagName == tagName.lower())
+        res.append(node->container);
 
-    QPtrListIterator<KXMLGUI::ContainerNode> it( node->children );
-    for (; it.current(); ++it )
+    QPtrListIterator< KXMLGUI::ContainerNode > it(node->children);
+    for(; it.current(); ++it)
     {
-        QPtrList<QWidget> lst = findRecursive( it.current(), tagName );
-        QPtrListIterator<QWidget> wit( lst );
-        for (; wit.current(); ++wit )
-            res.append( wit.current() );
+        QPtrList< QWidget > lst = findRecursive(it.current(), tagName);
+        QPtrListIterator< QWidget > wit(lst);
+        for(; wit.current(); ++wit)
+            res.append(wit.current());
     }
 
     return res;
 }
 
-void KXMLGUIFactory::plugActionList( KXMLGUIClient *client, const QString &name,
-                                     const QPtrList<KAction> &actionList )
+void KXMLGUIFactory::plugActionList(KXMLGUIClient *client, const QString &name, const QPtrList< KAction > &actionList)
 {
     d->pushState();
     d->guiClient = client;
     d->actionListName = name;
     d->actionList = actionList;
-    d->clientName = client->domDocument().documentElement().attribute( d->attrName );
+    d->clientName = client->domDocument().documentElement().attribute(d->attrName);
 
-    d->m_rootNode->plugActionList( *d );
+    d->m_rootNode->plugActionList(*d);
 
     d->BuildState::reset();
     d->popState();
 }
 
-void KXMLGUIFactory::unplugActionList( KXMLGUIClient *client, const QString &name )
+void KXMLGUIFactory::unplugActionList(KXMLGUIClient *client, const QString &name)
 {
     d->pushState();
     d->guiClient = client;
     d->actionListName = name;
-    d->clientName = client->domDocument().documentElement().attribute( d->attrName );
+    d->clientName = client->domDocument().documentElement().attribute(d->attrName);
 
-    d->m_rootNode->unplugActionList( *d );
+    d->m_rootNode->unplugActionList(*d);
 
     d->BuildState::reset();
     d->popState();
 }
 
-void KXMLGUIFactory::applyActionProperties( const QDomElement &actionPropElement )
+void KXMLGUIFactory::applyActionProperties(const QDomElement &actionPropElement)
 {
-    static const QString &tagAction = KGlobal::staticQString( "action" );
+    static const QString &tagAction = KGlobal::staticQString("action");
 
-    for (QDomNode n = actionPropElement.firstChild();
-         !n.isNull(); n = n.nextSibling() )
+    for(QDomNode n = actionPropElement.firstChild(); !n.isNull(); n = n.nextSibling())
     {
         QDomElement e = n.toElement();
-        if ( e.tagName().lower() != tagAction )
+        if(e.tagName().lower() != tagAction)
             continue;
 
-        KAction *action = d->guiClient->action( e );
-        if ( !action )
+        KAction *action = d->guiClient->action(e);
+        if(!action)
             continue;
 
-        configureAction( action, e.attributes() );
+        configureAction(action, e.attributes());
     }
 }
 
-void KXMLGUIFactory::configureAction( KAction *action, const QDomNamedNodeMap &attributes )
+void KXMLGUIFactory::configureAction(KAction *action, const QDomNamedNodeMap &attributes)
 {
-    for ( uint i = 0; i < attributes.length(); i++ )
+    for(uint i = 0; i < attributes.length(); i++)
     {
-        QDomAttr attr = attributes.item( i ).toAttr();
-        if ( attr.isNull() )
+        QDomAttr attr = attributes.item(i).toAttr();
+        if(attr.isNull())
             continue;
 
-        configureAction( action, attr );
+        configureAction(action, attr);
     }
 }
 
-void KXMLGUIFactory::configureAction( KAction *action, const QDomAttr &attribute )
+void KXMLGUIFactory::configureAction(KAction *action, const QDomAttr &attribute)
 {
-    static const QString &attrShortcut = KGlobal::staticQString( "shortcut" );
+    static const QString &attrShortcut = KGlobal::staticQString("shortcut");
 
     QString attrName = attribute.name();
     // If the attribute is a deprecated "accel", change to "shortcut".
-    if ( attrName.lower() == "accel" )
+    if(attrName.lower() == "accel")
         attrName = attrShortcut;
 
     QVariant propertyValue;
 
-    QVariant::Type propertyType = action->property( attrName.latin1() ).type();
+    QVariant::Type propertyType = action->property(attrName.latin1()).type();
 
-    if ( propertyType == QVariant::Int )
-        propertyValue = QVariant( attribute.value().toInt() );
-    else if ( propertyType == QVariant::UInt )
-        propertyValue = QVariant( attribute.value().toUInt() );
+    if(propertyType == QVariant::Int)
+        propertyValue = QVariant(attribute.value().toInt());
+    else if(propertyType == QVariant::UInt)
+        propertyValue = QVariant(attribute.value().toUInt());
     else
-        propertyValue = QVariant( attribute.value() );
+        propertyValue = QVariant(attribute.value());
 
-    action->setProperty( attrName.latin1(), propertyValue );
+    action->setProperty(attrName.latin1(), propertyValue);
 }
 
 
-int KXMLGUIFactory::configureShortcuts(bool bAllowLetterShortcuts , bool bSaveSettings )
+int KXMLGUIFactory::configureShortcuts(bool bAllowLetterShortcuts, bool bSaveSettings)
 {
-	KKeyDialog dlg( bAllowLetterShortcuts, dynamic_cast<QWidget*>(parent()) );
-	QPtrListIterator<KXMLGUIClient> it( d->m_clients );
-	KXMLGUIClient *client;
-	while( (client=it.current()) !=0 )
-	{
-		++it;
-		if(!client->xmlFile().isEmpty())
-			dlg.insert( client->actionCollection() );
-	}
-	return dlg.configure(bSaveSettings);
+    KKeyDialog dlg(bAllowLetterShortcuts, dynamic_cast< QWidget * >(parent()));
+    QPtrListIterator< KXMLGUIClient > it(d->m_clients);
+    KXMLGUIClient *client;
+    while((client = it.current()) != 0)
+    {
+        ++it;
+        if(!client->xmlFile().isEmpty())
+            dlg.insert(client->actionCollection());
+    }
+    return dlg.configure(bSaveSettings);
 }
 
-QDomElement KXMLGUIFactory::actionPropertiesElement( QDomDocument& doc )
+QDomElement KXMLGUIFactory::actionPropertiesElement(QDomDocument &doc)
 {
-	const QString tagActionProp = QString::fromLatin1("ActionProperties");
-	// first, lets see if we have existing properties
-	QDomElement elem;
-	QDomNode it = doc.documentElement().firstChild();
-	for( ; !it.isNull(); it = it.nextSibling() ) {
-		QDomElement e = it.toElement();
-		if( e.tagName() == tagActionProp ) {
-			elem = e;
-			break;
-		}
-	}
+    const QString tagActionProp = QString::fromLatin1("ActionProperties");
+    // first, lets see if we have existing properties
+    QDomElement elem;
+    QDomNode it = doc.documentElement().firstChild();
+    for(; !it.isNull(); it = it.nextSibling())
+    {
+        QDomElement e = it.toElement();
+        if(e.tagName() == tagActionProp)
+        {
+            elem = e;
+            break;
+        }
+    }
 
-	// if there was none, create one
-	if( elem.isNull() ) {
-		elem = doc.createElement( tagActionProp );
-		doc.documentElement().appendChild( elem );
-	}
-	return elem;
+    // if there was none, create one
+    if(elem.isNull())
+    {
+        elem = doc.createElement(tagActionProp);
+        doc.documentElement().appendChild(elem);
+    }
+    return elem;
 }
 
-QDomElement KXMLGUIFactory::findActionByName( QDomElement& elem, const QString& sName, bool create )
+QDomElement KXMLGUIFactory::findActionByName(QDomElement &elem, const QString &sName, bool create)
 {
-        static const QString& attrName = KGlobal::staticQString( "name" );
-	static const QString& tagAction = KGlobal::staticQString( "Action" );
-	for( QDomNode it = elem.firstChild(); !it.isNull(); it = it.nextSibling() ) {
-		QDomElement e = it.toElement();
-		if( e.attribute( attrName ) == sName )
-			return e;
-	}
+    static const QString &attrName = KGlobal::staticQString("name");
+    static const QString &tagAction = KGlobal::staticQString("Action");
+    for(QDomNode it = elem.firstChild(); !it.isNull(); it = it.nextSibling())
+    {
+        QDomElement e = it.toElement();
+        if(e.attribute(attrName) == sName)
+            return e;
+    }
 
-	if( create ) {
-		QDomElement act_elem = elem.ownerDocument().createElement( tagAction );
-		act_elem.setAttribute( attrName, sName );
-                elem.appendChild( act_elem );
-                return act_elem;
-	}
-        return QDomElement();
+    if(create)
+    {
+        QDomElement act_elem = elem.ownerDocument().createElement(tagAction);
+        act_elem.setAttribute(attrName, sName);
+        elem.appendChild(act_elem);
+        return act_elem;
+    }
+    return QDomElement();
 }
 
-void KXMLGUIFactory::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KXMLGUIFactory::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kxmlguifactory.moc"
 

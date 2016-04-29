@@ -22,17 +22,19 @@
 #include "undodcopinterface.h"
 #include "document.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateUndoInterface
-{
-  public:
-    PrivateUndoInterface() {interface = 0;}
-    ~PrivateUndoInterface() {}
+class PrivateUndoInterface {
+public:
+    PrivateUndoInterface()
+    {
+        interface = 0;
+    }
+    ~PrivateUndoInterface()
+    {
+    }
     UndoDCOPInterface *interface;
 };
-
 }
 
 using namespace KTextEditor;
@@ -41,34 +43,34 @@ unsigned int UndoInterface::globalUndoInterfaceNumber = 0;
 
 UndoInterface::UndoInterface()
 {
-  globalUndoInterfaceNumber++;
-  myUndoInterfaceNumber = globalUndoInterfaceNumber++;
+    globalUndoInterfaceNumber++;
+    myUndoInterfaceNumber = globalUndoInterfaceNumber++;
 
-  d = new PrivateUndoInterface();   
-  QString name = "UndoInterface#" + QString::number(myUndoInterfaceNumber);
-  d->interface = new UndoDCOPInterface(this, name.latin1());
+    d = new PrivateUndoInterface();
+    QString name = "UndoInterface#" + QString::number(myUndoInterfaceNumber);
+    d->interface = new UndoDCOPInterface(this, name.latin1());
 }
 
 UndoInterface::~UndoInterface()
 {
-  delete d->interface;
-  delete d;
+    delete d->interface;
+    delete d;
 }
 
-unsigned int UndoInterface::undoInterfaceNumber () const
+unsigned int UndoInterface::undoInterfaceNumber() const
 {
-  return myUndoInterfaceNumber;
+    return myUndoInterfaceNumber;
 }
 
-void UndoInterface::setUndoInterfaceDCOPSuffix (const QCString &suffix)
+void UndoInterface::setUndoInterfaceDCOPSuffix(const QCString &suffix)
 {
-  d->interface->setObjId ("UndoInterface#"+suffix);
+    d->interface->setObjId("UndoInterface#" + suffix);
 }
 
-UndoInterface *KTextEditor::undoInterface (Document *doc)
-{  
-  if (!doc)
-    return 0;
+UndoInterface *KTextEditor::undoInterface(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<UndoInterface*>(doc->qt_cast("KTextEditor::UndoInterface"));
+    return static_cast< UndoInterface * >(doc->qt_cast("KTextEditor::UndoInterface"));
 }

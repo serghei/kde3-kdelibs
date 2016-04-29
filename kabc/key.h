@@ -30,121 +30,120 @@ namespace KABC {
 /**
  * @short A class to store an encryption key.
  */
-class KABC_EXPORT Key
-{
-  friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const Key & );
-  friend KABC_EXPORT QDataStream &operator>>( QDataStream &, Key & );
+class KABC_EXPORT Key {
+    friend KABC_EXPORT QDataStream &operator<<(QDataStream &, const Key &);
+    friend KABC_EXPORT QDataStream &operator>>(QDataStream &, Key &);
 
 public:
-  typedef QValueList<Key> List;
-  typedef QValueList<int> TypeList;  
+    typedef QValueList< Key > List;
+    typedef QValueList< int > TypeList;
 
-  /**
-   * Key types
-   *
-   * @li X509   - X509 key
-   * @li PGP    - Pretty Good Privacy key
-   * @li Custom - Custom or IANA conform key
-   */
-  enum Types {
-    X509,
-    PGP,
-    Custom
-  };
+    /**
+     * Key types
+     *
+     * @li X509   - X509 key
+     * @li PGP    - Pretty Good Privacy key
+     * @li Custom - Custom or IANA conform key
+     */
+    enum Types
+    {
+        X509,
+        PGP,
+        Custom
+    };
 
-  /**
-   * Constructor.
-   *
-   * @param text  The text data.
-   * @param type  The key type, see Types.
-   */
-  Key( const QString &text = QString::null, int type = PGP );
+    /**
+     * Constructor.
+     *
+     * @param text  The text data.
+     * @param type  The key type, see Types.
+     */
+    Key(const QString &text = QString::null, int type = PGP);
 
-  /**
-   * Destructor.
-   */
-  ~Key();
-    
-  bool operator==( const Key & ) const;
-  bool operator!=( const Key & ) const;
+    /**
+     * Destructor.
+     */
+    ~Key();
 
-  /**
-   * Sets the unique identifier.
-   */
-  void setId( const QString &id );
+    bool operator==(const Key &) const;
+    bool operator!=(const Key &) const;
 
-  /**
-   * Returns the unique identifier.
-   */
-  QString id() const;
+    /**
+     * Sets the unique identifier.
+     */
+    void setId(const QString &id);
 
-  /**
-   * Sets binary data.
-   */
-  void setBinaryData( const QByteArray &binary );
+    /**
+     * Returns the unique identifier.
+     */
+    QString id() const;
 
-  /**
-   * Returns the binary data.
-   */
-  QByteArray binaryData() const;
+    /**
+     * Sets binary data.
+     */
+    void setBinaryData(const QByteArray &binary);
 
-  /**
-   * Sets text data.
-   */
-  void setTextData( const QString &text );
+    /**
+     * Returns the binary data.
+     */
+    QByteArray binaryData() const;
 
-  /**
-   * Returns the text data.
-   */
-  QString textData() const;
+    /**
+     * Sets text data.
+     */
+    void setTextData(const QString &text);
 
-  /**
-   * Returns whether the key contains binary or text data.
-   */
-  bool isBinary() const;
+    /**
+     * Returns the text data.
+     */
+    QString textData() const;
 
-  /**
-   * Sets the type, see Type.
-   */
-  void setType( int type );
+    /**
+     * Returns whether the key contains binary or text data.
+     */
+    bool isBinary() const;
 
-  /**
-   * Sets custom type string.
-   */
-  void setCustomTypeString( const QString &custom );
+    /**
+     * Sets the type, see Type.
+     */
+    void setType(int type);
 
-  /**
-   * Returns the type, see Type.
-   */
-  int type() const;
+    /**
+     * Sets custom type string.
+     */
+    void setCustomTypeString(const QString &custom);
 
-  /**
-   * Returns the custom type string.
-   */
-  QString customTypeString() const;
+    /**
+     * Returns the type, see Type.
+     */
+    int type() const;
 
-  /**
-   * Returns a list of all available key types.
-   */
-  static TypeList typeList();
-  
-  /**
-   * Returns a translated label for a given key type.
-   */
-  static QString typeLabel( int type );
+    /**
+     * Returns the custom type string.
+     */
+    QString customTypeString() const;
+
+    /**
+     * Returns a list of all available key types.
+     */
+    static TypeList typeList();
+
+    /**
+     * Returns a translated label for a given key type.
+     */
+    static QString typeLabel(int type);
 
 private:
-  QByteArray mBinaryData;
-  QString mId;
-  QString mTextData;
-  QString mCustomTypeString;
+    QByteArray mBinaryData;
+    QString mId;
+    QString mTextData;
+    QString mCustomTypeString;
 
-  int mIsBinary;
-  int mType;
+    int mIsBinary;
+    int mType;
 };
 
-KABC_EXPORT QDataStream &operator<<( QDataStream &, const Key & );
-KABC_EXPORT QDataStream &operator>>( QDataStream &, Key & );
-
+KABC_EXPORT QDataStream &operator<<(QDataStream &, const Key &);
+KABC_EXPORT QDataStream &operator>>(QDataStream &, Key &);
 }
 #endif

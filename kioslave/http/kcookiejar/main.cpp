@@ -26,67 +26,62 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <klocale.h>
 #include <kapplication.h>
 
-static const char description[] =
-	I18N_NOOP("HTTP Cookie Daemon");
+static const char description[] = I18N_NOOP("HTTP Cookie Daemon");
 
 static const char version[] = "1.0";
 
-static const KCmdLineOptions options[] =
-{
- { "shutdown", I18N_NOOP("Shut down cookie jar"), 0 },
- { "remove <domain>", I18N_NOOP("Remove cookies for domain"), 0 },
- { "remove-all", I18N_NOOP("Remove all cookies"), 0 },
- { "reload-config", I18N_NOOP("Reload configuration file"), 0 },
- KCmdLineLastOption
-};
+static const KCmdLineOptions options[] = {{"shutdown", I18N_NOOP("Shut down cookie jar"), 0},
+                                          {"remove <domain>", I18N_NOOP("Remove cookies for domain"), 0},
+                                          {"remove-all", I18N_NOOP("Remove all cookies"), 0},
+                                          {"reload-config", I18N_NOOP("Reload configuration file"), 0},
+                                          KCmdLineLastOption};
 
 extern "C" KDE_EXPORT int kdemain(int argc, char *argv[])
 {
-   KLocale::setMainCatalogue("kdelibs");
-   KCmdLineArgs::init(argc, argv, "kcookiejar", I18N_NOOP("HTTP cookie daemon"),
-		      description, version);
+    KLocale::setMainCatalogue("kdelibs");
+    KCmdLineArgs::init(argc, argv, "kcookiejar", I18N_NOOP("HTTP cookie daemon"), description, version);
 
-   KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::addCmdLineOptions(options);
 
-   KInstance a("kcookiejar");
-   
-   kapp->dcopClient()->attach();
+    KInstance a("kcookiejar");
 
-   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-   QCString replyType;
-   QByteArray replyData;
-   if (args->isSet("remove-all"))
-   {
-      kapp->dcopClient()->call( "kded", "kcookiejar", "deleteAllCookies()", QByteArray(), replyType, replyData);
-   }
-   if (args->isSet("remove"))
-   {
-      QString domain = args->getOption("remove");
-      QByteArray params;
-      QDataStream stream(params, IO_WriteOnly);
-      stream << domain;
-      kapp->dcopClient()->call( "kded", "kcookiejar", "deleteCookiesFromDomain(QString)", params, replyType, replyData);
-   }
-   if (args->isSet("shutdown"))
-   {
-      QCString module = "kcookiejar";
-      QByteArray params;
-      QDataStream stream(params, IO_WriteOnly);
-      stream << module;
-      kapp->dcopClient()->call( "kded", "kded", "unloadModule(QCString)", params, replyType, replyData);
-   }
-   else if(args->isSet("reload-config"))
-   {
-      kapp->dcopClient()->call( "kded", "kcookiejar", "reloadPolicy()", QByteArray(), replyType, replyData);
-   }
-   else
-   {
-      QCString module = "kcookiejar";
-      QByteArray params;
-      QDataStream stream(params, IO_WriteOnly);
-      stream << module;
-      kapp->dcopClient()->call( "kded", "kded", "loadModule(QCString)", params, replyType, replyData);
-   }
+    kapp->dcopClient()->attach();
 
-   return 0;
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    QCString replyType;
+    QByteArray replyData;
+    if(args->isSet("remove-all"))
+    {
+        kapp->dcopClient()->call("kded", "kcookiejar", "deleteAllCookies()", QByteArray(), replyType, replyData);
+    }
+    if(args->isSet("remove"))
+    {
+        QString domain = args->getOption("remove");
+        QByteArray params;
+        QDataStream stream(params, IO_WriteOnly);
+        stream << domain;
+        kapp->dcopClient()->call("kded", "kcookiejar", "deleteCookiesFromDomain(QString)", params, replyType, replyData);
+    }
+    if(args->isSet("shutdown"))
+    {
+        QCString module = "kcookiejar";
+        QByteArray params;
+        QDataStream stream(params, IO_WriteOnly);
+        stream << module;
+        kapp->dcopClient()->call("kded", "kded", "unloadModule(QCString)", params, replyType, replyData);
+    }
+    else if(args->isSet("reload-config"))
+    {
+        kapp->dcopClient()->call("kded", "kcookiejar", "reloadPolicy()", QByteArray(), replyType, replyData);
+    }
+    else
+    {
+        QCString module = "kcookiejar";
+        QByteArray params;
+        QDataStream stream(params, IO_WriteOnly);
+        stream << module;
+        kapp->dcopClient()->call("kded", "kded", "loadModule(QCString)", params, replyType, replyData);
+    }
+
+    return 0;
 }

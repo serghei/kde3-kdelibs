@@ -26,13 +26,13 @@
 
 using namespace KSpell2;
 
-ISpellDict::ISpellDict( const QString& lang )
-    : Dictionary( lang )
+ISpellDict::ISpellDict(const QString &lang) : Dictionary(lang)
 {
     m_checker = new ISpellChecker();
 
-    if ( !m_checker->requestDictionary( lang.latin1() ) ) {
-        kdError()<<"Language \""<< lang << "\" doesn't exist for Ispell"<<endl;
+    if(!m_checker->requestDictionary(lang.latin1()))
+    {
+        kdError() << "Language \"" << lang << "\" doesn't exist for Ispell" << endl;
     }
 }
 
@@ -40,37 +40,35 @@ ISpellDict::~ISpellDict()
 {
 }
 
-bool ISpellDict::check( const QString& word )
+bool ISpellDict::check(const QString &word)
 {
-    return m_checker->checkWord( word );
+    return m_checker->checkWord(word);
 }
 
-QStringList ISpellDict::suggest( const QString& word )
+QStringList ISpellDict::suggest(const QString &word)
 {
-    return m_checker->suggestWord( word );
+    return m_checker->suggestWord(word);
 }
 
-bool ISpellDict::checkAndSuggest( const QString& word,
-                                  QStringList& suggestions )
+bool ISpellDict::checkAndSuggest(const QString &word, QStringList &suggestions)
 {
-    bool c = check( word );
-    if ( c )
-        suggestions = suggest( word );
+    bool c = check(word);
+    if(c)
+        suggestions = suggest(word);
     return c;
 }
 
-bool ISpellDict::storeReplacement( const QString& ,
-                                   const QString& )
+bool ISpellDict::storeReplacement(const QString &, const QString &)
 {
     return false;
 }
 
-bool ISpellDict::addToPersonal( const QString& )
+bool ISpellDict::addToPersonal(const QString &)
 {
     return false;
 }
 
-bool ISpellDict::addToSession( const QString& )
+bool ISpellDict::addToSession(const QString &)
 {
     return false;
 }

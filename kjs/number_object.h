@@ -27,56 +27,63 @@
 
 namespace KJS {
 
-  class NumberInstanceImp : public ObjectImp {
-  public:
+class NumberInstanceImp : public ObjectImp {
+public:
     NumberInstanceImp(ObjectImp *proto);
 
-    virtual const ClassInfo *classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-  };
+};
 
-  /**
-   * @internal
-   *
-   * The initial value of Number.prototype (and thus all objects created
-   * with the Number constructor
-   */
-  class NumberPrototypeImp : public NumberInstanceImp {
-  public:
-    NumberPrototypeImp(ExecState *exec,
-                       ObjectPrototypeImp *objProto,
-                       FunctionPrototypeImp *funcProto);
-  };
+/**
+ * @internal
+ *
+ * The initial value of Number.prototype (and thus all objects created
+ * with the Number constructor
+ */
+class NumberPrototypeImp : public NumberInstanceImp {
+public:
+    NumberPrototypeImp(ExecState *exec, ObjectPrototypeImp *objProto, FunctionPrototypeImp *funcProto);
+};
 
-  /**
-   * @internal
-   *
-   * Class to implement all methods that are properties of the
-   * Number.prototype object
-   */
-  class NumberProtoFuncImp : public InternalFunctionImp {
-  public:
-    NumberProtoFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto,
-                       int i, int len, const Identifier &_ident);
+/**
+ * @internal
+ *
+ * Class to implement all methods that are properties of the
+ * Number.prototype object
+ */
+class NumberProtoFuncImp : public InternalFunctionImp {
+public:
+    NumberProtoFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto, int i, int len, const Identifier &_ident);
 
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
 
-    enum { ToString, ToLocaleString, ValueOf, ToFixed, ToExponential, ToPrecision };
-  private:
-    int id;
-  };
+    enum
+    {
+        ToString,
+        ToLocaleString,
+        ValueOf,
+        ToFixed,
+        ToExponential,
+        ToPrecision
+    };
 
-  /**
-   * @internal
-   *
-   * The initial value of the the global variable's "Number" property
-   */
-  class NumberObjectImp : public InternalFunctionImp {
-  public:
-    NumberObjectImp(ExecState *exec,
-                    FunctionPrototypeImp *funcProto,
-                    NumberPrototypeImp *numberProto);
+private:
+    int id;
+};
+
+/**
+ * @internal
+ *
+ * The initial value of the the global variable's "Number" property
+ */
+class NumberObjectImp : public InternalFunctionImp {
+public:
+    NumberObjectImp(ExecState *exec, FunctionPrototypeImp *funcProto, NumberPrototypeImp *numberProto);
 
     virtual bool implementsConstruct() const;
     virtual Object construct(ExecState *exec, const List &args);
@@ -86,13 +93,23 @@ namespace KJS {
 
     Value get(ExecState *exec, const Identifier &p) const;
     Value getValueProperty(ExecState *exec, int token) const;
-    virtual const ClassInfo *classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    enum { NaNValue, NegInfinity, PosInfinity, MaxValue, MinValue };
+    enum
+    {
+        NaNValue,
+        NegInfinity,
+        PosInfinity,
+        MaxValue,
+        MinValue
+    };
 
     Completion execute(const List &);
     Object construct(const List &);
-  };
+};
 
 } // namespace
 

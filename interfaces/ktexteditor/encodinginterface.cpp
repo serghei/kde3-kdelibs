@@ -23,18 +23,19 @@
 #include "document.h"
 
 
+namespace KTextEditor {
 
-namespace KTextEditor
-{
-
-class PrivateEncodingInterface
-{
-  public:
-    PrivateEncodingInterface() {interface=0;}
-    ~PrivateEncodingInterface() {}
+class PrivateEncodingInterface {
+public:
+    PrivateEncodingInterface()
+    {
+        interface = 0;
+    }
+    ~PrivateEncodingInterface()
+    {
+    }
     EncodingDCOPInterface *interface;
 };
-
 }
 
 using namespace KTextEditor;
@@ -43,34 +44,34 @@ unsigned int EncodingInterface::globalEncodingInterfaceNumber = 0;
 
 EncodingInterface::EncodingInterface()
 {
-  globalEncodingInterfaceNumber++;
-  myEncodingInterfaceNumber = globalEncodingInterfaceNumber++;
+    globalEncodingInterfaceNumber++;
+    myEncodingInterfaceNumber = globalEncodingInterfaceNumber++;
 
-  d = new PrivateEncodingInterface();
-  ::QString name = "EncodingInterface#" + ::QString::number(myEncodingInterfaceNumber);
-  d->interface = new EncodingDCOPInterface(this, name.latin1());
+    d = new PrivateEncodingInterface();
+    ::QString name = "EncodingInterface#" + ::QString::number(myEncodingInterfaceNumber);
+    d->interface = new EncodingDCOPInterface(this, name.latin1());
 }
 
 EncodingInterface::~EncodingInterface()
 {
-  delete d->interface;
-  delete d;
+    delete d->interface;
+    delete d;
 }
 
-unsigned int EncodingInterface::encodingInterfaceNumber () const
+unsigned int EncodingInterface::encodingInterfaceNumber() const
 {
-  return myEncodingInterfaceNumber;
+    return myEncodingInterfaceNumber;
 }
 
-void EncodingInterface::setEncodingInterfaceDCOPSuffix (const QCString &suffix)
+void EncodingInterface::setEncodingInterfaceDCOPSuffix(const QCString &suffix)
 {
-  d->interface->setObjId ("EncodingInterface#"+suffix);
+    d->interface->setObjId("EncodingInterface#" + suffix);
 }
 
-EncodingInterface *KTextEditor::encodingInterface (Document *doc)
-{         
-  if (!doc)
-    return 0;
+EncodingInterface *KTextEditor::encodingInterface(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<EncodingInterface*>(doc->qt_cast("KTextEditor::EncodingInterface"));
+    return static_cast< EncodingInterface * >(doc->qt_cast("KTextEditor::EncodingInterface"));
 }

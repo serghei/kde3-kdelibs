@@ -34,44 +34,42 @@ class KHistoryCombo;
 class KIntNumInput;
 class QVButtonGroup;
 
-class KDEUI_EXPORT KEdGotoLine : public KDialogBase
-{
+class KDEUI_EXPORT KEdGotoLine : public KDialogBase {
     Q_OBJECT
 
 public:
-    KEdGotoLine( QWidget *parent=0, const char *name=0, bool modal=true );
+    KEdGotoLine(QWidget *parent = 0, const char *name = 0, bool modal = true);
     int getLineNumber();
 
 public slots:
-    void selected( int );
+    void selected(int);
 
 private:
     KIntNumInput *lineNum;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KEdGotoLinePrivate;
     KEdGotoLinePrivate *d;
 };
 
 ///
-class KDEUI_EXPORT KEdFind : public KDialogBase
-{
+class KDEUI_EXPORT KEdFind : public KDialogBase {
     Q_OBJECT
-    Q_PROPERTY( QString text READ getText WRITE setText )
-    Q_PROPERTY( bool caseSensitivity READ case_sensitive WRITE setCaseSensitive )
-    Q_PROPERTY( bool direction READ get_direction WRITE setDirection )
+    Q_PROPERTY(QString text READ getText WRITE setText)
+    Q_PROPERTY(bool caseSensitivity READ case_sensitive WRITE setCaseSensitive)
+    Q_PROPERTY(bool direction READ get_direction WRITE setDirection)
 public:
-
-    KEdFind( QWidget *parent = 0, const char *name=0, bool modal=true);
+    KEdFind(QWidget *parent = 0, const char *name = 0, bool modal = true);
     ~KEdFind();
 
     QString getText() const;
     void setText(QString string);
-    void setCaseSensitive( bool b );
+    void setCaseSensitive(bool b);
     bool case_sensitive() const;
-    void setDirection( bool b );
+    void setDirection(bool b);
     bool get_direction() const;
 
     /**
@@ -81,43 +79,46 @@ public:
     KHistoryCombo *searchCombo() const;
 
 protected slots:
-    void slotCancel( void );
-    void slotUser1( void );
-    void textSearchChanged ( const QString & );
+    void slotCancel(void);
+    void slotUser1(void);
+    void textSearchChanged(const QString &);
 
 protected:
-  QVButtonGroup* group;
+    QVButtonGroup *group;
 
 private:
     QCheckBox *sensitive;
     QCheckBox *direction;
 
-    virtual void done(int i ) { KDialogBase::done(i); }
+    virtual void done(int i)
+    {
+        KDialogBase::done(i);
+    }
 
 signals:
 
     void search();
     void done();
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KEdFindPrivate;
     KEdFindPrivate *d;
 };
 
 ///
-class KDEUI_EXPORT KEdReplace : public KDialogBase
-{
+class KDEUI_EXPORT KEdReplace : public KDialogBase {
     Q_OBJECT
 
 public:
-
-    KEdReplace ( QWidget *parent = 0, const char *name=0, bool modal=true );
+    KEdReplace(QWidget *parent = 0, const char *name = 0, bool modal = true);
     ~KEdReplace();
 
-    QString 	getText();
-    QString 	getReplaceText();
-    void 	setText(QString);
+    QString getText();
+    QString getReplaceText();
+    void setText(QString);
 
     /**
      * @returns the combobox containing the history of searches. Can be used
@@ -131,30 +132,35 @@ public:
      */
     KHistoryCombo *replaceCombo() const;
 
-    bool 	case_sensitive();
-    bool 	get_direction();
+    bool case_sensitive();
+    bool get_direction();
 
 protected slots:
-    void slotCancel( void );
-    void slotClose( void );
-    void slotUser1( void );
-    void slotUser2( void );
-    void slotUser3( void );
-    void textSearchChanged ( const QString & );
+    void slotCancel(void);
+    void slotClose(void);
+    void slotUser1(void);
+    void slotUser2(void);
+    void slotUser3(void);
+    void textSearchChanged(const QString &);
 
 private:
-    QCheckBox 	*sensitive;
-    QCheckBox 	*direction;
+    QCheckBox *sensitive;
+    QCheckBox *direction;
 
-	virtual void done(int i ) { KDialogBase::done(i); }
+    virtual void done(int i)
+    {
+        KDialogBase::done(i);
+    }
 
 signals:
     void replace();
     void find();
     void replaceAll();
     void done();
+
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KEdReplacePrivate;
     KEdReplacePrivate *d;
@@ -168,15 +174,14 @@ private:
  * @author Bernd Johannes Wuebben <wuebben@math.cornell.edu>, Waldo Bastian <bastian@kde.org>
  **/
 
-class KDEUI_EXPORT_DEPRECATED KEdit : public QMultiLineEdit
-{
+class KDEUI_EXPORT_DEPRECATED KEdit : public QMultiLineEdit {
     Q_OBJECT
 
 public:
     /**
      * The usual constructor.
      **/
-    KEdit (QWidget *_parent=NULL, const char *name=NULL);
+    KEdit(QWidget *_parent = NULL, const char *name = NULL);
 
     ~KEdit();
 
@@ -184,9 +189,12 @@ public:
      * Search directions.
      * @internal
      **/
-    enum { NONE,
-	   FORWARD,
-	   BACKWARD };
+    enum
+    {
+        NONE,
+        FORWARD,
+        BACKWARD
+    };
     /**
      * Insert text from the text stream into the edit widget.
      **/
@@ -205,12 +213,12 @@ public:
      *  Let the user select a font and set the font of the textwidget to that
      * selected font.
      **/
-    void 	selectFont();
+    void selectFont();
 
     /**
      * Present a search dialog to the user
      **/
-    void 	search();
+    void search();
 
     /**
      * Repeat the last search specified on the search dialog.
@@ -220,36 +228,36 @@ public:
      *
      * @return @p true if a search was done. @p false if no search was done.
      **/
-    bool 	repeatSearch();
+    bool repeatSearch();
 
     /**
      * Present a Search and Replace Dialog to the user.
      **/
-    void 	replace();
+    void replace();
 
     /**
      * Present a "Goto Line" dialog to the user.
      */
-    void 	doGotoLine();
+    void doGotoLine();
 
     /**
      * Clean up redundant whitespace from selected text.
      */
-    void        cleanWhiteSpace();
+    void cleanWhiteSpace();
 
     /**
      * Install a context menu for KEdit.
      *
      *  The Popup Menu will be activated on a right mouse button press event.
      */
-    void 	installRBPopup( QPopupMenu* );
+    void installRBPopup(QPopupMenu *);
 
     /**
      * Retrieve the current line number.
      *
      * The current line is the line the cursor is on.
      **/
-    int 	currentLine();
+    int currentLine();
 
     /**
      * Retrieve the actual column number the cursor is on.
@@ -260,7 +268,7 @@ public:
      *    if you want to display the current line or column in the status bar for
      *    example.
      */
-    int 	currentColumn();
+    int currentColumn();
 
 
     /**
@@ -284,7 +292,7 @@ public:
     QString selectWordUnderCursor();
 
     /// @since 3.3
-    QPopupMenu *createPopupMenu( const QPoint& pos );
+    QPopupMenu *createPopupMenu(const QPoint &pos);
 
     void setAutoUpdate(bool b);
 
@@ -295,14 +303,14 @@ signals:
       *  Note that the user can drop also Text on it, but
       * this is already handled internally by QMultiLineEdit.
       */
-    void        gotUrlDrop(QDropEvent* e);
+    void gotUrlDrop(QDropEvent *e);
 
     /** This signal is emitted whenever the cursor position changes.
      *
      * Use this in conjunction with currentLine(), currentColumn()
      * if you need to know the cursor position.
      */
-    void 	CursorPositionChanged();
+    void CursorPositionChanged();
 
     /**
      * This signal is emitted if the user toggles from insert to overwrite mode
@@ -313,121 +321,118 @@ signals:
      * This feature must be activated by calling setOverwriteEnabled(true)
      * first.
      */
-    void 	toggle_overwrite_signal();
+    void toggle_overwrite_signal();
 
 public slots:
-      /**
-       * @internal
-       **/
-    void corrected (const QString &originalword, const QString &newword, unsigned int pos);
-      /**
-       * @internal
-       **/
-    void misspelling (const QString &word, const QStringList &, unsigned int pos);
+    /**
+     * @internal
+     **/
+    void corrected(const QString &originalword, const QString &newword, unsigned int pos);
+    /**
+     * @internal
+     **/
+    void misspelling(const QString &word, const QStringList &, unsigned int pos);
 private slots:
 
-      /**
-       * @internal
-       * Called from search dialog.
-       **/
+    /**
+     * @internal
+     * Called from search dialog.
+     **/
     void search_slot();
 
-      /**
-       * @internal
-       **/
+    /**
+     * @internal
+     **/
     void searchdone_slot();
 
-      /**
-       * @internal
-       **/
+    /**
+     * @internal
+     **/
     void replace_slot();
 
-      /**
-       * @internal
-       **/
+    /**
+     * @internal
+     **/
     void replace_all_slot();
 
-      /**
-       * @internal
-       **/
+    /**
+     * @internal
+     **/
     void replace_search_slot();
 
-      /**
-       * @internal
-       **/
+    /**
+     * @internal
+     **/
     void replacedone_slot();
 
-      /**
-       * Cursor moved...
-       */
+    /**
+     * Cursor moved...
+     */
     void slotCursorPositionChanged();
 
 protected:
     void computePosition();
-    int 	doSearch(QString s_pattern, bool case_sensitive,
-			 bool regex, bool forward,int line, int col);
+    int doSearch(QString s_pattern, bool case_sensitive, bool regex, bool forward, int line, int col);
 
-    int 	doReplace(QString s_pattern, bool case_sensitive,
-			  bool regex, bool forward,int line, int col,bool replace);
+    int doReplace(QString s_pattern, bool case_sensitive, bool regex, bool forward, int line, int col, bool replace);
 
-      /**
-       * Sets line and col to the position pos, considering word wrap.
-       **/
-    void	posToRowCol(unsigned int pos, unsigned int &line, unsigned int &col);
+    /**
+     * Sets line and col to the position pos, considering word wrap.
+     **/
+    void posToRowCol(unsigned int pos, unsigned int &line, unsigned int &col);
 
     /**
      * Reimplemented for internal reasons, the API is not affected.
      */
-    virtual void create( WId = 0, bool initializeWindow = true,
-                         bool destroyOldWindow = true );
+    virtual void create(WId = 0, bool initializeWindow = true, bool destroyOldWindow = true);
 
     /**
      * Reimplemented for internal reasons, the API is not affected.
      */
     virtual void ensureCursorVisible();
-    virtual void setCursor( const QCursor & );
-    virtual void viewportPaintEvent( QPaintEvent* );
+    virtual void setCursor(const QCursor &);
+    virtual void viewportPaintEvent(QPaintEvent *);
 
 protected:
-
-    void 	keyPressEvent 	 ( QKeyEvent *  );
+    void keyPressEvent(QKeyEvent *);
 
     // DnD interface
-    void        dragMoveEvent(QDragMoveEvent* e);
-    void        dragEnterEvent(QDragEnterEvent* e);
-    void        dropEvent(QDropEvent* e);
-    void        contentsDragMoveEvent(QDragMoveEvent* e);
-    void        contentsDragEnterEvent(QDragEnterEvent* e);
-    void        contentsDropEvent(QDropEvent* e);
+    void dragMoveEvent(QDragMoveEvent *e);
+    void dragEnterEvent(QDragEnterEvent *e);
+    void dropEvent(QDropEvent *e);
+    void contentsDragMoveEvent(QDragMoveEvent *e);
+    void contentsDragEnterEvent(QDragEnterEvent *e);
+    void contentsDropEvent(QDropEvent *e);
 
 private:
-    QTimer* repaintTimer;
+    QTimer *repaintTimer;
 
-    QString	killbufferstring;
-    QWidget     *parent;
-    KEdFind 	*srchdialog;
-    KEdReplace 	*replace_dialog;
+    QString killbufferstring;
+    QWidget *parent;
+    KEdFind *srchdialog;
+    KEdReplace *replace_dialog;
     KEdGotoLine *gotodialog;
 
-    QString     pattern;
+    QString pattern;
 
-    bool 	can_replace;
-    bool	killing;
-    bool 	killtrue;
-    bool 	lastwasanewline;
-    bool        saved_readonlystate;
-    int 	last_search;
-    int 	last_replace;
-    int 	replace_all_line;
-    int 	replace_all_col;
+    bool can_replace;
+    bool killing;
+    bool killtrue;
+    bool lastwasanewline;
+    bool saved_readonlystate;
+    int last_search;
+    int last_replace;
+    int replace_all_line;
+    int replace_all_col;
 
-    int 	line_pos, col_pos;
-    bool        fill_column_is_set;
-    bool        word_wrap_is_set;
-    int         fill_column_value;
+    int line_pos, col_pos;
+    bool fill_column_is_set;
+    bool word_wrap_is_set;
+    int fill_column_value;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KEditPrivate;
     KEditPrivate *d;

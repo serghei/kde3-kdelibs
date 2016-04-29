@@ -15,7 +15,7 @@
    along with this library; see the file COPYING.LIB.  If not, write to
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
-   
+
    $Id: selectioninterfaceext.cpp 669011 2007-05-28 10:35:26Z mueller $
 */
 
@@ -27,65 +27,65 @@
 
 using namespace KTextEditor;
 
-//BEGIN KTextEditor::SelectionInterfaceExt
+// BEGIN KTextEditor::SelectionInterfaceExt
 class KTextEditor::PrivateSelectionInterfaceExt {
-  public:
-    PrivateSelectionInterfaceExt() : interface( 0 ) {}
-    ~PrivateSelectionInterfaceExt() {}
-    
+public:
+    PrivateSelectionInterfaceExt() : interface(0)
+    {
+    }
+    ~PrivateSelectionInterfaceExt()
+    {
+    }
+
     SelectionExtDCOPInterface *interface;
 };
 
 unsigned int SelectionInterfaceExt::globalSelectionInterfaceExtNumber = 0;
 
-SelectionInterfaceExt::SelectionInterfaceExt()
-  : d ( new PrivateSelectionInterfaceExt )
+SelectionInterfaceExt::SelectionInterfaceExt() : d(new PrivateSelectionInterfaceExt)
 {
-  globalSelectionInterfaceExtNumber++;
-  mySelectionInterfaceExtNumber = globalSelectionInterfaceExtNumber;
-  QString name = "SelectionInterfaceExt#" + QString::number(mySelectionInterfaceExtNumber);
-  d->interface = new SelectionExtDCOPInterface(this, name.latin1());
+    globalSelectionInterfaceExtNumber++;
+    mySelectionInterfaceExtNumber = globalSelectionInterfaceExtNumber;
+    QString name = "SelectionInterfaceExt#" + QString::number(mySelectionInterfaceExtNumber);
+    d->interface = new SelectionExtDCOPInterface(this, name.latin1());
 }
 
 SelectionInterfaceExt::~SelectionInterfaceExt()
 {
-  delete d->interface;
-  delete d;
+    delete d->interface;
+    delete d;
 }
 
-unsigned int SelectionInterfaceExt::selectionInterfaceExtNumber () const
+unsigned int SelectionInterfaceExt::selectionInterfaceExtNumber() const
 {
-  return mySelectionInterfaceExtNumber;
+    return mySelectionInterfaceExtNumber;
 }
 
-void SelectionInterfaceExt::setSelectionInterfaceExtDCOPSuffix (const QCString &suffix)
+void SelectionInterfaceExt::setSelectionInterfaceExtDCOPSuffix(const QCString &suffix)
 {
-  d->interface->setObjId ("SelectionInterfaceExt#"+suffix);
+    d->interface->setObjId("SelectionInterfaceExt#" + suffix);
 }
 
-SelectionInterfaceExt *KTextEditor::selectionInterfaceExt (Document *doc)
+SelectionInterfaceExt *KTextEditor::selectionInterfaceExt(Document *doc)
 {
-  if (!doc)
-    return 0;
+    if(!doc)
+        return 0;
 
-  return static_cast<SelectionInterfaceExt*>(doc->qt_cast("KTextEditor::SelectionInterfaceExt"));
+    return static_cast< SelectionInterfaceExt * >(doc->qt_cast("KTextEditor::SelectionInterfaceExt"));
 }
 
-SelectionInterfaceExt *KTextEditor::selectionInterfaceExt (View *view)
+SelectionInterfaceExt *KTextEditor::selectionInterfaceExt(View *view)
 {
-  if (!view)
-    return 0;
+    if(!view)
+        return 0;
 
-  return static_cast<SelectionInterfaceExt*>(view->qt_cast("KTextEditor::SelectionInterfaceExt"));
+    return static_cast< SelectionInterfaceExt * >(view->qt_cast("KTextEditor::SelectionInterfaceExt"));
 }
 
-//END KTextEditor::SelectionInterfaceExt
+// END KTextEditor::SelectionInterfaceExt
 
-//BEGIN KTextEditor::SelectionExtDCOPInterface
-SelectionExtDCOPInterface::SelectionExtDCOPInterface(
-                SelectionInterfaceExt *parent, const char* name )
-  : DCOPObject( name ),
-    m_parent( parent )
+// BEGIN KTextEditor::SelectionExtDCOPInterface
+SelectionExtDCOPInterface::SelectionExtDCOPInterface(SelectionInterfaceExt *parent, const char *name) : DCOPObject(name), m_parent(parent)
 {
 }
 
@@ -95,21 +95,21 @@ SelectionExtDCOPInterface::~SelectionExtDCOPInterface()
 
 int SelectionExtDCOPInterface::selStartLine()
 {
-  return m_parent->selStartLine();
+    return m_parent->selStartLine();
 }
 
 int SelectionExtDCOPInterface::selStartCol()
 {
-  return m_parent->selStartCol();
+    return m_parent->selStartCol();
 }
 
 int SelectionExtDCOPInterface::selEndLine()
 {
-  return m_parent->selEndLine();
+    return m_parent->selEndLine();
 }
 
 int SelectionExtDCOPInterface::selEndCol()
 {
-  return m_parent->selEndCol();
+    return m_parent->selEndCol();
 }
-//END KTextEditor::SelectionExtDCOPInterface
+// END KTextEditor::SelectionExtDCOPInterface

@@ -24,43 +24,40 @@
 class QCString;
 class QPopupMenu;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 *  This is an interface to provide custom popup menus for a View.
 */
-class KTEXTEDITOR_EXPORT PopupMenuInterface
-{
-  friend class PrivatePopupMenuInterface;
+class KTEXTEDITOR_EXPORT PopupMenuInterface {
+    friend class PrivatePopupMenuInterface;
 
-  public:
-    PopupMenuInterface ();
-    virtual ~PopupMenuInterface ();
+public:
+    PopupMenuInterface();
+    virtual ~PopupMenuInterface();
 
-    unsigned int popupMenuInterfaceNumber () const;
-    
-  protected:  
-    void setPopupMenuInterfaceDCOPSuffix (const QCString &suffix);  
+    unsigned int popupMenuInterfaceNumber() const;
 
-  //
-  // normal methodes
-  //
-  public:
-     /**
-      Install a Popup Menu. The Popup Menu will be activated on
-      a right mouse button press event.
-    */
-    virtual void installPopup (QPopupMenu *rmb_Menu) = 0;
+protected:
+    void setPopupMenuInterfaceDCOPSuffix(const QCString &suffix);
 
-  private:
-    class PrivatePopupMenuInterface *d;    
+    //
+    // normal methodes
+    //
+public:
+    /**
+     Install a Popup Menu. The Popup Menu will be activated on
+     a right mouse button press event.
+   */
+    virtual void installPopup(QPopupMenu *rmb_Menu) = 0;
+
+private:
+    class PrivatePopupMenuInterface *d;
     static unsigned int globalPopupMenuInterfaceNumber;
     unsigned int myPopupMenuInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT PopupMenuInterface *popupMenuInterface (class View *view);
-
+KTEXTEDITOR_EXPORT PopupMenuInterface *popupMenuInterface(class View *view);
 }
 
 #endif

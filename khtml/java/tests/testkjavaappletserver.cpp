@@ -9,17 +9,13 @@
 #include "java/kjavaapplet.h"
 #include "java/kjavaappletwidget.h"
 
-static KCmdLineOptions options[] =
-{
-    { "+[kdelibs_path]", "path to kdelibs directory", 0 },
-    KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"+[kdelibs_path]", "path to kdelibs directory", 0}, KCmdLineLastOption};
 
 int main(int argc, char **argv)
 {
-    KCmdLineArgs::init( argc, argv, "testKJASSever", "testKJASServer", "test program", "0.0" );
+    KCmdLineArgs::init(argc, argv, "testKJASSever", "testKJASServer", "test program", "0.0");
 
-    KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::addCmdLineOptions(options);
 
     KApplication app;
 
@@ -29,10 +25,10 @@ int main(int argc, char **argv)
 
     a->show();
 
-    a->applet()->setBaseURL( "file:" + path_to_kdelibs + "/kdelibs/khtml/test/" );
-    a->applet()->setAppletName( "Lake" );
-    a->applet()->setAppletClass( "lake.class" );
-    a->applet()->setParameter( "image", "konqi.gif" );
+    a->applet()->setBaseURL("file:" + path_to_kdelibs + "/kdelibs/khtml/test/");
+    a->applet()->setAppletName("Lake");
+    a->applet()->setAppletClass("lake.class");
+    a->applet()->setParameter("image", "konqi.gif");
 
     a->showApplet();
     a->applet()->start();

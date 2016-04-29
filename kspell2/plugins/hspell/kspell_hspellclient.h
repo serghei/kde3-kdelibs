@@ -31,30 +31,31 @@ extern "C" {
 }
 
 namespace KSpell2 {
-    class Dictionary;
+class Dictionary;
 }
 using KSpell2::Dictionary;
 
-class HSpellClient : public KSpell2::Client
-{
+class HSpellClient : public KSpell2::Client {
     Q_OBJECT
 public:
-    HSpellClient( QObject *parent, const char *name, const QStringList & /* args */  );
+    HSpellClient(QObject *parent, const char *name, const QStringList & /* args */);
     ~HSpellClient();
 
-    virtual int reliability() const {
+    virtual int reliability() const
+    {
         return 20;
     }
 
-    virtual Dictionary* dictionary( const QString& language );
+    virtual Dictionary *dictionary(const QString &language);
 
     virtual QStringList languages() const;
 
-    virtual QString name() const {
+    virtual QString name() const
+    {
         return "HSpell";
     }
-private:
 
+private:
 };
 
 #endif

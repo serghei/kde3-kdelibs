@@ -25,17 +25,16 @@
 
 #include <kdelibs_export.h>
 
-class KDEPRINT_EXPORT KPipeProcess : public QFile
-{
+class KDEPRINT_EXPORT KPipeProcess : public QFile {
 public:
-	KPipeProcess(const QString& cmd = QString::null, int mode = IO_ReadOnly);
-	~KPipeProcess();
+    KPipeProcess(const QString &cmd = QString::null, int mode = IO_ReadOnly);
+    ~KPipeProcess();
 
-	bool open(const QString& cmd, int mode = IO_ReadOnly);
-	void close();
+    bool open(const QString &cmd, int mode = IO_ReadOnly);
+    void close();
 
 private:
-	FILE	*m_pipe;
+    FILE *m_pipe;
 };
 
 #endif

@@ -65,15 +65,15 @@ Connection::~Connection()
 void Connection::suspend()
 {
     m_suspended = true;
-    if (notifier)
-       notifier->setEnabled(false);
+    if(notifier)
+        notifier->setEnabled(false);
 }
 
 void Connection::resume()
 {
     m_suspended = false;
-    if (notifier)
-       notifier->setEnabled(true);
+    if(notifier)
+        notifier->setEnabled(true);
 }
 
 void Connection::close()
@@ -84,40 +84,43 @@ void Connection::close()
     socket = 0;
 
     // KSocket has already closed the file descriptor, but we need to
-    // close the file-stream as well otherwise we leak memory. 
+    // close the file-stream as well otherwise we leak memory.
     // As a result we close the file descriptor twice, but that should
     // be harmless
     // KDE4: fix this
-    if (f_out)
-       fclose(f_out);
+    if(f_out)
+        fclose(f_out);
     f_out = 0;
     fd_in = -1;
     tasks.clear();
 }
 
-void Connection::send(int cmd, const QByteArray& data)
+void Connection::send(int cmd, const QByteArray &data)
 {
-    if (!inited() || tasks.count() > 0) {
-	Task *task = new Task();
-	task->cmd = cmd;
-	task->data = data;
-	tasks.append(task);
-    } else {
-	sendnow( cmd, data );
+    if(!inited() || tasks.count() > 0)
+    {
+        Task *task = new Task();
+        task->cmd = cmd;
+        task->data = data;
+        tasks.append(task);
+    }
+    else
+    {
+        sendnow(cmd, data);
     }
 }
 
 void Connection::dequeue()
 {
-    if (!inited())
-	return;
+    if(!inited())
+        return;
 
-    while (tasks.count())
+    while(tasks.count())
     {
-       tasks.first();
-       Task *task = tasks.take();
-       sendnow( task->cmd, task->data );
-       delete task;
+        tasks.first();
+        Task *task = tasks.take();
+        sendnow(task->cmd, task->data);
+        delete task;
     }
 }
 
@@ -125,18 +128,20 @@ void Connection::init(KSocket *sock)
 {
     delete notifier;
     notifier = 0;
-#ifdef Q_OS_UNIX //TODO: not yet available on WIN32
+#ifdef Q_OS_UNIX // TODO: not yet available on WIN32
     delete socket;
     socket = sock;
     fd_in = socket->socket();
-    f_out = KDE_fdopen( socket->socket(), "wb" );
+    f_out = KDE_fdopen(socket->socket(), "wb");
 #endif
-    if (receiver && ( fd_in != -1 )) {
-	notifier = new QSocketNotifier(fd_in, QSocketNotifier::Read);
-	if ( m_suspended ) {
+    if(receiver && (fd_in != -1))
+    {
+        notifier = new QSocketNotifier(fd_in, QSocketNotifier::Read);
+        if(m_suspended)
+        {
             suspend();
-	}
-	QObject::connect(notifier, SIGNAL(activated(int)), receiver, member);
+        }
+        QObject::connect(notifier, SIGNAL(activated(int)), receiver, member);
     }
     dequeue();
 }
@@ -146,13 +151,15 @@ void Connection::init(int _fd_in, int fd_out)
     delete notifier;
     notifier = 0;
     fd_in = _fd_in;
-    f_out = KDE_fdopen( fd_out, "wb" );
-    if (receiver && ( fd_in != -1 )) {
-	notifier = new QSocketNotifier(fd_in, QSocketNotifier::Read);
-	if ( m_suspended ) {
+    f_out = KDE_fdopen(fd_out, "wb");
+    if(receiver && (fd_in != -1))
+    {
+        notifier = new QSocketNotifier(fd_in, QSocketNotifier::Read);
+        if(m_suspended)
+        {
             suspend();
-	}
-	QObject::connect(notifier, SIGNAL(activated(int)), receiver, member);
+        }
+        QObject::connect(notifier, SIGNAL(activated(int)), receiver, member);
     }
     dequeue();
 }
@@ -164,106 +171,119 @@ void Connection::connect(QObject *_receiver, const char *_member)
     member = _member;
     delete notifier;
     notifier = 0;
-    if (receiver && (fd_in != -1 )) {
-	notifier = new QSocketNotifier(fd_in, QSocketNotifier::Read);
-        if ( m_suspended )
+    if(receiver && (fd_in != -1))
+    {
+        notifier = new QSocketNotifier(fd_in, QSocketNotifier::Read);
+        if(m_suspended)
             suspend();
-	QObject::connect(notifier, SIGNAL(activated(int)), receiver, member);
+        QObject::connect(notifier, SIGNAL(activated(int)), receiver, member);
     }
 }
 
-bool Connection::sendnow( int _cmd, const QByteArray &data )
+bool Connection::sendnow(int _cmd, const QByteArray &data)
 {
-    if (f_out == 0) {
-	return false;
+    if(f_out == 0)
+    {
+        return false;
     }
 
-    if (data.size() > 0xffffff)
+    if(data.size() > 0xffffff)
         return false;
 
-    static char buffer[ 64 ];
-    sprintf( buffer, "%6x_%2x_", data.size(), _cmd );
+    static char buffer[64];
+    sprintf(buffer, "%6x_%2x_", data.size(), _cmd);
 
-    size_t n = fwrite( buffer, 1, 10, f_out );
+    size_t n = fwrite(buffer, 1, 10, f_out);
 
-    if ( n != 10 ) {
-	kdError(7017) << "Could not send header" << endl;
-	return false;
+    if(n != 10)
+    {
+        kdError(7017) << "Could not send header" << endl;
+        return false;
     }
 
-    n = fwrite( data.data(), 1, data.size(), f_out );
+    n = fwrite(data.data(), 1, data.size(), f_out);
 
-    if ( n != data.size() ) {
-	kdError(7017) << "Could not write data" << endl;
-	return false;
+    if(n != data.size())
+    {
+        kdError(7017) << "Could not write data" << endl;
+        return false;
     }
 
-    if (fflush( f_out )) {
-	kdError(7017) << "Could not write data" << endl;
-	return false;
+    if(fflush(f_out))
+    {
+        kdError(7017) << "Could not write data" << endl;
+        return false;
     }
 
     return true;
 }
 
-int Connection::read( int* _cmd, QByteArray &data )
+int Connection::read(int *_cmd, QByteArray &data)
 {
-    if (fd_in == -1 ) {
-	kdError(7017) << "read: not yet inited" << endl;
-	return -1;
+    if(fd_in == -1)
+    {
+        kdError(7017) << "read: not yet inited" << endl;
+        return -1;
     }
 
-    static char buffer[ 10 ];
+    static char buffer[10];
 
- again1:
-    ssize_t n = ::read( fd_in, buffer, 10);
-    if ( n == -1 && errno == EINTR )
-	goto again1;
+again1:
+    ssize_t n = ::read(fd_in, buffer, 10);
+    if(n == -1 && errno == EINTR)
+        goto again1;
 
-    if ( n == -1) {
-	kdError(7017) << "Header read failed, errno=" << errno << endl;
+    if(n == -1)
+    {
+        kdError(7017) << "Header read failed, errno=" << errno << endl;
     }
 
-    if ( n != 10 ) {
-      if ( n ) // 0 indicates end of file
-        kdError(7017) << "Header has invalid size (" << n << ")" << endl;
-      return -1;
+    if(n != 10)
+    {
+        if(n) // 0 indicates end of file
+            kdError(7017) << "Header has invalid size (" << n << ")" << endl;
+        return -1;
     }
 
-    buffer[ 6 ] = 0;
-    buffer[ 9 ] = 0;
+    buffer[6] = 0;
+    buffer[9] = 0;
 
     char *p = buffer;
-    while( *p == ' ' ) p++;
-    long int len = strtol( p, 0L, 16 );
+    while(*p == ' ')
+        p++;
+    long int len = strtol(p, 0L, 16);
 
     p = buffer + 7;
-    while( *p == ' ' ) p++;
-    long int cmd = strtol( p, 0L, 16 );
+    while(*p == ' ')
+        p++;
+    long int cmd = strtol(p, 0L, 16);
 
-    data.resize( len );
+    data.resize(len);
 
-    if ( len > 0L ) {
-	size_t bytesToGo = len;
-	size_t bytesRead = 0;
-	do {
-	    n = ::read(fd_in, data.data()+bytesRead, bytesToGo);
-	    if (n == -1) {
-		if (errno == EINTR)
-		    continue;
+    if(len > 0L)
+    {
+        size_t bytesToGo = len;
+        size_t bytesRead = 0;
+        do
+        {
+            n = ::read(fd_in, data.data() + bytesRead, bytesToGo);
+            if(n == -1)
+            {
+                if(errno == EINTR)
+                    continue;
 
-		kdError(7017) << "Data read failed, errno=" << errno << endl;
-		return -1;
-	    }
-	    if ( !n ) { // 0 indicates end of file
-        	kdError(7017) << "Connection ended unexpectedly (" << n << "/" << bytesToGo << ")" << endl;
-      		return -1;
-    	    }
+                kdError(7017) << "Data read failed, errno=" << errno << endl;
+                return -1;
+            }
+            if(!n)
+            { // 0 indicates end of file
+                kdError(7017) << "Connection ended unexpectedly (" << n << "/" << bytesToGo << ")" << endl;
+                return -1;
+            }
 
-	    bytesRead += n;
-	    bytesToGo -= n;
-	}
-	while(bytesToGo);
+            bytesRead += n;
+            bytesToGo -= n;
+        } while(bytesToGo);
     }
 
     *_cmd = cmd;

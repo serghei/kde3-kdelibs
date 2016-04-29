@@ -30,28 +30,32 @@ namespace DOM {
 
 class DOMString;
 
-class HTMLAnchorElementImpl : public HTMLElementImpl
-{
+class HTMLAnchorElementImpl : public HTMLElementImpl {
 public:
-    HTMLAnchorElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc), m_hasTarget(false) {}
+    HTMLAnchorElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc), m_hasTarget(false)
+    {
+    }
 
-    virtual bool isFocusable() const { return m_hasAnchor; }
+    virtual bool isFocusable() const
+    {
+        return m_hasAnchor;
+    }
     virtual Id id() const;
     virtual void parseAttribute(AttributeImpl *attr);
     virtual void defaultEventHandler(EventImpl *evt);
     void click();
+
 protected:
     bool m_hasTarget : 1;
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLBRElementImpl : public HTMLElementImpl
-{
+class HTMLBRElementImpl : public HTMLElementImpl {
 public:
-    HTMLBRElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc) {}
+    HTMLBRElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
     virtual Id id() const;
     virtual void parseAttribute(AttributeImpl *attr);
@@ -60,16 +64,16 @@ public:
 
 // -------------------------------------------------------------------------
 
-class HTMLFontElementImpl : public HTMLElementImpl
-{
+class HTMLFontElementImpl : public HTMLElementImpl {
 public:
-    HTMLFontElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc) {}
+    HTMLFontElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
     virtual Id id() const;
     virtual void parseAttribute(AttributeImpl *attr);
 };
 
-} //namespace
+} // namespace
 
 #endif

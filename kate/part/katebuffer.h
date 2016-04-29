@@ -46,11 +46,10 @@ class QTextCodec;
  * @author Waldo Bastian <bastian@kde.org>
  * @author Christoph Cullmann <cullmann@kde.org>
  */
-class KateBufBlock
-{
-  friend class KateBufBlockList;
+class KateBufBlock {
+    friend class KateBufBlockList;
 
-  public:
+public:
     /**
      * Create an empty block. (empty == ONE line)
      * @param parent buffer the block belongs to
@@ -58,39 +57,41 @@ class KateBufBlock
      * @param next next bufblock in the list
      * @param stream stream to load the content from, if any given
      */
-    KateBufBlock ( KateBuffer *parent, KateBufBlock *prev = 0, KateBufBlock *next = 0,
-                   KateFileLoader *stream = 0 );
+    KateBufBlock(KateBuffer *parent, KateBufBlock *prev = 0, KateBufBlock *next = 0, KateFileLoader *stream = 0);
 
     /**
      * destroy this block and take care of freeing all mem
      */
-    ~KateBufBlock ();
+    ~KateBufBlock();
 
-  private:
+private:
     /**
      * fill the block with the lines from the given stream
      * @param stream stream to load data from
      */
-    void fillBlock (KateFileLoader *stream);
+    void fillBlock(KateFileLoader *stream);
 
-  public:
+public:
     /**
      * state flags
      */
     enum State
     {
-      stateSwapped = 0,
-      stateClean = 1,
-      stateDirty = 2
+        stateSwapped = 0,
+        stateClean = 1,
+        stateDirty = 2
     };
 
     /**
      * returns the current state of this block
      * @return state
      */
-    State state () const { return m_state; }
+    State state() const
+    {
+        return m_state;
+    }
 
-  public:
+public:
     /**
      * return line @p i
      * The first line of this block is line 0.
@@ -119,60 +120,78 @@ class KateBufBlock
      * mark this block as dirty, will invalidate the swap data
      * insert/removeLine will mark the block dirty itself
      */
-    void markDirty ();
+    void markDirty();
 
-  public:
+public:
     /**
      * startLine
      * @return first line in block
      */
-    inline uint startLine () const { return m_startLine; };
+    inline uint startLine() const
+    {
+        return m_startLine;
+    };
 
     /**
      * update the first line, needed to keep it up to date
      * @param line new startLine
      */
-    inline void setStartLine (uint line) { m_startLine = line; }
+    inline void setStartLine(uint line)
+    {
+        m_startLine = line;
+    }
 
     /**
      * first line behind this block
      * @return line behind block
      */
-    inline uint endLine () const { return m_startLine + m_lines; }
+    inline uint endLine() const
+    {
+        return m_startLine + m_lines;
+    }
 
     /**
      * lines in this block
      * @return lines
      */
-    inline uint lines () const { return m_lines; }
+    inline uint lines() const
+    {
+        return m_lines;
+    }
 
     /**
      * prev block
      * @return previous block
      */
-    inline KateBufBlock *prev () { return m_prev; }
+    inline KateBufBlock *prev()
+    {
+        return m_prev;
+    }
 
     /**
      * next block
      * @return next block
      */
-    inline KateBufBlock *next () { return m_next; }
+    inline KateBufBlock *next()
+    {
+        return m_next;
+    }
 
-  /**
-   * methodes to swap in/out
-   */
-  private:
+    /**
+     * methodes to swap in/out
+     */
+private:
     /**
      * swap in the kvmallocater data, create string list
      */
-    void swapIn ();
+    void swapIn();
 
     /**
      * swap our string list out, delete it !
      */
-    void swapOut ();
+    void swapOut();
 
-  private:
+private:
     /**
      * VERY IMPORTANT, state of this block
      * this uchar indicates if the block is swapped, loaded, clean or dirty
@@ -202,12 +221,12 @@ class KateBufBlock
     /**
      * list of textlines
      */
-    QValueVector<KateTextLine::Ptr> m_stringList;
+    QValueVector< KateTextLine::Ptr > m_stringList;
 
     /**
      * parent buffer.
      */
-    KateBuffer* m_parent;
+    KateBuffer *m_parent;
 
     /**
      * prev block
@@ -219,7 +238,7 @@ class KateBufBlock
      */
     KateBufBlock *m_next;
 
-  private:
+private:
     /**
      * list pointer, to which list I belong
      * list element pointers for the KateBufBlockList ONLY !!!
@@ -245,72 +264,86 @@ class KateBufBlock
  *
  * @author Christoph Cullmann <cullmann@kde.org>
  */
-class KateBufBlockList
-{
-  public:
+class KateBufBlockList {
+public:
     /**
      * Default Constructor
      */
-    KateBufBlockList ();
+    KateBufBlockList();
 
-  public:
+public:
     /**
      * count of blocks in this list
      * @return count of blocks
      */
-    inline uint count() const { return m_count; }
+    inline uint count() const
+    {
+        return m_count;
+    }
 
     /**
      * first block in this list or 0
      * @return head of list
      */
-    inline KateBufBlock *first () { return m_first; };
+    inline KateBufBlock *first()
+    {
+        return m_first;
+    };
 
     /**
      * last block in this list or 0
      * @return end of list
      */
-    inline KateBufBlock *last () { return m_last; };
+    inline KateBufBlock *last()
+    {
+        return m_last;
+    };
 
     /**
      * is buf the last block?
      * @param buf block to test
      * @return is this block the first one?
      */
-    inline bool isFirst (KateBufBlock *buf) { return m_first == buf; };
+    inline bool isFirst(KateBufBlock *buf)
+    {
+        return m_first == buf;
+    };
 
     /**
      * is buf the last block?
      * @param buf block to test
      * @return is this block the last one?
      */
-    inline bool isLast (KateBufBlock *buf) { return m_last == buf; };
+    inline bool isLast(KateBufBlock *buf)
+    {
+        return m_last == buf;
+    };
 
     /**
      * append a block to this list !
      * will remove it from the list it belonged before !
      * @param buf block to append
      */
-    void append (KateBufBlock *buf);
+    void append(KateBufBlock *buf);
 
     /**
      * remove the block from the list it belongs to !
      * @param buf block to remove
      */
-    inline static void remove (KateBufBlock *buf)
+    inline static void remove(KateBufBlock *buf)
     {
-      if (buf->list)
-        buf->list->removeInternal (buf);
+        if(buf->list)
+            buf->list->removeInternal(buf);
     }
 
-  private:
+private:
     /**
      * internal helper for remove
      * @param buf block to remove
      */
-    void removeInternal (KateBufBlock *buf);
+    void removeInternal(KateBufBlock *buf);
 
-  private:
+private:
     /**
      * count of blocks in list
      */
@@ -338,80 +371,94 @@ class KateBufBlockList
  * @author Waldo Bastian <bastian@kde.org>
  * @author Christoph Cullmann <cullmann@kde.org>
  */
-class KateBuffer : public QObject
-{
-  Q_OBJECT
+class KateBuffer : public QObject {
+    Q_OBJECT
 
-  friend class KateBufBlock;
+    friend class KateBufBlock;
 
-  public:
+public:
     /**
      * maximal loaded block count
      * @return max loaded blocks
      */
-    inline static uint maxLoadedBlocks () { return m_maxLoadedBlocks; }
+    inline static uint maxLoadedBlocks()
+    {
+        return m_maxLoadedBlocks;
+    }
 
     /**
      * modifier for max loaded blocks limit
      * @param count new limit
      */
-    static void setMaxLoadedBlocks (uint count);
+    static void setMaxLoadedBlocks(uint count);
 
-  private:
+private:
     /**
      * global max loaded blocks limit
      */
     static uint m_maxLoadedBlocks;
 
-  public:
+public:
     /**
      * Create an empty buffer.
      * @param doc parent document
      */
-    KateBuffer (KateDocument *doc);
+    KateBuffer(KateDocument *doc);
 
     /**
      * Goodbye buffer
      */
-    ~KateBuffer ();
+    ~KateBuffer();
 
-  public:
+public:
     /**
      * start some editing action
      */
-    void editStart ();
+    void editStart();
 
     /**
      * finish some editing action
      */
-    void editEnd ();
+    void editEnd();
 
     /**
      * were there changes in the current running
      * editing session?
      * @return changes done?
      */
-    inline bool editChanged () const { return editChangesDone; }
+    inline bool editChanged() const
+    {
+        return editChangesDone;
+    }
 
     /**
      * dirty lines start
      * @return start line
      */
-    inline uint editTagStart () const { return editTagLineStart; }
+    inline uint editTagStart() const
+    {
+        return editTagLineStart;
+    }
 
     /**
      * dirty lines end
      * @return end line
      */
-    inline uint editTagEnd () const { return editTagLineEnd; }
+    inline uint editTagEnd() const
+    {
+        return editTagLineEnd;
+    }
 
     /**
      * line inserted/removed?
      * @return line inserted/removed?
      */
-    inline bool editTagFrom () const { return editTagLineFrom; }
+    inline bool editTagFrom() const
+    {
+        return editTagLineFrom;
+    }
 
-  private:
+private:
     /**
      * edit session recursion
      */
@@ -442,7 +489,7 @@ class KateBuffer : public QObject
      */
     bool editChangesDone;
 
-  public:
+public:
     /**
      * Clear the buffer.
      */
@@ -453,102 +500,112 @@ class KateBuffer : public QObject
      * @param m_file filename to open
      * @return success
      */
-    bool openFile (const QString &m_file);
+    bool openFile(const QString &m_file);
 
     /**
      * was the last loading broken because of not enough tmp disk space ?
      * (will be reseted on successful save of the file, user gets warning if he really wants to do it)
      * @return was loading borked?
      */
-    bool loadingBorked () const { return m_loadingBorked; }
+    bool loadingBorked() const
+    {
+        return m_loadingBorked;
+    }
 
     /**
      * is this file a binary?
      * @return binary file?
      */
-    bool binary () const { return m_binary; }
+    bool binary() const
+    {
+        return m_binary;
+    }
 
     /**
      * Can the current codec handle all chars
      * @return chars can be encoded
      */
-    bool canEncode ();
+    bool canEncode();
 
     /**
      * Save the buffer to a file, use the given filename + codec + end of line chars (internal use of qtextstream)
      * @param m_file filename to save to
      * @return success
      */
-    bool saveFile (const QString &m_file);
+    bool saveFile(const QString &m_file);
 
-  public:
+public:
     /**
      * Return line @p i
      */
     inline KateTextLine::Ptr line(uint i)
     {
-      KateBufBlock *buf = findBlock(i);
-      if (!buf)
-        return 0;
+        KateBufBlock *buf = findBlock(i);
+        if(!buf)
+            return 0;
 
-      if (i < m_lineHighlighted)
-        return buf->line (i - buf->startLine());
+        if(i < m_lineHighlighted)
+            return buf->line(i - buf->startLine());
 
-      return line_internal (buf, i);
+        return line_internal(buf, i);
     }
 
-  private:
+private:
     /**
      * line needs hl
      */
-     KateTextLine::Ptr line_internal (KateBufBlock *buf, uint i);
+    KateTextLine::Ptr line_internal(KateBufBlock *buf, uint i);
 
-     inline void addIndentBasedFoldingInformation(QMemArray<uint> &foldingList,bool addindent,uint deindent);
-     inline void updatePreviousNotEmptyLine(KateBufBlock *blk,uint current_line,bool addindent,uint deindent);
-  public:
+    inline void addIndentBasedFoldingInformation(QMemArray< uint > &foldingList, bool addindent, uint deindent);
+    inline void updatePreviousNotEmptyLine(KateBufBlock *blk, uint current_line, bool addindent, uint deindent);
+
+public:
     /**
      * Return line @p i without triggering highlighting
      */
     inline KateTextLine::Ptr plainLine(uint i)
     {
-      KateBufBlock *buf = findBlock(i);
-      if (!buf)
-        return 0;
+        KateBufBlock *buf = findBlock(i);
+        if(!buf)
+            return 0;
 
-      return buf->line(i - buf->startLine());
+        return buf->line(i - buf->startLine());
     }
 
     /**
      * Return the total number of lines in the buffer.
      */
-    inline uint count() const { return m_lines; }
+    inline uint count() const
+    {
+        return m_lines;
+    }
 
-  private:
+private:
     /**
      * Find the block containing line @p i
      * index pointer gets filled with index of block in m_blocks
      * index only valid if returned block != 0 !
      */
-    KateBufBlock *findBlock (uint i, uint *index = 0)
+    KateBufBlock *findBlock(uint i, uint *index = 0)
     {
-      // out of range !
-      if (i >= m_lines)
-        return 0;
+        // out of range !
+        if(i >= m_lines)
+            return 0;
 
-      if ((m_blocks[m_lastFoundBlock]->startLine() <= i) && (m_blocks[m_lastFoundBlock]->endLine() > i))
-      {
-        if (index)
-          (*index) = m_lastFoundBlock;
+        if((m_blocks[m_lastFoundBlock]->startLine() <= i) && (m_blocks[m_lastFoundBlock]->endLine() > i))
+        {
+            if(index)
+                (*index) = m_lastFoundBlock;
 
-        return m_blocks[m_lastFoundBlock];
-      }
+            return m_blocks[m_lastFoundBlock];
+        }
 
-      return findBlock_internal (i, index);
+        return findBlock_internal(i, index);
     }
 
-    KateBufBlock *findBlock_internal (uint i, uint *index = 0);
+    KateBufBlock *findBlock_internal(uint i, uint *index = 0);
 
-  public:
+public:
     /**
      * Mark line @p i as changed !
      */
@@ -564,19 +621,34 @@ class KateBuffer : public QObject
      */
     void removeLine(uint i);
 
-  public:
-    inline uint countVisible () { return m_lines - m_regionTree.getHiddenLinesCount(m_lines); }
+public:
+    inline uint countVisible()
+    {
+        return m_lines - m_regionTree.getHiddenLinesCount(m_lines);
+    }
 
-    inline uint lineNumber (uint visibleLine) { return m_regionTree.getRealLine (visibleLine); }
+    inline uint lineNumber(uint visibleLine)
+    {
+        return m_regionTree.getRealLine(visibleLine);
+    }
 
-    inline uint lineVisibleNumber (uint line) { return m_regionTree.getVirtualLine (line); }
+    inline uint lineVisibleNumber(uint line)
+    {
+        return m_regionTree.getVirtualLine(line);
+    }
 
-    inline void lineInfo (KateLineInfo *info, unsigned int line) { m_regionTree.getLineInfo(info,line); }
+    inline void lineInfo(KateLineInfo *info, unsigned int line)
+    {
+        m_regionTree.getLineInfo(info, line);
+    }
 
-    inline uint tabWidth () const { return m_tabWidth; }
+    inline uint tabWidth() const
+    {
+        return m_tabWidth;
+    }
 
-  public:
-    void setTabWidth (uint w);
+public:
+    void setTabWidth(uint w);
 
     /**
      * Use @p highlight for highlighting
@@ -584,21 +656,27 @@ class KateBuffer : public QObject
      * @p highlight may be 0 in which case highlighting
      * will be disabled.
      */
-    void setHighlight (uint hlMode);
+    void setHighlight(uint hlMode);
 
-    KateHighlighting *highlight () { return m_highlight; };
+    KateHighlighting *highlight()
+    {
+        return m_highlight;
+    };
 
     /**
      * Invalidate highlighting of whole buffer.
      */
     void invalidateHighlighting();
 
-    KateCodeFoldingTree *foldingTree () { return &m_regionTree; };
+    KateCodeFoldingTree *foldingTree()
+    {
+        return &m_regionTree;
+    };
 
-  public slots:
+public slots:
     void codeFoldingColumnUpdate(unsigned int lineNr);
 
-  private:
+private:
     /**
      * Highlight information needs to be updated.
      *
@@ -611,9 +689,9 @@ class KateBuffer : public QObject
      * @returns true when the highlighting in the next block needs to be updated,
      * false otherwise.
      */
-    bool doHighlight (KateBufBlock *buf, uint from, uint to, bool invalidate);
+    bool doHighlight(KateBufBlock *buf, uint from, uint to, bool invalidate);
 
-  signals:
+signals:
     /**
      * Emittend if codefolding returned with a changed list
      */
@@ -625,7 +703,7 @@ class KateBuffer : public QObject
      */
     void tagLines(int start, int end);
 
-  private:
+private:
     /**
      * document we belong too
      */
@@ -640,7 +718,7 @@ class KateBuffer : public QObject
      * ALL blocks
      * in order of linenumbers
      */
-    QValueVector<KateBufBlock*> m_blocks;
+    QValueVector< KateBufBlock * > m_blocks;
 
     /**
      * last block where the start/end line is in sync with real life
@@ -669,10 +747,10 @@ class KateBuffer : public QObject
      */
     bool m_binary;
 
-  /**
-   * highlighting & folding relevant stuff
-   */
-  private:
+    /**
+     * highlighting & folding relevant stuff
+     */
+private:
     /**
      * current highlighting mode or 0
      */
@@ -689,15 +767,15 @@ class KateBuffer : public QObject
     uint m_lineHighlightedMax;
     uint m_lineHighlighted;
 
-  /**
-     * number of dynamic contexts causing a full invalidation
-     */
+    /**
+       * number of dynamic contexts causing a full invalidation
+       */
     uint m_maxDynamicContexts;
 
-  /**
-   * only used from the KateBufBlocks !
-   */
-  private:
+    /**
+     * only used from the KateBufBlocks !
+     */
+private:
     /**
      * all not swapped blocks !
      */

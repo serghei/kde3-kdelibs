@@ -34,53 +34,51 @@
  * @author Hans Petter Bieker <bieker@kde.org>
  * @since 3.2
  */
-class KDEUI_EXPORT KTimeWidget : public QWidget
-{
-  Q_OBJECT
-  Q_PROPERTY( QTime time READ time WRITE setTime )
+class KDEUI_EXPORT KTimeWidget : public QWidget {
+    Q_OBJECT
+    Q_PROPERTY(QTime time READ time WRITE setTime)
 
 public:
-  /**
-   * Constructs a time selection widget.
-   */
-  KTimeWidget(QWidget * parent = 0, const char * name = 0);
+    /**
+     * Constructs a time selection widget.
+     */
+    KTimeWidget(QWidget *parent = 0, const char *name = 0);
 
-  /**
-   * Constructs a time selection widget with the initial time set to
-   * @p time.
-   */
-  KTimeWidget(const QTime & time,
-              QWidget * parent = 0, const char * name = 0 );
+    /**
+     * Constructs a time selection widget with the initial time set to
+     * @p time.
+     */
+    KTimeWidget(const QTime &time, QWidget *parent = 0, const char *name = 0);
 
-  /**
-   * Destructs the time selection widget.
-   */
-  virtual ~KTimeWidget();
+    /**
+     * Destructs the time selection widget.
+     */
+    virtual ~KTimeWidget();
 
-  /**
-   * Returns the currently selected time.
-   */
-  QTime time() const;
+    /**
+     * Returns the currently selected time.
+     */
+    QTime time() const;
 
 public slots:
-  /**
-   * Changes the selected time to @p time.
-   */
-  void setTime(const QTime & time);
+    /**
+     * Changes the selected time to @p time.
+     */
+    void setTime(const QTime &time);
 
 signals:
-  /**
-   * Emitted whenever the time of the widget
-   * is changed, either with setTime() or via user selection.
-   */
-  void valueChanged(const QTime & time);
+    /**
+     * Emitted whenever the time of the widget
+     * is changed, either with setTime() or via user selection.
+     */
+    void valueChanged(const QTime &time);
 
 private:
-  void init();
+    void init();
 
 private:
-  class KTimeWidgetPrivate;
-  KTimeWidgetPrivate *d;
+    class KTimeWidgetPrivate;
+    KTimeWidgetPrivate *d;
 };
 
 #endif

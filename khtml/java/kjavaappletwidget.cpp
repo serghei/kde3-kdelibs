@@ -30,32 +30,31 @@
 
 
 // For future expansion
-class KJavaAppletWidgetPrivate
-{
-friend class KJavaAppletWidget;
+class KJavaAppletWidgetPrivate {
+    friend class KJavaAppletWidget;
+
 private:
-    QLabel* tmplabel;
+    QLabel *tmplabel;
 };
 
 int KJavaAppletWidget::appletCount = 0;
 
-KJavaAppletWidget::KJavaAppletWidget( QWidget* parent, const char* name )
-   : QXEmbed ( parent, name)
+KJavaAppletWidget::KJavaAppletWidget(QWidget *parent, const char *name) : QXEmbed(parent, name)
 {
     setProtocol(QXEmbed::XPLAIN);
 
-    m_applet = new KJavaApplet( this );
-    d        = new KJavaAppletWidgetPrivate;
-    m_kwm    = new KWinModule( this );
+    m_applet = new KJavaApplet(this);
+    d = new KJavaAppletWidgetPrivate;
+    m_kwm = new KWinModule(this);
 
-    d->tmplabel = new QLabel( this );
-    d->tmplabel->setText( KJavaAppletServer::getAppletLabel() );
-    d->tmplabel->setAlignment( Qt::AlignCenter | Qt::WordBreak );
-    d->tmplabel->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
+    d->tmplabel = new QLabel(this);
+    d->tmplabel->setText(KJavaAppletServer::getAppletLabel());
+    d->tmplabel->setAlignment(Qt::AlignCenter | Qt::WordBreak);
+    d->tmplabel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     d->tmplabel->show();
 
-    m_swallowTitle.sprintf( "KJAS Applet - Ticket number %u", appletCount++ );
-    m_applet->setWindowName( m_swallowTitle );
+    m_swallowTitle.sprintf("KJAS Applet - Ticket number %u", appletCount++);
+    m_applet->setWindowName(m_swallowTitle);
 }
 
 KJavaAppletWidget::~KJavaAppletWidget()
@@ -66,34 +65,30 @@ KJavaAppletWidget::~KJavaAppletWidget()
 
 void KJavaAppletWidget::showApplet()
 {
-    connect( m_kwm, SIGNAL( windowAdded( WId ) ),
-	         this,  SLOT( setWindow( WId ) ) );
+    connect(m_kwm, SIGNAL(windowAdded(WId)), this, SLOT(setWindow(WId)));
 
-    m_kwm->doNotManage( m_swallowTitle );
+    m_kwm->doNotManage(m_swallowTitle);
 
-    //Now we send applet info to the applet server
-    if ( !m_applet->isCreated() )
+    // Now we send applet info to the applet server
+    if(!m_applet->isCreated())
         m_applet->create();
 }
 
-void KJavaAppletWidget::setWindow( WId w )
+void KJavaAppletWidget::setWindow(WId w)
 {
-    //make sure that this window has the right name, if so, embed it...
-    KWin::WindowInfo w_info = KWin::windowInfo( w );
-    if ( m_swallowTitle == w_info.name() ||
-         m_swallowTitle == w_info.visibleName() )
+    // make sure that this window has the right name, if so, embed it...
+    KWin::WindowInfo w_info = KWin::windowInfo(w);
+    if(m_swallowTitle == w_info.name() || m_swallowTitle == w_info.visibleName())
     {
-        kdDebug(6100) << "swallowing our window: " << m_swallowTitle
-                      << ", window id = " << w << endl;
+        kdDebug(6100) << "swallowing our window: " << m_swallowTitle << ", window id = " << w << endl;
         delete d->tmplabel;
         d->tmplabel = 0;
 
         // disconnect from KWM events
-        disconnect( m_kwm, SIGNAL( windowAdded( WId ) ),
-                    this,  SLOT( setWindow( WId ) ) );
+        disconnect(m_kwm, SIGNAL(windowAdded(WId)), this, SLOT(setWindow(WId)));
 
 
-        embed( w );
+        embed(w);
         setFocus();
     }
 }
@@ -103,11 +98,11 @@ QSize KJavaAppletWidget::sizeHint() const
     kdDebug(6100) << "KJavaAppletWidget::sizeHint()" << endl;
     QSize rval = QXEmbed::sizeHint();
 
-    if( rval.width() == 0 || rval.height() == 0 )
+    if(rval.width() == 0 || rval.height() == 0)
     {
-        if( width() != 0 && height() != 0 )
+        if(width() != 0 && height() != 0)
         {
-            rval = QSize( width(), height() );
+            rval = QSize(width(), height());
         }
     }
 
@@ -116,23 +111,25 @@ QSize KJavaAppletWidget::sizeHint() const
     return rval;
 }
 
-void KJavaAppletWidget::resize( int w, int h )
+void KJavaAppletWidget::resize(int w, int h)
 {
-    if( d->tmplabel )
+    if(d->tmplabel)
     {
-        d->tmplabel->resize( w, h );
-        m_applet->setSize( QSize( w, h ) );
+        d->tmplabel->resize(w, h);
+        m_applet->setSize(QSize(w, h));
     }
 
-    QXEmbed::resize( w, h );
+    QXEmbed::resize(w, h);
 }
 
-void KJavaAppletWidget::showEvent (QShowEvent * e) {
+void KJavaAppletWidget::showEvent(QShowEvent *e)
+{
     QXEmbed::showEvent(e);
-    if (!applet()->isCreated() && !applet()->appletClass().isEmpty()) {
+    if(!applet()->isCreated() && !applet()->appletClass().isEmpty())
+    {
         // delayed showApplet
-        if (applet()->size().width() <= 0)
-            applet()->setSize (sizeHint());
+        if(applet()->size().width() <= 0)
+            applet()->setSize(sizeHint());
         showApplet();
     }
 }

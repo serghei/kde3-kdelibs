@@ -26,61 +26,60 @@
 
 #include "mainwidget.h"
 
-MainWidget::MainWidget(QDomElement& dockConfig,KMdi::MdiMode mode)
-: KMdiMainFrm(0L, "theMDIMainFrm",mode)
- ,m_dockConfig(dockConfig)
+MainWidget::MainWidget(QDomElement &dockConfig, KMdi::MdiMode mode) : KMdiMainFrm(0L, "theMDIMainFrm", mode), m_dockConfig(dockConfig)
 {
-   setIDEAlModeStyle(1); // KDEV3
+    setIDEAlModeStyle(1); // KDEV3
 
-   dockManager->setReadDockConfigMode(KDockManager::RestoreAllDockwidgets);
-   initMenu();
+    dockManager->setReadDockConfigMode(KDockManager::RestoreAllDockwidgets);
+    initMenu();
 
-   if (m_dockConfig.hasChildNodes()) {
+    if(m_dockConfig.hasChildNodes())
+    {
         readDockConfig(m_dockConfig);
-   }
+    }
 
-   QMultiLineEdit* mle = new QMultiLineEdit(0L,"theMultiLineEditWidget");
-   mle->setText("This is a QMultiLineEdit widget.");
-   addToolWindow( mle, KDockWidget::DockBottom, m_pMdi, 70);
+    QMultiLineEdit *mle = new QMultiLineEdit(0L, "theMultiLineEditWidget");
+    mle->setText("This is a QMultiLineEdit widget.");
+    addToolWindow(mle, KDockWidget::DockBottom, m_pMdi, 70);
 
-   QMultiLineEdit* mle2 = new QMultiLineEdit(0L,"theMultiLineEditWidget2");
-   addToolWindow( mle2, KDockWidget::DockCenter, mle, 70);
+    QMultiLineEdit *mle2 = new QMultiLineEdit(0L, "theMultiLineEditWidget2");
+    addToolWindow(mle2, KDockWidget::DockCenter, mle, 70);
 
-   QMultiLineEdit* mle3 = new QMultiLineEdit(0L,"theMultiLineEditWidget3");
-   addToolWindow( mle3, KDockWidget::DockCenter, mle, 70);
+    QMultiLineEdit *mle3 = new QMultiLineEdit(0L, "theMultiLineEditWidget3");
+    addToolWindow(mle3, KDockWidget::DockCenter, mle, 70);
 
-   QMultiLineEdit* mle4 = new QMultiLineEdit(0L,"theMultiLineEditWidget4");
-   addToolWindow( mle4, KDockWidget::DockCenter, mle, 70);
+    QMultiLineEdit *mle4 = new QMultiLineEdit(0L, "theMultiLineEditWidget4");
+    addToolWindow(mle4, KDockWidget::DockCenter, mle, 70);
 
-   KMdiToolViewAccessor *tva=createToolWindow();
-   tva->setWidgetToWrap(new QMultiLineEdit(tva->wrapperWidget(),"theMultiLineEditWidget5"));
-   tva->placeAndShow(KDockWidget::DockCenter,mle,70);   
+    KMdiToolViewAccessor *tva = createToolWindow();
+    tva->setWidgetToWrap(new QMultiLineEdit(tva->wrapperWidget(), "theMultiLineEditWidget5"));
+    tva->placeAndShow(KDockWidget::DockCenter, mle, 70);
 
-   QListView* lv = new QListView(0L,"theListViewWidget");
+    QListView *lv = new QListView(0L, "theListViewWidget");
 #include "../res/filenew.xpm"
-   lv->setIcon(filenew);
-   lv->addColumn("Test", 50);
-   lv->addColumn("KMDI", 70);
-   new QListViewItem(lv,QString("test"),QString("test"));
-   addToolWindow( lv, KDockWidget::DockLeft, m_pMdi, 35, "1");
+    lv->setIcon(filenew);
+    lv->addColumn("Test", 50);
+    lv->addColumn("KMDI", 70);
+    new QListViewItem(lv, QString("test"), QString("test"));
+    addToolWindow(lv, KDockWidget::DockLeft, m_pMdi, 35, "1");
 
-   QListView* lv2 = new QListView(0L,"theListViewWidget2");
-   lv2->setIcon(filenew);
-   lv2->addColumn("Test2", 50);
-   lv2->addColumn("KMDI2", 70);
-   new QListViewItem(lv,QString("test2"),QString("test2"));
-   addToolWindow( lv2, KDockWidget::DockCenter, lv, 35, "2");
-   
-   QListView* lv3 = new QListView(0L,"theListViewWidget3");
-   lv3->setIcon(filenew);
-   lv3->addColumn("Test3", 50);
-   lv3->addColumn("KMDI3", 70);
-   new QListViewItem(lv,QString("test3"),QString("test3"));
-   addToolWindow( lv3, KDockWidget::DockCenter, lv, 35, "3");
+    QListView *lv2 = new QListView(0L, "theListViewWidget2");
+    lv2->setIcon(filenew);
+    lv2->addColumn("Test2", 50);
+    lv2->addColumn("KMDI2", 70);
+    new QListViewItem(lv, QString("test2"), QString("test2"));
+    addToolWindow(lv2, KDockWidget::DockCenter, lv, 35, "2");
 
-   dockManager->finishReadDockConfig();
+    QListView *lv3 = new QListView(0L, "theListViewWidget3");
+    lv3->setIcon(filenew);
+    lv3->addColumn("Test3", 50);
+    lv3->addColumn("KMDI3", 70);
+    new QListViewItem(lv, QString("test3"), QString("test3"));
+    addToolWindow(lv3, KDockWidget::DockCenter, lv, 35, "3");
 
-   setMenuForSDIModeSysButtons( menuBar());
+    dockManager->finishReadDockConfig();
+
+    setMenuForSDIModeSysButtons(menuBar());
 }
 
 MainWidget::~MainWidget()
@@ -96,23 +95,23 @@ MainWidget::~MainWidget()
 
 void MainWidget::initMenu()
 {
-   menuBar()->insertItem("&Window", windowMenu());
-   menuBar()->insertItem("&Docking", dockHideShowMenu());
+    menuBar()->insertItem("&Window", windowMenu());
+    menuBar()->insertItem("&Docking", dockHideShowMenu());
 }
 
 /** additionally fit the system menu button position to the menu position */
-void MainWidget::resizeEvent( QResizeEvent *pRSE)
+void MainWidget::resizeEvent(QResizeEvent *pRSE)
 {
-   KMdiMainFrm::resizeEvent( pRSE);
-   setSysButtonsAtMenuPosition();
+    KMdiMainFrm::resizeEvent(pRSE);
+    setSysButtonsAtMenuPosition();
 }
 
-RestartWidget::RestartWidget():KMainWindow()
+RestartWidget::RestartWidget() : KMainWindow()
 {
-    mdimode=KMdi::ChildframeMode;
-    QVBoxLayout* bl = new QVBoxLayout(this);
-    QLabel* l = new QLabel("This is for the testing of\nKMdiMainFrm::read/writeDockConfig().\n", this);
-    QCheckBox* b1 = new QCheckBox("KMdiMainFrm close/restart", this);
+    mdimode = KMdi::ChildframeMode;
+    QVBoxLayout *bl = new QVBoxLayout(this);
+    QLabel *l = new QLabel("This is for the testing of\nKMdiMainFrm::read/writeDockConfig().\n", this);
+    QCheckBox *b1 = new QCheckBox("KMdiMainFrm close/restart", this);
     b1->toggle();
     QObject::connect(b1, SIGNAL(stateChanged(int)), this, SLOT(onStateChanged(int)));
     bl->add(l);
@@ -127,21 +126,23 @@ RestartWidget::RestartWidget():KMainWindow()
 
 void RestartWidget::onStateChanged(int on)
 {
-    if (on) {
-        m_w = new MainWidget(dockConfig,mdimode);
-        m_w->resize(500,500);
+    if(on)
+    {
+        m_w = new MainWidget(dockConfig, mdimode);
+        m_w->resize(500, 500);
         m_w->show();
     }
-    else {
-        mdimode=m_w->mdiMode();
+    else
+    {
+        mdimode = m_w->mdiMode();
         m_w->close();
         delete m_w;
     }
-
 }
 
-void RestartWidget::setWindow(MainWidget *w) {
-        m_w=w;
+void RestartWidget::setWindow(MainWidget *w)
+{
+    m_w = w;
 }
 
 #include "mainwidget.moc"

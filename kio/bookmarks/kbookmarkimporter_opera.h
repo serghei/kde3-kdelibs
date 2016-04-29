@@ -32,12 +32,15 @@
  * A class for importing Opera bookmarks
  * @deprecated
  */
-class KIO_EXPORT_DEPRECATED KOperaBookmarkImporter : public QObject
-{
+class KIO_EXPORT_DEPRECATED KOperaBookmarkImporter : public QObject {
     Q_OBJECT
 public:
-    KOperaBookmarkImporter( const QString & fileName ) : m_fileName(fileName) {}
-    ~KOperaBookmarkImporter() {}
+    KOperaBookmarkImporter(const QString &fileName) : m_fileName(fileName)
+    {
+    }
+    ~KOperaBookmarkImporter()
+    {
+    }
 
     void parseOperaBookmarks();
 
@@ -45,8 +48,8 @@ public:
     static QString operaBookmarksFile();
 
 signals:
-    void newBookmark( const QString & text, const QCString & url, const QString & additionalInfo );
-    void newFolder( const QString & text, bool open, const QString & additionalInfo );
+    void newBookmark(const QString &text, const QCString &url, const QString &additionalInfo);
+    void newFolder(const QString &text, bool open, const QString &additionalInfo);
     void newSeparator();
     void endFolder();
 
@@ -58,12 +61,14 @@ protected:
  * A class for importing Opera bookmarks
  * @since 3.2
  */
-class KIO_EXPORT KOperaBookmarkImporterImpl : public KBookmarkImporterBase
-{
+class KIO_EXPORT KOperaBookmarkImporterImpl : public KBookmarkImporterBase {
 public:
-    KOperaBookmarkImporterImpl() { }
+    KOperaBookmarkImporterImpl()
+    {
+    }
     virtual void parse();
     virtual QString findDefaultLocation(bool forSaving = false) const;
+
 private:
     class KOperaBookmarkImporterImplPrivate *d;
 };
@@ -71,14 +76,17 @@ private:
 /**
  * @since 3.2
  */
-class KIO_EXPORT KOperaBookmarkExporterImpl : public KBookmarkExporterBase
-{
+class KIO_EXPORT KOperaBookmarkExporterImpl : public KBookmarkExporterBase {
 public:
-    KOperaBookmarkExporterImpl(KBookmarkManager* mgr, const QString & filename)
-      : KBookmarkExporterBase(mgr, filename) 
-    { ; }
-    virtual ~KOperaBookmarkExporterImpl() {}
+    KOperaBookmarkExporterImpl(KBookmarkManager *mgr, const QString &filename) : KBookmarkExporterBase(mgr, filename)
+    {
+        ;
+    }
+    virtual ~KOperaBookmarkExporterImpl()
+    {
+    }
     virtual void write(KBookmarkGroup);
+
 private:
     class KOperaBookmarkExporterImplPrivate *d;
 };

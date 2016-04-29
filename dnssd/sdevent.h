@@ -25,57 +25,61 @@
 #include <qstring.h>
 #include <qmap.h>
 
-namespace DNSSD
-{
+namespace DNSSD {
 
-enum Operation { SD_ERROR = 101,SD_ADDREMOVE, SD_PUBLISH, SD_RESOLVE};
-
-class ErrorEvent : public QCustomEvent
+enum Operation
 {
-public:
-	ErrorEvent() : QCustomEvent(QEvent::User+SD_ERROR) 
-	{}
-};
-class AddRemoveEvent : public QCustomEvent
-{
-public:
-	enum Operation { Add, Remove };
-	AddRemoveEvent(Operation op,const QString& name,const QString& type,
-		const QString& domain, bool last) : QCustomEvent(QEvent::User+SD_ADDREMOVE),
-	m_op(op), m_name(name), m_type(type), m_domain(domain), m_last(last) 
-	{}
-
-	const Operation m_op;
-	const QString m_name;
-	const QString m_type;
-	const QString m_domain;
-	const bool m_last;
+    SD_ERROR = 101,
+    SD_ADDREMOVE,
+    SD_PUBLISH,
+    SD_RESOLVE
 };
 
-class PublishEvent : public QCustomEvent
-{
+class ErrorEvent : public QCustomEvent {
 public:
-	PublishEvent(const QString& name) : QCustomEvent(QEvent::User+SD_PUBLISH), m_name(name)
-	{}
+    ErrorEvent() : QCustomEvent(QEvent::User + SD_ERROR)
+    {
+    }
+};
+class AddRemoveEvent : public QCustomEvent {
+public:
+    enum Operation
+    {
+        Add,
+        Remove
+    };
+    AddRemoveEvent(Operation op, const QString &name, const QString &type, const QString &domain, bool last)
+        : QCustomEvent(QEvent::User + SD_ADDREMOVE), m_op(op), m_name(name), m_type(type), m_domain(domain), m_last(last)
+    {
+    }
 
-	const QString m_name;
+    const Operation m_op;
+    const QString m_name;
+    const QString m_type;
+    const QString m_domain;
+    const bool m_last;
 };
 
-class ResolveEvent : public QCustomEvent
-{
+class PublishEvent : public QCustomEvent {
 public:
-	ResolveEvent(const QString& hostname, unsigned short port,
-		     const QMap<QString,QString>& txtdata) 
-		: QCustomEvent(QEvent::User+SD_RESOLVE), m_hostname(hostname),
-		  m_port(port), m_txtdata(txtdata)
-	{}
+    PublishEvent(const QString &name) : QCustomEvent(QEvent::User + SD_PUBLISH), m_name(name)
+    {
+    }
 
-	const QString m_hostname;
-	const unsigned short m_port;
-	const QMap<QString,QString> m_txtdata;
+    const QString m_name;
 };
 
+class ResolveEvent : public QCustomEvent {
+public:
+    ResolveEvent(const QString &hostname, unsigned short port, const QMap< QString, QString > &txtdata)
+        : QCustomEvent(QEvent::User + SD_RESOLVE), m_hostname(hostname), m_port(port), m_txtdata(txtdata)
+    {
+    }
 
+    const QString m_hostname;
+    const unsigned short m_port;
+    const QMap< QString, QString > m_txtdata;
+};
 }
 
 #endif

@@ -30,8 +30,7 @@
 
 using namespace KSpell2;
 
-BackgroundEngine::BackgroundEngine( QObject *parent )
-    : QObject( parent )
+BackgroundEngine::BackgroundEngine(QObject *parent) : QObject(parent)
 {
     m_filter = Filter::defaultFilter();
     m_dict = 0;
@@ -39,20 +38,21 @@ BackgroundEngine::BackgroundEngine( QObject *parent )
 
 BackgroundEngine::~BackgroundEngine()
 {
-    delete m_dict; m_dict = 0;
+    delete m_dict;
+    m_dict = 0;
 }
 
-void BackgroundEngine::setBroker( const Broker::Ptr& broker )
+void BackgroundEngine::setBroker(const Broker::Ptr &broker)
 {
     m_broker = broker;
     delete m_dict;
     m_defaultDict = m_broker->defaultDictionary();
-    m_filter->setSettings( m_broker->settings() );
+    m_filter->setSettings(m_broker->settings());
 }
 
-void BackgroundEngine::setText( const QString& text )
+void BackgroundEngine::setText(const QString &text)
 {
-    m_filter->setBuffer( text );
+    m_filter->setBuffer(text);
 }
 
 QString BackgroundEngine::text() const
@@ -60,34 +60,37 @@ QString BackgroundEngine::text() const
     return m_filter->buffer();
 }
 
-void BackgroundEngine::changeLanguage( const QString& lang )
+void BackgroundEngine::changeLanguage(const QString &lang)
 {
     delete m_dict;
-    if ( lang.isEmpty() ) {
+    if(lang.isEmpty())
+    {
         m_dict = 0;
-    } else {
-        m_dict = m_broker->dictionary( lang );
+    }
+    else
+    {
+        m_dict = m_broker->dictionary(lang);
     }
 }
 
 QString BackgroundEngine::language() const
 {
-    if ( m_dict )
+    if(m_dict)
         return m_dict->language();
     else
         return m_defaultDict->language();
 }
 
-void BackgroundEngine::setFilter( Filter *filter )
+void BackgroundEngine::setFilter(Filter *filter)
 {
     QString oldText = m_filter->buffer();
     m_filter = filter;
-    m_filter->setBuffer( oldText );
+    m_filter->setBuffer(oldText);
 }
 
 void BackgroundEngine::start()
 {
-    QTimer::singleShot( 0, this, SLOT(checkNext()) );
+    QTimer::singleShot(0, this, SLOT(checkNext()));
 }
 
 void BackgroundEngine::stop()
@@ -96,43 +99,46 @@ void BackgroundEngine::stop()
 
 void BackgroundEngine::continueChecking()
 {
-    QTimer::singleShot( 0, this, SLOT(checkNext()) );
+    QTimer::singleShot(0, this, SLOT(checkNext()));
 }
 
 void BackgroundEngine::checkNext()
 {
     Word w = m_filter->nextWord();
-    if ( w.end ) {
+    if(w.end)
+    {
         emit done();
         return;
     }
 
-    Dictionary *dict = ( m_dict ) ? m_dict : static_cast<Dictionary*>( m_defaultDict );
+    Dictionary *dict = (m_dict) ? m_dict : static_cast< Dictionary * >(m_defaultDict);
 
-    if ( !dict->check( w.word ) ) {
-        //kdDebug()<<"found misspelling "<< w.word <<endl;
-        emit misspelling( w.word, w.start );
-        //wait for the handler. the parent will decide itself when to continue
-    } else
+    if(!dict->check(w.word))
+    {
+        // kdDebug()<<"found misspelling "<< w.word <<endl;
+        emit misspelling(w.word, w.start);
+        // wait for the handler. the parent will decide itself when to continue
+    }
+    else
         continueChecking();
 }
 
-bool BackgroundEngine::checkWord( const QString& word )
+bool BackgroundEngine::checkWord(const QString &word)
 {
-    Dictionary *dict = ( m_dict ) ? m_dict : static_cast<Dictionary*>( m_defaultDict );
-    return dict->check( word );
+    Dictionary *dict = (m_dict) ? m_dict : static_cast< Dictionary * >(m_defaultDict);
+    return dict->check(word);
 }
 
-bool BackgroundEngine::addWord( const QString& word )
+bool BackgroundEngine::addWord(const QString &word)
 {
-    Dictionary *dict = ( m_dict ) ? m_dict : static_cast<Dictionary*>( m_defaultDict );
-    return dict->addToPersonal( word );
+    Dictionary *dict = (m_dict) ? m_dict : static_cast< Dictionary * >(m_defaultDict);
+    return dict->addToPersonal(word);
 }
 
-QStringList BackgroundEngine::suggest( const QString& word )
+QStringList BackgroundEngine::suggest(const QString &word)
 {
-    Dictionary *dict = ( m_dict ) ? m_dict : static_cast<Dictionary*>( m_defaultDict );
-    return dict->suggest( word );
+    Dictionary *dict = (m_dict) ? m_dict : static_cast< Dictionary * >(m_defaultDict);
+    return dict->suggest(word);
 }
 
 #include "backgroundengine.moc"

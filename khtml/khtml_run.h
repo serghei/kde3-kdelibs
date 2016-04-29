@@ -30,30 +30,27 @@
 
 class KHTMLPart;
 
-namespace khtml
-{
-  class ChildFrame;
+namespace khtml {
+class ChildFrame;
 }
 
-class KHTMLRun : public KParts::BrowserRun
-{
-  Q_OBJECT
+class KHTMLRun : public KParts::BrowserRun {
+    Q_OBJECT
 public:
-  KHTMLRun( KHTMLPart *part, khtml::ChildFrame *child, const KURL &url,
-            const KParts::URLArgs &args, bool hideErrorDialog );
+    KHTMLRun(KHTMLPart *part, khtml::ChildFrame *child, const KURL &url, const KParts::URLArgs &args, bool hideErrorDialog);
 
-  virtual void foundMimeType( const QString &mimetype );
+    virtual void foundMimeType(const QString &mimetype);
 
-  //KHTMLPart *htmlPart() const;
+    // KHTMLPart *htmlPart() const;
 
 protected:
-  virtual void handleError( KIO::Job * job );
+    virtual void handleError(KIO::Job *job);
 
-  virtual void save( const KURL & url, const QString & suggestedFilename );
-  bool askSave( const KURL & url, KService::Ptr offer, const QString & mimeType, const QString & suggestedFilename );
+    virtual void save(const KURL &url, const QString &suggestedFilename);
+    bool askSave(const KURL &url, KService::Ptr offer, const QString &mimeType, const QString &suggestedFilename);
 
 private:
-  khtml::ChildFrame *m_child;
+    khtml::ChildFrame *m_child;
 };
 
 #endif

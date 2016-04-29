@@ -27,50 +27,49 @@ class PrintcapEntry;
 class PrinttoolEntry;
 class GsChecker;
 
-class KMLpdManager : public KMManager
-{
+class KMLpdManager : public KMManager {
 public:
-	KMLpdManager(QObject *parent = 0, const char *name = 0);
-	~KMLpdManager();
+    KMLpdManager(QObject *parent = 0, const char *name = 0);
+    ~KMLpdManager();
 
-	bool completePrinterShort(KMPrinter*);
-	bool completePrinter(KMPrinter*);
-	bool createPrinter(KMPrinter*);
-	bool removePrinter(KMPrinter*);
-	bool enablePrinter(KMPrinter*);
-	bool disablePrinter(KMPrinter*);
+    bool completePrinterShort(KMPrinter *);
+    bool completePrinter(KMPrinter *);
+    bool createPrinter(KMPrinter *);
+    bool removePrinter(KMPrinter *);
+    bool enablePrinter(KMPrinter *);
+    bool disablePrinter(KMPrinter *);
 
-	// Driver DB functions
-	QString driverDbCreationProgram();
-	QString driverDirectory();
+    // Driver DB functions
+    QString driverDbCreationProgram();
+    QString driverDirectory();
 
-	// Driver loading functions
-	DrMain* loadDbDriver(KMDBEntry*);
-	DrMain* loadPrinterDriver(KMPrinter *p, bool config = false);
-	bool savePrinterDriver(KMPrinter*, DrMain*);
-	bool validateDbDriver(KMDBEntry*);
+    // Driver loading functions
+    DrMain *loadDbDriver(KMDBEntry *);
+    DrMain *loadPrinterDriver(KMPrinter *p, bool config = false);
+    bool savePrinterDriver(KMPrinter *, DrMain *);
+    bool validateDbDriver(KMDBEntry *);
 
 protected:
-	void listPrinters();
-	bool writePrinters();
-	void loadPrintcapFile(const QString& filename);
-	bool writePrintcapFile(const QString& filename);
-	void loadPrinttoolDb(const QString& filename);
-	QMap<QString,QString> loadPrinttoolCfgFile(const QString& filename);
-	bool savePrinttoolCfgFile(const QString& templatefile, const QString& dirname, const QMap<QString,QString>& options);
-	bool checkGsDriver(const QString& gsdriver);
-	bool createSpooldir(PrintcapEntry*);
-	bool createPrinttoolEntry(KMPrinter*, PrintcapEntry*);
-	PrintcapEntry* findPrintcapEntry(const QString& name);
-	PrinttoolEntry* findPrinttoolEntry(const QString& name);
-	QString programName(int);
-	void checkStatus();
-	bool enablePrinter(KMPrinter*, bool);
+    void listPrinters();
+    bool writePrinters();
+    void loadPrintcapFile(const QString &filename);
+    bool writePrintcapFile(const QString &filename);
+    void loadPrinttoolDb(const QString &filename);
+    QMap< QString, QString > loadPrinttoolCfgFile(const QString &filename);
+    bool savePrinttoolCfgFile(const QString &templatefile, const QString &dirname, const QMap< QString, QString > &options);
+    bool checkGsDriver(const QString &gsdriver);
+    bool createSpooldir(PrintcapEntry *);
+    bool createPrinttoolEntry(KMPrinter *, PrintcapEntry *);
+    PrintcapEntry *findPrintcapEntry(const QString &name);
+    PrinttoolEntry *findPrinttoolEntry(const QString &name);
+    QString programName(int);
+    void checkStatus();
+    bool enablePrinter(KMPrinter *, bool);
 
 private:
-	QDict<PrintcapEntry>	m_entries;
-	QDict<PrinttoolEntry>	m_ptentries;
-	GsChecker		*m_gschecker;
+    QDict< PrintcapEntry > m_entries;
+    QDict< PrinttoolEntry > m_ptentries;
+    GsChecker *m_gschecker;
 };
 
 #endif

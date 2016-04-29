@@ -24,17 +24,16 @@
 #include <qdict.h>
 #include <qdatetime.h>
 
-class KMExtManager : public KMManager
-{
+class KMExtManager : public KMManager {
 public:
-	KMExtManager(QObject *parent, const char *name, const QStringList & /*args*/);
-	~KMExtManager();
+    KMExtManager(QObject *parent, const char *name, const QStringList & /*args*/);
+    ~KMExtManager();
 
 protected:
-	void listPrinters();
+    void listPrinters();
 
 private:
-	KMPrinter	*m_psprinter;
+    KMPrinter *m_psprinter;
 };
 
 #endif

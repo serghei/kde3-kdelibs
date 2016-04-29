@@ -37,22 +37,21 @@ class Lock;
 /**
   This resource allows access to a local file.
 */
-class KABC_EXPORT ResourceFile : public Resource
-{
-  Q_OBJECT
+class KABC_EXPORT ResourceFile : public Resource {
+    Q_OBJECT
 
-  public:
+public:
     /**
       Constructor.
 
       @param cfg The config object where custom resource settings are stored.
      */
-    ResourceFile( const KConfig *cfg );
+    ResourceFile(const KConfig *cfg);
 
     /**
       Construct file resource on file @arg fileName using format @arg formatName.
      */
-    ResourceFile( const QString &fileName, const QString &formatName = "vcard" );
+    ResourceFile(const QString &fileName, const QString &formatName = "vcard");
 
     /**
       Destructor.
@@ -62,7 +61,7 @@ class KABC_EXPORT ResourceFile : public Resource
     /**
       Writes the config back.
      */
-    virtual void writeConfig( KConfig *cfg );
+    virtual void writeConfig(KConfig *cfg);
 
     /**
       Tries to open the file and checks for the proper format.
@@ -80,7 +79,7 @@ class KABC_EXPORT ResourceFile : public Resource
      */
     virtual Ticket *requestSaveTicket();
 
-    virtual void releaseSaveTicket( Ticket* );
+    virtual void releaseSaveTicket(Ticket *);
 
     /**
       Loads all addressees from file to the address book.
@@ -96,14 +95,14 @@ class KABC_EXPORT ResourceFile : public Resource
 
       @param ticket  The ticket returned by requestSaveTicket()
      */
-    virtual bool save( Ticket *ticket );
+    virtual bool save(Ticket *ticket);
 
-    virtual bool asyncSave( Ticket *ticket );
+    virtual bool asyncSave(Ticket *ticket);
 
     /**
       Set name of file to be used for saving.
      */
-    void setFileName( const QString & );
+    void setFileName(const QString &);
 
     /**
       Return name of file used for loading and saving the address book.
@@ -113,7 +112,7 @@ class KABC_EXPORT ResourceFile : public Resource
     /**
       Sets a new format by name.
      */
-    void setFormat( const QString &name );
+    void setFormat(const QString &name);
 
     /**
       Returns the format name.
@@ -124,24 +123,24 @@ class KABC_EXPORT ResourceFile : public Resource
       Remove a addressee from its source.
       This method is mainly called by KABC::AddressBook.
      */
-    virtual void removeAddressee( const Addressee& addr );
+    virtual void removeAddressee(const Addressee &addr);
 
-  private slots:
+private slots:
     void emitLoadingFinished();
     void emitLoadingError();
     void emitSavingFinished();
     void emitSavingError();
 
-  protected slots:
+protected slots:
     void fileChanged();
 
-  protected:
-    void init( const QString &fileName, const QString &format );
+protected:
+    void init(const QString &fileName, const QString &format);
 
-    bool lock( const QString &fileName );
-    void unlock( const QString &fileName );
+    bool lock(const QString &fileName);
+    void unlock(const QString &fileName);
 
-  private:
+private:
     QString mFileName;
     QString mFormatName;
 
@@ -156,7 +155,6 @@ class KABC_EXPORT ResourceFile : public Resource
     class ResourceFilePrivate;
     ResourceFilePrivate *d;
 };
-
 }
 
 #endif

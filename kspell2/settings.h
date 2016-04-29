@@ -28,51 +28,50 @@
 
 class KSharedConfig;
 
-namespace KSpell2
-{
-    class Broker;
+namespace KSpell2 {
+class Broker;
 
-    class KDE_EXPORT Settings
-    {
-    public:
-        ~Settings();
+class KDE_EXPORT Settings {
+public:
+    ~Settings();
 
-        void setDefaultLanguage( const QString& lang );
-        QString defaultLanguage() const;
+    void setDefaultLanguage(const QString &lang);
+    QString defaultLanguage() const;
 
-        void setDefaultClient( const QString& client );
-        QString defaultClient() const;
+    void setDefaultClient(const QString &client);
+    QString defaultClient() const;
 
-        void setCheckUppercase( bool );
-        bool checkUppercase() const;
+    void setCheckUppercase(bool);
+    bool checkUppercase() const;
 
-        void setSkipRunTogether( bool );
-        bool skipRunTogether() const;
+    void setSkipRunTogether(bool);
+    bool skipRunTogether() const;
 
-        void setBackgroundCheckerEnabled( bool );
-        bool backgroundCheckerEnabled() const;
+    void setBackgroundCheckerEnabled(bool);
+    bool backgroundCheckerEnabled() const;
 
-        void setCurrentIgnoreList( const QStringList& ignores );
-        void addWordToIgnore( const QString& word );
-        QStringList currentIgnoreList() const;
-        bool ignore( const QString& word );
+    void setCurrentIgnoreList(const QStringList &ignores);
+    void addWordToIgnore(const QString &word);
+    QStringList currentIgnoreList() const;
+    bool ignore(const QString &word);
 
-        void save();
+    void save();
 
-        KSharedConfig *sharedConfig() const;
+    KSharedConfig *sharedConfig() const;
 
-    private:
-        void loadConfig();
-        void readIgnoreList();
-        void setQuietIgnoreList( const QStringList& ignores );
+private:
+    void loadConfig();
+    void readIgnoreList();
+    void setQuietIgnoreList(const QStringList &ignores);
 
-    private:
-        friend class Broker;
-        Settings( Broker *broker, KSharedConfig *config );
-    private:
-        class Private;
-        Private *d;
-    };
+private:
+    friend class Broker;
+    Settings(Broker *broker, KSharedConfig *config);
+
+private:
+    class Private;
+    Private *d;
+};
 }
 
 #endif

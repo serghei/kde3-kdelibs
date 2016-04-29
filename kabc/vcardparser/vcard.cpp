@@ -26,84 +26,84 @@ VCard::VCard()
 {
 }
 
-VCard::VCard( const VCard& vcard )
+VCard::VCard(const VCard &vcard)
 {
-  mLineMap = vcard.mLineMap;
+    mLineMap = vcard.mLineMap;
 }
 
 VCard::~VCard()
 {
 }
 
-VCard& VCard::operator=( const VCard& vcard )
+VCard &VCard::operator=(const VCard &vcard)
 {
-  if ( &vcard == this )
+    if(&vcard == this)
+        return *this;
+
+    mLineMap = vcard.mLineMap;
+
     return *this;
-
-  mLineMap = vcard.mLineMap;
-
-  return *this;
 }
 
 void VCard::clear()
 {
-  mLineMap.clear();
+    mLineMap.clear();
 }
 
 QStringList VCard::identifiers() const
 {
-  return mLineMap.keys();
+    return mLineMap.keys();
 }
 
-void VCard::addLine( const VCardLine& line )
+void VCard::addLine(const VCardLine &line)
 {
-  mLineMap[ line.identifier() ].append( line );
+    mLineMap[line.identifier()].append(line);
 }
 
-VCardLine::List VCard::lines( const QString& identifier ) const
+VCardLine::List VCard::lines(const QString &identifier) const
 {
-  LineMap::ConstIterator it = mLineMap.find( identifier );
-  if ( it == mLineMap.end() )
-    return VCardLine::List();
+    LineMap::ConstIterator it = mLineMap.find(identifier);
+    if(it == mLineMap.end())
+        return VCardLine::List();
 
-  return *it;
+    return *it;
 }
 
-VCardLine VCard::line( const QString& identifier ) const
+VCardLine VCard::line(const QString &identifier) const
 {
-  LineMap::ConstIterator it = mLineMap.find( identifier );
-  if ( it == mLineMap.end() )
-    return VCardLine();
+    LineMap::ConstIterator it = mLineMap.find(identifier);
+    if(it == mLineMap.end())
+        return VCardLine();
 
-  if ( (*it).isEmpty() )
-    return VCardLine();
-  else
-    return (*it).first();
+    if((*it).isEmpty())
+        return VCardLine();
+    else
+        return (*it).first();
 }
 
-void VCard::setVersion( Version version )
+void VCard::setVersion(Version version)
 {
-  mLineMap.erase( "VERSION" );
+    mLineMap.erase("VERSION");
 
-  VCardLine line;
-  line.setIdentifier( "VERSION" );
-  if ( version == v2_1 )
-    line.setIdentifier( "2.1" );
-  else if ( version == v3_0 )
-    line.setIdentifier( "3.0" );
+    VCardLine line;
+    line.setIdentifier("VERSION");
+    if(version == v2_1)
+        line.setIdentifier("2.1");
+    else if(version == v3_0)
+        line.setIdentifier("3.0");
 
-  mLineMap[ "VERSION" ].append( line );
+    mLineMap["VERSION"].append(line);
 }
 
 VCard::Version VCard::version() const
 {
-  LineMap::ConstIterator versionEntry = mLineMap.find( "VERSION" );
-  if ( versionEntry == mLineMap.end() )
-    return v3_0;
+    LineMap::ConstIterator versionEntry = mLineMap.find("VERSION");
+    if(versionEntry == mLineMap.end())
+        return v3_0;
 
-  VCardLine line = ( *versionEntry )[ 0 ];
-  if ( line.value() == "2.1" )
-    return v2_1;
-  else
-    return v3_0;
+    VCardLine line = (*versionEntry)[0];
+    if(line.value() == "2.1")
+        return v2_1;
+    else
+        return v3_0;
 }

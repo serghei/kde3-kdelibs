@@ -37,86 +37,73 @@ using namespace DOM;
 /* CSS says Fixed for the default padding value, but we treat variable as 0 padding anyways, and like
  * this is works fine for table paddings aswell
  */
-StyleSurroundData::StyleSurroundData()
-    : margin( Fixed ), padding( Variable )
+StyleSurroundData::StyleSurroundData() : margin(Fixed), padding(Variable)
 {
 }
 
-StyleSurroundData::StyleSurroundData(const StyleSurroundData& o )
-    : Shared<StyleSurroundData>(),
-      offset( o.offset ), margin( o.margin ), padding( o.padding ),
-      border( o.border )
+StyleSurroundData::StyleSurroundData(const StyleSurroundData &o)
+    : Shared< StyleSurroundData >(), offset(o.offset), margin(o.margin), padding(o.padding), border(o.border)
 {
 }
 
-bool StyleSurroundData::operator==(const StyleSurroundData& o) const
+bool StyleSurroundData::operator==(const StyleSurroundData &o) const
 {
-    return offset==o.offset && margin==o.margin &&
-	padding==o.padding && border==o.border;
+    return offset == o.offset && margin == o.margin && padding == o.padding && border == o.border;
 }
 
-StyleBoxData::StyleBoxData()
-    : z_index( 0 ), z_auto( true )
+StyleBoxData::StyleBoxData() : z_index(0), z_auto(true)
 {
     min_width = min_height = RenderStyle::initialMinSize();
     max_width = max_height = RenderStyle::initialMaxSize();
     box_sizing = RenderStyle::initialBoxSizing();
 }
 
-StyleBoxData::StyleBoxData(const StyleBoxData& o )
-    : Shared<StyleBoxData>(),
-      width( o.width ), height( o.height ),
-      min_width( o.min_width ), max_width( o.max_width ),
-      min_height ( o.min_height ), max_height( o.max_height ),
-      box_sizing( o.box_sizing),
-      z_index( o.z_index ), z_auto( o.z_auto )
+StyleBoxData::StyleBoxData(const StyleBoxData &o)
+    : Shared< StyleBoxData >()
+    , width(o.width)
+    , height(o.height)
+    , min_width(o.min_width)
+    , max_width(o.max_width)
+    , min_height(o.min_height)
+    , max_height(o.max_height)
+    , box_sizing(o.box_sizing)
+    , z_index(o.z_index)
+    , z_auto(o.z_auto)
 {
 }
 
-bool StyleBoxData::operator==(const StyleBoxData& o) const
+bool StyleBoxData::operator==(const StyleBoxData &o) const
 {
-    return
-	    width == o.width &&
-	    height == o.height &&
-	    min_width == o.min_width &&
-	    max_width == o.max_width &&
-	    min_height == o.min_height &&
-	    max_height == o.max_height &&
-            box_sizing == o.box_sizing &&
-	    z_index == o.z_index &&
-            z_auto == o.z_auto;
+    return width == o.width && height == o.height && min_width == o.min_width && max_width == o.max_width && min_height == o.min_height
+           && max_height == o.max_height && box_sizing == o.box_sizing && z_index == o.z_index && z_auto == o.z_auto;
 }
 
-StyleVisualData::StyleVisualData()
-     : textDecoration(RenderStyle::initialTextDecoration()),
-      palette( QApplication::palette() )
+StyleVisualData::StyleVisualData() : textDecoration(RenderStyle::initialTextDecoration()), palette(QApplication::palette())
 {
 }
 
-StyleVisualData::~StyleVisualData() {
+StyleVisualData::~StyleVisualData()
+{
 }
 
-StyleVisualData::StyleVisualData(const StyleVisualData& o )
-    : Shared<StyleVisualData>(),
-      clip( o.clip ), textDecoration(o.textDecoration),
-      palette( o.palette )
+StyleVisualData::StyleVisualData(const StyleVisualData &o)
+    : Shared< StyleVisualData >(), clip(o.clip), textDecoration(o.textDecoration), palette(o.palette)
 {
 }
 
 BackgroundLayer::BackgroundLayer()
-:m_image(RenderStyle::initialBackgroundImage()),
- m_bgAttachment(RenderStyle::initialBackgroundAttachment()),
- m_bgClip(RenderStyle::initialBackgroundClip()),
- m_bgOrigin(RenderStyle::initialBackgroundOrigin()),
- m_bgRepeat(RenderStyle::initialBackgroundRepeat()),
- m_backgroundSize(RenderStyle::initialBackgroundSize()),
- m_next(0)
+    : m_image(RenderStyle::initialBackgroundImage())
+    , m_bgAttachment(RenderStyle::initialBackgroundAttachment())
+    , m_bgClip(RenderStyle::initialBackgroundClip())
+    , m_bgOrigin(RenderStyle::initialBackgroundOrigin())
+    , m_bgRepeat(RenderStyle::initialBackgroundRepeat())
+    , m_backgroundSize(RenderStyle::initialBackgroundSize())
+    , m_next(0)
 {
-    m_imageSet = m_attachmentSet = m_clipSet = m_originSet = 
-            m_repeatSet = m_xPosSet = m_yPosSet = m_backgroundSizeSet = false;
+    m_imageSet = m_attachmentSet = m_clipSet = m_originSet = m_repeatSet = m_xPosSet = m_yPosSet = m_backgroundSizeSet = false;
 }
 
-BackgroundLayer::BackgroundLayer(const BackgroundLayer& o)
+BackgroundLayer::BackgroundLayer(const BackgroundLayer &o)
 {
     m_next = o.m_next ? new BackgroundLayer(*o.m_next) : 0;
     m_image = o.m_image;
@@ -142,8 +129,10 @@ BackgroundLayer::~BackgroundLayer()
     delete m_next;
 }
 
-BackgroundLayer& BackgroundLayer::operator=(const BackgroundLayer& o) {
-    if (m_next != o.m_next) {
+BackgroundLayer &BackgroundLayer::operator=(const BackgroundLayer &o)
+{
+    if(m_next != o.m_next)
+    {
         delete m_next;
         m_next = o.m_next ? new BackgroundLayer(*o.m_next) : 0;
     }
@@ -168,102 +157,126 @@ BackgroundLayer& BackgroundLayer::operator=(const BackgroundLayer& o) {
     return *this;
 }
 
-bool BackgroundLayer::operator==(const BackgroundLayer& o) const {
-    return m_image == o.m_image && m_xPosition == o.m_xPosition && m_yPosition == o.m_yPosition &&
-           m_bgAttachment == o.m_bgAttachment && m_bgClip == o.m_bgClip && m_bgOrigin == o.m_bgOrigin && m_bgRepeat == o.m_bgRepeat &&
-           m_backgroundSize.width == o.m_backgroundSize.width && m_backgroundSize.height == o.m_backgroundSize.height && 
-           m_imageSet == o.m_imageSet && m_attachmentSet == o.m_attachmentSet && m_repeatSet == o.m_repeatSet && 
-           m_xPosSet == o.m_xPosSet && m_yPosSet == o.m_yPosSet && m_backgroundSizeSet == o.m_backgroundSizeSet && 
-           ((m_next && o.m_next) ? *m_next == *o.m_next : m_next == o.m_next);
+bool BackgroundLayer::operator==(const BackgroundLayer &o) const
+{
+    return m_image == o.m_image && m_xPosition == o.m_xPosition && m_yPosition == o.m_yPosition && m_bgAttachment == o.m_bgAttachment
+           && m_bgClip == o.m_bgClip && m_bgOrigin == o.m_bgOrigin && m_bgRepeat == o.m_bgRepeat && m_backgroundSize.width == o.m_backgroundSize.width
+           && m_backgroundSize.height == o.m_backgroundSize.height && m_imageSet == o.m_imageSet && m_attachmentSet == o.m_attachmentSet
+           && m_repeatSet == o.m_repeatSet && m_xPosSet == o.m_xPosSet && m_yPosSet == o.m_yPosSet && m_backgroundSizeSet == o.m_backgroundSizeSet
+           && ((m_next && o.m_next) ? *m_next == *o.m_next : m_next == o.m_next);
 }
 
 void BackgroundLayer::fillUnsetProperties()
 {
-    BackgroundLayer* curr;
-    for (curr = this; curr && curr->isBackgroundImageSet(); curr = curr->next());
-    if (curr && curr != this) {
+    BackgroundLayer *curr;
+    for(curr = this; curr && curr->isBackgroundImageSet(); curr = curr->next())
+        ;
+    if(curr && curr != this)
+    {
         // We need to fill in the remaining values with the pattern specified.
-        for (BackgroundLayer* pattern = this; curr; curr = curr->next()) {
+        for(BackgroundLayer *pattern = this; curr; curr = curr->next())
+        {
             curr->m_image = pattern->m_image;
             pattern = pattern->next();
-            if (pattern == curr || !pattern)
+            if(pattern == curr || !pattern)
                 pattern = this;
         }
     }
 
-    for (curr = this; curr && curr->isBackgroundXPositionSet(); curr = curr->next());
-    if (curr && curr != this) {
+    for(curr = this; curr && curr->isBackgroundXPositionSet(); curr = curr->next())
+        ;
+    if(curr && curr != this)
+    {
         // We need to fill in the remaining values with the pattern specified.
-        for (BackgroundLayer* pattern = this; curr; curr = curr->next()) {
+        for(BackgroundLayer *pattern = this; curr; curr = curr->next())
+        {
             curr->m_xPosition = pattern->m_xPosition;
             pattern = pattern->next();
-            if (pattern == curr || !pattern)
+            if(pattern == curr || !pattern)
                 pattern = this;
         }
     }
 
-    for (curr = this; curr && curr->isBackgroundYPositionSet(); curr = curr->next());
-    if (curr && curr != this) {
+    for(curr = this; curr && curr->isBackgroundYPositionSet(); curr = curr->next())
+        ;
+    if(curr && curr != this)
+    {
         // We need to fill in the remaining values with the pattern specified.
-        for (BackgroundLayer* pattern = this; curr; curr = curr->next()) {
+        for(BackgroundLayer *pattern = this; curr; curr = curr->next())
+        {
             curr->m_yPosition = pattern->m_yPosition;
             pattern = pattern->next();
-            if (pattern == curr || !pattern)
+            if(pattern == curr || !pattern)
                 pattern = this;
         }
     }
 
-    for (curr = this; curr && curr->isBackgroundAttachmentSet(); curr = curr->next());
-    if (curr && curr != this) {
+    for(curr = this; curr && curr->isBackgroundAttachmentSet(); curr = curr->next())
+        ;
+    if(curr && curr != this)
+    {
         // We need to fill in the remaining values with the pattern specified.
-        for (BackgroundLayer* pattern = this; curr; curr = curr->next()) {
+        for(BackgroundLayer *pattern = this; curr; curr = curr->next())
+        {
             curr->m_bgAttachment = pattern->m_bgAttachment;
             pattern = pattern->next();
-            if (pattern == curr || !pattern)
+            if(pattern == curr || !pattern)
                 pattern = this;
         }
     }
 
-    for (curr = this; curr && curr->isBackgroundClipSet(); curr = curr->next());
-    if (curr && curr != this) {
+    for(curr = this; curr && curr->isBackgroundClipSet(); curr = curr->next())
+        ;
+    if(curr && curr != this)
+    {
         // We need to fill in the remaining values with the pattern specified.
-        for (BackgroundLayer* pattern = this; curr; curr = curr->next()) {
+        for(BackgroundLayer *pattern = this; curr; curr = curr->next())
+        {
             curr->m_bgClip = pattern->m_bgClip;
             pattern = pattern->next();
-            if (pattern == curr || !pattern)
+            if(pattern == curr || !pattern)
                 pattern = this;
         }
     }
 
-    for (curr = this; curr && curr->isBackgroundOriginSet(); curr = curr->next());
-    if (curr && curr != this) {
+    for(curr = this; curr && curr->isBackgroundOriginSet(); curr = curr->next())
+        ;
+    if(curr && curr != this)
+    {
         // We need to fill in the remaining values with the pattern specified.
-        for (BackgroundLayer* pattern = this; curr; curr = curr->next()) {
+        for(BackgroundLayer *pattern = this; curr; curr = curr->next())
+        {
             curr->m_bgOrigin = pattern->m_bgOrigin;
             pattern = pattern->next();
-            if (pattern == curr || !pattern)
+            if(pattern == curr || !pattern)
                 pattern = this;
         }
     }
 
-    for (curr = this; curr && curr->isBackgroundRepeatSet(); curr = curr->next());
-    if (curr && curr != this) {
+    for(curr = this; curr && curr->isBackgroundRepeatSet(); curr = curr->next())
+        ;
+    if(curr && curr != this)
+    {
         // We need to fill in the remaining values with the pattern specified.
-        for (BackgroundLayer* pattern = this; curr; curr = curr->next()) {
+        for(BackgroundLayer *pattern = this; curr; curr = curr->next())
+        {
             curr->m_bgRepeat = pattern->m_bgRepeat;
             pattern = pattern->next();
-            if (pattern == curr || !pattern)
+            if(pattern == curr || !pattern)
                 pattern = this;
         }
     }
-    
-    for (curr = this; curr && curr->isBackgroundSizeSet(); curr = curr->next());
-    if (curr && curr != this) {
+
+    for(curr = this; curr && curr->isBackgroundSizeSet(); curr = curr->next())
+        ;
+    if(curr && curr != this)
+    {
         // We need to fill in the remaining values with the pattern specified.
-        for (BackgroundLayer* pattern = this; curr; curr = curr->next()) {
+        for(BackgroundLayer *pattern = this; curr; curr = curr->next())
+        {
             curr->m_backgroundSize = pattern->m_backgroundSize;
             pattern = pattern->next();
-            if (pattern == curr || !pattern)
+            if(pattern == curr || !pattern)
                 pattern = this;
         }
     }
@@ -272,13 +285,13 @@ void BackgroundLayer::fillUnsetProperties()
 void BackgroundLayer::cullEmptyLayers()
 {
     BackgroundLayer *next;
-    for (BackgroundLayer *p = this; p; p = next) {
+    for(BackgroundLayer *p = this; p; p = next)
+    {
         next = p->m_next;
-        if (next && !next->isBackgroundImageSet() &&
-            !next->isBackgroundXPositionSet() && !next->isBackgroundYPositionSet() &&
-            !next->isBackgroundAttachmentSet() && !next->isBackgroundClipSet() &&
-            !next->isBackgroundOriginSet() && !next->isBackgroundRepeatSet() &&
-            !next->isBackgroundSizeSet()) {
+        if(next && !next->isBackgroundImageSet() && !next->isBackgroundXPositionSet() && !next->isBackgroundYPositionSet()
+           && !next->isBackgroundAttachmentSet() && !next->isBackgroundClipSet() && !next->isBackgroundOriginSet() && !next->isBackgroundRepeatSet()
+           && !next->isBackgroundSizeSet())
+        {
             delete next;
             p->m_next = 0;
             break;
@@ -287,59 +300,72 @@ void BackgroundLayer::cullEmptyLayers()
 }
 
 StyleBackgroundData::StyleBackgroundData()
-{}
+{
+}
 
-StyleBackgroundData::StyleBackgroundData(const StyleBackgroundData& o)
-    : Shared<StyleBackgroundData>(), m_background(o.m_background), m_outline(o.m_outline)
-{}
+StyleBackgroundData::StyleBackgroundData(const StyleBackgroundData &o)
+    : Shared< StyleBackgroundData >(), m_background(o.m_background), m_outline(o.m_outline)
+{
+}
 
-bool StyleBackgroundData::operator==(const StyleBackgroundData& o) const
+bool StyleBackgroundData::operator==(const StyleBackgroundData &o) const
 {
     return m_background == o.m_background && m_color == o.m_color && m_outline == o.m_outline;
 }
 
-StyleGeneratedData::StyleGeneratedData() : Shared<StyleGeneratedData>(), content(0), counter_reset(0), counter_increment(0) {}
-
-StyleGeneratedData::~StyleGeneratedData() 
+StyleGeneratedData::StyleGeneratedData() : Shared< StyleGeneratedData >(), content(0), counter_reset(0), counter_increment(0)
 {
-    if (counter_reset) counter_reset->deref();
-    if (counter_increment) counter_increment->deref();
+}
+
+StyleGeneratedData::~StyleGeneratedData()
+{
+    if(counter_reset)
+        counter_reset->deref();
+    if(counter_increment)
+        counter_increment->deref();
     delete content;
 }
 
-StyleGeneratedData::StyleGeneratedData(const StyleGeneratedData& o)
-    : Shared<StyleGeneratedData>(), content(0),
-      counter_reset(o.counter_reset), counter_increment(o.counter_increment)
+StyleGeneratedData::StyleGeneratedData(const StyleGeneratedData &o)
+    : Shared< StyleGeneratedData >(), content(0), counter_reset(o.counter_reset), counter_increment(o.counter_increment)
 {
-    if (o.content) content = new ContentData(*o.content);
-    if (counter_reset) counter_reset->ref();
-    if (counter_increment) counter_increment->ref();
+    if(o.content)
+        content = new ContentData(*o.content);
+    if(counter_reset)
+        counter_reset->ref();
+    if(counter_increment)
+        counter_increment->ref();
 }
 
-bool StyleGeneratedData::contentDataEquivalent(const StyleGeneratedData* otherStyle) const
+bool StyleGeneratedData::contentDataEquivalent(const StyleGeneratedData *otherStyle) const
 {
-    ContentData* c1 = content;
-    ContentData* c2 = otherStyle->content;
+    ContentData *c1 = content;
+    ContentData *c2 = otherStyle->content;
 
-    while (c1 && c2) {
-        if (c1->_contentType != c2->_contentType)
+    while(c1 && c2)
+    {
+        if(c1->_contentType != c2->_contentType)
             return false;
-        if (c1->_contentType == CONTENT_TEXT) {
+        if(c1->_contentType == CONTENT_TEXT)
+        {
             DOM::DOMString c1Str(c1->_content.text);
             DOM::DOMString c2Str(c2->_content.text);
-            if (c1Str != c2Str)
+            if(c1Str != c2Str)
                 return false;
         }
-        else if (c1->_contentType == CONTENT_OBJECT) {
-            if (c1->_content.object != c2->_content.object)
+        else if(c1->_contentType == CONTENT_OBJECT)
+        {
+            if(c1->_content.object != c2->_content.object)
                 return false;
         }
-        else if (c1->_contentType == CONTENT_COUNTER) {
-            if (c1->_content.counter != c2->_content.counter)
+        else if(c1->_contentType == CONTENT_COUNTER)
+        {
+            if(c1->_content.counter != c2->_content.counter)
                 return false;
         }
-        else if (c1->_contentType == CONTENT_QUOTE) {
-            if (c1->_content.quote != c2->_content.quote)
+        else if(c1->_contentType == CONTENT_QUOTE)
+        {
+            if(c1->_content.quote != c2->_content.quote)
                 return false;
         }
 
@@ -350,34 +376,40 @@ bool StyleGeneratedData::contentDataEquivalent(const StyleGeneratedData* otherSt
     return !c1 && !c2;
 }
 
-static bool compareCounterActList(const CSSValueListImpl* ca, const CSSValueListImpl* cb) {
+static bool compareCounterActList(const CSSValueListImpl *ca, const CSSValueListImpl *cb)
+{
     // weeee....
-    CSSValueListImpl* a = const_cast<CSSValueListImpl*>(ca);
-    CSSValueListImpl* b = const_cast<CSSValueListImpl*>(cb);
+    CSSValueListImpl *a = const_cast< CSSValueListImpl * >(ca);
+    CSSValueListImpl *b = const_cast< CSSValueListImpl * >(cb);
 
-    if (!a && !b) return true;
-    if (!a || !b) return false;
-    if (a->length() != b->length()) return false;
-    for(uint i=0; i< a->length(); i++) {
-        CSSValueImpl *ai =  a->item(i);
-        CSSValueImpl *bi =  b->item(i);
+    if(!a && !b)
+        return true;
+    if(!a || !b)
+        return false;
+    if(a->length() != b->length())
+        return false;
+    for(uint i = 0; i < a->length(); i++)
+    {
+        CSSValueImpl *ai = a->item(i);
+        CSSValueImpl *bi = b->item(i);
         assert(ai && ai->cssValueType() == CSSValue::CSS_CUSTOM);
         assert(bi && bi->cssValueType() == CSSValue::CSS_CUSTOM);
-        CounterActImpl* caa = static_cast<CounterActImpl*>(ai);
-        CounterActImpl* cab = static_cast<CounterActImpl*>(bi);
-        if (caa->value() != cab->value()) return false;
-        if (caa->counter() != cab->counter()) return false;
+        CounterActImpl *caa = static_cast< CounterActImpl * >(ai);
+        CounterActImpl *cab = static_cast< CounterActImpl * >(bi);
+        if(caa->value() != cab->value())
+            return false;
+        if(caa->counter() != cab->counter())
+            return false;
     }
     return true;
 }
 
-bool StyleGeneratedData::counterDataEquivalent(const StyleGeneratedData* otherStyle) const
+bool StyleGeneratedData::counterDataEquivalent(const StyleGeneratedData *otherStyle) const
 {
-    return compareCounterActList(counter_reset, otherStyle->counter_reset) && 
-           compareCounterActList(counter_increment, otherStyle->counter_increment);
+    return compareCounterActList(counter_reset, otherStyle->counter_reset) && compareCounterActList(counter_increment, otherStyle->counter_increment);
 }
 
-bool StyleGeneratedData::operator==(const StyleGeneratedData& o) const
+bool StyleGeneratedData::operator==(const StyleGeneratedData &o) const
 {
     return contentDataEquivalent(&o) && counterDataEquivalent(&o);
 }
@@ -391,54 +423,52 @@ StyleMarqueeData::StyleMarqueeData()
     loops = RenderStyle::initialMarqueeLoopCount();
 }
 
-StyleMarqueeData::StyleMarqueeData(const StyleMarqueeData& o)
-:Shared<StyleMarqueeData>(), increment(o.increment), speed(o.speed), loops(o.loops),
- behavior(o.behavior), direction(o.direction)
-{}
-
-bool StyleMarqueeData::operator==(const StyleMarqueeData& o) const
-{
-    return (increment == o.increment && speed == o.speed && direction == o.direction &&
-            behavior == o.behavior && loops == o.loops);
-}
-
-StyleCSS3NonInheritedData::StyleCSS3NonInheritedData()
-:Shared<StyleCSS3NonInheritedData>()
-, opacity(RenderStyle::initialOpacity())
+StyleMarqueeData::StyleMarqueeData(const StyleMarqueeData &o)
+    : Shared< StyleMarqueeData >(), increment(o.increment), speed(o.speed), loops(o.loops), behavior(o.behavior), direction(o.direction)
 {
 }
 
-StyleCSS3NonInheritedData::StyleCSS3NonInheritedData(const StyleCSS3NonInheritedData& o)
-:Shared<StyleCSS3NonInheritedData>(),
- opacity(o.opacity),
+bool StyleMarqueeData::operator==(const StyleMarqueeData &o) const
+{
+    return (increment == o.increment && speed == o.speed && direction == o.direction && behavior == o.behavior && loops == o.loops);
+}
+
+StyleCSS3NonInheritedData::StyleCSS3NonInheritedData() : Shared< StyleCSS3NonInheritedData >(), opacity(RenderStyle::initialOpacity())
+{
+}
+
+StyleCSS3NonInheritedData::StyleCSS3NonInheritedData(const StyleCSS3NonInheritedData &o)
+    : Shared< StyleCSS3NonInheritedData >()
+    , opacity(o.opacity)
+    ,
 #ifdef APPLE_CHANGES
- flexibleBox(o.flexibleBox),
+    flexibleBox(o.flexibleBox)
+    ,
 #endif
- marquee(o.marquee)
+    marquee(o.marquee)
 {
 }
 
-bool StyleCSS3NonInheritedData::operator==(const StyleCSS3NonInheritedData& o) const
+bool StyleCSS3NonInheritedData::operator==(const StyleCSS3NonInheritedData &o) const
 {
-    return
-     opacity == o.opacity &&
+    return opacity == o.opacity &&
 #ifdef APPLE_CHANGES
-     flexibleBox == o.flexibleBox &&
+           flexibleBox == o.flexibleBox &&
 #endif
-     marquee == o.marquee;
+           marquee == o.marquee;
 }
 
 StyleCSS3InheritedData::StyleCSS3InheritedData()
-:Shared<StyleCSS3InheritedData>(), textShadow(0)
+    : Shared< StyleCSS3InheritedData >()
+    , textShadow(0)
 #ifdef APPLE_CHANGES
-, userModify(READ_ONLY), textSizeAdjust(RenderStyle::initialTextSizeAdjust())
+    , userModify(READ_ONLY)
+    , textSizeAdjust(RenderStyle::initialTextSizeAdjust())
 #endif
 {
-
 }
 
-StyleCSS3InheritedData::StyleCSS3InheritedData(const StyleCSS3InheritedData& o)
-:Shared<StyleCSS3InheritedData>()
+StyleCSS3InheritedData::StyleCSS3InheritedData(const StyleCSS3InheritedData &o) : Shared< StyleCSS3InheritedData >()
 {
     textShadow = o.textShadow ? new ShadowData(*o.textShadow) : 0;
 #ifdef APPLE_CHANGES
@@ -452,77 +482,76 @@ StyleCSS3InheritedData::~StyleCSS3InheritedData()
     delete textShadow;
 }
 
-bool StyleCSS3InheritedData::operator==(const StyleCSS3InheritedData& o) const
+bool StyleCSS3InheritedData::operator==(const StyleCSS3InheritedData &o) const
 {
     return shadowDataEquivalent(o)
 #ifdef APPLE_CHANGES
-            && (userModify == o.userModify) && (textSizeAdjust == o.textSizeAdjust)
+           && (userModify == o.userModify) && (textSizeAdjust == o.textSizeAdjust)
 #endif
-    ;
+        ;
 }
 
-bool StyleCSS3InheritedData::shadowDataEquivalent(const StyleCSS3InheritedData& o) const
+bool StyleCSS3InheritedData::shadowDataEquivalent(const StyleCSS3InheritedData &o) const
 {
-    if (!textShadow && o.textShadow || textShadow && !o.textShadow)
+    if(!textShadow && o.textShadow || textShadow && !o.textShadow)
         return false;
-    if (textShadow && o.textShadow && (*textShadow != *o.textShadow))
+    if(textShadow && o.textShadow && (*textShadow != *o.textShadow))
         return false;
     return true;
 }
 
 StyleInheritedData::StyleInheritedData()
-    : indent( RenderStyle::initialTextIndent() ), line_height( RenderStyle::initialLineHeight() ),
-      style_image( RenderStyle::initialListStyleImage() ),
-      font(), color( RenderStyle::initialColor() ),
-      border_hspacing( RenderStyle::initialBorderHorizontalSpacing() ),
-      border_vspacing( RenderStyle::initialBorderVerticalSpacing() ),
-      widows( RenderStyle::initialWidows() ), orphans( RenderStyle::initialOrphans() ),
-      quotes(0)
+    : indent(RenderStyle::initialTextIndent())
+    , line_height(RenderStyle::initialLineHeight())
+    , style_image(RenderStyle::initialListStyleImage())
+    , font()
+    , color(RenderStyle::initialColor())
+    , border_hspacing(RenderStyle::initialBorderHorizontalSpacing())
+    , border_vspacing(RenderStyle::initialBorderVerticalSpacing())
+    , widows(RenderStyle::initialWidows())
+    , orphans(RenderStyle::initialOrphans())
+    , quotes(0)
 {
 }
 
 StyleInheritedData::~StyleInheritedData()
 {
-    if (quotes) quotes->deref();
+    if(quotes)
+        quotes->deref();
 }
 
-StyleInheritedData::StyleInheritedData(const StyleInheritedData& o )
-    : Shared<StyleInheritedData>(),
-      indent( o.indent ), line_height( o.line_height ), style_image( o.style_image ),
-      font( o.font ), color( o.color ),
-      border_hspacing( o.border_hspacing ),
-      border_vspacing( o.border_vspacing ),
-      widows(o.widows), orphans(o.orphans)
+StyleInheritedData::StyleInheritedData(const StyleInheritedData &o)
+    : Shared< StyleInheritedData >()
+    , indent(o.indent)
+    , line_height(o.line_height)
+    , style_image(o.style_image)
+    , font(o.font)
+    , color(o.color)
+    , border_hspacing(o.border_hspacing)
+    , border_vspacing(o.border_vspacing)
+    , widows(o.widows)
+    , orphans(o.orphans)
 {
     quotes = o.quotes;
-    if (quotes) quotes->ref();
+    if(quotes)
+        quotes->ref();
 }
 
-bool StyleInheritedData::operator==(const StyleInheritedData& o) const
+bool StyleInheritedData::operator==(const StyleInheritedData &o) const
 {
-    return
-	indent == o.indent &&
-	line_height == o.line_height &&
-        border_hspacing == o.border_hspacing &&
-        border_vspacing == o.border_vspacing &&
-	style_image == o.style_image &&
-	font == o.font &&
-	color == o.color &&
-        border_hspacing == o.border_hspacing &&
-        border_vspacing == o.border_vspacing &&
-        quotes == o.quotes &&
-        widows == o.widows &&
-        orphans == o.orphans ;
+    return indent == o.indent && line_height == o.line_height && border_hspacing == o.border_hspacing && border_vspacing == o.border_vspacing
+           && style_image == o.style_image && font == o.font && color == o.color && border_hspacing == o.border_hspacing
+           && border_vspacing == o.border_vspacing && quotes == o.quotes && widows == o.widows && orphans == o.orphans;
 
     // doesn't work because structs are not packed
-    //return memcmp(this, &o, sizeof(*this))==0;
+    // return memcmp(this, &o, sizeof(*this))==0;
 }
 
 RenderStyle::RenderStyle()
 {
-//    counter++;
-    if (!_default)
-	_default = new RenderStyle(true);
+    //    counter++;
+    if(!_default)
+        _default = new RenderStyle(true);
 
     box = _default->box;
     visual = _default->visual;
@@ -549,7 +578,7 @@ RenderStyle::RenderStyle(bool)
     surround.init();
     generated.init();
     css3NonInheritedData.init();
-#ifdef APPLE_CHANGES	// ### yet to be merged
+#ifdef APPLE_CHANGES // ### yet to be merged
     css3NonInheritedData.access()->flexibleBox.init();
 #endif
     css3NonInheritedData.access()->marquee.init();
@@ -559,22 +588,30 @@ RenderStyle::RenderStyle(bool)
     pseudoStyle = 0;
 }
 
-RenderStyle::RenderStyle(const RenderStyle& o)
-    : Shared<RenderStyle>(),
-      inherited_flags( o.inherited_flags ), noninherited_flags( o.noninherited_flags ),
-      box( o.box ), visual( o.visual ), background( o.background ), surround( o.surround ), generated(o.generated),
-      css3NonInheritedData( o.css3NonInheritedData ), css3InheritedData( o.css3InheritedData ),
-      inherited( o.inherited ), pseudoStyle( 0 )
-{}
+RenderStyle::RenderStyle(const RenderStyle &o)
+    : Shared< RenderStyle >()
+    , inherited_flags(o.inherited_flags)
+    , noninherited_flags(o.noninherited_flags)
+    , box(o.box)
+    , visual(o.visual)
+    , background(o.background)
+    , surround(o.surround)
+    , generated(o.generated)
+    , css3NonInheritedData(o.css3NonInheritedData)
+    , css3InheritedData(o.css3InheritedData)
+    , inherited(o.inherited)
+    , pseudoStyle(0)
+{
+}
 
-void RenderStyle::inheritFrom(const RenderStyle* inheritParent)
+void RenderStyle::inheritFrom(const RenderStyle *inheritParent)
 {
     css3InheritedData = inheritParent->css3InheritedData;
     inherited = inheritParent->inherited;
     inherited_flags = inheritParent->inherited_flags;
 
     // Simulate ":after,:before { white-space: pre-line }"
-    if (styleType() == AFTER || styleType() == BEFORE)
+    if(styleType() == AFTER || styleType() == BEFORE)
         setWhiteSpace(PRE_LINE);
 }
 
@@ -583,41 +620,42 @@ RenderStyle::~RenderStyle()
     RenderStyle *ps = pseudoStyle;
     RenderStyle *prev = 0;
 
-    while (ps) {
+    while(ps)
+    {
         prev = ps;
         ps = ps->pseudoStyle;
-	// to prevent a double deletion.
-	// this works only because the styles below aren't really shared
-	// Dirk said we need another construct as soon as these are shared
+        // to prevent a double deletion.
+        // this works only because the styles below aren't really shared
+        // Dirk said we need another construct as soon as these are shared
         prev->pseudoStyle = 0;
         prev->deref();
     }
 }
 
-bool RenderStyle::operator==(const RenderStyle& o) const
+bool RenderStyle::operator==(const RenderStyle &o) const
 {
-// compare everything except the pseudoStyle pointer
-    return (inherited_flags == o.inherited_flags &&
-            noninherited_flags == o.noninherited_flags &&
-	    box == o.box &&
-            visual == o.visual &&
-            background == o.background &&
-            surround == o.surround &&
-            generated == o.generated &&
-            css3NonInheritedData == o.css3NonInheritedData &&
-            css3InheritedData == o.css3InheritedData &&
-            inherited == o.inherited);
+    // compare everything except the pseudoStyle pointer
+    return (inherited_flags == o.inherited_flags && noninherited_flags == o.noninherited_flags && box == o.box && visual == o.visual
+            && background == o.background && surround == o.surround && generated == o.generated && css3NonInheritedData == o.css3NonInheritedData
+            && css3InheritedData == o.css3InheritedData && inherited == o.inherited);
 }
 
-enum EPseudoBit { NO_BIT = 0x0, 
-                  FIRST_LINE_BIT = 0x1, FIRST_LETTER_BIT = 0x2, SELECTION_BIT = 0x4, 
-                  BEFORE_BIT = 0x8, AFTER_BIT = 0x10, MARKER_BIT = 0x20,
-                  REPLACED_BIT = 0x40
-                  };
+enum EPseudoBit
+{
+    NO_BIT = 0x0,
+    FIRST_LINE_BIT = 0x1,
+    FIRST_LETTER_BIT = 0x2,
+    SELECTION_BIT = 0x4,
+    BEFORE_BIT = 0x8,
+    AFTER_BIT = 0x10,
+    MARKER_BIT = 0x20,
+    REPLACED_BIT = 0x40
+};
 
 static int pseudoBit(RenderStyle::PseudoId pseudo)
 {
-    switch (pseudo) {
+    switch(pseudo)
+    {
         case RenderStyle::BEFORE:
             return BEFORE_BIT;
         case RenderStyle::AFTER:
@@ -644,32 +682,35 @@ bool RenderStyle::hasPseudoStyle(PseudoId pseudo) const
 
 void RenderStyle::setHasPseudoStyle(PseudoId pseudo, bool b)
 {
-    if (b)
+    if(b)
         noninherited_flags.f._pseudoBits |= pseudoBit(pseudo);
     else
         noninherited_flags.f._pseudoBits &= ~(pseudoBit(pseudo));
 }
 
-RenderStyle* RenderStyle::getPseudoStyle(PseudoId pid) const
+RenderStyle *RenderStyle::getPseudoStyle(PseudoId pid) const
 {
-    if (!hasPseudoStyle(pid)) return 0;
+    if(!hasPseudoStyle(pid))
+        return 0;
 
     RenderStyle *ps = 0;
-    if (noninherited_flags.f._styleType==NOPSEUDO)
-        for (ps = pseudoStyle; ps; ps = ps->pseudoStyle)
-            if (ps->noninherited_flags.f._styleType==pid)
+    if(noninherited_flags.f._styleType == NOPSEUDO)
+        for(ps = pseudoStyle; ps; ps = ps->pseudoStyle)
+            if(ps->noninherited_flags.f._styleType == pid)
                 break;
     return ps;
 }
 
-RenderStyle* RenderStyle::addPseudoStyle(PseudoId pid)
+RenderStyle *RenderStyle::addPseudoStyle(PseudoId pid)
 {
-    if (hasPseudoStyle(pid)) return getPseudoStyle(pid);
+    if(hasPseudoStyle(pid))
+        return getPseudoStyle(pid);
 
     RenderStyle *ps = 0;
 
-    switch (pid) {
-        case FIRST_LETTER:             // pseudo-elements (FIRST_LINE has a special handling)
+    switch(pid)
+    {
+        case FIRST_LETTER: // pseudo-elements (FIRST_LINE has a special handling)
         case SELECTION:
         case BEFORE:
         case AFTER:
@@ -694,8 +735,10 @@ void RenderStyle::removePseudoStyle(PseudoId pid)
     RenderStyle *ps = pseudoStyle;
     RenderStyle *prev = this;
 
-    while (ps) {
-        if (ps->noninherited_flags.f._styleType==pid) {
+    while(ps)
+    {
+        if(ps->noninherited_flags.f._styleType == pid)
+        {
             prev->pseudoStyle = ps->pseudoStyle;
             ps->deref();
             return;
@@ -708,14 +751,9 @@ void RenderStyle::removePseudoStyle(PseudoId pid)
 }
 
 
-bool RenderStyle::inheritedNotEqual( RenderStyle *other ) const
+bool RenderStyle::inheritedNotEqual(RenderStyle *other) const
 {
-    return
-	(
-	    inherited_flags != other->inherited_flags ||
-            inherited != other->inherited ||
-            css3InheritedData != other->css3InheritedData
-	    );
+    return (inherited_flags != other->inherited_flags || inherited != other->inherited || css3InheritedData != other->css3InheritedData);
 }
 
 /*
@@ -733,145 +771,136 @@ bool RenderStyle::inheritedNotEqual( RenderStyle *other ) const
   optimisations are unimplemented, and currently result in the
   worst case result causing a relayout of the containing block.
 */
-RenderStyle::Diff RenderStyle::diff( const RenderStyle *other ) const
+RenderStyle::Diff RenderStyle::diff(const RenderStyle *other) const
 {
     // we anyway assume they are the same
-// 	EDisplay _display : 5;
+    // 	EDisplay _display : 5;
 
     // NonVisible:
-// 	ECursor _cursor_style : 4;
-//	EUserInput _user_input : 2;	as long as :enabled is not impl'd
+    // 	ECursor _cursor_style : 4;
+    //	EUserInput _user_input : 2;	as long as :enabled is not impl'd
 
-// ### this needs work to know more exactly if we need a relayout
-//     or just a repaint
+    // ### this needs work to know more exactly if we need a relayout
+    //     or just a repaint
 
-// non-inherited attributes
-//     DataRef<StyleBoxData> box;
-//     DataRef<StyleVisualData> visual;
-//     DataRef<StyleSurroundData> surround;
+    // non-inherited attributes
+    //     DataRef<StyleBoxData> box;
+    //     DataRef<StyleVisualData> visual;
+    //     DataRef<StyleSurroundData> surround;
 
-// inherited attributes
-//     DataRef<StyleInheritedData> inherited;
+    // inherited attributes
+    //     DataRef<StyleInheritedData> inherited;
 
-    if ( *box.get() != *other->box.get() ||
-         *visual.get() != *other->visual.get() ||
-         (*surround.get() != *other->surround.get() 
-           && (other->position() == STATIC || other->position() != position())) ||
-         !(inherited->indent == other->inherited->indent) ||
-         !(inherited->line_height == other->inherited->line_height) ||
-         !(inherited->style_image == other->inherited->style_image) ||
-         !(inherited->font == other->inherited->font) ||
-         !(inherited->border_hspacing == other->inherited->border_hspacing) ||
-         !(inherited->border_vspacing == other->inherited->border_vspacing) ||
-         !(inherited_flags.f._visuallyOrdered == other->inherited_flags.f._visuallyOrdered) ||
-         !(inherited_flags.f._htmlHacks == other->inherited_flags.f._htmlHacks) ||
-         !(noninherited_flags.f._textOverflow == other->noninherited_flags.f._textOverflow) )
+    if(*box.get() != *other->box.get() || *visual.get() != *other->visual.get()
+       || (*surround.get() != *other->surround.get() && (other->position() == STATIC || other->position() != position()))
+       || !(inherited->indent == other->inherited->indent) || !(inherited->line_height == other->inherited->line_height)
+       || !(inherited->style_image == other->inherited->style_image) || !(inherited->font == other->inherited->font)
+       || !(inherited->border_hspacing == other->inherited->border_hspacing) || !(inherited->border_vspacing == other->inherited->border_vspacing)
+       || !(inherited_flags.f._visuallyOrdered == other->inherited_flags.f._visuallyOrdered)
+       || !(inherited_flags.f._htmlHacks == other->inherited_flags.f._htmlHacks)
+       || !(noninherited_flags.f._textOverflow == other->noninherited_flags.f._textOverflow))
         return CbLayout;
 
     // changes causing Layout changes:
 
-// only for tables:
-// 	_border_collapse
-// 	EEmptyCell _empty_cells : 2 ;
-// 	ECaptionSide _caption_side : 2;
-//     ETableLayout _table_layout : 1;
-//     EPosition _position : 2;
-//     EFloat _floating : 2;
-    if ( ((int)noninherited_flags.f._display) >= TABLE ) {
-        if ( !(inherited_flags.f._empty_cells == other->inherited_flags.f._empty_cells) ||
-             !(inherited_flags.f._caption_side == other->inherited_flags.f._caption_side) ||
-             !(inherited_flags.f._border_collapse == other->inherited_flags.f._border_collapse) ||
-             !(noninherited_flags.f._table_layout == other->noninherited_flags.f._table_layout) ||
-             !(noninherited_flags.f._position == other->noninherited_flags.f._position) ||
-             !(noninherited_flags.f._floating == other->noninherited_flags.f._floating) ||
-             !(noninherited_flags.f._flowAroundFloats == other->noninherited_flags.f._flowAroundFloats) ||
-             !(noninherited_flags.f._unicodeBidi == other->noninherited_flags.f._unicodeBidi) )
+    // only for tables:
+    // 	_border_collapse
+    // 	EEmptyCell _empty_cells : 2 ;
+    // 	ECaptionSide _caption_side : 2;
+    //     ETableLayout _table_layout : 1;
+    //     EPosition _position : 2;
+    //     EFloat _floating : 2;
+    if(((int)noninherited_flags.f._display) >= TABLE)
+    {
+        if(!(inherited_flags.f._empty_cells == other->inherited_flags.f._empty_cells)
+           || !(inherited_flags.f._caption_side == other->inherited_flags.f._caption_side)
+           || !(inherited_flags.f._border_collapse == other->inherited_flags.f._border_collapse)
+           || !(noninherited_flags.f._table_layout == other->noninherited_flags.f._table_layout)
+           || !(noninherited_flags.f._position == other->noninherited_flags.f._position)
+           || !(noninherited_flags.f._floating == other->noninherited_flags.f._floating)
+           || !(noninherited_flags.f._flowAroundFloats == other->noninherited_flags.f._flowAroundFloats)
+           || !(noninherited_flags.f._unicodeBidi == other->noninherited_flags.f._unicodeBidi))
             return CbLayout;
     }
 
-// only for lists:
-// 	EListStyleType _list_style_type : 5 ;
-// 	EListStylePosition _list_style_position :1;
-    if (noninherited_flags.f._display == LIST_ITEM ) {
-        if ( !(inherited_flags.f._list_style_type == other->inherited_flags.f._list_style_type) ||
-             !(inherited_flags.f._list_style_position == other->inherited_flags.f._list_style_position) )
+    // only for lists:
+    // 	EListStyleType _list_style_type : 5 ;
+    // 	EListStylePosition _list_style_position :1;
+    if(noninherited_flags.f._display == LIST_ITEM)
+    {
+        if(!(inherited_flags.f._list_style_type == other->inherited_flags.f._list_style_type)
+           || !(inherited_flags.f._list_style_position == other->inherited_flags.f._list_style_position))
             return Layout;
     }
 
-// ### These could be better optimised
-// 	ETextAlign _text_align : 3;
-// 	ETextTransform _text_transform : 4;
-// 	EDirection _direction : 1;
-// 	EWhiteSpace _white_space : 2;
-//     EClear _clear : 2;
-    if ( !(inherited_flags.f._text_align == other->inherited_flags.f._text_align) ||
-	 !(inherited_flags.f._text_transform == other->inherited_flags.f._text_transform) ||
-	 !(inherited_flags.f._direction == other->inherited_flags.f._direction) ||
-	 !(inherited_flags.f._white_space == other->inherited_flags.f._white_space) ||
-	 !(noninherited_flags.f._clear == other->noninherited_flags.f._clear)
-	)
+    // ### These could be better optimised
+    // 	ETextAlign _text_align : 3;
+    // 	ETextTransform _text_transform : 4;
+    // 	EDirection _direction : 1;
+    // 	EWhiteSpace _white_space : 2;
+    //     EClear _clear : 2;
+    if(!(inherited_flags.f._text_align == other->inherited_flags.f._text_align)
+       || !(inherited_flags.f._text_transform == other->inherited_flags.f._text_transform)
+       || !(inherited_flags.f._direction == other->inherited_flags.f._direction)
+       || !(inherited_flags.f._white_space == other->inherited_flags.f._white_space)
+       || !(noninherited_flags.f._clear == other->noninherited_flags.f._clear))
         return Layout;
 
     // Overflow returns a layout hint.
-    if (noninherited_flags.f._overflowX != other->noninherited_flags.f._overflowX ||
-        noninherited_flags.f._overflowY != other->noninherited_flags.f._overflowY)
+    if(noninherited_flags.f._overflowX != other->noninherited_flags.f._overflowX
+       || noninherited_flags.f._overflowY != other->noninherited_flags.f._overflowY)
         return Layout;
 
-// only for inline:
-//     EVerticalAlign _vertical_align : 4;
+    // only for inline:
+    //     EVerticalAlign _vertical_align : 4;
 
-    if ( !(noninherited_flags.f._display == INLINE) &&
-         !(noninherited_flags.f._vertical_align == other->noninherited_flags.f._vertical_align) )
-	    return Layout;
+    if(!(noninherited_flags.f._display == INLINE) && !(noninherited_flags.f._vertical_align == other->noninherited_flags.f._vertical_align))
+        return Layout;
 
-    if (*surround.get() != *other->surround.get()) {
-        assert( other->position() != STATIC );                      // this style is positioned or relatively positioned
-        if ( surround->hasSamePBMData(*other->surround.get()) &&    // padding/border/margin are identical
-             (other->position() == RELATIVE ||
-               !(other->left().isVariable() && other->right().isVariable()) &&  // X isn't static
-               !(other->top().isVariable() && other->bottom().isVariable()) ))   // neither is Y
-           // therefore only the offset is different
-           return Position;
+    if(*surround.get() != *other->surround.get())
+    {
+        assert(other->position() != STATIC);                   // this style is positioned or relatively positioned
+        if(surround->hasSamePBMData(*other->surround.get()) && // padding/border/margin are identical
+           (other->position() == RELATIVE
+            || !(other->left().isVariable() && other->right().isVariable()) &&    // X isn't static
+                   !(other->top().isVariable() && other->bottom().isVariable()))) // neither is Y
+            // therefore only the offset is different
+            return Position;
         return Layout;
     }
 
     // Visible:
-// 	EVisibility _visibility : 2;
-// 	int _text_decorations : 4;
-//     DataRef<StyleBackgroundData> background;
-    if (inherited->color != other->inherited->color ||
-        !(inherited_flags.f._visibility == other->inherited_flags.f._visibility) ||
-        !(inherited_flags.f._text_decorations == other->inherited_flags.f._text_decorations) ||
-        !(noninherited_flags.f._hasClip == other->noninherited_flags.f._hasClip) ||
-        visual->textDecoration != other->visual->textDecoration ||
-        *background.get() != *other->background.get() ||
-        css3NonInheritedData->opacity != other->css3NonInheritedData->opacity ||
-        !css3InheritedData->shadowDataEquivalent(*other->css3InheritedData.get())
-       )
+    // 	EVisibility _visibility : 2;
+    // 	int _text_decorations : 4;
+    //     DataRef<StyleBackgroundData> background;
+    if(inherited->color != other->inherited->color || !(inherited_flags.f._visibility == other->inherited_flags.f._visibility)
+       || !(inherited_flags.f._text_decorations == other->inherited_flags.f._text_decorations)
+       || !(noninherited_flags.f._hasClip == other->noninherited_flags.f._hasClip) || visual->textDecoration != other->visual->textDecoration
+       || *background.get() != *other->background.get() || css3NonInheritedData->opacity != other->css3NonInheritedData->opacity
+       || !css3InheritedData->shadowDataEquivalent(*other->css3InheritedData.get()))
         return Visible;
 
     RenderStyle::Diff ch = Equal;
     // Check for visible pseudo-changes:
-    if (hasPseudoStyle(FIRST_LINE) != other->hasPseudoStyle(FIRST_LINE))
+    if(hasPseudoStyle(FIRST_LINE) != other->hasPseudoStyle(FIRST_LINE))
         ch = Visible;
-    else
-    if (hasPseudoStyle(FIRST_LINE) && other->hasPseudoStyle(FIRST_LINE))
+    else if(hasPseudoStyle(FIRST_LINE) && other->hasPseudoStyle(FIRST_LINE))
         ch = getPseudoStyle(FIRST_LINE)->diff(other->getPseudoStyle(FIRST_LINE));
 
-    if (ch != Equal) return ch;
+    if(ch != Equal)
+        return ch;
 
     // Check for visible pseudo-changes:
-    if (hasPseudoStyle(SELECTION) != other->hasPseudoStyle(SELECTION))
+    if(hasPseudoStyle(SELECTION) != other->hasPseudoStyle(SELECTION))
         ch = Visible;
-    else
-    if (hasPseudoStyle(SELECTION) && other->hasPseudoStyle(SELECTION))
+    else if(hasPseudoStyle(SELECTION) && other->hasPseudoStyle(SELECTION))
         ch = getPseudoStyle(SELECTION)->diff(other->getPseudoStyle(SELECTION));
 
     return ch;
 }
 
 
-RenderStyle* RenderStyle::_default = 0;
+RenderStyle *RenderStyle::_default = 0;
 
 void RenderStyle::cleanup()
 {
@@ -879,14 +908,15 @@ void RenderStyle::cleanup()
     _default = 0;
 }
 
-void RenderStyle::setPaletteColor(QPalette::ColorGroup g, QColorGroup::ColorRole r, const QColor& c)
+void RenderStyle::setPaletteColor(QPalette::ColorGroup g, QColorGroup::ColorRole r, const QColor &c)
 {
-    visual.access()->palette.setColor(g,r,c);
+    visual.access()->palette.setColor(g, r, c);
 }
 
 void RenderStyle::adjustBackgroundLayers()
 {
-    if (backgroundLayers()->next()) {
+    if(backgroundLayers()->next())
+    {
         // First we cull out layers that have no properties set.
         accessBackgroundLayers()->cullEmptyLayers();
 
@@ -895,7 +925,7 @@ void RenderStyle::adjustBackgroundLayers()
     }
 }
 
-void RenderStyle::setClip( Length top, Length right, Length bottom, Length left )
+void RenderStyle::setClip(Length top, Length right, Length bottom, Length left)
 {
     StyleVisualData *data = visual.access();
     data->clip.top = top;
@@ -904,17 +934,19 @@ void RenderStyle::setClip( Length top, Length right, Length bottom, Length left 
     data->clip.left = left;
 }
 
-void RenderStyle::setQuotes(DOM::QuotesValueImpl* q)
+void RenderStyle::setQuotes(DOM::QuotesValueImpl *q)
 {
     DOM::QuotesValueImpl *t = inherited->quotes;
     inherited.access()->quotes = q;
-    if (q) q->ref();
-    if (t) t->deref();
+    if(q)
+        q->ref();
+    if(t)
+        t->deref();
 }
 
 QString RenderStyle::openQuote(int level) const
 {
-    if (inherited->quotes)
+    if(inherited->quotes)
         return inherited->quotes->openQuote(level);
     else
         return "\""; // 0 is default quotes
@@ -922,26 +954,26 @@ QString RenderStyle::openQuote(int level) const
 
 QString RenderStyle::closeQuote(int level) const
 {
-    if (inherited->quotes)
+    if(inherited->quotes)
         return inherited->quotes->closeQuote(level);
     else
         return "\""; // 0 is default quotes
 }
 
-void RenderStyle::addContent(CachedObject* o)
+void RenderStyle::addContent(CachedObject *o)
 {
-    if (!o)
+    if(!o)
         return; // The object is null. Nothing to do. Just bail.
 
     StyleGeneratedData *t_generated = generated.access();
 
-    ContentData* lastContent = t_generated->content;
-    while (lastContent && lastContent->_nextContent)
+    ContentData *lastContent = t_generated->content;
+    while(lastContent && lastContent->_nextContent)
         lastContent = lastContent->_nextContent;
 
-    ContentData* newContentData = new ContentData;
+    ContentData *newContentData = new ContentData;
 
-    if (lastContent)
+    if(lastContent)
         lastContent->_nextContent = newContentData;
     else
         t_generated->content = newContentData;
@@ -951,22 +983,24 @@ void RenderStyle::addContent(CachedObject* o)
     newContentData->_contentType = CONTENT_OBJECT;
 }
 
-void RenderStyle::addContent(DOM::DOMStringImpl* s)
+void RenderStyle::addContent(DOM::DOMStringImpl *s)
 {
-    if (!s)
+    if(!s)
         return; // The string is null. Nothing to do. Just bail.
 
     StyleGeneratedData *t_generated = generated.access();
 
-    ContentData* lastContent = t_generated->content;
-    while (lastContent && lastContent->_nextContent)
+    ContentData *lastContent = t_generated->content;
+    while(lastContent && lastContent->_nextContent)
         lastContent = lastContent->_nextContent;
 
-    if (lastContent) {
-        if (lastContent->_contentType == CONTENT_TEXT) {
+    if(lastContent)
+    {
+        if(lastContent->_contentType == CONTENT_TEXT)
+        {
             // We can augment the existing string and share this ContentData node.
-            DOMStringImpl* oldStr = lastContent->_content.text;
-            DOMStringImpl* newStr = oldStr->copy();
+            DOMStringImpl *oldStr = lastContent->_content.text;
+            DOMStringImpl *newStr = oldStr->copy();
             newStr->ref();
             oldStr->deref();
             newStr->append(s);
@@ -975,9 +1009,9 @@ void RenderStyle::addContent(DOM::DOMStringImpl* s)
         }
     }
 
-    ContentData* newContentData = new ContentData;
+    ContentData *newContentData = new ContentData;
 
-    if (lastContent)
+    if(lastContent)
         lastContent->_nextContent = newContentData;
     else
         t_generated->content = newContentData;
@@ -985,23 +1019,22 @@ void RenderStyle::addContent(DOM::DOMStringImpl* s)
     newContentData->_content.text = s;
     newContentData->_content.text->ref();
     newContentData->_contentType = CONTENT_TEXT;
-
 }
 
-void RenderStyle::addContent(DOM::CounterImpl* c)
+void RenderStyle::addContent(DOM::CounterImpl *c)
 {
-    if (!c)
+    if(!c)
         return;
 
     StyleGeneratedData *t_generated = generated.access();
 
-    ContentData* lastContent = t_generated->content;
-    while (lastContent && lastContent->_nextContent)
+    ContentData *lastContent = t_generated->content;
+    while(lastContent && lastContent->_nextContent)
         lastContent = lastContent->_nextContent;
 
-    ContentData* newContentData = new ContentData;
+    ContentData *newContentData = new ContentData;
 
-    if (lastContent)
+    if(lastContent)
         lastContent->_nextContent = newContentData;
     else
         t_generated->content = newContentData;
@@ -1013,18 +1046,18 @@ void RenderStyle::addContent(DOM::CounterImpl* c)
 
 void RenderStyle::addContent(EQuoteContent q)
 {
-    if (q == NO_QUOTE)
+    if(q == NO_QUOTE)
         return;
 
     StyleGeneratedData *t_generated = generated.access();
 
-    ContentData* lastContent = t_generated->content;
-    while (lastContent && lastContent->_nextContent)
+    ContentData *lastContent = t_generated->content;
+    while(lastContent && lastContent->_nextContent)
         lastContent = lastContent->_nextContent;
 
-    ContentData* newContentData = new ContentData;
+    ContentData *newContentData = new ContentData;
 
-    if (lastContent)
+    if(lastContent)
         lastContent->_nextContent = newContentData;
     else
         t_generated->content = newContentData;
@@ -1034,31 +1067,37 @@ void RenderStyle::addContent(EQuoteContent q)
 }
 
 // content: normal is the same as having no content at all
-void RenderStyle::setContentNormal() {
-    if (generated->content != 0) {
+void RenderStyle::setContentNormal()
+{
+    if(generated->content != 0)
+    {
         delete generated->content;
         generated.access()->content = 0;
     }
 }
 
 // content: none, add an empty content node
-void RenderStyle::setContentNone() {
+void RenderStyle::setContentNone()
+{
     setContentNormal();
     generated.access()->content = new ContentData;
 }
 
-void RenderStyle::setContentData(ContentData *data) {
-    if (data != generated->content) {
-        if (data)
+void RenderStyle::setContentData(ContentData *data)
+{
+    if(data != generated->content)
+    {
+        if(data)
             generated.access()->content = new ContentData(*data);
         else
             generated.access()->content = 0;
     }
 }
 
-ContentData::ContentData(const ContentData& o) : _contentType(o._contentType)
+ContentData::ContentData(const ContentData &o) : _contentType(o._contentType)
 {
-    switch (_contentType) {
+    switch(_contentType)
+    {
         case CONTENT_OBJECT:
             _content.object = o._content.object;
             break;
@@ -1091,7 +1130,7 @@ void ContentData::clearContent()
     delete _nextContent;
     _nextContent = 0;
 
-    switch (_contentType)
+    switch(_contentType)
     {
         case CONTENT_OBJECT:
             _content.object = 0;
@@ -1107,89 +1146,92 @@ void ContentData::clearContent()
         case CONTENT_QUOTE:
             _content.quote = NO_QUOTE;
             break;
-        default:
-            ;
+        default:;
     }
 }
 
-void RenderStyle::setTextShadow(ShadowData* val, bool add)
+void RenderStyle::setTextShadow(ShadowData *val, bool add)
 {
-    StyleCSS3InheritedData* css3Data = css3InheritedData.access();
-    if (!add) {
+    StyleCSS3InheritedData *css3Data = css3InheritedData.access();
+    if(!add)
+    {
         delete css3Data->textShadow;
         css3Data->textShadow = val;
         return;
     }
 
-    ShadowData* last = css3Data->textShadow;
-    while (last->next) last = last->next;
+    ShadowData *last = css3Data->textShadow;
+    while(last->next)
+        last = last->next;
     last->next = val;
 }
 
-ShadowData::ShadowData(const ShadowData& o)
-:x(o.x), y(o.y), blur(o.blur), color(o.color)
+ShadowData::ShadowData(const ShadowData &o) : x(o.x), y(o.y), blur(o.blur), color(o.color)
 {
     next = o.next ? new ShadowData(*o.next) : 0;
 }
 
-bool ShadowData::operator==(const ShadowData& o) const
+bool ShadowData::operator==(const ShadowData &o) const
 {
-    if ((next && !o.next) || (!next && o.next) ||
-        (next && o.next && *next != *o.next))
+    if((next && !o.next) || (!next && o.next) || (next && o.next && *next != *o.next))
         return false;
 
     return x == o.x && y == o.y && blur == o.blur && color == o.color;
 }
 
-static bool hasCounter(const DOM::DOMString& c, CSSValueListImpl *l)
+static bool hasCounter(const DOM::DOMString &c, CSSValueListImpl *l)
 {
     int len = l->length();
-    for(int i=0; i<len; i++) {
-        CounterActImpl* ca = static_cast<CounterActImpl*>(l->item(i));
+    for(int i = 0; i < len; i++)
+    {
+        CounterActImpl *ca = static_cast< CounterActImpl * >(l->item(i));
         Q_ASSERT(ca != 0);
-        if (ca->m_counter == c) return true;
+        if(ca->m_counter == c)
+            return true;
     }
     return false;
 }
 
-bool RenderStyle::hasCounterReset(const DOM::DOMString& c) const
+bool RenderStyle::hasCounterReset(const DOM::DOMString &c) const
 {
-    if (generated->counter_reset)
+    if(generated->counter_reset)
         return hasCounter(c, generated->counter_reset);
     else
         return false;
 }
 
-bool RenderStyle::hasCounterIncrement(const DOM::DOMString& c) const
+bool RenderStyle::hasCounterIncrement(const DOM::DOMString &c) const
 {
-    if (generated->counter_increment)
+    if(generated->counter_increment)
         return hasCounter(c, generated->counter_increment);
     else
         return false;
 }
 
-static short readCounter(const DOM::DOMString& c, CSSValueListImpl *l)
+static short readCounter(const DOM::DOMString &c, CSSValueListImpl *l)
 {
     int len = l->length();
-    for(int i=0; i<len; i++) {
-        CounterActImpl* ca = static_cast<CounterActImpl*>(l->item(i));
+    for(int i = 0; i < len; i++)
+    {
+        CounterActImpl *ca = static_cast< CounterActImpl * >(l->item(i));
         Q_ASSERT(ca != 0);
-        if (ca->m_counter == c) return ca->m_value;
+        if(ca->m_counter == c)
+            return ca->m_value;
     }
     return 0;
 }
 
-short RenderStyle::counterReset(const DOM::DOMString& c) const
+short RenderStyle::counterReset(const DOM::DOMString &c) const
 {
-    if (generated->counter_reset)
+    if(generated->counter_reset)
         return readCounter(c, generated->counter_reset);
     else
         return 0;
 }
 
-short RenderStyle::counterIncrement(const DOM::DOMString& c) const
+short RenderStyle::counterIncrement(const DOM::DOMString &c) const
 {
-    if (generated->counter_increment)
+    if(generated->counter_increment)
         return readCounter(c, generated->counter_increment);
     else
         return 0;
@@ -1199,51 +1241,55 @@ void RenderStyle::setCounterReset(CSSValueListImpl *l)
 {
     CSSValueListImpl *t = generated->counter_reset;
     generated.access()->counter_reset = l;
-    if (l) l->ref();
-    if (t) t->deref();
+    if(l)
+        l->ref();
+    if(t)
+        t->deref();
 }
 
 void RenderStyle::setCounterIncrement(CSSValueListImpl *l)
 {
     CSSValueListImpl *t = generated->counter_increment;
     generated.access()->counter_increment = l;
-    if (l) l->ref();
-    if (t) t->deref();
+    if(l)
+        l->ref();
+    if(t)
+        t->deref();
 }
 
 #ifdef ENABLE_DUMP
 
-static QString describeFont( const QFont &f)
+static QString describeFont(const QFont &f)
 {
     QString res = "'" + f.family() + "' ";
 
-    if ( f.pointSize() > 0)
-        res += QString::number( f.pointSize() ) + "pt";
+    if(f.pointSize() > 0)
+        res += QString::number(f.pointSize()) + "pt";
     else
-        res += QString::number( f.pixelSize() ) + "px";
+        res += QString::number(f.pixelSize()) + "px";
 
-    if ( f.bold() )
+    if(f.bold())
         res += " bold";
-    if ( f.italic() )
+    if(f.italic())
         res += " italic";
-    if ( f.underline() )
+    if(f.underline())
         res += " underline";
-    if ( f.overline() )
+    if(f.overline())
         res += " overline";
-    if ( f.strikeOut() )
+    if(f.strikeOut())
         res += " strikeout";
     return res;
 }
 
-QString RenderStyle::createDiff( const RenderStyle &parent ) const
+QString RenderStyle::createDiff(const RenderStyle &parent) const
 {
     QString res;
-      if ( color().isValid() && parent.color() != color() )
+    if(color().isValid() && parent.color() != color())
         res += " [color=" + color().name() + "]";
-    if ( backgroundColor().isValid() && parent.backgroundColor() != backgroundColor() )
+    if(backgroundColor().isValid() && parent.backgroundColor() != backgroundColor())
         res += " [bgcolor=" + backgroundColor().name() + "]";
-    if ( parent.font() != font() )
-        res += " [font=" + describeFont( font() ) + "]";
+    if(parent.font() != font())
+        res += " [font=" + describeFont(font()) + "]";
 
     return res;
 }
@@ -1258,20 +1304,20 @@ RenderPageStyle::~RenderPageStyle()
     delete next;
 }
 
-RenderPageStyle* RenderPageStyle::getPageStyle(PageType type)
+RenderPageStyle *RenderPageStyle::getPageStyle(PageType type)
 {
     RenderPageStyle *ps = 0;
-    for (ps = this; ps; ps = ps->next)
-        if (ps->m_pageType==type)
+    for(ps = this; ps; ps = ps->next)
+        if(ps->m_pageType == type)
             break;
     return ps;
 }
 
-RenderPageStyle* RenderPageStyle::addPageStyle(PageType type)
+RenderPageStyle *RenderPageStyle::addPageStyle(PageType type)
 {
     RenderPageStyle *ps = getPageStyle(type);
 
-    if (!ps)
+    if(!ps)
     {
         ps = new RenderPageStyle(*this); // use the real copy constructor to get an identical copy
         ps->m_pageType = type;
@@ -1288,8 +1334,10 @@ void RenderPageStyle::removePageStyle(PageType type)
     RenderPageStyle *ps = next;
     RenderPageStyle *prev = this;
 
-    while (ps) {
-        if (ps->m_pageType==type) {
+    while(ps)
+    {
+        if(ps->m_pageType == type)
+        {
             prev->next = ps->next;
             delete ps;
             return;

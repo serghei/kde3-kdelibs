@@ -47,14 +47,14 @@ class KHTMLView;
 class HTMLStackElem;
 
 namespace DOM {
-    class HTMLDocumentImpl;
-    class DocumentImpl;
-    class HTMLElementImpl;
-    class NodeImpl;
-    class HTMLFormElementImpl;
-    class HTMLMapElementImpl;
-    class HTMLHeadElementImpl;
-    class DocumentFragmentImpl;
+class HTMLDocumentImpl;
+class DocumentImpl;
+class HTMLElementImpl;
+class NodeImpl;
+class HTMLFormElementImpl;
+class HTMLMapElementImpl;
+class HTMLHeadElementImpl;
+class DocumentFragmentImpl;
 }
 
 namespace khtml {
@@ -65,11 +65,10 @@ class Token;
  * The parser for html. It receives a stream of tokens from the HTMLTokenizer, and
  * builds up the Document structure form it.
  */
-class KHTMLParser
-{
+class KHTMLParser {
 public:
-    KHTMLParser( KHTMLView *w, DOM::DocumentImpl *i );
-    KHTMLParser( DOM::DocumentFragmentImpl *frag, DOM::DocumentImpl *doc );
+    KHTMLParser(KHTMLView *w, DOM::DocumentImpl *i);
+    KHTMLParser(DOM::DocumentFragmentImpl *frag, DOM::DocumentImpl *doc);
     virtual ~KHTMLParser();
 
     /**
@@ -82,15 +81,29 @@ public:
      */
     void reset();
 
-    bool skipMode() const { return (discard_until != 0); }
-    bool noSpaces() const { return (inSelect || !m_inline  || !inBody); }
-    bool selectMode() const { return inSelect; }
+    bool skipMode() const
+    {
+        return (discard_until != 0);
+    }
+    bool noSpaces() const
+    {
+        return (inSelect || !m_inline || !inBody);
+    }
+    bool selectMode() const
+    {
+        return inSelect;
+    }
 
-    DOM::HTMLDocumentImpl *doc() const { return static_cast<DOM::HTMLDocumentImpl *>(document); }
-    DOM::DocumentImpl *docPtr() const { return document; }
+    DOM::HTMLDocumentImpl *doc() const
+    {
+        return static_cast< DOM::HTMLDocumentImpl * >(document);
+    }
+    DOM::DocumentImpl *docPtr() const
+    {
+        return document;
+    }
 
 protected:
-
     KHTMLView *HTMLWidget;
     DOM::DocumentImpl *document;
 
@@ -106,10 +119,12 @@ protected:
     /*
      * The currently active element (the one new elements will be added to)
      */
-    void setCurrent( DOM::NodeImpl* newNode )
+    void setCurrent(DOM::NodeImpl *newNode)
     {
-        if ( newNode ) newNode->ref();
-        if ( current ) current->deref();
+        if(newNode)
+            newNode->ref();
+        if(current)
+            current->deref();
         current = newNode;
     }
 
@@ -118,20 +133,20 @@ private:
 
     HTMLStackElem *blockStack;
 
-    void pushBlock( int _id, int _level);
+    void pushBlock(int _id, int _level);
 
-    void popBlock( int _id );
+    void popBlock(int _id);
     void popOneBlock(bool delBlock = true);
     void popInlineBlocks();
 
-    void freeBlock( void);
+    void freeBlock(void);
 
     void createHead();
 
     bool isResidualStyleTag(int _id);
     bool isAffectedByResidualStyle(int _id);
-    void handleResidualStyleCloseTagAcrossBlocks(HTMLStackElem* elem);
-    void reopenResidualStyleTags(HTMLStackElem* elem, DOM::NodeImpl* malformedTableParent);
+    void handleResidualStyleCloseTagAcrossBlocks(HTMLStackElem *elem);
+    void reopenResidualStyleTags(HTMLStackElem *elem, DOM::NodeImpl *malformedTableParent);
 
     ushort *forbiddenTag;
 
@@ -155,7 +170,7 @@ private:
      * html from the stone age
      */
     DOM::NodeImpl *isindex;
-    DOM::NodeImpl *handleIsindex( Token *t );
+    DOM::NodeImpl *handleIsindex(Token *t);
 
     /*
      * inserts the stupid isIndex element.
@@ -188,4 +203,3 @@ private:
 } // namespace khtml
 
 #endif // HTMLPARSER_H
-

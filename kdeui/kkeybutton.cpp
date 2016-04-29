@@ -33,8 +33,8 @@
 #ifdef Q_WS_X11
 #define XK_XKB_KEYS
 #define XK_MISCELLANY
-#include <X11/Xlib.h>	// For x11Event() 
-#include <X11/keysymdef.h> // For XK_... 
+#include <X11/Xlib.h>      // For x11Event()
+#include <X11/keysymdef.h> // For XK_...
 
 #ifdef KeyPress
 const int XFocusOut = FocusOut;
@@ -48,14 +48,13 @@ const int XKeyRelease = KeyRelease;
 #endif // KeyPress
 #endif // Q_WS_X11
 
-//static const char* psTemp[] = { 
-//  I18N_NOOP("Primary"), I18N_NOOP("Alternate"), I18N_NOOP("Multi-Key") 
+// static const char* psTemp[] = {
+//  I18N_NOOP("Primary"), I18N_NOOP("Alternate"), I18N_NOOP("Multi-Key")
 //};
 
-class KKeyButtonPrivate
-{
- public:
-	bool bQtShortcut;
+class KKeyButtonPrivate {
+public:
+    bool bQtShortcut;
 };
 
 /***********************************************************************/
@@ -65,114 +64,112 @@ class KKeyButtonPrivate
 /*                                                                     */
 /***********************************************************************/
 
-KKeyButton::KKeyButton(QWidget *parent, const char *name)
-:	QPushButton( parent, name )
+KKeyButton::KKeyButton(QWidget *parent, const char *name) : QPushButton(parent, name)
 {
-	d = new KKeyButtonPrivate;
-	setFocusPolicy( QWidget::StrongFocus );
-	m_bEditing = false;
-	connect( this, SIGNAL(clicked()), this, SLOT(captureShortcut()) );
-	setShortcut( KShortcut(), true );
+    d = new KKeyButtonPrivate;
+    setFocusPolicy(QWidget::StrongFocus);
+    m_bEditing = false;
+    connect(this, SIGNAL(clicked()), this, SLOT(captureShortcut()));
+    setShortcut(KShortcut(), true);
 }
 
-KKeyButton::~KKeyButton ()
+KKeyButton::~KKeyButton()
 {
-	delete d;
+    delete d;
 }
 
-void KKeyButton::setShortcut( const KShortcut& cut, bool bQtShortcut )
+void KKeyButton::setShortcut(const KShortcut &cut, bool bQtShortcut)
 {
-	d->bQtShortcut = bQtShortcut;
-	m_cut = cut;
-	QString keyStr = m_cut.toString();
-	keyStr.replace('&', QString::fromLatin1("&&"));
-	setText( keyStr.isEmpty() ? i18n("None") : keyStr );
+    d->bQtShortcut = bQtShortcut;
+    m_cut = cut;
+    QString keyStr = m_cut.toString();
+    keyStr.replace('&', QString::fromLatin1("&&"));
+    setText(keyStr.isEmpty() ? i18n("None") : keyStr);
 }
 
 // deprecated //
-void KKeyButton::setShortcut( const KShortcut& cut )
+void KKeyButton::setShortcut(const KShortcut &cut)
 {
-	setShortcut( cut, false );
+    setShortcut(cut, false);
 }
 
-void KKeyButton::setText( const QString& text )
+void KKeyButton::setText(const QString &text)
 {
-	QPushButton::setText( text );
-	setFixedSize( sizeHint().width()+12, sizeHint().height()+8 );
+    QPushButton::setText(text);
+    setFixedSize(sizeHint().width() + 12, sizeHint().height() + 8);
 }
 
 void KKeyButton::captureShortcut()
 {
-	KShortcut cut;
+    KShortcut cut;
 
-	m_bEditing = true;
-	repaint();
+    m_bEditing = true;
+    repaint();
 
-        {
-	KShortcutDialog dlg( m_cut, d->bQtShortcut, this );
-	if( dlg.exec() == KDialog::Accepted )
-                cut = dlg.shortcut();
-        } // emit the signal after the dialog is destroyed, otherwise it still has grab
-        if( !cut.isNull())
-	    emit capturedShortcut( cut );
+    {
+        KShortcutDialog dlg(m_cut, d->bQtShortcut, this);
+        if(dlg.exec() == KDialog::Accepted)
+            cut = dlg.shortcut();
+    } // emit the signal after the dialog is destroyed, otherwise it still has grab
+    if(!cut.isNull())
+        emit capturedShortcut(cut);
 
-	m_bEditing = false;
-	repaint();
+    m_bEditing = false;
+    repaint();
 }
 
-void KKeyButton::drawButton( QPainter *painter )
+void KKeyButton::drawButton(QPainter *painter)
 {
-  QPointArray a( 4 );
-  a.setPoint( 0, 0, 0) ;
-  a.setPoint( 1, width(), 0 );
-  a.setPoint( 2, 0, height() );
-  a.setPoint( 3, 0, 0 );
+    QPointArray a(4);
+    a.setPoint(0, 0, 0);
+    a.setPoint(1, width(), 0);
+    a.setPoint(2, 0, height());
+    a.setPoint(3, 0, 0);
 
-  QRegion r1( a );
-  painter->setClipRegion( r1 );
-  painter->setBrush( backgroundColor().light() );
-  painter->drawRoundRect( 0, 0, width(), height(), 20, 20);
+    QRegion r1(a);
+    painter->setClipRegion(r1);
+    painter->setBrush(backgroundColor().light());
+    painter->drawRoundRect(0, 0, width(), height(), 20, 20);
 
-  a.setPoint( 0, width(), height() );
-  a.setPoint( 1, width(), 0 );
-  a.setPoint( 2, 0, height() );
-  a.setPoint( 3, width(), height() );
+    a.setPoint(0, width(), height());
+    a.setPoint(1, width(), 0);
+    a.setPoint(2, 0, height());
+    a.setPoint(3, width(), height());
 
-  QRegion r2( a );
-  painter->setClipRegion( r2 );
-  painter->setBrush( backgroundColor().dark() );
-  painter->drawRoundRect( 0, 0, width(), height(), 20, 20 );
+    QRegion r2(a);
+    painter->setClipRegion(r2);
+    painter->setBrush(backgroundColor().dark());
+    painter->drawRoundRect(0, 0, width(), height(), 20, 20);
 
-  painter->setClipping( false );
-  if( width() > 12 && height() > 8 )
-    qDrawShadePanel( painter, 6, 4, width() - 12, height() - 8,
-                     colorGroup(), true, 1, 0L );
-  if ( m_bEditing )
-  {
-    painter->setPen( colorGroup().base() );
-    painter->setBrush( colorGroup().base() );
-  }
-  else
-  {
-    painter->setPen( backgroundColor() );
-    painter->setBrush( backgroundColor() );
-  }
-  if( width() > 14 && height() > 10 )
-    painter->drawRect( 7, 5, width() - 14, height() - 10 );
+    painter->setClipping(false);
+    if(width() > 12 && height() > 8)
+        qDrawShadePanel(painter, 6, 4, width() - 12, height() - 8, colorGroup(), true, 1, 0L);
+    if(m_bEditing)
+    {
+        painter->setPen(colorGroup().base());
+        painter->setBrush(colorGroup().base());
+    }
+    else
+    {
+        painter->setPen(backgroundColor());
+        painter->setBrush(backgroundColor());
+    }
+    if(width() > 14 && height() > 10)
+        painter->drawRect(7, 5, width() - 14, height() - 10);
 
-  drawButtonLabel( painter );
+    drawButtonLabel(painter);
 
-  painter->setPen( colorGroup().text() );
-  painter->setBrush( NoBrush );
-  if( hasFocus() || m_bEditing )
-  {
-    if( width() > 16 && height() > 12 )
-      painter->drawRect( 8, 6, width() - 16, height() - 12 );
-  }
-
+    painter->setPen(colorGroup().text());
+    painter->setBrush(NoBrush);
+    if(hasFocus() || m_bEditing)
+    {
+        if(width() > 16 && height() > 12)
+            painter->drawRect(8, 6, width() - 16, height() - 12);
+    }
 }
 
-void KKeyButton::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KKeyButton::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kkeybutton.moc"

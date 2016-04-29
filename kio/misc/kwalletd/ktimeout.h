@@ -28,25 +28,25 @@
 
 // @internal
 class KTimeout : public QObject {
-	Q_OBJECT
-	public:
-		KTimeout(int size = 29);
-		virtual ~KTimeout();
+    Q_OBJECT
+public:
+    KTimeout(int size = 29);
+    virtual ~KTimeout();
 
-	signals:
-		void timedOut(int id);
+signals:
+    void timedOut(int id);
 
-	public slots:
-		void resetTimer(int id, int timeout);
-		void addTimer(int id, int timeout);
-		void removeTimer(int id);
-		void clear();
+public slots:
+    void resetTimer(int id, int timeout);
+    void addTimer(int id, int timeout);
+    void removeTimer(int id);
+    void clear();
 
-	private slots:
-		void timeout();
+private slots:
+    void timeout();
 
-	private:
-		QIntDict<QTimer> _timers;
+private:
+    QIntDict< QTimer > _timers;
 };
 
 #endif

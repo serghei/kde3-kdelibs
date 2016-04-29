@@ -10,7 +10,7 @@
  *  permit persons to whom the Software is furnished to do so, subject to
  *  the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
@@ -41,243 +41,240 @@ using namespace KNetwork;
  *
  */
 
-KDatagramSocket::KDatagramSocket(QObject* parent, const char *name)
-  : KClientSocketBase(parent, name), d(0L)
+KDatagramSocket::KDatagramSocket(QObject *parent, const char *name) : KClientSocketBase(parent, name), d(0L)
 {
-  peerResolver().setFamily(KResolver::KnownFamily);
-  localResolver().setFamily(KResolver::KnownFamily);
+    peerResolver().setFamily(KResolver::KnownFamily);
+    localResolver().setFamily(KResolver::KnownFamily);
 
-  peerResolver().setSocketType(SOCK_DGRAM);
-  localResolver().setSocketType(SOCK_DGRAM);
+    peerResolver().setSocketType(SOCK_DGRAM);
+    localResolver().setSocketType(SOCK_DGRAM);
 
-  localResolver().setFlags(KResolver::Passive);
+    localResolver().setFlags(KResolver::Passive);
 
-  //  QObject::connect(localResolver(), SIGNAL(finished(KResolverResults)),
-  //		   this, SLOT(lookupFinishedLocal()));
-  QObject::connect(&peerResolver(), SIGNAL(finished(KResolverResults)),
-  		   this, SLOT(lookupFinishedPeer()));
-  QObject::connect(this, SIGNAL(hostFound()), this, SLOT(lookupFinishedLocal()));
+    //  QObject::connect(localResolver(), SIGNAL(finished(KResolverResults)),
+    //		   this, SLOT(lookupFinishedLocal()));
+    QObject::connect(&peerResolver(), SIGNAL(finished(KResolverResults)), this, SLOT(lookupFinishedPeer()));
+    QObject::connect(this, SIGNAL(hostFound()), this, SLOT(lookupFinishedLocal()));
 }
 
 KDatagramSocket::~KDatagramSocket()
 {
-  // KClientSocketBase's destructor closes the socket
+    // KClientSocketBase's destructor closes the socket
 
-  //delete d;
+    // delete d;
 }
 
-bool KDatagramSocket::bind(const QString& node, const QString& service)
+bool KDatagramSocket::bind(const QString &node, const QString &service)
 {
-  if (state() >= Bound)
-    return false;
+    if(state() >= Bound)
+        return false;
 
-  if (localResolver().isRunning())
-    localResolver().cancel(false);
+    if(localResolver().isRunning())
+        localResolver().cancel(false);
 
-  // no, we must do a host lookup
-  localResolver().setAddress(node, service);
+    // no, we must do a host lookup
+    localResolver().setAddress(node, service);
 
-  if (!lookup())
-    return false;
+    if(!lookup())
+        return false;
 
-  // see if lookup has finished already
-  // this also catches blocking mode, since lookup has to finish
-  // its processing if we're in blocking mode
-  if (state() > HostLookup)
-    return doBind();
+    // see if lookup has finished already
+    // this also catches blocking mode, since lookup has to finish
+    // its processing if we're in blocking mode
+    if(state() > HostLookup)
+        return doBind();
 
-  return true;
+    return true;
 }
 
-bool KDatagramSocket::connect(const QString& node, const QString& service)
+bool KDatagramSocket::connect(const QString &node, const QString &service)
 {
-  if (state() >= Connected)
-    return true;		// already connected
+    if(state() >= Connected)
+        return true; // already connected
 
-  if (peerResolver().nodeName() != node ||
-      peerResolver().serviceName() != service)
-    peerResolver().setAddress(node, service); // this resets the resolver's state
+    if(peerResolver().nodeName() != node || peerResolver().serviceName() != service)
+        peerResolver().setAddress(node, service); // this resets the resolver's state
 
-  // KClientSocketBase::lookup only works if the state is Idle or HostLookup
-  // therefore, we store the old state, call the lookup routine and then set
-  // it back.
-  SocketState s = state();
-  setState(s == Connecting ? HostLookup : Idle);
-  bool ok = lookup();
-  if (!ok)
+    // KClientSocketBase::lookup only works if the state is Idle or HostLookup
+    // therefore, we store the old state, call the lookup routine and then set
+    // it back.
+    SocketState s = state();
+    setState(s == Connecting ? HostLookup : Idle);
+    bool ok = lookup();
+    if(!ok)
     {
-      setState(s);		// go back
-      return false;
+        setState(s); // go back
+        return false;
     }
 
-  // check if lookup is finished
-  // if we're in blocking mode, then the lookup has to be finished
-  if (state() == HostLookup)
+    // check if lookup is finished
+    // if we're in blocking mode, then the lookup has to be finished
+    if(state() == HostLookup)
     {
-      // it hasn't finished
-      setState(Connecting);
-      emit stateChanged(Connecting);
-      return true;
+        // it hasn't finished
+        setState(Connecting);
+        emit stateChanged(Connecting);
+        return true;
     }
 
-  // it has to be finished here
-  if (state() != Connected)
+    // it has to be finished here
+    if(state() != Connected)
     {
-      setState(Connecting);
-      emit stateChanged(Connecting);
-      lookupFinishedPeer();
+        setState(Connecting);
+        emit stateChanged(Connecting);
+        lookupFinishedPeer();
     }
 
-  return state() == Connected;
+    return state() == Connected;
 }
 
 KDatagramPacket KDatagramSocket::receive()
 {
-  Q_LONG size = bytesAvailable();
-  if (size == 0)
+    Q_LONG size = bytesAvailable();
+    if(size == 0)
     {
-      // nothing available yet to read
-      // wait for data if we're not blocking
-      if (blocking())
-	socketDevice()->waitForMore(-1); // wait forever
-      else
-	{
-	  // mimic error
-	  setError(IO_ReadError, WouldBlock);
-	  emit gotError(WouldBlock);
-	  return KDatagramPacket();
-	}
+        // nothing available yet to read
+        // wait for data if we're not blocking
+        if(blocking())
+            socketDevice()->waitForMore(-1); // wait forever
+        else
+        {
+            // mimic error
+            setError(IO_ReadError, WouldBlock);
+            emit gotError(WouldBlock);
+            return KDatagramPacket();
+        }
 
-      // try again
-      size = bytesAvailable();
+        // try again
+        size = bytesAvailable();
     }
 
-  QByteArray data(size);
-  KSocketAddress address;
-  
-  // now do the reading
-  size = readBlock(data.data(), size, address);
-  if (size < 0)
-    // error has been set
-    return KDatagramPacket();
+    QByteArray data(size);
+    KSocketAddress address;
 
-  data.resize(size);		// just to be sure
-  return KDatagramPacket(data, address);
+    // now do the reading
+    size = readBlock(data.data(), size, address);
+    if(size < 0)
+        // error has been set
+        return KDatagramPacket();
+
+    data.resize(size); // just to be sure
+    return KDatagramPacket(data, address);
 }
 
-Q_LONG KDatagramSocket::send(const KDatagramPacket& packet)
+Q_LONG KDatagramSocket::send(const KDatagramPacket &packet)
 {
-  return writeBlock(packet.data(), packet.size(), packet.address());
+    return writeBlock(packet.data(), packet.size(), packet.address());
 }
 
-Q_LONG KDatagramSocket::writeBlock(const char *data, Q_ULONG len, const KSocketAddress& to)
+Q_LONG KDatagramSocket::writeBlock(const char *data, Q_ULONG len, const KSocketAddress &to)
 {
-  if (to.family() != AF_UNSPEC)
+    if(to.family() != AF_UNSPEC)
     {
-      // make sure the socket is open at this point
-      if (!socketDevice()->isOpen())
-	// error handling will happen below
-	socketDevice()->create(to.family(), SOCK_DGRAM, 0);
+        // make sure the socket is open at this point
+        if(!socketDevice()->isOpen())
+            // error handling will happen below
+            socketDevice()->create(to.family(), SOCK_DGRAM, 0);
     }
-  return KClientSocketBase::writeBlock(data, len, to);
+    return KClientSocketBase::writeBlock(data, len, to);
 }
 
 void KDatagramSocket::lookupFinishedLocal()
 {
-  // bind lookup has finished and succeeded
-  // state() == HostFound
+    // bind lookup has finished and succeeded
+    // state() == HostFound
 
-  if (!doBind())
-    return;			// failed binding
+    if(!doBind())
+        return; // failed binding
 
-  if (peerResults().count() > 0)
+    if(peerResults().count() > 0)
     {
-      setState(Connecting);
-      emit stateChanged(Connecting);
+        setState(Connecting);
+        emit stateChanged(Connecting);
 
-      lookupFinishedPeer();
+        lookupFinishedPeer();
     }
 }
 
 void KDatagramSocket::lookupFinishedPeer()
 {
-  // this function is called by lookupFinishedLocal above
-  // and is also connected to a signal
-  // so it might be called twice.
+    // this function is called by lookupFinishedLocal above
+    // and is also connected to a signal
+    // so it might be called twice.
 
-  if (state() != Connecting)
-    return;
+    if(state() != Connecting)
+        return;
 
-  if (peerResults().count() == 0)
+    if(peerResults().count() == 0)
     {
-      setState(Unconnected);
-      emit stateChanged(Unconnected);
-      return;
+        setState(Unconnected);
+        emit stateChanged(Unconnected);
+        return;
     }
 
-  KResolverResults::ConstIterator it = peerResults().begin();
-  for ( ; it != peerResults().end(); ++it)
-    if (connect(*it))
-      {
-	// weee, we connected
+    KResolverResults::ConstIterator it = peerResults().begin();
+    for(; it != peerResults().end(); ++it)
+        if(connect(*it))
+        {
+            // weee, we connected
 
-	setState(Connected);	// this sets up signals
-	//setupSignals();	// setState sets up the signals
+            setState(Connected); // this sets up signals
+            // setupSignals();	// setState sets up the signals
 
-	emit stateChanged(Connected);
-	emit connected(*it);
-	return;
-      }
+            emit stateChanged(Connected);
+            emit connected(*it);
+            return;
+        }
 
-  // no connection
-  copyError();
-  setState(Unconnected);
-  emit stateChanged(Unconnected);
-  emit gotError(error());
+    // no connection
+    copyError();
+    setState(Unconnected);
+    emit stateChanged(Unconnected);
+    emit gotError(error());
 }
 
 bool KDatagramSocket::doBind()
 {
-  if (localResults().count() == 0)
-    return true;
-  if (state() >= Bound)
-    return true;		// already bound
+    if(localResults().count() == 0)
+        return true;
+    if(state() >= Bound)
+        return true; // already bound
 
-  KResolverResults::ConstIterator it = localResults().begin();
-  for ( ; it != localResults().end(); ++it)
-    if (bind(*it))
-      {
-	// bound
-	setupSignals();
-	return true;
-      }
+    KResolverResults::ConstIterator it = localResults().begin();
+    for(; it != localResults().end(); ++it)
+        if(bind(*it))
+        {
+            // bound
+            setupSignals();
+            return true;
+        }
 
-  // not bound
-  // no need to set state since it can only be HostFound already
-  copyError();
-  emit gotError(error());
-  return false;
+    // not bound
+    // no need to set state since it can only be HostFound already
+    copyError();
+    emit gotError(error());
+    return false;
 }
 
 void KDatagramSocket::setupSignals()
 {
-  QSocketNotifier *n = socketDevice()->readNotifier();
-  if (n)
+    QSocketNotifier *n = socketDevice()->readNotifier();
+    if(n)
     {
-      n->setEnabled(emitsReadyRead());
-      QObject::connect(n, SIGNAL(activated(int)), this, SLOT(slotReadActivity()));
+        n->setEnabled(emitsReadyRead());
+        QObject::connect(n, SIGNAL(activated(int)), this, SLOT(slotReadActivity()));
     }
-  else
-    return;
+    else
+        return;
 
-  n = socketDevice()->writeNotifier();
-  if (n)
+    n = socketDevice()->writeNotifier();
+    if(n)
     {
-      n->setEnabled(emitsReadyWrite());
-      QObject::connect(n, SIGNAL(activated(int)), this, SLOT(slotWriteActivity()));
+        n->setEnabled(emitsReadyWrite());
+        QObject::connect(n, SIGNAL(activated(int)), this, SLOT(slotWriteActivity()));
     }
-  else
-    return;
+    else
+        return;
 }
 
 #include "kdatagramsocket.moc"

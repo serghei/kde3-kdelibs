@@ -37,30 +37,34 @@
 
 namespace KJS {
 
-  class ObjectImpPrivate;
-  class PropertyMap;
-  class HashTable;
-  struct HashEntry;
-  class ListImp;
+class ObjectImpPrivate;
+class PropertyMap;
+class HashTable;
+struct HashEntry;
+class ListImp;
 
-  /** Attributes (only applicable to the Object type).
-  *   See ECMA 262-3 8.6.1
-  */ 
-  enum Attribute { None       = 0,
-                   ReadOnly   = 1 << 1, ///< property can be only read, not written
-                   DontEnum   = 1 << 2, ///< property doesn't appear in (for .. in ..)
-                   DontDelete = 1 << 3, ///< property can't be deleted
-                   Internal   = 1 << 4, ///< an internal property, set to by pass checks
-                   Function   = 1 << 5 }; ///< property is a function - only used by static hashtables
+/** Attributes (only applicable to the Object type).
+*   See ECMA 262-3 8.6.1
+*/
+enum Attribute
+{
+    None = 0,
+    ReadOnly = 1 << 1,   ///< property can be only read, not written
+    DontEnum = 1 << 2,   ///< property doesn't appear in (for .. in ..)
+    DontDelete = 1 << 3, ///< property can't be deleted
+    Internal = 1 << 4,   ///< an internal property, set to by pass checks
+    Function = 1 << 5
+}; ///< property is a function - only used by static hashtables
 
-  /**
-   * Class Information
-   */
-  struct ClassInfo {
+/**
+ * Class Information
+ */
+struct ClassInfo
+{
     /**
      * A string denoting the class name. Example: "Window".
      */
-    const char* className;
+    const char *className;
     /**
      * Pointer to the class information of the base class.
      * 0L if there is none.
@@ -74,14 +78,16 @@ namespace KJS {
      * Reserved for future extension.
      */
     void *dummy;
-  };
+};
 
-  /**
-   * Represents an Object. This is a wrapper for ObjectImp
-   */
-  class KJS_EXPORT Object : public Value {
-  public:
-    Object() { }
+/**
+ * Represents an Object. This is a wrapper for ObjectImp
+ */
+class KJS_EXPORT Object : public Value {
+public:
+    Object()
+    {
+    }
     explicit Object(ObjectImp *v);
 
     ObjectImp *imp() const;
@@ -144,10 +150,8 @@ namespace KJS {
      * @param value The value to set
      * @param attr The Attribute value for the property
      */
-    void put(ExecState *exec, const Identifier &propertyName,
-	     const Value &value, int attr = None);
-    void put(ExecState *exec, unsigned propertyName,
-	     const Value &value, int attr = None);
+    void put(ExecState *exec, const Identifier &propertyName, const Value &value, int attr = None);
+    void put(ExecState *exec, unsigned propertyName, const Value &value, int attr = None);
 
     /**
      * Used to check whether or not a particular property is allowed to be set
@@ -354,13 +358,17 @@ namespace KJS {
      * @param v The new internal value
      */
     void setInternalValue(const Value &v);
-  };
+};
 
-  inline Object Value::toObject(ExecState *exec) const { return rep->dispatchToObject(exec); }
+inline Object Value::toObject(ExecState *exec) const
+{
+    return rep->dispatchToObject(exec);
+}
 
-  class KJS_EXPORT ObjectImp : public ValueImp {
+class KJS_EXPORT ObjectImp : public ValueImp {
     friend class ObjectProtoFuncImp;
-  public:
+
+public:
     /**
      * Creates a new ObjectImp with the specified prototype
      *
@@ -481,8 +489,7 @@ namespace KJS {
      */
     // [[Get]] - must be implemented by all Objects
     virtual Value get(ExecState *exec, const Identifier &propertyName) const;
-    virtual Value getPropertyByIndex(ExecState *exec,
-				     unsigned propertyName) const;
+    virtual Value getPropertyByIndex(ExecState *exec, unsigned propertyName) const;
 
     /**
      * Implementation of the [[Put]] internal property (implemented by all
@@ -490,10 +497,8 @@ namespace KJS {
      *
      * @see Object::put()
      */
-    virtual void put(ExecState *exec, const Identifier &propertyName,
-		     const Value &value, int attr = None);
-    virtual void putPropertyByIndex(ExecState *exec, unsigned propertyName,
-				    const Value &value, int attr = None);
+    virtual void put(ExecState *exec, const Identifier &propertyName, const Value &value, int attr = None);
+    virtual void putPropertyByIndex(ExecState *exec, unsigned propertyName, const Value &value, int attr = None);
 
     /**
      * Implementation of the [[CanPut]] internal property (implemented by all
@@ -509,8 +514,7 @@ namespace KJS {
      *
      * @see Object::hasProperty()
      */
-    virtual bool hasProperty(ExecState *exec,
-			     const Identifier &propertyName) const;
+    virtual bool hasProperty(ExecState *exec, const Identifier &propertyName) const;
     virtual bool hasPropertyByIndex(ExecState *exec, unsigned propertyName) const;
 
     /**
@@ -519,8 +523,7 @@ namespace KJS {
      *
      * @see Object::deleteProperty()
      */
-    virtual bool deleteProperty(ExecState *exec,
-				const Identifier &propertyName);
+    virtual bool deleteProperty(ExecState *exec, const Identifier &propertyName);
     virtual bool deletePropertyByIndex(ExecState *exec, unsigned propertyName);
 
     /**
@@ -552,8 +555,7 @@ namespace KJS {
      *
      * @see Object::call()
      */
-    virtual Value call(ExecState *exec, Object &thisObj,
-                       const List &args);
+    virtual Value call(ExecState *exec, Object &thisObj, const List &args);
 
     virtual bool implementsHasInstance() const;
     /**
@@ -568,8 +570,14 @@ namespace KJS {
      *
      * @see Object::scope()
      */
-    const ScopeChain &scope() const { return _scope; }
-    void setScope(const ScopeChain &s) { _scope = s; }
+    const ScopeChain &scope() const
+    {
+        return _scope;
+    }
+    void setScope(const ScopeChain &s)
+    {
+        _scope = s;
+    }
 
     virtual ReferenceList propList(ExecState *exec, bool recursive = true);
 
@@ -577,8 +585,7 @@ namespace KJS {
     void setInternalValue(const Value &v);
     void setInternalValue(ValueImp *v);
 
-    Value toPrimitive(ExecState *exec,
-                      Type preferredType = UnspecifiedType) const;
+    Value toPrimitive(ExecState *exec, Type preferredType = UnspecifiedType) const;
     bool toBoolean(ExecState *exec) const;
     double toNumber(ExecState *exec) const;
     UString toString(ExecState *exec) const;
@@ -588,8 +595,10 @@ namespace KJS {
     // A bit like hasProperty(recursive=false), this doesn't go to the prototype.
     // This is used e.g. by lookupOrCreateFunction (to cache a function, we don't want
     // to look up in the prototype, it might already exist there)
-    ValueImp *getDirect(const Identifier& propertyName) const
-        { return _prop.get(propertyName); }
+    ValueImp *getDirect(const Identifier &propertyName) const
+    {
+        return _prop.get(propertyName);
+    }
     void putDirect(const Identifier &propertyName, ValueImp *value, int attr = 0);
     void putDirect(const Identifier &propertyName, int value, int attr = 0);
 
@@ -599,33 +608,37 @@ namespace KJS {
      */
     void setFunctionName(const Identifier &propertyName);
 
-  protected:
+protected:
     PropertyMap _prop;
-  private:
-    const HashEntry* findPropertyHashEntry( const Identifier& propertyName ) const;
+
+private:
+    const HashEntry *findPropertyHashEntry(const Identifier &propertyName) const;
     ObjectImpPrivate *_od;
     ValueImp *_proto;
     ValueImp *_internalValue;
     ScopeChain _scope;
-  };
+};
 
-  /**
-   * Types of Native Errors available. For custom errors, GeneralError
-   * should be used.
-   */
-  enum ErrorType { GeneralError   = 0,
-                   EvalError      = 1,
-                   RangeError     = 2,
-                   ReferenceError = 3,
-                   SyntaxError    = 4,
-                   TypeError      = 5,
-                   URIError       = 6};
+/**
+ * Types of Native Errors available. For custom errors, GeneralError
+ * should be used.
+ */
+enum ErrorType
+{
+    GeneralError = 0,
+    EvalError = 1,
+    RangeError = 2,
+    ReferenceError = 3,
+    SyntaxError = 4,
+    TypeError = 5,
+    URIError = 6
+};
 
-  /**
-   * @short Factory methods for error objects.
-   */
-  class KJS_EXPORT Error {
-  public:
+/**
+ * @short Factory methods for error objects.
+ */
+class KJS_EXPORT Error {
+public:
     /**
      * Factory method for error objects.
      *
@@ -635,91 +648,142 @@ namespace KJS {
      * @param lineno Optional line number.
      * @param sourceId Optional source id.
      */
-    static Object create(ExecState *exec, ErrorType errtype = GeneralError,
-                         const char *message = 0, int lineno = -1,
-                         int sourceId = -1);
+    static Object create(ExecState *exec, ErrorType errtype = GeneralError, const char *message = 0, int lineno = -1, int sourceId = -1);
 
     /**
      * Array of error names corresponding to ErrorType
      */
-    static const char * const * const errorNames;
-  };
+    static const char *const *const errorNames;
+};
 
-  inline Object::Object(ObjectImp *v) : Value(v) { }
+inline Object::Object(ObjectImp *v) : Value(v)
+{
+}
 
-  inline ObjectImp *Object::imp() const { return static_cast<ObjectImp*>(rep); }
+inline ObjectImp *Object::imp() const
+{
+    return static_cast< ObjectImp * >(rep);
+}
 
-  inline const ClassInfo *Object::classInfo() const
-    { return imp()->classInfo(); }
+inline const ClassInfo *Object::classInfo() const
+{
+    return imp()->classInfo();
+}
 
-  inline bool Object::inherits(const ClassInfo *cinfo) const
-    { return imp()->inherits(cinfo); }
+inline bool Object::inherits(const ClassInfo *cinfo) const
+{
+    return imp()->inherits(cinfo);
+}
 
-  inline Value Object::prototype() const
-    { return Value(imp()->prototype()); }
+inline Value Object::prototype() const
+{
+    return Value(imp()->prototype());
+}
 
-  inline UString Object::className() const
-    { return imp()->className(); }
+inline UString Object::className() const
+{
+    return imp()->className();
+}
 
-  inline Value Object::get(ExecState *exec, const Identifier &propertyName) const
-    { return imp()->get(exec,propertyName); }
+inline Value Object::get(ExecState *exec, const Identifier &propertyName) const
+{
+    return imp()->get(exec, propertyName);
+}
 
-  inline Value Object::get(ExecState *exec, unsigned propertyName) const
-    { return imp()->getPropertyByIndex(exec, propertyName); }
+inline Value Object::get(ExecState *exec, unsigned propertyName) const
+{
+    return imp()->getPropertyByIndex(exec, propertyName);
+}
 
-  inline void Object::put(ExecState *exec, const Identifier &propertyName, const Value &value, int attr)
-    { imp()->put(exec,propertyName,value,attr); }
+inline void Object::put(ExecState *exec, const Identifier &propertyName, const Value &value, int attr)
+{
+    imp()->put(exec, propertyName, value, attr);
+}
 
-  inline void Object::put(ExecState *exec, unsigned propertyName, const Value &value, int attr)
-    { imp()->putPropertyByIndex(exec, propertyName, value, attr); }
+inline void Object::put(ExecState *exec, unsigned propertyName, const Value &value, int attr)
+{
+    imp()->putPropertyByIndex(exec, propertyName, value, attr);
+}
 
-  inline bool Object::canPut(ExecState *exec, const Identifier &propertyName) const
-    { return imp()->canPut(exec,propertyName); }
+inline bool Object::canPut(ExecState *exec, const Identifier &propertyName) const
+{
+    return imp()->canPut(exec, propertyName);
+}
 
-  inline bool Object::hasProperty(ExecState *exec, const Identifier &propertyName) const
-    { return imp()->hasProperty(exec, propertyName); }
+inline bool Object::hasProperty(ExecState *exec, const Identifier &propertyName) const
+{
+    return imp()->hasProperty(exec, propertyName);
+}
 
-  inline bool Object::hasProperty(ExecState *exec, unsigned propertyName) const
-    { return imp()->hasPropertyByIndex(exec, propertyName); }
+inline bool Object::hasProperty(ExecState *exec, unsigned propertyName) const
+{
+    return imp()->hasPropertyByIndex(exec, propertyName);
+}
 
-  inline bool Object::deleteProperty(ExecState *exec, const Identifier &propertyName)
-    { return imp()->deleteProperty(exec,propertyName); }
+inline bool Object::deleteProperty(ExecState *exec, const Identifier &propertyName)
+{
+    return imp()->deleteProperty(exec, propertyName);
+}
 
-  inline bool Object::deleteProperty(ExecState *exec, unsigned propertyName)
-    { return imp()->deletePropertyByIndex(exec, propertyName); }
+inline bool Object::deleteProperty(ExecState *exec, unsigned propertyName)
+{
+    return imp()->deletePropertyByIndex(exec, propertyName);
+}
 
-  inline Value Object::defaultValue(ExecState *exec, Type hint) const
-    { return imp()->defaultValue(exec,hint); }
+inline Value Object::defaultValue(ExecState *exec, Type hint) const
+{
+    return imp()->defaultValue(exec, hint);
+}
 
-  inline bool Object::implementsConstruct() const
-    { return imp()->implementsConstruct(); }
+inline bool Object::implementsConstruct() const
+{
+    return imp()->implementsConstruct();
+}
 
-  inline Object Object::construct(ExecState *exec, const List &args)
-    { return imp()->construct(exec,args); }
+inline Object Object::construct(ExecState *exec, const List &args)
+{
+    return imp()->construct(exec, args);
+}
 
-  inline bool Object::implementsCall() const
-    { return imp()->implementsCall(); }
+inline bool Object::implementsCall() const
+{
+    return imp()->implementsCall();
+}
 
-  inline bool Object::implementsHasInstance() const
-    { return imp()->implementsHasInstance(); }
+inline bool Object::implementsHasInstance() const
+{
+    return imp()->implementsHasInstance();
+}
 
-  inline Boolean Object::hasInstance(ExecState *exec, const Value &value)
-    { return imp()->hasInstance(exec,value); }
+inline Boolean Object::hasInstance(ExecState *exec, const Value &value)
+{
+    return imp()->hasInstance(exec, value);
+}
 
-  inline const ScopeChain &Object::scope() const
-    { return imp()->scope(); }
+inline const ScopeChain &Object::scope() const
+{
+    return imp()->scope();
+}
 
-  inline void Object::setScope(const ScopeChain &s)
-    { imp()->setScope(s); }
+inline void Object::setScope(const ScopeChain &s)
+{
+    imp()->setScope(s);
+}
 
-  inline ReferenceList Object::propList(ExecState *exec, bool recursive)
-    { return imp()->propList(exec,recursive); }
+inline ReferenceList Object::propList(ExecState *exec, bool recursive)
+{
+    return imp()->propList(exec, recursive);
+}
 
-  inline Value Object::internalValue() const
-    { return imp()->internalValue(); }
+inline Value Object::internalValue() const
+{
+    return imp()->internalValue();
+}
 
-  inline void Object::setInternalValue(const Value &v)
-    { imp()->setInternalValue(v); }
+inline void Object::setInternalValue(const Value &v)
+{
+    imp()->setInternalValue(v);
+}
 
 } // namespace
 

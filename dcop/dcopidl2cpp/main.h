@@ -26,15 +26,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /**
  * Writes the skeleton
  */
-void generateSkel( const QString& idl, const QString& filename, QDomElement de );
+void generateSkel(const QString &idl, const QString &filename, QDomElement de);
 
 /**
  * Writes the stubs header
  */
-void generateStub( const QString& idl, const QString& filename, QDomElement de);
+void generateStub(const QString &idl, const QString &filename, QDomElement de);
 
 /**
  * Writes the stub implementation
  */
-void generateStubImpl( const QString& idl, const QString& header, const QString& headerBase, const QString& filename, QDomElement de);
-
+void generateStubImpl(const QString &idl, const QString &header, const QString &headerBase, const QString &filename, QDomElement de);

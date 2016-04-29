@@ -30,26 +30,25 @@
 
 using namespace KABC;
 
-void ConsoleErrorHandler::error( const QString &msg )
+void ConsoleErrorHandler::error(const QString &msg)
 {
-  // no debug area is ok here
-  kdError() << msg << endl;
+    // no debug area is ok here
+    kdError() << msg << endl;
 }
 
 
-void GUIErrorHandler::error( const QString &msg )
+void GUIErrorHandler::error(const QString &msg)
 {
-  KMessageBox::error( 0, msg, i18n( "Error in libkabc" ) );
+    KMessageBox::error(0, msg, i18n("Error in libkabc"));
 }
 
 
-GuiErrorHandler::GuiErrorHandler( QWidget *parent )
-  : mParent( parent )
+GuiErrorHandler::GuiErrorHandler(QWidget *parent) : mParent(parent)
 {
 }
 
-void GuiErrorHandler::error( const QString &msg )
+void GuiErrorHandler::error(const QString &msg)
 {
-  if (qApp)
-    KMessageBox::error( mParent, msg );
+    if(qApp)
+        KMessageBox::error(mParent, msg);
 }

@@ -18,21 +18,22 @@ class QWidget;
 class QMouseEvent;
 class QPaintEvent;
 
-class Hello : public KMdiChildView
-{
+class Hello : public KMdiChildView {
     Q_OBJECT
 public:
-    Hello( const char *title, const char *text, QWidget* parentWidget = 0 );
+    Hello(const char *title, const char *text, QWidget *parentWidget = 0);
 signals:
     void clicked();
+
 protected:
-    void mouseReleaseEvent( QMouseEvent * );
-    void paintEvent( QPaintEvent * );
+    void mouseReleaseEvent(QMouseEvent *);
+    void paintEvent(QPaintEvent *);
 private slots:
     void animate();
+
 private:
     QString t;
-    int     b;
+    int b;
 };
 
 #endif

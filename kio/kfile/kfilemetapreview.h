@@ -15,16 +15,14 @@
 #include <kpreviewwidgetbase.h>
 #include <kurl.h>
 
-class KIO_EXPORT KFileMetaPreview : public KPreviewWidgetBase
-{
+class KIO_EXPORT KFileMetaPreview : public KPreviewWidgetBase {
     Q_OBJECT
 
 public:
     KFileMetaPreview(QWidget *parent, const char *name = 0);
     ~KFileMetaPreview();
 
-    virtual void addPreviewProvider( const QString& mimeType,
-                                     KPreviewWidgetBase *provider );
+    virtual void addPreviewProvider(const QString &mimeType, KPreviewWidgetBase *provider);
     virtual void clearPreviewProviders();
 
 public slots:
@@ -32,20 +30,20 @@ public slots:
     virtual void clearPreview();
 
 protected:
-    virtual KPreviewWidgetBase *previewProviderFor( const QString& mimeType );
+    virtual KPreviewWidgetBase *previewProviderFor(const QString &mimeType);
 
 protected:
-    virtual void virtual_hook( int id, void* data );
-    
+    virtual void virtual_hook(int id, void *data);
+
 private:
     void initPreviewProviders();
 
     QWidgetStack *m_stack;
-    QDict<KPreviewWidgetBase> m_previewProviders;
+    QDict< KPreviewWidgetBase > m_previewProviders;
     bool haveAudioPreview;
 
     // may return 0L
-    static KPreviewWidgetBase * createAudioPreview( QWidget *parent );
+    static KPreviewWidgetBase *createAudioPreview(QWidget *parent);
     static bool s_tryAudioPreview;
 
 private:

@@ -28,42 +28,50 @@
 
 class QObject;
 
-namespace KSpell2
-{
-    class Filter;
-    class Broker;
-    class Dictionary;
-    class BackgroundThread : public QThread
+namespace KSpell2 {
+class Filter;
+class Broker;
+class Dictionary;
+class BackgroundThread : public QThread {
+public:
+    BackgroundThread();
+    void setReceiver(QObject *parent);
+    QObject *receiver() const
     {
-    public:
-        BackgroundThread();
-        void setReceiver( QObject *parent );
-        QObject *receiver() const { return m_recv; }
+        return m_recv;
+    }
 
-        void setBroker( const Broker::Ptr& broker );
-        Broker *broker() const { return m_broker; }
+    void setBroker(const Broker::Ptr &broker);
+    Broker *broker() const
+    {
+        return m_broker;
+    }
 
-        void setText( const QString& );
-        QString text() const;
+    void setText(const QString &);
+    QString text() const;
 
-        void changeLanguage( const QString& );
-        QString language() const;
+    void changeLanguage(const QString &);
+    QString language() const;
 
-        void setFilter( Filter *filter );
-        Filter *filter() const { return m_filter; }
+    void setFilter(Filter *filter);
+    Filter *filter() const
+    {
+        return m_filter;
+    }
 
-        QStringList suggest( const QString& ) const;
+    QStringList suggest(const QString &) const;
 
-        virtual void run();
-        void stop();
-    private:
-        QObject    *m_recv;
-        QMutex      m_mutex;
-        Filter     *m_filter;
-        Broker::Ptr m_broker;
-        Dictionary *m_dict;
-        bool        m_done;
-    };
+    virtual void run();
+    void stop();
+
+private:
+    QObject *m_recv;
+    QMutex m_mutex;
+    Filter *m_filter;
+    Broker::Ptr m_broker;
+    Dictionary *m_dict;
+    bool m_done;
+};
 }
 
 #endif

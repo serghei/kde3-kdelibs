@@ -2,7 +2,7 @@
     Copyright (C) 2001 Holger Freyther (freyher@yahoo.com)
                   based on ideas from Martijn and Simon
                   many thanks to Simon
-		  
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License version 2 as published by the Free Software Foundation.
@@ -29,8 +29,7 @@
 
 #include "kguiitem.h"
 
-class KGuiItem::KGuiItemPrivate
-{
+class KGuiItem::KGuiItemPrivate {
 public:
     KGuiItemPrivate()
     {
@@ -38,12 +37,12 @@ public:
         m_hasIcon = false;
     }
 
-    KGuiItemPrivate( const KGuiItemPrivate &rhs )
+    KGuiItemPrivate(const KGuiItemPrivate &rhs)
     {
-        ( *this ) = rhs;
+        (*this) = rhs;
     }
 
-    KGuiItemPrivate &operator=( const KGuiItemPrivate &rhs )
+    KGuiItemPrivate &operator=(const KGuiItemPrivate &rhs)
     {
         m_text = rhs.m_text;
         m_iconSet = rhs.m_iconSet;
@@ -68,45 +67,43 @@ public:
 };
 
 
-KGuiItem::KGuiItem() {
-    d = new KGuiItemPrivate;
-}
-
-KGuiItem::KGuiItem( const QString &text,    const QString &iconName,
-                    const QString &toolTip, const QString &whatsThis )
+KGuiItem::KGuiItem()
 {
     d = new KGuiItemPrivate;
-    d->m_text = text;
-    d->m_toolTip = toolTip;
-    d->m_whatsThis = whatsThis;
-    setIconName( iconName );
 }
 
-KGuiItem::KGuiItem( const QString &text,    const QIconSet &iconSet,
-                    const QString &toolTip, const QString &whatsThis )
+KGuiItem::KGuiItem(const QString &text, const QString &iconName, const QString &toolTip, const QString &whatsThis)
 {
     d = new KGuiItemPrivate;
     d->m_text = text;
     d->m_toolTip = toolTip;
     d->m_whatsThis = whatsThis;
-    setIconSet( iconSet );
+    setIconName(iconName);
 }
 
-KGuiItem::KGuiItem( const KGuiItem &rhs )
-    : d( 0 )
+KGuiItem::KGuiItem(const QString &text, const QIconSet &iconSet, const QString &toolTip, const QString &whatsThis)
 {
-    ( *this ) = rhs;
+    d = new KGuiItemPrivate;
+    d->m_text = text;
+    d->m_toolTip = toolTip;
+    d->m_whatsThis = whatsThis;
+    setIconSet(iconSet);
 }
 
-KGuiItem &KGuiItem::operator=( const KGuiItem &rhs )
+KGuiItem::KGuiItem(const KGuiItem &rhs) : d(0)
 {
-    if ( d == rhs.d )
+    (*this) = rhs;
+}
+
+KGuiItem &KGuiItem::operator=(const KGuiItem &rhs)
+{
+    if(d == rhs.d)
         return *this;
 
-    assert( rhs.d );
+    assert(rhs.d);
 
     delete d;
-    d = new KGuiItemPrivate( *rhs.d );
+    d = new KGuiItemPrivate(*rhs.d);
 
     return *this;
 }
@@ -126,22 +123,22 @@ QString KGuiItem::plainText() const
 {
     const int len = d->m_text.length();
 
-    if (len == 0)
+    if(len == 0)
         return d->m_text;
 
-    //Can assume len >= 1 from now on.
+    // Can assume len >= 1 from now on.
     QString stripped;
 
     int resultLength = 0;
     stripped.setLength(len);
 
-    const QChar* data    = d->m_text.unicode();
-    for ( int pos = 0; pos < len; ++pos )
+    const QChar *data = d->m_text.unicode();
+    for(int pos = 0; pos < len; ++pos)
     {
-        if ( data[ pos ] != '&' )
-            stripped[ resultLength++ ] = data[ pos ];
-        else if ( pos + 1 < len && data[ pos + 1 ] == '&' )
-            stripped[ resultLength++ ] = data[ pos++ ];
+        if(data[pos] != '&')
+            stripped[resultLength++] = data[pos];
+        else if(pos + 1 < len && data[pos + 1] == '&')
+            stripped[resultLength++] = data[pos++];
     }
 
     stripped.truncate(resultLength);
@@ -149,14 +146,14 @@ QString KGuiItem::plainText() const
     return stripped;
 }
 
-QIconSet KGuiItem::iconSet( KIcon::Group group, int size, KInstance* instance ) const
+QIconSet KGuiItem::iconSet(KIcon::Group group, int size, KInstance *instance) const
 {
-    if( d->m_hasIcon )
+    if(d->m_hasIcon)
     {
-        if( !d->m_iconName.isEmpty())
+        if(!d->m_iconName.isEmpty())
         {
-// some caching here would(?) come handy
-            return instance->iconLoader()->loadIconSet( d->m_iconName, group, size, true, false );
+            // some caching here would(?) come handy
+            return instance->iconLoader()->loadIconSet(d->m_iconName, group, size, true, false);
         }
         else
         {
@@ -192,38 +189,38 @@ bool KGuiItem::hasIcon() const
     return d->m_hasIcon;
 }
 
-void KGuiItem::setText( const QString &text ) {
-    d->m_text=text;
+void KGuiItem::setText(const QString &text)
+{
+    d->m_text = text;
 }
 
-void KGuiItem::setIconSet( const QIconSet &iconset )
+void KGuiItem::setIconSet(const QIconSet &iconset)
 {
     d->m_iconSet = iconset;
     d->m_iconName = QString::null;
     d->m_hasIcon = !iconset.isNull();
 }
 
-void KGuiItem::setIconName( const QString &iconName )
+void KGuiItem::setIconName(const QString &iconName)
 {
     d->m_iconName = iconName;
     d->m_iconSet = QIconSet();
     d->m_hasIcon = !iconName.isEmpty();
 }
 
-void KGuiItem::setToolTip( const QString &toolTip )
+void KGuiItem::setToolTip(const QString &toolTip)
 {
     d->m_toolTip = toolTip;
 }
 
-void KGuiItem::setWhatsThis( const QString &whatsThis )
+void KGuiItem::setWhatsThis(const QString &whatsThis)
 {
     d->m_whatsThis = whatsThis;
 }
 
-void KGuiItem::setEnabled( bool enabled )
+void KGuiItem::setEnabled(bool enabled)
 {
     d->m_enabled = enabled;
 }
 
 // vim: set et sw=4:
-

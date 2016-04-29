@@ -24,34 +24,32 @@
 #include <qwidget.h>
 #include <kdelibs_export.h>
 
-namespace KSpell2
-{
-    class Broker;
-    class KDE_EXPORT ConfigWidget : public QWidget
-    {
-        Q_OBJECT
-    public:
-        ConfigWidget( Broker *broker, QWidget *parent, const char *name =0 );
-        ~ConfigWidget();
+namespace KSpell2 {
+class Broker;
+class KDE_EXPORT ConfigWidget : public QWidget {
+    Q_OBJECT
+public:
+    ConfigWidget(Broker *broker, QWidget *parent, const char *name = 0);
+    ~ConfigWidget();
 
-        bool backgroundCheckingButtonShown() const;
+    bool backgroundCheckingButtonShown() const;
 
-    public slots:
-        void save();
-        void setBackgroundCheckingButtonShown( bool );
-        void slotDefault();
-    protected slots:
-        void slotChanged();
+public slots:
+    void save();
+    void setBackgroundCheckingButtonShown(bool);
+    void slotDefault();
+protected slots:
+    void slotChanged();
 
-    private:
-        void init( Broker *broker );
-        void setFromGUI();
-        void setCorrectLanguage( const QStringList& langs );
+private:
+    void init(Broker *broker);
+    void setFromGUI();
+    void setCorrectLanguage(const QStringList &langs);
 
-    private:
-        class Private;
-        Private *d;
-    };
+private:
+    class Private;
+    Private *d;
+};
 }
 
 #endif

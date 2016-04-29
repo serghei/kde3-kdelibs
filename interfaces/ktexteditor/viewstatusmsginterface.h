@@ -24,40 +24,37 @@
 class QString;
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 *  This is an interface for retrieving status bar messages from the Document class.
 */
-class KTEXTEDITOR_EXPORT ViewStatusMsgInterface
-{
-  friend class PrivateViewStatusMsgInterface;
+class KTEXTEDITOR_EXPORT ViewStatusMsgInterface {
+    friend class PrivateViewStatusMsgInterface;
 
-  public:
+public:
     ViewStatusMsgInterface();
     virtual ~ViewStatusMsgInterface();
 
-    unsigned int viewStatusMsgInterfaceNumber () const;
-    
-  protected:  
-    void setViewStatusMsgInterfaceDCOPSuffix (const QCString &suffix); 
+    unsigned int viewStatusMsgInterfaceNumber() const;
 
-  //
-  // signals !!!
-  //  
-  public:
-    virtual void viewStatusMsg (const class QString &msg) = 0;
-    
+protected:
+    void setViewStatusMsgInterfaceDCOPSuffix(const QCString &suffix);
 
-  private:
+    //
+    // signals !!!
+    //
+public:
+    virtual void viewStatusMsg(const class QString &msg) = 0;
+
+
+private:
     class PrivateViewStatusMsgInterface *d;
     static unsigned int globalViewStatusMsgInterfaceNumber;
     unsigned int myViewStatusMsgInterfaceNumber;
 };
-                  
-KTEXTEDITOR_EXPORT ViewStatusMsgInterface *viewStatusMsgInterface (class View *view);
 
+KTEXTEDITOR_EXPORT ViewStatusMsgInterface *viewStatusMsgInterface(class View *view);
 }
 
 #endif

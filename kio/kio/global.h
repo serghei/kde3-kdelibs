@@ -31,147 +31,147 @@
  * @short A namespace for KIO globals
  *
  */
-namespace KIO
+namespace KIO {
+/// 64-bit file offset
+typedef Q_LLONG fileoffset_t;
+/// 64-bit file size
+typedef Q_ULLONG filesize_t;
+
+/**
+ * Converts @p size from bytes to the string representation.
+ *
+ * @param  size  size in bytes
+ * @return converted size as a string - e.g. 123.4 kB , 12.0 MB
+ */
+KIO_EXPORT QString convertSize(KIO::filesize_t size);
+
+/**
+ * Converts @p size from bytes to a string representation with includes
+ * the size in bytes.
+ * e.g. 90 B, 240 B, 1.4 KB (1495 B), 2.6MB (2,734,344 B), 0 B
+ * @param  size  size in bytes
+ * @return converted size as a string - e.g. 1.4 KB (1495 B), 45 B
+ */
+KIO_EXPORT QString convertSizeWithBytes(KIO::filesize_t size);
+/**
+ * Converts a size to a string representation
+ * Not unlike QString::number(...)
+ *
+ * @param size size in bytes
+ * @return  converted size as a string - e.g. 123456789
+ */
+KIO_EXPORT QString number(KIO::filesize_t size);
+
+/**
+ * Converts size from kilo-bytes to the string representation.
+ *
+ * @param  kbSize  size in kilo-bytes
+ * @return converted size as a string - e.g. 123.4 kB , 12.0 MB
+ */
+KIO_EXPORT QString convertSizeFromKB(KIO::filesize_t kbSize);
+
+/**
+ * Calculates remaining time in seconds from total size, processed size and speed.
+ *
+ * @param  totalSize      total size in bytes
+ * @param  processedSize  processed size in bytes
+ * @param  speed          speed in bytes per second
+ * @return calculated remaining time in seconds
+ *
+ * @since 3.4
+ */
+KIO_EXPORT unsigned int calculateRemainingSeconds(KIO::filesize_t totalSize, KIO::filesize_t processedSize, KIO::filesize_t speed);
+
+/**
+ * Convert @p seconds to a string representing number of days, hours, minutes and seconds
+ *
+ * @param  seconds number of seconds to convert
+ * @return string representation in a locale depending format
+ *
+ * @since 3.4
+ */
+KIO_EXPORT QString convertSeconds(unsigned int seconds);
+
+/**
+ * Calculates remaining time from total size, processed size and speed.
+ * Warning: As QTime is limited to 23:59:59, use calculateRemainingSeconds() instead
+ *
+ * @param  totalSize      total size in bytes
+ * @param  processedSize  processed size in bytes
+ * @param  speed          speed in bytes per second
+ * @return calculated remaining time
+ */
+KIO_EXPORT QTime calculateRemaining(KIO::filesize_t totalSize, KIO::filesize_t processedSize, KIO::filesize_t speed) KDE_DEPRECATED;
+
+/**
+ * Helper for showing information about a set of files and directories
+ * @param items the number of items (= @p files + @p dirs + number of symlinks :)
+ * @param files the number of files
+ * @param dirs the number of dirs
+ * @param size the sum of the size of the @p files
+ * @param showSize whether to show the size in the result
+ * @return the summary string
+ */
+KIO_EXPORT QString itemsSummaryString(uint items, uint files, uint dirs, KIO::filesize_t size, bool showSize);
+
+/**
+ * Encodes (from the text displayed to the real filename)
+ * This translates % into %% and / into %2f
+ * Used by KIO::link, for instance.
+ * @param str the file name to encode
+ * @return the encoded file name
+ */
+KIO_EXPORT QString encodeFileName(const QString &str);
+/**
+ * Decodes (from the filename to the text displayed)
+ * This translates %2[fF] into / and %% into %
+ * @param str the file name to decode
+ * @return the decoded file name
+ */
+KIO_EXPORT QString decodeFileName(const QString &str);
+
+/**
+ * Commands that can be invoked by a job.
+ */
+enum Command
 {
-  /// 64-bit file offset
-  typedef Q_LLONG fileoffset_t;
-  /// 64-bit file size
-  typedef Q_ULLONG filesize_t;
-
-  /**
-   * Converts @p size from bytes to the string representation.
-   *
-   * @param  size  size in bytes
-   * @return converted size as a string - e.g. 123.4 kB , 12.0 MB
-   */
-  KIO_EXPORT QString convertSize( KIO::filesize_t size );
-
-  /**
-   * Converts @p size from bytes to a string representation with includes
-   * the size in bytes.
-   * e.g. 90 B, 240 B, 1.4 KB (1495 B), 2.6MB (2,734,344 B), 0 B
-   * @param  size  size in bytes
-   * @return converted size as a string - e.g. 1.4 KB (1495 B), 45 B
-   */
-  KIO_EXPORT QString convertSizeWithBytes( KIO::filesize_t size );
-  /**
-   * Converts a size to a string representation
-   * Not unlike QString::number(...)
-   *
-   * @param size size in bytes
-   * @return  converted size as a string - e.g. 123456789
-   */
-  KIO_EXPORT QString number( KIO::filesize_t size );
-
-  /**
-   * Converts size from kilo-bytes to the string representation.
-   *
-   * @param  kbSize  size in kilo-bytes
-   * @return converted size as a string - e.g. 123.4 kB , 12.0 MB
-   */
-   KIO_EXPORT QString convertSizeFromKB( KIO::filesize_t kbSize );
-
-  /**
-   * Calculates remaining time in seconds from total size, processed size and speed.
-   *
-   * @param  totalSize      total size in bytes
-   * @param  processedSize  processed size in bytes
-   * @param  speed          speed in bytes per second
-   * @return calculated remaining time in seconds
-   *
-   * @since 3.4
-   */
-  KIO_EXPORT unsigned int calculateRemainingSeconds( KIO::filesize_t totalSize,
-                                                     KIO::filesize_t processedSize, KIO::filesize_t speed );
-
-  /**
-   * Convert @p seconds to a string representing number of days, hours, minutes and seconds
-   *
-   * @param  seconds number of seconds to convert
-   * @return string representation in a locale depending format
-   *
-   * @since 3.4
-   */
-  KIO_EXPORT QString convertSeconds( unsigned int seconds );
-
-  /**
-   * Calculates remaining time from total size, processed size and speed.
-   * Warning: As QTime is limited to 23:59:59, use calculateRemainingSeconds() instead
-   *
-   * @param  totalSize      total size in bytes
-   * @param  processedSize  processed size in bytes
-   * @param  speed          speed in bytes per second
-   * @return calculated remaining time
-   */
-  KIO_EXPORT QTime calculateRemaining( KIO::filesize_t totalSize, KIO::filesize_t processedSize, KIO::filesize_t speed ) KDE_DEPRECATED;
-
-  /**
-   * Helper for showing information about a set of files and directories
-   * @param items the number of items (= @p files + @p dirs + number of symlinks :)
-   * @param files the number of files
-   * @param dirs the number of dirs
-   * @param size the sum of the size of the @p files
-   * @param showSize whether to show the size in the result
-   * @return the summary string
-   */
-  KIO_EXPORT QString itemsSummaryString(uint items, uint files, uint dirs, KIO::filesize_t size, bool showSize);
-
-  /**
-   * Encodes (from the text displayed to the real filename)
-   * This translates % into %% and / into %2f
-   * Used by KIO::link, for instance.
-   * @param str the file name to encode
-   * @return the encoded file name
-   */
-  KIO_EXPORT QString encodeFileName( const QString & str );
-  /**
-   * Decodes (from the filename to the text displayed)
-   * This translates %2[fF] into / and %% into %
-   * @param str the file name to decode
-   * @return the decoded file name
-   */
-  KIO_EXPORT QString decodeFileName( const QString & str );
-
-  /**
-   * Commands that can be invoked by a job.
-   */
-  enum Command {
-    CMD_HOST = '0', // 48
-    CMD_CONNECT = '1', // 49
-    CMD_DISCONNECT = '2', // 50
-    CMD_SLAVE_STATUS = '3', // 51
-    CMD_SLAVE_CONNECT = '4', // 52
-    CMD_SLAVE_HOLD = '5', // 53
-    CMD_NONE = 'A', // 65
-    CMD_TESTDIR = 'B', // 66
-    CMD_GET = 'C', // 67
-    CMD_PUT = 'D', // 68
-    CMD_STAT = 'E', // 69
-    CMD_MIMETYPE = 'F', // 70
-    CMD_LISTDIR = 'G', // 71
-    CMD_MKDIR = 'H', // 72
-    CMD_RENAME = 'I', // 73
-    CMD_COPY = 'J', // 74
-    CMD_DEL = 'K', // 75
-    CMD_CHMOD = 'L', // 76
-    CMD_SPECIAL = 'M', // 77
-    CMD_USERPASS = 'N', // 78
+    CMD_HOST = '0',                 // 48
+    CMD_CONNECT = '1',              // 49
+    CMD_DISCONNECT = '2',           // 50
+    CMD_SLAVE_STATUS = '3',         // 51
+    CMD_SLAVE_CONNECT = '4',        // 52
+    CMD_SLAVE_HOLD = '5',           // 53
+    CMD_NONE = 'A',                 // 65
+    CMD_TESTDIR = 'B',              // 66
+    CMD_GET = 'C',                  // 67
+    CMD_PUT = 'D',                  // 68
+    CMD_STAT = 'E',                 // 69
+    CMD_MIMETYPE = 'F',             // 70
+    CMD_LISTDIR = 'G',              // 71
+    CMD_MKDIR = 'H',                // 72
+    CMD_RENAME = 'I',               // 73
+    CMD_COPY = 'J',                 // 74
+    CMD_DEL = 'K',                  // 75
+    CMD_CHMOD = 'L',                // 76
+    CMD_SPECIAL = 'M',              // 77
+    CMD_USERPASS = 'N',             // 78
     CMD_REPARSECONFIGURATION = 'O', // 79
-    CMD_META_DATA = 'P', // 80
-    CMD_SYMLINK = 'Q', // 81
-    CMD_SUBURL = 'R', // 82  Inform the slave about the url it is streaming on.
-    CMD_MESSAGEBOXANSWER = 'S', // 83
-    CMD_RESUMEANSWER = 'T', // 84
-    CMD_CONFIG = 'U', // 85
-    CMD_MULTI_GET = 'V' // 86
-    // Add new ones here once a release is done, to avoid breaking binary compatibility.
-    // Note that protocol-specific commands shouldn't be added here, but should use special.
-  };
+    CMD_META_DATA = 'P',            // 80
+    CMD_SYMLINK = 'Q',              // 81
+    CMD_SUBURL = 'R',               // 82  Inform the slave about the url it is streaming on.
+    CMD_MESSAGEBOXANSWER = 'S',     // 83
+    CMD_RESUMEANSWER = 'T',         // 84
+    CMD_CONFIG = 'U',               // 85
+    CMD_MULTI_GET = 'V'             // 86
+                                    // Add new ones here once a release is done, to avoid breaking binary compatibility.
+                                    // Note that protocol-specific commands shouldn't be added here, but should use special.
+};
 
-  /**
-   * Error codes that can be emitted by KIO.
-   */
-  enum Error {
+/**
+ * Error codes that can be emitted by KIO.
+ */
+enum Error
+{
     ERR_CANNOT_OPEN_FOR_READING = 1,
     ERR_CANNOT_OPEN_FOR_WRITING = 2,
     ERR_CANNOT_LAUNCH_PROCESS = 3,
@@ -181,7 +181,7 @@ namespace KIO
     ERR_NO_SOURCE_PROTOCOL = 7,
     ERR_UNSUPPORTED_ACTION = 8,
     ERR_IS_DIRECTORY = 9, // ... where a file was expected
-    ERR_IS_FILE = 10, // ... where a directory was expected (e.g. listing)
+    ERR_IS_FILE = 10,     // ... where a directory was expected (e.g. listing)
     ERR_DOES_NOT_EXIST = 11,
     ERR_FILE_ALREADY_EXIST = 12,
     ERR_DIR_ALREADY_EXIST = 13,
@@ -234,75 +234,74 @@ namespace KIO
     ERR_CANNOT_SYMLINK = 59,
     ERR_NO_CONTENT = 60, // Action succeeded but no content will follow.
     ERR_DISK_FULL = 61,
-    ERR_IDENTICAL_FILES = 62, // src==dest when moving/copying
-    ERR_SLAVE_DEFINED = 63, // for slave specified errors that can be
-                            // rich text.  Email links will be handled
-                            // by the standard email app and all hrefs
-                            // will be handled by the standard browser.
-                            // <a href="exec:/khelpcenter ?" will be
-                            // forked.
+    ERR_IDENTICAL_FILES = 62,  // src==dest when moving/copying
+    ERR_SLAVE_DEFINED = 63,    // for slave specified errors that can be
+                               // rich text.  Email links will be handled
+                               // by the standard email app and all hrefs
+                               // will be handled by the standard browser.
+                               // <a href="exec:/khelpcenter ?" will be
+                               // forked.
     ERR_UPGRADE_REQUIRED = 64, // A transport upgrade is required to access this
                                // object.  For instance, TLS is demanded by
                                // the server in order to continue.
-    ERR_POST_DENIED = 65    // Issued when trying to POST data to a certain Ports
+    ERR_POST_DENIED = 65       // Issued when trying to POST data to a certain Ports
                                // see job.cpp
-  };
+};
 
-  /**
-   * Returns a translated error message for @p errorCode using the
-   * additional error information provided by @p errorText.
-   * @param errorCode the error code
-   * @param errorText the additional error text
-   * @return the created error string
-   */
-  KIO_EXPORT QString buildErrorString(int errorCode, const QString &errorText);
+/**
+ * Returns a translated error message for @p errorCode using the
+ * additional error information provided by @p errorText.
+ * @param errorCode the error code
+ * @param errorText the additional error text
+ * @return the created error string
+ */
+KIO_EXPORT QString buildErrorString(int errorCode, const QString &errorText);
 
-  /**
-   * Returns a translated html error message for @p errorCode using the
-   * additional error information provided by @p errorText , @p reqUrl
-   * (the request URL), and the ioslave @p method .
-   * @param errorCode the error code
-   * @param errorText the additional error text
-   * @param reqUrl the request URL
-   * @param method the ioslave method
-   * @return the created error string
-   */
-  KIO_EXPORT QString buildHTMLErrorString(int errorCode, const QString &errorText,
-                                const KURL *reqUrl = 0L, int method = -1 );
+/**
+ * Returns a translated html error message for @p errorCode using the
+ * additional error information provided by @p errorText , @p reqUrl
+ * (the request URL), and the ioslave @p method .
+ * @param errorCode the error code
+ * @param errorText the additional error text
+ * @param reqUrl the request URL
+ * @param method the ioslave method
+ * @return the created error string
+ */
+KIO_EXPORT QString buildHTMLErrorString(int errorCode, const QString &errorText, const KURL *reqUrl = 0L, int method = -1);
 
-  /**
-   * Returns translated error details for @p errorCode using the
-   * additional error information provided by @p errorText , @p reqUrl
-   * (the request URL), and the ioslave @p method .
-   *
-   * @param errorCode the error code
-   * @param errorText the additional error text
-   * @param reqUrl the request URL
-   * @param method the ioslave method
-   * @return the following data:
-   * @li QString errorName - the name of the error
-   * @li QString techName - if not null, the more technical name of the error
-   * @li QString description - a description of the error
-   * @li QStringList causes - a list of possible causes of the error
-   * @li QStringList solutions - a liso of solutions for the error
-   */
-  KIO_EXPORT QByteArray rawErrorDetail(int errorCode, const QString &errorText,
-                                const KURL *reqUrl = 0L, int method = -1 );
+/**
+ * Returns translated error details for @p errorCode using the
+ * additional error information provided by @p errorText , @p reqUrl
+ * (the request URL), and the ioslave @p method .
+ *
+ * @param errorCode the error code
+ * @param errorText the additional error text
+ * @param reqUrl the request URL
+ * @param method the ioslave method
+ * @return the following data:
+ * @li QString errorName - the name of the error
+ * @li QString techName - if not null, the more technical name of the error
+ * @li QString description - a description of the error
+ * @li QStringList causes - a list of possible causes of the error
+ * @li QStringList solutions - a liso of solutions for the error
+ */
+KIO_EXPORT QByteArray rawErrorDetail(int errorCode, const QString &errorText, const KURL *reqUrl = 0L, int method = -1);
 
-  /**
-   * Returns an appropriate error message if the given command @p cmd
-   * is an unsupported action (ERR_UNSUPPORTED_ACTION).
-   * @param protocol name of the protocol
-   * @param cmd given command
-   * @see enum Command
-   * @since 3.2
-   */
-  KIO_EXPORT QString unsupportedActionErrorString(const QString &protocol, int cmd);
+/**
+ * Returns an appropriate error message if the given command @p cmd
+ * is an unsupported action (ERR_UNSUPPORTED_ACTION).
+ * @param protocol name of the protocol
+ * @param cmd given command
+ * @see enum Command
+ * @since 3.2
+ */
+KIO_EXPORT QString unsupportedActionErrorString(const QString &protocol, int cmd);
 
-  /**
-   * Constants used to specify the type of a KUDSAtom.
-   */
-  enum UDSAtomTypes {
+/**
+ * Constants used to specify the type of a KUDSAtom.
+ */
+enum UDSAtomTypes
+{
     /// First let's define the item types
     UDS_STRING = 1,
     UDS_LONG = 2,
@@ -322,7 +321,7 @@ namespace KIO
     /// @since 3.2
     UDS_ICON_NAME = 24 | UDS_STRING,
     /// Group ID of the file owner
-    UDS_GROUP =	32 | UDS_STRING,
+    UDS_GROUP = 32 | UDS_STRING,
     /// Extra data (used only if you specified Columns/ColumnsTypes)
     /// This is the only UDS entry that can be repeated.
     /// @since 3.2
@@ -347,7 +346,7 @@ namespace KIO
     /// @since 3.5
     UDS_DEFAULT_ACL_STRING = 104 | UDS_STRING,
 
-    // available: 112, 120 
+    // available: 112, 120
 
     /// Access permissions (part of the mode returned by stat)
     UDS_ACCESS = 128 | UDS_LONG,
@@ -374,97 +373,103 @@ namespace KIO
     /// XML properties, e.g. for WebDAV
     /// @since 3.1
     UDS_XML_PROPERTIES = 0x8000 | UDS_STRING
-  };
+};
 
-  /**
-   * Specifies how to use the cache.
-   * @see parseCacheControl()
-   * @see getCacheControlString()
-   */
-  enum CacheControl
-  {
-      CC_CacheOnly, ///< Fail request if not in cache
-      CC_Cache,     ///< Use cached entry if available
-      CC_Verify,    ///< Validate cached entry with remote site if expired
-      CC_Refresh,   ///< Always validate cached entry with remote site
-                    ///< @since 3.1
-      CC_Reload     ///< Always fetch from remote site.
-  };
+/**
+ * Specifies how to use the cache.
+ * @see parseCacheControl()
+ * @see getCacheControlString()
+ */
+enum CacheControl
+{
+    CC_CacheOnly, ///< Fail request if not in cache
+    CC_Cache,     ///< Use cached entry if available
+    CC_Verify,    ///< Validate cached entry with remote site if expired
+    CC_Refresh,   ///< Always validate cached entry with remote site
+                  ///< @since 3.1
+    CC_Reload     ///< Always fetch from remote site.
+};
 
-  /**
-   * Parses the string representation of the cache control option.
-   *
-   * @param cacheControl the string representation
-   * @return the cache control value
-   * @see getCacheControlString()
-   */
-  KIO_EXPORT KIO::CacheControl parseCacheControl(const QString &cacheControl);
+/**
+ * Parses the string representation of the cache control option.
+ *
+ * @param cacheControl the string representation
+ * @return the cache control value
+ * @see getCacheControlString()
+ */
+KIO_EXPORT KIO::CacheControl parseCacheControl(const QString &cacheControl);
 
-  /**
-   * Returns a string representation of the given cache control method.
-   *
-   * @param cacheControl the cache control method
-   * @return the string representation
-   * @see parseCacheControl()
-   */
-  KIO_EXPORT QString getCacheControlString(KIO::CacheControl cacheControl);
+/**
+ * Returns a string representation of the given cache control method.
+ *
+ * @param cacheControl the cache control method
+ * @return the string representation
+ * @see parseCacheControl()
+ */
+KIO_EXPORT QString getCacheControlString(KIO::CacheControl cacheControl);
 
-  /**
-   * Returns the mount point where @p device is mounted
-   * right now. This means, it has to be mounted, not just
-   * defined in fstab.
-   */
-  KIO_EXPORT QString findDeviceMountPoint( const QString& device );
+/**
+ * Returns the mount point where @p device is mounted
+ * right now. This means, it has to be mounted, not just
+ * defined in fstab.
+ */
+KIO_EXPORT QString findDeviceMountPoint(const QString &device);
 
-  /**
-   * Returns the mount point on which resides @p filename.
-   * For instance if /home is a separate partition, findPathMountPoint("/home/user/blah")
-   * will return /home
-   * @param filename the file name to check
-   * @return the mount point of the given @p filename
-   */
-  KIO_EXPORT QString findPathMountPoint( const QString & filename );
+/**
+ * Returns the mount point on which resides @p filename.
+ * For instance if /home is a separate partition, findPathMountPoint("/home/user/blah")
+ * will return /home
+ * @param filename the file name to check
+ * @return the mount point of the given @p filename
+ */
+KIO_EXPORT QString findPathMountPoint(const QString &filename);
 
-  /**
-   * Checks if the path belongs to a filesystem that is probably
-   * slow. It checks for NFS or for paths belonging to automounted
-   * paths not yet mounted
-   * @param filename the file name to check
-   * @return true if the filesystem is probably slow
-   */
-  KIO_EXPORT bool probably_slow_mounted(const QString& filename);
+/**
+ * Checks if the path belongs to a filesystem that is probably
+ * slow. It checks for NFS or for paths belonging to automounted
+ * paths not yet mounted
+ * @param filename the file name to check
+ * @return true if the filesystem is probably slow
+ */
+KIO_EXPORT bool probably_slow_mounted(const QString &filename);
 
-  /**
-   * Checks if the path belongs to a filesystem that is manually
-   * mounted.
-   * @param filename the file name to check
-   * @return true if the filesystem is manually mounted
-   */
-  KIO_EXPORT bool manually_mounted(const QString& filename);
+/**
+ * Checks if the path belongs to a filesystem that is manually
+ * mounted.
+ * @param filename the file name to check
+ * @return true if the filesystem is manually mounted
+ */
+KIO_EXPORT bool manually_mounted(const QString &filename);
 
-  enum FileSystemFlag { SupportsChmod, SupportsChown, SupportsUTime,
-                        SupportsSymlinks, CaseInsensitive };
-  /**
-   * Checks the capabilities of the filesystem to which a given file belongs.
-   * given feature (e.g. chmod).
-   * @param filename the file name to check
-   * @param flag the flag to check
-   * @return true if the filesystem has that flag, false if not (or some error occurred)
-   *
-   * The availables flags are:
-   * @li SupportsChmod: returns true if the filesystem supports chmod
-   * (e.g. msdos filesystems return false)
-   * @li SupportsChown: returns true if the filesystem supports chown
-   * (e.g. msdos filesystems return false)
-   * @li SupportsUtime: returns true if the filesystems supports utime
-   * (e.g. msdos filesystems return false)
-   * @li SupportsSymlinks: returns true if the filesystems supports symlinks
-   * (e.g. msdos filesystems return false)
-   * @li CaseInsensitive: returns true if the filesystem treats
-   * "foo" and "FOO" as being the same file (true for msdos systems)
-   *
-   */
-  KIO_EXPORT bool testFileSystemFlag(const QString& filename, FileSystemFlag flag);
+enum FileSystemFlag
+{
+    SupportsChmod,
+    SupportsChown,
+    SupportsUTime,
+    SupportsSymlinks,
+    CaseInsensitive
+};
+/**
+ * Checks the capabilities of the filesystem to which a given file belongs.
+ * given feature (e.g. chmod).
+ * @param filename the file name to check
+ * @param flag the flag to check
+ * @return true if the filesystem has that flag, false if not (or some error occurred)
+ *
+ * The availables flags are:
+ * @li SupportsChmod: returns true if the filesystem supports chmod
+ * (e.g. msdos filesystems return false)
+ * @li SupportsChown: returns true if the filesystem supports chown
+ * (e.g. msdos filesystems return false)
+ * @li SupportsUtime: returns true if the filesystems supports utime
+ * (e.g. msdos filesystems return false)
+ * @li SupportsSymlinks: returns true if the filesystems supports symlinks
+ * (e.g. msdos filesystems return false)
+ * @li CaseInsensitive: returns true if the filesystem treats
+ * "foo" and "FOO" as being the same file (true for msdos systems)
+ *
+ */
+KIO_EXPORT bool testFileSystemFlag(const QString &filename, FileSystemFlag flag);
 
 
 /************
@@ -480,65 +485,59 @@ namespace KIO
  *
  * Each atom contains a specific bit of information for the file
  */
-class KIO_EXPORT UDSAtom
-{
+class KIO_EXPORT UDSAtom {
 public:
-  /**
-   * Whether 'm_str' or 'm_long' is used depends on the value of 'm_uds'.
-   */
-  QString m_str;
-  /**
-   * Whether 'm_str' or 'm_long' is used depends on the value of 'm_uds'.
-   */
-  long long m_long;
+    /**
+     * Whether 'm_str' or 'm_long' is used depends on the value of 'm_uds'.
+     */
+    QString m_str;
+    /**
+     * Whether 'm_str' or 'm_long' is used depends on the value of 'm_uds'.
+     */
+    long long m_long;
 
-  /**
-   * Holds one of the UDS_XXX constants
-   */
-  unsigned int m_uds;
+    /**
+     * Holds one of the UDS_XXX constants
+     */
+    unsigned int m_uds;
 };
 
 /**
  * An entry is the list of atoms containing all the informations for a file or URL
  */
-typedef QValueList<UDSAtom> UDSEntry;
-typedef QValueList<UDSEntry> UDSEntryList;
-typedef QValueListIterator<UDSEntry> UDSEntryListIterator;
-typedef QValueListConstIterator<UDSEntry> UDSEntryListConstIterator;
+typedef QValueList< UDSAtom > UDSEntry;
+typedef QValueList< UDSEntry > UDSEntryList;
+typedef QValueListIterator< UDSEntry > UDSEntryListIterator;
+typedef QValueListConstIterator< UDSEntry > UDSEntryListConstIterator;
 
 /**
  * MetaData is a simple map of key/value strings.
  */
-class KIO_EXPORT MetaData : public QMap<QString, QString>
-{
+class KIO_EXPORT MetaData : public QMap< QString, QString > {
 public:
-  /**
-   * Creates an empty meta data map.
-   */
-   MetaData() : QMap<QString, QString>() { };
-  /**
-   * Copy constructor.
-   */
-   MetaData(const QMap<QString, QString>&metaData) :
-     QMap<QString, QString>(metaData) { };
+    /**
+     * Creates an empty meta data map.
+     */
+    MetaData() : QMap< QString, QString >(){};
+    /**
+     * Copy constructor.
+     */
+    MetaData(const QMap< QString, QString > &metaData) : QMap< QString, QString >(metaData){};
 
-   /**
-    * Adds the given meta data map to this map.
-    * @param metaData the map to add
-    * @return this map
-    */
-   MetaData & operator+= ( const QMap<QString,QString> &metaData )
-   {
-      QMap<QString,QString>::ConstIterator it;
-      for( it = metaData.begin();
-           it !=  metaData.end();
-           ++it)
-      {
-         replace(it.key(), it.data());
-      }
-      return *this;
-   }
+    /**
+     * Adds the given meta data map to this map.
+     * @param metaData the map to add
+     * @return this map
+     */
+    MetaData &operator+=(const QMap< QString, QString > &metaData)
+    {
+        QMap< QString, QString >::ConstIterator it;
+        for(it = metaData.begin(); it != metaData.end(); ++it)
+        {
+            replace(it.key(), it.data());
+        }
+        return *this;
+    }
 };
-
 }
 #endif

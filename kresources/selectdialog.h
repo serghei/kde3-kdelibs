@@ -53,17 +53,15 @@ class Resource;
  * }
  * \endcode
  */
-class KRESOURCES_EXPORT SelectDialog : KDialog
-{
-  public:
+class KRESOURCES_EXPORT SelectDialog : KDialog {
+public:
     /**
      * Constructor.
      * @param list   The list of available resources
      * @param parent The parent widget
      * @param name   The name of the dialog
      */
-    SelectDialog( QPtrList<Resource> list, QWidget *parent = 0,
-        const char *name = 0);
+    SelectDialog(QPtrList< Resource > list, QWidget *parent = 0, const char *name = 0);
 
     /**
      * Returns selected resource.
@@ -74,14 +72,13 @@ class KRESOURCES_EXPORT SelectDialog : KDialog
      * Opens a dialog showing the available resources and returns the resource the
      * user has selected. Returns 0, if the dialog was canceled.
      */
-    static Resource *getResource( QPtrList<Resource> list, QWidget *parent = 0 );
+    static Resource *getResource(QPtrList< Resource > list, QWidget *parent = 0);
 
-  private:
+private:
     KListBox *mResourceId;
 
-    QMap<int, Resource*> mResourceMap;
+    QMap< int, Resource * > mResourceMap;
 };
-
 }
 
 #endif

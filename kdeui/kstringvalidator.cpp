@@ -26,35 +26,38 @@
 // KStringListValidator
 //
 
-QValidator::State KStringListValidator::validate( QString & input, int& ) const {
-  if ( input.isEmpty() ) return Intermediate;
+QValidator::State KStringListValidator::validate(QString &input, int &) const
+{
+    if(input.isEmpty())
+        return Intermediate;
 
-  if ( isRejecting() ) // anything not in mStringList is acceptable:
-    if ( mStringList.find( input ) == mStringList.end() )
-      return Acceptable;
+    if(isRejecting()) // anything not in mStringList is acceptable:
+        if(mStringList.find(input) == mStringList.end())
+            return Acceptable;
+        else
+            return Intermediate;
+    else // only what is in mStringList is acceptable:
+        if(mStringList.find(input) != mStringList.end())
+        return Acceptable;
     else
-      return Intermediate;
-  else // only what is in mStringList is acceptable:
-    if ( mStringList.find( input ) != mStringList.end() )
-      return Acceptable;
-    else
-      for ( QStringList::ConstIterator it = mStringList.begin() ;
-	    it != mStringList.end() ; ++it )
-	if ( (*it).startsWith( input ) || input.startsWith( *it ) )
-	  return Intermediate;
+        for(QStringList::ConstIterator it = mStringList.begin(); it != mStringList.end(); ++it)
+            if((*it).startsWith(input) || input.startsWith(*it))
+                return Intermediate;
 
-  return Invalid;
+    return Invalid;
 }
 
-void KStringListValidator::fixup( QString & /* input */ ) const {
-  if ( !isFixupEnabled() ) return;
-  // warn (but only once!) about non-implemented fixup():
-  static bool warn = true;
-  if ( warn ) {
-    kdDebug() << "KStringListValidator::fixup() isn't yet implemented!"
-	      << endl;
-    warn = false;
-  }
+void KStringListValidator::fixup(QString & /* input */) const
+{
+    if(!isFixupEnabled())
+        return;
+    // warn (but only once!) about non-implemented fixup():
+    static bool warn = true;
+    if(warn)
+    {
+        kdDebug() << "KStringListValidator::fixup() isn't yet implemented!" << endl;
+        warn = false;
+    }
 }
 
 //
@@ -63,28 +66,26 @@ void KStringListValidator::fixup( QString & /* input */ ) const {
 
 #define ALLOWED_CHARS "!#-'*+.0-9^-~+-"
 
-QValidator::State KMimeTypeValidator::validate( QString & input, int& ) const
+QValidator::State KMimeTypeValidator::validate(QString &input, int &) const
 {
-  if ( input.isEmpty() )
-    return Intermediate;
+    if(input.isEmpty())
+        return Intermediate;
 
-  QRegExp acceptable( "[" ALLOWED_CHARS "]+/[" ALLOWED_CHARS "]+",
-		      false /*case-insens.*/);
-  if ( acceptable.exactMatch( input ) )
-    return Acceptable;
+    QRegExp acceptable("[" ALLOWED_CHARS "]+/[" ALLOWED_CHARS "]+", false /*case-insens.*/);
+    if(acceptable.exactMatch(input))
+        return Acceptable;
 
-  QRegExp intermediate( "[" ALLOWED_CHARS "]*/?[" ALLOWED_CHARS "]*",
-			false /*case-insensitive*/);
-  if ( intermediate.exactMatch( input ) )
-    return Intermediate;
+    QRegExp intermediate("[" ALLOWED_CHARS "]*/?[" ALLOWED_CHARS "]*", false /*case-insensitive*/);
+    if(intermediate.exactMatch(input))
+        return Intermediate;
 
-  return Invalid;
+    return Invalid;
 }
 
-void KMimeTypeValidator::fixup( QString & input ) const
+void KMimeTypeValidator::fixup(QString &input) const
 {
-  QRegExp invalidChars("[^/" ALLOWED_CHARS "]+");
-  input.replace( invalidChars, QString::null);
+    QRegExp invalidChars("[^/" ALLOWED_CHARS "]+");
+    input.replace(invalidChars, QString::null);
 }
 
 #include "kstringvalidator.moc"

@@ -56,19 +56,16 @@ class QRect;
  * \code
  * \endcode
  */
-class KUTILS_EXPORT KReplaceDialog:
-    public KFindDialog
-{
+class KUTILS_EXPORT KReplaceDialog : public KFindDialog {
     Q_OBJECT
 
 public:
-
     /**
      * Options.
      */
     enum Options
     {
-        PromptOnReplace = 256,  ///< Should the user be prompted before the replace operation?
+        PromptOnReplace = 256, ///< Should the user be prompted before the replace operation?
         BackReference = 512
     };
 
@@ -84,10 +81,8 @@ public:
      *        replace with
      * @param hasSelection Whether a selection exists
      */
-    KReplaceDialog( QWidget *parent = 0, const char *name = 0, long options = 0,
-		    const QStringList &findStrings = QStringList(),
-		    const QStringList &replaceStrings = QStringList(),
-		    bool hasSelection = true );
+    KReplaceDialog(QWidget *parent = 0, const char *name = 0, long options = 0, const QStringList &findStrings = QStringList(),
+                   const QStringList &replaceStrings = QStringList(), bool hasSelection = true);
 
     /**
      * Destructor.
@@ -102,7 +97,7 @@ public:
      * @param history The replacement history.
      * @see replacementHistory
      */
-    void setReplacementHistory( const QStringList &history );
+    void setReplacementHistory(const QStringList &history);
 
     /**
      * Returns the list of history items.
@@ -118,7 +113,7 @@ public:
      * @param options The setting of the Options.
      * @see Options, KFindDialog::Options
      */
-    void setOptions( long options );
+    void setOptions(long options);
 
     /**
      * Returns the state of the options. Disabled options may be returned in
@@ -147,10 +142,9 @@ public:
 protected slots:
 
     void slotOk();
-    virtual void showEvent ( QShowEvent * );
+    virtual void showEvent(QShowEvent *);
 
 private:
-
     // Binary compatible extensibility.
     class KReplaceDialogPrivate;
     KReplaceDialogPrivate *d;

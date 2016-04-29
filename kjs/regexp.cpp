@@ -35,386 +35,425 @@ using namespace KJS;
 RegExp::UTF8SupportState RegExp::utf8Support = RegExp::Unknown;
 #endif
 
-RegExp::RegExp(const UString &p, int f)
-  : pat(p), flgs(f), m_notEmpty(false), valid(true), buffer(0), originalPos(0)
+RegExp::RegExp(const UString &p, int f) : pat(p), flgs(f), m_notEmpty(false), valid(true), buffer(0), originalPos(0)
 {
-  // Determine whether libpcre has unicode support if need be..
+// Determine whether libpcre has unicode support if need be..
 #ifdef PCRE_CONFIG_UTF8
-  if (utf8Support == Unknown) {
-    int supported;
-    pcre_config(PCRE_CONFIG_UTF8, (void*)&supported);
-    utf8Support = supported ? Supported : Unsupported;
-  }
+    if(utf8Support == Unknown)
+    {
+        int supported;
+        pcre_config(PCRE_CONFIG_UTF8, (void *)&supported);
+        utf8Support = supported ? Supported : Unsupported;
+    }
 #endif
 
-  nrSubPatterns = 0; // determined in match() with POSIX regex.
+    nrSubPatterns = 0; // determined in match() with POSIX regex.
 
-  // JS regexps can contain Unicode escape sequences (\uxxxx) which
-  // are rather uncommon elsewhere. As our regexp libs don't understand
-  // them we do the unescaping ourselves internally.
-  // Also make sure to expand out any nulls as pcre_compile 
-  // expects null termination..
-  UString intern;
-  const char* const nil = "\\x00";
-  if (p.find('\\') >= 0 || p.find(KJS::UChar('\0')) >= 0) {
-    bool escape = false;
-    for (int i = 0; i < p.size(); ++i) {
-      UChar c = p[i];
-      if (escape) {
-        escape = false;
-        // we only care about \u
-        if (c == 'u') {
-	  // standard unicode escape sequence looks like \uxxxx but
-	  // other browsers also accept less then 4 hex digits
-	  unsigned short u = 0;
-	  int j = 0;
-	  for (j = 0; j < 4; ++j) {
-	    if (i + 1 < p.size() && Lexer::isHexDigit(p[i + 1].unicode())) {
-	      u = (u << 4) + Lexer::convertHex(p[i + 1].unicode());
-	      ++i;
-	    } else {
-	      // sequence incomplete. restore index.
-	      // TODO: cleaner way to propagate warning
-	      fprintf(stderr, "KJS: saw %d digit \\u sequence.\n", j);
-	      i -= j;
-	      break;
-	    }
-	  }
-	  if (j < 4) {
-	    // sequence was incomplete. treat \u as u which IE always
-	    // and FF sometimes does.
-	    intern.append(UString('u'));
-	  } else {
-            c = UChar(u);
-            switch (u) {
-            case 0:
-	      // Make sure to encode 0, to avoid terminating the string
-	      intern += UString(nil);
-	      break;
-            case '^':
-            case '$':
-            case '\\':
-            case '.':
-            case '*':
-            case '+':
-            case '?':
-            case '(': case ')':
-            case '{': case '}':
-            case '[': case ']':
-            case '|':
-	      // escape pattern characters have to remain escaped
-	      intern.append(UString('\\'));
-	      // intentional fallthrough
-            default:
-	      intern += UString(&c, 1);
-	      break;
-	    }
-          }
-          continue;
+    // JS regexps can contain Unicode escape sequences (\uxxxx) which
+    // are rather uncommon elsewhere. As our regexp libs don't understand
+    // them we do the unescaping ourselves internally.
+    // Also make sure to expand out any nulls as pcre_compile
+    // expects null termination..
+    UString intern;
+    const char *const nil = "\\x00";
+    if(p.find('\\') >= 0 || p.find(KJS::UChar('\0')) >= 0)
+    {
+        bool escape = false;
+        for(int i = 0; i < p.size(); ++i)
+        {
+            UChar c = p[i];
+            if(escape)
+            {
+                escape = false;
+                // we only care about \u
+                if(c == 'u')
+                {
+                    // standard unicode escape sequence looks like \uxxxx but
+                    // other browsers also accept less then 4 hex digits
+                    unsigned short u = 0;
+                    int j = 0;
+                    for(j = 0; j < 4; ++j)
+                    {
+                        if(i + 1 < p.size() && Lexer::isHexDigit(p[i + 1].unicode()))
+                        {
+                            u = (u << 4) + Lexer::convertHex(p[i + 1].unicode());
+                            ++i;
+                        }
+                        else
+                        {
+                            // sequence incomplete. restore index.
+                            // TODO: cleaner way to propagate warning
+                            fprintf(stderr, "KJS: saw %d digit \\u sequence.\n", j);
+                            i -= j;
+                            break;
+                        }
+                    }
+                    if(j < 4)
+                    {
+                        // sequence was incomplete. treat \u as u which IE always
+                        // and FF sometimes does.
+                        intern.append(UString('u'));
+                    }
+                    else
+                    {
+                        c = UChar(u);
+                        switch(u)
+                        {
+                            case 0:
+                                // Make sure to encode 0, to avoid terminating the string
+                                intern += UString(nil);
+                                break;
+                            case '^':
+                            case '$':
+                            case '\\':
+                            case '.':
+                            case '*':
+                            case '+':
+                            case '?':
+                            case '(':
+                            case ')':
+                            case '{':
+                            case '}':
+                            case '[':
+                            case ']':
+                            case '|':
+                                // escape pattern characters have to remain escaped
+                                intern.append(UString('\\'));
+                            // intentional fallthrough
+                            default:
+                                intern += UString(&c, 1);
+                                break;
+                        }
+                    }
+                    continue;
+                }
+                intern += UString('\\');
+                intern += UString(&c, 1);
+            }
+            else
+            {
+                if(c == '\\')
+                    escape = true;
+                else if(c == '\0')
+                    intern += UString(nil);
+                else
+                    intern += UString(&c, 1);
+            }
         }
-        intern += UString('\\');
-        intern += UString(&c, 1);
-      } else {
-        if (c == '\\')
-          escape = true;
-        else if (c == '\0')
-          intern += UString(nil);
-        else
-          intern += UString(&c, 1);
-      }
     }
-  } else {
-    intern = p;
-  }
+    else
+    {
+        intern = p;
+    }
 
 #ifdef HAVE_PCREPOSIX
-  int pcreflags = 0;
-  const char *perrormsg;
-  int errorOffset;
+    int pcreflags = 0;
+    const char *perrormsg;
+    int errorOffset;
 
-  if (flgs & IgnoreCase)
-    pcreflags |= PCRE_CASELESS;
+    if(flgs & IgnoreCase)
+        pcreflags |= PCRE_CASELESS;
 
-  if (flgs & Multiline)
-    pcreflags |= PCRE_MULTILINE;
+    if(flgs & Multiline)
+        pcreflags |= PCRE_MULTILINE;
 
 #ifdef PCRE_CONFIG_UTF8
-  if (utf8Support == Supported)
-    pcreflags |= (PCRE_UTF8 | PCRE_NO_UTF8_CHECK);
+    if(utf8Support == Supported)
+        pcreflags |= (PCRE_UTF8 | PCRE_NO_UTF8_CHECK);
 #endif
 
-  // Fill our buffer with an encoded version, whether utf-8, or, 
-  // if PCRE is incapable, truncated.
-  prepareMatch(intern);
+    // Fill our buffer with an encoded version, whether utf-8, or,
+    // if PCRE is incapable, truncated.
+    prepareMatch(intern);
 
-  pcregex = pcre_compile(buffer, pcreflags,
-			 &perrormsg, &errorOffset, NULL);
-  doneMatch(); // Cleanup buffers
-  if (!pcregex) {
+    pcregex = pcre_compile(buffer, pcreflags, &perrormsg, &errorOffset, NULL);
+    doneMatch(); // Cleanup buffers
+    if(!pcregex)
+    {
 #ifndef NDEBUG
-    fprintf(stderr, "KJS: pcre_compile() failed with '%s'\n", perrormsg);
+        fprintf(stderr, "KJS: pcre_compile() failed with '%s'\n", perrormsg);
 #endif
-    valid = false;
-    return;
-  }
+        valid = false;
+        return;
+    }
 
 #ifdef PCRE_INFO_CAPTURECOUNT
-  // Get number of subpatterns that will be returned
-  int rc = pcre_fullinfo( pcregex, NULL, PCRE_INFO_CAPTURECOUNT, &nrSubPatterns);
-  if (rc != 0)
+    // Get number of subpatterns that will be returned
+    int rc = pcre_fullinfo(pcregex, NULL, PCRE_INFO_CAPTURECOUNT, &nrSubPatterns);
+    if(rc != 0)
 #endif
-    nrSubPatterns = 0; // fallback. We always need the first pair of offsets.
+        nrSubPatterns = 0; // fallback. We always need the first pair of offsets.
 
 #else /* HAVE_PCREPOSIX */
 
-  int regflags = 0;
+    int regflags = 0;
 #ifdef REG_EXTENDED
-  regflags |= REG_EXTENDED;
+    regflags |= REG_EXTENDED;
 #endif
 #ifdef REG_ICASE
-  if ( f & IgnoreCase )
-    regflags |= REG_ICASE;
+    if(f & IgnoreCase)
+        regflags |= REG_ICASE;
 #endif
 
-  //NOTE: Multiline is not feasible with POSIX regex.
-  //if ( f & Multiline )
-  //    ;
-  // Note: the Global flag is already handled by RegExpProtoFunc::execute
+    // NOTE: Multiline is not feasible with POSIX regex.
+    // if ( f & Multiline )
+    //    ;
+    // Note: the Global flag is already handled by RegExpProtoFunc::execute
 
-  int errorCode = regcomp(&preg, intern.ascii(), regflags);
-  if (errorCode != 0) {
+    int errorCode = regcomp(&preg, intern.ascii(), regflags);
+    if(errorCode != 0)
+    {
 #ifndef NDEBUG
-    char errorMessage[80];
-    regerror(errorCode, &preg, errorMessage, sizeof errorMessage);
-    fprintf(stderr, "KJS: regcomp failed with '%s'\n", errorMessage);
+        char errorMessage[80];
+        regerror(errorCode, &preg, errorMessage, sizeof errorMessage);
+        fprintf(stderr, "KJS: regcomp failed with '%s'\n", errorMessage);
 #endif
-    valid = false;
-  }
+        valid = false;
+    }
 #endif
 }
 
 RegExp::~RegExp()
 {
-  doneMatch(); // Be 100% sure buffers are freed
+    doneMatch(); // Be 100% sure buffers are freed
 #ifdef HAVE_PCREPOSIX
-  if (pcregex)
-    pcre_free(pcregex);
+    if(pcregex)
+        pcre_free(pcregex);
 #else
-  /* TODO: is this really okay after an error ? */
-  regfree(&preg);
+    /* TODO: is this really okay after an error ? */
+    regfree(&preg);
 #endif
 }
 
-void RegExp::prepareUtf8(const UString& s)
+void RegExp::prepareUtf8(const UString &s)
 {
-  // Allocate a buffer big enough to hold all the characters plus \0
-  const int length = s.size();
-  buffer = new char[length * 3 + 1];
+    // Allocate a buffer big enough to hold all the characters plus \0
+    const int length = s.size();
+    buffer = new char[length * 3 + 1];
 
-  // Also create buffer for positions. We need one extra character in there,
-  // even past the \0 since the non-empty handling may jump one past the end
-  originalPos = new int[length * 3 + 2];
+    // Also create buffer for positions. We need one extra character in there,
+    // even past the \0 since the non-empty handling may jump one past the end
+    originalPos = new int[length * 3 + 2];
 
-  // Convert to runs of 8-bit characters, and generate indeces
-  // Note that we do NOT combine surrogate pairs here, as 
-  // regexps operate on them as separate characters
-  char *p      = buffer;
-  int  *posOut = originalPos;
-  const UChar *d = s.data();
-  for (int i = 0; i != length; ++i) {
-    unsigned short c = d[i].unicode();
+    // Convert to runs of 8-bit characters, and generate indeces
+    // Note that we do NOT combine surrogate pairs here, as
+    // regexps operate on them as separate characters
+    char *p = buffer;
+    int *posOut = originalPos;
+    const UChar *d = s.data();
+    for(int i = 0; i != length; ++i)
+    {
+        unsigned short c = d[i].unicode();
 
-    int sequenceLen;
-    if (c < 0x80) {
-      *p++ = (char)c;
-      sequenceLen = 1;
-    } else if (c < 0x800) {
-      *p++ = (char)((c >> 6) | 0xC0); // C0 is the 2-byte flag for UTF-8
-      *p++ = (char)((c | 0x80) & 0xBF); // next 6 bits, with high bit set
-      sequenceLen = 2;
-    } else {
-      *p++ = (char)((c >> 12) | 0xE0); // E0 is the 3-byte flag for UTF-8
-      *p++ = (char)(((c >> 6) | 0x80) & 0xBF); // next 6 bits, with high bit set
-      *p++ = (char)((c | 0x80) & 0xBF); // next 6 bits, with high bit set
-      sequenceLen = 3;
+        int sequenceLen;
+        if(c < 0x80)
+        {
+            *p++ = (char)c;
+            sequenceLen = 1;
+        }
+        else if(c < 0x800)
+        {
+            *p++ = (char)((c >> 6) | 0xC0);   // C0 is the 2-byte flag for UTF-8
+            *p++ = (char)((c | 0x80) & 0xBF); // next 6 bits, with high bit set
+            sequenceLen = 2;
+        }
+        else
+        {
+            *p++ = (char)((c >> 12) | 0xE0);         // E0 is the 3-byte flag for UTF-8
+            *p++ = (char)(((c >> 6) | 0x80) & 0xBF); // next 6 bits, with high bit set
+            *p++ = (char)((c | 0x80) & 0xBF);        // next 6 bits, with high bit set
+            sequenceLen = 3;
+        }
+
+        while(sequenceLen > 0)
+        {
+            *posOut = i;
+            ++posOut;
+            --sequenceLen;
+        }
     }
 
-    while (sequenceLen > 0) {
-      *posOut = i;
-      ++posOut;
-      --sequenceLen;
-    }
-  }
+    bufferSize = p - buffer;
 
-  bufferSize = p - buffer;
+    *p++ = '\0';
 
-  *p++ = '\0';
-
-  // Record positions for \0, and the fictional character after that.
-  *posOut     = length;
-  *(posOut+1) = length+1;
+    // Record positions for \0, and the fictional character after that.
+    *posOut = length;
+    *(posOut + 1) = length + 1;
 }
 
-void RegExp::prepareASCII (const UString& s)
+void RegExp::prepareASCII(const UString &s)
 {
-  originalPos = 0;
+    originalPos = 0;
 
-  // Best-effort attempt to get something done
-  // when we don't have utf 8 available -- use 
-  // truncated version, and pray for the best 
-  CString truncated = s.cstring();
-  buffer = new char[truncated.size() + 1];
-  memcpy(buffer, truncated.c_str(), truncated.size());
-  buffer[truncated.size()] = '\0'; // For _compile use
-  bufferSize = truncated.size();
+    // Best-effort attempt to get something done
+    // when we don't have utf 8 available -- use
+    // truncated version, and pray for the best
+    CString truncated = s.cstring();
+    buffer = new char[truncated.size() + 1];
+    memcpy(buffer, truncated.c_str(), truncated.size());
+    buffer[truncated.size()] = '\0'; // For _compile use
+    bufferSize = truncated.size();
 }
 
 void RegExp::prepareMatch(const UString &s)
 {
-  delete[] originalPos; // Just to be sure..
-  delete[] buffer;
+    delete[] originalPos; // Just to be sure..
+    delete[] buffer;
 #ifdef PCRE_CONFIG_UTF8
-  if (utf8Support == Supported)
-    prepareUtf8(s);
-  else
+    if(utf8Support == Supported)
+        prepareUtf8(s);
+    else
 #endif
-    prepareASCII(s);
+        prepareASCII(s);
 
 #ifndef NDEBUG
-  originalS = s;
+    originalS = s;
 #endif
 }
 
-void RegExp::doneMatch() 
+void RegExp::doneMatch()
 {
-  delete[] originalPos; originalPos = 0;
-  delete[] buffer;      buffer      = 0;
+    delete[] originalPos;
+    originalPos = 0;
+    delete[] buffer;
+    buffer = 0;
 }
 
 UString RegExp::match(const UString &s, int i, int *pos, int **ovector)
 {
 #ifndef NDEBUG
-  assert(s.data() == originalS.data()); // Make sure prepareMatch got called right..
+    assert(s.data() == originalS.data()); // Make sure prepareMatch got called right..
 #endif
-  assert(valid);
+    assert(valid);
 
-  if (i < 0)
-    i = 0;
-  if (ovector)
-    *ovector = 0L;
-  int dummyPos;
-  if (!pos)
-    pos = &dummyPos;
-  *pos = -1;
-  if (i > s.size() || s.isNull())
-    return UString::null;
+    if(i < 0)
+        i = 0;
+    if(ovector)
+        *ovector = 0L;
+    int dummyPos;
+    if(!pos)
+        pos = &dummyPos;
+    *pos = -1;
+    if(i > s.size() || s.isNull())
+        return UString::null;
 
 #ifdef HAVE_PCREPOSIX
-  int ovecsize = (nrSubPatterns+1)*3; // see pcre docu
-  if (ovector) *ovector = new int[ovecsize];
-  if (!pcregex)
-    return UString::null;
+    int ovecsize = (nrSubPatterns + 1) * 3; // see pcre docu
+    if(ovector)
+        *ovector = new int[ovecsize];
+    if(!pcregex)
+        return UString::null;
 
-  int startPos;
-  int nextPos;
+    int startPos;
+    int nextPos;
 
 #ifdef PCRE_CONFIG_UTF8
-  if (utf8Support == Supported) {
-    startPos = i;
-    while (originalPos[startPos] < i)
-      ++startPos;
-
-    nextPos = startPos;
-    while (originalPos[nextPos] < (i + 1))
-      ++nextPos;
-  } else
-#endif
-  {
-    startPos = i;
-    nextPos  = i + 1;
-  }
-
-  int baseFlags =
-#ifdef PCRE_CONFIG_UTF8
-    utf8Support == Supported ? PCRE_NO_UTF8_CHECK :
-#endif
-    0;
-  if (pcre_exec(pcregex, NULL, buffer, bufferSize, startPos,
-                m_notEmpty ? (PCRE_NOTEMPTY | PCRE_ANCHORED | baseFlags) : baseFlags, // see man pcretest
-                ovector ? *ovector : 0L, ovecsize) == PCRE_ERROR_NOMATCH)
-  {
-    // Failed to match.
-    if ((flgs & Global) && m_notEmpty && ovector)
+    if(utf8Support == Supported)
     {
-      // We set m_notEmpty ourselves, to look for a non-empty match
-      // (see man pcretest or pcretest.c for details).
-      // So we don't stop here, we want to try again at i+1.
-#ifdef KJS_VERBOSE
-      fprintf(stderr, "No match after m_notEmpty. +1 and keep going.\n");
+        startPos = i;
+        while(originalPos[startPos] < i)
+            ++startPos;
+
+        nextPos = startPos;
+        while(originalPos[nextPos] < (i + 1))
+            ++nextPos;
+    }
+    else
 #endif
-      m_notEmpty = 0;
-      if (pcre_exec(pcregex, NULL, buffer, bufferSize, nextPos, baseFlags,
-                    ovector ? *ovector : 0L, ovecsize) == PCRE_ERROR_NOMATCH)
+    {
+        startPos = i;
+        nextPos = i + 1;
+    }
+
+    int baseFlags =
+#ifdef PCRE_CONFIG_UTF8
+        utf8Support == Supported ? PCRE_NO_UTF8_CHECK :
+#endif
+                                 0;
+    if(pcre_exec(pcregex, NULL, buffer, bufferSize, startPos,
+                 m_notEmpty ? (PCRE_NOTEMPTY | PCRE_ANCHORED | baseFlags) : baseFlags, // see man pcretest
+                 ovector ? *ovector : 0L, ovecsize)
+       == PCRE_ERROR_NOMATCH)
+    {
+        // Failed to match.
+        if((flgs & Global) && m_notEmpty && ovector)
+        {
+// We set m_notEmpty ourselves, to look for a non-empty match
+// (see man pcretest or pcretest.c for details).
+// So we don't stop here, we want to try again at i+1.
+#ifdef KJS_VERBOSE
+            fprintf(stderr, "No match after m_notEmpty. +1 and keep going.\n");
+#endif
+            m_notEmpty = 0;
+            if(pcre_exec(pcregex, NULL, buffer, bufferSize, nextPos, baseFlags, ovector ? *ovector : 0L, ovecsize) == PCRE_ERROR_NOMATCH)
+                return UString::null;
+        }
+        else // done
+            return UString::null;
+    }
+
+    // Got a match, proceed with it.
+    // But fix up the ovector if need be..
+    if(ovector && originalPos)
+    {
+        for(unsigned c = 0; c < 2 * (nrSubPatterns + 1); ++c)
+        {
+            if((*ovector)[c] != -1)
+                (*ovector)[c] = originalPos[(*ovector)[c]];
+        }
+    }
+
+    if(!ovector)
+        return UString::null; // don't rely on the return value if you pass ovector==0
+#else
+    const uint maxMatch = 10;
+    regmatch_t rmatch[maxMatch];
+
+    char *str = strdup(s.ascii()); // TODO: why ???
+    if(regexec(&preg, str + i, maxMatch, rmatch, 0))
+    {
+        free(str);
         return UString::null;
     }
-    else // done
-      return UString::null;
-  }
-
-  // Got a match, proceed with it.
-  // But fix up the ovector if need be..
-  if (ovector && originalPos) {
-    for (unsigned c = 0; c < 2 * (nrSubPatterns + 1); ++c) {
-      if ((*ovector)[c] != -1)
-        (*ovector)[c] = originalPos[(*ovector)[c]];
-    }
-  }
-
-  if (!ovector)
-    return UString::null; // don't rely on the return value if you pass ovector==0
-#else
-  const uint maxMatch = 10;
-  regmatch_t rmatch[maxMatch];
-
-  char *str = strdup(s.ascii()); // TODO: why ???
-  if (regexec(&preg, str + i, maxMatch, rmatch, 0)) {
     free(str);
-    return UString::null;
-  }
-  free(str);
 
-  if (!ovector) {
-    *pos = rmatch[0].rm_so + i;
-    return s.substr(rmatch[0].rm_so + i, rmatch[0].rm_eo - rmatch[0].rm_so);
-  }
+    if(!ovector)
+    {
+        *pos = rmatch[0].rm_so + i;
+        return s.substr(rmatch[0].rm_so + i, rmatch[0].rm_eo - rmatch[0].rm_so);
+    }
 
-  // map rmatch array to ovector used in PCRE case
-  nrSubPatterns = 0;
-  for (uint j = 0; j < maxMatch && rmatch[j].rm_so >= 0 ; j++) {
-    nrSubPatterns++;
-    // if the nonEmpty flag is set, return a failed match if any of the
-    // subMatches happens to be an empty string.
-    if (m_notEmpty && rmatch[j].rm_so == rmatch[j].rm_eo) 
-      return UString::null;
-  }
-  // Allow an ovector slot to return the (failed) match result.
-  if (nrSubPatterns == 0) nrSubPatterns = 1;
-  
-  int ovecsize = (nrSubPatterns)*3; // see above
-  *ovector = new int[ovecsize];
-  for (uint j = 0; j < nrSubPatterns; j++) {
-      (*ovector)[2*j] = rmatch[j].rm_so + i;
-      (*ovector)[2*j+1] = rmatch[j].rm_eo + i;
-  }
+    // map rmatch array to ovector used in PCRE case
+    nrSubPatterns = 0;
+    for(uint j = 0; j < maxMatch && rmatch[j].rm_so >= 0; j++)
+    {
+        nrSubPatterns++;
+        // if the nonEmpty flag is set, return a failed match if any of the
+        // subMatches happens to be an empty string.
+        if(m_notEmpty && rmatch[j].rm_so == rmatch[j].rm_eo)
+            return UString::null;
+    }
+    // Allow an ovector slot to return the (failed) match result.
+    if(nrSubPatterns == 0)
+        nrSubPatterns = 1;
+
+    int ovecsize = (nrSubPatterns)*3; // see above
+    *ovector = new int[ovecsize];
+    for(uint j = 0; j < nrSubPatterns; j++)
+    {
+        (*ovector)[2 * j] = rmatch[j].rm_so + i;
+        (*ovector)[2 * j + 1] = rmatch[j].rm_eo + i;
+    }
 #endif
 
-  *pos = (*ovector)[0];
-  if ( *pos == (*ovector)[1] && (flgs & Global) )
-  {
-    // empty match, next try will be with m_notEmpty=true
-    m_notEmpty=true;
-  }
-  return s.substr((*ovector)[0], (*ovector)[1] - (*ovector)[0]);
+    *pos = (*ovector)[0];
+    if(*pos == (*ovector)[1] && (flgs & Global))
+    {
+        // empty match, next try will be with m_notEmpty=true
+        m_notEmpty = true;
+    }
+    return s.substr((*ovector)[0], (*ovector)[1] - (*ovector)[0]);
 }
 
 #if 0 // unused

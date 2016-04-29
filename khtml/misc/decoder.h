@@ -33,10 +33,10 @@ class JapaneseCode;
 /**
  * @internal
  */
-class Decoder
-{
+class Decoder {
 public:
-    enum EncodingType {
+    enum EncodingType
+    {
         DefaultEncoding,
         AutoDetectedEncoding,
         EncodingFromXMLHeader,
@@ -53,14 +53,21 @@ public:
 
     QString decode(const char *data, int len);
 
-    bool visuallyOrdered() const { return visualRTL; }
+    bool visuallyOrdered() const
+    {
+        return visualRTL;
+    }
 
-    const QTextCodec *codec() const { return m_codec; }
+    const QTextCodec *codec() const
+    {
+        return m_codec;
+    }
 
     QString flush() const;
 
 
-    enum AutoDetectLanguage {
+    enum AutoDetectLanguage
+    {
         SemiautomaticDetection,
         Arabic,
         Baltic,
@@ -78,21 +85,26 @@ public:
         WesternEuropean
     };
 
-    void setAutoDetectLanguage( AutoDetectLanguage _language ) { m_autoDetectLanguage = _language; }
-    AutoDetectLanguage autoDetectLanguage() { return m_autoDetectLanguage; }
-
+    void setAutoDetectLanguage(AutoDetectLanguage _language)
+    {
+        m_autoDetectLanguage = _language;
+    }
+    AutoDetectLanguage autoDetectLanguage()
+    {
+        return m_autoDetectLanguage;
+    }
 
 
 private:
-    QCString automaticDetectionForArabic( const unsigned char* str, int size );
-    QCString automaticDetectionForBaltic( const unsigned char* str, int size );
-    QCString automaticDetectionForCentralEuropean( const unsigned char* str, int size );
-    QCString automaticDetectionForCyrillic( const unsigned char* str, int size, AutoDetectLanguage _language );
-    QCString automaticDetectionForGreek( const unsigned char* str, int size );
-    QCString automaticDetectionForHebrew( const unsigned char* str, int size );
-    QCString automaticDetectionForJapanese( const unsigned char* str, int size );
-    QCString automaticDetectionForTurkish( const unsigned char* str, int size );
-    QCString automaticDetectionForWesternEuropean( const unsigned char* str, int size );
+    QCString automaticDetectionForArabic(const unsigned char *str, int size);
+    QCString automaticDetectionForBaltic(const unsigned char *str, int size);
+    QCString automaticDetectionForCentralEuropean(const unsigned char *str, int size);
+    QCString automaticDetectionForCyrillic(const unsigned char *str, int size, AutoDetectLanguage _language);
+    QCString automaticDetectionForGreek(const unsigned char *str, int size);
+    QCString automaticDetectionForHebrew(const unsigned char *str, int size);
+    QCString automaticDetectionForJapanese(const unsigned char *str, int size);
+    QCString automaticDetectionForTurkish(const unsigned char *str, int size);
+    QCString automaticDetectionForWesternEuropean(const unsigned char *str, int size);
 
     // codec used for decoding. default is Latin1.
     QTextCodec *m_codec;
@@ -110,6 +122,5 @@ private:
 
     JapaneseCode *kc;
 };
-
 }
 #endif

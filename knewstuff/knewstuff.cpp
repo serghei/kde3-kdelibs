@@ -30,57 +30,52 @@
 
 using namespace KNS;
 
-KAction* KNS::standardAction(const QString& what,
-                             const QObject *recvr,
-                             const char *slot, KActionCollection* parent,
-                             const char *name)
+KAction *KNS::standardAction(const QString &what, const QObject *recvr, const char *slot, KActionCollection *parent, const char *name)
 {
-    return new KAction(i18n("Download New %1").arg(what), "knewstuff",
-                       0, recvr, slot, parent, name);
+    return new KAction(i18n("Download New %1").arg(what), "knewstuff", 0, recvr, slot, parent, name);
 }
 
-KNewStuff::KNewStuff( const QString &type, QWidget *parentWidget )
+KNewStuff::KNewStuff(const QString &type, QWidget *parentWidget)
 {
-    mEngine = new Engine( this, type, parentWidget );
+    mEngine = new Engine(this, type, parentWidget);
 }
 
-KNewStuff::KNewStuff( const QString &type, const QString &providerList, QWidget *parentWidget )
+KNewStuff::KNewStuff(const QString &type, const QString &providerList, QWidget *parentWidget)
 {
-  mEngine = new Engine( this, type, providerList, parentWidget );
+    mEngine = new Engine(this, type, providerList, parentWidget);
 }
 
 QString KNewStuff::type() const
 {
-  return mEngine->type();
+    return mEngine->type();
 }
 
 QWidget *KNewStuff::parentWidget() const
 {
-  return mEngine->parentWidget();
+    return mEngine->parentWidget();
 }
 
 KNewStuff::~KNewStuff()
 {
-  delete mEngine;
+    delete mEngine;
 }
 
 void KNewStuff::download()
 {
-  mEngine->download();
+    mEngine->download();
 }
 
-QString KNewStuff::downloadDestination( Entry * )
+QString KNewStuff::downloadDestination(Entry *)
 {
-  return KGlobal::dirs()->saveLocation( "tmp" ) +
-         KApplication::randomString( 10 );
+    return KGlobal::dirs()->saveLocation("tmp") + KApplication::randomString(10);
 }
 
 void KNewStuff::upload()
 {
-  mEngine->upload();
+    mEngine->upload();
 }
 
-void KNewStuff::upload( const QString &fileName, const QString previewName )
+void KNewStuff::upload(const QString &fileName, const QString previewName)
 {
-  mEngine->upload(fileName, previewName);
+    mEngine->upload(fileName, previewName);
 }

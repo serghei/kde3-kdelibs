@@ -217,7 +217,7 @@ class QDBusData;
 class QDBusError;
 class QDBusMessage;
 
-template <class T> class QValueList;
+template < class T > class QValueList;
 
 /**
  * @brief Client interface to a remote service object
@@ -233,9 +233,8 @@ template <class T> class QValueList;
  *
  * See section @ref dbusclient for documentation on how to use QDBusProxy
  */
-class QDBUS_EXPORT QDBusProxy : public QObject
-{
-  Q_OBJECT
+class QDBUS_EXPORT QDBusProxy : public QObject {
+    Q_OBJECT
 public:
     /**
      * @brief Creates a proxy without binding it to a service or connection
@@ -246,7 +245,7 @@ public:
      * @param parent QObject parent
      * @param name QObject name
      */
-    QDBusProxy(QObject* parent = 0, const char* name = 0);
+    QDBusProxy(QObject *parent = 0, const char *name = 0);
 
     /**
      * @brief Creates a proxy on a given connection without binding it to a
@@ -263,8 +262,7 @@ public:
      * @param parent QObject parent
      * @param name QObject name
      */
-    QDBusProxy(const QDBusConnection& connection, QObject* parent = 0,
-               const char* name = 0);
+    QDBusProxy(const QDBusConnection &connection, QObject *parent = 0, const char *name = 0);
 
     /**
      * @brief Creates a proxy for a given peer on a given connection
@@ -280,9 +278,8 @@ public:
      * @param parent QObject parent
      * @param name QObject name
      */
-    QDBusProxy(const QString& service, const QString& path,
-               const QString& interface, const QDBusConnection& connection,
-               QObject* parent = 0, const char* name = 0);
+    QDBusProxy(const QString &service, const QString &path, const QString &interface, const QDBusConnection &connection, QObject *parent = 0,
+               const char *name = 0);
 
     /**
      * @brief Destroys the proxy instance
@@ -309,14 +306,14 @@ public:
      * @see setPath()
      * @see setInterface()
      */
-    bool setConnection(const QDBusConnection& connection);
+    bool setConnection(const QDBusConnection &connection);
 
     /**
      * @brief Returns the currently used D-Bus connection
      *
      * @see setConnection()
      */
-    const QDBusConnection& connection() const;
+    const QDBusConnection &connection() const;
 
     /**
      * @brief Sets the peer's service name
@@ -334,7 +331,7 @@ public:
      * @see setPath()
      * @see setInterface()
      */
-    void setService(const QString& service);
+    void setService(const QString &service);
 
     /**
      * @brief Returns the peer's service name
@@ -362,7 +359,7 @@ public:
      * @see setService()
      * @see setInterface()
      */
-    void setPath(const QString& path);
+    void setPath(const QString &path);
 
     /**
      * @brief Returns the peer's object path
@@ -390,7 +387,7 @@ public:
      * @see setService()
      * @see setPath()
      */
-    void setInterface(const QString& interface);
+    void setInterface(const QString &interface);
 
     /**
      * @brief Returns the name of the peer interface
@@ -440,7 +437,7 @@ public:
      * @see sendWithAsyncReply()
      * @see @ref dbusconventions-membername
      */
-    bool send(const QString& method, const QValueList<QDBusData>& params) const;
+    bool send(const QString &method, const QValueList< QDBusData > &params) const;
 
     /**
      * @brief Sends a method call to the peer object and waits for the reply
@@ -462,8 +459,7 @@ public:
      * @see sendWithAsyncReply()
      * @see @ref dbusconventions-membername
      */
-    QDBusMessage sendWithReply(const QString& method,
-                               const QValueList<QDBusData>& params, QDBusError* error = 0) const;
+    QDBusMessage sendWithReply(const QString &method, const QValueList< QDBusData > &params, QDBusError *error = 0) const;
 
     /**
      * @brief Sends a method call to the peer object but does not wait for an
@@ -494,7 +490,7 @@ public:
      * @see sendWithReply()
      * @see @ref dbusconventions-membername
      */
-    int sendWithAsyncReply(const QString& method, const QValueList<QDBusData>& params);
+    int sendWithAsyncReply(const QString &method, const QValueList< QDBusData > &params);
 
     /**
      * @brief Returns the last error seen by the proxy
@@ -518,7 +514,7 @@ signals:
      *
      * @see QDBusMessage::SignalMessage
      */
-    void dbusSignal(const QDBusMessage& message);
+    void dbusSignal(const QDBusMessage &message);
 
     /**
      * @brief Signal emitted for received replies to asynchronous method calls
@@ -534,7 +530,7 @@ signals:
      * @see handleAsyncReply()
      * @see QDBusMessage::replySerialNumber()
      */
-    void asyncReply(int callID, const QDBusMessage& message);
+    void asyncReply(int callID, const QDBusMessage &message);
 
 protected slots:
     /**
@@ -556,7 +552,7 @@ protected slots:
      *
      * @see QDBusMessage::SignalMessage
      */
-    virtual void handleDBusSignal(const QDBusMessage& message);
+    virtual void handleDBusSignal(const QDBusMessage &message);
 
     /**
      * @brief Handles replies to asynchronous method calls
@@ -568,16 +564,15 @@ protected slots:
      *
      * @see QDBusMessage::replySerialNumber()
      */
-    virtual void handleAsyncReply(const QDBusMessage& message);
+    virtual void handleAsyncReply(const QDBusMessage &message);
 
 private:
-  class Private;
-  Private* d;
+    class Private;
+    Private *d;
 
 private:
-  QDBusProxy(const QDBusProxy&);
-  QDBusProxy& operator=(const QDBusProxy&);
+    QDBusProxy(const QDBusProxy &);
+    QDBusProxy &operator=(const QDBusProxy &);
 };
 
 #endif
-

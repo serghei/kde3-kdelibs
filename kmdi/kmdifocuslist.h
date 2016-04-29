@@ -23,20 +23,19 @@
 #include <qwidget.h>
 #include <kdelibs_export.h>
 
-class KMDI_EXPORT KMdiFocusList: public QObject
-{
-	Q_OBJECT
+class KMDI_EXPORT KMdiFocusList : public QObject {
+    Q_OBJECT
 public:
-	KMdiFocusList( QObject *parent );
-	~KMdiFocusList();
-	void addWidgetTree( QWidget* );
-	void restore();
+    KMdiFocusList(QObject *parent);
+    ~KMdiFocusList();
+    void addWidgetTree(QWidget *);
+    void restore();
 protected slots:
-	void objectHasBeenDestroyed( QObject* );
-private:
-	QMap<QWidget*, QWidget::FocusPolicy> m_list;
+    void objectHasBeenDestroyed(QObject *);
 
+private:
+    QMap< QWidget *, QWidget::FocusPolicy > m_list;
 };
 
-#endif 
+#endif
 // kate: space-indent off; tab-width 4; replace-tabs off; indent-mode csands;

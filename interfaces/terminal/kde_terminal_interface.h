@@ -38,10 +38,10 @@ class QStrList;
  *  void processExited( KProcess *process );
  *  void receivedData( const QString& s );
  * See the example code below for how to connect to these..
- * 
+ *
  * The process provided by processExited() is obviously exited,
  * and is only guaranteed to be valid until you return from the
- * slot connected to it! 
+ * slot connected to it!
  *
  * Use it like this:
  * \code
@@ -89,27 +89,24 @@ class QStrList;
  *
  * @author Dominique Devriese <devriese@kde.org>
  */
-class KDE_EXPORT TerminalInterface
-{
+class KDE_EXPORT TerminalInterface {
 public:
-  /**
-   * This starts @p program, with arguments @p args
-   */
-  virtual void startProgram( const QString& program,
-                             const QStrList& args ) = 0;
-  /**
-   * If a shell is currently shown, this sends it a cd
-   * command. Otherwise, this starts a shell, and sends it a cd
-   * command too...
-   */
-  virtual void showShellInDir( const QString& dir ) = 0;
+    /**
+     * This starts @p program, with arguments @p args
+     */
+    virtual void startProgram(const QString &program, const QStrList &args) = 0;
+    /**
+     * If a shell is currently shown, this sends it a cd
+     * command. Otherwise, this starts a shell, and sends it a cd
+     * command too...
+     */
+    virtual void showShellInDir(const QString &dir) = 0;
 
-  /**
-   * This sends @param text as input to the currently running
-   * program..
-   */
-  virtual void sendInput( const QString& text ) = 0;
-
+    /**
+     * This sends @param text as input to the currently running
+     * program..
+     */
+    virtual void sendInput(const QString &text) = 0;
 };
 
 /**
@@ -126,43 +123,41 @@ public:
    @since 3.5
 */
 
-class KDE_EXPORT ExtTerminalInterface
-{
+class KDE_EXPORT ExtTerminalInterface {
 public:
-  /**
-   * This starts @p program, with arguments @p args
-   */
-  virtual void startProgram( const QString& program,
-                             const QStrList& args ) = 0;
-  /**
-   * If a shell is currently shown, this sends it a cd
-   * command. Otherwise, this starts a shell, and sends it a cd
-   * command too...
-   */
-  virtual void showShellInDir( const QString& dir ) = 0;
+    /**
+     * This starts @p program, with arguments @p args
+     */
+    virtual void startProgram(const QString &program, const QStrList &args) = 0;
+    /**
+     * If a shell is currently shown, this sends it a cd
+     * command. Otherwise, this starts a shell, and sends it a cd
+     * command too...
+     */
+    virtual void showShellInDir(const QString &dir) = 0;
 
-  /**
-   * This sends @param text as input to the currently running
-   * program..
-   */
-  virtual void sendInput( const QString& text ) = 0;
+    /**
+     * This sends @param text as input to the currently running
+     * program..
+     */
+    virtual void sendInput(const QString &text) = 0;
 
-  /**
-     Call this to disable the automatic shell that
-     is normally loaded when konsolePart is instantiated;
+    /**
+       Call this to disable the automatic shell that
+       is normally loaded when konsolePart is instantiated;
 
-     You must call this function immediately after creating
-     the part! The shell is otherwise started as soon as the Qt
-     event loop is entered.
-  */       
-  virtual void setAutoStartShell(bool enabled) = 0;
+       You must call this function immediately after creating
+       the part! The shell is otherwise started as soon as the Qt
+       event loop is entered.
+    */
+    virtual void setAutoStartShell(bool enabled) = 0;
 
-  /**
-     If set to true (which is default), konsolePart will destroy itself
-     as soon as the running program terminates. If false, you can
-     start another program instead or close it yourself.
-  */
-  virtual void setAutoDestroy(bool enabled) = 0;
+    /**
+       If set to true (which is default), konsolePart will destroy itself
+       as soon as the running program terminates. If false, you can
+       start another program instead or close it yourself.
+    */
+    virtual void setAutoDestroy(bool enabled) = 0;
 };
 
 #endif

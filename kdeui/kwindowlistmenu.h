@@ -33,12 +33,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class KWinModule;
 class KWindowListMenuPrivate;
 
-class KDEUI_EXPORT KWindowListMenu : public KPopupMenu
-{
+class KDEUI_EXPORT KWindowListMenu : public KPopupMenu {
     Q_OBJECT
 
 public:
-    KWindowListMenu( QWidget *parent = 0, const char *name = 0 );
+    KWindowListMenu(QWidget *parent = 0, const char *name = 0);
     virtual ~KWindowListMenu();
 
     void init();
@@ -47,20 +46,22 @@ public slots:
     /**
      * Pre-selects the active window in the popup menu, for faster
      * keyboard navigation. Needs to be called after popup().
-     * Should not be used when the popup is invoked using the mouse. 
+     * Should not be used when the popup is invoked using the mouse.
      */
     void selectActiveWindow();
-    
+
 protected slots:
     void slotExec(int id);
     void slotUnclutterWindows();
     void slotCascadeWindows();
 
 private:
-    KWinModule*         kwin_module;
-    QMap<int,WId>       map;
+    KWinModule *kwin_module;
+    QMap< int, WId > map;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     KWindowListMenuPrivate *d;
 };

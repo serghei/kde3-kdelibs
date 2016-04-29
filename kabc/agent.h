@@ -37,92 +37,89 @@ class Addressee;
  * At the moment the vcard format does not support saving and loading
  * this entity.
  */
-class KABC_EXPORT Agent
-{
-  friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const Agent & );
-  friend KABC_EXPORT QDataStream &operator>>( QDataStream &, Agent & );
+class KABC_EXPORT Agent {
+    friend KABC_EXPORT QDataStream &operator<<(QDataStream &, const Agent &);
+    friend KABC_EXPORT QDataStream &operator>>(QDataStream &, Agent &);
 
 public:
+    /**
+     * Consturctor. Creates an empty object.
+     */
+    Agent();
 
-  /**
-   * Consturctor. Creates an empty object.
-   */
-  Agent();
+    /**
+     * Consturctor.
+     *
+     * @param url  A URL that describes the position of the agent file.
+     */
+    Agent(const QString &url);
 
-  /**
-   * Consturctor.
-   *
-   * @param url  A URL that describes the position of the agent file.
-   */
-  Agent( const QString &url );
+    /**
+     * Consturctor.
+     *
+     * @param addressee  The addressee object of the agent.
+     */
+    Agent(Addressee *addressee);
 
-  /**
-   * Consturctor.
-   *
-   * @param addressee  The addressee object of the agent.
-   */
-  Agent( Addressee *addressee );
-
-  /**
-   * Destructor.
-   */
-  ~Agent();
+    /**
+     * Destructor.
+     */
+    ~Agent();
 
 
-  bool operator==( const Agent & ) const;
-  bool operator!=( const Agent & ) const;
-  Agent &operator=(  const Agent & );
-  
-  /**
-   * Sets a URL for the location of the agent file. When using this
-   * function, isIntern() will return 'false' until you use
-   * setAddressee().
-   *
-   * @param url  The location URL of the agent file.
-   */
-  void setUrl( const QString &url );
+    bool operator==(const Agent &) const;
+    bool operator!=(const Agent &) const;
+    Agent &operator=(const Agent &);
 
-  /**
-   * Sets the addressee of the agent. When using this function,
-   * isIntern() will return 'true' until you use setUrl().
-   *
-   * @param addressee  The addressee object of the agent.
-   */
-  void setAddressee( Addressee *addressee );
+    /**
+     * Sets a URL for the location of the agent file. When using this
+     * function, isIntern() will return 'false' until you use
+     * setAddressee().
+     *
+     * @param url  The location URL of the agent file.
+     */
+    void setUrl(const QString &url);
 
-  /**
-   * Returns whether the agent is described by a URL (extern) or
-   * by a addressee (intern).
-   * When this method returns 'true' you can use addressee() to
-   * get a Addressee object. Otherwise you can request the URL
-   * of this agent by url() and load the data from that location.
-   */
-  bool isIntern() const;
+    /**
+     * Sets the addressee of the agent. When using this function,
+     * isIntern() will return 'true' until you use setUrl().
+     *
+     * @param addressee  The addressee object of the agent.
+     */
+    void setAddressee(Addressee *addressee);
 
-  /**
-   * Returns the location URL of this agent.
-   */
-  QString url() const;
+    /**
+     * Returns whether the agent is described by a URL (extern) or
+     * by a addressee (intern).
+     * When this method returns 'true' you can use addressee() to
+     * get a Addressee object. Otherwise you can request the URL
+     * of this agent by url() and load the data from that location.
+     */
+    bool isIntern() const;
 
-  /**
-   * Returns the addressee object of this agent.
-   */
-  Addressee* addressee() const;
+    /**
+     * Returns the location URL of this agent.
+     */
+    QString url() const;
 
-  /**
-   * Returns string representation of the agent.
-   */
-  QString asString() const;
+    /**
+     * Returns the addressee object of this agent.
+     */
+    Addressee *addressee() const;
+
+    /**
+     * Returns string representation of the agent.
+     */
+    QString asString() const;
 
 private:
-  Addressee *mAddressee;
-  QString mUrl;
+    Addressee *mAddressee;
+    QString mUrl;
 
-  int mIntern;
+    int mIntern;
 };
 
-KABC_EXPORT QDataStream &operator<<( QDataStream &, const Agent & );
-KABC_EXPORT QDataStream &operator>>( QDataStream &, Agent & );
-
+KABC_EXPORT QDataStream &operator<<(QDataStream &, const Agent &);
+KABC_EXPORT QDataStream &operator>>(QDataStream &, Agent &);
 }
 #endif

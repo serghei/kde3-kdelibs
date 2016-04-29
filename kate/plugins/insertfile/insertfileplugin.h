@@ -30,37 +30,33 @@
 #include <jobclasses.h>
 #include <kurl.h>
 
-class InsertFilePlugin : public KTextEditor::Plugin, public KTextEditor::PluginViewInterface
-{             
-  Q_OBJECT
+class InsertFilePlugin : public KTextEditor::Plugin, public KTextEditor::PluginViewInterface {
+    Q_OBJECT
 
-  public:
-    InsertFilePlugin( QObject *parent = 0, 
-                            const char* name = 0, 
-                            const QStringList &args = QStringList() );
-    virtual ~InsertFilePlugin();       
-    
-    void addView (KTextEditor::View *view);
-    void removeView (KTextEditor::View *view);
-    
-    
-  private:
-    QPtrList<class InsertFilePluginView> m_views;
+public:
+    InsertFilePlugin(QObject *parent = 0, const char *name = 0, const QStringList &args = QStringList());
+    virtual ~InsertFilePlugin();
+
+    void addView(KTextEditor::View *view);
+    void removeView(KTextEditor::View *view);
+
+
+private:
+    QPtrList< class InsertFilePluginView > m_views;
 };
 
-class InsertFilePluginView : public QObject, public KXMLGUIClient
-{
-  Q_OBJECT
-  public:
-    InsertFilePluginView( KTextEditor::View *view, const char *name=0 );
-    ~InsertFilePluginView() {};
-  public slots:
+class InsertFilePluginView : public QObject, public KXMLGUIClient {
+    Q_OBJECT
+public:
+    InsertFilePluginView(KTextEditor::View *view, const char *name = 0);
+    ~InsertFilePluginView(){};
+public slots:
     /* display a file dialog, and insert the chosen file */
     void slotInsertFile();
-  private slots:
-    void slotFinished( KIO::Job *job );
-    //slotAborted( KIO::Job *job );
-  private:
+private slots:
+    void slotFinished(KIO::Job *job);
+    // slotAborted( KIO::Job *job );
+private:
     void insertFile();
     KURL _file;
     QString _tmpfile;

@@ -18,23 +18,24 @@
 
 using namespace KABC;
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-    KAboutData aboutData("testkabc",I18N_NOOP("TestKabc"),"0.1");
+    KAboutData aboutData("testkabc", I18N_NOOP("TestKabc"), "0.1");
     KCmdLineArgs::init(argc, argv, &aboutData);
 
-    KApplication app( false, false );
+    KApplication app(false, false);
     AddressBook *ab = StdAddressBook::self();
 
 #define READ
 
 #ifdef READ
     AddressBook::Iterator it;
-    for ( it = ab->begin(); it != ab->end(); ++it ) {
-      QString vcard;
-      VCardConverter converter;
-      converter.addresseeToVCard( *it, vcard );
-      kdDebug() << "card=" << vcard << endl;
+    for(it = ab->begin(); it != ab->end(); ++it)
+    {
+        QString vcard;
+        VCardConverter converter;
+        converter.addresseeToVCard(*it, vcard);
+        kdDebug() << "card=" << vcard << endl;
     }
 #else
     Addressee addr;
@@ -46,14 +47,14 @@ int main(int argc,char **argv)
     Picture pic;
     QImage img;
     img.load("/home/tobias/test.png");
-/*
-    pic.setData(img);
-    pic.setType(QImage::imageFormat("/home/tobias/test.png"));
-*/
+    /*
+        pic.setData(img);
+        pic.setType(QImage::imageFormat("/home/tobias/test.png"));
+    */
     pic.setUrl("http://www.mypict.de");
-    addr.setLogo( pic );
+    addr.setLogo(pic);
 
-    ab->insertAddressee( addr );
+    ab->insertAddressee(addr);
 
     StdAddressBook::save();
 #endif

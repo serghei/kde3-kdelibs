@@ -17,16 +17,14 @@
 
 bool KFileMetaPreview::s_tryAudioPreview = true;
 
-KFileMetaPreview::KFileMetaPreview( QWidget *parent, const char *name )
-    : KPreviewWidgetBase( parent, name ),
-      haveAudioPreview( false )
+KFileMetaPreview::KFileMetaPreview(QWidget *parent, const char *name) : KPreviewWidgetBase(parent, name), haveAudioPreview(false)
 {
-    QHBoxLayout *layout = new QHBoxLayout( this, 0, 0 );
-    m_stack = new QWidgetStack( this );
-    layout->addWidget( m_stack );
+    QHBoxLayout *layout = new QHBoxLayout(this, 0, 0);
+    m_stack = new QWidgetStack(this);
+    layout->addWidget(m_stack);
 
     // ###
-//     m_previewProviders.setAutoDelete( true );
+    //     m_previewProviders.setAutoDelete( true );
     initPreviewProviders();
 }
 
@@ -40,95 +38,95 @@ void KFileMetaPreview::initPreviewProviders()
     // hardcoded so far
 
     // image previews
-    KImageFilePreview *imagePreview = new KImageFilePreview( m_stack );
-    (void) m_stack->addWidget( imagePreview );
-    m_stack->raiseWidget( imagePreview );
-    resize( imagePreview->sizeHint() );
+    KImageFilePreview *imagePreview = new KImageFilePreview(m_stack);
+    (void)m_stack->addWidget(imagePreview);
+    m_stack->raiseWidget(imagePreview);
+    resize(imagePreview->sizeHint());
 
     QStringList mimeTypes = imagePreview->supportedMimeTypes();
     QStringList::ConstIterator it = mimeTypes.begin();
-    for ( ; it != mimeTypes.end(); ++it )
+    for(; it != mimeTypes.end(); ++it)
     {
-//         qDebug(".... %s", (*it).latin1());
-        m_previewProviders.insert( *it, imagePreview );
+        //         qDebug(".... %s", (*it).latin1());
+        m_previewProviders.insert(*it, imagePreview);
     }
 }
 
-KPreviewWidgetBase * KFileMetaPreview::previewProviderFor( const QString& mimeType )
+KPreviewWidgetBase *KFileMetaPreview::previewProviderFor(const QString &mimeType)
 {
-//     qDebug("### looking for: %s", mimeType.latin1());
+    //     qDebug("### looking for: %s", mimeType.latin1());
     // often the first highlighted item, where we can be sure, there is no plugin
     // (this "folders reflect icons" is a konq-specific thing, right?)
-    if ( mimeType == "inode/directory" ) 
+    if(mimeType == "inode/directory")
         return 0L;
 
-    KPreviewWidgetBase *provider = m_previewProviders.find( mimeType );
-    if ( provider )
+    KPreviewWidgetBase *provider = m_previewProviders.find(mimeType);
+    if(provider)
         return provider;
 
-//qDebug("#### didn't find anything for: %s", mimeType.latin1());
+    // qDebug("#### didn't find anything for: %s", mimeType.latin1());
 
-    if ( s_tryAudioPreview && 
-         !mimeType.startsWith("text/") && !mimeType.startsWith("image/") )
+    if(s_tryAudioPreview && !mimeType.startsWith("text/") && !mimeType.startsWith("image/"))
     {
-        if ( !haveAudioPreview )
+        if(!haveAudioPreview)
         {
-            KPreviewWidgetBase *audioPreview = createAudioPreview( m_stack );
-            if ( audioPreview )
+            KPreviewWidgetBase *audioPreview = createAudioPreview(m_stack);
+            if(audioPreview)
             {
                 haveAudioPreview = true;
-                (void) m_stack->addWidget( audioPreview );
+                (void)m_stack->addWidget(audioPreview);
                 QStringList mimeTypes = audioPreview->supportedMimeTypes();
                 QStringList::ConstIterator it = mimeTypes.begin();
-                for ( ; it != mimeTypes.end(); ++it )
-                    m_previewProviders.insert( *it, audioPreview );
+                for(; it != mimeTypes.end(); ++it)
+                    m_previewProviders.insert(*it, audioPreview);
             }
         }
     }
 
     // with the new mimetypes from the audio-preview, try again
-    provider = m_previewProviders.find( mimeType );
-    if ( provider )
+    provider = m_previewProviders.find(mimeType);
+    if(provider)
         return provider;
 
     // ### mimetype may be image/* for example, try that
-    int index = mimeType.find( '/' );
-    if ( index > 0 )
+    int index = mimeType.find('/');
+    if(index > 0)
     {
-        provider = m_previewProviders.find( mimeType.left( index + 1 ) + "*" );
-        if ( provider )
+        provider = m_previewProviders.find(mimeType.left(index + 1) + "*");
+        if(provider)
             return provider;
     }
 
-    KMimeType::Ptr mimeInfo = KMimeType::mimeType( mimeType );
-    if ( mimeInfo )
+    KMimeType::Ptr mimeInfo = KMimeType::mimeType(mimeType);
+    if(mimeInfo)
     {
         // check mime type inheritance
         QString parentMimeType = mimeInfo->parentMimeType();
-        while ( !parentMimeType.isEmpty() )
+        while(!parentMimeType.isEmpty())
         {
-            provider = m_previewProviders.find( parentMimeType );
-            if ( provider )
+            provider = m_previewProviders.find(parentMimeType);
+            if(provider)
                 return provider;
 
-            KMimeType::Ptr parentMimeInfo = KMimeType::mimeType( parentMimeType );
-            if ( !parentMimeInfo ) break;
+            KMimeType::Ptr parentMimeInfo = KMimeType::mimeType(parentMimeType);
+            if(!parentMimeInfo)
+                break;
 
             parentMimeType = parentMimeInfo->parentMimeType();
         }
 
         // check X-KDE-Text property
-        QVariant textProperty = mimeInfo->property( "X-KDE-text" );
-        if ( textProperty.isValid() && textProperty.type() == QVariant::Bool )
+        QVariant textProperty = mimeInfo->property("X-KDE-text");
+        if(textProperty.isValid() && textProperty.type() == QVariant::Bool)
         {
-            if ( textProperty.toBool() )
+            if(textProperty.toBool())
             {
-                provider = m_previewProviders.find( "text/plain" );
-                if ( provider )
+                provider = m_previewProviders.find("text/plain");
+                if(provider)
                     return provider;
 
-                provider = m_previewProviders.find( "text/*" );
-                if ( provider )
+                provider = m_previewProviders.find("text/*");
+                if(provider)
                     return provider;
             }
         }
@@ -139,58 +137,59 @@ KPreviewWidgetBase * KFileMetaPreview::previewProviderFor( const QString& mimeTy
 
 void KFileMetaPreview::showPreview(const KURL &url)
 {
-    KMimeType::Ptr mt = KMimeType::findByURL( url );
-    KPreviewWidgetBase *provider = previewProviderFor( mt->name() );
-    if ( provider )
+    KMimeType::Ptr mt = KMimeType::findByURL(url);
+    KPreviewWidgetBase *provider = previewProviderFor(mt->name());
+    if(provider)
     {
-        if ( provider != m_stack->visibleWidget() ) // stop the previous preview
+        if(provider != m_stack->visibleWidget()) // stop the previous preview
             clearPreview();
 
-        m_stack->setEnabled( true );
-        m_stack->raiseWidget( provider );
-        provider->showPreview( url );
+        m_stack->setEnabled(true);
+        m_stack->raiseWidget(provider);
+        provider->showPreview(url);
     }
     else
     {
         clearPreview();
-        m_stack->setEnabled( false );
+        m_stack->setEnabled(false);
     }
 }
 
 void KFileMetaPreview::clearPreview()
 {
-    if ( m_stack->visibleWidget() )
-        static_cast<KPreviewWidgetBase*>( m_stack->visibleWidget() )->clearPreview();
+    if(m_stack->visibleWidget())
+        static_cast< KPreviewWidgetBase * >(m_stack->visibleWidget())->clearPreview();
 }
 
-void KFileMetaPreview::addPreviewProvider( const QString& mimeType,
-                                           KPreviewWidgetBase *provider )
+void KFileMetaPreview::addPreviewProvider(const QString &mimeType, KPreviewWidgetBase *provider)
 {
-    m_previewProviders.insert( mimeType, provider );
+    m_previewProviders.insert(mimeType, provider);
 }
 
 void KFileMetaPreview::clearPreviewProviders()
 {
-    QDictIterator<KPreviewWidgetBase> it( m_previewProviders );
-    for ( ; it.current(); ++it )
-        m_stack->removeWidget( it.current() );
+    QDictIterator< KPreviewWidgetBase > it(m_previewProviders);
+    for(; it.current(); ++it)
+        m_stack->removeWidget(it.current());
 
     m_previewProviders.clear();
 }
 
 // static
-KPreviewWidgetBase * KFileMetaPreview::createAudioPreview( QWidget *parent )
+KPreviewWidgetBase *KFileMetaPreview::createAudioPreview(QWidget *parent)
 {
-    KLibFactory *factory = KLibLoader::self()->factory( "kfileaudiopreview" );
-    if ( !factory )
+    KLibFactory *factory = KLibLoader::self()->factory("kfileaudiopreview");
+    if(!factory)
     {
         s_tryAudioPreview = false;
         return 0L;
     }
 
-    return dynamic_cast<KPreviewWidgetBase*>( factory->create( parent, "kfileaudiopreview" ));
+    return dynamic_cast< KPreviewWidgetBase * >(factory->create(parent, "kfileaudiopreview"));
 }
 
-void KFileMetaPreview::virtual_hook( int, void* ) {}
+void KFileMetaPreview::virtual_hook(int, void *)
+{
+}
 
 #include "kfilemetapreview.moc"

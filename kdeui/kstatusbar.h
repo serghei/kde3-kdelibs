@@ -32,29 +32,26 @@ class KStatusBar;
  *  Internal label class for use in KStatusBar
  *  @internal
  */
-class KDEUI_EXPORT KStatusBarLabel : public QLabel
-{
-  Q_OBJECT
+class KDEUI_EXPORT KStatusBarLabel : public QLabel {
+    Q_OBJECT
 
 public:
-
-
-  KStatusBarLabel( const QString& text, int _id, KStatusBar* parent = 0L, const char *name=0L );
-  ~KStatusBarLabel () {}
+    KStatusBarLabel(const QString &text, int _id, KStatusBar *parent = 0L, const char *name = 0L);
+    ~KStatusBarLabel()
+    {
+    }
 
 protected:
-
-  void mousePressEvent (QMouseEvent* _event);
-  void mouseReleaseEvent (QMouseEvent* _event);
+    void mousePressEvent(QMouseEvent *_event);
+    void mouseReleaseEvent(QMouseEvent *_event);
 
 private:
-
-  int id;
+    int id;
 
 signals:
 
-  void itemPressed (int id);
-  void itemReleased (int id);
+    void itemPressed(int id);
+    void itemReleased(int id);
 };
 
 /**
@@ -84,125 +81,131 @@ signals:
 
  *  @see KActionCollection
  */
-class KDEUI_EXPORT KStatusBar : public QStatusBar
-{
-  Q_OBJECT
+class KDEUI_EXPORT KStatusBar : public QStatusBar {
+    Q_OBJECT
 
 public:
-  /**
-   * @deprecated
-   * WARNING: This enum is only for backward compatibility and it may be removed.
-   * No method here uses it.
-   */
-  enum BarStatus{ Toggle, Show, Hide };
+    /**
+     * @deprecated
+     * WARNING: This enum is only for backward compatibility and it may be removed.
+     * No method here uses it.
+     */
+    enum BarStatus
+    {
+        Toggle,
+        Show,
+        Hide
+    };
 
-  /**
-   *  Constructs a status bar. @p parent is usually KMainWindow.
-   */
-  KStatusBar( QWidget* parent = 0L, const char* name = 0L );
+    /**
+     *  Constructs a status bar. @p parent is usually KMainWindow.
+     */
+    KStatusBar(QWidget *parent = 0L, const char *name = 0L);
 
-  /**
-   *  Destructor.
-   *
-   *  Deletes all internal objects.
-   */
-  ~KStatusBar();
+    /**
+     *  Destructor.
+     *
+     *  Deletes all internal objects.
+     */
+    ~KStatusBar();
 
-  /**
-   *  Inserts a text label into the status bar.
-   *  Parameters @p stretch and  @p permanent are passed to
-   * QStatusBar::addWidget .
-   *
-   *  If @p permanent is true, then item will be placed on the far right of
-   *  the statusbar and will never be hidden by QStatusBar::message.
-   *
-   *  @param text The label's text string.
-   *  @param id id of item
-   *  @param stretch stretch passed to QStatusBar::addWidget
-   *  @param permanent is item permanent or not (passed to QStatusBar::addWidget )
-   *
-   *  @see QStatusbar::addWidget
-   *
-   */
-  void insertItem(const QString& text, int id, int stretch=0, bool permanent=false );
+    /**
+     *  Inserts a text label into the status bar.
+     *  Parameters @p stretch and  @p permanent are passed to
+     * QStatusBar::addWidget .
+     *
+     *  If @p permanent is true, then item will be placed on the far right of
+     *  the statusbar and will never be hidden by QStatusBar::message.
+     *
+     *  @param text The label's text string.
+     *  @param id id of item
+     *  @param stretch stretch passed to QStatusBar::addWidget
+     *  @param permanent is item permanent or not (passed to QStatusBar::addWidget )
+     *
+     *  @see QStatusbar::addWidget
+     *
+     */
+    void insertItem(const QString &text, int id, int stretch = 0, bool permanent = false);
 
-  /**
-   *  Inserts a fixed width text label into status bar. The width will be set
-   *  according to @p text, but will remain fixed even if you change text.
-   *  You can change fixed width by calling setItemFixed.
-   *
-   *  @param text The label's text string
-   *  @param id id of item
-   *  @param permanent permanent flag passed to QStatusBar::addWidget
-   */
-  inline void insertFixedItem(const QString& text, int id, bool permanent=false)
-               { insertItem(text, id, 0, permanent); setItemFixed(id); }
+    /**
+     *  Inserts a fixed width text label into status bar. The width will be set
+     *  according to @p text, but will remain fixed even if you change text.
+     *  You can change fixed width by calling setItemFixed.
+     *
+     *  @param text The label's text string
+     *  @param id id of item
+     *  @param permanent permanent flag passed to QStatusBar::addWidget
+     */
+    inline void insertFixedItem(const QString &text, int id, bool permanent = false)
+    {
+        insertItem(text, id, 0, permanent);
+        setItemFixed(id);
+    }
 
-  /**
-   *  Removes an item.
-   *
-   * @param id The item to remove.
-   */
-  void removeItem( int id );
+    /**
+     *  Removes an item.
+     *
+     * @param id The item to remove.
+     */
+    void removeItem(int id);
 
-  /**
-   *  @since 3.2
-   *
-   *  Returns true if an item with @p id exists already in KStatusBar,
-   *  otherwise returns false.
-   *
-   *  @param id id of the item
-   */
-  bool hasItem( int id ) const;
+    /**
+     *  @since 3.2
+     *
+     *  Returns true if an item with @p id exists already in KStatusBar,
+     *  otherwise returns false.
+     *
+     *  @param id id of the item
+     */
+    bool hasItem(int id) const;
 
-  /**
-   * Changes the text in a status bar field.
-   *
-   * The item will be resized to fit the text. If you change text to be empty,
-   * item will not be visible (untill you add some text).
-   *
-   * @param text The label's text string
-   * @param id The id of item.
-   */
-  void changeItem( const QString& text, int id );
+    /**
+     * Changes the text in a status bar field.
+     *
+     * The item will be resized to fit the text. If you change text to be empty,
+     * item will not be visible (untill you add some text).
+     *
+     * @param text The label's text string
+     * @param id The id of item.
+     */
+    void changeItem(const QString &text, int id);
 
-  /**
-   * Sets the alignment of item @p id. By default all fields are aligned
-   * @p AlignHCenter | @p AlignVCenter. See QLabel::setAlignment for details.
-   *
-  */
-  void setItemAlignment(int id, int align);
+    /**
+     * Sets the alignment of item @p id. By default all fields are aligned
+     * @p AlignHCenter | @p AlignVCenter. See QLabel::setAlignment for details.
+     *
+    */
+    void setItemAlignment(int id, int align);
 
-  /**
-   * Sets item @p id to have fixed width. This cannot be undone, but you can
-   * always set new fixed width.
-   *
-   * @param id id of item
-   * @param width fixed width in pixels. Default -1 is to adapt to text width.
-   */
-  void setItemFixed(int id, int width=-1);
+    /**
+     * Sets item @p id to have fixed width. This cannot be undone, but you can
+     * always set new fixed width.
+     *
+     * @param id id of item
+     * @param width fixed width in pixels. Default -1 is to adapt to text width.
+     */
+    void setItemFixed(int id, int width = -1);
 
 signals:
 
-  /**
-   *  Emitted when mouse is pressed over item @p id.
-   *
-   *  Connect to this signal if you want to respond to mouse press events.
-   *
-   */
-  void pressed( int );
+    /**
+     *  Emitted when mouse is pressed over item @p id.
+     *
+     *  Connect to this signal if you want to respond to mouse press events.
+     *
+     */
+    void pressed(int);
 
-  /**
-   *  Emitted when mouse is released over item @p id.
-   *
-   *  Connect to this signal if you want to respond to mouse release events (clicks).
-   */
-  void released( int );
+    /**
+     *  Emitted when mouse is released over item @p id.
+     *
+     *  Connect to this signal if you want to respond to mouse release events (clicks).
+     */
+    void released(int);
 
 private:
-  QIntDict<KStatusBarLabel> items;
-  class KStatusBarPrivate* d;
+    QIntDict< KStatusBarLabel > items;
+    class KStatusBarPrivate *d;
 };
 
 #endif // __KSTATUSBAR_H__
-

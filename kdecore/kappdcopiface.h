@@ -34,41 +34,39 @@ dcop interface to all KDE applications that use it.
 @short DCOP interface to KApplication.
 @author Ian Reinhart Geiser <geiseri@yahoo.com>
 */
-class KDECORE_EXPORT KAppDCOPInterface : virtual public DCOPObject
-{
-K_DCOP
+class KDECORE_EXPORT KAppDCOPInterface : virtual public DCOPObject {
+    K_DCOP
 
 public:
-	/**
-	Construct a new interface object.
-	@param theKapp - The parent KApplication object
-	    that will provide us with the functional interface.
-	*/
-	KAppDCOPInterface( KApplication * theKapp );
-	/**
-	Destructor
-	Cleans up the dcop connection.
-	**/
-	~KAppDCOPInterface();
-k_dcop:
-	/**
-	Disable current applications session management
-	**/
-	void disableSessionManagement();
-	
-	QCString startupId();
-	QCString caption();
-	
-	void quit();
+    /**
+    Construct a new interface object.
+    @param theKapp - The parent KApplication object
+        that will provide us with the functional interface.
+    */
+    KAppDCOPInterface(KApplication *theKapp);
+    /**
+    Destructor
+    Cleans up the dcop connection.
+    **/
+    ~KAppDCOPInterface();
+    k_dcop :
+        /**
+        Disable current applications session management
+        **/
+        void
+        disableSessionManagement();
 
-	void reparseConfiguration();
+    QCString startupId();
+    QCString caption();
 
-	void updateUserTimestamp( ulong time );
+    void quit();
+
+    void reparseConfiguration();
+
+    void updateUserTimestamp(ulong time);
 
 private:
-	KApplication *m_KApplication;
+    KApplication *m_KApplication;
 };
 
 #endif
-
-

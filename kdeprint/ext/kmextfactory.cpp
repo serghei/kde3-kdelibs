@@ -23,6 +23,5 @@
 
 #include <kgenericfactory.h>
 
-typedef K_TYPELIST_3( KMExtManager, KMExtUiManager, KExtPrinterImpl ) Products;
-K_EXPORT_COMPONENT_FACTORY( kdeprint_ext, KGenericFactory< Products > )
-
+typedef K_TYPELIST_3(KMExtManager, KMExtUiManager, KExtPrinterImpl) Products;
+K_EXPORT_COMPONENT_FACTORY(kdeprint_ext, KGenericFactory< Products >)

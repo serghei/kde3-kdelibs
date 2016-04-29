@@ -26,130 +26,181 @@
 
 namespace KJS {
 
-  /**
-   * Represents an Identifier for a Javascript object.
-   */
-    class KJS_EXPORT Identifier {
-        friend class PropertyMap;
-    public:
-	/** 
-	* Creates an empty identifier
-	*/
-        Identifier() { }
-	/**
-	* Creates an identifier with the name of the string 
-	* @code
-	* KJS::Identifier method("someJSMethod");
-	* @endcode
-	*/
-        Identifier(const char *s) : _ustring(add(s)) { }
-        Identifier(const UChar *s, int length) : _ustring(add(s, length)) { }
-        explicit Identifier(const UString &s) : _ustring(add(s.rep)) { }
+/**
+ * Represents an Identifier for a Javascript object.
+ */
+class KJS_EXPORT Identifier {
+    friend class PropertyMap;
 
-	/**
-	* returns a UString of the identifier
-	*/
-        const UString &ustring() const { return _ustring; }
-        DOM::DOMString string() const;
-        /**
-	* returns a QString of the identifier
-	*/
-	QString qstring() const;
+public:
+    /**
+    * Creates an empty identifier
+    */
+    Identifier()
+    {
+    }
+    /**
+    * Creates an identifier with the name of the string
+    * @code
+    * KJS::Identifier method("someJSMethod");
+    * @endcode
+    */
+    Identifier(const char *s) : _ustring(add(s))
+    {
+    }
+    Identifier(const UChar *s, int length) : _ustring(add(s, length))
+    {
+    }
+    explicit Identifier(const UString &s) : _ustring(add(s.rep))
+    {
+    }
 
-	/**
-	* returns a UChar pointer to the string of the identifier with a size defined by @ref size().
-	*/
-        const UChar *data() const { return _ustring.data(); }
-	/**
-	* The size of the UChar string returned.
-	*/
-        int size() const { return _ustring.size(); }
+    /**
+    * returns a UString of the identifier
+    */
+    const UString &ustring() const
+    {
+        return _ustring;
+    }
+    DOM::DOMString string() const;
+    /**
+* returns a QString of the identifier
+*/
+    QString qstring() const;
 
-	/**
-	* Char * of the identifier's string.
-	*/
-        const char *ascii() const { return _ustring.ascii(); }
+    /**
+    * returns a UChar pointer to the string of the identifier with a size defined by @ref size().
+    */
+    const UChar *data() const
+    {
+        return _ustring.data();
+    }
+    /**
+    * The size of the UChar string returned.
+    */
+    int size() const
+    {
+        return _ustring.size();
+    }
 
-        static Identifier from(unsigned y) { return Identifier(UString::from(y)); }
+    /**
+    * Char * of the identifier's string.
+    */
+    const char *ascii() const
+    {
+        return _ustring.ascii();
+    }
 
-	/**
-	* Returns the identfiers state of being unset.
-	*/
-        bool isNull() const { return _ustring.isNull(); }
-	/**
-	* Returns that the identifiers string is set, but is empty.
-	*/
-        bool isEmpty() const { return _ustring.isEmpty(); }
+    static Identifier from(unsigned y)
+    {
+        return Identifier(UString::from(y));
+    }
 
-        unsigned long toULong(bool *ok) const { return _ustring.toULong(ok); }
-        unsigned toStrictUInt32(bool *ok) const { return _ustring.toStrictUInt32(ok); }
-        unsigned toArrayIndex(bool *ok) const { return _ustring.toArrayIndex(ok); }
+    /**
+    * Returns the identfiers state of being unset.
+    */
+    bool isNull() const
+    {
+        return _ustring.isNull();
+    }
+    /**
+    * Returns that the identifiers string is set, but is empty.
+    */
+    bool isEmpty() const
+    {
+        return _ustring.isEmpty();
+    }
 
-        double toDouble() const { return _ustring.toDouble(); }
+    unsigned long toULong(bool *ok) const
+    {
+        return _ustring.toULong(ok);
+    }
+    unsigned toStrictUInt32(bool *ok) const
+    {
+        return _ustring.toStrictUInt32(ok);
+    }
+    unsigned toArrayIndex(bool *ok) const
+    {
+        return _ustring.toArrayIndex(ok);
+    }
 
-	/**
-	* Creates an empty Identifier
-	*/
-        static const Identifier &null();
+    double toDouble() const
+    {
+        return _ustring.toDouble();
+    }
 
-        friend bool operator==(const Identifier &, const Identifier &);
-        friend bool operator!=(const Identifier &, const Identifier &);
+    /**
+    * Creates an empty Identifier
+    */
+    static const Identifier &null();
 
-        friend bool operator==(const Identifier &, const char *);
+    friend bool operator==(const Identifier &, const Identifier &);
+    friend bool operator!=(const Identifier &, const Identifier &);
 
-        static void remove(UString::Rep *);
+    friend bool operator==(const Identifier &, const char *);
 
-    private:
-        UString _ustring;
+    static void remove(UString::Rep *);
 
-        static bool equal(UString::Rep *, const char *);
-        static bool equal(UString::Rep *, const UChar *, int length);
-        static bool equal(UString::Rep *, UString::Rep *);
+private:
+    UString _ustring;
 
-        static bool equal(const Identifier &a, const Identifier &b)
-            { return a._ustring.rep == b._ustring.rep; }
-        static bool equal(const Identifier &a, const char *b)
-            { return equal(a._ustring.rep, b); }
+    static bool equal(UString::Rep *, const char *);
+    static bool equal(UString::Rep *, const UChar *, int length);
+    static bool equal(UString::Rep *, UString::Rep *);
 
-        static UString::Rep *add(const char *);
-        static UString::Rep *add(const UChar *, int length);
-        static UString::Rep *add(UString::Rep *);
+    static bool equal(const Identifier &a, const Identifier &b)
+    {
+        return a._ustring.rep == b._ustring.rep;
+    }
+    static bool equal(const Identifier &a, const char *b)
+    {
+        return equal(a._ustring.rep, b);
+    }
 
-        static void insert(UString::Rep *);
+    static UString::Rep *add(const char *);
+    static UString::Rep *add(const UChar *, int length);
+    static UString::Rep *add(UString::Rep *);
 
-        static void rehash(int newTableSize);
-        static void expand();
-        static void shrink();
+    static void insert(UString::Rep *);
 
-	// TODO: move into .cpp file
-        static UString::Rep **_table;
-        static int _tableSize;
-        static int _tableSizeMask;
-        static int _keyCount;
-    };
+    static void rehash(int newTableSize);
+    static void expand();
+    static void shrink();
 
-    inline bool operator==(const Identifier &a, const Identifier &b)
-        { return Identifier::equal(a, b); }
+    // TODO: move into .cpp file
+    static UString::Rep **_table;
+    static int _tableSize;
+    static int _tableSizeMask;
+    static int _keyCount;
+};
 
-    inline bool operator!=(const Identifier &a, const Identifier &b)
-        { return !Identifier::equal(a, b); }
+inline bool operator==(const Identifier &a, const Identifier &b)
+{
+    return Identifier::equal(a, b);
+}
 
-    inline bool operator==(const Identifier &a, const char *b)
-        { return Identifier::equal(a, b); }
+inline bool operator!=(const Identifier &a, const Identifier &b)
+{
+    return !Identifier::equal(a, b);
+}
 
-    KJS_EXPORT extern const Identifier argumentsPropertyName;
-    KJS_EXPORT extern const Identifier calleePropertyName;
-    KJS_EXPORT extern const Identifier callerPropertyName;
-    KJS_EXPORT extern const Identifier constructorPropertyName;
-    KJS_EXPORT extern const Identifier lengthPropertyName;
-    KJS_EXPORT extern const Identifier messagePropertyName;
-    KJS_EXPORT extern const Identifier namePropertyName;
-    KJS_EXPORT extern const Identifier prototypePropertyName;
-    KJS_EXPORT extern const Identifier specialPrototypePropertyName;
-    KJS_EXPORT extern const Identifier toLocaleStringPropertyName;
-    KJS_EXPORT extern const Identifier toStringPropertyName;
-    KJS_EXPORT extern const Identifier valueOfPropertyName;
+inline bool operator==(const Identifier &a, const char *b)
+{
+    return Identifier::equal(a, b);
+}
 
+KJS_EXPORT extern const Identifier argumentsPropertyName;
+KJS_EXPORT extern const Identifier calleePropertyName;
+KJS_EXPORT extern const Identifier callerPropertyName;
+KJS_EXPORT extern const Identifier constructorPropertyName;
+KJS_EXPORT extern const Identifier lengthPropertyName;
+KJS_EXPORT extern const Identifier messagePropertyName;
+KJS_EXPORT extern const Identifier namePropertyName;
+KJS_EXPORT extern const Identifier prototypePropertyName;
+KJS_EXPORT extern const Identifier specialPrototypePropertyName;
+KJS_EXPORT extern const Identifier toLocaleStringPropertyName;
+KJS_EXPORT extern const Identifier toStringPropertyName;
+KJS_EXPORT extern const Identifier valueOfPropertyName;
 }
 
 #endif

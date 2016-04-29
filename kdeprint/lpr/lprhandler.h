@@ -20,7 +20,7 @@
 #ifndef LPRHANDLER_H
 #define LPRHANDLER_H
 
-#if !defined( _KDEPRINT_COMPILE ) && defined( __GNUC__ )
+#if !defined(_KDEPRINT_COMPILE) && defined(__GNUC__)
 #warning internal header, do not use except if you are a KDEPrint developer
 #endif
 
@@ -39,50 +39,57 @@ class KPrinter;
  * if you're a KDEPrint developer. The API might change in the
  * future and binary compatibility might be broken.
  */
-class LprHandler
-{
+class LprHandler {
 public:
-	LprHandler(const QString& name, KMManager *mgr = 0);
-	virtual ~LprHandler();
+    LprHandler(const QString &name, KMManager *mgr = 0);
+    virtual ~LprHandler();
 
-	virtual bool validate(PrintcapEntry*);
-	virtual KMPrinter* createPrinter(PrintcapEntry*);
-	virtual bool completePrinter(KMPrinter*, PrintcapEntry*, bool shortmode = true);
-	virtual DrMain* loadDriver(KMPrinter*, PrintcapEntry*, bool = false);
-	virtual DrMain* loadDbDriver(const QString&);
-	virtual bool savePrinterDriver(KMPrinter*, PrintcapEntry*, DrMain*, bool* = 0);
-	virtual PrintcapEntry* createEntry(KMPrinter*);
-	virtual bool removePrinter(KMPrinter*, PrintcapEntry*);
-	virtual QString printOptions(KPrinter*);
-	virtual void reset();
+    virtual bool validate(PrintcapEntry *);
+    virtual KMPrinter *createPrinter(PrintcapEntry *);
+    virtual bool completePrinter(KMPrinter *, PrintcapEntry *, bool shortmode = true);
+    virtual DrMain *loadDriver(KMPrinter *, PrintcapEntry *, bool = false);
+    virtual DrMain *loadDbDriver(const QString &);
+    virtual bool savePrinterDriver(KMPrinter *, PrintcapEntry *, DrMain *, bool * = 0);
+    virtual PrintcapEntry *createEntry(KMPrinter *);
+    virtual bool removePrinter(KMPrinter *, PrintcapEntry *);
+    virtual QString printOptions(KPrinter *);
+    virtual void reset();
 
-	QString name() const;
-	KMManager* manager() const;
-	QString driverDirectory();
-
-protected:
-	DrMain* loadToolDriver(const QString&);
-	QString locateDir(const QString& dirname, const QString& paths);
-	QString cachedDriverDir() const;
-	void setCachedDriverDir(const QString&);
-	virtual QString driverDirInternal();
+    QString name() const;
+    KMManager *manager() const;
+    QString driverDirectory();
 
 protected:
-	QString	m_name;
-	KMManager	*m_manager;
-	QString	m_cacheddriverdir;
+    DrMain *loadToolDriver(const QString &);
+    QString locateDir(const QString &dirname, const QString &paths);
+    QString cachedDriverDir() const;
+    void setCachedDriverDir(const QString &);
+    virtual QString driverDirInternal();
+
+protected:
+    QString m_name;
+    KMManager *m_manager;
+    QString m_cacheddriverdir;
 };
 
 inline QString LprHandler::name() const
-{ return m_name; }
+{
+    return m_name;
+}
 
-inline KMManager* LprHandler::manager() const
-{ return m_manager; }
+inline KMManager *LprHandler::manager() const
+{
+    return m_manager;
+}
 
 inline QString LprHandler::cachedDriverDir() const
-{ return m_cacheddriverdir; }
+{
+    return m_cacheddriverdir;
+}
 
-inline void LprHandler::setCachedDriverDir(const QString& s)
-{ m_cacheddriverdir = s; }
+inline void LprHandler::setCachedDriverDir(const QString &s)
+{
+    m_cacheddriverdir = s;
+}
 
 #endif

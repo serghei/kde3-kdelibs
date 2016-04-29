@@ -35,83 +35,88 @@
 #define KMDI_CHILDFRM_MIN_WIDTH 130
 
 //----------------------------------------------------------------------------
-/** 
+/**
 * @short A namespace for the KMDI library
 */
-namespace KMdi
-{
-   /** extent Qt events
-      @see QCustomEvent, QEvent::User
-      \code
-      bool B_MyWidget::event( QEvent* e) {
-         if( e->type() == QEvent::Type(QEvent::User + int(KMdi::EV_Move))) {
-            ...
-         }
+namespace KMdi {
+/** extent Qt events
+   @see QCustomEvent, QEvent::User
+   \code
+   bool B_MyWidget::event( QEvent* e) {
+      if( e->type() == QEvent::Type(QEvent::User + int(KMdi::EV_Move))) {
          ...
       }
-      \endcode
-   */
-   enum EventType {
-      EV_Move=1,
-      EV_DragBegin,
-      EV_DragEnd,
-      EV_ResizeBegin,
-      EV_ResizeEnd
-   };
+      ...
+   }
+   \endcode
+*/
+enum EventType
+{
+    EV_Move = 1,
+    EV_DragBegin,
+    EV_DragEnd,
+    EV_ResizeBegin,
+    EV_ResizeEnd
+};
 
-   /**
-   * During KMdiMainFrm::addWindow the enum AddWindowFlags is used to determine how the view is initialy being added to the MDI system
-   */
-   enum AddWindowFlags {
-      /**
-      * standard is: show normal, attached, visible, document view (not toolview). Maximize, Minimize, Hide adds
-      * appropriately. Detach adds a view that appears toplevel, ToolWindow adds the view as tool view.
-      * That means it is stay-on-top and toplevel. UseKMdiSizeHint should use the restore geometry of the
-      * latest current top childframe but is not supported yet.
-      */
-      StandardAdd = 0,
-      Maximize    = 1,
-      Minimize    = 2,
-      Hide        = 4,
-      Detach      = 8,
-      ToolWindow  = 16,
-      UseKMdiSizeHint = 32,
-      AddWindowFlags = 0xff
-   };
+/**
+* During KMdiMainFrm::addWindow the enum AddWindowFlags is used to determine how the view is initialy being added to the MDI system
+*/
+enum AddWindowFlags
+{
+    /**
+    * standard is: show normal, attached, visible, document view (not toolview). Maximize, Minimize, Hide adds
+    * appropriately. Detach adds a view that appears toplevel, ToolWindow adds the view as tool view.
+    * That means it is stay-on-top and toplevel. UseKMdiSizeHint should use the restore geometry of the
+    * latest current top childframe but is not supported yet.
+    */
+    StandardAdd = 0,
+    Maximize = 1,
+    Minimize = 2,
+    Hide = 4,
+    Detach = 8,
+    ToolWindow = 16,
+    UseKMdiSizeHint = 32,
+    AddWindowFlags = 0xff
+};
 
-   enum FrameDecor {
-      Win95Look = 0,
-      KDE1Look  = 1,
-      KDELook  = 2,
-      KDELaptopLook = 3
-   };
+enum FrameDecor
+{
+    Win95Look = 0,
+    KDE1Look = 1,
+    KDELook = 2,
+    KDELaptopLook = 3
+};
 
-   enum MdiMode {
-      UndefinedMode  = 0,
-      ToplevelMode   = 1,
-      ChildframeMode = 2,
-      TabPageMode    = 3,
-      IDEAlMode      = 4
-   };
+enum MdiMode
+{
+    UndefinedMode = 0,
+    ToplevelMode = 1,
+    ChildframeMode = 2,
+    TabPageMode = 3,
+    IDEAlMode = 4
+};
 
-   enum TabWidgetVisibility {
-      AlwaysShowTabs         = 0,
-      ShowWhenMoreThanOneTab = 1,
-      NeverShowTabs          = 2
-   };
+enum TabWidgetVisibility
+{
+    AlwaysShowTabs = 0,
+    ShowWhenMoreThanOneTab = 1,
+    NeverShowTabs = 2
+};
 
-  /**
-   * The style of the toolview tabs
-   * \since 3.3
-   */
-   enum ToolviewStyle {
-   /** Show only icons on the toolview tabs. The visible toolviews contain both the icon and text. */
-      IconOnly = 0,
-   /** Show only the text description on the toolview tabs. */
-      TextOnly = 1,
-   /** Show both the icon and description on the toolview tabs. */
-      TextAndIcon = 3
-   };
-} //namespace
+/**
+ * The style of the toolview tabs
+ * \since 3.3
+ */
+enum ToolviewStyle
+{
+    /** Show only icons on the toolview tabs. The visible toolviews contain both the icon and text. */
+    IconOnly = 0,
+    /** Show only the text description on the toolview tabs. */
+    TextOnly = 1,
+    /** Show both the icon and description on the toolview tabs. */
+    TextAndIcon = 3
+};
+} // namespace
 
 #endif //_KMDIDEFINES_H_

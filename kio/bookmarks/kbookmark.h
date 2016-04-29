@@ -28,18 +28,24 @@
 class KBookmarkManager;
 class KBookmarkGroup;
 
-class KIO_EXPORT KBookmark
-{
+class KIO_EXPORT KBookmark {
     friend class KBookmarkGroup;
+
 public:
-    enum MetaDataOverwriteMode {
-        OverwriteMetaData, DontOverwriteMetaData
+    enum MetaDataOverwriteMode
+    {
+        OverwriteMetaData,
+        DontOverwriteMetaData
     };
 
-    KBookmark( ) {}
-    KBookmark( QDomElement elem ) : element(elem) {}
+    KBookmark()
+    {
+    }
+    KBookmark(QDomElement elem) : element(elem)
+    {
+    }
 
-    static KBookmark standaloneBookmark( const QString & text, const KURL & url, const QString & icon = QString::null );
+    static KBookmark standaloneBookmark(const QString &text, const KURL &url, const QString &icon = QString::null);
 
     /**
      * Whether the bookmark is a group or a normal bookmark
@@ -56,7 +62,10 @@ public:
      * be the case for a real bookmark (in a menu), but it's used
      * for instance as the end condition for KBookmarkGroup::next()
      */
-    bool isNull() const {return element.isNull();}
+    bool isNull() const
+    {
+        return element.isNull();
+    }
 
     /**
      * @return true if bookmark is contained by a QDomDocument,
@@ -110,12 +119,15 @@ public:
     // knows about its manager, so that there can be several managers.
     // But if we say there is only one manager (i.e. set of bookmarks)
     // per application, then KBookmarkManager::self() is much easier.
-    //KBookmarkManager * manager() const { return m_manager; }
+    // KBookmarkManager * manager() const { return m_manager; }
 
     /**
      * @internal for KEditBookmarks
      */
-    QDomElement internalElement() const { return element; }
+    QDomElement internalElement() const
+    {
+        return element;
+    }
 
     /**
      * Updates the bookmarks access metadata
@@ -129,38 +141,44 @@ public:
     /**
      * @return address of parent
      */
-    static QString parentAddress( const QString & address )
-    { return address.left( address.findRev('/') ); }
+    static QString parentAddress(const QString &address)
+    {
+        return address.left(address.findRev('/'));
+    }
 
     /**
      * @return position in parent (e.g. /4/5/2 -> 2)
      */
-    static uint positionInParent( const QString & address )
-    { return address.mid( address.findRev('/') + 1 ).toInt(); }
+    static uint positionInParent(const QString &address)
+    {
+        return address.mid(address.findRev('/') + 1).toInt();
+    }
 
     /**
      * @return address of previous sibling (e.g. /4/5/2 -> /4/5/1)
      * Returns QString::null for a first child
      */
-    static QString previousAddress( const QString & address )
+    static QString previousAddress(const QString &address)
     {
         uint pp = positionInParent(address);
-        return pp>0 ? parentAddress(address) + '/' + QString::number(pp-1) : QString::null;
+        return pp > 0 ? parentAddress(address) + '/' + QString::number(pp - 1) : QString::null;
     }
 
     /**
      * @return address of next sibling (e.g. /4/5/2 -> /4/5/3)
      * This doesn't check whether it actually exists
      */
-    static QString nextAddress( const QString & address )
-    { return parentAddress(address) + '/' + QString::number(positionInParent(address)+1); }
+    static QString nextAddress(const QString &address)
+    {
+        return parentAddress(address) + '/' + QString::number(positionInParent(address) + 1);
+    }
 
     /**
-     * @return the common parent of both addresses which 
+     * @return the common parent of both addresses which
      * has the greatest depth
      * @since 3.5
      */
-     static QString commonParent(QString A, QString B);
+    static QString commonParent(QString A, QString B);
 
     /**
      * Get the value of a specific metadata item.
@@ -169,7 +187,7 @@ public:
      * the specified key does not exist.
      * @since 3.4
      */
-    QString metaDataItem( const QString &key ) const;
+    QString metaDataItem(const QString &key) const;
 
     /**
      * Change the value of a specific metadata item, or create the given item
@@ -179,7 +197,7 @@ public:
      * @param mode Whether to overwrite the item's value if it exists already or not.
      * @since 3.4
      */
-    void setMetaDataItem( const QString &key, const QString &value, MetaDataOverwriteMode mode = OverwriteMetaData );
+    void setMetaDataItem(const QString &key, const QString &value, MetaDataOverwriteMode mode = OverwriteMetaData);
 
 protected:
     QDomElement element;
@@ -190,14 +208,13 @@ protected:
 
 private:
     bool hasMetaData() const;
-    static QString left(const QString & str, uint len);
+    static QString left(const QString &str, uint len);
 };
 
 /**
  * A group of bookmarks
  */
-class KIO_EXPORT KBookmarkGroup : public KBookmark
-{
+class KIO_EXPORT KBookmarkGroup : public KBookmark {
 public:
     /**
      * Create an invalid group. This is mostly for use in QValueList,
@@ -210,7 +227,7 @@ public:
     /**
      * Create a bookmark group as specified by the given element
      */
-    KBookmarkGroup( QDomElement elem );
+    KBookmarkGroup(QDomElement elem);
 
     /**
      * Much like KBookmark::address, but caches the
@@ -231,12 +248,12 @@ public:
      * Return the prevous sibling of a child bookmark of this group
      * @param current has to be one of our child bookmarks.
      */
-    KBookmark previous( const KBookmark & current ) const;
+    KBookmark previous(const KBookmark &current) const;
     /**
      * Return the next sibling of a child bookmark of this group
      * @param current has to be one of our child bookmarks.
      */
-    KBookmark next( const KBookmark & current ) const;
+    KBookmark next(const KBookmark &current) const;
 
     /**
      * Create a new bookmark folder, as the last child of this group
@@ -244,7 +261,7 @@ public:
      * @param text for the folder. If empty, the user will be queried for it.
      * @param emitSignal if true emit KBookmarkNotifier signal
      */
-    KBookmarkGroup createNewFolder( KBookmarkManager* mgr, const QString & text = QString::null, bool emitSignal = true );
+    KBookmarkGroup createNewFolder(KBookmarkManager *mgr, const QString &text = QString::null, bool emitSignal = true);
     /**
      * Create a new bookmark separator
      * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
@@ -259,7 +276,7 @@ public:
      * @param emitSignal if true emit KBookmarkNotifier signal
      * @since 3.4
      */
-    KBookmark addBookmark( KBookmarkManager* mgr, const KBookmark &bm, bool emitSignal = true );
+    KBookmark addBookmark(KBookmarkManager *mgr, const KBookmark &bm, bool emitSignal = true);
 
     /**
      * Create a new bookmark, as the last child of this group
@@ -271,20 +288,20 @@ public:
      * will be determined from the URL if not specified.
      * @param emitSignal if true emit KBookmarkNotifier signal
      */
-    KBookmark addBookmark( KBookmarkManager* mgr, const QString & text, const KURL & url, const QString & icon = QString::null, bool emitSignal = true );
+    KBookmark addBookmark(KBookmarkManager *mgr, const QString &text, const KURL &url, const QString &icon = QString::null, bool emitSignal = true);
 
     /**
      * Moves @p item after @p after (which should be a child of ours).
      * If item is null, @p item is moved as the first child.
      * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
      */
-    bool moveItem( const KBookmark & item, const KBookmark & after );
+    bool moveItem(const KBookmark &item, const KBookmark &after);
 
     /**
      * Delete a bookmark - it has to be one of our children !
      * Don't forget to use KBookmarkManager::self()->emitChanged( parentBookmark );
      */
-    void deleteBookmark( KBookmark bk );
+    void deleteBookmark(KBookmark bk);
 
     /**
      * @return true if this is the toolbar group
@@ -299,10 +316,10 @@ public:
      * @return the list of urls of bookmarks at top level of the group
      * @since 3.2
      */
-    QValueList<KURL> groupUrlList() const;
+    QValueList< KURL > groupUrlList() const;
 
 protected:
-    QDomElement nextKnownTag( QDomElement start, bool goNext ) const;
+    QDomElement nextKnownTag(QDomElement start, bool goNext) const;
 
 private:
     mutable QString m_address;
@@ -317,11 +334,24 @@ private:
  */
 class KIO_EXPORT KBookmarkGroupTraverser {
 protected:
-    virtual ~KBookmarkGroupTraverser() { ; }
+    virtual ~KBookmarkGroupTraverser()
+    {
+        ;
+    }
     void traverse(const KBookmarkGroup &);
-    virtual void visit(const KBookmark &) { ; }
-    virtual void visitEnter(const KBookmarkGroup &) { ; }
-    virtual void visitLeave(const KBookmarkGroup &) { ; }
+    virtual void visit(const KBookmark &)
+    {
+        ;
+    }
+    virtual void visitEnter(const KBookmarkGroup &)
+    {
+        ;
+    }
+    virtual void visitLeave(const KBookmarkGroup &)
+    {
+        ;
+    }
+
 private:
     class KBookmarkGroupTraverserPrivate *d;
 };

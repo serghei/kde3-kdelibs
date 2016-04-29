@@ -47,19 +47,21 @@ class DOMString;
  * BLOCKQUOTE element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLBlockquoteElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLBlockquoteElement : public HTMLElement {
 public:
     HTMLBlockquoteElement();
     HTMLBlockquoteElement(const HTMLBlockquoteElement &other);
     HTMLBlockquoteElement(const Node &other) : HTMLElement()
-        {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLBlockquoteElement(HTMLElementImpl *impl);
-public:
 
-    HTMLBlockquoteElement & operator = (const HTMLBlockquoteElement &other);
-    HTMLBlockquoteElement & operator = (const Node &other);
+public:
+    HTMLBlockquoteElement &operator=(const HTMLBlockquoteElement &other);
+    HTMLBlockquoteElement &operator=(const Node &other);
 
     ~HTMLBlockquoteElement();
 
@@ -74,7 +76,7 @@ public:
     /**
      * see cite
      */
-    void setCite( const DOMString & );
+    void setCite(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -88,19 +90,21 @@ class DOMString;
  * DIV element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLDivElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLDivElement : public HTMLElement {
 public:
     HTMLDivElement();
     HTMLDivElement(const HTMLDivElement &other);
     HTMLDivElement(const Node &other) : HTMLElement()
-        {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLDivElement(HTMLDivElementImpl *impl);
-public:
 
-    HTMLDivElement & operator = (const HTMLDivElement &other);
-    HTMLDivElement & operator = (const Node &other);
+public:
+    HTMLDivElement &operator=(const HTMLDivElement &other);
+    HTMLDivElement &operator=(const Node &other);
 
     ~HTMLDivElement();
 
@@ -116,7 +120,7 @@ public:
     /**
      * see align
      */
-    void setAlign( const DOMString & );
+    void setAlign(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -130,19 +134,21 @@ class DOMString;
  * HR element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLHRElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLHRElement : public HTMLElement {
 public:
     HTMLHRElement();
     HTMLHRElement(const HTMLHRElement &other);
     HTMLHRElement(const Node &other) : HTMLElement()
-        {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLHRElement(HTMLHRElementImpl *impl);
-public:
 
-    HTMLHRElement & operator = (const HTMLHRElement &other);
-    HTMLHRElement & operator = (const Node &other);
+public:
+    HTMLHRElement &operator=(const HTMLHRElement &other);
+    HTMLHRElement &operator=(const Node &other);
 
     ~HTMLHRElement();
 
@@ -158,7 +164,7 @@ public:
     /**
      * see align
      */
-    void setAlign( const DOMString & );
+    void setAlign(const DOMString &);
 
     /**
      * Indicates to the user agent that there should be no shading in
@@ -173,7 +179,7 @@ public:
     /**
      * see noShade
      */
-    void setNoShade( bool );
+    void setNoShade(bool);
 
     /**
      * The height of the rule. See the <a
@@ -187,7 +193,7 @@ public:
     /**
      * see size
      */
-    void setSize( const DOMString & );
+    void setSize(const DOMString &);
 
     /**
      * The width of the rule. See the <a
@@ -201,7 +207,7 @@ public:
     /**
      * see width
      */
-    void setWidth( const DOMString & );
+    void setWidth(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -214,19 +220,21 @@ class DOMString;
  * H1 element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLHeadingElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLHeadingElement : public HTMLElement {
 public:
     HTMLHeadingElement();
     HTMLHeadingElement(const HTMLHeadingElement &other);
     HTMLHeadingElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLHeadingElement(HTMLElementImpl *impl);
-public:
 
-    HTMLHeadingElement & operator = (const HTMLHeadingElement &other);
-    HTMLHeadingElement & operator = (const Node &other);
+public:
+    HTMLHeadingElement &operator=(const HTMLHeadingElement &other);
+    HTMLHeadingElement &operator=(const Node &other);
 
     ~HTMLHeadingElement();
 
@@ -242,7 +250,7 @@ public:
     /**
      * see align
      */
-    void setAlign( const DOMString & );
+    void setAlign(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -255,19 +263,21 @@ class DOMString;
  * element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLParagraphElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLParagraphElement : public HTMLElement {
 public:
     HTMLParagraphElement();
     HTMLParagraphElement(const HTMLParagraphElement &other);
     HTMLParagraphElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLParagraphElement(HTMLElementImpl *impl);
-public:
 
-    HTMLParagraphElement & operator = (const HTMLParagraphElement &other);
-    HTMLParagraphElement & operator = (const Node &other);
+public:
+    HTMLParagraphElement &operator=(const HTMLParagraphElement &other);
+    HTMLParagraphElement &operator=(const Node &other);
 
     ~HTMLParagraphElement();
 
@@ -283,7 +293,7 @@ public:
     /**
      * see align
      */
-    void setAlign( const DOMString & );
+    void setAlign(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -296,19 +306,21 @@ class HTMLPreElementImpl;
  * PRE element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLPreElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLPreElement : public HTMLElement {
 public:
     HTMLPreElement();
     HTMLPreElement(const HTMLPreElement &other);
     HTMLPreElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLPreElement(HTMLPreElementImpl *impl);
-public:
 
-    HTMLPreElement & operator = (const HTMLPreElement &other);
-    HTMLPreElement & operator = (const Node &other);
+public:
+    HTMLPreElement &operator=(const HTMLPreElement &other);
+    HTMLPreElement &operator=(const Node &other);
 
     ~HTMLPreElement();
 
@@ -324,7 +336,7 @@ public:
     /**
      * see width
      */
-    void setWidth( long );
+    void setWidth(long);
 };
 
 class HTMLLayerElementImpl;
@@ -334,19 +346,21 @@ class HTMLLayerElementImpl;
  * Behaves mostly like absolute positioned DIV-blocks.
  *
  */
-class KHTML_EXPORT HTMLLayerElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLLayerElement : public HTMLElement {
 public:
     HTMLLayerElement();
     HTMLLayerElement(const HTMLLayerElement &other);
     HTMLLayerElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLLayerElement(HTMLLayerElementImpl *impl);
-public:
 
-    HTMLLayerElement & operator = (const HTMLLayerElement &other);
-    HTMLLayerElement & operator = (const Node &other);
+public:
+    HTMLLayerElement &operator=(const HTMLLayerElement &other);
+    HTMLLayerElement &operator=(const Node &other);
 
     ~HTMLLayerElement();
 
@@ -359,7 +373,7 @@ public:
     /**
      * see top
      */
-    void setTop( long );
+    void setTop(long);
 
     /**
      * The absolute position of the layer from the left.
@@ -370,7 +384,7 @@ public:
     /**
      * see left
      */
-    void setLeft( long );
+    void setLeft(long);
 
     /**
      * The visibility of layers is either "show" or "hide"
@@ -381,7 +395,7 @@ public:
     /**
      * see visibility
      */
-    void setVisibility( const DOMString & );
+    void setVisibility(const DOMString &);
 
     /**
      * The background color of the layer.
@@ -392,7 +406,7 @@ public:
     /**
      * see bgColor
      */
-    void setBgColor( const DOMString & );
+    void setBgColor(const DOMString &);
 
     /**
      * The collection of sub-layers
@@ -401,6 +415,6 @@ public:
     HTMLCollection layers() const;
 };
 
-} //namespace
+} // namespace
 
 #endif

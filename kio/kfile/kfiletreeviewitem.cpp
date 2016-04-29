@@ -26,45 +26,34 @@
 /* --- KFileTreeViewItem --- */
 /*
  */
-KFileTreeViewItem::KFileTreeViewItem( KFileTreeViewItem *parent,
-				      KFileItem* item,
-				      KFileTreeBranch *brnch )
-   : KListViewItem( parent ),
-     m_kfileitem( item ),
-     m_branch( brnch ),
-     m_wasListed(false)
+KFileTreeViewItem::KFileTreeViewItem(KFileTreeViewItem *parent, KFileItem *item, KFileTreeBranch *brnch)
+    : KListViewItem(parent), m_kfileitem(item), m_branch(brnch), m_wasListed(false)
 {
-   setPixmap(0, item->pixmap( KIcon::SizeSmall ));
-   setText( 0, item->text());
-
+    setPixmap(0, item->pixmap(KIcon::SizeSmall));
+    setText(0, item->text());
 }
 
-KFileTreeViewItem::KFileTreeViewItem( KFileTreeView* parent,
-				      KFileItem* item,
-				      KFileTreeBranch *brnch )
-   :KListViewItem( (QListView*)parent ),
-    m_kfileitem(item ),
-    m_branch( brnch ),
-    m_wasListed(false)
+KFileTreeViewItem::KFileTreeViewItem(KFileTreeView *parent, KFileItem *item, KFileTreeBranch *brnch)
+    : KListViewItem((QListView *)parent), m_kfileitem(item), m_branch(brnch), m_wasListed(false)
 {
-   setPixmap(0, item->pixmap( KIcon::SizeSmall ));
-   setText( 0, item->text());
+    setPixmap(0, item->pixmap(KIcon::SizeSmall));
+    setText(0, item->text());
 }
 
 KFileTreeViewItem::~KFileTreeViewItem()
 {
-    if ( m_kfileitem )
-        m_kfileitem->removeExtraData( m_branch );
+    if(m_kfileitem)
+        m_kfileitem->removeExtraData(m_branch);
 }
 
 bool KFileTreeViewItem::alreadyListed() const
 {
-   return m_wasListed;
+    return m_wasListed;
 }
 
-void KFileTreeViewItem::setListed( bool wasListed )
+void KFileTreeViewItem::setListed(bool wasListed)
 {
-   m_wasListed = wasListed;
+    m_wasListed = wasListed;
 }
 
 KURL KFileTreeViewItem::url() const
@@ -72,7 +61,7 @@ KURL KFileTreeViewItem::url() const
     return m_kfileitem ? m_kfileitem->url() : KURL();
 }
 
-QString KFileTreeViewItem::path()  const
+QString KFileTreeViewItem::path() const
 {
     return m_kfileitem ? m_kfileitem->url().path() : QString::null;
 }

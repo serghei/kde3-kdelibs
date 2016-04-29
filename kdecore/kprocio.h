@@ -47,171 +47,174 @@ class QTextCodec;
  **/
 
 
-class KDECORE_EXPORT KProcIO : public KProcess
-{
-  Q_OBJECT
+class KDECORE_EXPORT KProcIO : public KProcess {
+    Q_OBJECT
 
 public:
-  /**
-   * Constructor
-   */
-  KProcIO ( QTextCodec *codec = 0 );
+    /**
+     * Constructor
+     */
+    KProcIO(QTextCodec *codec = 0);
 
-  /**
-   * Destructor
-   */
-  ~KProcIO();
+    /**
+     * Destructor
+     */
+    ~KProcIO();
 
-  /**
-   * Sets the communication mode to be passed to KProcess::start()
-   * by start(). The default communication mode is KProcess::All.
-   * You probably want to use this function in conjunction with
-   * KProcess::setUsePty().
-   * @param comm the communication mode
-   */
-  void setComm (Communication comm);
+    /**
+     * Sets the communication mode to be passed to KProcess::start()
+     * by start(). The default communication mode is KProcess::All.
+     * You probably want to use this function in conjunction with
+     * KProcess::setUsePty().
+     * @param comm the communication mode
+     */
+    void setComm(Communication comm);
 
-  /**
-   *  Starts the process. It will fail in the following cases:
-   *  @li The process is already running.
-   *  @li The command line argument list is empty.
-   *  @li The starting of the process failed (could not fork).
-   *  @li The executable was not found.
-   *
-   *  @param runmode For a detailed description of the
-   *  various run modes, have a look at the
-   *  general description of the KProcess class.
-   *  @param includeStderr If true, data from both stdout and stderr is
-   *  listened to. If false, only stdout is listened to.
-   *  @return true on success, false on error.
-   **/
-  bool start (RunMode  runmode = NotifyOnExit, bool includeStderr = false);
+    /**
+     *  Starts the process. It will fail in the following cases:
+     *  @li The process is already running.
+     *  @li The command line argument list is empty.
+     *  @li The starting of the process failed (could not fork).
+     *  @li The executable was not found.
+     *
+     *  @param runmode For a detailed description of the
+     *  various run modes, have a look at the
+     *  general description of the KProcess class.
+     *  @param includeStderr If true, data from both stdout and stderr is
+     *  listened to. If false, only stdout is listened to.
+     *  @return true on success, false on error.
+     **/
+    bool start(RunMode runmode = NotifyOnExit, bool includeStderr = false);
 
-  /**
-   * Writes text to stdin of the process.
-   * @param line Text to write.
-   * @param appendnewline if true, a newline '\\n' is appended.
-   * @return true if successful, false otherwise
-   **/
-  bool writeStdin(const QString &line, bool appendnewline=true);
+    /**
+     * Writes text to stdin of the process.
+     * @param line Text to write.
+     * @param appendnewline if true, a newline '\\n' is appended.
+     * @return true if successful, false otherwise
+     **/
+    bool writeStdin(const QString &line, bool appendnewline = true);
 
-  /**
-   * Writes text to stdin of the process.
-   * @param line Text to write.
-   * @param appendnewline if true, a newline '\\n' is appended.
-   * @return true if successful, false otherwise
-   **/
-  bool writeStdin(const QCString &line, bool appendnewline);
+    /**
+     * Writes text to stdin of the process.
+     * @param line Text to write.
+     * @param appendnewline if true, a newline '\\n' is appended.
+     * @return true if successful, false otherwise
+     **/
+    bool writeStdin(const QCString &line, bool appendnewline);
 
-  /**
-   * Writes data to stdin of the process.
-   * @param data Data to write.
-   * @return true if successful, false otherwise
-   **/
-  bool writeStdin(const QByteArray &data);
+    /**
+     * Writes data to stdin of the process.
+     * @param data Data to write.
+     * @return true if successful, false otherwise
+     **/
+    bool writeStdin(const QByteArray &data);
 
-  //I like fputs better -- it's the same as writeStdin
-  //inline
-  /**
-   * This function just calls writeStdin().
-   *
-   * @param line Text to write.
-   * @param AppendNewLine if true, a newline '\\n' is appended.
-   * @return true if successful, false otherwise
-   * @deprecated
-   **/
-  KDE_DEPRECATED bool fputs (const QString &line, bool AppendNewLine=true)
-    { return writeStdin(line, AppendNewLine); }
+    // I like fputs better -- it's the same as writeStdin
+    // inline
+    /**
+     * This function just calls writeStdin().
+     *
+     * @param line Text to write.
+     * @param AppendNewLine if true, a newline '\\n' is appended.
+     * @return true if successful, false otherwise
+     * @deprecated
+     **/
+    KDE_DEPRECATED bool fputs(const QString &line, bool AppendNewLine = true)
+    {
+        return writeStdin(line, AppendNewLine);
+    }
 
-  /**
-   * Closes stdin after all data has been send.
-   */
-  void closeWhenDone();
+    /**
+     * Closes stdin after all data has been send.
+     */
+    void closeWhenDone();
 
-  /**
-   * Reads a line of text (up to and including '\\n').
-   *
-   * Use readln() in response to a readReady() signal.
-   * You may use it multiple times if more than one line of data is
-   *  available.
-   * Be sure to use ackRead() when you have finished processing the
-   *  readReady() signal.  This informs KProcIO that you are ready for
-   *  another readReady() signal.
-   *
-   * readln() never blocks.
-   *
-   * autoAck==true makes these functions call ackRead() for you.
-   *
-   * @param line is used to store the line that was read.
-   * @param autoAck when true, ackRead() is called for you.
-   * @param partial when provided the line is returned
-   * even if it does not contain a '\\n'. *partial will be set to
-   * false if the line contains a '\\n' and false otherwise.
-   * @return the number of characters read, or -1 if no data is available.
-   **/
-  int readln (QString &line, bool autoAck=true, bool *partial=0);
+    /**
+     * Reads a line of text (up to and including '\\n').
+     *
+     * Use readln() in response to a readReady() signal.
+     * You may use it multiple times if more than one line of data is
+     *  available.
+     * Be sure to use ackRead() when you have finished processing the
+     *  readReady() signal.  This informs KProcIO that you are ready for
+     *  another readReady() signal.
+     *
+     * readln() never blocks.
+     *
+     * autoAck==true makes these functions call ackRead() for you.
+     *
+     * @param line is used to store the line that was read.
+     * @param autoAck when true, ackRead() is called for you.
+     * @param partial when provided the line is returned
+     * even if it does not contain a '\\n'. *partial will be set to
+     * false if the line contains a '\\n' and false otherwise.
+     * @return the number of characters read, or -1 if no data is available.
+     **/
+    int readln(QString &line, bool autoAck = true, bool *partial = 0);
 
-  /**
-   * This function calls readln().
-   * @param line is used to store the line that was read.
-   * @param autoAck when true, ackRead() is called for you.
-   * @return the number of characters read, or -1 if no data is available.
-   * @deprecated use readln. Note that it has an inverted autoAck default,
-   *  though.
-   **/
-  KDE_DEPRECATED int fgets (QString &line, bool autoAck=false)
-    { return readln (line, autoAck); }
+    /**
+     * This function calls readln().
+     * @param line is used to store the line that was read.
+     * @param autoAck when true, ackRead() is called for you.
+     * @return the number of characters read, or -1 if no data is available.
+     * @deprecated use readln. Note that it has an inverted autoAck default,
+     *  though.
+     **/
+    KDE_DEPRECATED int fgets(QString &line, bool autoAck = false)
+    {
+        return readln(line, autoAck);
+    }
 
-  /**
-   * Reset the class.  Doesn't kill the process.
-   **/
-  void resetAll ();
+    /**
+     * Reset the class.  Doesn't kill the process.
+     **/
+    void resetAll();
 
-  /**
-   * Call this after you have finished processing a readReady()
-   * signal.  This call need not be made in the slot that was signalled
-   * by readReady().  You won't receive any more readReady() signals
-   * until you acknowledge with ackRead().  This prevents your slot
-   * from being reentered while you are still processing the current
-   * data.  If this doesn't matter, then call ackRead() right away in
-   * your readReady()-processing slot.
-   **/
-  void ackRead ();
+    /**
+     * Call this after you have finished processing a readReady()
+     * signal.  This call need not be made in the slot that was signalled
+     * by readReady().  You won't receive any more readReady() signals
+     * until you acknowledge with ackRead().  This prevents your slot
+     * from being reentered while you are still processing the current
+     * data.  If this doesn't matter, then call ackRead() right away in
+     * your readReady()-processing slot.
+     **/
+    void ackRead();
 
-  /**
-   *  Turns readReady() signals on and off.
-   *   You can turn this off at will and not worry about losing any data.
-   *   (as long as you turn it back on at some point...)
-   * @param enable true to turn the signals on, false to turn them off
-   */
-  void enableReadSignals (bool enable);
+    /**
+     *  Turns readReady() signals on and off.
+     *   You can turn this off at will and not worry about losing any data.
+     *   (as long as you turn it back on at some point...)
+     * @param enable true to turn the signals on, false to turn them off
+     */
+    void enableReadSignals(bool enable);
 
 signals:
-  /**
-   * Emitted when the process is ready for reading.
-   * @param pio the process that emitted the signal
-   * @see enableReadSignals()
-   */
-  void readReady(KProcIO *pio);
+    /**
+     * Emitted when the process is ready for reading.
+     * @param pio the process that emitted the signal
+     * @see enableReadSignals()
+     */
+    void readReady(KProcIO *pio);
 
 protected:
-  QPtrList<QByteArray> outbuffer;
-  QCString recvbuffer;
-  QTextCodec *codec;
-  int rbi;
-  bool needreadsignal, readsignalon, writeready;
+    QPtrList< QByteArray > outbuffer;
+    QCString recvbuffer;
+    QTextCodec *codec;
+    int rbi;
+    bool needreadsignal, readsignalon, writeready;
 
-  void controlledEmission ();
+    void controlledEmission();
 
 protected slots:
-  void received (KProcess *proc, char *buffer, int buflen);
-  void sent (KProcess *);
+    void received(KProcess *proc, char *buffer, int buflen);
+    void sent(KProcess *);
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  KProcIOPrivate *d;
+    KProcIOPrivate *d;
 };
 
 #endif // KPROCIO_H_
-

@@ -28,25 +28,24 @@ class KMManager;
 class KXmlCommand;
 class DrMain;
 
-class KMSpecialManager : public QObject
-{
+class KMSpecialManager : public QObject {
 public:
-	KMSpecialManager(KMManager *parent, const char *name = 0);
+    KMSpecialManager(KMManager *parent, const char *name = 0);
 
-	bool loadPrinters();
-	bool savePrinters();
-	void refresh();
-	KXmlCommand* loadCommand(KMPrinter*);
-	KXmlCommand* loadCommand(const QString& cmd);
-	DrMain* loadDriver(KMPrinter*);
-	QString setupCommand(const QString& cmd, const QMap<QString,QString>& opts);
+    bool loadPrinters();
+    bool savePrinters();
+    void refresh();
+    KXmlCommand *loadCommand(KMPrinter *);
+    KXmlCommand *loadCommand(const QString &cmd);
+    DrMain *loadDriver(KMPrinter *);
+    QString setupCommand(const QString &cmd, const QMap< QString, QString > &opts);
 
 protected:
-	bool loadDesktopFile(const QString&);
+    bool loadDesktopFile(const QString &);
 
 private:
-	KMManager	*m_mgr;
-	bool		m_loaded;
+    KMManager *m_mgr;
+    bool m_loaded;
 };
 
 #endif

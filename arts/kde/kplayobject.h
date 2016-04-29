@@ -1,23 +1,23 @@
-	/*
+/*
 
-	Copyright (C) 2001 Nikolas Zimmermann <wildfox@kde.org>
+Copyright (C) 2001 Nikolas Zimmermann <wildfox@kde.org>
 
-	This library is free software; you can redistribute it and/or
-	modify it under the terms of the GNU Library General Public
-	License as published by the Free Software Foundation; either
-	version 2 of the License, or (at your option) any later version.
-  
-	This library is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	Library General Public License for more details.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-	You should have received a copy of the GNU Library General Public License
-	along with this library; see the file COPYING.LIB.  If not, write to
-	the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-	Boston, MA 02110-1301, USA.
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
 
-	*/
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.
+
+*/
 
 #ifndef KPLAYOBJECT_H
 #define KPLAYOBJECT_H
@@ -27,95 +27,93 @@
 #include <kurl.h>
 #include <qobject.h>
 
-class KDE_EXPORT KPlayObject : public QObject
-{
-Q_OBJECT
+class KDE_EXPORT KPlayObject : public QObject {
+    Q_OBJECT
 public:
-	KPlayObject();
-	KPlayObject(Arts::PlayObject playobject, bool isStream);
-	~KPlayObject();
+    KPlayObject();
+    KPlayObject(Arts::PlayObject playobject, bool isStream);
+    ~KPlayObject();
 
-	/**
-	  * Sets the internal Arts::PlayObject
-	  * to @a playObject
-	  */
-	void setObject(Arts::PlayObject playObject);
-	
-	/**
-	  * Returns the internal Arts::PlayObject
-	  */
-	Arts::PlayObject object();
+    /**
+      * Sets the internal Arts::PlayObject
+      * to @a playObject
+      */
+    void setObject(Arts::PlayObject playObject);
 
-	/**
-	 * return true if both this != 0, and object.isNull()
-	 *
-	 * in essence, ((KPlayObject*)0)->isNull() will not 
-	 * crash
-	 **/
-	bool isNull();
+    /**
+      * Returns the internal Arts::PlayObject
+      */
+    Arts::PlayObject object();
 
-	/**
-	 * returns true if the internally playobject
-	 * is used to play a stream
-	 */
-    	bool stream();
+    /**
+     * return true if both this != 0, and object.isNull()
+     *
+     * in essence, ((KPlayObject*)0)->isNull() will not
+     * crash
+     **/
+    bool isNull();
 
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	void play();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	void seek(Arts::poTime newTime);
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	void pause();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	 
-	void halt();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	QString description();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	Arts::poTime currentTime();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	Arts::poTime overallTime();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	Arts::poCapabilities capabilities();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	QString mediaName();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	Arts::poState state();
+    /**
+     * returns true if the internally playobject
+     * is used to play a stream
+     */
+    bool stream();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    void play();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    void seek(Arts::poTime newTime);
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    void pause();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+
+    void halt();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    QString description();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    Arts::poTime currentTime();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    Arts::poTime overallTime();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    Arts::poCapabilities capabilities();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    QString mediaName();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    Arts::poState state();
 
 private:
-	Arts::PlayObject m_playObject;
-	bool m_isStream;
+    Arts::PlayObject m_playObject;
+    bool m_isStream;
 };
-
 
 
 namespace KDE {
@@ -177,130 +175,127 @@ class PlayObjectFactory;
   * of the Arts::PlayObject.
   *
   * However, KDE::PlayObject will try to act reasonable on calls to play(),
-  * halt(), pause() and state(). If you call play() and then pause() 
-  * before the connection to the media source was established, it will 
+  * halt(), pause() and state(). If you call play() and then pause()
+  * before the connection to the media source was established, it will
   * not start playing once the connection got established. Calling halt()
   * will cancel the connection process. KDE::PlayObject will maintain
   * an internal state variable, and calling state() will return this
   * internal state until the real Arts::PlayObject got created, afterwards
   * the state of the Arts::PlayObject will be returned.
   */
-class KDE_EXPORT PlayObject : public QObject
-{
-Q_OBJECT
+class KDE_EXPORT PlayObject : public QObject {
+    Q_OBJECT
 public:
-	~PlayObject();
+    ~PlayObject();
 
-	/**
-	  * Returns the internal Arts::PlayObject
-	  */
-	Arts::PlayObject object();
+    /**
+      * Returns the internal Arts::PlayObject
+      */
+    Arts::PlayObject object();
 
-	/**
-	 * return true if this != 0.
-	 *
-	 * in essence, ((KDE::PlayObject*)0)->isNull() will not 
-	 * crash
-	 **/
-	bool isNull();
+    /**
+     * return true if this != 0.
+     *
+     * in essence, ((KDE::PlayObject*)0)->isNull() will not
+     * crash
+     **/
+    bool isNull();
 
-	/**
-	 * returns "true" if the content to play is delivered as a stream.
-	 */
-    	bool stream();
+    /**
+     * returns "true" if the content to play is delivered as a stream.
+     */
+    bool stream();
 
-	/**
-	 * causes the PlayObject to start the play back.
-	 */
-	void play();
-	
-	/**
-	 * causes the PlayObject to skip to the time @p newTime. 
-	 * You don't need to stop or restart the play back after calling seek.
-	 */
-	void seek(Arts::poTime newTime);
-	
-	/**
-	 * causes the PlayObject to pause play back immediately. It will not
-	 * restart until you call play(). This also works on streams, the
-	 * connection to the media source will be maintained while the 
-	 * PlayObject is paused.
-	 */
-	void pause();
-	
-	/**
-	 * immediately stops the play back and resets the media to the
-	 * start of the content. If playing from a stream, halt() causes
-	 * the connection to be canceled.
-	 */
-	 
-	void halt();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	QString description();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	Arts::poTime currentTime();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	Arts::poTime overallTime();
-	
-	/**
-	 * returns the capabilities of the PlayObject. The return value is
-	 * a binary OR of Arts::capSeek and Arts::capPause, or 0.
-	 */
-	Arts::poCapabilities capabilities();
-	
-	/**
-	 * Reimplemented (Arts::PlayObject Wrapper)
-	 */
-	QString mediaName();
-	
-	/**
-	 * returns the internal state of the PlayObject. The state can be
-	 * either Arts::posIdle, Arts::posPaused or Arts::posPlaying. A
-	 * PlayObject in state Arts::posIdle is stopped. Once you call
-	 * play(), the state changes to Arts::posPlaying. pause() causes
-	 * the PlayObject to change to Arts::posPaused.
-	 */
-	Arts::poState state();
+    /**
+     * causes the PlayObject to start the play back.
+     */
+    void play();
+
+    /**
+     * causes the PlayObject to skip to the time @p newTime.
+     * You don't need to stop or restart the play back after calling seek.
+     */
+    void seek(Arts::poTime newTime);
+
+    /**
+     * causes the PlayObject to pause play back immediately. It will not
+     * restart until you call play(). This also works on streams, the
+     * connection to the media source will be maintained while the
+     * PlayObject is paused.
+     */
+    void pause();
+
+    /**
+     * immediately stops the play back and resets the media to the
+     * start of the content. If playing from a stream, halt() causes
+     * the connection to be canceled.
+     */
+
+    void halt();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    QString description();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    Arts::poTime currentTime();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    Arts::poTime overallTime();
+
+    /**
+     * returns the capabilities of the PlayObject. The return value is
+     * a binary OR of Arts::capSeek and Arts::capPause, or 0.
+     */
+    Arts::poCapabilities capabilities();
+
+    /**
+     * Reimplemented (Arts::PlayObject Wrapper)
+     */
+    QString mediaName();
+
+    /**
+     * returns the internal state of the PlayObject. The state can be
+     * either Arts::posIdle, Arts::posPaused or Arts::posPlaying. A
+     * PlayObject in state Arts::posIdle is stopped. Once you call
+     * play(), the state changes to Arts::posPlaying. pause() causes
+     * the PlayObject to change to Arts::posPaused.
+     */
+    Arts::poState state();
 
 signals:
-	/**
-	 * this signal is emitted as soon as the internal Arts::PlayObject
-	 * is created and ready to play. It is granted that the Arts::PlayObject
-	 * has not started playing, but KDE::PlayObject will call
-	 * object().play() immediately after emitting this signal, so you
-	 * need not do it yourself.
-	 */
-	void playObjectCreated();
+    /**
+     * this signal is emitted as soon as the internal Arts::PlayObject
+     * is created and ready to play. It is granted that the Arts::PlayObject
+     * has not started playing, but KDE::PlayObject will call
+     * object().play() immediately after emitting this signal, so you
+     * need not do it yourself.
+     */
+    void playObjectCreated();
 
 private slots:
-	void attachPlayObject( Arts::PlayObject );
+    void attachPlayObject(Arts::PlayObject);
 
 private:
-	Arts::PlayObject m_playObject;
-	bool m_isStream;
+    Arts::PlayObject m_playObject;
+    bool m_isStream;
 
-	struct PrivateData;
-	PrivateData* d;
+    struct PrivateData;
+    PrivateData *d;
 
-	/* private constructors, to prevent instantiation and copying */
-	PlayObject();
-	PlayObject( const PlayObject& ) : QObject() {};
-	PlayObject(Arts::PlayObject playobject, bool isStream);
-	PlayObject( Arts::SoundServerV2 server, const KURL& url, bool isStream, bool createBUS );
+    /* private constructors, to prevent instantiation and copying */
+    PlayObject();
+    PlayObject(const PlayObject &) : QObject(){};
+    PlayObject(Arts::PlayObject playobject, bool isStream);
+    PlayObject(Arts::SoundServerV2 server, const KURL &url, bool isStream, bool createBUS);
 
-	friend class KDE::PlayObjectFactory;
-
+    friend class KDE::PlayObjectFactory;
 };
-
 }
 
 #endif

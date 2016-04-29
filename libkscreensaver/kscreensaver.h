@@ -56,15 +56,14 @@ class KBlankEffectPrivate;
 * @short Provides a QWidget for a screensaver to draw into.
 * @author Martin R. Jones <mjones@kde.org>
 */
-class KDE_EXPORT KScreenSaver : public QWidget
-{
-	Q_OBJECT
+class KDE_EXPORT KScreenSaver : public QWidget {
+    Q_OBJECT
 public:
     /**
      * @param id The winId() of the widget to draw the screensaver into.
      */
-	KScreenSaver( WId id=0 );
-	~KScreenSaver();
+    KScreenSaver(WId id = 0);
+    ~KScreenSaver();
 
 protected:
     /**
@@ -75,9 +74,9 @@ protected:
      *
      * @param widget The widget to embed in the screensaver widget.
      */
-    void embed( QWidget *widget );
+    void embed(QWidget *widget);
 
-    bool eventFilter( QObject *o, QEvent * );
+    bool eventFilter(QObject *o, QEvent *);
 
 private:
     KScreenSaverPrivate *d;
@@ -91,15 +90,21 @@ private:
 * @short Blanks a widget using various effects.
 * @author Martin R. Jones <mjones@kde.org>
 */
-class KBlankEffect : public QObject
-{
-	Q_OBJECT
+class KBlankEffect : public QObject {
+    Q_OBJECT
 public:
-	KBlankEffect( QObject *parent=0 );
-	~KBlankEffect();
+    KBlankEffect(QObject *parent = 0);
+    ~KBlankEffect();
 
-    enum Effect { Random=-1, Blank=0, SweepRight, SweepDown, Blocks,
-                  MaximumEffects };
+    enum Effect
+    {
+        Random = -1,
+        Blank = 0,
+        SweepRight,
+        SweepDown,
+        Blocks,
+        MaximumEffects
+    };
 
     /**
      * Blank a widget using the specified effect.
@@ -109,7 +114,7 @@ public:
      * @param w The widget to blank.
      * @param effect The type of effect to use.
      */
-    void blank( QWidget *w, Effect effect=Random );
+    void blank(QWidget *w, Effect effect = Random);
 
     typedef void (KBlankEffect::*BlankEffect)();
 
@@ -135,4 +140,3 @@ protected:
     KBlankEffectPrivate *d;
 };
 #endif
-

@@ -33,11 +33,7 @@ namespace KNS {
 class Engine;
 class Entry;
 
-KDE_EXPORT KAction* standardAction(const QString& what,
-                        const QObject *recvr,
-                        const char *slot,
-                        KActionCollection* parent,
-                        const char *name = 0);
+KDE_EXPORT KAction *standardAction(const QString &what, const QObject *recvr, const char *slot, KActionCollection *parent, const char *name = 0);
 }
 
 /**
@@ -66,9 +62,8 @@ KDE_EXPORT KAction* standardAction(const QString& what,
  *
  * @since 3.3
  */
-class KDE_EXPORT KNewStuff
-{
-  public:
+class KDE_EXPORT KNewStuff {
+public:
     /**
       Constructor.
 
@@ -77,8 +72,8 @@ class KDE_EXPORT KNewStuff
       @param parentWidget parent widget of dialogs opened by the KNewStuff
                           engine
     */
-    KNewStuff( const QString &type, QWidget *parentWidget = 0 );
-    
+    KNewStuff(const QString &type, QWidget *parentWidget = 0);
+
     /**
       Constructor.
 
@@ -88,7 +83,7 @@ class KDE_EXPORT KNewStuff
       @param parentWidget parent widget of dialogs opened by the KNewStuff
                           engine
     */
-    KNewStuff( const QString &type, const QString &providerList, QWidget *parentWidget = 0 );
+    KNewStuff(const QString &type, const QString &providerList, QWidget *parentWidget = 0);
     virtual ~KNewStuff();
 
     /**
@@ -114,7 +109,7 @@ class KDE_EXPORT KNewStuff
     /**
       Upload with pre-defined files.
     */
-    void upload( const QString &fileName, const QString previewName );
+    void upload(const QString &fileName, const QString previewName);
 
     /**
       Install file to application. The given fileName points to the file
@@ -127,7 +122,7 @@ class KDE_EXPORT KNewStuff
 
       @param fileName name of downloaded file
     */
-    virtual bool install( const QString &fileName ) = 0;
+    virtual bool install(const QString &fileName) = 0;
     /**
       Create a file to be uploaded to a "new stuff provider" and return the
       filename. The format of the file is application specific. The only
@@ -137,24 +132,27 @@ class KDE_EXPORT KNewStuff
       @param fileName name of the file to be written
       @return @c true on success, @c false on error.
     */
-    virtual bool createUploadFile( const QString &fileName ) = 0;
+    virtual bool createUploadFile(const QString &fileName) = 0;
 
     /**
       Return a filename which should be used as destination for downloading the
       specified new stuff entry. Reimplement this function, if you don't want
       the new stuff to be downloaded to a temporary file.
     */
-    virtual QString downloadDestination( KNS::Entry *entry );
-    
-    
-  protected:
+    virtual QString downloadDestination(KNS::Entry *entry);
+
+
+protected:
     /**
       Get the pointer to the engine. Needed by subclasses to access the KNS::Engine object.
-     */  
-    KNS::Engine *engine() { return mEngine; }  
+     */
+    KNS::Engine *engine()
+    {
+        return mEngine;
+    }
 
-    
-  private:
+
+private:
     KNS::Engine *mEngine;
 };
 

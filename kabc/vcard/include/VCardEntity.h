@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,48 +21,43 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  ENTITY_H
-#define  ENTITY_H
+#ifndef ENTITY_H
+#define ENTITY_H
 
 #include <qcstring.h>
 #include <kdelibs_export.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT Entity
-{
-	public:
-		
-		Entity();
-		Entity(const Entity & e);
-		Entity(const QCString & s);
-		
-		virtual Entity & operator = (const Entity & e);
-		virtual Entity & operator = (const QCString & s);
-		
-		virtual bool operator == (Entity & e);
-		virtual bool operator != (Entity & e);
-		virtual bool operator == (const QCString & s);
-		virtual bool operator != (const QCString & s);
-		
-		virtual ~Entity();
-		
-		QCString asString();
-		
-		virtual void parse();
-		virtual void assemble();
-		
-		virtual void _parse() = 0;
-		virtual void _assemble() = 0;
-	
-	protected:
-		
-		QCString strRep_;
-		bool parsed_;
-		bool assembled_;
+class KVCARD_EXPORT Entity {
+public:
+    Entity();
+    Entity(const Entity &e);
+    Entity(const QCString &s);
+
+    virtual Entity &operator=(const Entity &e);
+    virtual Entity &operator=(const QCString &s);
+
+    virtual bool operator==(Entity &e);
+    virtual bool operator!=(Entity &e);
+    virtual bool operator==(const QCString &s);
+    virtual bool operator!=(const QCString &s);
+
+    virtual ~Entity();
+
+    QCString asString();
+
+    virtual void parse();
+    virtual void assemble();
+
+    virtual void _parse() = 0;
+    virtual void _assemble() = 0;
+
+protected:
+    QCString strRep_;
+    bool parsed_;
+    bool assembled_;
 };
-
 }
 
 #endif

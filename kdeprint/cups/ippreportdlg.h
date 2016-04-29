@@ -25,18 +25,17 @@
 class IppRequest;
 class KTextEdit;
 
-class IppReportDlg : public KDialogBase
-{
-	Q_OBJECT
+class IppReportDlg : public KDialogBase {
+    Q_OBJECT
 public:
-	IppReportDlg(QWidget *parent = 0, const char *name = 0);
-	static void report(IppRequest *req, int group, const QString& caption = QString::null);
+    IppReportDlg(QWidget *parent = 0, const char *name = 0);
+    static void report(IppRequest *req, int group, const QString &caption = QString::null);
 
 protected slots:
-	void slotUser1();
-	
+    void slotUser1();
+
 private:
-	KTextEdit	*m_edit;
+    KTextEdit *m_edit;
 };
 
 #endif

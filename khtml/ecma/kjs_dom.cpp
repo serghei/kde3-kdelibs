@@ -25,7 +25,7 @@
 #include "rendering/render_layer.h"
 #include "xml/dom_nodeimpl.h"
 #include "xml/dom_docimpl.h"
-#include "misc/htmltags.h" // ID_*
+#include "misc/htmltags.h"  // ID_*
 #include "misc/htmlattrs.h" // ATTR_*
 #include "html/html_baseimpl.h"
 #include <kdebug.h>
@@ -62,7 +62,7 @@ namespace KJS {
   NOTATION_NODE     DOM::Node::NOTATION_NODE        DontDelete|ReadOnly
 @end
 */
-IMPLEMENT_CONSTANT_TABLE(DOMNodeConstants,"DOMNodeConstants")
+IMPLEMENT_CONSTANT_TABLE(DOMNodeConstants, "DOMNodeConstants")
 // -------------------------------------------------------------------------
 /* Source for DOMNodeProtoTable.
 @begin DOMNodeProtoTable 13
@@ -90,21 +90,19 @@ IMPLEMENT_CONSTANT_TABLE(DOMNodeConstants,"DOMNodeConstants")
 IMPLEMENT_PROTOFUNC_DOM(DOMNodeProtoFunc)
 KJS_IMPLEMENT_PROTOTYPE("DOMNode", DOMNodeProto, DOMNodeProtoFunc)
 
-const ClassInfo DOMNode::info = { "Node", 0, &DOMNodeTable, 0 };
+const ClassInfo DOMNode::info = {"Node", 0, &DOMNodeTable, 0};
 
-DOMNode::DOMNode(ExecState *exec, const DOM::Node& n)
-  : DOMObject(DOMNodeProto::self(exec)), node(n)
+DOMNode::DOMNode(ExecState *exec, const DOM::Node &n) : DOMObject(DOMNodeProto::self(exec)), node(n)
 {
 }
 
-DOMNode::DOMNode(const Object& proto, const DOM::Node& n)
-  : DOMObject(proto), node(n)
+DOMNode::DOMNode(const Object &proto, const DOM::Node &n) : DOMObject(proto), node(n)
 {
 }
 
 DOMNode::~DOMNode()
 {
-  ScriptInterpreter::forgetDOMObject(node.handle());
+    ScriptInterpreter::forgetDOMObject(node.handle());
 }
 
 bool DOMNode::toBoolean(ExecState *) const
@@ -178,372 +176,391 @@ bool DOMNode::toBoolean(ExecState *) const
 Value DOMNode::tryGet(ExecState *exec, const Identifier &propertyName) const
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "DOMNode::tryGet " << propertyName.qstring() << endl;
+    kdDebug(6070) << "DOMNode::tryGet " << propertyName.qstring() << endl;
 #endif
-  return DOMObjectLookupGetValue<DOMNode, DOMObject>(exec, propertyName, &DOMNodeTable, this);
+    return DOMObjectLookupGetValue< DOMNode, DOMObject >(exec, propertyName, &DOMNodeTable, this);
 }
 
-static khtml::RenderObject* handleBodyRootQuirk(const DOM::Node& node, khtml::RenderObject* rend, int token)
+static khtml::RenderObject *handleBodyRootQuirk(const DOM::Node &node, khtml::RenderObject *rend, int token)
 {
-  //This emulates the quirks of various height/width properties on the viewport and root. Note that it 
-  //is (mostly) IE-compatible in quirks, and mozilla-compatible in strict.
-  if (!rend) return 0;
+    // This emulates the quirks of various height/width properties on the viewport and root. Note that it
+    // is (mostly) IE-compatible in quirks, and mozilla-compatible in strict.
+    if(!rend)
+        return 0;
 
-  bool quirksMode = rend->style() && rend->style()->htmlHacks();
-  
-  //There are a couple quirks here. One is that in quirks mode body is always forwarded to root...
-  //This is relevant for even the scrollTop/scrollLeft type properties.
-  if (quirksMode && node.handle()->id() == ID_BODY) {
-    while (rend->parent() && !rend->isRoot())
-      rend = rend->parent();
-  }
+    bool quirksMode = rend->style() && rend->style()->htmlHacks();
 
-  //Also, some properties of the root are really done in terms of the viewport.
-  //These are  {offset/client}{Height/Width}. The offset versions do it only in 
-  //quirks mode, the client always.
-  if (!rend->isRoot()) return rend; //Don't care about non-root things here!
-  bool needViewport = false;
+    // There are a couple quirks here. One is that in quirks mode body is always forwarded to root...
+    // This is relevant for even the scrollTop/scrollLeft type properties.
+    if(quirksMode && node.handle()->id() == ID_BODY)
+    {
+        while(rend->parent() && !rend->isRoot())
+            rend = rend->parent();
+    }
 
-  switch (token) {
-    case DOMNode::OffsetHeight:
-    case DOMNode::OffsetWidth:
-      needViewport = quirksMode;
-      break;
-    case DOMNode::ClientHeight:
-    case DOMNode::ClientWidth:
-      needViewport = true;
-      break;
-  }
-  
-  if (needViewport) {
-    //Scan up to find the new target
-    while (rend->parent())
-      rend = rend->parent();
-  }
-  return rend;
+    // Also, some properties of the root are really done in terms of the viewport.
+    // These are  {offset/client}{Height/Width}. The offset versions do it only in
+    // quirks mode, the client always.
+    if(!rend->isRoot())
+        return rend; // Don't care about non-root things here!
+    bool needViewport = false;
+
+    switch(token)
+    {
+        case DOMNode::OffsetHeight:
+        case DOMNode::OffsetWidth:
+            needViewport = quirksMode;
+            break;
+        case DOMNode::ClientHeight:
+        case DOMNode::ClientWidth:
+            needViewport = true;
+            break;
+    }
+
+    if(needViewport)
+    {
+        // Scan up to find the new target
+        while(rend->parent())
+            rend = rend->parent();
+    }
+    return rend;
 }
 
 Value DOMNode::getValueProperty(ExecState *exec, int token) const
 {
-  switch (token) {
-  case NodeName:
-    return String(node.nodeName());
-  case NodeValue:
-    return getString(node.nodeValue()); // initially null, per domts/level1/core/hc_documentcreateelement.html
-  case NodeType:
-    return Number((unsigned int)node.nodeType());
-  case ParentNode:
-    return getDOMNode(exec,node.parentNode());
-  case ParentElement: // IE only apparently
-    return getDOMNode(exec,node.parentNode());
-  case ChildNodes:
-    return getDOMNodeList(exec,node.childNodes());
-  case FirstChild:
-    return getDOMNode(exec,node.firstChild());
-  case LastChild:
-    return getDOMNode(exec,node.lastChild());
-  case PreviousSibling:
-    return getDOMNode(exec,node.previousSibling());
-  case NextSibling:
-    return getDOMNode(exec,node.nextSibling());
-  case Attributes:
-    return getDOMNamedNodeMap(exec,node.attributes());
-  case NamespaceURI:
-    return getString(node.namespaceURI()); // Moz returns null if not set (dom/namespaces.html)
-  case Prefix:
-    return getString(node.prefix());  // Moz returns null if not set (dom/namespaces.html)
-  case TextContent:
-     return getString(node.textContent()); //DOM3 says return null, but I really should test mozilla..
-  case LocalName:
-    return getString(node.localName());  // Moz returns null if not set (dom/namespaces.html)
-  case OwnerDocument:
-    return getDOMNode(exec,node.ownerDocument());
-  case OnAbort:
-    return getListener(DOM::EventImpl::ABORT_EVENT);
-  case OnBlur:
-    return getListener(DOM::EventImpl::BLUR_EVENT);
-  case OnChange:
-    return getListener(DOM::EventImpl::CHANGE_EVENT);
-  case OnClick:
-    return getListener(DOM::EventImpl::KHTML_ECMA_CLICK_EVENT);
-  case OnDblClick:
-    return getListener(DOM::EventImpl::KHTML_ECMA_DBLCLICK_EVENT);
-  case OnDragDrop:
-    return getListener(DOM::EventImpl::KHTML_DRAGDROP_EVENT);
-  case OnError:
-    return getListener(DOM::EventImpl::ERROR_EVENT);
-  case OnFocus:
-    return getListener(DOM::EventImpl::FOCUS_EVENT);
-  case OnKeyDown:
-    return getListener(DOM::EventImpl::KEYDOWN_EVENT);
-  case OnKeyPress:
-    return getListener(DOM::EventImpl::KEYPRESS_EVENT);
-  case OnKeyUp:
-    return getListener(DOM::EventImpl::KEYUP_EVENT);
-  case OnLoad:
-    return getListener(DOM::EventImpl::LOAD_EVENT);
-  case OnMouseDown:
-    return getListener(DOM::EventImpl::MOUSEDOWN_EVENT);
-  case OnMouseMove:
-    return getListener(DOM::EventImpl::MOUSEMOVE_EVENT);
-  case OnMouseOut:
-    return getListener(DOM::EventImpl::MOUSEOUT_EVENT);
-  case OnMouseOver:
-    return getListener(DOM::EventImpl::MOUSEOVER_EVENT);
-  case OnMouseUp:
-    return getListener(DOM::EventImpl::MOUSEUP_EVENT);
-  case OnMove:
-    return getListener(DOM::EventImpl::KHTML_MOVE_EVENT);
-  case OnReset:
-    return getListener(DOM::EventImpl::RESET_EVENT);
-  case OnResize:
-    return getListener(DOM::EventImpl::RESIZE_EVENT);
-  case OnSelect:
-    return getListener(DOM::EventImpl::SELECT_EVENT);
-  case OnSubmit:
-    return getListener(DOM::EventImpl::SUBMIT_EVENT);
-  case OnUnload:
-    return getListener(DOM::EventImpl::UNLOAD_EVENT);
-  case SourceIndex: {
-    // Retrieves the ordinal position of the object, in source order, as the object
-    // appears in the document's all collection
-    // i.e. document.all[n.sourceIndex] == n
-    DOM::Document doc = node.ownerDocument();
-    if (doc.isHTMLDocument()) {
-      DOM::HTMLCollection all = static_cast<DOM::HTMLDocument>(doc).all();
-      unsigned long i = 0;
-      DOM::Node n = all.firstItem();
-      for ( ; !n.isNull() && n != node; n = all.nextItem() )
-        ++i;
-      Q_ASSERT( !n.isNull() ); // node not in document.all !?
-      return Number(i);
-    }
-  }
-  default:
-    // no DOM standard, found in IE only
-
-    // Make sure our layout is up to date before we allow a query on these attributes.
-    DOM::DocumentImpl* docimpl = node.handle()->getDocument();
-    if (docimpl) {
-      docimpl->updateLayout();
-    }
-
-    khtml::RenderObject *rend = node.handle()->renderer();
-
-    //In quirks mode, may need to forward if to body.
-    rend = handleBodyRootQuirk(node, rend, token);
-
-    switch (token) {
-    case OffsetLeft:
-      return rend ? static_cast<Value>( Number( rend->offsetLeft() ) ) : Undefined();
-    case OffsetTop:
-      return rend ? static_cast<Value>(  Number( rend->offsetTop() ) ) : Undefined();
-    case OffsetWidth:
-      return rend ? static_cast<Value>(  Number( rend->offsetWidth() ) ) : Undefined();
-    case OffsetHeight:
-      return rend ? static_cast<Value>(  Number( rend->offsetHeight() ) ) : Undefined();
-    case OffsetParent:
+    switch(token)
     {
-      khtml::RenderObject* par = rend ? rend->offsetParent() : 0;
-      return getDOMNode( exec, par ? par->element() : 0 );
+        case NodeName:
+            return String(node.nodeName());
+        case NodeValue:
+            return getString(node.nodeValue()); // initially null, per domts/level1/core/hc_documentcreateelement.html
+        case NodeType:
+            return Number((unsigned int)node.nodeType());
+        case ParentNode:
+            return getDOMNode(exec, node.parentNode());
+        case ParentElement: // IE only apparently
+            return getDOMNode(exec, node.parentNode());
+        case ChildNodes:
+            return getDOMNodeList(exec, node.childNodes());
+        case FirstChild:
+            return getDOMNode(exec, node.firstChild());
+        case LastChild:
+            return getDOMNode(exec, node.lastChild());
+        case PreviousSibling:
+            return getDOMNode(exec, node.previousSibling());
+        case NextSibling:
+            return getDOMNode(exec, node.nextSibling());
+        case Attributes:
+            return getDOMNamedNodeMap(exec, node.attributes());
+        case NamespaceURI:
+            return getString(node.namespaceURI()); // Moz returns null if not set (dom/namespaces.html)
+        case Prefix:
+            return getString(node.prefix()); // Moz returns null if not set (dom/namespaces.html)
+        case TextContent:
+            return getString(node.textContent()); // DOM3 says return null, but I really should test mozilla..
+        case LocalName:
+            return getString(node.localName()); // Moz returns null if not set (dom/namespaces.html)
+        case OwnerDocument:
+            return getDOMNode(exec, node.ownerDocument());
+        case OnAbort:
+            return getListener(DOM::EventImpl::ABORT_EVENT);
+        case OnBlur:
+            return getListener(DOM::EventImpl::BLUR_EVENT);
+        case OnChange:
+            return getListener(DOM::EventImpl::CHANGE_EVENT);
+        case OnClick:
+            return getListener(DOM::EventImpl::KHTML_ECMA_CLICK_EVENT);
+        case OnDblClick:
+            return getListener(DOM::EventImpl::KHTML_ECMA_DBLCLICK_EVENT);
+        case OnDragDrop:
+            return getListener(DOM::EventImpl::KHTML_DRAGDROP_EVENT);
+        case OnError:
+            return getListener(DOM::EventImpl::ERROR_EVENT);
+        case OnFocus:
+            return getListener(DOM::EventImpl::FOCUS_EVENT);
+        case OnKeyDown:
+            return getListener(DOM::EventImpl::KEYDOWN_EVENT);
+        case OnKeyPress:
+            return getListener(DOM::EventImpl::KEYPRESS_EVENT);
+        case OnKeyUp:
+            return getListener(DOM::EventImpl::KEYUP_EVENT);
+        case OnLoad:
+            return getListener(DOM::EventImpl::LOAD_EVENT);
+        case OnMouseDown:
+            return getListener(DOM::EventImpl::MOUSEDOWN_EVENT);
+        case OnMouseMove:
+            return getListener(DOM::EventImpl::MOUSEMOVE_EVENT);
+        case OnMouseOut:
+            return getListener(DOM::EventImpl::MOUSEOUT_EVENT);
+        case OnMouseOver:
+            return getListener(DOM::EventImpl::MOUSEOVER_EVENT);
+        case OnMouseUp:
+            return getListener(DOM::EventImpl::MOUSEUP_EVENT);
+        case OnMove:
+            return getListener(DOM::EventImpl::KHTML_MOVE_EVENT);
+        case OnReset:
+            return getListener(DOM::EventImpl::RESET_EVENT);
+        case OnResize:
+            return getListener(DOM::EventImpl::RESIZE_EVENT);
+        case OnSelect:
+            return getListener(DOM::EventImpl::SELECT_EVENT);
+        case OnSubmit:
+            return getListener(DOM::EventImpl::SUBMIT_EVENT);
+        case OnUnload:
+            return getListener(DOM::EventImpl::UNLOAD_EVENT);
+        case SourceIndex:
+        {
+            // Retrieves the ordinal position of the object, in source order, as the object
+            // appears in the document's all collection
+            // i.e. document.all[n.sourceIndex] == n
+            DOM::Document doc = node.ownerDocument();
+            if(doc.isHTMLDocument())
+            {
+                DOM::HTMLCollection all = static_cast< DOM::HTMLDocument >(doc).all();
+                unsigned long i = 0;
+                DOM::Node n = all.firstItem();
+                for(; !n.isNull() && n != node; n = all.nextItem())
+                    ++i;
+                Q_ASSERT(!n.isNull()); // node not in document.all !?
+                return Number(i);
+            }
+        }
+        default:
+            // no DOM standard, found in IE only
+
+            // Make sure our layout is up to date before we allow a query on these attributes.
+            DOM::DocumentImpl *docimpl = node.handle()->getDocument();
+            if(docimpl)
+            {
+                docimpl->updateLayout();
+            }
+
+            khtml::RenderObject *rend = node.handle()->renderer();
+
+            // In quirks mode, may need to forward if to body.
+            rend = handleBodyRootQuirk(node, rend, token);
+
+            switch(token)
+            {
+                case OffsetLeft:
+                    return rend ? static_cast< Value >(Number(rend->offsetLeft())) : Undefined();
+                case OffsetTop:
+                    return rend ? static_cast< Value >(Number(rend->offsetTop())) : Undefined();
+                case OffsetWidth:
+                    return rend ? static_cast< Value >(Number(rend->offsetWidth())) : Undefined();
+                case OffsetHeight:
+                    return rend ? static_cast< Value >(Number(rend->offsetHeight())) : Undefined();
+                case OffsetParent:
+                {
+                    khtml::RenderObject *par = rend ? rend->offsetParent() : 0;
+                    return getDOMNode(exec, par ? par->element() : 0);
+                }
+                case ClientWidth:
+                    return rend ? static_cast< Value >(Number(rend->clientWidth())) : Undefined();
+                case ClientHeight:
+                    return rend ? static_cast< Value >(Number(rend->clientHeight())) : Undefined();
+                case ScrollWidth:
+                    return rend ? static_cast< Value >(Number(rend->scrollWidth())) : Undefined();
+                case ScrollHeight:
+                    return rend ? static_cast< Value >(Number(rend->scrollHeight())) : Undefined();
+                case ScrollLeft:
+                    if(rend && rend->layer())
+                    {
+                        if(rend->isRoot() && !rend->style()->hidesOverflow())
+                            return Number(node.ownerDocument().view() ? node.ownerDocument().view()->contentsX() : 0);
+                        return Number(rend->layer()->scrollXOffset());
+                    }
+                    return Number(0);
+                case ScrollTop:
+                    if(rend && rend->layer())
+                    {
+                        if(rend->isRoot() && !rend->style()->hidesOverflow())
+                            return Number(node.ownerDocument().view() ? node.ownerDocument().view()->contentsY() : 0);
+                        return Number(rend->layer()->scrollYOffset());
+                    }
+                    return Number(0);
+                default:
+                    kdDebug(6070) << "WARNING: Unhandled token in DOMNode::getValueProperty : " << token << endl;
+                    break;
+            }
     }
-    case ClientWidth:
-      return rend ? static_cast<Value>( Number( rend->clientWidth() ) ) : Undefined();
-    case ClientHeight:
-      return rend ? static_cast<Value>( Number( rend->clientHeight() ) ) : Undefined();
-    case ScrollWidth:
-      return rend ? static_cast<Value>( Number(rend->scrollWidth()) ) : Undefined();
-    case ScrollHeight:
-      return rend ? static_cast<Value>( Number(rend->scrollHeight()) ) : Undefined();
-    case ScrollLeft:
-      if (rend && rend->layer()) {
-          if (rend->isRoot() && !rend->style()->hidesOverflow())
-              return Number( node.ownerDocument().view() ? node.ownerDocument().view()->contentsX() : 0);
-          return Number( rend->layer()->scrollXOffset() );
-      }
-      return Number( 0 );
-    case ScrollTop:
-      if (rend && rend->layer()) {
-          if (rend->isRoot() && !rend->style()->hidesOverflow())
-              return Number( node.ownerDocument().view() ? node.ownerDocument().view()->contentsY() : 0);
-          return Number( rend->layer()->scrollYOffset() );
-      }
-      return Number( 0 );
-    default:
-      kdDebug(6070) << "WARNING: Unhandled token in DOMNode::getValueProperty : " << token << endl;
-      break;
-    }
-  }
-  return Undefined();
+    return Undefined();
 }
 
 
-void DOMNode::tryPut(ExecState *exec, const Identifier& propertyName, const Value& value, int attr)
+void DOMNode::tryPut(ExecState *exec, const Identifier &propertyName, const Value &value, int attr)
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "DOMNode::tryPut " << propertyName.qstring() << endl;
+    kdDebug(6070) << "DOMNode::tryPut " << propertyName.qstring() << endl;
 #endif
-  DOMObjectLookupPut<DOMNode,DOMObject>(exec, propertyName, value, attr,
-                                        &DOMNodeTable, this );
+    DOMObjectLookupPut< DOMNode, DOMObject >(exec, propertyName, value, attr, &DOMNodeTable, this);
 }
 
-void DOMNode::putValueProperty(ExecState *exec, int token, const Value& value, int /*attr*/)
+void DOMNode::putValueProperty(ExecState *exec, int token, const Value &value, int /*attr*/)
 {
-  switch (token) {
-  case NodeValue:
-    node.setNodeValue(value.toString(exec).string());
-    break;
-  case Prefix:
-    node.setPrefix(value.toString(exec).string());
-    break;
-  case TextContent:
-    node.setTextContent(value.toString(exec).string());
-    break;
-  case OnAbort:
-    setListener(exec,DOM::EventImpl::ABORT_EVENT,value);
-    break;
-  case OnBlur:
-    setListener(exec,DOM::EventImpl::BLUR_EVENT,value);
-    break;
-  case OnChange:
-    setListener(exec,DOM::EventImpl::CHANGE_EVENT,value);
-    break;
-  case OnClick:
-    setListener(exec,DOM::EventImpl::KHTML_ECMA_CLICK_EVENT,value);
-    break;
-  case OnDblClick:
-    setListener(exec,DOM::EventImpl::KHTML_ECMA_DBLCLICK_EVENT,value);
-    break;
-  case OnDragDrop:
-    setListener(exec,DOM::EventImpl::KHTML_DRAGDROP_EVENT,value);
-    break;
-  case OnError:
-    setListener(exec,DOM::EventImpl::ERROR_EVENT,value);
-    break;
-  case OnFocus:
-    setListener(exec,DOM::EventImpl::FOCUS_EVENT,value);
-    break;
-  case OnKeyDown:
-    setListener(exec,DOM::EventImpl::KEYDOWN_EVENT,value);
-    break;
-  case OnKeyPress:
-    setListener(exec,DOM::EventImpl::KEYPRESS_EVENT,value);
-    break;
-  case OnKeyUp:
-    setListener(exec,DOM::EventImpl::KEYUP_EVENT,value);
-    break;
-  case OnLoad:
-    setListener(exec,DOM::EventImpl::LOAD_EVENT,value);
-    break;
-  case OnMouseDown:
-    setListener(exec,DOM::EventImpl::MOUSEDOWN_EVENT,value);
-    break;
-  case OnMouseMove:
-    setListener(exec,DOM::EventImpl::MOUSEMOVE_EVENT,value);
-    break;
-  case OnMouseOut:
-    setListener(exec,DOM::EventImpl::MOUSEOUT_EVENT,value);
-    break;
-  case OnMouseOver:
-    setListener(exec,DOM::EventImpl::MOUSEOVER_EVENT,value);
-    break;
-  case OnMouseUp:
-    setListener(exec,DOM::EventImpl::MOUSEUP_EVENT,value);
-    break;
-  case OnMove:
-    setListener(exec,DOM::EventImpl::KHTML_MOVE_EVENT,value);
-    break;
-  case OnReset:
-    setListener(exec,DOM::EventImpl::RESET_EVENT,value);
-    break;
-  case OnResize:
-    setListener(exec,DOM::EventImpl::RESIZE_EVENT,value);
-    break;
-  case OnSelect:
-    setListener(exec,DOM::EventImpl::SELECT_EVENT,value);
-    break;
-  case OnSubmit:
-    setListener(exec,DOM::EventImpl::SUBMIT_EVENT,value);
-    break;
-  case OnUnload:
-    setListener(exec,DOM::EventImpl::UNLOAD_EVENT,value);
-    break;
-  default:
-    // Make sure our layout is up to date 
-    DOM::DocumentImpl* docimpl = node.handle()->getDocument();
-    if (docimpl)
-      docimpl->updateLayout();
+    switch(token)
+    {
+        case NodeValue:
+            node.setNodeValue(value.toString(exec).string());
+            break;
+        case Prefix:
+            node.setPrefix(value.toString(exec).string());
+            break;
+        case TextContent:
+            node.setTextContent(value.toString(exec).string());
+            break;
+        case OnAbort:
+            setListener(exec, DOM::EventImpl::ABORT_EVENT, value);
+            break;
+        case OnBlur:
+            setListener(exec, DOM::EventImpl::BLUR_EVENT, value);
+            break;
+        case OnChange:
+            setListener(exec, DOM::EventImpl::CHANGE_EVENT, value);
+            break;
+        case OnClick:
+            setListener(exec, DOM::EventImpl::KHTML_ECMA_CLICK_EVENT, value);
+            break;
+        case OnDblClick:
+            setListener(exec, DOM::EventImpl::KHTML_ECMA_DBLCLICK_EVENT, value);
+            break;
+        case OnDragDrop:
+            setListener(exec, DOM::EventImpl::KHTML_DRAGDROP_EVENT, value);
+            break;
+        case OnError:
+            setListener(exec, DOM::EventImpl::ERROR_EVENT, value);
+            break;
+        case OnFocus:
+            setListener(exec, DOM::EventImpl::FOCUS_EVENT, value);
+            break;
+        case OnKeyDown:
+            setListener(exec, DOM::EventImpl::KEYDOWN_EVENT, value);
+            break;
+        case OnKeyPress:
+            setListener(exec, DOM::EventImpl::KEYPRESS_EVENT, value);
+            break;
+        case OnKeyUp:
+            setListener(exec, DOM::EventImpl::KEYUP_EVENT, value);
+            break;
+        case OnLoad:
+            setListener(exec, DOM::EventImpl::LOAD_EVENT, value);
+            break;
+        case OnMouseDown:
+            setListener(exec, DOM::EventImpl::MOUSEDOWN_EVENT, value);
+            break;
+        case OnMouseMove:
+            setListener(exec, DOM::EventImpl::MOUSEMOVE_EVENT, value);
+            break;
+        case OnMouseOut:
+            setListener(exec, DOM::EventImpl::MOUSEOUT_EVENT, value);
+            break;
+        case OnMouseOver:
+            setListener(exec, DOM::EventImpl::MOUSEOVER_EVENT, value);
+            break;
+        case OnMouseUp:
+            setListener(exec, DOM::EventImpl::MOUSEUP_EVENT, value);
+            break;
+        case OnMove:
+            setListener(exec, DOM::EventImpl::KHTML_MOVE_EVENT, value);
+            break;
+        case OnReset:
+            setListener(exec, DOM::EventImpl::RESET_EVENT, value);
+            break;
+        case OnResize:
+            setListener(exec, DOM::EventImpl::RESIZE_EVENT, value);
+            break;
+        case OnSelect:
+            setListener(exec, DOM::EventImpl::SELECT_EVENT, value);
+            break;
+        case OnSubmit:
+            setListener(exec, DOM::EventImpl::SUBMIT_EVENT, value);
+            break;
+        case OnUnload:
+            setListener(exec, DOM::EventImpl::UNLOAD_EVENT, value);
+            break;
+        default:
+            // Make sure our layout is up to date
+            DOM::DocumentImpl *docimpl = node.handle()->getDocument();
+            if(docimpl)
+                docimpl->updateLayout();
 
-    khtml::RenderObject *rend = node.handle() ? node.handle()->renderer() : 0L;
+            khtml::RenderObject *rend = node.handle() ? node.handle()->renderer() : 0L;
 
-    //In quirks mode, may need to forward.
-    rend = handleBodyRootQuirk(node, rend, token);
+            // In quirks mode, may need to forward.
+            rend = handleBodyRootQuirk(node, rend, token);
 
-    switch (token) {
-      case ScrollLeft:
-        if (rend && rend->layer()) {
-          if (rend->style()->hidesOverflow())
-            rend->layer()->scrollToXOffset(value.toInt32(exec));
-          else if (rend->isRoot()) {
-            QScrollView* sview = node.ownerDocument().view();
-            if (sview)
-              sview->setContentsPos(value.toInt32(exec), sview->contentsY());
-          }
-        }
-        break;
-      case ScrollTop:
-        if (rend && rend->layer()) {
-          if (rend->style()->hidesOverflow())
-            rend->layer()->scrollToYOffset(value.toInt32(exec));
-          else if (rend->isRoot()) {
-            QScrollView* sview = node.ownerDocument().view();
-            if (sview)
-              sview->setContentsPos(sview->contentsX(), value.toInt32(exec));
-          }
-        }
-        break;
-      default:
-      kdDebug(6070) << "WARNING: DOMNode::putValueProperty unhandled token " << token << endl;
+            switch(token)
+            {
+                case ScrollLeft:
+                    if(rend && rend->layer())
+                    {
+                        if(rend->style()->hidesOverflow())
+                            rend->layer()->scrollToXOffset(value.toInt32(exec));
+                        else if(rend->isRoot())
+                        {
+                            QScrollView *sview = node.ownerDocument().view();
+                            if(sview)
+                                sview->setContentsPos(value.toInt32(exec), sview->contentsY());
+                        }
+                    }
+                    break;
+                case ScrollTop:
+                    if(rend && rend->layer())
+                    {
+                        if(rend->style()->hidesOverflow())
+                            rend->layer()->scrollToYOffset(value.toInt32(exec));
+                        else if(rend->isRoot())
+                        {
+                            QScrollView *sview = node.ownerDocument().view();
+                            if(sview)
+                                sview->setContentsPos(sview->contentsX(), value.toInt32(exec));
+                        }
+                    }
+                    break;
+                default:
+                    kdDebug(6070) << "WARNING: DOMNode::putValueProperty unhandled token " << token << endl;
+            }
     }
-  }
 }
 
 Value DOMNode::toPrimitive(ExecState *exec, Type /*preferred*/) const
 {
-  if (node.isNull())
-    return Null();
+    if(node.isNull())
+        return Null();
 
-  return String(toString(exec));
+    return String(toString(exec));
 }
 
 UString DOMNode::toString(ExecState *) const
 {
-  if (node.isNull())
-    return "null";
-  UString s;
+    if(node.isNull())
+        return "null";
+    UString s;
 
-  DOM::Element e = node;
-  if ( !e.isNull() ) {
-    s = e.nodeName().string();
-  } else
-    s = className(); // fallback
+    DOM::Element e = node;
+    if(!e.isNull())
+    {
+        s = e.nodeName().string();
+    }
+    else
+        s = className(); // fallback
 
-  return "[object " + s + "]";
+    return "[object " + s + "]";
 }
 
-void DOMNode::setListener(ExecState *exec, int eventId, const Value& func) const
+void DOMNode::setListener(ExecState *exec, int eventId, const Value &func) const
 {
-  node.handle()->setHTMLEventListener(eventId,Window::retrieveActive(exec)->getJSEventListener(func,true));
+    node.handle()->setHTMLEventListener(eventId, Window::retrieveActive(exec)->getJSEventListener(func, true));
 }
 
 Value DOMNode::getListener(int eventId) const
 {
-  DOM::EventListener *listener = node.handle()->getHTMLEventListener(eventId);
-  JSEventListener *jsListener = static_cast<JSEventListener*>(listener);
-  if ( jsListener && jsListener->listenerObjImp() )
-    return jsListener->listenerObj();
-  else
-    return Null();
+    DOM::EventListener *listener = node.handle()->getHTMLEventListener(eventId);
+    JSEventListener *jsListener = static_cast< JSEventListener * >(listener);
+    if(jsListener && jsListener->listenerObjImp())
+        return jsListener->listenerObj();
+    else
+        return Null();
 }
 
 void DOMNode::pushEventHandlerScope(ExecState *, ScopeChain &) const
@@ -552,82 +569,85 @@ void DOMNode::pushEventHandlerScope(ExecState *, ScopeChain &) const
 
 Value DOMNodeProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  KJS_CHECK_THIS( DOMNode, thisObj );
-  DOM::Node node = static_cast<DOMNode *>( thisObj.imp() )->toNode();
-  switch (id) {
-    case DOMNode::HasAttributes:
-      return Boolean(node.hasAttributes());
-    case DOMNode::HasChildNodes:
-      return Boolean(node.hasChildNodes());
-    case DOMNode::CloneNode:
-      return getDOMNode(exec,node.cloneNode(args[0].toBoolean(exec)));
-    case DOMNode::Normalize:
-      node.normalize();
-      return Undefined();
-    case DOMNode::IsSupported:
-      return Boolean(node.isSupported(args[0].toString(exec).string(),args[1].toString(exec).string()));
-    case DOMNode::AddEventListener: {
-        JSEventListener *listener = Window::retrieveActive(exec)->getJSEventListener(args[1]);
-        node.addEventListener(args[0].toString(exec).string(),listener,args[2].toBoolean(exec));
-        return Undefined();
-    }
-    case DOMNode::RemoveEventListener: {
-        JSEventListener *listener = Window::retrieveActive(exec)->getJSEventListener(args[1]);
-        node.removeEventListener(args[0].toString(exec).string(),listener,args[2].toBoolean(exec));
-        return Undefined();
-    }
-    case DOMNode::DispatchEvent:
-      return Boolean(node.dispatchEvent(toEvent(args[0])));
-    case DOMNode::AppendChild:
-      return getDOMNode(exec,node.appendChild(toNode(args[0])));
-    case DOMNode::RemoveChild:
-      return getDOMNode(exec,node.removeChild(toNode(args[0])));
-    case DOMNode::InsertBefore:
-      return getDOMNode(exec,node.insertBefore(toNode(args[0]), toNode(args[1])));
-    case DOMNode::ReplaceChild:
-      return getDOMNode(exec,node.replaceChild(toNode(args[0]), toNode(args[1])));
-    case DOMNode::Contains:
+    KJS_CHECK_THIS(DOMNode, thisObj);
+    DOM::Node node = static_cast< DOMNode * >(thisObj.imp())->toNode();
+    switch(id)
     {
-	DOM::Node other = toNode(args[0]);
-	if (!other.isNull() && node.nodeType()==DOM::Node::ELEMENT_NODE)
-	{
-	    DOM::NodeBaseImpl *impl = static_cast<DOM::NodeBaseImpl *>(node.handle());
-	    bool retval = other.handle()->isAncestor(impl);
-	    return Boolean(retval);
-	}
-        return Undefined();
+        case DOMNode::HasAttributes:
+            return Boolean(node.hasAttributes());
+        case DOMNode::HasChildNodes:
+            return Boolean(node.hasChildNodes());
+        case DOMNode::CloneNode:
+            return getDOMNode(exec, node.cloneNode(args[0].toBoolean(exec)));
+        case DOMNode::Normalize:
+            node.normalize();
+            return Undefined();
+        case DOMNode::IsSupported:
+            return Boolean(node.isSupported(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMNode::AddEventListener:
+        {
+            JSEventListener *listener = Window::retrieveActive(exec)->getJSEventListener(args[1]);
+            node.addEventListener(args[0].toString(exec).string(), listener, args[2].toBoolean(exec));
+            return Undefined();
+        }
+        case DOMNode::RemoveEventListener:
+        {
+            JSEventListener *listener = Window::retrieveActive(exec)->getJSEventListener(args[1]);
+            node.removeEventListener(args[0].toString(exec).string(), listener, args[2].toBoolean(exec));
+            return Undefined();
+        }
+        case DOMNode::DispatchEvent:
+            return Boolean(node.dispatchEvent(toEvent(args[0])));
+        case DOMNode::AppendChild:
+            return getDOMNode(exec, node.appendChild(toNode(args[0])));
+        case DOMNode::RemoveChild:
+            return getDOMNode(exec, node.removeChild(toNode(args[0])));
+        case DOMNode::InsertBefore:
+            return getDOMNode(exec, node.insertBefore(toNode(args[0]), toNode(args[1])));
+        case DOMNode::ReplaceChild:
+            return getDOMNode(exec, node.replaceChild(toNode(args[0]), toNode(args[1])));
+        case DOMNode::Contains:
+        {
+            DOM::Node other = toNode(args[0]);
+            if(!other.isNull() && node.nodeType() == DOM::Node::ELEMENT_NODE)
+            {
+                DOM::NodeBaseImpl *impl = static_cast< DOM::NodeBaseImpl * >(node.handle());
+                bool retval = other.handle()->isAncestor(impl);
+                return Boolean(retval);
+            }
+            return Undefined();
+        }
+        case DOMNode::InsertAdjacentHTML:
+        {
+            // see http://www.faqts.com/knowledge_base/view.phtml/aid/5756
+            // and http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/insertAdjacentHTML.asp
+            Range range = node.ownerDocument().createRange();
+
+            range.setStartBefore(node);
+
+            DocumentFragment docFrag = range.createContextualFragment(args[1].toString(exec).string());
+
+            DOMString where = args[0].toString(exec).string();
+
+            if(where == "beforeBegin" || where == "BeforeBegin")
+                node.parentNode().insertBefore(docFrag, node);
+            else if(where == "afterBegin" || where == "AfterBegin")
+                node.insertBefore(docFrag, node.firstChild());
+            else if(where == "beforeEnd" || where == "BeforeEnd")
+                return getDOMNode(exec, node.appendChild(docFrag));
+            else if(where == "afterEnd" || where == "AfterEnd")
+                if(!node.nextSibling().isNull())
+                    node.parentNode().insertBefore(docFrag, node.nextSibling());
+                else
+                    node.parentNode().appendChild(docFrag);
+
+            return Undefined();
+        }
+        case DOMNode::Item:
+            return getDOMNode(exec, node.childNodes().item(static_cast< unsigned long >(args[0].toNumber(exec))));
     }
-    case DOMNode::InsertAdjacentHTML:
-    {
-      // see http://www.faqts.com/knowledge_base/view.phtml/aid/5756
-      // and http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/insertAdjacentHTML.asp
-      Range range = node.ownerDocument().createRange();
 
-      range.setStartBefore(node);
-
-      DocumentFragment docFrag = range.createContextualFragment(args[1].toString(exec).string());
-
-      DOMString where = args[0].toString(exec).string();
-
-      if (where == "beforeBegin" || where == "BeforeBegin")
-        node.parentNode().insertBefore(docFrag, node);
-      else if (where == "afterBegin" || where == "AfterBegin")
-        node.insertBefore(docFrag, node.firstChild());
-      else if (where == "beforeEnd" || where == "BeforeEnd")
-        return getDOMNode(exec, node.appendChild(docFrag));
-      else if (where == "afterEnd" || where == "AfterEnd")
-        if (!node.nextSibling().isNull())
-	  node.parentNode().insertBefore(docFrag, node.nextSibling());
-	else
-	  node.parentNode().appendChild(docFrag);
-
-      return Undefined();
-    }
-    case DOMNode::Item:
-      return getDOMNode(exec, node.childNodes().item(static_cast<unsigned long>(args[0].toNumber(exec))));
-  }
-
-  return Undefined();
+    return Undefined();
 }
 
 // -------------------------------------------------------------------------
@@ -644,166 +664,172 @@ IMPLEMENT_PROTOFUNC_DOM(DOMNodeListProtoFunc)
 KJS_IMPLEMENT_PROTOTYPE("DOMNodeList", DOMNodeListProto, DOMNodeListProtoFunc)
 
 
-const ClassInfo DOMNodeList::info = { "NodeList", 0, 0, 0 };
+const ClassInfo DOMNodeList::info = {"NodeList", 0, 0, 0};
 
-DOMNodeList::DOMNodeList(ExecState *exec, const DOM::NodeList& l)
- : DOMObject(DOMNodeListProto::self(exec)), list(l) { }
+DOMNodeList::DOMNodeList(ExecState *exec, const DOM::NodeList &l) : DOMObject(DOMNodeListProto::self(exec)), list(l)
+{
+}
 
 DOMNodeList::~DOMNodeList()
 {
-  ScriptInterpreter::forgetDOMObject(list.handle());
+    ScriptInterpreter::forgetDOMObject(list.handle());
 }
 
 // We have to implement hasProperty since we don't use a hashtable for 'length'
 // ## this breaks "for (..in..)" though.
 bool DOMNodeList::hasProperty(ExecState *exec, const Identifier &p) const
 {
-  if (p == lengthPropertyName)
-    return true;
+    if(p == lengthPropertyName)
+        return true;
 
-  if (ObjectImp::hasProperty(exec, p))
-    return true;
+    if(ObjectImp::hasProperty(exec, p))
+        return true;
 
-  bool ok;
-  unsigned long pos = p.toULong(&ok);
-  if (ok && pos < list.length())
-    return true;
+    bool ok;
+    unsigned long pos = p.toULong(&ok);
+    if(ok && pos < list.length())
+        return true;
 
-  // ## missing: accept p if item id...
-  return false;
+    // ## missing: accept p if item id...
+    return false;
 }
 
 Value DOMNodeList::tryGet(ExecState *exec, const Identifier &p) const
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "DOMNodeList::tryGet " << p.ascii() << endl;
+    kdDebug(6070) << "DOMNodeList::tryGet " << p.ascii() << endl;
 #endif
-  if (p == lengthPropertyName)
-    return Number(list.length());
+    if(p == lengthPropertyName)
+        return Number(list.length());
 
-  // Look in the prototype (for functions) before assuming it's an item's name
-  Object proto = Object::dynamicCast(prototype());
-  if (proto.isValid() && proto.hasProperty(exec,p))
-    return proto.get(exec,p);
+    // Look in the prototype (for functions) before assuming it's an item's name
+    Object proto = Object::dynamicCast(prototype());
+    if(proto.isValid() && proto.hasProperty(exec, p))
+        return proto.get(exec, p);
 
-  Value result;
+    Value result;
 
-  // array index ?
-  bool ok;
-  long unsigned int idx = p.toULong(&ok);
-  if (ok)
-    result = getDOMNode(exec,list.item(idx));
-  else {
-    // Find by ID
-    DOM::HTMLElement e;
-    unsigned long l = list.length();
-    bool found = false;
+    // array index ?
+    bool ok;
+    long unsigned int idx = p.toULong(&ok);
+    if(ok)
+        result = getDOMNode(exec, list.item(idx));
+    else
+    {
+        // Find by ID
+        DOM::HTMLElement e;
+        unsigned long l = list.length();
+        bool found = false;
 
-    for ( unsigned long i = 0; i < l; i++ )
-      if ( ( e = list.item( i ) ).id() == p.string() ) {
-        result = getDOMNode(exec, list.item( i ) );
-        found = true;
-        break;
-      }
+        for(unsigned long i = 0; i < l; i++)
+            if((e = list.item(i)).id() == p.string())
+            {
+                result = getDOMNode(exec, list.item(i));
+                found = true;
+                break;
+            }
 
-    if ( !found )
-      result = ObjectImp::get(exec, p);
-  }
+        if(!found)
+            result = ObjectImp::get(exec, p);
+    }
 
-  return result;
+    return result;
 }
 
 ReferenceList DOMNodeList::propList(ExecState *exec, bool recursive)
 {
-  ReferenceList properties = ObjectImp::propList(exec,recursive);
+    ReferenceList properties = ObjectImp::propList(exec, recursive);
 
-  for (unsigned i = 0; i < list.length(); ++i) {
-    if (!ObjectImp::hasProperty(exec,Identifier::from(i))) {
-      properties.append(Reference(this, i));
+    for(unsigned i = 0; i < list.length(); ++i)
+    {
+        if(!ObjectImp::hasProperty(exec, Identifier::from(i)))
+        {
+            properties.append(Reference(this, i));
+        }
     }
-  }
 
-  if (!ObjectImp::hasProperty(exec, lengthPropertyName))
-    properties.append(Reference(this, lengthPropertyName));
+    if(!ObjectImp::hasProperty(exec, lengthPropertyName))
+        properties.append(Reference(this, lengthPropertyName));
 
-  return properties;
+    return properties;
 }
 
 // Need to support both get and call, so that list[0] and list(0) work.
 Value DOMNodeList::call(ExecState *exec, Object &thisObj, const List &args)
 {
-  // This code duplication is necessary, DOMNodeList isn't a DOMFunction
-  Value val;
-  try {
-    val = tryCall(exec, thisObj, args);
-  }
-  // pity there's no way to distinguish between these in JS code
-  catch (...) {
-    Object err = Error::create(exec, GeneralError, "Exception from DOMNodeList");
-    exec->setException(err);
-  }
-  return val;
+    // This code duplication is necessary, DOMNodeList isn't a DOMFunction
+    Value val;
+    try
+    {
+        val = tryCall(exec, thisObj, args);
+    }
+    // pity there's no way to distinguish between these in JS code
+    catch(...)
+    {
+        Object err = Error::create(exec, GeneralError, "Exception from DOMNodeList");
+        exec->setException(err);
+    }
+    return val;
 }
 
 Value DOMNodeList::tryCall(ExecState *exec, Object &, const List &args)
 {
-  // Do not use thisObj here. See HTMLCollection.
-  UString s = args[0].toString(exec);
+    // Do not use thisObj here. See HTMLCollection.
+    UString s = args[0].toString(exec);
 
-  // index-based lookup?
-  bool ok;
-  unsigned int u = s.toULong(&ok);
-  if (ok)
-    return getDOMNode(exec,list.item(u));
+    // index-based lookup?
+    bool ok;
+    unsigned int u = s.toULong(&ok);
+    if(ok)
+        return getDOMNode(exec, list.item(u));
 
-  // try lookup by name
-  // ### NodeList::namedItem() would be cool to have
-  // ### do we need to support the same two arg overload as in HTMLCollection?
-  Value result = tryGet(exec, Identifier(s));
+    // try lookup by name
+    // ### NodeList::namedItem() would be cool to have
+    // ### do we need to support the same two arg overload as in HTMLCollection?
+    Value result = tryGet(exec, Identifier(s));
 
-  if (result.isValid())
-    return result;
+    if(result.isValid())
+        return result;
 
-  return Undefined();
+    return Undefined();
 }
 
 // Not a prototype class currently, but should probably be converted to one
 Value DOMNodeListProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  KJS_CHECK_THIS( KJS::DOMNodeList, thisObj );
-  DOM::NodeList list = static_cast<DOMNodeList *>(thisObj.imp())->nodeList();
-  switch (id) {
-  case KJS::DOMNodeList::Item:
-    return getDOMNode(exec, list.item(args[0].toInt32(exec)));
-  case KJS::DOMNodeList::NamedItem:
-  {
-    // Not a real namedItem implementation like the one HTMLCollection has.
-    // This is only an IE extension...
-    DOM::HTMLElement e;
-    unsigned long len = list.length();
-    DOM::DOMString s = args[0].toString(exec).string();
-
-    for ( unsigned long i = 0; i < len; i++ )
+    KJS_CHECK_THIS(KJS::DOMNodeList, thisObj);
+    DOM::NodeList list = static_cast< DOMNodeList * >(thisObj.imp())->nodeList();
+    switch(id)
     {
-      e = list.item( i );
-      if ( !e.isNull() && (
-             e.id() == s || static_cast<ElementImpl *>(e.handle())->getAttribute(ATTR_NAME) == s )
-      )
-      {
-        return getDOMNode(exec, e );
-      }
+        case KJS::DOMNodeList::Item:
+            return getDOMNode(exec, list.item(args[0].toInt32(exec)));
+        case KJS::DOMNodeList::NamedItem:
+        {
+            // Not a real namedItem implementation like the one HTMLCollection has.
+            // This is only an IE extension...
+            DOM::HTMLElement e;
+            unsigned long len = list.length();
+            DOM::DOMString s = args[0].toString(exec).string();
+
+            for(unsigned long i = 0; i < len; i++)
+            {
+                e = list.item(i);
+                if(!e.isNull() && (e.id() == s || static_cast< ElementImpl * >(e.handle())->getAttribute(ATTR_NAME) == s))
+                {
+                    return getDOMNode(exec, e);
+                }
+            }
+            return Null(); // see HTMLCollection::NamedItem implementation
+        }
+        default:
+            return Undefined();
     }
-    return Null(); // see HTMLCollection::NamedItem implementation
-  }
-  default:
-    return Undefined();
-  }
 }
 
 // -------------------------------------------------------------------------
 
 //### FIXME: link to the node prototype.
-const ClassInfo DOMAttr::info = { "Attr", &DOMNode::info, &DOMAttrTable, 0 };
+const ClassInfo DOMAttr::info = {"Attr", &DOMNode::info, &DOMAttrTable, 0};
 
 /* Source for DOMAttrTable.
 @begin DOMAttrTable 5
@@ -816,45 +842,45 @@ const ClassInfo DOMAttr::info = { "Attr", &DOMNode::info, &DOMAttrTable, 0 };
 Value DOMAttr::tryGet(ExecState *exec, const Identifier &propertyName) const
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "DOMAttr::tryGet " << propertyName.qstring() << endl;
+    kdDebug(6070) << "DOMAttr::tryGet " << propertyName.qstring() << endl;
 #endif
-  return DOMObjectLookupGetValue<DOMAttr,DOMNode>(exec, propertyName,
-                                                  &DOMAttrTable, this );
+    return DOMObjectLookupGetValue< DOMAttr, DOMNode >(exec, propertyName, &DOMAttrTable, this);
 }
 
 Value DOMAttr::getValueProperty(ExecState *exec, int token) const
 {
-  switch (token) {
-  case Name:
-    return String(static_cast<DOM::Attr>(node).name());
-  case Specified:
-    return Boolean(static_cast<DOM::Attr>(node).specified());
-  case ValueProperty:
-    return String(static_cast<DOM::Attr>(node).value());
-  case OwnerElement: // DOM2
-    return getDOMNode(exec,static_cast<DOM::Attr>(node).ownerElement());
-  }
-  return Value(); // not reached
+    switch(token)
+    {
+        case Name:
+            return String(static_cast< DOM::Attr >(node).name());
+        case Specified:
+            return Boolean(static_cast< DOM::Attr >(node).specified());
+        case ValueProperty:
+            return String(static_cast< DOM::Attr >(node).value());
+        case OwnerElement: // DOM2
+            return getDOMNode(exec, static_cast< DOM::Attr >(node).ownerElement());
+    }
+    return Value(); // not reached
 }
 
-void DOMAttr::tryPut(ExecState *exec, const Identifier &propertyName, const Value& value, int attr)
+void DOMAttr::tryPut(ExecState *exec, const Identifier &propertyName, const Value &value, int attr)
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "DOMAttr::tryPut " << propertyName.qstring() << endl;
+    kdDebug(6070) << "DOMAttr::tryPut " << propertyName.qstring() << endl;
 #endif
-  DOMObjectLookupPut<DOMAttr,DOMNode>(exec, propertyName, value, attr,
-                                      &DOMAttrTable, this );
+    DOMObjectLookupPut< DOMAttr, DOMNode >(exec, propertyName, value, attr, &DOMAttrTable, this);
 }
 
-void DOMAttr::putValueProperty(ExecState *exec, int token, const Value& value, int /*attr*/)
+void DOMAttr::putValueProperty(ExecState *exec, int token, const Value &value, int /*attr*/)
 {
-  switch (token) {
-  case ValueProperty:
-    static_cast<DOM::Attr>(node).setValue(value.toString(exec).string());
-    return;
-  default:
-    kdDebug(6070) << "WARNING: DOMAttr::putValueProperty unhandled token " << token << endl;
-  }
+    switch(token)
+    {
+        case ValueProperty:
+            static_cast< DOM::Attr >(node).setValue(value.toString(exec).string());
+            return;
+        default:
+            kdDebug(6070) << "WARNING: DOMAttr::putValueProperty unhandled token " << token << endl;
+    }
 }
 
 // -------------------------------------------------------------------------
@@ -889,7 +915,7 @@ IMPLEMENT_PROTOFUNC_DOM(DOMDocumentProtoFunc)
 KJS_IMPLEMENT_PROTOTYPE("DOMDocument", DOMDocumentProto, DOMDocumentProtoFunc)
 IMPLEMENT_PSEUDO_CONSTRUCTOR(DocumentPseudoCtor, "Document", DOMDocumentProto)
 
-const ClassInfo DOMDocument::info = { "Document", &DOMNode::info, &DOMDocumentTable, 0 };
+const ClassInfo DOMDocument::info = {"Document", &DOMNode::info, &DOMDocumentTable, 0};
 
 /* Source for DOMDocumentTable.
 @begin DOMDocumentTable 4
@@ -906,211 +932,222 @@ const ClassInfo DOMDocument::info = { "Document", &DOMNode::info, &DOMDocumentTa
 @end
 */
 
-DOMDocument::DOMDocument(ExecState *exec, const DOM::Document& d)
-  : DOMNode(DOMDocumentProto::self(exec), d) { }
+DOMDocument::DOMDocument(ExecState *exec, const DOM::Document &d) : DOMNode(DOMDocumentProto::self(exec), d)
+{
+}
 
-DOMDocument::DOMDocument(const Object& proto, const DOM::Document& d)
-  : DOMNode(proto, d) { }
+DOMDocument::DOMDocument(const Object &proto, const DOM::Document &d) : DOMNode(proto, d)
+{
+}
 
 DOMDocument::~DOMDocument()
 {
-  ScriptInterpreter::forgetDOMObject(node.handle());
+    ScriptInterpreter::forgetDOMObject(node.handle());
 }
 
 Value DOMDocument::tryGet(ExecState *exec, const Identifier &propertyName) const
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "DOMDocument::tryGet " << propertyName.qstring() << endl;
+    kdDebug(6070) << "DOMDocument::tryGet " << propertyName.qstring() << endl;
 #endif
-  return DOMObjectLookupGetValue<DOMDocument, DOMNode>(
-    exec, propertyName, &DOMDocumentTable, this);
+    return DOMObjectLookupGetValue< DOMDocument, DOMNode >(exec, propertyName, &DOMDocumentTable, this);
 }
 
 Value DOMDocument::getValueProperty(ExecState *exec, int token) const
 {
-  DOM::Document doc = static_cast<DOM::Document>(node);
+    DOM::Document doc = static_cast< DOM::Document >(node);
 
-  switch(token) {
-  case DocType:
-    return getDOMNode(exec,doc.doctype());
-  case Implementation:
-    return getDOMDOMImplementation(exec,doc.implementation());
-  case DocumentElement:
-    return getDOMNode(exec,doc.documentElement());
-  case CharacterSet: {
-    DOM::DocumentImpl* docImpl = static_cast<DOM::DocumentImpl*>(doc.handle());
-    if (docImpl->part())
-      return String(docImpl->part()->encoding());
-    else
-      return Undefined();
-  }
-  case StyleSheets:
-    //kdDebug() << "DOMDocument::StyleSheets, returning " << doc.styleSheets().length() << " stylesheets" << endl;
-    return getDOMStyleSheetList(exec, doc.styleSheets(), doc);
-  case DOMDocument::DefaultView: // DOM2
+    switch(token)
     {
-    KHTMLView *view = node.handle()->getDocument()->view();
-    if (view)
-        return Window::retrieve(view->part());
-    return getDOMAbstractView(exec, doc.defaultView());
+        case DocType:
+            return getDOMNode(exec, doc.doctype());
+        case Implementation:
+            return getDOMDOMImplementation(exec, doc.implementation());
+        case DocumentElement:
+            return getDOMNode(exec, doc.documentElement());
+        case CharacterSet:
+        {
+            DOM::DocumentImpl *docImpl = static_cast< DOM::DocumentImpl * >(doc.handle());
+            if(docImpl->part())
+                return String(docImpl->part()->encoding());
+            else
+                return Undefined();
+        }
+        case StyleSheets:
+            // kdDebug() << "DOMDocument::StyleSheets, returning " << doc.styleSheets().length() << " stylesheets" << endl;
+            return getDOMStyleSheetList(exec, doc.styleSheets(), doc);
+        case DOMDocument::DefaultView: // DOM2
+        {
+            KHTMLView *view = node.handle()->getDocument()->view();
+            if(view)
+                return Window::retrieve(view->part());
+            return getDOMAbstractView(exec, doc.defaultView());
+        }
+        case PreferredStylesheetSet:
+            return String(doc.preferredStylesheetSet());
+        case SelectedStylesheetSet:
+            return String(doc.selectedStylesheetSet());
+        case ReadyState:
+        {
+            DOM::DocumentImpl *docimpl = node.handle()->getDocument();
+            if(docimpl && docimpl->view())
+            {
+                KHTMLPart *part = docimpl->view()->part();
+                if(part)
+                {
+                    if(part->d->m_bComplete)
+                        return String("complete");
+                    if(docimpl->parsing())
+                        return String("loading");
+                    return String("loaded");
+                    // What does the interactive value mean ?
+                    // Missing support for "uninitialized"
+                }
+            }
+            return Undefined();
+        }
+        case Async:
+            return Boolean(doc.async());
+        default:
+            kdDebug(6070) << "WARNING: DOMDocument::getValueProperty unhandled token " << token << endl;
+            return Value();
     }
-  case PreferredStylesheetSet:
-    return String(doc.preferredStylesheetSet());
-  case SelectedStylesheetSet:
-    return String(doc.selectedStylesheetSet());
-  case ReadyState:
-    {
-    DOM::DocumentImpl* docimpl = node.handle()->getDocument();
-    if ( docimpl && docimpl->view() )
-    {
-      KHTMLPart* part = docimpl->view()->part();
-      if ( part ) {
-        if (part->d->m_bComplete) return String("complete");
-        if (docimpl->parsing()) return String("loading");
-        return String("loaded");
-        // What does the interactive value mean ?
-        // Missing support for "uninitialized"
-      }
-    }
-    return Undefined();
-    }
-  case Async:
-    return Boolean(doc.async());
-  default:
-    kdDebug(6070) << "WARNING: DOMDocument::getValueProperty unhandled token " << token << endl;
-    return Value();
-  }
 }
 
-void DOMDocument::tryPut(ExecState *exec, const Identifier& propertyName, const Value& value, int attr)
+void DOMDocument::tryPut(ExecState *exec, const Identifier &propertyName, const Value &value, int attr)
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "DOMDocument::tryPut " << propertyName.qstring() << endl;
+    kdDebug(6070) << "DOMDocument::tryPut " << propertyName.qstring() << endl;
 #endif
-  DOMObjectLookupPut<DOMDocument,DOMNode>(exec, propertyName, value, attr, &DOMDocumentTable, this );
+    DOMObjectLookupPut< DOMDocument, DOMNode >(exec, propertyName, value, attr, &DOMDocumentTable, this);
 }
 
-void DOMDocument::putValueProperty(ExecState *exec, int token, const Value& value, int /*attr*/)
+void DOMDocument::putValueProperty(ExecState *exec, int token, const Value &value, int /*attr*/)
 {
-  DOM::Document doc = static_cast<DOM::Document>(node);
-  switch (token) {
-    case SelectedStylesheetSet: {
-      doc.setSelectedStylesheetSet(value.toString(exec).string());
-      break;
+    DOM::Document doc = static_cast< DOM::Document >(node);
+    switch(token)
+    {
+        case SelectedStylesheetSet:
+        {
+            doc.setSelectedStylesheetSet(value.toString(exec).string());
+            break;
+        }
+        case Async:
+        {
+            doc.setAsync(value.toBoolean(exec));
+            break;
+        }
     }
-    case Async: {
-      doc.setAsync(value.toBoolean(exec));
-      break;
-    }
-  }
 }
 
 Value DOMDocumentProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  KJS_CHECK_THIS( KJS::DOMDocument, thisObj );
-  DOM::Node node = static_cast<DOMNode *>( thisObj.imp() )->toNode();
-  DOM::Document doc = static_cast<DOM::Document>(node);
-  String str = args[0].toString(exec);
-  DOM::DOMString s = str.value().string();
+    KJS_CHECK_THIS(KJS::DOMDocument, thisObj);
+    DOM::Node node = static_cast< DOMNode * >(thisObj.imp())->toNode();
+    DOM::Document doc = static_cast< DOM::Document >(node);
+    String str = args[0].toString(exec);
+    DOM::DOMString s = str.value().string();
 
-  switch(id) {
-  case DOMDocument::CreateElement:
-    return getDOMNode(exec,doc.createElement(s));
-  case DOMDocument::CreateDocumentFragment:
-    return getDOMNode(exec,doc.createDocumentFragment());
-  case DOMDocument::CreateTextNode:
-    return getDOMNode(exec,doc.createTextNode(s));
-  case DOMDocument::CreateComment:
-    return getDOMNode(exec,doc.createComment(s));
-  case DOMDocument::CreateCDATASection:
-    return getDOMNode(exec,doc.createCDATASection(s));  /* TODO: okay ? */
-  case DOMDocument::CreateProcessingInstruction:
-    return getDOMNode(exec,doc.createProcessingInstruction(args[0].toString(exec).string(),
-                                                                 args[1].toString(exec).string()));
-  case DOMDocument::CreateAttribute:
-    return getDOMNode(exec,doc.createAttribute(s));
-  case DOMDocument::CreateEntityReference:
-    return getDOMNode(exec,doc.createEntityReference(args[0].toString(exec).string()));
-  case DOMDocument::GetElementsByTagName:
-    return getDOMNodeList(exec,doc.getElementsByTagName(s));
-  case DOMDocument::ImportNode: // DOM2
-    return getDOMNode(exec,doc.importNode(toNode(args[0]), args[1].toBoolean(exec)));
-  case DOMDocument::CreateElementNS: // DOM2
-    return getDOMNode(exec,doc.createElementNS(args[0].toString(exec).string(), args[1].toString(exec).string()));
-  case DOMDocument::CreateAttributeNS: // DOM2
-    return getDOMNode(exec,doc.createAttributeNS(args[0].toString(exec).string(),args[1].toString(exec).string()));
-  case DOMDocument::GetElementsByTagNameNS: // DOM2
-    return getDOMNodeList(exec,doc.getElementsByTagNameNS(args[0].toString(exec).string(),
-                                                          args[1].toString(exec).string()));
-  case DOMDocument::GetElementById:
+    switch(id)
+    {
+        case DOMDocument::CreateElement:
+            return getDOMNode(exec, doc.createElement(s));
+        case DOMDocument::CreateDocumentFragment:
+            return getDOMNode(exec, doc.createDocumentFragment());
+        case DOMDocument::CreateTextNode:
+            return getDOMNode(exec, doc.createTextNode(s));
+        case DOMDocument::CreateComment:
+            return getDOMNode(exec, doc.createComment(s));
+        case DOMDocument::CreateCDATASection:
+            return getDOMNode(exec, doc.createCDATASection(s)); /* TODO: okay ? */
+        case DOMDocument::CreateProcessingInstruction:
+            return getDOMNode(exec, doc.createProcessingInstruction(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMDocument::CreateAttribute:
+            return getDOMNode(exec, doc.createAttribute(s));
+        case DOMDocument::CreateEntityReference:
+            return getDOMNode(exec, doc.createEntityReference(args[0].toString(exec).string()));
+        case DOMDocument::GetElementsByTagName:
+            return getDOMNodeList(exec, doc.getElementsByTagName(s));
+        case DOMDocument::ImportNode: // DOM2
+            return getDOMNode(exec, doc.importNode(toNode(args[0]), args[1].toBoolean(exec)));
+        case DOMDocument::CreateElementNS: // DOM2
+            return getDOMNode(exec, doc.createElementNS(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMDocument::CreateAttributeNS: // DOM2
+            return getDOMNode(exec, doc.createAttributeNS(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMDocument::GetElementsByTagNameNS: // DOM2
+            return getDOMNodeList(exec, doc.getElementsByTagNameNS(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMDocument::GetElementById:
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "DOMDocument::GetElementById looking for " << args[0].toString(exec).string() << endl;
+            kdDebug(6070) << "DOMDocument::GetElementById looking for " << args[0].toString(exec).string() << endl;
 #endif
-    return getDOMNode(exec,doc.getElementById(args[0].toString(exec).string()));
-  case DOMDocument::CreateRange:
-    return getDOMRange(exec,doc.createRange());
-  case DOMDocument::CreateNodeIterator:
-    if (args[2].isA(NullType)) {
-        DOM::NodeFilter filter;
-        return getDOMNodeIterator(exec,
-                                  doc.createNodeIterator(toNode(args[0]),
-                                                         (long unsigned int)(args[1].toNumber(exec)),
-                                                         filter,args[3].toBoolean(exec)));
+            return getDOMNode(exec, doc.getElementById(args[0].toString(exec).string()));
+        case DOMDocument::CreateRange:
+            return getDOMRange(exec, doc.createRange());
+        case DOMDocument::CreateNodeIterator:
+            if(args[2].isA(NullType))
+            {
+                DOM::NodeFilter filter;
+                return getDOMNodeIterator(
+                    exec, doc.createNodeIterator(toNode(args[0]), (long unsigned int)(args[1].toNumber(exec)), filter, args[3].toBoolean(exec)));
+            }
+            else
+            {
+                Object obj = Object::dynamicCast(args[2]);
+                if(obj.isValid())
+                {
+                    DOM::CustomNodeFilter *customFilter = new JSNodeFilter(obj);
+                    DOM::NodeFilter filter = DOM::NodeFilter::createCustom(customFilter);
+                    return getDOMNodeIterator(
+                        exec, doc.createNodeIterator(toNode(args[0]), (long unsigned int)(args[1].toNumber(exec)), filter, args[3].toBoolean(exec)));
+                } // else?
+            }
+        case DOMDocument::CreateTreeWalker:
+            return getDOMTreeWalker(exec, doc.createTreeWalker(toNode(args[0]), (long unsigned int)(args[1].toNumber(exec)), toNodeFilter(args[2]),
+                                                               args[3].toBoolean(exec)));
+        case DOMDocument::CreateEvent:
+            return getDOMEvent(exec, doc.createEvent(s));
+        case DOMDocument::GetOverrideStyle:
+        {
+            DOM::Node arg0 = toNode(args[0]);
+            if(arg0.nodeType() != DOM::Node::ELEMENT_NODE)
+                return Undefined(); // throw exception?
+            else
+                return getDOMCSSStyleDeclaration(exec, doc.getOverrideStyle(static_cast< DOM::Element >(arg0), args[1].toString(exec).string()));
+        }
+        case DOMDocument::Abort:
+            doc.abort();
+            break;
+        case DOMDocument::Load:
+        {
+            Window *active = Window::retrieveActive(exec);
+            // Complete the URL using the "active part" (running interpreter). We do this for the security
+            // check and to make sure we load exactly the same url as we have verified to be safe
+            KHTMLPart *khtmlpart = ::qt_cast< KHTMLPart * >(active->part());
+            if(khtmlpart)
+            {
+                // Security: only allow documents to be loaded from the same host
+                QString dstUrl = khtmlpart->htmlDocument().completeURL(s).string();
+                KParts::ReadOnlyPart *part = static_cast< KJS::ScriptInterpreter * >(exec->interpreter())->part();
+                if(part->url().host() == KURL(dstUrl).host())
+                {
+                    kdDebug(6070) << "JavaScript: access granted for document.load() of " << dstUrl << endl;
+                    doc.load(dstUrl);
+                }
+                else
+                {
+                    kdDebug(6070) << "JavaScript: access denied for document.load() of " << dstUrl << endl;
+                }
+            }
+            break;
+        }
+        case DOMDocument::LoadXML:
+            doc.loadXML(s);
+            break;
+        default:
+            break;
     }
-    else {
-      Object obj = Object::dynamicCast(args[2]);
-      if (obj.isValid())
-      {
-        DOM::CustomNodeFilter *customFilter = new JSNodeFilter(obj);
-        DOM::NodeFilter filter = DOM::NodeFilter::createCustom(customFilter);
-        return getDOMNodeIterator(exec,
-          doc.createNodeIterator(
-            toNode(args[0]),(long unsigned int)(args[1].toNumber(exec)),
-            filter,args[3].toBoolean(exec)));
-      }// else?
-    }
-  case DOMDocument::CreateTreeWalker:
-    return getDOMTreeWalker(exec,doc.createTreeWalker(toNode(args[0]),(long unsigned int)(args[1].toNumber(exec)),
-             toNodeFilter(args[2]),args[3].toBoolean(exec)));
-  case DOMDocument::CreateEvent:
-    return getDOMEvent(exec,doc.createEvent(s));
-  case DOMDocument::GetOverrideStyle: {
-    DOM::Node arg0 = toNode(args[0]);
-    if (arg0.nodeType() != DOM::Node::ELEMENT_NODE)
-      return Undefined(); // throw exception?
-    else
-      return getDOMCSSStyleDeclaration(exec,doc.getOverrideStyle(static_cast<DOM::Element>(arg0),args[1].toString(exec).string()));
-  }
-  case DOMDocument::Abort:
-    doc.abort();
-    break;
-  case DOMDocument::Load: {
-    Window* active = Window::retrieveActive(exec);
-    // Complete the URL using the "active part" (running interpreter). We do this for the security
-    // check and to make sure we load exactly the same url as we have verified to be safe
-    KHTMLPart *khtmlpart = ::qt_cast<KHTMLPart *>(active->part());
-    if (khtmlpart) {
-      // Security: only allow documents to be loaded from the same host
-      QString dstUrl = khtmlpart->htmlDocument().completeURL(s).string();
-      KParts::ReadOnlyPart *part = static_cast<KJS::ScriptInterpreter*>(exec->interpreter())->part();
-      if (part->url().host() == KURL(dstUrl).host()) {
-	kdDebug(6070) << "JavaScript: access granted for document.load() of " << dstUrl << endl;
-	doc.load(dstUrl);
-      }
-      else {
-	kdDebug(6070) << "JavaScript: access denied for document.load() of " << dstUrl << endl;
-      }
-    }
-    break;
-  }
-  case DOMDocument::LoadXML:
-    doc.loadXML(s);
-    break;
-  default:
-    break;
-  }
 
-  return Undefined();
+    return Undefined();
 }
 
 // -------------------------------------------------------------------------
@@ -1139,100 +1176,104 @@ KJS_IMPLEMENT_PROTOTYPE("DOMElement", DOMElementProto, DOMElementProtoFunc)
 
 IMPLEMENT_PSEUDO_CONSTRUCTOR(ElementPseudoCtor, "Element", DOMElementProto)
 
-const ClassInfo DOMElement::info = { "Element", &DOMNode::info, &DOMElementTable, 0 };
+const ClassInfo DOMElement::info = {"Element", &DOMNode::info, &DOMElementTable, 0};
 /* Source for DOMElementTable.
 @begin DOMElementTable 3
   tagName	DOMElement::TagName                         DontDelete|ReadOnly
   style		DOMElement::Style                           DontDelete|ReadOnly
 @end
 */
-DOMElement::DOMElement(ExecState *exec, const DOM::Element& e)
-  : DOMNode(DOMElementProto::self(exec), e) { }
+DOMElement::DOMElement(ExecState *exec, const DOM::Element &e) : DOMNode(DOMElementProto::self(exec), e)
+{
+}
 
-DOMElement::DOMElement(const Object& proto, const DOM::Element& e)
-  : DOMNode(proto, e) { }
+DOMElement::DOMElement(const Object &proto, const DOM::Element &e) : DOMNode(proto, e)
+{
+}
 
 Value DOMElement::tryGet(ExecState *exec, const Identifier &propertyName) const
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "DOMElement::tryGet " << propertyName.qstring() << endl;
+    kdDebug(6070) << "DOMElement::tryGet " << propertyName.qstring() << endl;
 #endif
-  DOM::Element element = static_cast<DOM::Element>(node);
+    DOM::Element element = static_cast< DOM::Element >(node);
 
-  const HashEntry* entry = Lookup::findEntry(&DOMElementTable, propertyName);
-  if (entry)
-  {
-    switch( entry->value ) {
-    case TagName:
-      return String(element.tagName());
-    case Style:
-      return getDOMCSSStyleDeclaration(exec,element.style());
-    default:
-      kdDebug(6070) << "WARNING: Unhandled token in DOMElement::tryGet : " << entry->value << endl;
-      break;
+    const HashEntry *entry = Lookup::findEntry(&DOMElementTable, propertyName);
+    if(entry)
+    {
+        switch(entry->value)
+        {
+            case TagName:
+                return String(element.tagName());
+            case Style:
+                return getDOMCSSStyleDeclaration(exec, element.style());
+            default:
+                kdDebug(6070) << "WARNING: Unhandled token in DOMElement::tryGet : " << entry->value << endl;
+                break;
+        }
     }
-  }
-  // We have to check in DOMNode before giving access to attributes, otherwise
-  // onload="..." would make onload return the string (attribute value) instead of
-  // the listener object (function).
-  if (DOMNode::hasProperty(exec, propertyName))
-    return DOMNode::tryGet(exec, propertyName);
+    // We have to check in DOMNode before giving access to attributes, otherwise
+    // onload="..." would make onload return the string (attribute value) instead of
+    // the listener object (function).
+    if(DOMNode::hasProperty(exec, propertyName))
+        return DOMNode::tryGet(exec, propertyName);
 
-  DOM::DOMString attr = element.getAttribute( propertyName.string() );
-  // Give access to attributes
-  if ( !attr.isNull() )
-    return String( attr );
+    DOM::DOMString attr = element.getAttribute(propertyName.string());
+    // Give access to attributes
+    if(!attr.isNull())
+        return String(attr);
 
-  return Undefined();
+    return Undefined();
 }
 
 Value DOMElementProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  KJS_CHECK_THIS( KJS::DOMNode, thisObj ); // node should be enough here, given the cast
-  DOM::Node node = static_cast<DOMNode *>( thisObj.imp() )->toNode();
-  DOM::Element element = static_cast<DOM::Element>(node);
+    KJS_CHECK_THIS(KJS::DOMNode, thisObj); // node should be enough here, given the cast
+    DOM::Node node = static_cast< DOMNode * >(thisObj.imp())->toNode();
+    DOM::Element element = static_cast< DOM::Element >(node);
 
-  switch(id) {
-    case DOMElement::GetAttribute:
-      /** In theory, we should not return null here, as per DOM. In practice, that 
-       breaks websites
-      */
-      return getString(element.getAttribute(args[0].toString(exec).string()));
-    case DOMElement::SetAttribute:
-      element.setAttribute(args[0].toString(exec).string(),args[1].toString(exec).string());
-      return Undefined();
-    case DOMElement::RemoveAttribute:
-      element.removeAttribute(args[0].toString(exec).string());
-      return Undefined();
-    case DOMElement::GetAttributeNode:
-      return getDOMNode(exec,element.getAttributeNode(args[0].toString(exec).string()));
-    case DOMElement::SetAttributeNode:
-      return getDOMNode(exec,element.setAttributeNode(KJS::toNode(args[0])));
-    case DOMElement::RemoveAttributeNode:
-      return getDOMNode(exec,element.removeAttributeNode(KJS::toNode(args[0])));
-    case DOMElement::GetElementsByTagName:
-      return getDOMNodeList(exec,element.getElementsByTagName(args[0].toString(exec).string()));
-    case DOMElement::HasAttribute: // DOM2
-      return Boolean(element.hasAttribute(args[0].toString(exec).string()));
-    case DOMElement::GetAttributeNS: // DOM2
-      return String(element.getAttributeNS(args[0].toString(exec).string(),args[1].toString(exec).string()));
-    case DOMElement::SetAttributeNS: // DOM2
-      element.setAttributeNS(args[0].toString(exec).string(),args[1].toString(exec).string(),args[2].toString(exec).string());
-      return Undefined();
-    case DOMElement::RemoveAttributeNS: // DOM2
-      element.removeAttributeNS(args[0].toString(exec).string(),args[1].toString(exec).string());
-      return Undefined();
-    case DOMElement::GetAttributeNodeNS: // DOM2
-      return getDOMNode(exec,element.getAttributeNodeNS(args[0].toString(exec).string(),args[1].toString(exec).string()));
-    case DOMElement::SetAttributeNodeNS: // DOM2
-      return getDOMNode(exec,element.setAttributeNodeNS(KJS::toNode(args[0])));
-    case DOMElement::GetElementsByTagNameNS: // DOM2
-      return getDOMNodeList(exec,element.getElementsByTagNameNS(args[0].toString(exec).string(),args[1].toString(exec).string()));
-    case DOMElement::HasAttributeNS: // DOM2
-      return Boolean(element.hasAttributeNS(args[0].toString(exec).string(),args[1].toString(exec).string()));
-  default:
-    return Undefined();
-  }
+    switch(id)
+    {
+        case DOMElement::GetAttribute:
+            /** In theory, we should not return null here, as per DOM. In practice, that
+             breaks websites
+            */
+            return getString(element.getAttribute(args[0].toString(exec).string()));
+        case DOMElement::SetAttribute:
+            element.setAttribute(args[0].toString(exec).string(), args[1].toString(exec).string());
+            return Undefined();
+        case DOMElement::RemoveAttribute:
+            element.removeAttribute(args[0].toString(exec).string());
+            return Undefined();
+        case DOMElement::GetAttributeNode:
+            return getDOMNode(exec, element.getAttributeNode(args[0].toString(exec).string()));
+        case DOMElement::SetAttributeNode:
+            return getDOMNode(exec, element.setAttributeNode(KJS::toNode(args[0])));
+        case DOMElement::RemoveAttributeNode:
+            return getDOMNode(exec, element.removeAttributeNode(KJS::toNode(args[0])));
+        case DOMElement::GetElementsByTagName:
+            return getDOMNodeList(exec, element.getElementsByTagName(args[0].toString(exec).string()));
+        case DOMElement::HasAttribute: // DOM2
+            return Boolean(element.hasAttribute(args[0].toString(exec).string()));
+        case DOMElement::GetAttributeNS: // DOM2
+            return String(element.getAttributeNS(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMElement::SetAttributeNS: // DOM2
+            element.setAttributeNS(args[0].toString(exec).string(), args[1].toString(exec).string(), args[2].toString(exec).string());
+            return Undefined();
+        case DOMElement::RemoveAttributeNS: // DOM2
+            element.removeAttributeNS(args[0].toString(exec).string(), args[1].toString(exec).string());
+            return Undefined();
+        case DOMElement::GetAttributeNodeNS: // DOM2
+            return getDOMNode(exec, element.getAttributeNodeNS(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMElement::SetAttributeNodeNS: // DOM2
+            return getDOMNode(exec, element.setAttributeNodeNS(KJS::toNode(args[0])));
+        case DOMElement::GetElementsByTagNameNS: // DOM2
+            return getDOMNodeList(exec, element.getElementsByTagNameNS(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMElement::HasAttributeNS: // DOM2
+            return Boolean(element.hasAttributeNS(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        default:
+            return Undefined();
+    }
 }
 
 // -------------------------------------------------------------------------
@@ -1251,51 +1292,57 @@ KJS_DEFINE_PROTOTYPE(DOMDOMImplementationProto)
 IMPLEMENT_PROTOFUNC_DOM(DOMDOMImplementationProtoFunc)
 KJS_IMPLEMENT_PROTOTYPE("DOMImplementation", DOMDOMImplementationProto, DOMDOMImplementationProtoFunc)
 
-const ClassInfo DOMDOMImplementation::info = { "DOMImplementation", 0, 0, 0 };
+const ClassInfo DOMDOMImplementation::info = {"DOMImplementation", 0, 0, 0};
 
-DOMDOMImplementation::DOMDOMImplementation(ExecState *exec, const DOM::DOMImplementation& i)
-  : DOMObject(DOMDOMImplementationProto::self(exec)), implementation(i) { }
+DOMDOMImplementation::DOMDOMImplementation(ExecState *exec, const DOM::DOMImplementation &i)
+    : DOMObject(DOMDOMImplementationProto::self(exec)), implementation(i)
+{
+}
 
 DOMDOMImplementation::~DOMDOMImplementation()
 {
-  ScriptInterpreter::forgetDOMObject(implementation.handle());
+    ScriptInterpreter::forgetDOMObject(implementation.handle());
 }
 
 Value DOMDOMImplementationProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  KJS_CHECK_THIS( KJS::DOMDOMImplementation, thisObj );
-  DOM::DOMImplementation implementation = static_cast<DOMDOMImplementation *>( thisObj.imp() )->toImplementation();
+    KJS_CHECK_THIS(KJS::DOMDOMImplementation, thisObj);
+    DOM::DOMImplementation implementation = static_cast< DOMDOMImplementation * >(thisObj.imp())->toImplementation();
 
-  switch(id) {
-  case DOMDOMImplementation::HasFeature:
-    return Boolean(implementation.hasFeature(args[0].toString(exec).string(),args[1].toString(exec).string()));
-  case DOMDOMImplementation::CreateDocumentType: // DOM2
-    return getDOMNode(exec,implementation.createDocumentType(args[0].toString(exec).string(),args[1].toString(exec).string(),args[2].toString(exec).string()));
-  case DOMDOMImplementation::CreateDocument: { // DOM2
-    // Initially set the URL to document of the creator... this is so that it resides in the same
-    // host/domain for security checks. The URL will be updated if Document.load() is called.
-    KHTMLPart *part = ::qt_cast<KHTMLPart*>(static_cast<KJS::ScriptInterpreter*>(exec->interpreter())->part());
-    if (part) {
-      Document doc = implementation.createDocument(args[0].toString(exec).string(),args[1].toString(exec).string(),toNode(args[2]));
-      KURL url = static_cast<DocumentImpl*>(part->document().handle())->URL();
-      static_cast<DocumentImpl*>(doc.handle())->setURL(url.url());
-      return getDOMNode(exec,doc);
+    switch(id)
+    {
+        case DOMDOMImplementation::HasFeature:
+            return Boolean(implementation.hasFeature(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMDOMImplementation::CreateDocumentType: // DOM2
+            return getDOMNode(exec, implementation.createDocumentType(args[0].toString(exec).string(), args[1].toString(exec).string(),
+                                                                      args[2].toString(exec).string()));
+        case DOMDOMImplementation::CreateDocument:
+        { // DOM2
+            // Initially set the URL to document of the creator... this is so that it resides in the same
+            // host/domain for security checks. The URL will be updated if Document.load() is called.
+            KHTMLPart *part = ::qt_cast< KHTMLPart * >(static_cast< KJS::ScriptInterpreter * >(exec->interpreter())->part());
+            if(part)
+            {
+                Document doc = implementation.createDocument(args[0].toString(exec).string(), args[1].toString(exec).string(), toNode(args[2]));
+                KURL url = static_cast< DocumentImpl * >(part->document().handle())->URL();
+                static_cast< DocumentImpl * >(doc.handle())->setURL(url.url());
+                return getDOMNode(exec, doc);
+            }
+            break;
+        }
+        case DOMDOMImplementation::CreateCSSStyleSheet: // DOM2
+            return getDOMStyleSheet(exec, implementation.createCSSStyleSheet(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMDOMImplementation::CreateHTMLDocument: // DOM2-HTML
+            return getDOMNode(exec, implementation.createHTMLDocument(args[0].toString(exec).string()));
+        default:
+            break;
     }
-    break;
-  }
-  case DOMDOMImplementation::CreateCSSStyleSheet: // DOM2
-    return getDOMStyleSheet(exec,implementation.createCSSStyleSheet(args[0].toString(exec).string(),args[1].toString(exec).string()));
-  case DOMDOMImplementation::CreateHTMLDocument: // DOM2-HTML
-    return getDOMNode(exec, implementation.createHTMLDocument(args[0].toString(exec).string()));
-  default:
-    break;
-  }
-  return Undefined();
+    return Undefined();
 }
 
 // -------------------------------------------------------------------------
 
-const ClassInfo DOMDocumentType::info = { "DocumentType", &DOMNode::info, &DOMDocumentTypeTable, 0 };
+const ClassInfo DOMDocumentType::info = {"DocumentType", &DOMNode::info, &DOMDocumentTypeTable, 0};
 
 /* Source for DOMDocumentTypeTable.
 @begin DOMDocumentTypeTable 6
@@ -1308,37 +1355,39 @@ const ClassInfo DOMDocumentType::info = { "DocumentType", &DOMNode::info, &DOMDo
   internalSubset	DOMDocumentType::InternalSubset	DontDelete|ReadOnly
 @end
 */
-DOMDocumentType::DOMDocumentType(ExecState *exec, const DOM::DocumentType& dt)
-  : DOMNode( /*### no proto yet*/exec, dt ) { }
+DOMDocumentType::DOMDocumentType(ExecState *exec, const DOM::DocumentType &dt) : DOMNode(/*### no proto yet*/ exec, dt)
+{
+}
 
 Value DOMDocumentType::tryGet(ExecState *exec, const Identifier &propertyName) const
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "DOMDocumentType::tryGet " << propertyName.qstring() << endl;
+    kdDebug(6070) << "DOMDocumentType::tryGet " << propertyName.qstring() << endl;
 #endif
-  return DOMObjectLookupGetValue<DOMDocumentType, DOMNode>(exec, propertyName, &DOMDocumentTypeTable, this);
+    return DOMObjectLookupGetValue< DOMDocumentType, DOMNode >(exec, propertyName, &DOMDocumentTypeTable, this);
 }
 
 Value DOMDocumentType::getValueProperty(ExecState *exec, int token) const
 {
-  DOM::DocumentType type = static_cast<DOM::DocumentType>(node);
-  switch (token) {
-  case Name:
-    return String(type.name());
-  case Entities:
-    return getDOMNamedNodeMap(exec,type.entities());
-  case Notations:
-    return getDOMNamedNodeMap(exec,type.notations());
-  case PublicId: // DOM2
-    return String(type.publicId());
-  case SystemId: // DOM2
-    return String(type.systemId());
-  case InternalSubset: // DOM2
-    return getString(type.internalSubset()); // can be null, see domts/level2/core/internalSubset01.html
-  default:
-    kdDebug(6070) << "WARNING: DOMDocumentType::getValueProperty unhandled token " << token << endl;
-    return Value();
-  }
+    DOM::DocumentType type = static_cast< DOM::DocumentType >(node);
+    switch(token)
+    {
+        case Name:
+            return String(type.name());
+        case Entities:
+            return getDOMNamedNodeMap(exec, type.entities());
+        case Notations:
+            return getDOMNamedNodeMap(exec, type.notations());
+        case PublicId: // DOM2
+            return String(type.publicId());
+        case SystemId: // DOM2
+            return String(type.systemId());
+        case InternalSubset:                         // DOM2
+            return getString(type.internalSubset()); // can be null, see domts/level2/core/internalSubset01.html
+        default:
+            kdDebug(6070) << "WARNING: DOMDocumentType::getValueProperty unhandled token " << token << endl;
+            return Value();
+    }
 }
 
 // -------------------------------------------------------------------------
@@ -1362,67 +1411,69 @@ KJS_DEFINE_PROTOTYPE(DOMNamedNodeMapProto)
 IMPLEMENT_PROTOFUNC_DOM(DOMNamedNodeMapProtoFunc)
 KJS_IMPLEMENT_PROTOTYPE("NamedNodeMap", DOMNamedNodeMapProto, DOMNamedNodeMapProtoFunc)
 
-const ClassInfo DOMNamedNodeMap::info = { "NamedNodeMap", 0, &DOMNamedNodeMapTable, 0 };
+const ClassInfo DOMNamedNodeMap::info = {"NamedNodeMap", 0, &DOMNamedNodeMapTable, 0};
 
-DOMNamedNodeMap::DOMNamedNodeMap(ExecState *exec, const DOM::NamedNodeMap& m)
-  : DOMObject(DOMNamedNodeMapProto::self(exec)), map(m) { }
+DOMNamedNodeMap::DOMNamedNodeMap(ExecState *exec, const DOM::NamedNodeMap &m) : DOMObject(DOMNamedNodeMapProto::self(exec)), map(m)
+{
+}
 
 DOMNamedNodeMap::~DOMNamedNodeMap()
 {
-  ScriptInterpreter::forgetDOMObject(map.handle());
+    ScriptInterpreter::forgetDOMObject(map.handle());
 }
 
 bool DOMNamedNodeMap::hasProperty(ExecState *exec, const Identifier &p) const
 {
-  // ## missing? array index
-  return DOMObject::hasProperty(exec, p);
+    // ## missing? array index
+    return DOMObject::hasProperty(exec, p);
 }
 
-Value DOMNamedNodeMap::tryGet(ExecState* exec, const Identifier &p) const
+Value DOMNamedNodeMap::tryGet(ExecState *exec, const Identifier &p) const
 {
-  if (p == lengthPropertyName)
-    return Number(map.length());
+    if(p == lengthPropertyName)
+        return Number(map.length());
 
-  // array index ?
-  bool ok;
-  long unsigned int idx = p.toULong(&ok);
-  if (ok)
-    return getDOMNode(exec,map.item(idx));
+    // array index ?
+    bool ok;
+    long unsigned int idx = p.toULong(&ok);
+    if(ok)
+        return getDOMNode(exec, map.item(idx));
 
-  // Anything else (including functions, defined in the prototype)
-  return DOMObject::tryGet(exec, p);
+    // Anything else (including functions, defined in the prototype)
+    return DOMObject::tryGet(exec, p);
 }
 
 Value DOMNamedNodeMapProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  KJS_CHECK_THIS( KJS::DOMNamedNodeMap, thisObj );
-  DOM::NamedNodeMap map = static_cast<DOMNamedNodeMap *>(thisObj.imp())->toMap();
+    KJS_CHECK_THIS(KJS::DOMNamedNodeMap, thisObj);
+    DOM::NamedNodeMap map = static_cast< DOMNamedNodeMap * >(thisObj.imp())->toMap();
 
-  switch(id) {
-    case DOMNamedNodeMap::GetNamedItem:
-      return getDOMNode(exec, map.getNamedItem(args[0].toString(exec).string()));
-    case DOMNamedNodeMap::SetNamedItem:
-      return getDOMNode(exec, map.setNamedItem(KJS::toNode(args[0])));
-    case DOMNamedNodeMap::RemoveNamedItem:
-      return getDOMNode(exec, map.removeNamedItem(args[0].toString(exec).string()));
-    case DOMNamedNodeMap::Item:
-      return getDOMNode(exec, map.item(args[0].toInt32(exec)));
-    case DOMNamedNodeMap::GetNamedItemNS: // DOM2
-      return getDOMNode(exec, map.getNamedItemNS(args[0].toString(exec).string(),args[1].toString(exec).string()));
-    case DOMNamedNodeMap::SetNamedItemNS: // DOM2
-      return getDOMNode(exec, map.setNamedItemNS(toNode(args[0])));
-    case DOMNamedNodeMap::RemoveNamedItemNS: // DOM2
-      return getDOMNode(exec, map.removeNamedItemNS(args[0].toString(exec).string(),args[1].toString(exec).string()));
-    default:
-      break;
-  }
+    switch(id)
+    {
+        case DOMNamedNodeMap::GetNamedItem:
+            return getDOMNode(exec, map.getNamedItem(args[0].toString(exec).string()));
+        case DOMNamedNodeMap::SetNamedItem:
+            return getDOMNode(exec, map.setNamedItem(KJS::toNode(args[0])));
+        case DOMNamedNodeMap::RemoveNamedItem:
+            return getDOMNode(exec, map.removeNamedItem(args[0].toString(exec).string()));
+        case DOMNamedNodeMap::Item:
+            return getDOMNode(exec, map.item(args[0].toInt32(exec)));
+        case DOMNamedNodeMap::GetNamedItemNS: // DOM2
+            return getDOMNode(exec, map.getNamedItemNS(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        case DOMNamedNodeMap::SetNamedItemNS: // DOM2
+            return getDOMNode(exec, map.setNamedItemNS(toNode(args[0])));
+        case DOMNamedNodeMap::RemoveNamedItemNS: // DOM2
+            return getDOMNode(exec, map.removeNamedItemNS(args[0].toString(exec).string(), args[1].toString(exec).string()));
+        default:
+            break;
+    }
 
-  return Undefined();
+    return Undefined();
 }
 
 // -------------------------------------------------------------------------
 //### FIXME: proto
-const ClassInfo DOMProcessingInstruction::info = { "ProcessingInstruction", &DOMNode::info, &DOMProcessingInstructionTable, 0 };
+const ClassInfo DOMProcessingInstruction::info = {"ProcessingInstruction", &DOMNode::info, &DOMProcessingInstructionTable, 0};
 
 /* Source for DOMProcessingInstructionTable.
 @begin DOMProcessingInstructionTable 3
@@ -1433,36 +1484,37 @@ const ClassInfo DOMProcessingInstruction::info = { "ProcessingInstruction", &DOM
 */
 Value DOMProcessingInstruction::tryGet(ExecState *exec, const Identifier &propertyName) const
 {
-  return DOMObjectLookupGetValue<DOMProcessingInstruction, DOMNode>(exec, propertyName, &DOMProcessingInstructionTable, this);
+    return DOMObjectLookupGetValue< DOMProcessingInstruction, DOMNode >(exec, propertyName, &DOMProcessingInstructionTable, this);
 }
 
 Value DOMProcessingInstruction::getValueProperty(ExecState *exec, int token) const
 {
-  switch (token) {
-  case Target:
-    return String(static_cast<DOM::ProcessingInstruction>(node).target());
-  case Data:
-    return String(static_cast<DOM::ProcessingInstruction>(node).data());
-  case Sheet:
-    return getDOMStyleSheet(exec,static_cast<DOM::ProcessingInstruction>(node).sheet());
-  default:
-    kdDebug(6070) << "WARNING: DOMProcessingInstruction::getValueProperty unhandled token " << token << endl;
-    return Value();
-  }
+    switch(token)
+    {
+        case Target:
+            return String(static_cast< DOM::ProcessingInstruction >(node).target());
+        case Data:
+            return String(static_cast< DOM::ProcessingInstruction >(node).data());
+        case Sheet:
+            return getDOMStyleSheet(exec, static_cast< DOM::ProcessingInstruction >(node).sheet());
+        default:
+            kdDebug(6070) << "WARNING: DOMProcessingInstruction::getValueProperty unhandled token " << token << endl;
+            return Value();
+    }
 }
 
-void DOMProcessingInstruction::tryPut(ExecState *exec, const Identifier &propertyName, const Value& value, int attr)
+void DOMProcessingInstruction::tryPut(ExecState *exec, const Identifier &propertyName, const Value &value, int attr)
 {
-  // Not worth using the hashtable for this one ;)
-  if (propertyName == "data")
-    static_cast<DOM::ProcessingInstruction>(node).setData(value.toString(exec).string());
-  else
-    DOMNode::tryPut(exec, propertyName,value,attr);
+    // Not worth using the hashtable for this one ;)
+    if(propertyName == "data")
+        static_cast< DOM::ProcessingInstruction >(node).setData(value.toString(exec).string());
+    else
+        DOMNode::tryPut(exec, propertyName, value, attr);
 }
 
 // -------------------------------------------------------------------------
 
-const ClassInfo DOMNotation::info = { "Notation", &DOMNode::info, &DOMNotationTable, 0 };
+const ClassInfo DOMNotation::info = {"Notation", &DOMNode::info, &DOMNotationTable, 0};
 
 /* Source for DOMNotationTable.
 @begin DOMNotationTable 2
@@ -1472,25 +1524,26 @@ const ClassInfo DOMNotation::info = { "Notation", &DOMNode::info, &DOMNotationTa
 */
 Value DOMNotation::tryGet(ExecState *exec, const Identifier &propertyName) const
 {
-  return DOMObjectLookupGetValue<DOMNotation, DOMNode>(exec, propertyName, &DOMNotationTable, this);
+    return DOMObjectLookupGetValue< DOMNotation, DOMNode >(exec, propertyName, &DOMNotationTable, this);
 }
 
 Value DOMNotation::getValueProperty(ExecState *, int token) const
 {
-  switch (token) {
-  case PublicId:
-    return String(static_cast<DOM::Notation>(node).publicId());
-  case SystemId:
-    return String(static_cast<DOM::Notation>(node).systemId());
-  default:
-    kdDebug(6070) << "WARNING: DOMNotation::getValueProperty unhandled token " << token << endl;
-    return Value();
-  }
+    switch(token)
+    {
+        case PublicId:
+            return String(static_cast< DOM::Notation >(node).publicId());
+        case SystemId:
+            return String(static_cast< DOM::Notation >(node).systemId());
+        default:
+            kdDebug(6070) << "WARNING: DOMNotation::getValueProperty unhandled token " << token << endl;
+            return Value();
+    }
 }
 
 // -------------------------------------------------------------------------
 
-const ClassInfo DOMEntity::info = { "Entity", &DOMNode::info, 0, 0 };
+const ClassInfo DOMEntity::info = {"Entity", &DOMNode::info, 0, 0};
 
 /* Source for DOMEntityTable.
 @begin DOMEntityTable 2
@@ -1501,116 +1554,118 @@ const ClassInfo DOMEntity::info = { "Entity", &DOMNode::info, 0, 0 };
 */
 Value DOMEntity::tryGet(ExecState *exec, const Identifier &propertyName) const
 {
-  return DOMObjectLookupGetValue<DOMEntity, DOMNode>(exec, propertyName, &DOMEntityTable, this);
+    return DOMObjectLookupGetValue< DOMEntity, DOMNode >(exec, propertyName, &DOMEntityTable, this);
 }
 
 Value DOMEntity::getValueProperty(ExecState *, int token) const
 {
-  switch (token) {
-  case PublicId:
-    return String(static_cast<DOM::Entity>(node).publicId());
-  case SystemId:
-    return String(static_cast<DOM::Entity>(node).systemId());
-  case NotationName:
-    return String(static_cast<DOM::Entity>(node).notationName());
-  default:
-    kdDebug(6070) << "WARNING: DOMEntity::getValueProperty unhandled token " << token << endl;
-    return Value();
-  }
+    switch(token)
+    {
+        case PublicId:
+            return String(static_cast< DOM::Entity >(node).publicId());
+        case SystemId:
+            return String(static_cast< DOM::Entity >(node).systemId());
+        case NotationName:
+            return String(static_cast< DOM::Entity >(node).notationName());
+        default:
+            kdDebug(6070) << "WARNING: DOMEntity::getValueProperty unhandled token " << token << endl;
+            return Value();
+    }
 }
 
 // -------------------------------------------------------------------------
 
-bool checkNodeSecurity(ExecState *exec, const DOM::Node& n)
+bool checkNodeSecurity(ExecState *exec, const DOM::Node &n)
 {
-  // Check to see if the currently executing interpreter is allowed to access the specified node
-  if (n.isNull())
+    // Check to see if the currently executing interpreter is allowed to access the specified node
+    if(n.isNull())
+        return true;
+    KHTMLView *view = n.handle()->getDocument()->view();
+    Window *win = view && view->part() ? Window::retrieveWindow(view->part()) : 0L;
+    if(!win || !win->isSafeScript(exec))
+        return false;
     return true;
-  KHTMLView *view = n.handle()->getDocument()->view();
-  Window* win = view && view->part() ? Window::retrieveWindow(view->part()) : 0L;
-  if ( !win || !win->isSafeScript(exec) )
-    return false;
-  return true;
 }
 
-Value getDOMNode(ExecState *exec, const DOM::Node& n)
+Value getDOMNode(ExecState *exec, const DOM::Node &n)
 {
-  DOMObject *ret = 0;
-  if (n.isNull())
-    return Null();
-  ScriptInterpreter* interp = static_cast<ScriptInterpreter *>(exec->interpreter());
-  if ((ret = interp->getDOMObject(n.handle())))
+    DOMObject *ret = 0;
+    if(n.isNull())
+        return Null();
+    ScriptInterpreter *interp = static_cast< ScriptInterpreter * >(exec->interpreter());
+    if((ret = interp->getDOMObject(n.handle())))
+        return Value(ret);
+
+    switch(n.nodeType())
+    {
+        case DOM::Node::ELEMENT_NODE:
+            if(static_cast< DOM::Element >(n).isHTMLElement())
+                ret = new HTMLElement(exec, static_cast< DOM::HTMLElement >(n));
+            else
+                ret = new DOMElement(exec, static_cast< DOM::Element >(n));
+            break;
+        case DOM::Node::ATTRIBUTE_NODE:
+            ret = new DOMAttr(exec, static_cast< DOM::Attr >(n));
+            break;
+        case DOM::Node::TEXT_NODE:
+        case DOM::Node::CDATA_SECTION_NODE:
+            ret = new DOMText(exec, static_cast< DOM::Text >(n));
+            break;
+        case DOM::Node::ENTITY_REFERENCE_NODE:
+            ret = new DOMNode(exec, n);
+            break;
+        case DOM::Node::ENTITY_NODE:
+            ret = new DOMEntity(exec, static_cast< DOM::Entity >(n));
+            break;
+        case DOM::Node::PROCESSING_INSTRUCTION_NODE:
+            ret = new DOMProcessingInstruction(exec, static_cast< DOM::ProcessingInstruction >(n));
+            break;
+        case DOM::Node::COMMENT_NODE:
+            ret = new DOMCharacterData(exec, static_cast< DOM::CharacterData >(n));
+            break;
+        case DOM::Node::DOCUMENT_NODE:
+            if(static_cast< DOM::Document >(n).isHTMLDocument())
+                ret = new HTMLDocument(exec, static_cast< DOM::HTMLDocument >(n));
+            else
+                ret = new DOMDocument(exec, static_cast< DOM::Document >(n));
+            break;
+        case DOM::Node::DOCUMENT_TYPE_NODE:
+            ret = new DOMDocumentType(exec, static_cast< DOM::DocumentType >(n));
+            break;
+        case DOM::Node::DOCUMENT_FRAGMENT_NODE:
+            ret = new DOMNode(exec, n);
+            break;
+        case DOM::Node::NOTATION_NODE:
+            ret = new DOMNotation(exec, static_cast< DOM::Notation >(n));
+            break;
+        default:
+            ret = new DOMNode(exec, n);
+    }
+    interp->putDOMObject(n.handle(), ret);
+
     return Value(ret);
-
-  switch (n.nodeType()) {
-    case DOM::Node::ELEMENT_NODE:
-      if (static_cast<DOM::Element>(n).isHTMLElement())
-        ret = new HTMLElement(exec, static_cast<DOM::HTMLElement>(n));
-      else
-        ret = new DOMElement(exec, static_cast<DOM::Element>(n));
-      break;
-    case DOM::Node::ATTRIBUTE_NODE:
-      ret = new DOMAttr(exec, static_cast<DOM::Attr>(n));
-      break;
-    case DOM::Node::TEXT_NODE:
-    case DOM::Node::CDATA_SECTION_NODE:
-      ret = new DOMText(exec, static_cast<DOM::Text>(n));
-      break;
-    case DOM::Node::ENTITY_REFERENCE_NODE:
-      ret = new DOMNode(exec, n);
-      break;
-    case DOM::Node::ENTITY_NODE:
-      ret = new DOMEntity(exec, static_cast<DOM::Entity>(n));
-      break;
-    case DOM::Node::PROCESSING_INSTRUCTION_NODE:
-      ret = new DOMProcessingInstruction(exec, static_cast<DOM::ProcessingInstruction>(n));
-      break;
-    case DOM::Node::COMMENT_NODE:
-      ret = new DOMCharacterData(exec, static_cast<DOM::CharacterData>(n));
-      break;
-    case DOM::Node::DOCUMENT_NODE:
-      if (static_cast<DOM::Document>(n).isHTMLDocument())
-        ret = new HTMLDocument(exec, static_cast<DOM::HTMLDocument>(n));
-      else
-        ret = new DOMDocument(exec, static_cast<DOM::Document>(n));
-      break;
-    case DOM::Node::DOCUMENT_TYPE_NODE:
-      ret = new DOMDocumentType(exec, static_cast<DOM::DocumentType>(n));
-      break;
-    case DOM::Node::DOCUMENT_FRAGMENT_NODE:
-      ret = new DOMNode(exec, n);
-      break;
-    case DOM::Node::NOTATION_NODE:
-      ret = new DOMNotation(exec, static_cast<DOM::Notation>(n));
-      break;
-    default:
-      ret = new DOMNode(exec, n);
-  }
-  interp->putDOMObject(n.handle(),ret);
-
-  return Value(ret);
 }
 
-Value getDOMNamedNodeMap(ExecState *exec, const DOM::NamedNodeMap& m)
+Value getDOMNamedNodeMap(ExecState *exec, const DOM::NamedNodeMap &m)
 {
-  return Value(cacheDOMObject<DOM::NamedNodeMap, KJS::DOMNamedNodeMap>(exec, m));
+    return Value(cacheDOMObject< DOM::NamedNodeMap, KJS::DOMNamedNodeMap >(exec, m));
 }
 
-Value getDOMNodeList(ExecState *exec, const DOM::NodeList& l)
+Value getDOMNodeList(ExecState *exec, const DOM::NodeList &l)
 {
-  return Value(cacheDOMObject<DOM::NodeList, KJS::DOMNodeList>(exec, l));
+    return Value(cacheDOMObject< DOM::NodeList, KJS::DOMNodeList >(exec, l));
 }
 
-Value getDOMDOMImplementation(ExecState *exec, const DOM::DOMImplementation& i)
+Value getDOMDOMImplementation(ExecState *exec, const DOM::DOMImplementation &i)
 {
-  return Value(cacheDOMObject<DOM::DOMImplementation, KJS::DOMDOMImplementation>(exec, i));
+    return Value(cacheDOMObject< DOM::DOMImplementation, KJS::DOMDOMImplementation >(exec, i));
 }
 
 // -------------------------------------------------------------------------
 IMPLEMENT_PSEUDO_CONSTRUCTOR_WITH_PARENT(NodeConstructor, "NodeConstructor", DOMNodeProto, DOMNodeConstants)
 // -------------------------------------------------------------------------
 
-const ClassInfo DOMExceptionConstructor::info = { "DOMExceptionConstructor", 0, 0, 0 };
+const ClassInfo DOMExceptionConstructor::info = {"DOMExceptionConstructor", 0, 0, 0};
 
 /* Source for DOMExceptionConstructorTable.
 @begin DOMExceptionConstructorTable 15
@@ -1632,20 +1687,19 @@ const ClassInfo DOMExceptionConstructor::info = { "DOMExceptionConstructor", 0, 
 @end
 */
 
-DOMExceptionConstructor::DOMExceptionConstructor(ExecState* exec)
-  : DOMObject(exec->interpreter()->builtinObjectPrototype())
+DOMExceptionConstructor::DOMExceptionConstructor(ExecState *exec) : DOMObject(exec->interpreter()->builtinObjectPrototype())
 {
 }
 
 Value DOMExceptionConstructor::tryGet(ExecState *exec, const Identifier &propertyName) const
 {
-  return DOMObjectLookupGetValue<DOMExceptionConstructor, DOMObject>(exec, propertyName, &DOMExceptionConstructorTable, this);
+    return DOMObjectLookupGetValue< DOMExceptionConstructor, DOMObject >(exec, propertyName, &DOMExceptionConstructorTable, this);
 }
 
 Value DOMExceptionConstructor::getValueProperty(ExecState *, int token) const
 {
-  // We use the token as the value to return directly
-  return Number((unsigned int)token);
+    // We use the token as the value to return directly
+    return Number((unsigned int)token);
 #if 0
   switch (token) {
   case INDEX_SIZE_ERR:
@@ -1687,7 +1741,7 @@ Value DOMExceptionConstructor::getValueProperty(ExecState *, int token) const
 
 Object getDOMExceptionConstructor(ExecState *exec)
 {
-  return cacheGlobalObject<DOMExceptionConstructor>(exec, "[[DOMException.constructor]]");
+    return cacheGlobalObject< DOMExceptionConstructor >(exec, "[[DOMException.constructor]]");
 }
 
 // -------------------------------------------------------------------------
@@ -1697,37 +1751,36 @@ Object getDOMExceptionConstructor(ExecState *exec)
   length		KJS::DOMNamedNodesCollection::Length		DontDelete|ReadOnly
 @end
 */
-const ClassInfo KJS::DOMNamedNodesCollection::info = { "DOMNamedNodesCollection", 0, &DOMNamedNodesCollectionTable, 0 };
+const ClassInfo KJS::DOMNamedNodesCollection::info = {"DOMNamedNodesCollection", 0, &DOMNamedNodesCollectionTable, 0};
 
 // Such a collection is usually very short-lived, it only exists
 // for constructs like document.forms.<name>[1],
 // so it shouldn't be a problem that it's storing all the nodes (with the same name). (David)
-DOMNamedNodesCollection::DOMNamedNodesCollection(ExecState *exec, const QValueList<DOM::Node>& nodes )
-  : DOMObject(exec->interpreter()->builtinObjectPrototype()),
-  m_nodes(nodes)
+DOMNamedNodesCollection::DOMNamedNodesCollection(ExecState *exec, const QValueList< DOM::Node > &nodes)
+    : DOMObject(exec->interpreter()->builtinObjectPrototype()), m_nodes(nodes)
 {
-  // Maybe we should ref (and deref in the dtor) the nodes, though ?
+    // Maybe we should ref (and deref in the dtor) the nodes, though ?
 }
 
 Value DOMNamedNodesCollection::tryGet(ExecState *exec, const Identifier &propertyName) const
 {
-  kdDebug(6070) << k_funcinfo << propertyName.ascii() << endl;
-  if (propertyName == lengthPropertyName)
-    return Number(m_nodes.count());
-  // index?
-  bool ok;
-  unsigned int u = propertyName.toULong(&ok);
-  if (ok && u < m_nodes.count()) {
-    DOM::Node node = m_nodes[u];
-    return getDOMNode(exec,node);
-  }
-  return DOMObject::tryGet(exec,propertyName);
+    kdDebug(6070) << k_funcinfo << propertyName.ascii() << endl;
+    if(propertyName == lengthPropertyName)
+        return Number(m_nodes.count());
+    // index?
+    bool ok;
+    unsigned int u = propertyName.toULong(&ok);
+    if(ok && u < m_nodes.count())
+    {
+        DOM::Node node = m_nodes[u];
+        return getDOMNode(exec, node);
+    }
+    return DOMObject::tryGet(exec, propertyName);
 }
 
 // -------------------------------------------------------------------------
 
-const ClassInfo DOMCharacterData::info = { "CharacterImp",
-					  &DOMNode::info, &DOMCharacterDataTable, 0 };
+const ClassInfo DOMCharacterData::info = {"CharacterImp", &DOMNode::info, &DOMCharacterDataTable, 0};
 /*
 @begin DOMCharacterDataTable 2
   data		DOMCharacterData::Data		DontDelete
@@ -1745,74 +1798,77 @@ KJS_DEFINE_PROTOTYPE_WITH_PROTOTYPE(DOMCharacterDataProto, DOMNodeProto)
 IMPLEMENT_PROTOFUNC_DOM(DOMCharacterDataProtoFunc)
 KJS_IMPLEMENT_PROTOTYPE("DOMCharacterData", DOMCharacterDataProto, DOMCharacterDataProtoFunc)
 
-DOMCharacterData::DOMCharacterData(ExecState *exec, const DOM::CharacterData& d)
- : DOMNode(DOMCharacterDataProto::self(exec), d) {}
+DOMCharacterData::DOMCharacterData(ExecState *exec, const DOM::CharacterData &d) : DOMNode(DOMCharacterDataProto::self(exec), d)
+{
+}
 
-DOMCharacterData::DOMCharacterData(const Object& proto, const DOM::CharacterData& d)
- : DOMNode(proto, d) {}
+DOMCharacterData::DOMCharacterData(const Object &proto, const DOM::CharacterData &d) : DOMNode(proto, d)
+{
+}
 
 Value DOMCharacterData::tryGet(ExecState *exec, const Identifier &p) const
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070)<<"DOMCharacterData::tryGet "<<p.string().string()<<endl;
+    kdDebug(6070) << "DOMCharacterData::tryGet " << p.string().string() << endl;
 #endif
-  return DOMObjectLookupGetValue<DOMCharacterData,DOMNode>(exec,p,&DOMCharacterDataTable,this);
+    return DOMObjectLookupGetValue< DOMCharacterData, DOMNode >(exec, p, &DOMCharacterDataTable, this);
 }
 
 Value DOMCharacterData::getValueProperty(ExecState *, int token) const
 {
-  DOM::CharacterData data = static_cast<DOM::CharacterData>(node);
-  switch (token) {
-  case Data:
-    return String(data.data());
-  case Length:
-    return Number(data.length());
- default:
-   kdDebug(6070) << "WARNING: Unhandled token in DOMCharacterData::getValueProperty : " << token << endl;
-   return Value();
-  }
+    DOM::CharacterData data = static_cast< DOM::CharacterData >(node);
+    switch(token)
+    {
+        case Data:
+            return String(data.data());
+        case Length:
+            return Number(data.length());
+        default:
+            kdDebug(6070) << "WARNING: Unhandled token in DOMCharacterData::getValueProperty : " << token << endl;
+            return Value();
+    }
 }
 
-void DOMCharacterData::tryPut(ExecState *exec, const Identifier &propertyName, const Value& value, int attr)
+void DOMCharacterData::tryPut(ExecState *exec, const Identifier &propertyName, const Value &value, int attr)
 {
-  if (propertyName == "data")
-    static_cast<DOM::CharacterData>(node).setData(value.toString(exec).string());
-  else
-    DOMNode::tryPut(exec, propertyName,value,attr);
+    if(propertyName == "data")
+        static_cast< DOM::CharacterData >(node).setData(value.toString(exec).string());
+    else
+        DOMNode::tryPut(exec, propertyName, value, attr);
 }
 
 Value DOMCharacterDataProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  KJS_CHECK_THIS( KJS::DOMCharacterData, thisObj );
-  DOM::CharacterData data = static_cast<DOMCharacterData *>(thisObj.imp())->toData();
-  switch(id) {
-    case DOMCharacterData::SubstringData:
-      return String(data.substringData(args[0].toInteger(exec),args[1].toInteger(exec)));
-    case DOMCharacterData::AppendData:
-      data.appendData(args[0].toString(exec).string());
-      return Undefined();
-      break;
-    case DOMCharacterData::InsertData:
-      data.insertData(args[0].toInteger(exec),args[1].toString(exec).string());
-      return  Undefined();
-      break;
-    case DOMCharacterData::DeleteData:
-      data.deleteData(args[0].toInteger(exec),args[1].toInteger(exec));
-      return  Undefined();
-      break;
-    case DOMCharacterData::ReplaceData:
-      data.replaceData(args[0].toInteger(exec),args[1].toInteger(exec),args[2].toString(exec).string());
-      return Undefined();
-    default:
-      break;
-  }
-  return Undefined();
+    KJS_CHECK_THIS(KJS::DOMCharacterData, thisObj);
+    DOM::CharacterData data = static_cast< DOMCharacterData * >(thisObj.imp())->toData();
+    switch(id)
+    {
+        case DOMCharacterData::SubstringData:
+            return String(data.substringData(args[0].toInteger(exec), args[1].toInteger(exec)));
+        case DOMCharacterData::AppendData:
+            data.appendData(args[0].toString(exec).string());
+            return Undefined();
+            break;
+        case DOMCharacterData::InsertData:
+            data.insertData(args[0].toInteger(exec), args[1].toString(exec).string());
+            return Undefined();
+            break;
+        case DOMCharacterData::DeleteData:
+            data.deleteData(args[0].toInteger(exec), args[1].toInteger(exec));
+            return Undefined();
+            break;
+        case DOMCharacterData::ReplaceData:
+            data.replaceData(args[0].toInteger(exec), args[1].toInteger(exec), args[2].toString(exec).string());
+            return Undefined();
+        default:
+            break;
+    }
+    return Undefined();
 }
 
 // -------------------------------------------------------------------------
 
-const ClassInfo DOMText::info = { "Text",
-				 &DOMCharacterData::info, 0, 0 };
+const ClassInfo DOMText::info = {"Text", &DOMCharacterData::info, 0, 0};
 /*
 @begin DOMTextProtoTable 1
   splitText	DOMText::SplitText	DontDelete|Function 1
@@ -1822,28 +1878,29 @@ KJS_DEFINE_PROTOTYPE_WITH_PROTOTYPE(DOMTextProto, DOMCharacterDataProto)
 IMPLEMENT_PROTOFUNC_DOM(DOMTextProtoFunc)
 KJS_IMPLEMENT_PROTOTYPE("DOMText", DOMTextProto, DOMTextProtoFunc)
 
-DOMText::DOMText(ExecState *exec, const DOM::Text& t)
-  : DOMCharacterData(DOMTextProto::self(exec), t) { }
+DOMText::DOMText(ExecState *exec, const DOM::Text &t) : DOMCharacterData(DOMTextProto::self(exec), t)
+{
+}
 
 Value DOMText::tryGet(ExecState *exec, const Identifier &p) const
 {
-  if (p.isEmpty())
-    return Undefined(); // ### TODO
-  else
-    return DOMCharacterData::tryGet(exec, p);
+    if(p.isEmpty())
+        return Undefined(); // ### TODO
+    else
+        return DOMCharacterData::tryGet(exec, p);
 }
 
 Value DOMTextProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  KJS_CHECK_THIS( KJS::DOMText, thisObj );
-  DOM::Text text = static_cast<DOMText *>(thisObj.imp())->toText();
-  switch(id) {
-    case DOMText::SplitText:
-      return getDOMNode(exec,text.splitText(args[0].toInteger(exec)));
-    default:
-      break;
-  }
-  return Undefined();
+    KJS_CHECK_THIS(KJS::DOMText, thisObj);
+    DOM::Text text = static_cast< DOMText * >(thisObj.imp())->toText();
+    switch(id)
+    {
+        case DOMText::SplitText:
+            return getDOMNode(exec, text.splitText(args[0].toInteger(exec)));
+        default:
+            break;
+    }
+    return Undefined();
 }
-
 }

@@ -10,7 +10,7 @@
  *  permit persons to whom the Software is furnished to do so, subject to
  *  the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
@@ -40,83 +40,82 @@ class KHttpProxySocketDevicePrivate;
  *
  * @author Thiago Macieira <thiago.macieira@kdemail.net>
  */
-class KDECORE_EXPORT KHttpProxySocketDevice: public KSocketDevice
-{
+class KDECORE_EXPORT KHttpProxySocketDevice : public KSocketDevice {
 public:
-  /**
-   * Constructor.
-   */
-  KHttpProxySocketDevice(const KSocketBase* = 0L);
+    /**
+     * Constructor.
+     */
+    KHttpProxySocketDevice(const KSocketBase * = 0L);
 
-  /**
-   * Constructor with proxy server's address.
-   */
-  KHttpProxySocketDevice(const KResolverEntry& proxy);
+    /**
+     * Constructor with proxy server's address.
+     */
+    KHttpProxySocketDevice(const KResolverEntry &proxy);
 
-  /**
-   * Destructor
-   */
-  virtual ~KHttpProxySocketDevice();
+    /**
+     * Destructor
+     */
+    virtual ~KHttpProxySocketDevice();
 
-  /**
-   * Sets our capabilities.
-   */
-  virtual int capabilities() const;
+    /**
+     * Sets our capabilities.
+     */
+    virtual int capabilities() const;
 
-  /**
-   * Retrieves the proxy server address.
-   */
-  const KResolverEntry& proxyServer() const;
+    /**
+     * Retrieves the proxy server address.
+     */
+    const KResolverEntry &proxyServer() const;
 
-  /**
-   * Sets the proxy server address.
-   */
-  void setProxyServer(const KResolverEntry& proxy);
+    /**
+     * Sets the proxy server address.
+     */
+    void setProxyServer(const KResolverEntry &proxy);
 
-  /**
-   * Closes the socket.
-   */
-  virtual void close();
+    /**
+     * Closes the socket.
+     */
+    virtual void close();
 
-  /**
-   * Overrides connection.
-   */
-  virtual bool connect(const KResolverEntry& address);
+    /**
+     * Overrides connection.
+     */
+    virtual bool connect(const KResolverEntry &address);
 
-  /**
-   * Name-based connection.
-   * We can tell the HTTP proxy server the full name.
-   */
-  virtual bool connect(const QString& name, const QString& service);
+    /**
+     * Name-based connection.
+     * We can tell the HTTP proxy server the full name.
+     */
+    virtual bool connect(const QString &name, const QString &service);
 
-  /**
-   * Return the peer address.
-   */
-  virtual KSocketAddress peerAddress() const;
+    /**
+     * Return the peer address.
+     */
+    virtual KSocketAddress peerAddress() const;
 
-  /**
-   * Return the externally visible address. We can't tell what that address is,
-   * so this function always returns an empty object.
-   */
-  virtual KSocketAddress externalAddress() const;
+    /**
+     * Return the externally visible address. We can't tell what that address is,
+     * so this function always returns an empty object.
+     */
+    virtual KSocketAddress externalAddress() const;
 
 private:
-  /**
-   * Parses the server reply after sending the connect command.
-   * Returns true on success and false on failure.
-   */
-  bool parseServerReply();
-  KHttpProxySocketDevicePrivate *d;
+    /**
+     * Parses the server reply after sending the connect command.
+     * Returns true on success and false on failure.
+     */
+    bool parseServerReply();
+    KHttpProxySocketDevicePrivate *d;
 
 public:
-  /**
-   * This is the default proxy server to be used.
-   * Applications may want to set this value so that calling @ref setProxyServer
-   * is unnecessary.
-   */
-  static KResolverEntry defaultProxy;
+    /**
+     * This is the default proxy server to be used.
+     * Applications may want to set this value so that calling @ref setProxyServer
+     * is unnecessary.
+     */
+    static KResolverEntry defaultProxy;
 };
 
-}				// namespace KNetwork
+} // namespace KNetwork
 
 #endif

@@ -68,9 +68,7 @@ class QDBusVariant;
  *
  * @see QDBusDataList
  */
-template <typename T>
-class QDBUS_EXPORT QDBusDataMap : private QMap<T, QDBusData>
-{
+template < typename T > class QDBUS_EXPORT QDBusDataMap : private QMap< T, QDBusData > {
     friend class QDBusData;
 
 public:
@@ -78,15 +76,16 @@ public:
      * Constant iterator. A QMapConstIterator with value type specified
      * as QDBusData
      */
-    typedef QMapConstIterator<T, QDBusData> const_iterator;
+    typedef QMapConstIterator< T, QDBusData > const_iterator;
 
     /**
      * @brief Creates an empty and invalid map
      *
      * @see QDBusData::Invalid
      */
-    QDBusDataMap<T>()
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::Invalid) {}
+    QDBusDataMap< T >() : QMap< T, QDBusData >(), m_valueType(QDBusData::Invalid)
+    {
+    }
 
     /**
      * @brief Creates an empty map with the given simple type for values
@@ -99,8 +98,9 @@ public:
      *
      * @param simpleValueType the type of the values in the new map
      */
-    explicit QDBusDataMap<T>(QDBusData::Type simpleValueType)
-        : QMap<T, QDBusData>(), m_valueType(simpleValueType) {}
+    explicit QDBusDataMap< T >(QDBusData::Type simpleValueType) : QMap< T, QDBusData >(), m_valueType(simpleValueType)
+    {
+    }
 
     /**
      * @brief Creates an empty map with the given container type for values
@@ -112,10 +112,10 @@ public:
      *
      * @see hasContainerValueType()
      */
-    explicit QDBusDataMap<T>(const QDBusData& containerValueType)
-        : QMap<T, QDBusData>(), m_valueType(containerValueType.type())
+    explicit QDBusDataMap< T >(const QDBusData &containerValueType) : QMap< T, QDBusData >(), m_valueType(containerValueType.type())
     {
-        if (hasContainerValueType()) m_containerValueType = containerValueType;
+        if(hasContainerValueType())
+            m_containerValueType = containerValueType;
     }
 
     /**
@@ -126,9 +126,10 @@ public:
      *
      * @param other the other map object to copy from
      */
-    QDBusDataMap<T>(const QDBusDataMap<T>& other)
-        : QMap<T, QDBusData>(other), m_valueType(other.m_valueType),
-          m_containerValueType(other.m_containerValueType) {}
+    QDBusDataMap< T >(const QDBusDataMap< T > &other)
+        : QMap< T, QDBusData >(other), m_valueType(other.m_valueType), m_containerValueType(other.m_containerValueType)
+    {
+    }
 
     /**
      * @brief Creates a map from the given QMap of QDBusData objects
@@ -146,24 +147,24 @@ public:
      *
      * @see toQMap()
      */
-    QDBusDataMap<T>(const QMap<T, QDBusData>& other)
-        : QMap<T, QDBusData>(other), m_valueType(QDBusData::Invalid)
+    QDBusDataMap< T >(const QMap< T, QDBusData > &other) : QMap< T, QDBusData >(other), m_valueType(QDBusData::Invalid)
     {
         const_iterator it = begin();
-        if (it == end()) return;
+        if(it == end())
+            return;
 
         m_valueType = (*it).type();
 
         QCString containerSignature;
-        if (hasContainerValueType())
+        if(hasContainerValueType())
         {
             m_containerValueType = it.data();
             containerSignature = m_containerValueType.buildDBusSignature();
         }
 
-        for (++it; it != end(); ++it)
+        for(++it; it != end(); ++it)
         {
-            if ((*it).type() != m_valueType)
+            if((*it).type() != m_valueType)
             {
                 m_valueType = QDBusData::Invalid;
                 m_containerValueType = QDBusData();
@@ -171,9 +172,9 @@ public:
                 clear();
                 return;
             }
-            else if (hasContainerValueType())
+            else if(hasContainerValueType())
             {
-                if (it.data().buildDBusSignature() != containerSignature)
+                if(it.data().buildDBusSignature() != containerSignature)
                 {
                     m_valueType = QDBusData::Invalid;
                     m_containerValueType = QDBusData();
@@ -197,12 +198,11 @@ public:
      *
      * @see toBoolMap()
      */
-    QDBusDataMap<T>(const QMap<T, bool>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::Bool)
+    QDBusDataMap< T >(const QMap< T, bool > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::Bool)
     {
-        typename QMap<T, bool>::const_iterator it    = other.begin();
-        typename QMap<T, bool>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, bool >::const_iterator it = other.begin();
+        typename QMap< T, bool >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromBool(it.data()));
         }
@@ -220,12 +220,11 @@ public:
      *
      * @see toByteMap()
      */
-    QDBusDataMap<T>(const QMap<T, Q_UINT8>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::Byte)
+    QDBusDataMap< T >(const QMap< T, Q_UINT8 > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::Byte)
     {
-        typename QMap<T, Q_UINT8>::const_iterator it    = other.begin();
-        typename QMap<T, Q_UINT8>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, Q_UINT8 >::const_iterator it = other.begin();
+        typename QMap< T, Q_UINT8 >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromByte(it.data()));
         }
@@ -243,12 +242,11 @@ public:
      *
      * @see toInt16Map()
      */
-    QDBusDataMap<T>(const QMap<T, Q_INT16>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::Int16)
+    QDBusDataMap< T >(const QMap< T, Q_INT16 > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::Int16)
     {
-        typename QMap<T, Q_INT16>::const_iterator it    = other.begin();
-        typename QMap<T, Q_INT16>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, Q_INT16 >::const_iterator it = other.begin();
+        typename QMap< T, Q_INT16 >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromInt16(it.data()));
         }
@@ -266,12 +264,11 @@ public:
      *
      * @see toUInt16Map()
      */
-    QDBusDataMap<T>(const QMap<T, Q_UINT16>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::UInt16)
+    QDBusDataMap< T >(const QMap< T, Q_UINT16 > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::UInt16)
     {
-        typename QMap<T, Q_UINT16>::const_iterator it    = other.begin();
-        typename QMap<T, Q_UINT16>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, Q_UINT16 >::const_iterator it = other.begin();
+        typename QMap< T, Q_UINT16 >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromUInt16(it.data()));
         }
@@ -289,12 +286,11 @@ public:
      *
      * @see toInt32Map()
      */
-    QDBusDataMap<T>(const QMap<T, Q_INT32>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::Int32)
+    QDBusDataMap< T >(const QMap< T, Q_INT32 > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::Int32)
     {
-        typename QMap<T, Q_INT32>::const_iterator it    = other.begin();
-        typename QMap<T, Q_INT32>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, Q_INT32 >::const_iterator it = other.begin();
+        typename QMap< T, Q_INT32 >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromInt32(it.data()));
         }
@@ -312,12 +308,11 @@ public:
      *
      * @see toUInt32Map()
      */
-    QDBusDataMap<T>(const QMap<T, Q_UINT32>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::UInt32)
+    QDBusDataMap< T >(const QMap< T, Q_UINT32 > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::UInt32)
     {
-        typename QMap<T, Q_UINT32>::const_iterator it    = other.begin();
-        typename QMap<T, Q_UINT32>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, Q_UINT32 >::const_iterator it = other.begin();
+        typename QMap< T, Q_UINT32 >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromUInt32(it.data()));
         }
@@ -335,12 +330,11 @@ public:
      *
      * @see toInt64Map()
      */
-    QDBusDataMap<T>(const QMap<T, Q_INT64>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::Int64)
+    QDBusDataMap< T >(const QMap< T, Q_INT64 > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::Int64)
     {
-        typename QMap<T, Q_INT64>::const_iterator it    = other.begin();
-        typename QMap<T, Q_INT64>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, Q_INT64 >::const_iterator it = other.begin();
+        typename QMap< T, Q_INT64 >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromInt64(it.data()));
         }
@@ -358,12 +352,11 @@ public:
      *
      * @see toUInt64Map()
      */
-    QDBusDataMap<T>(const QMap<T, Q_UINT64>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::UInt64)
+    QDBusDataMap< T >(const QMap< T, Q_UINT64 > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::UInt64)
     {
-        typename QMap<T, Q_UINT64>::const_iterator it    = other.begin();
-        typename QMap<T, Q_UINT64>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, Q_UINT64 >::const_iterator it = other.begin();
+        typename QMap< T, Q_UINT64 >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromUInt64(it.data()));
         }
@@ -381,12 +374,11 @@ public:
      *
      * @see toDoubleMap()
      */
-    QDBusDataMap<T>(const QMap<T, double>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::Double)
+    QDBusDataMap< T >(const QMap< T, double > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::Double)
     {
-        typename QMap<T, double>::const_iterator it    = other.begin();
-        typename QMap<T, double>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, double >::const_iterator it = other.begin();
+        typename QMap< T, double >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromDouble(it.data()));
         }
@@ -404,12 +396,11 @@ public:
      *
      * @see toStringMap()
      */
-    QDBusDataMap<T>(const QMap<T, QString>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::String)
+    QDBusDataMap< T >(const QMap< T, QString > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::String)
     {
-        typename QMap<T, QString>::const_iterator it    = other.begin();
-        typename QMap<T, QString>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, QString >::const_iterator it = other.begin();
+        typename QMap< T, QString >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromString(it.data()));
         }
@@ -427,12 +418,11 @@ public:
      *
      * @see toObjectPathMap()
      */
-    QDBusDataMap<T>(const QMap<T, QDBusObjectPath>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::ObjectPath)
+    QDBusDataMap< T >(const QMap< T, QDBusObjectPath > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::ObjectPath)
     {
-        typename QMap<T, QDBusObjectPath>::const_iterator it    = other.begin();
-        typename QMap<T, QDBusObjectPath>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, QDBusObjectPath >::const_iterator it = other.begin();
+        typename QMap< T, QDBusObjectPath >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromObjectPath(it.data()));
         }
@@ -450,12 +440,11 @@ public:
      *
      * @see toVariantMap()
      */
-    QDBusDataMap<T>(const QMap<T, QDBusVariant>& other)
-        : QMap<T, QDBusData>(), m_valueType(QDBusData::Variant)
+    QDBusDataMap< T >(const QMap< T, QDBusVariant > &other) : QMap< T, QDBusData >(), m_valueType(QDBusData::Variant)
     {
-        typename QMap<T, QDBusVariant>::const_iterator it    = other.begin();
-        typename QMap<T, QDBusVariant>::const_iterator endIt = other.end();
-        for (; it != endIt; ++it)
+        typename QMap< T, QDBusVariant >::const_iterator it = other.begin();
+        typename QMap< T, QDBusVariant >::const_iterator endIt = other.end();
+        for(; it != endIt; ++it)
         {
             insert(it.key(), QDBusData::fromVariant(it.data()));
         }
@@ -471,9 +460,9 @@ public:
      *
      * @return a reference to this map object
      */
-    QDBusDataMap<T>& operator=(const QDBusDataMap<T>& other)
+    QDBusDataMap< T > &operator=(const QDBusDataMap< T > &other)
     {
-        QMap<T, QDBusData>::operator=(other);
+        QMap< T, QDBusData >::operator=(other);
 
         m_valueType = other.m_valueType;
         m_containerValueType = other.m_containerValueType;
@@ -495,28 +484,29 @@ public:
      *
      * @return a reference to this map object
      */
-    QDBusDataMap<T>& operator=(const QMap<T, QDBusData>& other)
+    QDBusDataMap< T > &operator=(const QMap< T, QDBusData > &other)
     {
-        QMap<T, QDBusData>::operator=(other);
+        QMap< T, QDBusData >::operator=(other);
 
         m_valueType = QDBusData::Invalid;
         m_containerValueType = QDBusData();
 
         const_iterator it = begin();
-        if (it == end()) return *this;
+        if(it == end())
+            return *this;
 
         m_valueType = (*it).type();
 
         QCString containerSignature;
-        if (hasContainerValueType())
+        if(hasContainerValueType())
         {
             m_containerValueType = it.data();
             containerSignature = m_containerValueType.buildDBusSignature();
         }
 
-        for (++it; it != end(); ++it)
+        for(++it; it != end(); ++it)
         {
-            if ((*it).type() != m_valueType)
+            if((*it).type() != m_valueType)
             {
                 m_valueType = QDBusData::Invalid;
                 m_containerValueType = QDBusData();
@@ -524,9 +514,9 @@ public:
                 clear();
                 return *this;
             }
-            else if (hasContainerValueType())
+            else if(hasContainerValueType())
             {
-                if (it.data()->buildSignature() != containerSignature)
+                if(it.data()->buildSignature() != containerSignature)
                 {
                     m_valueType = QDBusData::Invalid;
                     m_containerValueType = QDBusData();
@@ -548,7 +538,10 @@ public:
      *
      * @see valueType()
      */
-    QDBusData::Type keyType() const { return m_keyType; }
+    QDBusData::Type keyType() const
+    {
+        return m_keyType;
+    }
 
     /**
      * @brief Returns the value type of the map object
@@ -559,7 +552,10 @@ public:
      * @see containerValueType()
      * @see keyType()
      */
-    QDBusData::Type valueType() const { return m_valueType; }
+    QDBusData::Type valueType() const
+    {
+        return m_valueType;
+    }
 
     /**
      * @brief Checks whether the value type is a data container itself
@@ -576,8 +572,7 @@ public:
      */
     bool hasContainerValueType() const
     {
-        return m_valueType == QDBusData::List || m_valueType == QDBusData::Struct
-                                              || m_valueType == QDBusData::Map;
+        return m_valueType == QDBusData::List || m_valueType == QDBusData::Struct || m_valueType == QDBusData::Map;
     }
 
     /**
@@ -595,7 +590,10 @@ public:
      * @see valueType()
      * @see QDBusData::Invalid
      */
-    QDBusData containerValueType() const { return m_containerValueType; }
+    QDBusData containerValueType() const
+    {
+        return m_containerValueType;
+    }
 
     /**
      * @brief Checks whether this map object has a valid value type
@@ -604,7 +602,10 @@ public:
      *
      * @return @c true if the map object is valid, otherwise @c false
      */
-    inline bool isValid() const { return valueType() != QDBusData::Invalid; }
+    inline bool isValid() const
+    {
+        return valueType() != QDBusData::Invalid;
+    }
 
     /**
      * @brief Checks whether this map object has any key/value pairs
@@ -613,7 +614,10 @@ public:
      *
      * @see count()
      */
-    bool isEmpty() const { return QMap<T, QDBusData>::empty(); }
+    bool isEmpty() const
+    {
+        return QMap< T, QDBusData >::empty();
+    }
 
     /**
      * @brief Returns the number of key/value pairs of this map object
@@ -622,7 +626,10 @@ public:
      *
      * @see isEmpty()
      */
-    uint count() const { return QMap<T, QDBusData>::count(); }
+    uint count() const
+    {
+        return QMap< T, QDBusData >::count();
+    }
 
     /**
      * @brief Checks whether the given @p other map is equal to this one
@@ -637,27 +644,32 @@ public:
      *
      * @see QDBusData::operator==()
      */
-    bool operator==(const QDBusDataMap<T>& other) const
+    bool operator==(const QDBusDataMap< T > &other) const
     {
-        if (m_valueType != other.m_valueType) return false;
+        if(m_valueType != other.m_valueType)
+            return false;
 
-        if (count() != other.count()) return false;
+        if(count() != other.count())
+            return false;
 
-        if (hasContainerValueType() != other.hasContainerValueType()) return false;
+        if(hasContainerValueType() != other.hasContainerValueType())
+            return false;
 
-        if (hasContainerValueType())
+        if(hasContainerValueType())
         {
-            if (m_containerValueType.buildDBusSignature() !=
-                other.m_containerValueType.buildDBusSignature()) return false;
+            if(m_containerValueType.buildDBusSignature() != other.m_containerValueType.buildDBusSignature())
+                return false;
         }
 
         const_iterator it = begin();
         const_iterator otherIt = other.begin();
-        for (; it != end() && otherIt != other.end(); ++it, ++otherIt)
+        for(; it != end() && otherIt != other.end(); ++it, ++otherIt)
         {
-            if (it.key() != otherIt.key()) return false;
+            if(it.key() != otherIt.key())
+                return false;
 
-            if (!(it.data() == otherIt.data())) return false;
+            if(!(it.data() == otherIt.data()))
+                return false;
         }
 
         return true;
@@ -668,7 +680,10 @@ public:
      *
      * Value type and, if applicable, container value type will stay untouched.
      */
-    void clear() { QMap<T, QDBusData>::clear(); }
+    void clear()
+    {
+        QMap< T, QDBusData >::clear();
+    }
 
     /**
      * @brief Returns an iterator to the first item according to the key sort order
@@ -677,7 +692,7 @@ public:
      */
     const_iterator begin() const
     {
-        return QMap<T, QDBusData>::begin();
+        return QMap< T, QDBusData >::begin();
     }
 
     /**
@@ -687,7 +702,7 @@ public:
      */
     const_iterator end() const
     {
-        return QMap<T, QDBusData>::end();
+        return QMap< T, QDBusData >::end();
     }
 
     /**
@@ -708,40 +723,42 @@ public:
      *
      * @return @c true on successfull insert, otherwise @c false
      */
-    bool insert(const T& key, const QDBusData& data)
+    bool insert(const T &key, const QDBusData &data)
     {
-        if (data.type() == QDBusData::Invalid) return false;
+        if(data.type() == QDBusData::Invalid)
+            return false;
 
-        if (m_valueType == QDBusData::Invalid)
+        if(m_valueType == QDBusData::Invalid)
         {
             m_valueType = data.type();
 
             // TODO: create empty copy of container
-            if (hasContainerValueType()) m_containerValueType = data;
+            if(hasContainerValueType())
+                m_containerValueType = data;
 
-            QMap<T, QDBusData>::insert(key, data);
+            QMap< T, QDBusData >::insert(key, data);
         }
-        else if (data.type() != m_valueType)
+        else if(data.type() != m_valueType)
         {
-            qWarning("QDBusDataMap: trying to add data of type %s to map of type %s",
-                     data.typeName(), QDBusData::typeName(m_valueType));
+            qWarning("QDBusDataMap: trying to add data of type %s to map of type %s", data.typeName(), QDBusData::typeName(m_valueType));
         }
-        else if (hasContainerValueType())
+        else if(hasContainerValueType())
         {
-            QCString ourSignature  = m_containerValueType.buildDBusSignature();
+            QCString ourSignature = m_containerValueType.buildDBusSignature();
             QCString dataSignature = data.buildDBusSignature();
 
-            if (ourSignature != dataSignature)
+            if(ourSignature != dataSignature)
             {
-                qWarning("QDBusDataMap: trying to add data with signature %s "
-                        "to map with value signature %s",
-                        dataSignature.data(), ourSignature.data());
+                qWarning(
+                    "QDBusDataMap: trying to add data with signature %s "
+                    "to map with value signature %s",
+                    dataSignature.data(), ourSignature.data());
             }
             else
-                QMap<T, QDBusData>::insert(key, data);
+                QMap< T, QDBusData >::insert(key, data);
         }
         else
-            QMap<T, QDBusData>::insert(key, data);
+            QMap< T, QDBusData >::insert(key, data);
 
         return true;
     }
@@ -751,7 +768,10 @@ public:
      *
      * @return the key/value pairs of the map object as a QMap
      */
-    QMap<T, QDBusData> toQMap() const { return *this; }
+    QMap< T, QDBusData > toQMap() const
+    {
+        return *this;
+    }
 
     /**
      * @brief Tries to get the map object's pairs as a QMap of bool
@@ -769,24 +789,26 @@ public:
      *
      * @see QDBusData::toBool()
      */
-    QMap<T, bool> toBoolMap(bool* ok = 0) const
+    QMap< T, bool > toBoolMap(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::Bool)
+        if(m_valueType != QDBusData::Bool)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, bool>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, bool >();
         }
 
-        QMap<T, bool> result;
+        QMap< T, bool > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toBool());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -807,24 +829,26 @@ public:
      *
      * @see QDBusData::toBool()
      */
-    QMap<T, Q_UINT8> toByteMap(bool* ok = 0) const
+    QMap< T, Q_UINT8 > toByteMap(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::Byte)
+        if(m_valueType != QDBusData::Byte)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, Q_UINT8>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, Q_UINT8 >();
         }
 
-        QMap<T, Q_UINT8> result;
+        QMap< T, Q_UINT8 > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toByte());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -846,24 +870,26 @@ public:
      *
      * @see QDBusData::toInt16()
      */
-    QMap<T, Q_INT16> toInt16Map(bool* ok = 0) const
+    QMap< T, Q_INT16 > toInt16Map(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::Int16)
+        if(m_valueType != QDBusData::Int16)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, Q_INT16>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, Q_INT16 >();
         }
 
-        QMap<T, Q_INT16> result;
+        QMap< T, Q_INT16 > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toInt16());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -885,24 +911,26 @@ public:
      *
      * @see QDBusData::toUInt16()
      */
-    QMap<T, Q_UINT16> toUInt16Map(bool* ok = 0) const
+    QMap< T, Q_UINT16 > toUInt16Map(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::UInt16)
+        if(m_valueType != QDBusData::UInt16)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, Q_UINT16>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, Q_UINT16 >();
         }
 
-        QMap<T, Q_UINT16> result;
+        QMap< T, Q_UINT16 > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toUInt16());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -924,24 +952,26 @@ public:
      *
      * @see QDBusData::toInt32()
      */
-    QMap<T, Q_INT32> toInt32Map(bool* ok = 0) const
+    QMap< T, Q_INT32 > toInt32Map(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::Int32)
+        if(m_valueType != QDBusData::Int32)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, Q_INT32>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, Q_INT32 >();
         }
 
-        QMap<T, Q_INT32> result;
+        QMap< T, Q_INT32 > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toInt32());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -963,24 +993,26 @@ public:
      *
      * @see QDBusData::toUInt32()
      */
-    QMap<T, Q_UINT32> toUInt32Map(bool* ok = 0) const
+    QMap< T, Q_UINT32 > toUInt32Map(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::UInt32)
+        if(m_valueType != QDBusData::UInt32)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, Q_UINT32>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, Q_UINT32 >();
         }
 
-        QMap<T, Q_UINT32> result;
+        QMap< T, Q_UINT32 > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toUInt32());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -1002,24 +1034,26 @@ public:
      *
      * @see QDBusData::toInt64()
      */
-    QMap<T, Q_INT64> toInt64Map(bool* ok = 0) const
+    QMap< T, Q_INT64 > toInt64Map(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::Int64)
+        if(m_valueType != QDBusData::Int64)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, Q_INT64>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, Q_INT64 >();
         }
 
-        QMap<T, Q_INT64> result;
+        QMap< T, Q_INT64 > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toInt64());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -1041,24 +1075,26 @@ public:
      *
      * @see QDBusData::toUInt64()
      */
-    QMap<T, Q_UINT64> toUInt64Map(bool* ok = 0) const
+    QMap< T, Q_UINT64 > toUInt64Map(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::UInt64)
+        if(m_valueType != QDBusData::UInt64)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, Q_UINT64>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, Q_UINT64 >();
         }
 
-        QMap<T, Q_UINT64> result;
+        QMap< T, Q_UINT64 > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toUInt64());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -1079,24 +1115,26 @@ public:
      *
      * @see QDBusData::toDouble()
      */
-    QMap<T, double> toDoubleMap(bool* ok = 0) const
+    QMap< T, double > toDoubleMap(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::Double)
+        if(m_valueType != QDBusData::Double)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, double>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, double >();
         }
 
-        QMap<T, double> result;
+        QMap< T, double > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toDouble());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -1117,24 +1155,26 @@ public:
      *
      * @see QDBusData::toString()
      */
-    QMap<T, QString> toStringMap(bool* ok = 0) const
+    QMap< T, QString > toStringMap(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::String)
+        if(m_valueType != QDBusData::String)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, QString>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, QString >();
         }
 
-        QMap<T, QString> result;
+        QMap< T, QString > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toString());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -1152,24 +1192,26 @@ public:
      *
      * @see QDBusData::toObjectPath()
      */
-    QMap<T, QDBusObjectPath> toObjectPathMap(bool* ok = 0) const
+    QMap< T, QDBusObjectPath > toObjectPathMap(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::ObjectPath)
+        if(m_valueType != QDBusData::ObjectPath)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, QDBusObjectPath>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, QDBusObjectPath >();
         }
 
-        QMap<T, QDBusObjectPath> result;
+        QMap< T, QDBusObjectPath > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toObjectPath());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }
@@ -1190,24 +1232,26 @@ public:
      *
      * @see QDBusData::toVariant()
      */
-    QMap<T, QDBusVariant> toVariantMap(bool* ok = 0) const
+    QMap< T, QDBusVariant > toVariantMap(bool *ok = 0) const
     {
-        if (m_valueType != QDBusData::Variant)
+        if(m_valueType != QDBusData::Variant)
         {
-            if (ok != 0) *ok = false;
-            return QMap<T, QDBusVariant>();
+            if(ok != 0)
+                *ok = false;
+            return QMap< T, QDBusVariant >();
         }
 
-        QMap<T, QDBusVariant> result;
+        QMap< T, QDBusVariant > result;
 
-        const_iterator it    = begin();
+        const_iterator it = begin();
         const_iterator endIt = end();
-        for (; it != endIt; ++it)
+        for(; it != endIt; ++it)
         {
             result.insert(it.key(), (*it).toVariant());
         }
 
-        if (ok != 0) *ok = true;
+        if(ok != 0)
+            *ok = true;
 
         return result;
     }

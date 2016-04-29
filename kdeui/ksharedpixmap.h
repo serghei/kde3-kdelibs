@@ -34,7 +34,7 @@ class KSharedPixmapPrivate;
  * to copy (a part of) a shared pixmap into. KSharedPixmap inherits KPixmap
  * for that purpose.
  *
- * The server part of shared pixmaps is not implemented here. 
+ * The server part of shared pixmaps is not implemented here.
  * That part is provided by KPixmapServer, in the source file:
  * kdebase/kdesktop/pixmapserver.cc.
  *
@@ -49,14 +49,10 @@ class KSharedPixmapPrivate;
  * @version $Id: ksharedpixmap.h 363180 2004-11-15 14:50:36Z mueller $
  *
  */
-class KDEUI_EXPORT KSharedPixmap: 
-    public QWidget,
-    public KPixmap
-{
+class KDEUI_EXPORT KSharedPixmap : public QWidget, public KPixmap {
     Q_OBJECT
 
 public:
-
     /**
      * Construct an empty pixmap.
      */
@@ -72,15 +68,15 @@ public:
      * when the operation has finished.
      *
      * @param name The shared pixmap name.
-     * @param rect If you pass a nonzero rectangle, a tile is generated which 
-     * is able to fill up the specified rectangle completely. This is solely 
-     * for optimization: in some cases the tile will be much smaller than the 
+     * @param rect If you pass a nonzero rectangle, a tile is generated which
+     * is able to fill up the specified rectangle completely. This is solely
+     * for optimization: in some cases the tile will be much smaller than the
      * original pixmap. It reflects KSharedPixmap's original use: sharing
      * of the desktop background to achieve pseudo transparency.
      * @return True if the shared pixmap exists and loading has started
      * successfully, false otherwise.
      */
-    bool loadFromShared(const QString & name, const QRect & rect=QRect());
+    bool loadFromShared(const QString &name, const QRect &rect = QRect());
 
     /**
      * Check whether a shared pixmap is available.
@@ -88,10 +84,10 @@ public:
      * @param name The shared pixmap name.
      * @return True if the shared pixmap is available, false otherwise.
      */
-    bool isAvailable(const QString & name) const;
+    bool isAvailable(const QString &name) const;
 
 signals:
-    /** 
+    /**
      * This signal is raised when a pixmap load operation has finished.
      *
      * @param success True if successful, false otherwise.
@@ -100,9 +96,9 @@ signals:
 
 protected:
     bool x11Event(XEvent *);
-    
+
 private:
-    bool copy(const QString & id, const QRect & rect);
+    bool copy(const QString &id, const QRect &rect);
     void init();
 
     KSharedPixmapPrivate *d;

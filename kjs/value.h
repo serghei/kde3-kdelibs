@@ -34,63 +34,76 @@
 
 namespace KJS {
 
-  class Value;
-  class ValueImp;
-  class ValueImpPrivate;
-  class Undefined;
-  class UndefinedImp;
-  class Null;
-  class NullImp;
-  class Boolean;
-  class BooleanImp;
-  class String;
-  class StringImp;
-  class Number;
-  class NumberImp;
-  class Object;
-  class ObjectImp;
-  class Reference;
-  class List;
-  class ListImp;
-  class Completion;
-  class ExecState;
+class Value;
+class ValueImp;
+class ValueImpPrivate;
+class Undefined;
+class UndefinedImp;
+class Null;
+class NullImp;
+class Boolean;
+class BooleanImp;
+class String;
+class StringImp;
+class Number;
+class NumberImp;
+class Object;
+class ObjectImp;
+class Reference;
+class List;
+class ListImp;
+class Completion;
+class ExecState;
 
-  /**
-   * Primitive types
-   */
-  enum Type {
+/**
+ * Primitive types
+ */
+enum Type
+{
     UnspecifiedType = 0,
-    UndefinedType   = 1,
-    NullType        = 2,
-    BooleanType     = 3,
-    StringType      = 4,
-    NumberType      = 5,
-    ObjectType      = 6
-  };
+    UndefinedType = 1,
+    NullType = 2,
+    BooleanType = 3,
+    StringType = 4,
+    NumberType = 5,
+    ObjectType = 6
+};
 
-  /**
-   * ValueImp is the base type for all primitives (Undefined, Null, Boolean,
-   * String, Number) and objects in ECMAScript.
-   *
-   * Note: you should never inherit from ValueImp as it is for primitive types
-   * only (all of which are provided internally by KJS). Instead, inherit from
-   * ObjectImp.
-   */
-  class KJS_EXPORT ValueImp {
+/**
+ * ValueImp is the base type for all primitives (Undefined, Null, Boolean,
+ * String, Number) and objects in ECMAScript.
+ *
+ * Note: you should never inherit from ValueImp as it is for primitive types
+ * only (all of which are provided internally by KJS). Instead, inherit from
+ * ObjectImp.
+ */
+class KJS_EXPORT ValueImp {
     friend class Collector;
     friend class Value;
     friend class ContextImp;
-  public:
+
+public:
     ValueImp();
     virtual ~ValueImp();
 
-    ValueImp* ref() { if (!SimpleNumber::is(this)) refcount++; return this; }
-    bool deref() { if (SimpleNumber::is(this)) return false; else return (!--refcount); }
+    ValueImp *ref()
+    {
+        if(!SimpleNumber::is(this))
+            refcount++;
+        return this;
+    }
+    bool deref()
+    {
+        if(SimpleNumber::is(this))
+            return false;
+        else
+            return (!--refcount);
+    }
 
     virtual void mark();
     bool marked() const;
-    void* operator new(size_t);
-    void operator delete(void*);
+    void *operator new(size_t);
+    void operator delete(void *);
 
     /**
      * @internal
@@ -100,7 +113,10 @@ namespace KJS {
     void setGcAllowed();
 
     // Will crash if called on a simple number.
-    void setGcAllowedFast() { _flags |= VI_GCALLOWED; }
+    void setGcAllowedFast()
+    {
+        _flags |= VI_GCALLOWED;
+    }
 
     int toInteger(ExecState *exec) const;
     int toInt32(ExecState *exec) const;
@@ -114,14 +130,17 @@ namespace KJS {
     bool dispatchToBoolean(ExecState *exec) const;
     double dispatchToNumber(ExecState *exec) const;
     UString dispatchToString(ExecState *exec) const;
-    bool dispatchToUInt32(unsigned&) const;
+    bool dispatchToUInt32(unsigned &) const;
     Object dispatchToObject(ExecState *exec) const;
 
     unsigned short int refcount;
 
-    bool isDestroyed() const { return _flags & VI_DESTRUCTED; }
+    bool isDestroyed() const
+    {
+        return _flags & VI_DESTRUCTED;
+    }
 
-  private:
+private:
     unsigned short int _flags;
 
     virtual Type type() const = 0;
@@ -134,58 +153,70 @@ namespace KJS {
     // TODO: no need for the following 4 int conversions to be virtual
     virtual UString toString(ExecState *exec) const = 0;
     virtual Object toObject(ExecState *exec) const = 0;
-    virtual bool toUInt32(unsigned&) const;
+    virtual bool toUInt32(unsigned &) const;
 
-    enum {
-      VI_MARKED = 1,
-      VI_GCALLOWED = 2,
-      VI_CREATED = 4,
-      VI_DESTRUCTED = 8   // nice word we have here :)
-    }; // VI means VALUEIMPL
+    enum
+    {
+        VI_MARKED = 1,
+        VI_GCALLOWED = 2,
+        VI_CREATED = 4,
+        VI_DESTRUCTED = 8 // nice word we have here :)
+    };                    // VI means VALUEIMPL
 
     ValueImpPrivate *_vd;
 
     // Give a compile time error if we try to copy one of these.
-    ValueImp(const ValueImp&);
-    ValueImp& operator=(const ValueImp&);
-  };
+    ValueImp(const ValueImp &);
+    ValueImp &operator=(const ValueImp &);
+};
 
-  /**
-   * Value objects are act as wrappers ("smart pointers") around ValueImp
-   * objects and their descendents. Instead of using ValueImps
-   * (and derivatives) during normal program execution, you should use a
-   * Value-derived class.
-   *
-   * Value maintains a pointer to a ValueImp object and uses a reference
-   * counting scheme to ensure that the ValueImp object is not deleted or
-   * garbage collected.
-   *
-   * Note: The conversion operations all return values of various types -
-   * if an error occurs during conversion, an error object will instead
-   * be returned (where possible), and the execution state's exception
-   * will be set appropriately.
-   */
-  class KJS_EXPORT Value {
-  public:
-    Value() : rep(0) { }
+/**
+ * Value objects are act as wrappers ("smart pointers") around ValueImp
+ * objects and their descendents. Instead of using ValueImps
+ * (and derivatives) during normal program execution, you should use a
+ * Value-derived class.
+ *
+ * Value maintains a pointer to a ValueImp object and uses a reference
+ * counting scheme to ensure that the ValueImp object is not deleted or
+ * garbage collected.
+ *
+ * Note: The conversion operations all return values of various types -
+ * if an error occurs during conversion, an error object will instead
+ * be returned (where possible), and the execution state's exception
+ * will be set appropriately.
+ */
+class KJS_EXPORT Value {
+public:
+    Value() : rep(0)
+    {
+    }
     explicit Value(ValueImp *v);
     Value(const Value &v);
     ~Value();
 
-    Value& operator=(const Value &v);
+    Value &operator=(const Value &v);
     /**
      * Returns whether or not this is a valid value. An invalid value
      * has a 0 implementation pointer and should not be used for
      * any other operation than this check. Current use: as a
      * distinct return value signalling failing dynamicCast() calls.
      */
-    bool isValid() const { return rep != 0; }
+    bool isValid() const
+    {
+        return rep != 0;
+    }
     /**
      * @deprecated
      * Use !isValid() instead.
      */
-    bool isNull() const { return rep == 0; }
-    ValueImp *imp() const { return rep; }
+    bool isNull() const
+    {
+        return rep == 0;
+    }
+    ValueImp *imp() const
+    {
+        return rep;
+    }
 
     /**
      * Returns the type of value. This is one of UndefinedType, NullType,
@@ -193,7 +224,10 @@ namespace KJS {
      *
      * @return The type of value
      */
-    Type type() const { return rep->dispatchType(); }
+    Type type() const
+    {
+        return rep->dispatchType();
+    }
 
     /**
      * Checks whether or not the value is of a particular tpye
@@ -201,50 +235,75 @@ namespace KJS {
      * @param t The type to compare with
      * @return true if the value is of the specified type, otherwise false
      */
-    bool isA(Type t) const { return rep->dispatchType() == t; }
+    bool isA(Type t) const
+    {
+        return rep->dispatchType() == t;
+    }
 
     /**
      * Performs the ToPrimitive type conversion operation on this value
      * (ECMA 9.1)
      */
-    Value toPrimitive(ExecState *exec,
-                      Type preferredType = UnspecifiedType) const
-      { return rep->dispatchToPrimitive(exec, preferredType); }
+    Value toPrimitive(ExecState *exec, Type preferredType = UnspecifiedType) const
+    {
+        return rep->dispatchToPrimitive(exec, preferredType);
+    }
 
     /**
      * Performs the ToBoolean type conversion operation on this value (ECMA 9.2)
      */
-    bool toBoolean(ExecState *exec) const { return rep->dispatchToBoolean(exec); }
+    bool toBoolean(ExecState *exec) const
+    {
+        return rep->dispatchToBoolean(exec);
+    }
 
     /**
      * Performs the ToNumber type conversion operation on this value (ECMA 9.3)
      */
-    double toNumber(ExecState *exec) const { return rep->dispatchToNumber(exec); }
+    double toNumber(ExecState *exec) const
+    {
+        return rep->dispatchToNumber(exec);
+    }
 
     /**
      * Performs the ToInteger type conversion operation on this value (ECMA 9.4)
      */
-    int toInteger(ExecState *exec) const { return rep->toInteger(exec); }
+    int toInteger(ExecState *exec) const
+    {
+        return rep->toInteger(exec);
+    }
 
     /**
      * Performs the ToInt32 type conversion operation on this value (ECMA 9.5)
      */
-    int toInt32(ExecState *exec) const { return rep->toInt32(exec); }
+    int toInt32(ExecState *exec) const
+    {
+        return rep->toInt32(exec);
+    }
 
     /**
      * Performs the ToUInt32 type conversion operation on this value (ECMA 9.6)
      */
-    unsigned int toUInt32(ExecState *exec) const { return rep->toUInt32(exec); }
+    unsigned int toUInt32(ExecState *exec) const
+    {
+        return rep->toUInt32(exec);
+    }
 
     /**
      * Performs the ToUInt16 type conversion operation on this value (ECMA 9.7)
      */
-    unsigned short toUInt16(ExecState *exec) const { return rep->toUInt16(exec); }
+    unsigned short toUInt16(ExecState *exec) const
+    {
+        return rep->toUInt16(exec);
+    }
 
     /**
      * Performs the ToString type conversion operation on this value (ECMA 9.8)
      */
-    UString toString(ExecState *exec) const { return rep->dispatchToString(exec); }
+    UString toString(ExecState *exec) const
+    {
+        return rep->dispatchToString(exec);
+    }
 
     /**
      * Performs the ToObject type conversion operation on this value (ECMA 9.9)
@@ -254,21 +313,24 @@ namespace KJS {
     /**
      * Checks if we can do a lossless conversion to UInt32.
      */
-    bool toUInt32(unsigned& i) const { return rep->dispatchToUInt32(i); }
+    bool toUInt32(unsigned &i) const
+    {
+        return rep->dispatchToUInt32(i);
+    }
 
-  protected:
+protected:
     ValueImp *rep;
-  };
+};
 
-  // Primitive types
+// Primitive types
 
-  /**
-   * Represents an primitive Undefined value. All instances of this class
-   * share the same implementation object, so == will always return true
-   * for any comparison between two Undefined objects.
-   */
-  class KJS_EXPORT Undefined : public Value {
-  public:
+/**
+ * Represents an primitive Undefined value. All instances of this class
+ * share the same implementation object, so == will always return true
+ * for any comparison between two Undefined objects.
+ */
+class KJS_EXPORT Undefined : public Value {
+public:
     Undefined();
 
     /**
@@ -281,19 +343,19 @@ namespace KJS {
      * @return The value converted to an Undefined
      */
     static Undefined dynamicCast(const Value &v);
-  private:
+
+private:
     friend class UndefinedImp;
     explicit Undefined(UndefinedImp *v);
+};
 
-  };
-
-  /**
-   * Represents an primitive Null value. All instances of this class
-   * share the same implementation object, so == will always return true
-   * for any comparison between two Null objects.
-   */
-  class KJS_EXPORT Null : public Value {
-  public:
+/**
+ * Represents an primitive Null value. All instances of this class
+ * share the same implementation object, so == will always return true
+ * for any comparison between two Null objects.
+ */
+class KJS_EXPORT Null : public Value {
+public:
     Null();
 
     /**
@@ -306,16 +368,17 @@ namespace KJS {
      * @return The value converted to a Null
      */
     static Null dynamicCast(const Value &v);
-  private:
+
+private:
     friend class NullImp;
     explicit Null(NullImp *v);
-  };
+};
 
-  /**
-   * Represents an primitive Boolean value
-   */
-  class KJS_EXPORT Boolean : public Value {
-  public:
+/**
+ * Represents an primitive Boolean value
+ */
+class KJS_EXPORT Boolean : public Value {
+public:
     Boolean(bool b = false);
 
     /**
@@ -330,16 +393,17 @@ namespace KJS {
     static Boolean dynamicCast(const Value &v);
 
     bool value() const;
-  private:
+
+private:
     friend class BooleanImp;
     explicit Boolean(BooleanImp *v);
-  };
+};
 
-  /**
-   * Represents an primitive String value
-   */
-  class KJS_EXPORT String : public Value {
-  public:
+/**
+ * Represents an primitive String value
+ */
+class KJS_EXPORT String : public Value {
+public:
     String(const UString &s = "");
 
     /**
@@ -354,20 +418,22 @@ namespace KJS {
     static String dynamicCast(const Value &v);
 
     UString value() const;
-  private:
+
+private:
     friend class StringImp;
     explicit String(StringImp *v);
-  };
+};
 
-  extern const double NaN;
-  extern const double Inf;
+extern const double NaN;
+extern const double Inf;
 
-  /**
-   * Represents an primitive Number value
-   */
-  class KJS_EXPORT Number : public Value {
+/**
+ * Represents an primitive Number value
+ */
+class KJS_EXPORT Number : public Value {
     friend class ValueImp;
-  public:
+
+public:
     Number(int i);
     Number(unsigned int u);
     Number(double d = 0.0);
@@ -390,10 +456,11 @@ namespace KJS {
      * @return The value converted to a Number
      */
     static Number dynamicCast(const Value &v);
-  private:
+
+private:
     friend class NumberImp;
     explicit Number(NumberImp *v);
-  };
+};
 
 } // namespace
 

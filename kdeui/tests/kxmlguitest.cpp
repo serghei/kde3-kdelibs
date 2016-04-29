@@ -16,47 +16,47 @@ void Client::slotSec()
     kdDebug() << "Client::slotSec()" << endl;
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-    KApplication app( argc, argv, "kxmlguitest" );
+    KApplication app(argc, argv, "kxmlguitest");
 
     // KXMLGUIClient looks in the "data" resource for the .rc files
     // Let's add $PWD (ideally $srcdir instead...) to it
-    KGlobal::dirs()->addResourceDir( "data", QDir::currentDirPath() );
+    KGlobal::dirs()->addResourceDir("data", QDir::currentDirPath());
 
     KMainWindow *mainwindow = new KMainWindow;
 
-    QLineEdit* line = new QLineEdit( mainwindow );
-    mainwindow->setCentralWidget( line );
+    QLineEdit *line = new QLineEdit(mainwindow);
+    mainwindow->setCentralWidget(line);
 
     mainwindow->show();
 
-    KXMLGUIBuilder *builder = new KXMLGUIBuilder( mainwindow );
+    KXMLGUIBuilder *builder = new KXMLGUIBuilder(mainwindow);
 
-    KXMLGUIFactory *factory = new KXMLGUIFactory( builder );
+    KXMLGUIFactory *factory = new KXMLGUIFactory(builder);
 
     Client *shell = new Client;
-    shell->setInstance( new KInstance( "konqueror" ) );
-    shell->instance()->dirs()->addResourceDir( "data", QDir::currentDirPath() );
+    shell->setInstance(new KInstance("konqueror"));
+    shell->instance()->dirs()->addResourceDir("data", QDir::currentDirPath());
 
-    (void)new KAction( "Split", "view_left_right", 0, 0, 0, shell->actionCollection(), "splitviewh" );
+    (void)new KAction("Split", "view_left_right", 0, 0, 0, shell->actionCollection(), "splitviewh");
 
-    shell->setXMLFile( "./kxmlguitest_shell.rc" );
+    shell->setXMLFile("./kxmlguitest_shell.rc");
 
-    factory->addClient( shell );
+    factory->addClient(shell);
 
     Client *part = new Client;
 
-    (void)new KAction( "decfont", "viewmag-", 0, 0, 0, part->actionCollection(), "decFontSizes" );
-    (void)new KAction( "sec", "unlock", Qt::ALT + Qt::Key_1, part, SLOT( slotSec() ), part->actionCollection(), "security" );
+    (void)new KAction("decfont", "viewmag-", 0, 0, 0, part->actionCollection(), "decFontSizes");
+    (void)new KAction("sec", "unlock", Qt::ALT + Qt::Key_1, part, SLOT(slotSec()), part->actionCollection(), "security");
 
-    part->setXMLFile( "./kxmlguitest_part.rc" );
+    part->setXMLFile("./kxmlguitest_part.rc");
 
-    factory->addClient( part );
-    for ( int i = 0; i < 10; ++i )
+    factory->addClient(part);
+    for(int i = 0; i < 10; ++i)
     {
-        factory->removeClient( part );
-        factory->addClient( part );
+        factory->removeClient(part);
+        factory->addClient(part);
     }
 
     return app.exec();

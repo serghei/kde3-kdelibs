@@ -28,23 +28,21 @@ extern "C" {
 #include "hspell.h"
 }
 
-class HSpellDict : public KSpell2::Dictionary
-{
+class HSpellDict : public KSpell2::Dictionary {
 public:
-    HSpellDict( const QString& lang );
+    HSpellDict(const QString &lang);
     ~HSpellDict();
-    virtual bool check( const QString& word );
+    virtual bool check(const QString &word);
 
-    virtual QStringList suggest( const QString& word );
+    virtual QStringList suggest(const QString &word);
 
-    virtual bool checkAndSuggest( const QString& word,
-                                  QStringList& suggestions ) ;
+    virtual bool checkAndSuggest(const QString &word, QStringList &suggestions);
 
-    virtual bool storeReplacement( const QString& bad,
-                                   const QString& good );
+    virtual bool storeReplacement(const QString &bad, const QString &good);
 
-    virtual bool addToPersonal( const QString& word );
-    virtual bool addToSession( const QString& word );
+    virtual bool addToPersonal(const QString &word);
+    virtual bool addToSession(const QString &word);
+
 private:
     struct dict_radix *m_speller;
     QTextCodec *codec;

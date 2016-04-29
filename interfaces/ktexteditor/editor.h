@@ -24,8 +24,7 @@
 /**
  * KTextEditor is KDE's standard text editing KPart interface.
  */
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
  * This is a simplfied version of the Document & View classes
@@ -36,29 +35,28 @@ namespace KTextEditor
  * and are not interested in using advanced interfaces.
  */
 
-class KTEXTEDITOR_EXPORT Editor : public KParts::ReadWritePart
-{
-  friend class PrivateEditor;
+class KTEXTEDITOR_EXPORT Editor : public KParts::ReadWritePart {
+    friend class PrivateEditor;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
     * Create a new editor widget.
     */
-    Editor ( QObject *parent = 0, const char *name = 0  );
-    virtual ~Editor ();
-    
-    unsigned int editorNumber () const;
+    Editor(QObject *parent = 0, const char *name = 0);
+    virtual ~Editor();
 
-  private:
+    unsigned int editorNumber() const;
+
+private:
     class PrivateEditor *d;
     static unsigned int globalEditorNumber;
     unsigned int myEditorNumber;
-};     
+};
 
-KTEXTEDITOR_EXPORT Editor *createEditor ( const char* libname, QWidget *parentWidget = 0, const char *widgetName = 0, QObject *parent = 0, const char *name = 0 );
-
+KTEXTEDITOR_EXPORT Editor *createEditor(const char *libname, QWidget *parentWidget = 0, const char *widgetName = 0, QObject *parent = 0,
+                                        const char *name = 0);
 }
 
 #endif

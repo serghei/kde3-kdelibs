@@ -22,36 +22,41 @@
 
 #include <knuminput.h>
 
-class MarginValueWidget : public KDoubleNumInput
-{
-	Q_OBJECT
+class MarginValueWidget : public KDoubleNumInput {
+    Q_OBJECT
 public:
-	enum Mode { Pixels = 0, IN, CM, MM };
-	MarginValueWidget(KNumInput *below, double value = 18.0, QWidget *parent = 0, const char *name = 0);
+    enum Mode
+    {
+        Pixels = 0,
+        IN,
+        CM,
+        MM
+    };
+    MarginValueWidget(KNumInput *below, double value = 18.0, QWidget *parent = 0, const char *name = 0);
 
-	float margin();
-	int resolution() const;
-	void setResolution(int dpi);
+    float margin();
+    int resolution() const;
+    void setResolution(int dpi);
 
 public slots:
-	void setMode(int);
-	void setMargin(float);
+    void setMode(int);
+    void setMargin(float);
 
 signals:
-	void marginChanged(float);
+    void marginChanged(float);
 
 protected slots:
-	void slotValueChanged(double);
+    void slotValueChanged(double);
 
 protected:
-	float toPixel(double value, int mode);
-	double toValue(float pix, int mode);
+    float toPixel(double value, int mode);
+    double toValue(float pix, int mode);
 
 private:
-	int		m_mode;
-	double	m_dpi;
-	bool	m_block;
-	float m_margin;
+    int m_mode;
+    double m_dpi;
+    bool m_block;
+    float m_margin;
 };
 
 #endif

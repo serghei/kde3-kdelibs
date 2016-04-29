@@ -24,72 +24,69 @@
 
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 *  This is an interface to access the text cursor of a View class.
 */
-class KTEXTEDITOR_EXPORT ViewCursorInterface
-{
-  friend class PrivateViewCursorInterface;
+class KTEXTEDITOR_EXPORT ViewCursorInterface {
+    friend class PrivateViewCursorInterface;
 
-  public:
-    ViewCursorInterface ();
-    virtual ~ViewCursorInterface ();
+public:
+    ViewCursorInterface();
+    virtual ~ViewCursorInterface();
 
-    unsigned int viewCursorInterfaceNumber () const;
-    
-  protected:  
-    void setViewCursorInterfaceDCOPSuffix (const QCString &suffix); 
+    unsigned int viewCursorInterfaceNumber() const;
 
-  //
-  // slots !!!
-  //
-  public:
+protected:
+    void setViewCursorInterfaceDCOPSuffix(const QCString &suffix);
+
+    //
+    // slots !!!
+    //
+public:
     /**
      * Get the current cursor coordinates in pixels.
      */
-    virtual class QPoint cursorCoordinates () = 0;
+    virtual class QPoint cursorCoordinates() = 0;
 
     /**
      * Get the cursor position
      */
-    virtual void cursorPosition (unsigned int *line, unsigned int *col) = 0;
+    virtual void cursorPosition(unsigned int *line, unsigned int *col) = 0;
 
     /**
      * Get the cursor position, calculated with 1 character per tab
      */
-    virtual void cursorPositionReal (unsigned int *line, unsigned int *col) = 0;
+    virtual void cursorPositionReal(unsigned int *line, unsigned int *col) = 0;
 
     /**
      * Set the cursor position
      */
-    virtual bool setCursorPosition (unsigned int line, unsigned int col) = 0;
+    virtual bool setCursorPosition(unsigned int line, unsigned int col) = 0;
 
     /**
      * Set the cursor position, use 1 character per tab
      */
-    virtual bool setCursorPositionReal (unsigned int line, unsigned int col) = 0;
+    virtual bool setCursorPositionReal(unsigned int line, unsigned int col) = 0;
 
-    virtual unsigned int cursorLine () = 0;
-    virtual unsigned int cursorColumn () = 0;
-    virtual unsigned int cursorColumnReal () = 0;
+    virtual unsigned int cursorLine() = 0;
+    virtual unsigned int cursorColumn() = 0;
+    virtual unsigned int cursorColumnReal() = 0;
 
-  //
-  // signals !!!
-  //
-  public:
-    virtual void cursorPositionChanged () = 0;
-  
-  private:
+    //
+    // signals !!!
+    //
+public:
+    virtual void cursorPositionChanged() = 0;
+
+private:
     class PrivateViewCursorInterface *d;
     static unsigned int globalViewCursorInterfaceNumber;
     unsigned int myViewCursorInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT ViewCursorInterface *viewCursorInterface (class View *view);
-
+KTEXTEDITOR_EXPORT ViewCursorInterface *viewCursorInterface(class View *view);
 }
 
 #endif

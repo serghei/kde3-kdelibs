@@ -26,91 +26,90 @@
 #include <qlayout.h>
 #include <klocale.h>
 
-KMWDriver::KMWDriver(QWidget *parent, const char *name)
-: KMWizardPage(parent,name)
+KMWDriver::KMWDriver(QWidget *parent, const char *name) : KMWizardPage(parent, name)
 {
-	m_ID = KMWizard::Driver;
-	m_title = i18n("Printer Model Selection");
-	m_nextpage = KMWizard::DriverTest;
+    m_ID = KMWizard::Driver;
+    m_title = i18n("Printer Model Selection");
+    m_nextpage = KMWizard::DriverTest;
 
-	m_widget = new KMDriverDbWidget(this);
+    m_widget = new KMDriverDbWidget(this);
 
-	QVBoxLayout	*lay1 = new QVBoxLayout(this, 0, 0);
-	lay1->addWidget(m_widget);
+    QVBoxLayout *lay1 = new QVBoxLayout(this, 0, 0);
+    lay1->addWidget(m_widget);
 }
 
 void KMWDriver::initPrinter(KMPrinter *p)
 {
-	m_widget->init();
-	if (p)
-	{
-		QString autoDetect = p->option( "kde-autodetect" );
-		if ( !autoDetect.isEmpty() )
-		{
-			// use auto-detection info instead: split the string
-			// into make/model pair at the first space character
-			int p = autoDetect.find( ' ' );
-			if ( p != -1 )
-			{
-				QString manu = autoDetect.left( p ), model = autoDetect.mid( p+1 );
-				KMDBEntryList *l = KMDriverDB::self()->findPnpEntry( manu, model );
-				if ( l && l->count() > 0 )
-				{
-					m_widget->setDriver( l->getFirst()->manufacturer, l->getFirst()->model );
-					return;
-				}
-			}
-		}
-		m_widget->setDriver(p->manufacturer(),p->model());
-	}
+    m_widget->init();
+    if(p)
+    {
+        QString autoDetect = p->option("kde-autodetect");
+        if(!autoDetect.isEmpty())
+        {
+            // use auto-detection info instead: split the string
+            // into make/model pair at the first space character
+            int p = autoDetect.find(' ');
+            if(p != -1)
+            {
+                QString manu = autoDetect.left(p), model = autoDetect.mid(p + 1);
+                KMDBEntryList *l = KMDriverDB::self()->findPnpEntry(manu, model);
+                if(l && l->count() > 0)
+                {
+                    m_widget->setDriver(l->getFirst()->manufacturer, l->getFirst()->model);
+                    return;
+                }
+            }
+        }
+        m_widget->setDriver(p->manufacturer(), p->model());
+    }
 }
 
 void KMWDriver::updatePrinter(KMPrinter *p)
 {
-	if (p)
-	{
-		p->setManufacturer(QString::null);
-		p->setModel(QString::null);
-		p->setDbEntry(0);
-		p->setDriverInfo(QString::null);
-		p->setOption("kde-driver",QString::null);
-		setNextPage(KMWizard::DriverTest);
-		if (m_widget->isRaw())
-		{
-			p->setDriverInfo(i18n("Raw printer"));
-			p->setOption("kde-driver","raw");
-		}
-		else
-		{
-			p->setManufacturer(m_widget->manufacturer());
-			p->setModel(m_widget->model());
-			if (m_widget->isExternal())
-			{
-				p->setDriverInfo(m_widget->description());
-				p->setOption("kde-driver",m_widget->driverFile());
-			}
-			else
-			{
-				KMDBEntryList	*drvs = m_widget->drivers();
-				if (drvs->count() == 1)
-				{
-					p->setDbEntry(drvs->getFirst());
-					p->setDriverInfo(drvs->getFirst()->description);
-				}
-				else
-					setNextPage(KMWizard::DriverSelect);
-			}
-		}
-	}
+    if(p)
+    {
+        p->setManufacturer(QString::null);
+        p->setModel(QString::null);
+        p->setDbEntry(0);
+        p->setDriverInfo(QString::null);
+        p->setOption("kde-driver", QString::null);
+        setNextPage(KMWizard::DriverTest);
+        if(m_widget->isRaw())
+        {
+            p->setDriverInfo(i18n("Raw printer"));
+            p->setOption("kde-driver", "raw");
+        }
+        else
+        {
+            p->setManufacturer(m_widget->manufacturer());
+            p->setModel(m_widget->model());
+            if(m_widget->isExternal())
+            {
+                p->setDriverInfo(m_widget->description());
+                p->setOption("kde-driver", m_widget->driverFile());
+            }
+            else
+            {
+                KMDBEntryList *drvs = m_widget->drivers();
+                if(drvs->count() == 1)
+                {
+                    p->setDbEntry(drvs->getFirst());
+                    p->setDriverInfo(drvs->getFirst()->description);
+                }
+                else
+                    setNextPage(KMWizard::DriverSelect);
+            }
+        }
+    }
 }
 
-bool KMWDriver::isValid(QString& msg)
+bool KMWDriver::isValid(QString &msg)
 {
-	if (m_widget->isRaw() || m_widget->isExternal() || m_widget->drivers())
-		return true;
-	else
-	{
-		msg = i18n("Internal error: unable to locate the driver.");
-		return false;
-	}
+    if(m_widget->isRaw() || m_widget->isExternal() || m_widget->drivers())
+        return true;
+    else
+    {
+        msg = i18n("Internal error: unable to locate the driver.");
+        return false;
+    }
 }

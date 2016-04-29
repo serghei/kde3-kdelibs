@@ -56,107 +56,116 @@ void HTMLAnchorElementImpl::defaultEventHandler(EventImpl *evt)
     // React on clicks and on keypresses.
     // Don't make this KEYUP_EVENT again, it makes khtml follow links
     // it shouldn't, when pressing Enter in the combo.
-    if ( ( (evt->id() == EventImpl::CLICK_EVENT && !static_cast<MouseEventImpl*>(evt)->isDoubleClick()) ||
-         ( keydown && m_focused)) && m_hasAnchor) {
+    if(((evt->id() == EventImpl::CLICK_EVENT && !static_cast< MouseEventImpl * >(evt)->isDoubleClick()) || (keydown && m_focused)) && m_hasAnchor)
+    {
 
         MouseEventImpl *e = 0;
-        if ( evt->id() == EventImpl::CLICK_EVENT )
-            e = static_cast<MouseEventImpl*>( evt );
+        if(evt->id() == EventImpl::CLICK_EVENT)
+            e = static_cast< MouseEventImpl * >(evt);
 
         KeyEventBaseImpl *k = 0;
-        if (keydown)
-            k = static_cast<KeyEventBaseImpl *>( evt );
+        if(keydown)
+            k = static_cast< KeyEventBaseImpl * >(evt);
 
         QString utarget;
         QString url;
-        if ( e && e->button() == 2 ) {
-	    HTMLElementImpl::defaultEventHandler(evt);
-	    return;
+        if(e && e->button() == 2)
+        {
+            HTMLElementImpl::defaultEventHandler(evt);
+            return;
         }
 
-        if ( k ) {
-            if (k->virtKeyVal() != KeyEventBaseImpl::DOM_VK_ENTER) {
-                if (k->qKeyEvent())
+        if(k)
+        {
+            if(k->virtKeyVal() != KeyEventBaseImpl::DOM_VK_ENTER)
+            {
+                if(k->qKeyEvent())
                     k->qKeyEvent()->ignore();
                 HTMLElementImpl::defaultEventHandler(evt);
                 return;
             }
-            if (k->qKeyEvent()) k->qKeyEvent()->accept();
+            if(k->qKeyEvent())
+                k->qKeyEvent()->accept();
         }
 
         url = khtml::parseURL(getAttribute(ATTR_HREF)).string();
 
         utarget = getAttribute(ATTR_TARGET).string();
 
-        if ( e && e->button() == 1 )
+        if(e && e->button() == 1)
             utarget = "_blank";
 
-        if ( evt->target()->id() == ID_IMG ) {
-            HTMLImageElementImpl* img = static_cast<HTMLImageElementImpl*>( evt->target() );
-            if ( img && img->isServerMap() )
+        if(evt->target()->id() == ID_IMG)
+        {
+            HTMLImageElementImpl *img = static_cast< HTMLImageElementImpl * >(evt->target());
+            if(img && img->isServerMap())
             {
-                khtml::RenderImage *r = static_cast<khtml::RenderImage *>(img->renderer());
+                khtml::RenderImage *r = static_cast< khtml::RenderImage * >(img->renderer());
                 if(r && e)
                 {
-                    KHTMLView* v = getDocument()->view();
+                    KHTMLView *v = getDocument()->view();
                     int x = e->clientX();
                     int y = e->clientY();
                     int absx = 0;
                     int absy = 0;
-                    if ( v ) {
+                    if(v)
+                    {
                         x += v->contentsX();
                         y += v->contentsY();
                     }
                     r->absolutePosition(absx, absy);
-                    url += QString("?%1,%2").arg( x - absx ).arg( y - absy );
+                    url += QString("?%1,%2").arg(x - absx).arg(y - absy);
                 }
-                else {
+                else
+                {
                     evt->setDefaultHandled();
-		    HTMLElementImpl::defaultEventHandler(evt);
-		    return;
+                    HTMLElementImpl::defaultEventHandler(evt);
+                    return;
                 }
             }
         }
-        if ( !evt->defaultPrevented() ) {
+        if(!evt->defaultPrevented())
+        {
             int state = 0;
             int button = 0;
 
-            if ( e ) {
-                if ( e->ctrlKey() )
+            if(e)
+            {
+                if(e->ctrlKey())
                     state |= Qt::ControlButton;
-                if ( e->shiftKey() )
+                if(e->shiftKey())
                     state |= Qt::ShiftButton;
-                if ( e->altKey() )
+                if(e->altKey())
                     state |= Qt::AltButton;
-                if ( e->metaKey() )
+                if(e->metaKey())
                     state |= Qt::MetaButton;
 
-                if ( e->button() == 0 )
+                if(e->button() == 0)
                     button = Qt::LeftButton;
-                else if ( e->button() == 1 )
+                else if(e->button() == 1)
                     button = Qt::MidButton;
-                else if ( e->button() == 2 )
+                else if(e->button() == 2)
                     button = Qt::RightButton;
             }
-	    else if ( k )
-	    {
-	      if ( k->checkModifier(Qt::ShiftButton) )
-                state |= Qt::ShiftButton;
-	      if ( k->checkModifier(Qt::AltButton) )
-                state |= Qt::AltButton;
-	      if ( k->checkModifier(Qt::ControlButton) )
-                state |= Qt::ControlButton;
-	    }
+            else if(k)
+            {
+                if(k->checkModifier(Qt::ShiftButton))
+                    state |= Qt::ShiftButton;
+                if(k->checkModifier(Qt::AltButton))
+                    state |= Qt::AltButton;
+                if(k->checkModifier(Qt::ControlButton))
+                    state |= Qt::ControlButton;
+            }
 
-	    // ### also check if focused node is editable if not in designmode,
-	    // and prevent link loading then (LS)
-	    if (getDocument()->view() && !getDocument()->designMode()) {
-	      if (k) 
-		click();
-	      else
-		getDocument()->view()->part()->
-		    urlSelected( url, button, state, utarget );
-	    }
+            // ### also check if focused node is editable if not in designmode,
+            // and prevent link loading then (LS)
+            if(getDocument()->view() && !getDocument()->designMode())
+            {
+                if(k)
+                    click();
+                else
+                    getDocument()->view()->part()->urlSelected(url, button, state, utarget);
+            }
         }
         evt->setDefaultHandled();
     }
@@ -166,33 +175,33 @@ void HTMLAnchorElementImpl::defaultEventHandler(EventImpl *evt)
 
 void HTMLAnchorElementImpl::click()
 {
-    QMouseEvent me(QEvent::MouseButtonRelease, QPoint(0,0),Qt::LeftButton, 0);
-    dispatchMouseEvent(&me,EventImpl::CLICK_EVENT, 1);
+    QMouseEvent me(QEvent::MouseButtonRelease, QPoint(0, 0), Qt::LeftButton, 0);
+    dispatchMouseEvent(&me, EventImpl::CLICK_EVENT, 1);
 }
 
 void HTMLAnchorElementImpl::parseAttribute(AttributeImpl *attr)
 {
     switch(attr->id())
     {
-    case ATTR_HREF:
-    {
-        bool hadAnchor = m_hasAnchor;
-        m_hasAnchor = attr->val() != 0;
-        getDocument()->incDOMTreeVersion();
-        if (hadAnchor != m_hasAnchor)
-            setChanged();
-    }
+        case ATTR_HREF:
+        {
+            bool hadAnchor = m_hasAnchor;
+            m_hasAnchor = attr->val() != 0;
+            getDocument()->incDOMTreeVersion();
+            if(hadAnchor != m_hasAnchor)
+                setChanged();
+        }
         break;
-    case ATTR_TARGET:
-        m_hasTarget = attr->val() != 0;
-        break;
-    case ATTR_TITLE:
-    case ATTR_REL:
-	break;
-    case ATTR_ACCESSKEY:
-        break;
-    default:
-        HTMLElementImpl::parseAttribute(attr);
+        case ATTR_TARGET:
+            m_hasTarget = attr->val() != 0;
+            break;
+        case ATTR_TITLE:
+        case ATTR_REL:
+            break;
+        case ATTR_ACCESSKEY:
+            break;
+        default:
+            HTMLElementImpl::parseAttribute(attr);
     }
 }
 
@@ -207,16 +216,18 @@ void HTMLBRElementImpl::parseAttribute(AttributeImpl *attr)
 {
     switch(attr->id())
     {
-    case ATTR_CLEAR:
-    {
-        DOMString str = attr->value().lower();
-        if( str.isEmpty() ) str = "none";
-        else if( strcmp (str,"all")==0 ) str = "both";
-        addCSSProperty(CSS_PROP_CLEAR, str);
-        break;
-    }
-    default:
-        HTMLElementImpl::parseAttribute(attr);
+        case ATTR_CLEAR:
+        {
+            DOMString str = attr->value().lower();
+            if(str.isEmpty())
+                str = "none";
+            else if(strcmp(str, "all") == 0)
+                str = "both";
+            addCSSProperty(CSS_PROP_CLEAR, str);
+            break;
+        }
+        default:
+            HTMLElementImpl::parseAttribute(attr);
     }
 }
 
@@ -226,13 +237,15 @@ void HTMLBRElementImpl::attach()
     assert(!m_render);
     assert(parentNode());
 
-    if (parentNode()->renderer()) {
-        RenderStyle* style = getDocument()->styleSelector()->styleForElement( this );
+    if(parentNode()->renderer())
+    {
+        RenderStyle *style = getDocument()->styleSelector()->styleForElement(this);
         style->ref();
-        if( style->display() != NONE ) {
-          m_render = new (getDocument()->renderArena()) RenderBR(this);
-          m_render->setStyle(style);
-          parentNode()->renderer()->addChild(m_render, nextRenderer());
+        if(style->display() != NONE)
+        {
+            m_render = new(getDocument()->renderArena()) RenderBR(this);
+            m_render->setStyle(style);
+            parentNode()->renderer()->addChild(m_render, nextRenderer());
         }
         style->deref();
     }
@@ -250,49 +263,60 @@ void HTMLFontElementImpl::parseAttribute(AttributeImpl *attr)
 {
     switch(attr->id())
     {
-    case ATTR_SIZE:
-    {
-        DOMStringImpl* v = attr->val();
-        if(v) {
-            const QChar* s = v->s;
-            int num = v->toInt();
-            int len = v->l;
-            while( len && s->isSpace() )
-              len--,s++;
-            if ( len && *s == '+' )
-                num += 3;
-            int size;
-            switch (num)
+        case ATTR_SIZE:
+        {
+            DOMStringImpl *v = attr->val();
+            if(v)
             {
-            case -2:
-            case  1: size = CSS_VAL_XX_SMALL;  break;
-            case -1:
-            case  2: size = CSS_VAL_SMALL;    break;
-            case  0: // treat 0 the same as 3, because people
-                     // expect it to be between -1 and +1
-            case  3: size = CSS_VAL_MEDIUM;   break;
-            case  4: size = CSS_VAL_LARGE;    break;
-            case  5: size = CSS_VAL_X_LARGE;  break;
-            case  6: size = CSS_VAL_XX_LARGE; break;
-            default:
-                if (num > 6)
-                    size = CSS_VAL__KHTML_XXX_LARGE;
-                else
-                    size = CSS_VAL_XX_SMALL;
+                const QChar *s = v->s;
+                int num = v->toInt();
+                int len = v->l;
+                while(len && s->isSpace())
+                    len--, s++;
+                if(len && *s == '+')
+                    num += 3;
+                int size;
+                switch(num)
+                {
+                    case -2:
+                    case 1:
+                        size = CSS_VAL_XX_SMALL;
+                        break;
+                    case -1:
+                    case 2:
+                        size = CSS_VAL_SMALL;
+                        break;
+                    case 0: // treat 0 the same as 3, because people
+                            // expect it to be between -1 and +1
+                    case 3:
+                        size = CSS_VAL_MEDIUM;
+                        break;
+                    case 4:
+                        size = CSS_VAL_LARGE;
+                        break;
+                    case 5:
+                        size = CSS_VAL_X_LARGE;
+                        break;
+                    case 6:
+                        size = CSS_VAL_XX_LARGE;
+                        break;
+                    default:
+                        if(num > 6)
+                            size = CSS_VAL__KHTML_XXX_LARGE;
+                        else
+                            size = CSS_VAL_XX_SMALL;
+                }
+                addCSSProperty(CSS_PROP_FONT_SIZE, size);
             }
-            addCSSProperty(CSS_PROP_FONT_SIZE, size);
+            break;
         }
-        break;
-    }
-    case ATTR_COLOR:
-        addHTMLColor(CSS_PROP_COLOR, attr->value());
-        break;
-    case ATTR_FACE:
-        addCSSProperty(CSS_PROP_FONT_FAMILY, attr->value());
-        break;
-    default:
-        HTMLElementImpl::parseAttribute(attr);
+        case ATTR_COLOR:
+            addHTMLColor(CSS_PROP_COLOR, attr->value());
+            break;
+        case ATTR_FACE:
+            addCSSProperty(CSS_PROP_FONT_FAMILY, attr->value());
+            break;
+        default:
+            HTMLElementImpl::parseAttribute(attr);
     }
 }
-
-

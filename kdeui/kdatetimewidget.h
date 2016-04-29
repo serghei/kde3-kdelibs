@@ -37,56 +37,54 @@
  * @version $Id: kdatetimewidget.h 465272 2005-09-29 09:47:40Z mueller $
  * @since 3.2
  */
-class KDEUI_EXPORT KDateTimeWidget : public QWidget
-{
-  Q_OBJECT
-  Q_PROPERTY( QDateTime dateTime READ dateTime WRITE setDateTime )
+class KDEUI_EXPORT KDateTimeWidget : public QWidget {
+    Q_OBJECT
+    Q_PROPERTY(QDateTime dateTime READ dateTime WRITE setDateTime)
 
 public:
-  /**
-   * Constructs a date and time selection widget.
-   */
-  KDateTimeWidget(QWidget * parent = 0, const char * name = 0);
+    /**
+     * Constructs a date and time selection widget.
+     */
+    KDateTimeWidget(QWidget *parent = 0, const char *name = 0);
 
-  /**
-   * Constructs a date and time selection widget with the initial date and
-   * time set to @p datetime.
-   */
-  KDateTimeWidget(const QDateTime & datetime,
-                  QWidget * parent = 0, const char * name = 0 );
+    /**
+     * Constructs a date and time selection widget with the initial date and
+     * time set to @p datetime.
+     */
+    KDateTimeWidget(const QDateTime &datetime, QWidget *parent = 0, const char *name = 0);
 
-  /**
-   * Destructs the date and time selection widget.
-   */
-  virtual ~KDateTimeWidget();
+    /**
+     * Destructs the date and time selection widget.
+     */
+    virtual ~KDateTimeWidget();
 
-  /**
-   * Returns the currently selected date and time.
-   */
-  QDateTime dateTime() const;
+    /**
+     * Returns the currently selected date and time.
+     */
+    QDateTime dateTime() const;
 
 public slots:
-  /**
-   * Changes the selected date and time to @p datetime.
-   */
-  void setDateTime(const QDateTime & datetime);
+    /**
+     * Changes the selected date and time to @p datetime.
+     */
+    void setDateTime(const QDateTime &datetime);
 
 signals:
-  /**
-   * Emitted whenever the date or time of the widget
-   * is changed, either with setDateTime() or via user selection.
-   */
-  void valueChanged(const QDateTime & datetime);
+    /**
+     * Emitted whenever the date or time of the widget
+     * is changed, either with setDateTime() or via user selection.
+     */
+    void valueChanged(const QDateTime &datetime);
 
 private:
-  void init();
+    void init();
 
 private slots:
-  void slotValueChanged();
+    void slotValueChanged();
 
 private:
-  class KDateTimeWidgetPrivate;
-  KDateTimeWidgetPrivate *d;
+    class KDateTimeWidgetPrivate;
+    KDateTimeWidgetPrivate *d;
 };
 
 #endif

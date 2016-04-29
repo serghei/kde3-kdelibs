@@ -32,30 +32,29 @@ class QVBoxLayout;
  * Used internally by KAboutContainerBase
  * @internal
  */
-class KImageTrackLabel : public QLabel
-{
-  Q_OBJECT
+class KImageTrackLabel : public QLabel {
+    Q_OBJECT
 
-  public:
+public:
     enum MouseMode
     {
-      MousePress = 1,
-      MouseRelease,
-      MouseDoubleClick,
-      MouseMove
+        MousePress = 1,
+        MouseRelease,
+        MouseDoubleClick,
+        MouseMove
     };
 
-  public:
-    KImageTrackLabel( QWidget * parent, const char * name=0, WFlags f=0 );
+public:
+    KImageTrackLabel(QWidget *parent, const char *name = 0, WFlags f = 0);
 
-  signals:
-    void mouseTrack( int mode, const QMouseEvent *e );
+signals:
+    void mouseTrack(int mode, const QMouseEvent *e);
 
-  protected:
-    virtual void mousePressEvent( QMouseEvent *e );
-    virtual void mouseReleaseEvent( QMouseEvent *e );
-    virtual void mouseDoubleClickEvent( QMouseEvent *e );
-    virtual void mouseMoveEvent ( QMouseEvent *e );
+protected:
+    virtual void mousePressEvent(QMouseEvent *e);
+    virtual void mouseReleaseEvent(QMouseEvent *e);
+    virtual void mouseDoubleClickEvent(QMouseEvent *e);
+    virtual void mouseMoveEvent(QMouseEvent *e);
 };
 
 class KAboutContainer;
@@ -66,77 +65,71 @@ class KAboutContainerBasePrivate;
  * Used internally by KAboutDialog
  * @internal
  */
-class KAboutContainerBase : public QWidget
-{
-  Q_OBJECT
+class KAboutContainerBase : public QWidget {
+    Q_OBJECT
 
-  public:
+public:
     enum LayoutType
     {
-      AbtPlain         = 0x0001,
-      AbtTabbed        = 0x0002,
-      AbtTitle         = 0x0004,
-      AbtImageLeft     = 0x0008,
-      AbtImageRight    = 0x0010,
-      AbtImageOnly     = 0x0020,
-      AbtProduct       = 0x0040,
-      AbtKDEStandard   = AbtTabbed|AbtTitle|AbtImageLeft,
-      AbtAppStandard   = AbtTabbed|AbtTitle|AbtProduct,
-      AbtImageAndTitle = AbtPlain|AbtTitle|AbtImageOnly
+        AbtPlain = 0x0001,
+        AbtTabbed = 0x0002,
+        AbtTitle = 0x0004,
+        AbtImageLeft = 0x0008,
+        AbtImageRight = 0x0010,
+        AbtImageOnly = 0x0020,
+        AbtProduct = 0x0040,
+        AbtKDEStandard = AbtTabbed | AbtTitle | AbtImageLeft,
+        AbtAppStandard = AbtTabbed | AbtTitle | AbtProduct,
+        AbtImageAndTitle = AbtPlain | AbtTitle | AbtImageOnly
     };
 
-  public:
-    KAboutContainerBase( int layoutType, QWidget *parent = 0, char *name = 0 );
-    virtual void show( void );
-    virtual QSize sizeHint( void ) const;
+public:
+    KAboutContainerBase(int layoutType, QWidget *parent = 0, char *name = 0);
+    virtual void show(void);
+    virtual QSize sizeHint(void) const;
 
-    void setTitle( const QString &title );
-    void setImage( const QString &fileName );
-    void setImageBackgroundColor( const QColor &color );
-    void setImageFrame( bool state );
-    void setProgramLogo( const QString &fileName );
-    void setProgramLogo( const QPixmap &pixmap );
-    void setProduct( const QString &appName, const QString &version,
-		     const QString &author, const QString &year );
+    void setTitle(const QString &title);
+    void setImage(const QString &fileName);
+    void setImageBackgroundColor(const QColor &color);
+    void setImageFrame(bool state);
+    void setProgramLogo(const QString &fileName);
+    void setProgramLogo(const QPixmap &pixmap);
+    void setProduct(const QString &appName, const QString &version, const QString &author, const QString &year);
 
-    QFrame *addTextPage( const QString &title, const QString &text,
-			 bool richText=false, int numLines=10 );
-    QFrame *addLicensePage( const QString &title, const QString &text,
-			 int numLines=10 );
-    KAboutContainer *addContainerPage( const QString &title,
-      int childAlignment = AlignCenter, int innerAlignment = AlignCenter );
-    KAboutContainer *addScrolledContainerPage( const QString &title,
-      int childAlignment = AlignCenter, int innerAlignment = AlignCenter );
+    QFrame *addTextPage(const QString &title, const QString &text, bool richText = false, int numLines = 10);
+    QFrame *addLicensePage(const QString &title, const QString &text, int numLines = 10);
+    KAboutContainer *addContainerPage(const QString &title, int childAlignment = AlignCenter, int innerAlignment = AlignCenter);
+    KAboutContainer *addScrolledContainerPage(const QString &title, int childAlignment = AlignCenter, int innerAlignment = AlignCenter);
 
-    QFrame *addEmptyPage( const QString &title );
+    QFrame *addEmptyPage(const QString &title);
 
-    KAboutContainer *addContainer( int childAlignment, int innerAlignment );
+    KAboutContainer *addContainer(int childAlignment, int innerAlignment);
 
-  public slots:
-    virtual void slotMouseTrack( int mode, const QMouseEvent *e );
-    virtual void slotUrlClick( const QString &url );
-    virtual void slotMailClick( const QString &name, const QString &address );
+public slots:
+    virtual void slotMouseTrack(int mode, const QMouseEvent *e);
+    virtual void slotUrlClick(const QString &url);
+    virtual void slotMailClick(const QString &name, const QString &address);
 
-  protected:
-    virtual void fontChange( const QFont &oldFont );
+protected:
+    virtual void fontChange(const QFont &oldFont);
 
-  signals:
-    void mouseTrack( int mode, const QMouseEvent *e );
-    void urlClick( const QString &url );
-    void mailClick( const QString &name, const QString &address );
+signals:
+    void mouseTrack(int mode, const QMouseEvent *e);
+    void urlClick(const QString &url);
+    void mailClick(const QString &name, const QString &address);
 
-  private:
+private:
     QVBoxLayout *mTopLayout;
     KImageTrackLabel *mImageLabel;
-    QLabel  *mTitleLabel;
-    QLabel  *mIconLabel;
-    QLabel  *mVersionLabel;
-    QLabel  *mAuthorLabel;
-    QFrame  *mImageFrame;
+    QLabel *mTitleLabel;
+    QLabel *mIconLabel;
+    QLabel *mVersionLabel;
+    QLabel *mAuthorLabel;
+    QFrame *mImageFrame;
     QTabWidget *mPageTab;
-    QFrame  *mPlainSpace;
+    QFrame *mPlainSpace;
 
-    KAboutContainerBasePrivate* const d;
+    KAboutContainerBasePrivate *const d;
 };
 
 

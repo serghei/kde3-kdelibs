@@ -33,86 +33,100 @@
 #include <kded/kdedmodule.h>
 
 namespace KWallet {
-    class Wallet;
+class Wallet;
 }
 
-class KPasswdServer : public KDEDModule
-{
-  Q_OBJECT
-  K_DCOP
+class KPasswdServer : public KDEDModule {
+    Q_OBJECT
+    K_DCOP
 public:
-  KPasswdServer(const QCString &);
-  ~KPasswdServer();
+    KPasswdServer(const QCString &);
+    ~KPasswdServer();
 
-k_dcop:
-  // KDE4 merge
-  KIO::AuthInfo checkAuthInfo(KIO::AuthInfo, long, unsigned long);
-  KIO::AuthInfo checkAuthInfo(KIO::AuthInfo, long);
-  KIO::AuthInfo queryAuthInfo(KIO::AuthInfo, QString, long, long, unsigned long);
-  KIO::AuthInfo queryAuthInfo(KIO::AuthInfo, QString, long, long);
-  void addAuthInfo(KIO::AuthInfo, long);
+    k_dcop :
+        // KDE4 merge
+        KIO::AuthInfo
+        checkAuthInfo(KIO::AuthInfo, long, unsigned long);
+    KIO::AuthInfo checkAuthInfo(KIO::AuthInfo, long);
+    KIO::AuthInfo queryAuthInfo(KIO::AuthInfo, QString, long, long, unsigned long);
+    KIO::AuthInfo queryAuthInfo(KIO::AuthInfo, QString, long, long);
+    void addAuthInfo(KIO::AuthInfo, long);
 
 public slots:
-  void processRequest();
-  // Remove all authentication info associated with windowId
-  void removeAuthForWindowId(long windowId);
+    void processRequest();
+    // Remove all authentication info associated with windowId
+    void removeAuthForWindowId(long windowId);
 
 protected:
-  struct AuthInfo;
+    struct AuthInfo;
 
-  QString createCacheKey( const KIO::AuthInfo &info );
-  const AuthInfo *findAuthInfoItem(const QString &key, const KIO::AuthInfo &info);
-  void removeAuthInfoItem(const QString &key, const KIO::AuthInfo &info);
-  void addAuthInfoItem(const QString &key, const KIO::AuthInfo &info, long windowId, long seqNr, bool canceled);
-  KIO::AuthInfo copyAuthInfo(const AuthInfo *);
-  void updateAuthExpire(const QString &key, const AuthInfo *, long windowId, bool keep);
-  int findWalletEntry( const QMap<QString,QString>& map, const QString& username );
-  bool openWallet( WId windowId );
+    QString createCacheKey(const KIO::AuthInfo &info);
+    const AuthInfo *findAuthInfoItem(const QString &key, const KIO::AuthInfo &info);
+    void removeAuthInfoItem(const QString &key, const KIO::AuthInfo &info);
+    void addAuthInfoItem(const QString &key, const KIO::AuthInfo &info, long windowId, long seqNr, bool canceled);
+    KIO::AuthInfo copyAuthInfo(const AuthInfo *);
+    void updateAuthExpire(const QString &key, const AuthInfo *, long windowId, bool keep);
+    int findWalletEntry(const QMap< QString, QString > &map, const QString &username);
+    bool openWallet(WId windowId);
 
-  struct AuthInfo {
-    AuthInfo() { expire = expNever; isCanceled = false; seqNr = 0; }
+    struct AuthInfo
+    {
+        AuthInfo()
+        {
+            expire = expNever;
+            isCanceled = false;
+            seqNr = 0;
+        }
 
-    KURL url;
-    QString directory;
-    QString username;
-    QString password;
-    QString realmValue;
-    QString digestInfo;
+        KURL url;
+        QString directory;
+        QString username;
+        QString password;
+        QString realmValue;
+        QString digestInfo;
 
-    enum { expNever, expWindowClose, expTime } expire;
-    QValueList<long> windowList;
-    unsigned long expireTime;
-    long seqNr;
+        enum
+        {
+            expNever,
+            expWindowClose,
+            expTime
+        } expire;
+        QValueList< long > windowList;
+        unsigned long expireTime;
+        long seqNr;
 
-    bool isCanceled;
-  };
+        bool isCanceled;
+    };
 
-  class AuthInfoList : public QPtrList<AuthInfo>
-  {
+    class AuthInfoList : public QPtrList< AuthInfo > {
     public:
-      AuthInfoList() { setAutoDelete(true); }
-      int compareItems(QPtrCollection::Item n1, QPtrCollection::Item n2);
-  };
+        AuthInfoList()
+        {
+            setAutoDelete(true);
+        }
+        int compareItems(QPtrCollection::Item n1, QPtrCollection::Item n2);
+    };
 
-  QDict< AuthInfoList > m_authDict;
+    QDict< AuthInfoList > m_authDict;
 
-  struct Request {
-     DCOPClient *client;
-     DCOPClientTransaction *transaction;
-     QString key;
-     KIO::AuthInfo info;
-     QString errorMsg;
-     long windowId;
-     long seqNr;
-     bool prompt;
-  };
+    struct Request
+    {
+        DCOPClient *client;
+        DCOPClientTransaction *transaction;
+        QString key;
+        KIO::AuthInfo info;
+        QString errorMsg;
+        long windowId;
+        long seqNr;
+        bool prompt;
+    };
 
-  QPtrList< Request > m_authPending;
-  QPtrList< Request > m_authWait;
-  QIntDict<QStringList> mWindowIdList;
-  DCOPClient *m_dcopClient;
-  KWallet::Wallet* m_wallet;
-  long m_seqNr;
+    QPtrList< Request > m_authPending;
+    QPtrList< Request > m_authWait;
+    QIntDict< QStringList > mWindowIdList;
+    DCOPClient *m_dcopClient;
+    KWallet::Wallet *m_wallet;
+    long m_seqNr;
 };
 
 #endif

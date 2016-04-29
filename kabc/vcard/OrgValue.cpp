@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -29,79 +29,71 @@
 
 using namespace VCARD;
 
-OrgValue::OrgValue()
-	:	Value()
+OrgValue::OrgValue() : Value()
 {
 }
 
-OrgValue::OrgValue(const OrgValue & x)
-	:	Value(x)
+OrgValue::OrgValue(const OrgValue &x) : Value(x)
 {
 }
 
-OrgValue::OrgValue(const QCString & s)
-	:	Value(s)
+OrgValue::OrgValue(const QCString &s) : Value(s)
 {
 }
 
-	OrgValue &
-OrgValue::operator = (OrgValue & x)
+OrgValue &OrgValue::operator=(OrgValue &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Value::operator = (x);
-	return *this;
+    Value::operator=(x);
+    return *this;
 }
 
-	OrgValue &
-OrgValue::operator = (const QCString & s)
+OrgValue &OrgValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-OrgValue::operator == (OrgValue & x)
+bool OrgValue::operator==(OrgValue &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 OrgValue::~OrgValue()
 {
 }
 
-	void
-OrgValue::_parse()
+void OrgValue::_parse()
 {
-	RTokenise(strRep_, ";", valueList_);
+    RTokenise(strRep_, ";", valueList_);
 }
 
-	void
-OrgValue::_assemble()
+void OrgValue::_assemble()
 {
-	bool first(true);
-	
-	QStrListIterator it(valueList_);
-	
-	for (; it.current(); ++it) {
-		if (!first) strRep_ += ';';
-		strRep_ += it.current();
-		first = false;
-	}
+    bool first(true);
+
+    QStrListIterator it(valueList_);
+
+    for(; it.current(); ++it)
+    {
+        if(!first)
+            strRep_ += ';';
+        strRep_ += it.current();
+        first = false;
+    }
 }
 
-	unsigned int
-OrgValue::numValues()
+unsigned int OrgValue::numValues()
 {
-	parse();
-	return valueList_.count();
+    parse();
+    return valueList_.count();
 }
 
-	QCString
-OrgValue::value(unsigned int i)
+QCString OrgValue::value(unsigned int i)
 {
-	parse();
-	return valueList_.at(i);
+    parse();
+    return valueList_.at(i);
 }
-

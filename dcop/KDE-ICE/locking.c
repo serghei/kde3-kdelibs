@@ -32,31 +32,28 @@ Author: Ralph Mor, X Consortium
  */
 
 
-Status
-IceInitThreads ()
+Status IceInitThreads()
 
 {
     return (0);
 }
 
 
-void
-IceAppLockConn (iceConn)
+void IceAppLockConn(iceConn)
 
-IceConn iceConn;
+    IceConn iceConn;
 
 {
-    (void)iceConn;/*unused in the macro*/
-    IceLockConn (iceConn);
+    (void)iceConn; /*unused in the macro*/
+    IceLockConn(iceConn);
 }
 
 
-void
-IceAppUnlockConn (iceConn)
+void IceAppUnlockConn(iceConn)
 
-IceConn iceConn;
+    IceConn iceConn;
 
 {
-    (void)iceConn;/*unused in the macro*/
-    IceUnlockConn (iceConn);
+    (void)iceConn; /*unused in the macro*/
+    IceUnlockConn(iceConn);
 }

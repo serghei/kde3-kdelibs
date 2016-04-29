@@ -37,45 +37,48 @@
 
 #include "ksimpleconfig.h"
 
-KSimpleConfig::KSimpleConfig(const QString &fileName, bool bReadOnly)
-  : KConfig(QString::fromLatin1(""), bReadOnly, false)
+KSimpleConfig::KSimpleConfig(const QString &fileName, bool bReadOnly) : KConfig(QString::fromLatin1(""), bReadOnly, false)
 {
-  // the difference between KConfig and KSimpleConfig is just that
-  // for KSimpleConfig an absolute filename is guaranteed
-  if (!fileName.isNull() && QDir::isRelativePath(fileName)) {
-     backEnd->changeFileName( KGlobal::dirs()->
-	saveLocation("config", QString::null, !bReadOnly)+fileName, "config", false);
-  } else {
-     backEnd->changeFileName(fileName, "config", false);
-  }
-  setReadOnly( bReadOnly );
-  reparseConfiguration();
+    // the difference between KConfig and KSimpleConfig is just that
+    // for KSimpleConfig an absolute filename is guaranteed
+    if(!fileName.isNull() && QDir::isRelativePath(fileName))
+    {
+        backEnd->changeFileName(KGlobal::dirs()->saveLocation("config", QString::null, !bReadOnly) + fileName, "config", false);
+    }
+    else
+    {
+        backEnd->changeFileName(fileName, "config", false);
+    }
+    setReadOnly(bReadOnly);
+    reparseConfiguration();
 }
 
-KSimpleConfig::KSimpleConfig(KConfigBackEnd *backEnd, bool bReadOnly)
-  : KConfig(backEnd, bReadOnly)
-{}
+KSimpleConfig::KSimpleConfig(KConfigBackEnd *backEnd, bool bReadOnly) : KConfig(backEnd, bReadOnly)
+{
+}
 
 KSimpleConfig::~KSimpleConfig()
 {
-  // we need to call the KSimpleConfig version of sync.  Relying on the
-  // regular KConfig sync is bad, because the KSimpleConfig sync has
-  // different behavior.  Syncing here will insure that the sync() call
-  // in the KConfig destructor doesn't actually do anything.
-  sync();
+    // we need to call the KSimpleConfig version of sync.  Relying on the
+    // regular KConfig sync is bad, because the KSimpleConfig sync has
+    // different behavior.  Syncing here will insure that the sync() call
+    // in the KConfig destructor doesn't actually do anything.
+    sync();
 }
 
 void KSimpleConfig::sync()
 {
-   if (isReadOnly())
-       return;
-   backEnd->sync(false);
+    if(isReadOnly())
+        return;
+    backEnd->sync(false);
 
-   if (isDirty())
-     rollback();
+    if(isDirty())
+        rollback();
 }
 
-void KSimpleConfig::virtual_hook( int id, void* data )
-{ KConfig::virtual_hook( id, data ); }
+void KSimpleConfig::virtual_hook(int id, void *data)
+{
+    KConfig::virtual_hook(id, data);
+}
 
 #include "ksimpleconfig.moc"

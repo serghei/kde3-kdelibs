@@ -38,8 +38,7 @@
  * @short A combo box showing a number of recent URLs/directories
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-class KIO_EXPORT KURLComboBox : public KComboBox
-{
+class KIO_EXPORT KURLComboBox : public KComboBox {
     Q_OBJECT
     Q_PROPERTY(QStringList urls READ urls WRITE setURLs DESIGNABLE true)
     Q_PROPERTY(int maxItems READ maxItems WRITE setMaxItems DESIGNABLE true)
@@ -48,7 +47,12 @@ public:
     /**
      * This enum describes which kind of items is shown in the combo box.
      */
-    enum Mode { Files = -1, Directories = 1, Both = 0 };
+    enum Mode
+    {
+        Files = -1,
+        Directories = 1,
+        Both = 0
+    };
     /**
      * This Enumeration is used in setURL() to determine which items
      * will be removed when the given list is larger than maxItems().
@@ -56,7 +60,11 @@ public:
      * @li RemoveTop means that items will be removed from top
      * @li RemoveBottom means, that items will be removed from the bottom
      */
-    enum OverLoadResolving { RemoveTop, RemoveBottom };
+    enum OverLoadResolving
+    {
+        RemoveTop,
+        RemoveBottom
+    };
 
     /**
      * Constructs a KURLComboBox.
@@ -73,8 +81,8 @@ public:
      * @param parent The parent object of this widget.
      * @param name The name of this widget.
      */
-    KURLComboBox( Mode mode, QWidget *parent=0, const char *name=0 );
-    KURLComboBox( Mode mode, bool rw, QWidget *parent=0, const char *name=0 );
+    KURLComboBox(Mode mode, QWidget *parent = 0, const char *name = 0);
+    KURLComboBox(Mode mode, bool rw, QWidget *parent = 0, const char *name = 0);
     /**
      * Destructs the combo box.
      */
@@ -92,7 +100,7 @@ public:
      * Note that you won't receive any signals, e.g. textChanged(),
      * returnPressed() or activated() upon calling this method.
      */
-    void setURL( const KURL& url );
+    void setURL(const KURL &url);
 
     /**
      * Inserts @p urls into the combobox below the "default urls" (see
@@ -101,7 +109,7 @@ public:
      * If the list of urls contains more items than maxItems, the first items
      * will be stripped.
      */
-    void setURLs( QStringList urls );
+    void setURLs(QStringList urls);
 
     /**
      * Inserts @p urls into the combobox below the "default urls" (see
@@ -110,7 +118,7 @@ public:
      * If the list of urls contains more items than maxItems, the @p remove
      * parameter determines whether the first or last items will be stripped.
      */
-    void setURLs( QStringList urls, OverLoadResolving remove );
+    void setURLs(QStringList urls, OverLoadResolving remove);
 
     /**
      * @returns a list of all urls currently handled. The list contains at most
@@ -128,13 +136,16 @@ public:
      * Sets how many items should be handled and displayed by the combobox.
      * @see maxItems
      */
-    void setMaxItems( int );
+    void setMaxItems(int);
 
     /**
      * @returns the maximum of items the combobox handles.
      * @see setMaxItems
      */
-    int maxItems() const { return myMaximum; }
+    int maxItems() const
+    {
+        return myMaximum;
+    }
 
     /**
      * Adds a url that will always be shown in the combobox, it can't be
@@ -144,7 +155,7 @@ public:
      * the pixmap parameter.
      * Default URLs will be inserted into the combobox by setDefaults()
      */
-    void addDefaultURL( const KURL& url, const QString& text = QString::null );
+    void addDefaultURL(const KURL &url, const QString &text = QString::null);
 
     /**
      * Adds a url that will always be shown in the combobox, it can't be
@@ -154,8 +165,7 @@ public:
      * the pixmap parameter.
      * Default URLs will be inserted into the combobox by setDefaults()
      */
-    void addDefaultURL( const KURL& url, const QPixmap& pix,
-			const QString& text = QString::null );
+    void addDefaultURL(const KURL &url, const QPixmap &pix, const QString &text = QString::null);
 
     /**
      * Clears all items and inserts the default urls into the combo. Will be
@@ -168,7 +178,7 @@ public:
      * Removes any occurrence of @p url. If @p checkDefaultURLs is false
      * default-urls won't be removed.
      */
-    void removeURL( const KURL& url, bool checkDefaultURLs = true );
+    void removeURL(const KURL &url, bool checkDefaultURLs = true);
 
 signals:
     /**
@@ -176,39 +186,40 @@ signals:
      * @param url is the url of the now current item. If it is a local url,
      * it won't have a protocol (file:/), otherwise it will.
      */
-    void urlActivated( const KURL& url );
+    void urlActivated(const KURL &url);
 
 
 protected slots:
-    void slotActivated( int );
+    void slotActivated(int);
 
 
 protected:
-    struct _KURLComboItem {
-	QString text;
-	KURL url;
-	QPixmap pixmap;
+    struct _KURLComboItem
+    {
+        QString text;
+        KURL url;
+        QPixmap pixmap;
     };
     typedef _KURLComboItem KURLComboItem;
-    QPtrList<KURLComboItem> itemList;
-    QPtrList<KURLComboItem> defaultList;
-    QMap<int,const KURLComboItem*> itemMapper;
+    QPtrList< KURLComboItem > itemList;
+    QPtrList< KURLComboItem > defaultList;
+    QMap< int, const KURLComboItem * > itemMapper;
 
-    void init( Mode mode );
-    void insertURLItem( const KURLComboItem * );
+    void init(Mode mode);
+    void insertURLItem(const KURLComboItem *);
 
     /**
      * Uses KMimeType::pixmapForURL() to return a proper pixmap for @p url.
      * In directory mode, a folder icon is always returned.
      */
-    QPixmap getPixmap( const KURL& url ) const;
+    QPixmap getPixmap(const KURL &url) const;
 
     /**
      * Updates @p item with @p pixmap and sets the url instead of the text
      * of the KURLComboItem.
      * Also works around a Qt bug.
      */
-    void updateItem( const KURLComboItem *item, int index, const QPixmap& pix);
+    void updateItem(const KURLComboItem *item, int index, const QPixmap &pix);
 
     QPixmap opendirPix;
     int firstItemIndex;

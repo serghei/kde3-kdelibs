@@ -39,28 +39,27 @@ class KateDocCursor;
  * Cool, this is all we need here
  */
 namespace KJS {
-  class Object;
-  class ObjectImp;
-  class Interpreter;
-  class ExecState;
+class Object;
+class ObjectImp;
+class Interpreter;
+class ExecState;
 }
 
 /**
  * Whole Kate Part scripting in one classs
  * Allow subclassing to allow specialized scripting engine for indenters
  */
-class KateJScript
-{
-  public:
+class KateJScript {
+public:
     /**
      * generate new global interpreter for part scripting
      */
-    KateJScript ();
+    KateJScript();
 
     /**
      * be destructive
      */
-    virtual ~KateJScript ();
+    virtual ~KateJScript();
 
     /**
      * creates a JS wrapper object for given KateDocument
@@ -68,7 +67,7 @@ class KateJScript
      * @param doc document object to wrap
      * @return new js wrapper object
      */
-    KJS::ObjectImp *wrapDocument (KJS::ExecState *exec, KateDocument *doc);
+    KJS::ObjectImp *wrapDocument(KJS::ExecState *exec, KateDocument *doc);
 
     /**
      * creates a JS wrapper object for given KateView
@@ -76,7 +75,7 @@ class KateJScript
      * @param view view object to wrap
      * @return new js wrapper object
      */
-    KJS::ObjectImp *wrapView (KJS::ExecState *exec, KateView *view);
+    KJS::ObjectImp *wrapView(KJS::ExecState *exec, KateView *view);
 
     /**
      * execute given script
@@ -87,9 +86,9 @@ class KateJScript
      * @param errorMsg error to return if no success
      * @return success or not?
      */
-    bool execute (KateView *view, const QString &script, QString &errorMsg);
+    bool execute(KateView *view, const QString &script, QString &errorMsg);
 
-  protected:
+protected:
     /**
      * global object of interpreter
      */
@@ -111,22 +110,23 @@ class KateJScript
     KJS::Object *m_view;
 };
 
-class KateJScriptManager : public Kate::Command
-{
-  private:
+class KateJScriptManager : public Kate::Command {
+private:
     /**
      * Internal used Script Representation
      */
-    class Script
-    {
-      public:
+    class Script {
+    public:
         /**
          * get desktop filename
          * @return desktop filename
          */
-        inline QString desktopFilename () { return filename.left(filename.length()-2).append ("desktop"); }
+        inline QString desktopFilename()
+        {
+            return filename.left(filename.length() - 2).append("desktop");
+        }
 
-      public:
+    public:
         /**
          * command name, as used for command line and more
          */
@@ -143,21 +143,21 @@ class KateJScriptManager : public Kate::Command
         bool desktopFileExists;
     };
 
-  public:
-    KateJScriptManager ();
-    ~KateJScriptManager ();
+public:
+    KateJScriptManager();
+    ~KateJScriptManager();
 
-  private:
+private:
     /**
      * go, search our scripts
      * @param force force cache updating?
      */
-    void collectScripts (bool force = false);
+    void collectScripts(bool force = false);
 
-  //
-  // Here we deal with the Kate::Command stuff
-  //
-  public:
+    //
+    // Here we deal with the Kate::Command stuff
+    //
+public:
     /**
      * execute command
      * @param view view to use for execution
@@ -165,7 +165,7 @@ class KateJScriptManager : public Kate::Command
      * @param errorMsg error to return if no success
      * @return success
      */
-    bool exec( class Kate::View *view, const QString &cmd, QString &errorMsg );
+    bool exec(class Kate::View *view, const QString &cmd, QString &errorMsg);
 
     /**
      * get help for a command
@@ -174,7 +174,7 @@ class KateJScriptManager : public Kate::Command
      * @param msg help message
      * @return help available or not
      */
-    bool help( class Kate::View *view, const QString &cmd, QString &msg );
+    bool help(class Kate::View *view, const QString &cmd, QString &msg);
 
     /**
      * supported commands as prefixes
@@ -182,26 +182,26 @@ class KateJScriptManager : public Kate::Command
      */
     QStringList cmds();
 
-  private:
+private:
     /**
      * we need to know somewhere which scripts are around
      */
-    QDict<KateJScriptManager::Script> m_scripts;
+    QDict< KateJScriptManager::Script > m_scripts;
 };
 
-class KateIndentJScriptImpl: public KateIndentScriptImplAbstract {
-  public:
-    KateIndentJScriptImpl(const QString& internalName,
-        const QString  &filePath, const QString &niceName,
-        const QString &copyright, double version);
+class KateIndentJScriptImpl : public KateIndentScriptImplAbstract {
+public:
+    KateIndentJScriptImpl(const QString &internalName, const QString &filePath, const QString &niceName, const QString &copyright, double version);
     ~KateIndentJScriptImpl();
-    
-    virtual bool processChar( class Kate::View *view, QChar c, QString &errorMsg );
-    virtual bool processLine( class Kate::View *view, const KateDocCursor &line, QString &errorMsg );
-    virtual bool processNewline( class Kate::View *view, const KateDocCursor &begin, bool needcontinue, QString &errorMsg );
-  protected:
+
+    virtual bool processChar(class Kate::View *view, QChar c, QString &errorMsg);
+    virtual bool processLine(class Kate::View *view, const KateDocCursor &line, QString &errorMsg);
+    virtual bool processNewline(class Kate::View *view, const KateDocCursor &begin, bool needcontinue, QString &errorMsg);
+
+protected:
     virtual void decRef();
-  private:
+
+private:
     KateJSView *m_viewWrapper;
     KateJSDocument *m_docWrapper;
     KJS::Object *m_indenter;
@@ -210,22 +210,21 @@ class KateIndentJScriptImpl: public KateIndentScriptImplAbstract {
     void deleteInterpreter();
 };
 
-class KateIndentJScriptManager: public KateIndentScriptManagerAbstract
-{
+class KateIndentJScriptManager : public KateIndentScriptManagerAbstract {
 
-  public:
-    KateIndentJScriptManager ();
-    virtual ~KateIndentJScriptManager ();
+public:
+    KateIndentJScriptManager();
+    virtual ~KateIndentJScriptManager();
     virtual KateIndentScript script(const QString &scriptname);
-  private:
+
+private:
     /**
      * go, search our scripts
      * @param force force cache updating?
      */
-    void collectScripts (bool force = false);
-    void parseScriptHeader(const QString &filePath,
-        QString *niceName,QString *copyright,double *version);
-    QDict<KateIndentJScriptImpl> m_scripts;
+    void collectScripts(bool force = false);
+    void parseScriptHeader(const QString &filePath, QString *niceName, QString *copyright, double *version);
+    QDict< KateIndentJScriptImpl > m_scripts;
 };
 
 #endif

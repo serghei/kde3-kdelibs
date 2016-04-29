@@ -4,27 +4,24 @@
 #include <dcopclient.h>
 using namespace KTextEditor;
 
-PrintDCOPInterface::PrintDCOPInterface( PrintInterface *Parent, const char *name)
-	: DCOPObject(name)
+PrintDCOPInterface::PrintDCOPInterface(PrintInterface *Parent, const char *name) : DCOPObject(name)
 {
-	m_parent = Parent;
+    m_parent = Parent;
 }
 
 PrintDCOPInterface::~PrintDCOPInterface()
 {
-
 }
 
-uint PrintDCOPInterface::printInterfaceNumber () 
+uint PrintDCOPInterface::printInterfaceNumber()
 {
-	return m_parent->printInterfaceNumber();
+    return m_parent->printInterfaceNumber();
 }
-bool PrintDCOPInterface::printDialog ()
+bool PrintDCOPInterface::printDialog()
 {
-	return m_parent->printDialog();
+    return m_parent->printDialog();
 }
-bool PrintDCOPInterface::print ()  
+bool PrintDCOPInterface::print()
 {
-	return m_parent->print();
+    return m_parent->print();
 }
-

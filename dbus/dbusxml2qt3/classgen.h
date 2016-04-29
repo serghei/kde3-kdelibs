@@ -27,26 +27,18 @@
 class Class;
 class QDomElement;
 class QTextStream;
-template<typename T> class QValueList;
+template < typename T > class QValueList;
 
-class ClassGenerator
-{
+class ClassGenerator {
 public:
-    static bool initStreams(const QString& baseName,
-                            QTextStream& headerStream, QTextStream& sourceStream);
+    static bool initStreams(const QString &baseName, QTextStream &headerStream, QTextStream &sourceStream);
 
-    static bool finishStreams(const QString& baseName,
-                              QTextStream& headerStream, QTextStream& sourceStream);
+    static bool finishStreams(const QString &baseName, QTextStream &headerStream, QTextStream &sourceStream);
 
-    static bool extractClass(const QDomElement& interfaceElement, Class& classData);
-    static bool generateInterface(const Class& classData,
-                                  QTextStream& headerStream,
-                                  QTextStream& sourceStream);
-    static bool generateProxy(const Class& classData,
-                              QTextStream& headerStream, QTextStream& sourceStream);
-    static bool generateNode(const Class& classData,
-                             const QValueList<Class>& interfaces,
-                             QTextStream& headerStream, QTextStream& sourceStream);
+    static bool extractClass(const QDomElement &interfaceElement, Class &classData);
+    static bool generateInterface(const Class &classData, QTextStream &headerStream, QTextStream &sourceStream);
+    static bool generateProxy(const Class &classData, QTextStream &headerStream, QTextStream &sourceStream);
+    static bool generateNode(const Class &classData, const QValueList< Class > &interfaces, QTextStream &headerStream, QTextStream &sourceStream);
 };
 
 #endif

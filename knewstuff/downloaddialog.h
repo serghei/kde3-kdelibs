@@ -23,9 +23,8 @@
 #include <kdialogbase.h>
 #include <knewstuff/provider.h>
 
-namespace KIO
-{
-  class Job;
+namespace KIO {
+class Job;
 }
 
 class KListView;
@@ -33,8 +32,7 @@ class QTextBrowser;
 class QFrame;
 class KNewStuffGeneric;
 
-namespace KNS
-{
+namespace KNS {
 
 class ProviderLoader;
 class Entry;
@@ -54,11 +52,11 @@ class Engine;
  * \par Maintainer:
  * Josef Spillner (spillner@kde.org)
  */
-class KDE_EXPORT DownloadDialog : public KDialogBase
-{
+class KDE_EXPORT DownloadDialog : public KDialogBase {
     Q_OBJECT
     struct Private;
-  public:
+
+public:
     /**
       Constructor.
 
@@ -67,7 +65,7 @@ class KDE_EXPORT DownloadDialog : public KDialogBase
       @param parent the parent window
       @param caption the dialog caption
     */
-    DownloadDialog(Engine *engine, QWidget *parent, const QString& caption);
+    DownloadDialog(Engine *engine, QWidget *parent, const QString &caption);
 
     /**
       Alternative constructor.
@@ -76,7 +74,7 @@ class KDE_EXPORT DownloadDialog : public KDialogBase
       @param parent the parent window
       @param caption the dialog caption
     */
-    DownloadDialog(QWidget *parent, const QString& caption);
+    DownloadDialog(QWidget *parent, const QString &caption);
 
     /**
       Destructor.
@@ -89,7 +87,7 @@ class KDE_EXPORT DownloadDialog : public KDialogBase
       @param type a Hotstuff data type such as "korganizer/calendar"
     */
     void setType(QString type);
-	// ### KDE 4.0: use const QString&
+    // ### KDE 4.0: use const QString&
 
     /**
       Fetches descriptions of all available data, optionally considering
@@ -105,7 +103,7 @@ class KDE_EXPORT DownloadDialog : public KDialogBase
 
       @since 3.4
     */
-    void setProviderList(const QString& providerList);
+    void setProviderList(const QString &providerList);
 
     /**
       Fetches descriptions of all available data, optionally considering
@@ -141,7 +139,7 @@ class KDE_EXPORT DownloadDialog : public KDialogBase
       @param entry a Hotstuff data entry to be added
       @param variants all variants this entry is intended for
     */
-    void addEntry(Entry *entry, const QStringList& variants);
+    void addEntry(Entry *entry, const QStringList &variants);
 
     /**
       Clears the entry list of the current provider.
@@ -177,7 +175,7 @@ class KDE_EXPORT DownloadDialog : public KDialogBase
       @param type a data type such as "korganizer/calendar"
       @param caption the dialog caption
     */
-    static void open(const QString& type, const QString& caption);
+    static void open(const QString &type, const QString &caption);
 
     /**
       Opens the download dialog.
@@ -195,10 +193,10 @@ class KDE_EXPORT DownloadDialog : public KDialogBase
 
       @return list of data entries which have been installed
     */
-    QPtrList<Entry> installedEntries();
+    QPtrList< Entry > installedEntries();
     // ### KDE 4.0: the open() method should return this
 
-  public slots:
+public slots:
     /**
       Availability of the provider list.
 
@@ -206,11 +204,11 @@ class KDE_EXPORT DownloadDialog : public KDialogBase
     */
     void slotProviders(Provider::List *list);
 
-  protected slots:
+protected slots:
     void slotApply();
     void slotOk();
 
-  private slots:
+private slots:
     void slotResult(KIO::Job *job);
     void slotData(KIO::Job *job, const QByteArray &a);
     void slotInstall();
@@ -220,9 +218,9 @@ class KDE_EXPORT DownloadDialog : public KDialogBase
     void slotSelected();
     void slotPage(QWidget *w);
     void slotFinish();
-    void slotEmail(const QString& link);
+    void slotEmail(const QString &link);
 
-  private:
+private:
     void init(Engine *e);
     Entry *getEntry();
     void loadProvider(Provider *p);
@@ -236,22 +234,20 @@ class KDE_EXPORT DownloadDialog : public KDialogBase
     QTextBrowser *m_rt;
     QFrame *m_frame;
     QListViewItem *m_entryitem;
-    QPtrList<Entry> m_entries;
+    QPtrList< Entry > m_entries;
     Entry *m_entry;
     KNewStuffGeneric *m_s;
     int m_curtab;
-    QMap<QWidget*, QValueList<KListView*>* > m_map;
-    QMap<QWidget*, Provider*> m_providers;
-    QMap<QWidget*, QTextBrowser*> m_rts;
-    QMap<QWidget*, QValueList<QPushButton*>* > m_buttons;
-    QMap<KIO::Job*, Provider*> m_jobs;
-    QMap<KIO::Job*, QString> m_data;
+    QMap< QWidget *, QValueList< KListView * > * > m_map;
+    QMap< QWidget *, Provider * > m_providers;
+    QMap< QWidget *, QTextBrowser * > m_rts;
+    QMap< QWidget *, QValueList< QPushButton * > * > m_buttons;
+    QMap< KIO::Job *, Provider * > m_jobs;
+    QMap< KIO::Job *, QString > m_data;
     QString m_filter;
     Engine *m_engine;
     Private *d;
 };
-
 }
 
 #endif
-

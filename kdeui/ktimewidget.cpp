@@ -6,53 +6,48 @@
 
 #include "ktimewidget.h"
 
-class KTimeWidget::KTimeWidgetPrivate
-{
+class KTimeWidget::KTimeWidgetPrivate {
 public:
-  QTimeEdit * timeWidget;
+    QTimeEdit *timeWidget;
 };
 
-KTimeWidget::KTimeWidget(QWidget * parent, const char * name)
-  : QWidget(parent, name)
+KTimeWidget::KTimeWidget(QWidget *parent, const char *name) : QWidget(parent, name)
 {
-  init();
+    init();
 }
 
-KTimeWidget::KTimeWidget(const QTime & time,
-                         QWidget * parent, const char * name)
-  : QWidget(parent, name)
+KTimeWidget::KTimeWidget(const QTime &time, QWidget *parent, const char *name) : QWidget(parent, name)
 {
-  init();
+    init();
 
-  setTime(time);
+    setTime(time);
 }
 
 KTimeWidget::~KTimeWidget()
 {
-  delete d;
+    delete d;
 }
 
 void KTimeWidget::init()
 {
-  d = new KTimeWidgetPrivate;
+    d = new KTimeWidgetPrivate;
 
-  QHBoxLayout *layout = new QHBoxLayout(this, 0, KDialog::spacingHint());
-  layout->setAutoAdd(true);
+    QHBoxLayout *layout = new QHBoxLayout(this, 0, KDialog::spacingHint());
+    layout->setAutoAdd(true);
 
-  d->timeWidget = new QTimeEdit(this);
+    d->timeWidget = new QTimeEdit(this);
 
-  connect(d->timeWidget, SIGNAL(valueChanged(const QTime &)),
-          SIGNAL(valueChanged(const QTime &)));
+    connect(d->timeWidget, SIGNAL(valueChanged(const QTime &)), SIGNAL(valueChanged(const QTime &)));
 }
 
-void KTimeWidget::setTime(const QTime & time)
+void KTimeWidget::setTime(const QTime &time)
 {
-  d->timeWidget->setTime(time);
+    d->timeWidget->setTime(time);
 }
 
 QTime KTimeWidget::time() const
 {
-  return d->timeWidget->time();
+    return d->timeWidget->time();
 }
 
 #include "ktimewidget.moc"

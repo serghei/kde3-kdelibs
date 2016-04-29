@@ -34,8 +34,9 @@ int main(int argc, char **argv)
     list += KURL("file:///tmp/testfile.txt");
 
     // Test with one URL
-    KOpenWithDlg* dlg = new KOpenWithDlg(list, "OpenWith_Text", "OpenWith_Value", 0);
-    if(dlg->exec()) {
+    KOpenWithDlg *dlg = new KOpenWithDlg(list, "OpenWith_Text", "OpenWith_Value", 0);
+    if(dlg->exec())
+    {
         kdDebug() << "Dialog ended successfully\ntext: " << dlg->text() << endl;
     }
     else
@@ -45,7 +46,8 @@ int main(int argc, char **argv)
     // Test with two URLs
     list += KURL("http://www.kde.org/index.html");
     dlg = new KOpenWithDlg(list, "OpenWith_Text", "OpenWith_Value", 0);
-    if(dlg->exec()) {
+    if(dlg->exec())
+    {
         kdDebug() << "Dialog ended successfully\ntext: " << dlg->text() << endl;
     }
     else
@@ -54,8 +56,9 @@ int main(int argc, char **argv)
 
     // Test with a mimetype
     QString mimetype = "text/plain";
-    dlg = new KOpenWithDlg( mimetype, "kedit", 0);
-    if(dlg->exec()) {
+    dlg = new KOpenWithDlg(mimetype, "kedit", 0);
+    if(dlg->exec())
+    {
         kdDebug() << "Dialog ended successfully\ntext: " << dlg->text() << endl;
     }
     else
@@ -64,4 +67,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-

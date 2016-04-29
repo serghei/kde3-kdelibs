@@ -26,48 +26,40 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-
 /* --- typedefs & structures --- */
-typedef struct {
-  gchar   *file_name;
-  GTime    mtime;
-  GslLong  n_bytes;
-  /*< private >*/
-  GslLong  cpos;
-  GslMutex mutex;
-  gint     fd;
-  guint    ocount;
+typedef struct
+{
+    gchar *file_name;
+    GTime mtime;
+    GslLong n_bytes;
+    /*< private >*/
+    GslLong cpos;
+    GslMutex mutex;
+    gint fd;
+    guint ocount;
 } GslHFile;
-typedef struct {
-  GslHFile *hfile;
-  GslLong   offset;
+typedef struct
+{
+    GslHFile *hfile;
+    GslLong offset;
 } GslRFile;
 
 
 /* --- GslHFile API --- */
-GslHFile* gsl_hfile_open	(const gchar	*file_name);
-GslLong	  gsl_hfile_pread	(GslHFile	*hfile,
-				 GslLong	 offset,
-				 GslLong         n_bytes,
-				 gpointer	 bytes);
-void	  gsl_hfile_close	(GslHFile	*hfile);
+GslHFile *gsl_hfile_open(const gchar *file_name);
+GslLong gsl_hfile_pread(GslHFile *hfile, GslLong offset, GslLong n_bytes, gpointer bytes);
+void gsl_hfile_close(GslHFile *hfile);
 
 
 /* --- GslRFile API --- */
-GslRFile* gsl_rfile_open	(const gchar	*file_name);
-gchar*    gsl_rfile_name	(GslRFile	*rfile);
-GslLong	  gsl_rfile_pread	(GslRFile	*rfile,
-				 GslLong	 offset,
-				 GslLong         n_bytes,
-				 gpointer	 bytes);
-GslLong	  gsl_rfile_read	(GslRFile	*rfile,
-				 GslLong         n_bytes,
-				 gpointer	 bytes);
-GslLong	  gsl_rfile_seek_set	(GslRFile	*rfile,
-				 GslLong	 offset);
-GslLong	  gsl_rfile_position	(GslRFile	*rfile);
-GslLong	  gsl_rfile_length	(GslRFile	*rfile);
-void	  gsl_rfile_close	(GslRFile	*rfile);
+GslRFile *gsl_rfile_open(const gchar *file_name);
+gchar *gsl_rfile_name(GslRFile *rfile);
+GslLong gsl_rfile_pread(GslRFile *rfile, GslLong offset, GslLong n_bytes, gpointer bytes);
+GslLong gsl_rfile_read(GslRFile *rfile, GslLong n_bytes, gpointer bytes);
+GslLong gsl_rfile_seek_set(GslRFile *rfile, GslLong offset);
+GslLong gsl_rfile_position(GslRFile *rfile);
+GslLong gsl_rfile_length(GslRFile *rfile);
+void gsl_rfile_close(GslRFile *rfile);
 
 
 #ifdef __cplusplus

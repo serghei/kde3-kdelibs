@@ -33,8 +33,7 @@
  * @since 3.1
  * @internal
  */
-class KDECORE_EXPORT KClipboardSynchronizer : public QObject
-{
+class KDECORE_EXPORT KClipboardSynchronizer : public QObject {
     Q_OBJECT
 
 public:
@@ -55,7 +54,7 @@ public:
      * Default is false.
      * @see isSynchronizing
      */
-    static void setSynchronizing( bool sync );
+    static void setSynchronizing(bool sync);
 
     /**
      * Checks whether Clipboard and Selection will be synchronized upon changes.
@@ -77,7 +76,7 @@ public:
      * Default is true.
      * @see selectionSetting
      */
-    static void setReverseSynchronizing( bool enable );
+    static void setReverseSynchronizing(bool enable);
 
     /**
      * Checks whether the  Clipboard buffer will be copied to the Selection
@@ -100,10 +99,10 @@ private slots:
     void slotClipboardChanged();
 
 private:
-    KClipboardSynchronizer( QObject *parent = 0, const char *name = 0L );
+    KClipboardSynchronizer(QObject *parent = 0, const char *name = 0L);
     void setupSignals();
 
-    static void setClipboard( QMimeSource* data, QClipboard::Mode mode );
+    static void setClipboard(QMimeSource *data, QClipboard::Mode mode);
 
     static KClipboardSynchronizer *s_self;
     static bool s_sync;
@@ -114,10 +113,12 @@ private:
 
 private:
     // needed by klipper
-    enum Configuration { Synchronize = 1 };
+    enum Configuration
+    {
+        Synchronize = 1
+    };
     // called by KApplication upon kipc message, invoked by klipper
-    static void newConfiguration( int config );
-
+    static void newConfiguration(int config);
 };
 
 #endif // KCLIPBOARD_H

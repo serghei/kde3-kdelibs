@@ -20,7 +20,7 @@
 #ifndef PRINTCAPENTRY_H
 #define PRINTCAPENTRY_H
 
-#if !defined( _KDEPRINT_COMPILE ) && defined( __GNUC__ )
+#if !defined(_KDEPRINT_COMPILE) && defined(__GNUC__)
 #warning internal header, do not use except if you are a KDEPrint developer
 #endif
 
@@ -36,24 +36,32 @@
  * if you're a KDEPrint developer. The API might change in the
  * future and binary compatibility might be broken.
  */
-class Field
-{
+class Field {
 public:
-	enum Type { String, Integer, Boolean };
-	Field() : type(String) {}
-	Field(const Field &f) : type(f.type), name(f.name), value(f.value) {}
-	Field& operator= (const Field& f)
-	{
-		type = f.type;
-		name = f.name;
-		value = f.value;
-		return (*this);
-	}
-	QString toString() const;
+    enum Type
+    {
+        String,
+        Integer,
+        Boolean
+    };
+    Field() : type(String)
+    {
+    }
+    Field(const Field &f) : type(f.type), name(f.name), value(f.value)
+    {
+    }
+    Field &operator=(const Field &f)
+    {
+        type = f.type;
+        name = f.name;
+        value = f.value;
+        return (*this);
+    }
+    QString toString() const;
 
-	Type	type;
-	QString	name;
-	QString	value;
+    Type type;
+    QString name;
+    QString value;
 };
 
 /**
@@ -63,19 +71,24 @@ public:
  * if you're a KDEPrint developer. The API might change in the
  * future and binary compatibility might be broken.
  */
-class PrintcapEntry
-{
+class PrintcapEntry {
 public:
-	QString			name;
-	QStringList		aliases;
-	QString			comment;
-	QMap<QString,Field>	fields;
-	QString			postcomment;
+    QString name;
+    QStringList aliases;
+    QString comment;
+    QMap< QString, Field > fields;
+    QString postcomment;
 
-	bool has(const QString& f) const	{ return fields.contains(f); }
-	QString field(const QString& f) const	{ return fields[f].value; }
-	bool writeEntry(QTextStream&);
-	void addField(const QString& name, Field::Type type = Field::Boolean, const QString& value = QString::null);
+    bool has(const QString &f) const
+    {
+        return fields.contains(f);
+    }
+    QString field(const QString &f) const
+    {
+        return fields[f].value;
+    }
+    bool writeEntry(QTextStream &);
+    void addField(const QString &name, Field::Type type = Field::Boolean, const QString &value = QString::null);
 };
 
 #endif

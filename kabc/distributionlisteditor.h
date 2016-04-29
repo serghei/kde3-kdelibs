@@ -33,32 +33,28 @@ namespace KABC {
 class AddressBook;
 class DistributionListManager;
 
-class KABC_EXPORT EmailSelectDialog : public KDialogBase
-{
-  public:
-    EmailSelectDialog( const QStringList &emails, const QString &current,
-                       QWidget *parent );
-    
+class KABC_EXPORT EmailSelectDialog : public KDialogBase {
+public:
+    EmailSelectDialog(const QStringList &emails, const QString &current, QWidget *parent);
+
     QString selected();
 
-    static QString getEmail( const QStringList &emails, const QString &current,
-                             QWidget *parent );
+    static QString getEmail(const QStringList &emails, const QString &current, QWidget *parent);
 
-  private:
+private:
     QButtonGroup *mButtonGroup;
 };
 
 /**
   @obsolete
 */
-class DistributionListEditor : public QWidget
-{
+class DistributionListEditor : public QWidget {
     Q_OBJECT
-  public:
-    DistributionListEditor( AddressBook *, QWidget *parent );
+public:
+    DistributionListEditor(AddressBook *, QWidget *parent);
     virtual ~DistributionListEditor();
 
-  private slots:
+private slots:
     void newList();
     void removeList();
     void addEntry();
@@ -70,17 +66,16 @@ class DistributionListEditor : public QWidget
     void slotSelectionEntryViewChanged();
     void slotSelectionAddresseeViewChanged();
 
-  private:
-    QComboBox *mNameCombo;  
+private:
+    QComboBox *mNameCombo;
     QListView *mEntryView;
     QListView *mAddresseeView;
 
     AddressBook *mAddressBook;
     DistributionListManager *mManager;
     QPushButton *newButton, *removeButton;
-    QPushButton *changeEmailButton,*removeEntryButton,*addEntryButton;
+    QPushButton *changeEmailButton, *removeEntryButton, *addEntryButton;
 };
-
 }
 
 #endif

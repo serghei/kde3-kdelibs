@@ -22,63 +22,74 @@
 
 #include "ktimeout.h"
 
-KTimeout::KTimeout(int size)
-: QObject(), _timers(size) {
-	_timers.setAutoDelete(true);
+KTimeout::KTimeout(int size) : QObject(), _timers(size)
+{
+    _timers.setAutoDelete(true);
 }
 
 
-KTimeout::~KTimeout() {
-	clear();
+KTimeout::~KTimeout()
+{
+    clear();
 }
 
 
-void KTimeout::clear() {
-	_timers.clear();
+void KTimeout::clear()
+{
+    _timers.clear();
 }
 
 
-void KTimeout::removeTimer(int id) {
-	QTimer *t = _timers.find(id);
-	if (t != 0L) {
-		_timers.remove(id); // autodeletes
-	}
+void KTimeout::removeTimer(int id)
+{
+    QTimer *t = _timers.find(id);
+    if(t != 0L)
+    {
+        _timers.remove(id); // autodeletes
+    }
 }
 
 
-void KTimeout::addTimer(int id, int timeout) {
-	if (_timers.find(id) != 0L) {
-		return;
-	}
+void KTimeout::addTimer(int id, int timeout)
+{
+    if(_timers.find(id) != 0L)
+    {
+        return;
+    }
 
-	QTimer *t = new QTimer;
-	connect(t, SIGNAL(timeout()), this, SLOT(timeout()));
-	t->start(timeout);
-	_timers.insert(id, t);
+    QTimer *t = new QTimer;
+    connect(t, SIGNAL(timeout()), this, SLOT(timeout()));
+    t->start(timeout);
+    _timers.insert(id, t);
 }
 
 
-void KTimeout::resetTimer(int id, int timeout) {
-	QTimer *t = _timers.find(id);
-	if (t) {
-		t->changeInterval(timeout);
-	}
+void KTimeout::resetTimer(int id, int timeout)
+{
+    QTimer *t = _timers.find(id);
+    if(t)
+    {
+        t->changeInterval(timeout);
+    }
 }
 
 
-void KTimeout::timeout() {
-	const QTimer *t = static_cast<const QTimer*>(sender());
-	if (t) {
-		QIntDictIterator<QTimer> it(_timers);
-		for (; it.current(); ++it) {
-			if (it.current() == t) {
-				emit timedOut(it.currentKey());
-				return;
-			}
-		}
-	}
+void KTimeout::timeout()
+{
+    const QTimer *t = static_cast< const QTimer * >(sender());
+    if(t)
+    {
+        QIntDictIterator< QTimer > it(_timers);
+        for(; it.current(); ++it)
+        {
+            if(it.current() == t)
+            {
+                emit timedOut(it.currentKey());
+                return;
+            }
+        }
+    }
 }
 
 
 #include "ktimeout.moc"
-

@@ -50,40 +50,40 @@ QString KRecentDocument::recentDocumentDirectory()
 
 QStringList KRecentDocument::recentDocuments()
 {
-    QDir d(recentDocumentDirectory(), "*.desktop", QDir::Time,
-           QDir::Files | QDir::Readable | QDir::Hidden);
+    QDir d(recentDocumentDirectory(), "*.desktop", QDir::Time, QDir::Files | QDir::Readable | QDir::Hidden);
 
-    if (!d.exists())
+    if(!d.exists())
         d.mkdir(recentDocumentDirectory());
 
     QStringList list = d.entryList();
     QStringList fullList;
 
-    for (QStringList::ConstIterator it = list.begin(); it != list.end(); ++it) {
-       QString pathDesktop = d.absFilePath( *it );
-       KDesktopFile tmpDesktopFile( pathDesktop, false);
-       KURL urlDesktopFile(tmpDesktopFile.readURL());
-       if( urlDesktopFile.isLocalFile() && !QFile(urlDesktopFile.path()).exists())
-           d.remove(pathDesktop);
-       else
-           fullList.append( pathDesktop );
+    for(QStringList::ConstIterator it = list.begin(); it != list.end(); ++it)
+    {
+        QString pathDesktop = d.absFilePath(*it);
+        KDesktopFile tmpDesktopFile(pathDesktop, false);
+        KURL urlDesktopFile(tmpDesktopFile.readURL());
+        if(urlDesktopFile.isLocalFile() && !QFile(urlDesktopFile.path()).exists())
+            d.remove(pathDesktop);
+        else
+            fullList.append(pathDesktop);
     }
 
     return fullList;
 }
 
-void KRecentDocument::add(const KURL& url)
+void KRecentDocument::add(const KURL &url)
 {
     KRecentDocument::add(url, qApp->argv()[0]); // ### argv[0] might not match the service filename!
 }
 
-void KRecentDocument::add(const KURL& url, const QString& desktopEntryName)
+void KRecentDocument::add(const KURL &url, const QString &desktopEntryName)
 {
-	if ( url.isLocalFile() && !KGlobal::dirs()->relativeLocation("tmp", url.path()).startsWith("/"))
-		return;
+    if(url.isLocalFile() && !KGlobal::dirs()->relativeLocation("tmp", url.path()).startsWith("/"))
+        return;
 
     QString openStr = url.url();
-    openStr.replace( QRegExp("\\$"), "$$" ); // Desktop files with type "Link" are $-variable expanded
+    openStr.replace(QRegExp("\\$"), "$$"); // Desktop files with type "Link" are $-variable expanded
 
     kdDebug(250) << "KRecentDocument::add for " << openStr << endl;
     KConfig *config = KGlobal::config();
@@ -102,21 +102,21 @@ void KRecentDocument::add(const KURL& url, const QString& desktopEntryName)
 
     QString ddesktop = dStr + QString::fromLatin1(".desktop");
 
-    int i=1;
+    int i = 1;
     // check for duplicates
-    while(QFile::exists(ddesktop)){
+    while(QFile::exists(ddesktop))
+    {
         // see if it points to the same file and application
         KSimpleConfig tmp(ddesktop);
         tmp.setDesktopGroup();
-        if(tmp.readEntry(QString::fromLatin1("X-KDE-LastOpenedWith"))
-	   == desktopEntryName)
-	{
+        if(tmp.readEntry(QString::fromLatin1("X-KDE-LastOpenedWith")) == desktopEntryName)
+        {
             utime(QFile::encodeName(ddesktop), NULL);
             return;
         }
         // if not append a (num) to it
         ++i;
-        if ( i > maxEntries )
+        if(i > maxEntries)
             break;
         ddesktop = dStr + QString::fromLatin1("[%1].desktop").arg(i);
     }
@@ -125,10 +125,12 @@ void KRecentDocument::add(const KURL& url, const QString& desktopEntryName)
     // check for max entries, delete oldest files if exceeded
     QStringList list = dir.entryList(QDir::Files | QDir::Hidden, QDir::Time | QDir::Reversed);
     i = list.count();
-    if(i > maxEntries-1){
+    if(i > maxEntries - 1)
+    {
         QStringList::Iterator it;
         it = list.begin();
-        while(i > maxEntries-1){
+        while(i > maxEntries - 1)
+        {
             QFile::remove(dir.absPath() + QString::fromLatin1("/") + (*it));
             --i, ++it;
         }
@@ -137,34 +139,37 @@ void KRecentDocument::add(const KURL& url, const QString& desktopEntryName)
     // create the applnk
     KSimpleConfig conf(ddesktop);
     conf.setDesktopGroup();
-    conf.writeEntry( QString::fromLatin1("Type"), QString::fromLatin1("Link") );
-    conf.writePathEntry( QString::fromLatin1("URL"), openStr );
+    conf.writeEntry(QString::fromLatin1("Type"), QString::fromLatin1("Link"));
+    conf.writePathEntry(QString::fromLatin1("URL"), openStr);
     // If you change the line below, change the test in the above loop
-    conf.writeEntry( QString::fromLatin1("X-KDE-LastOpenedWith"), desktopEntryName );
+    conf.writeEntry(QString::fromLatin1("X-KDE-LastOpenedWith"), desktopEntryName);
     QString name = url.fileName();
-    if (name.isEmpty())
-      name = openStr;
-    conf.writeEntry( QString::fromLatin1("Name"), name );
-    conf.writeEntry( QString::fromLatin1("Icon"), KMimeType::iconForURL( url ) );
+    if(name.isEmpty())
+        name = openStr;
+    conf.writeEntry(QString::fromLatin1("Name"), name);
+    conf.writeEntry(QString::fromLatin1("Icon"), KMimeType::iconForURL(url));
 }
 
 void KRecentDocument::add(const QString &openStr, bool isUrl)
 {
-    if( isUrl ) {
-        add( KURL( openStr ) );
-    } else {
+    if(isUrl)
+    {
+        add(KURL(openStr));
+    }
+    else
+    {
         KURL url;
-        url.setPath( openStr );
-        add( url );
+        url.setPath(openStr);
+        add(url);
     }
 }
 
 void KRecentDocument::clear()
 {
-  QStringList list = recentDocuments();
-  QDir dir;
-  for(QStringList::Iterator it = list.begin(); it != list.end() ; ++it)
-    dir.remove(*it);
+    QStringList list = recentDocuments();
+    QDir dir;
+    for(QStringList::Iterator it = list.begin(); it != list.end(); ++it)
+        dir.remove(*it);
 }
 
 int KRecentDocument::maximumItems()
@@ -173,5 +178,3 @@ int KRecentDocument::maximumItems()
     KConfigGroupSaver sa(config, QString::fromLatin1("RecentDocuments"));
     return config->readNumEntry(QString::fromLatin1("MaxEntries"), 10);
 }
-
-

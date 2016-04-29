@@ -31,38 +31,38 @@ class QListViewItem;
 class QToolButton;
 class QTextBrowser;
 
-class KPFilterPage : public KPrintDialogPage
-{
-	Q_OBJECT
+class KPFilterPage : public KPrintDialogPage {
+    Q_OBJECT
 public:
-	KPFilterPage(QWidget *parent = 0, const char *name = 0);
-	~KPFilterPage();
+    KPFilterPage(QWidget *parent = 0, const char *name = 0);
+    ~KPFilterPage();
 
-	void setOptions(const QMap<QString,QString>& opts);
-	void getOptions(QMap<QString,QString>& opts, bool incldef = false);
-	bool isValid(QString& msg);
+    void setOptions(const QMap< QString, QString > &opts);
+    void getOptions(QMap< QString, QString > &opts, bool incldef = false);
+    bool isValid(QString &msg);
 
 protected slots:
-	void slotAddClicked();
-	void slotRemoveClicked();
-	void slotUpClicked();
-	void slotDownClicked();
-	void slotConfigureClicked();
-	void slotItemSelected(QListViewItem*);
+    void slotAddClicked();
+    void slotRemoveClicked();
+    void slotUpClicked();
+    void slotDownClicked();
+    void slotConfigureClicked();
+    void slotItemSelected(QListViewItem *);
 
 protected:
-	KXmlCommand* currentFilter();
-	void checkFilterChain();
-	void updateInfo();
-	QStringList activeList();
+    KXmlCommand *currentFilter();
+    void checkFilterChain();
+    void updateInfo();
+    QStringList activeList();
     void updateButton();
+
 private:
-	KListView		*m_view;
-	QStringList		m_filters;	// <idname,description> pairs
-	QDict<KXmlCommand>	m_activefilters;
-	QToolButton		*m_add, *m_remove, *m_up, *m_down, *m_configure;
-	bool			m_valid;
-	QTextBrowser		*m_info;
+    KListView *m_view;
+    QStringList m_filters; // <idname,description> pairs
+    QDict< KXmlCommand > m_activefilters;
+    QToolButton *m_add, *m_remove, *m_up, *m_down, *m_configure;
+    bool m_valid;
+    QTextBrowser *m_info;
 };
 
 #endif

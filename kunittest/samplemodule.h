@@ -29,10 +29,9 @@
 #include "tester.h"
 // Outside of kdelibs you would use: #include <kunittest/tester.h>
 
-class SampleTester : public KUnitTest::Tester
-{
+class SampleTester : public KUnitTest::Tester {
 public:
-        void allTests();
+    void allTests();
 };
 
 #endif

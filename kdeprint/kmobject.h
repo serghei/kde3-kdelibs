@@ -21,7 +21,7 @@
 #ifndef KMOBJECT_H
 #define KMOBJECT_H
 
-#if !defined( _KDEPRINT_COMPILE ) && defined( __GNUC__ )
+#if !defined(_KDEPRINT_COMPILE) && defined(__GNUC__)
 #warning internal header, do not use except if you are a KDEPrint developer
 #endif
 
@@ -32,25 +32,29 @@
  * if you're a KDEPrint developer. The API might change in the
  * future and binary compatibility might be broken.
  */
-class KMObject
-{
+class KMObject {
 public:
-	KMObject();
+    KMObject();
 
-	bool isDiscarded() const;
-	void setDiscarded(bool on = true);
+    bool isDiscarded() const;
+    void setDiscarded(bool on = true);
 
 protected:
-	bool m_discarded;
+    bool m_discarded;
 };
 
 inline KMObject::KMObject() : m_discarded(false)
-{ }
+{
+}
 
 inline bool KMObject::isDiscarded() const
-{ return m_discarded; }
+{
+    return m_discarded;
+}
 
 inline void KMObject::setDiscarded(bool on)
-{ m_discarded = on; }
+{
+    m_discarded = on;
+}
 
 #endif

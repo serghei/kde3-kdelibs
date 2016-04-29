@@ -17,7 +17,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
- 
+
 #ifndef _KSSLX509MAP_H
 #define _KSSLX509MAP_H
 
@@ -38,49 +38,49 @@
  */
 class KIO_EXPORT KSSLX509Map {
 public:
-	/**
-	 *  Construct an X.509 Map
-	 *
-	 *  @param name the map to parse
-	 */
-	KSSLX509Map(const QString& name);
+    /**
+     *  Construct an X.509 Map
+     *
+     *  @param name the map to parse
+     */
+    KSSLX509Map(const QString &name);
 
-	/**
-	 *  Destroy this map
-	 */
-	~KSSLX509Map();
+    /**
+     *  Destroy this map
+     */
+    ~KSSLX509Map();
 
-	/**
-	 *  Set a value in the map
-	 *
-	 *  @param key the key
-	 *  @param value the value
-	 */
-	void setValue(const QString& key, const QString& value);
+    /**
+     *  Set a value in the map
+     *
+     *  @param key the key
+     *  @param value the value
+     */
+    void setValue(const QString &key, const QString &value);
 
-	/**
-	 *  Get the value of an entry in the map
-	 *
-	 *  @param key the key
-	 *
-	 *  @return the value
-	 */
-	QString getValue(const QString& key) const;
+    /**
+     *  Get the value of an entry in the map
+     *
+     *  @param key the key
+     *
+     *  @return the value
+     */
+    QString getValue(const QString &key) const;
 
-	/**
-	 *  Reset (clear) the internal storage.
-	 *
-	 *  @param name if this is not empty, it will be parsed and used as
-	 *         the new map internally
-	 */
-	void reset(const QString& name = "");
-  
+    /**
+     *  Reset (clear) the internal storage.
+     *
+     *  @param name if this is not empty, it will be parsed and used as
+     *         the new map internally
+     */
+    void reset(const QString &name = "");
+
 private:
-	class KSSLX509MapPrivate;
-	KSSLX509MapPrivate *d;
-	QMap<QString, QString> m_pairs;
+    class KSSLX509MapPrivate;
+    KSSLX509MapPrivate *d;
+    QMap< QString, QString > m_pairs;
 
-	void parse(const QString& name);
+    void parse(const QString &name);
 };
 
 #endif

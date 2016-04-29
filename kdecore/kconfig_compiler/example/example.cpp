@@ -30,23 +30,23 @@
 #include <kconfig.h>
 #include <kstandarddirs.h>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "example", I18N_NOOP("cfgc example"), "0.1" );
-  aboutData.addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
+    KAboutData aboutData("example", I18N_NOOP("cfgc example"), "0.1");
+    aboutData.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  ExamplePrefsBase *prefs = new ExamplePrefsBase("Trans1", "Folder2");
-  
-  prefs->readConfig();
+    ExamplePrefsBase *prefs = new ExamplePrefsBase("Trans1", "Folder2");
 
-  prefs->setAnotherOption(17);
+    prefs->readConfig();
 
-  kdWarning() << "Another Option  = " << prefs->anotherOption() << endl;
-  kdWarning() << "Another Option2 = " << prefs->anotherOption2() << endl;
-  kdWarning() << "MyPaths         = " << prefs->myPaths() << endl;
-  kdWarning() << "MyPaths2        = " << prefs->myPaths2() << endl;
+    prefs->setAnotherOption(17);
+
+    kdWarning() << "Another Option  = " << prefs->anotherOption() << endl;
+    kdWarning() << "Another Option2 = " << prefs->anotherOption2() << endl;
+    kdWarning() << "MyPaths         = " << prefs->myPaths() << endl;
+    kdWarning() << "MyPaths2        = " << prefs->myPaths2() << endl;
 }

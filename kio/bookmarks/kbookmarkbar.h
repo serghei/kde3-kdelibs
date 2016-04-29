@@ -39,10 +39,10 @@ class QPopupMenu;
  * identical to using KBookmarkMenu so follow the directions
  * there.
  */
-class KIO_EXPORT KBookmarkBar : public QObject
-{
+class KIO_EXPORT KBookmarkBar : public QObject {
     Q_OBJECT
     friend class RMB;
+
 public:
     /**
      * Fills a bookmark toolbar
@@ -50,16 +50,14 @@ public:
      * @param manager the bookmark manager
      * @param owner implementation of the KBookmarkOwner interface (callbacks)
      * @param toolBar toolbar to fill
-     * 
+     *
      * The KActionCollection pointer argument is now obsolete.
      *
      * @param parent the parent widget for the bookmark toolbar
      * @param name the internal name for the bookmark toolbar
      */
-    KBookmarkBar( KBookmarkManager* manager,
-                  KBookmarkOwner *owner, KToolBar *toolBar,
-                  KActionCollection *,
-                  QObject *parent = 0L, const char *name = 0L);
+    KBookmarkBar(KBookmarkManager *manager, KBookmarkOwner *owner, KToolBar *toolBar, KActionCollection *, QObject *parent = 0L,
+                 const char *name = 0L);
 
     virtual ~KBookmarkBar();
 
@@ -82,49 +80,49 @@ signals:
     /**
      * @since 3.2
      */
-    void aboutToShowContextMenu( const KBookmark &, QPopupMenu * );
+    void aboutToShowContextMenu(const KBookmark &, QPopupMenu *);
     /**
      * @since 3.4
      */
-    void openBookmark( const QString& url, Qt::ButtonState state );
+    void openBookmark(const QString &url, Qt::ButtonState state);
 
 public slots:
     void clear();
 
-    void slotBookmarksChanged( const QString & );
+    void slotBookmarksChanged(const QString &);
     void slotBookmarkSelected();
 
     /**
      * @since 3.4
      */
-    void slotBookmarkSelected( KAction::ActivationReason reason, Qt::ButtonState state );
-    
+    void slotBookmarkSelected(KAction::ActivationReason reason, Qt::ButtonState state);
+
     /// @since 3.2
-    void slotRMBActionRemove( int );
+    void slotRMBActionRemove(int);
     /// @since 3.2
-    void slotRMBActionInsert( int );
+    void slotRMBActionInsert(int);
     /// @since 3.2
-    void slotRMBActionCopyLocation( int );
+    void slotRMBActionCopyLocation(int);
     /// @since 3.2
-    void slotRMBActionEditAt( int );
+    void slotRMBActionEditAt(int);
     /// @since 3.2
-    void slotRMBActionProperties( int );
+    void slotRMBActionProperties(int);
 
 protected:
-    void fillBookmarkBar( KBookmarkGroup & parent );
-    virtual bool eventFilter( QObject *o, QEvent *e );
+    void fillBookmarkBar(KBookmarkGroup &parent);
+    virtual bool eventFilter(QObject *o, QEvent *e);
 
 private:
     KBookmarkGroup getToolbar();
 
     KBookmarkOwner *m_pOwner;
-    QGuardedPtr<KToolBar> m_toolBar;
+    QGuardedPtr< KToolBar > m_toolBar;
     KActionCollection *m_actionCollection;
     KBookmarkManager *m_pManager;
-    QPtrList<KBookmarkMenu> m_lstSubMenus;
+    QPtrList< KBookmarkMenu > m_lstSubMenus;
 
 private:
-    class KBookmarkBarPrivate* dptr() const;
+    class KBookmarkBarPrivate *dptr() const;
 };
 
 #endif // KBOOKMARKBAR_H

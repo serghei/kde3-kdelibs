@@ -20,7 +20,7 @@
     AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-    This is a helper for progressive loading of JPEG's. 
+    This is a helper for progressive loading of JPEG's.
 */
 
 #ifndef _khtml_loader_jpeg_h
@@ -28,20 +28,17 @@
 
 #include <qasyncimageio.h>
 
-namespace khtml
-{
-    /**
-     * @internal
-     *
-     * An incremental loader factory for JPEG's.
-     */
-    class KJPEGFormatType : public QImageFormatType
-    {
-    public:
-        QImageFormat* decoderFor(const uchar* buffer, int length);
-        const char* formatName() const;
-    };
-
+namespace khtml {
+/**
+ * @internal
+ *
+ * An incremental loader factory for JPEG's.
+ */
+class KJPEGFormatType : public QImageFormatType {
+public:
+    QImageFormat *decoderFor(const uchar *buffer, int length);
+    const char *formatName() const;
+};
 }
 
 

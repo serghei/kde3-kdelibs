@@ -35,7 +35,7 @@ class KateView;
 class KateViewInternal;
 
 namespace Kate {
-  class Command;
+class Command;
 }
 
 /**
@@ -45,39 +45,45 @@ namespace Kate {
  *
  * Also, it adds some usefull indicators on the scrollbar.
  */
-class KateScrollBar : public QScrollBar
-{
-  Q_OBJECT
+class KateScrollBar : public QScrollBar {
+    Q_OBJECT
 
-  public:
-    KateScrollBar(Orientation orientation, class KateViewInternal *parent, const char* name = 0L);
+public:
+    KateScrollBar(Orientation orientation, class KateViewInternal *parent, const char *name = 0L);
 
-    inline bool showMarks() { return m_showMarks; };
-    inline void setShowMarks(bool b) { m_showMarks = b; update(); };
+    inline bool showMarks()
+    {
+        return m_showMarks;
+    };
+    inline void setShowMarks(bool b)
+    {
+        m_showMarks = b;
+        update();
+    };
 
-  signals:
+signals:
     void sliderMMBMoved(int value);
 
-  protected:
-    virtual void mousePressEvent(QMouseEvent* e);
-    virtual void mouseReleaseEvent(QMouseEvent* e);
-    virtual void mouseMoveEvent (QMouseEvent* e);
+protected:
+    virtual void mousePressEvent(QMouseEvent *e);
+    virtual void mouseReleaseEvent(QMouseEvent *e);
+    virtual void mouseMoveEvent(QMouseEvent *e);
     virtual void paintEvent(QPaintEvent *);
     virtual void resizeEvent(QResizeEvent *);
     virtual void styleChange(QStyle &oldStyle);
     virtual void valueChange();
     virtual void rangeChange();
 
-  protected slots:
+protected slots:
     void sliderMaybeMoved(int value);
     void marksChanged();
 
-  private:
+private:
     void redrawMarks();
     void recomputeMarksPositions(bool forceFullUpdate = false);
     void watchScrollBarSize();
 
-  bool m_middleMouseDown;
+    bool m_middleMouseDown;
 
     KateView *m_view;
     KateDocument *m_doc;
@@ -87,44 +93,42 @@ class KateScrollBar : public QScrollBar
     int m_bottomMargin;
     uint m_savVisibleLines;
 
-    QIntDict<QColor> m_lines;
+    QIntDict< QColor > m_lines;
 
     bool m_showMarks;
 };
 
-class KateCmdLine : public KLineEdit
-{
-  Q_OBJECT
+class KateCmdLine : public KLineEdit {
+    Q_OBJECT
 
-  public:
-    KateCmdLine (KateView *view);
+public:
+    KateCmdLine(KateView *view);
 
-  private slots:
-    void slotReturnPressed ( const QString& cmd );
-    void hideMe ();
+private slots:
+    void slotReturnPressed(const QString &cmd);
+    void hideMe();
 
-  protected:
-    void focusInEvent ( QFocusEvent *ev );
-    void keyPressEvent( QKeyEvent *ev );
+protected:
+    void focusInEvent(QFocusEvent *ev);
+    void keyPressEvent(QKeyEvent *ev);
 
-  private:
-    void fromHistory( bool up );
+private:
+    void fromHistory(bool up);
     KateView *m_view;
     bool m_msgMode;
     QString m_oldText;
-    uint m_histpos; ///< position in the history
-    uint m_cmdend; ///< the point where a command ends in the text, if we have a valid one.
-    Kate::Command *m_command; ///< For completing flags/args and interactiveness
+    uint m_histpos;                           ///< position in the history
+    uint m_cmdend;                            ///< the point where a command ends in the text, if we have a valid one.
+    Kate::Command *m_command;                 ///< For completing flags/args and interactiveness
     class KCompletion *m_oldCompletionObject; ///< save while completing command args.
     class KateCmdLnWhatsThis *m_help;
 };
 
-class KateIconBorder : public QWidget
-{
-  Q_OBJECT
+class KateIconBorder : public QWidget {
+    Q_OBJECT
 
-  public:
-    KateIconBorder( KateViewInternal* internalView, QWidget *parent );
+public:
+    KateIconBorder(KateViewInternal *internalView, QWidget *parent);
 
     // VERY IMPORTANT ;)
     virtual QSize sizeHint() const;
@@ -132,44 +136,74 @@ class KateIconBorder : public QWidget
     void updateFont();
     int lineNumberWidth() const;
 
-    void setIconBorderOn(     bool enable );
-    void setLineNumbersOn(    bool enable );
-    void setDynWrapIndicators(int state );
-    int dynWrapIndicators()  const { return m_dynWrapIndicators; }
-    bool dynWrapIndicatorsOn() const { return m_dynWrapIndicatorsOn; }
-    void setFoldingMarkersOn( bool enable );
-    void toggleIconBorder()     { setIconBorderOn(     !iconBorderOn() );     }
-    void toggleLineNumbers()    { setLineNumbersOn(    !lineNumbersOn() );    }
-    void toggleFoldingMarkers() { setFoldingMarkersOn( !foldingMarkersOn() ); }
-    bool iconBorderOn()       const { return m_iconBorderOn;     }
-    bool lineNumbersOn()      const { return m_lineNumbersOn;    }
-    bool foldingMarkersOn()   const { return m_foldingMarkersOn; }
+    void setIconBorderOn(bool enable);
+    void setLineNumbersOn(bool enable);
+    void setDynWrapIndicators(int state);
+    int dynWrapIndicators() const
+    {
+        return m_dynWrapIndicators;
+    }
+    bool dynWrapIndicatorsOn() const
+    {
+        return m_dynWrapIndicatorsOn;
+    }
+    void setFoldingMarkersOn(bool enable);
+    void toggleIconBorder()
+    {
+        setIconBorderOn(!iconBorderOn());
+    }
+    void toggleLineNumbers()
+    {
+        setLineNumbersOn(!lineNumbersOn());
+    }
+    void toggleFoldingMarkers()
+    {
+        setFoldingMarkersOn(!foldingMarkersOn());
+    }
+    bool iconBorderOn() const
+    {
+        return m_iconBorderOn;
+    }
+    bool lineNumbersOn() const
+    {
+        return m_lineNumbersOn;
+    }
+    bool foldingMarkersOn() const
+    {
+        return m_foldingMarkersOn;
+    }
 
-    enum BorderArea { None, LineNumbers, IconBorder, FoldingMarkers };
-    BorderArea positionToArea( const QPoint& ) const;
+    enum BorderArea
+    {
+        None,
+        LineNumbers,
+        IconBorder,
+        FoldingMarkers
+    };
+    BorderArea positionToArea(const QPoint &) const;
 
-  signals:
-    void toggleRegionVisibility( unsigned int );
+signals:
+    void toggleRegionVisibility(unsigned int);
 
-  private:
-    void paintEvent( QPaintEvent* );
-    void paintBorder (int x, int y, int width, int height);
+private:
+    void paintEvent(QPaintEvent *);
+    void paintBorder(int x, int y, int width, int height);
 
-    void mousePressEvent( QMouseEvent* );
-    void mouseMoveEvent( QMouseEvent* );
-    void mouseReleaseEvent( QMouseEvent* );
-    void mouseDoubleClickEvent( QMouseEvent* );
+    void mousePressEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+    void mouseDoubleClickEvent(QMouseEvent *);
 
-    void showMarkMenu( uint line, const QPoint& pos );
+    void showMarkMenu(uint line, const QPoint &pos);
 
     KateView *m_view;
     KateDocument *m_doc;
     KateViewInternal *m_viewInternal;
 
-    bool m_iconBorderOn:1;
-    bool m_lineNumbersOn:1;
-    bool m_foldingMarkersOn:1;
-    bool m_dynWrapIndicatorsOn:1;
+    bool m_iconBorderOn : 1;
+    bool m_lineNumbersOn : 1;
+    bool m_foldingMarkersOn : 1;
+    bool m_dynWrapIndicatorsOn : 1;
     int m_dynWrapIndicators;
 
     uint m_lastClickedLine;
@@ -182,24 +216,26 @@ class KateIconBorder : public QWidget
     mutable QColor m_oldBackgroundColor;
 };
 
-class KateViewEncodingAction : public KActionMenu
-{
-  Q_OBJECT
+class KateViewEncodingAction : public KActionMenu {
+    Q_OBJECT
 
-  public:
-    KateViewEncodingAction(KateDocument *_doc, KateView *_view, const QString& text, QObject* parent = 0, const char* name = 0);
+public:
+    KateViewEncodingAction(KateDocument *_doc, KateView *_view, const QString &text, QObject *parent = 0, const char *name = 0);
 
-    ~KateViewEncodingAction(){;};
+    ~KateViewEncodingAction()
+    {
+        ;
+    };
 
-  private:
-    KateDocument* doc;
+private:
+    KateDocument *doc;
     KateView *view;
 
-  public  slots:
+public slots:
     void slotAboutToShow();
 
-  private slots:
-    void setMode (int mode);
+private slots:
+    void setMode(int mode);
 };
 
 #endif

@@ -20,7 +20,7 @@
 #ifndef KMTIMER_H
 #define KMTIMER_H
 
-#if !defined( _KDEPRINT_COMPILE ) && defined( __GNUC__ )
+#if !defined(_KDEPRINT_COMPILE) && defined(__GNUC__)
 #warning internal header, do not use except if you are a KDEPrint developer
 #endif
 
@@ -34,29 +34,28 @@
  * if you're a KDEPrint developer. The API might change in the
  * future and binary compatibility might be broken.
  */
-class KDEPRINT_EXPORT KMTimer : public QTimer
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT KMTimer : public QTimer {
+    Q_OBJECT
 public:
-	void delay(int t);
-	~KMTimer();
+    void delay(int t);
+    ~KMTimer();
 
 public slots:
-	void hold();
-	void release();
-	void release(bool do_emit);
+    void hold();
+    void release();
+    void release(bool do_emit);
 
-	static KMTimer* self();
+    static KMTimer *self();
 
 private slots:
-	void slotTimeout();
+    void slotTimeout();
 
 private:
-	static KMTimer	*m_self;
-	int	m_count;
-	KMTimer(QObject *parent = 0, const char *name = 0);
-	void releaseTimer(bool do_emit = false);
-	void startTimer(int delay = -1);
+    static KMTimer *m_self;
+    int m_count;
+    KMTimer(QObject *parent = 0, const char *name = 0);
+    void releaseTimer(bool do_emit = false);
+    void startTimer(int delay = -1);
 };
 
 #endif

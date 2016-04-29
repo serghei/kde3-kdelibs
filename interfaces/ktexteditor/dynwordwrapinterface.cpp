@@ -21,16 +21,17 @@
 #include "dynwordwrapinterface.h"
 #include "view.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateDynWordWrapInterface
-{
-  public:
-    PrivateDynWordWrapInterface() {}
-    ~PrivateDynWordWrapInterface() {}
+class PrivateDynWordWrapInterface {
+public:
+    PrivateDynWordWrapInterface()
+    {
+    }
+    ~PrivateDynWordWrapInterface()
+    {
+    }
 };
-
 }
 
 using namespace KTextEditor;
@@ -39,31 +40,31 @@ unsigned int DynWordWrapInterface::globalDynWordWrapInterfaceNumber = 0;
 
 DynWordWrapInterface::DynWordWrapInterface()
 {
-  globalDynWordWrapInterfaceNumber++;
-  myDynWordWrapInterfaceNumber = globalDynWordWrapInterfaceNumber++;
+    globalDynWordWrapInterfaceNumber++;
+    myDynWordWrapInterfaceNumber = globalDynWordWrapInterfaceNumber++;
 
-  d = new PrivateDynWordWrapInterface();
+    d = new PrivateDynWordWrapInterface();
 }
 
 DynWordWrapInterface::~DynWordWrapInterface()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int DynWordWrapInterface::dynWordWrapInterfaceNumber () const
+unsigned int DynWordWrapInterface::dynWordWrapInterfaceNumber() const
 {
-  return myDynWordWrapInterfaceNumber;
+    return myDynWordWrapInterfaceNumber;
 }
 
-void DynWordWrapInterface::setDynWordWrapInterfaceDCOPSuffix (const QCString &/*suffix*/)
+void DynWordWrapInterface::setDynWordWrapInterfaceDCOPSuffix(const QCString & /*suffix*/)
 {
-  //d->interface->setObjId ("DynWordWrapInterface#"+suffix);
+    // d->interface->setObjId ("DynWordWrapInterface#"+suffix);
 }
 
-DynWordWrapInterface *KTextEditor::dynWordWrapInterface (View *view)
-{           
-  if (!view)
-    return 0;
+DynWordWrapInterface *KTextEditor::dynWordWrapInterface(View *view)
+{
+    if(!view)
+        return 0;
 
-  return static_cast<DynWordWrapInterface*>(view->qt_cast("KTextEditor::DynWordWrapInterface"));
+    return static_cast< DynWordWrapInterface * >(view->qt_cast("KTextEditor::DynWordWrapInterface"));
 }

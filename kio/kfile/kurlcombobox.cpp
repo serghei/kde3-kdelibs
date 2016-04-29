@@ -27,29 +27,26 @@
 
 #include <kurlcombobox.h>
 
-class KURLComboBox::KURLComboBoxPrivate
-{
+class KURLComboBox::KURLComboBoxPrivate {
 public:
-    KURLComboBoxPrivate() {
-	dirpix = SmallIcon(QString::fromLatin1("folder"));
+    KURLComboBoxPrivate()
+    {
+        dirpix = SmallIcon(QString::fromLatin1("folder"));
     }
 
     QPixmap dirpix;
 };
 
 
-KURLComboBox::KURLComboBox( Mode mode, QWidget *parent, const char *name )
-    : KComboBox( parent, name )
+KURLComboBox::KURLComboBox(Mode mode, QWidget *parent, const char *name) : KComboBox(parent, name)
 {
-    init( mode );
+    init(mode);
 }
 
 
-KURLComboBox::KURLComboBox( Mode mode, bool rw, QWidget *parent,
-                            const char *name )
-    : KComboBox( rw, parent, name )
+KURLComboBox::KURLComboBox(Mode mode, bool rw, QWidget *parent, const char *name) : KComboBox(rw, parent, name)
 {
-    init( mode );
+    init(mode);
 }
 
 
@@ -59,38 +56,40 @@ KURLComboBox::~KURLComboBox()
 }
 
 
-void KURLComboBox::init( Mode mode )
+void KURLComboBox::init(Mode mode)
 {
     d = new KURLComboBoxPrivate();
 
-    myMode    = mode;
-    urlAdded  = false;
+    myMode = mode;
+    urlAdded = false;
     myMaximum = 10; // default
-    itemList.setAutoDelete( true );
-    defaultList.setAutoDelete( true );
-    setInsertionPolicy( NoInsertion );
-    setTrapReturnKey( true );
-    setSizePolicy( QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed ));
+    itemList.setAutoDelete(true);
+    defaultList.setAutoDelete(true);
+    setInsertionPolicy(NoInsertion);
+    setTrapReturnKey(true);
+    setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed));
 
     opendirPix = SmallIcon(QString::fromLatin1("folder_open"));
 
-    connect( this, SIGNAL( activated( int )), SLOT( slotActivated( int )));
+    connect(this, SIGNAL(activated(int)), SLOT(slotActivated(int)));
 }
 
 
 QStringList KURLComboBox::urls() const
 {
     kdDebug(250) << "::urls()" << endl;
-    //static const QString &fileProt = KGlobal::staticQString("file:");
+    // static const QString &fileProt = KGlobal::staticQString("file:");
     QStringList list;
     QString url;
-    for ( int i = defaultList.count(); i < count(); i++ ) {
-        url = text( i );
-        if ( !url.isEmpty() ) {
-            //if ( url.at(0) == '/' )
+    for(int i = defaultList.count(); i < count(); i++)
+    {
+        url = text(i);
+        if(!url.isEmpty())
+        {
+            // if ( url.at(0) == '/' )
             //    list.append( url.prepend( fileProt ) );
-            //else
-                list.append( url );
+            // else
+            list.append(url);
         }
     }
 
@@ -98,27 +97,26 @@ QStringList KURLComboBox::urls() const
 }
 
 
-void KURLComboBox::addDefaultURL( const KURL& url, const QString& text )
+void KURLComboBox::addDefaultURL(const KURL &url, const QString &text)
 {
-    addDefaultURL( url, getPixmap( url ), text );
+    addDefaultURL(url, getPixmap(url), text);
 }
 
 
-void KURLComboBox::addDefaultURL( const KURL& url, const QPixmap& pix,
-                                  const QString& text )
+void KURLComboBox::addDefaultURL(const KURL &url, const QPixmap &pix, const QString &text)
 {
     KURLComboItem *item = new KURLComboItem;
     item->url = url;
     item->pixmap = pix;
-    if ( text.isEmpty() )
-        if ( url.isLocalFile() )
-          item->text = url.path( myMode );
+    if(text.isEmpty())
+        if(url.isLocalFile())
+            item->text = url.path(myMode);
         else
-          item->text = url.prettyURL( myMode );
+            item->text = url.prettyURL(myMode);
     else
         item->text = text;
 
-    defaultList.append( item );
+    defaultList.append(item);
 }
 
 
@@ -128,32 +126,35 @@ void KURLComboBox::setDefaults()
     itemMapper.clear();
 
     KURLComboItem *item;
-    for ( unsigned int id = 0; id < defaultList.count(); id++ ) {
-        item = defaultList.at( id );
-        insertURLItem( item );
+    for(unsigned int id = 0; id < defaultList.count(); id++)
+    {
+        item = defaultList.at(id);
+        insertURLItem(item);
     }
 }
 
-void KURLComboBox::setURLs( QStringList urls )
+void KURLComboBox::setURLs(QStringList urls)
 {
-    setURLs( urls, RemoveBottom );
+    setURLs(urls, RemoveBottom);
 }
 
-void KURLComboBox::setURLs( QStringList urls, OverLoadResolving remove )
+void KURLComboBox::setURLs(QStringList urls, OverLoadResolving remove)
 {
     setDefaults();
     itemList.clear();
 
-    if ( urls.isEmpty() )
+    if(urls.isEmpty())
         return;
 
     QStringList::Iterator it = urls.begin();
 
     // kill duplicates
     QString text;
-    while ( it != urls.end() ) {
-        while ( urls.contains( *it ) > 1 ) {
-            it = urls.remove( it );
+    while(it != urls.end())
+    {
+        while(urls.contains(*it) > 1)
+        {
+            it = urls.remove(it);
             continue;
         }
         ++it;
@@ -163,7 +164,8 @@ void KURLComboBox::setURLs( QStringList urls, OverLoadResolving remove )
     /* Note: overload is an (old) C++ keyword, some compilers (KCC) choke
        on that, so call it Overload (capital 'O').  (matz) */
     int Overload = urls.count() - myMaximum + defaultList.count();
-    while ( Overload > 0 ) {
+    while(Overload > 0)
+    {
         urls.remove((remove == RemoveBottom) ? urls.fromLast() : urls.begin());
         Overload--;
     }
@@ -173,53 +175,58 @@ void KURLComboBox::setURLs( QStringList urls, OverLoadResolving remove )
     KURLComboItem *item = 0L;
     KURL u;
 
-    while ( it != urls.end() ) {
-        if ( (*it).isEmpty() ) {
+    while(it != urls.end())
+    {
+        if((*it).isEmpty())
+        {
             ++it;
             continue;
         }
-        u = KURL::fromPathOrURL( *it );
+        u = KURL::fromPathOrURL(*it);
 
         // Don't restore if file doesn't exist anymore
-        if (u.isLocalFile() && !QFile::exists(u.path())) {
-            ++it; 
+        if(u.isLocalFile() && !QFile::exists(u.path()))
+        {
+            ++it;
             continue;
         }
 
         item = new KURLComboItem;
         item->url = u;
-        item->pixmap = getPixmap( u );
+        item->pixmap = getPixmap(u);
 
-        if ( u.isLocalFile() )
-            item->text = u.path( myMode ); // don't show file:/
+        if(u.isLocalFile())
+            item->text = u.path(myMode); // don't show file:/
         else
             item->text = *it;
 
-        insertURLItem( item );
-        itemList.append( item );
+        insertURLItem(item);
+        itemList.append(item);
         ++it;
     }
 }
 
 
-void KURLComboBox::setURL( const KURL& url )
+void KURLComboBox::setURL(const KURL &url)
 {
-    if ( url.isEmpty() )
+    if(url.isEmpty())
         return;
 
-    blockSignals( true );
+    blockSignals(true);
 
     // check for duplicates
-    QMap<int,const KURLComboItem*>::ConstIterator mit = itemMapper.begin();
+    QMap< int, const KURLComboItem * >::ConstIterator mit = itemMapper.begin();
     QString urlToInsert = url.url(-1);
-    while ( mit != itemMapper.end() ) {
-        if ( urlToInsert == mit.data()->url.url(-1) ) {
-            setCurrentItem( mit.key() );
+    while(mit != itemMapper.end())
+    {
+        if(urlToInsert == mit.data()->url.url(-1))
+        {
+            setCurrentItem(mit.key());
 
-            if ( myMode == Directories )
-                updateItem( mit.data(), mit.key(), opendirPix );
+            if(myMode == Directories)
+                updateItem(mit.data(), mit.key(), opendirPix);
 
-            blockSignals( false );
+            blockSignals(false);
             return;
         }
         ++mit;
@@ -228,135 +235,139 @@ void KURLComboBox::setURL( const KURL& url )
     // not in the combo yet -> create a new item and insert it
 
     // first remove the old item
-    if ( urlAdded ) {
+    if(urlAdded)
+    {
         itemList.removeLast();
         urlAdded = false;
     }
 
     setDefaults();
 
-    QPtrListIterator<KURLComboItem> it( itemList );
-    for( ; it.current(); ++it )
-        insertURLItem( it.current() );
+    QPtrListIterator< KURLComboItem > it(itemList);
+    for(; it.current(); ++it)
+        insertURLItem(it.current());
 
     KURLComboItem *item = new KURLComboItem;
     item->url = url;
-    item->pixmap = getPixmap( url );
-    if ( url.isLocalFile() )
-        item->text = url.path( myMode );
+    item->pixmap = getPixmap(url);
+    if(url.isLocalFile())
+        item->text = url.path(myMode);
     else
-        item->text = url.prettyURL( myMode );
-     kdDebug(250) << "setURL: text=" << item->text << endl;
+        item->text = url.prettyURL(myMode);
+    kdDebug(250) << "setURL: text=" << item->text << endl;
 
     int id = count();
     QString text = /*isEditable() ? item->url.prettyURL( myMode ) : */ item->text;
 
-    if ( myMode == Directories )
-        KComboBox::insertItem( opendirPix, text, id );
+    if(myMode == Directories)
+        KComboBox::insertItem(opendirPix, text, id);
     else
-        KComboBox::insertItem( item->pixmap, text, id );
-    itemMapper.insert( id, item );
-    itemList.append( item );
+        KComboBox::insertItem(item->pixmap, text, id);
+    itemMapper.insert(id, item);
+    itemList.append(item);
 
-    setCurrentItem( id );
+    setCurrentItem(id);
     urlAdded = true;
-    blockSignals( false );
+    blockSignals(false);
 }
 
 
-void KURLComboBox::slotActivated( int index )
+void KURLComboBox::slotActivated(int index)
 {
-    const KURLComboItem *item = itemMapper[ index ];
+    const KURLComboItem *item = itemMapper[index];
 
-    if ( item ) {
-        setURL( item->url );
-        emit urlActivated( item->url );
+    if(item)
+    {
+        setURL(item->url);
+        emit urlActivated(item->url);
     }
 }
 
 
-void KURLComboBox::insertURLItem( const KURLComboItem *item )
+void KURLComboBox::insertURLItem(const KURLComboItem *item)
 {
-// kdDebug(250) << "insertURLItem " << item->text << endl;
+    // kdDebug(250) << "insertURLItem " << item->text << endl;
     int id = count();
-    KComboBox::insertItem( item->pixmap, item->text, id );
-    itemMapper.insert( id, item );
+    KComboBox::insertItem(item->pixmap, item->text, id);
+    itemMapper.insert(id, item);
 }
 
 
-void KURLComboBox::setMaxItems( int max )
+void KURLComboBox::setMaxItems(int max)
 {
     myMaximum = max;
 
-    if ( count() > myMaximum ) {
+    if(count() > myMaximum)
+    {
         int oldCurrent = currentItem();
 
         setDefaults();
 
-        QPtrListIterator<KURLComboItem> it( itemList );
+        QPtrListIterator< KURLComboItem > it(itemList);
         int Overload = itemList.count() - myMaximum + defaultList.count();
-        for ( int i = 0; i <= Overload; i++ )
+        for(int i = 0; i <= Overload; i++)
             ++it;
 
-        for( ; it.current(); ++it )
-            insertURLItem( it.current() );
+        for(; it.current(); ++it)
+            insertURLItem(it.current());
 
-        if ( count() > 0 ) { // restore the previous currentItem
-            if ( oldCurrent >= count() )
-                oldCurrent = count() -1;
-            setCurrentItem( oldCurrent );
+        if(count() > 0)
+        { // restore the previous currentItem
+            if(oldCurrent >= count())
+                oldCurrent = count() - 1;
+            setCurrentItem(oldCurrent);
         }
     }
 }
 
 
-void KURLComboBox::removeURL( const KURL& url, bool checkDefaultURLs )
+void KURLComboBox::removeURL(const KURL &url, bool checkDefaultURLs)
 {
-    QMap<int,const KURLComboItem*>::ConstIterator mit = itemMapper.begin();
-    while ( mit != itemMapper.end() ) {
-        if ( url.url(-1) == mit.data()->url.url(-1) ) {
-            if ( !itemList.remove( mit.data() ) && checkDefaultURLs )
-                defaultList.remove( mit.data() );
+    QMap< int, const KURLComboItem * >::ConstIterator mit = itemMapper.begin();
+    while(mit != itemMapper.end())
+    {
+        if(url.url(-1) == mit.data()->url.url(-1))
+        {
+            if(!itemList.remove(mit.data()) && checkDefaultURLs)
+                defaultList.remove(mit.data());
         }
         ++mit;
     }
 
-    blockSignals( true );
+    blockSignals(true);
     setDefaults();
-    QPtrListIterator<KURLComboItem> it( itemList );
-    while ( it.current() ) {
-        insertURLItem( *it );
+    QPtrListIterator< KURLComboItem > it(itemList);
+    while(it.current())
+    {
+        insertURLItem(*it);
         ++it;
     }
-    blockSignals( false );
+    blockSignals(false);
 }
 
 
-QPixmap KURLComboBox::getPixmap( const KURL& url ) const
+QPixmap KURLComboBox::getPixmap(const KURL &url) const
 {
-    if ( myMode == Directories )
+    if(myMode == Directories)
         return d->dirpix;
     else
-        return KMimeType::pixmapForURL( url, 0, KIcon::Small );
+        return KMimeType::pixmapForURL(url, 0, KIcon::Small);
 }
 
 
 // updates "item" with pixmap "pixmap" and sets the URL instead of text
 // works around a Qt bug.
-void KURLComboBox::updateItem( const KURLComboItem *item,
-                               int index, const QPixmap& pixmap )
+void KURLComboBox::updateItem(const KURLComboItem *item, int index, const QPixmap &pixmap)
 {
     // QComboBox::changeItem() doesn't honor the pixmap when
     // using an editable combobox, so we just remove and insert
-    if ( editable() ) {
-	removeItem( index );
-	insertItem( pixmap,
-		    item->url.isLocalFile() ? item->url.path( myMode ) :
-		                              item->url.prettyURL( myMode ),
-		    index );
+    if(editable())
+    {
+        removeItem(index);
+        insertItem(pixmap, item->url.isLocalFile() ? item->url.path(myMode) : item->url.prettyURL(myMode), index);
     }
     else
-        changeItem( pixmap, item->text, index );
+        changeItem(pixmap, item->text, index);
 }
 
 

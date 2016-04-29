@@ -37,22 +37,20 @@ class QPushButton;
 class QVButtonGroup;
 class KURLLabel;
 
-class KCookieDetail : public QGroupBox
-{
+class KCookieDetail : public QGroupBox {
     Q_OBJECT
 
-public :
-    KCookieDetail( KHttpCookieList cookieList, int cookieCount, QWidget *parent=0,
-                   const char *name=0 );
+public:
+    KCookieDetail(KHttpCookieList cookieList, int cookieCount, QWidget *parent = 0, const char *name = 0);
     ~KCookieDetail();
 
-private :
-    KLineEdit*   m_name;
-    KLineEdit*   m_value;
-    KLineEdit*   m_expires;
-    KLineEdit*   m_domain;
-    KLineEdit*   m_path;
-    KLineEdit*   m_secure;
+private:
+    KLineEdit *m_name;
+    KLineEdit *m_value;
+    KLineEdit *m_expires;
+    KLineEdit *m_domain;
+    KLineEdit *m_path;
+    KLineEdit *m_secure;
 
     KHttpCookieList m_cookieList;
     KHttpCookiePtr m_cookie;
@@ -61,21 +59,19 @@ private slots:
     void slotNextCookie();
 };
 
-class KCookieWin : public KDialog
-{
+class KCookieWin : public KDialog {
     Q_OBJECT
 
-public :
-    KCookieWin( QWidget *parent, KHttpCookieList cookieList, int defaultButton=0,
-                bool showDetails=false );
+public:
+    KCookieWin(QWidget *parent, KHttpCookieList cookieList, int defaultButton = 0, bool showDetails = false);
     ~KCookieWin();
 
-    KCookieAdvice advice( KCookieJar *cookiejar, KHttpCookie* cookie );
+    KCookieAdvice advice(KCookieJar *cookiejar, KHttpCookie *cookie);
 
-private :
-    QPushButton*   m_button;
-    QVButtonGroup* m_btnGrp;
-    KCookieDetail* m_detailView;
+private:
+    QPushButton *m_button;
+    QVButtonGroup *m_btnGrp;
+    KCookieDetail *m_detailView;
     bool m_showDetails;
 
 private slots:

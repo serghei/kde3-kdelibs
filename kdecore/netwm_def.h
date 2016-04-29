@@ -23,8 +23,8 @@
 
 */
 
-#ifndef   __netwm_def_h
-#define   __netwm_def_h
+#ifndef __netwm_def_h
+#define __netwm_def_h
 
 #include <kdelibs_export.h>
 
@@ -35,23 +35,26 @@
   this class is to keep the implementation from being dependant on a
   separate framework/library.
 
-  NETPoint is only used by the NET API. Usually QPoint is the 
+  NETPoint is only used by the NET API. Usually QPoint is the
   appropriate class for representing a point.
 
   @author Bradley T. Hughes <bhughes@trolltech.com>
 **/
 
-struct NETPoint {
+struct NETPoint
+{
     /**
        Constructor to initialize this point to 0,0.
     **/
-    NETPoint() : x(0), y(0) { }
+    NETPoint() : x(0), y(0)
+    {
+    }
 
     /*
        Public data member.
     **/
     int x, ///< x coordinate.
-      y;   ///< y coordinate
+        y; ///< y coordinate
 };
 
 
@@ -62,23 +65,26 @@ struct NETPoint {
   existence of this class is to keep the implementation from being dependant
   on a separate framework/library.
 
-  NETSize is only used by the NET API. Usually QSize is the 
+  NETSize is only used by the NET API. Usually QSize is the
   appropriate class for representing a size.
 
   @author Bradley T. Hughes <bhughes@trolltech.com>
 **/
 
-struct NETSize {
+struct NETSize
+{
     /**
        Constructor to initialize this size to 0x0
     **/
-    NETSize() : width(0), height(0) { }
+    NETSize() : width(0), height(0)
+    {
+    }
 
     /*
        Public data member.
     **/
     int width,  ///< Width.
-      height;   ///< Height.
+        height; ///< Height.
 };
 
 /**
@@ -88,10 +94,11 @@ struct NETSize {
    size width by height.  The existence of this class is to keep the implementation
    from being dependant on a separate framework/library;
 
-   NETRect is only used by the NET API. Usually QRect is the 
+   NETRect is only used by the NET API. Usually QRect is the
    appropriate class for representing a rectangle.
 **/
-struct NETRect {
+struct NETRect
+{
     /**
        Position of the rectangle.
 
@@ -115,15 +122,18 @@ struct NETRect {
    The existence of this class is to keep the implementation from being
    dependant on a separate framework/library.
 
-   NETIcon is only used by the NET API. Usually QIcon is the 
+   NETIcon is only used by the NET API. Usually QIcon is the
    appropriate class for representing an icon.
 **/
 
-struct NETIcon {
+struct NETIcon
+{
     /**
        Constructor to initialize this icon to 0x0 with data=0
     **/
-    NETIcon() : data(0) { }
+    NETIcon() : data(0)
+    {
+    }
 
     /**
        Size of the icon.
@@ -150,13 +160,26 @@ struct NETIcon {
    See the _NET_WM_STRUT_PARTIAL property in the NETWM spec.
 **/
 
-struct NETExtendedStrut {
+struct NETExtendedStrut
+{
     /**
        Constructor to initialize this struct to 0,0,0,0
     **/
-    NETExtendedStrut() : left_width(0), left_start(0), left_end(0),
-        right_width(0), right_start(0), right_end(0), top_width(0), top_start(0), top_end(0),
-        bottom_width(0), bottom_start(0), bottom_end(0) {}
+    NETExtendedStrut()
+        : left_width(0)
+        , left_start(0)
+        , left_end(0)
+        , right_width(0)
+        , right_start(0)
+        , right_end(0)
+        , top_width(0)
+        , top_start(0)
+        , top_end(0)
+        , bottom_width(0)
+        , bottom_start(0)
+        , bottom_end(0)
+    {
+    }
 
     /**
        Left border of the strut, width and range.
@@ -177,7 +200,6 @@ struct NETExtendedStrut {
        Bottom border of the strut, width and range.
            **/
     int bottom_width, bottom_start, bottom_end;
-    
 };
 
 
@@ -192,11 +214,14 @@ struct NETExtendedStrut {
    property in the NETWM spec.
 **/
 
-struct NETStrut {
+struct NETStrut
+{
     /**
        Constructor to initialize this struct to 0,0,0,0
     **/
-    NETStrut() : left(0), right(0), top(0), bottom(0) { }
+    NETStrut() : left(0), right(0), top(0), bottom(0)
+    {
+    }
 
     /**
        Left border of the strut.
@@ -228,7 +253,7 @@ struct NETStrut {
   This class is the base class for the NETRootInfo and NETWinInfo classes, which
   are used to retrieve and modify the properties of windows. To keep
   the namespace relatively clean, all enums are defined here.
-  
+
   @see http://www.freedesktop.org/standards/wm-spec/
  **/
 
@@ -244,9 +269,10 @@ public:
        application.
     **/
 
-    enum Role {
-	Client,
-	WindowManager
+    enum Role
+    {
+        Client,
+        WindowManager
     };
 
     /**
@@ -271,18 +297,18 @@ public:
        not set, then windows with WM_TRANSIENT_FOR set must be taken as this type.
 
        @li Override - deprecated, has unclear meaning and is KDE-only.
-       
+
        @li TopMenu indicates a toplevel menu (AKA macmenu). This is a KDE extension to the
        _NET_WM_WINDOW_TYPE mechanism.
 
        @li DropdownMenu - dropdown menu (from a menubar typically)
-       
+
        @li PopupMenu - a popup menu (a context menu typically)
-       
+
        @li Tooltip - a tooltip window
-       
+
        @li Notification - a notification window
-       
+
        @li ComboBox - a list window for a combobox
 
        @li DNDIcon - a window that represents the dragged object during DND operation
@@ -291,59 +317,64 @@ public:
        windows (WX11BypassWM flag).
     **/
 
-    enum WindowType {
-	Unknown  = -1,
-	Normal   = 0,
-	Desktop  = 1,
-	Dock     = 2,
-	Toolbar  = 3,
-       	Menu     = 4,
-	Dialog   = 5,
-	Override = 6, ///< @deprecated
-        TopMenu  = 7, // NON STANDARD
-	Tool     = Toolbar, // This will go away soon, COMPAT (How soon? :)
-	Utility  = 8,	///< @since 3.2
-	Splash   = 9,   ///< @since 3.2
-        DropdownMenu = 10,  ///< @since 3.5.7
-        PopupMenu    = 11,  ///< @since 3.5.7
-        Tooltip      = 12,  ///< @since 3.5.7
-        Notification = 13,  ///< @since 3.5.7
-        ComboBox     = 14,  ///< @since 3.5.7
-        DNDIcon      = 15   ///< @since 3.5.7
+    enum WindowType
+    {
+        Unknown = -1,
+        Normal = 0,
+        Desktop = 1,
+        Dock = 2,
+        Toolbar = 3,
+        Menu = 4,
+        Dialog = 5,
+        Override = 6,      ///< @deprecated
+        TopMenu = 7,       // NON STANDARD
+        Tool = Toolbar,    // This will go away soon, COMPAT (How soon? :)
+        Utility = 8,       ///< @since 3.2
+        Splash = 9,        ///< @since 3.2
+        DropdownMenu = 10, ///< @since 3.5.7
+        PopupMenu = 11,    ///< @since 3.5.7
+        Tooltip = 12,      ///< @since 3.5.7
+        Notification = 13, ///< @since 3.5.7
+        ComboBox = 14,     ///< @since 3.5.7
+        DNDIcon = 15       ///< @since 3.5.7
     };
-    
+
     /**
         Values for WindowType when they should be OR'ed together, e.g.
         for the properties argument of the NETRootInfo constructor.
         @since 3.2
     **/
-    enum WindowTypeMask {
-	NormalMask   = 1<<0,
-	DesktopMask  = 1<<1,
-	DockMask     = 1<<2,
-	ToolbarMask  = 1<<3,
-	MenuMask     = 1<<4,
-	DialogMask   = 1<<5,
-	OverrideMask = 1<<6,
-        TopMenuMask  = 1<<7,
-	UtilityMask  = 1<<8,
-	SplashMask   = 1<<9,
-        DropdownMenuMask = 1<<10,  ///< @since 3.5.7
-        PopupMenuMask    = 1<<11,  ///< @since 3.5.7
-        TooltipMask      = 1<<12,  ///< @since 3.5.7
-        NotificationMask = 1<<13,  ///< @since 3.5.7
-        ComboBoxMask     = 1<<14,  ///< @since 3.5.7
-        DNDIconMask      = 1<<15   ///< @since 3.5.7
+    enum WindowTypeMask
+    {
+        NormalMask = 1 << 0,
+        DesktopMask = 1 << 1,
+        DockMask = 1 << 2,
+        ToolbarMask = 1 << 3,
+        MenuMask = 1 << 4,
+        DialogMask = 1 << 5,
+        OverrideMask = 1 << 6,
+        TopMenuMask = 1 << 7,
+        UtilityMask = 1 << 8,
+        SplashMask = 1 << 9,
+        DropdownMenuMask = 1 << 10, ///< @since 3.5.7
+        PopupMenuMask = 1 << 11,    ///< @since 3.5.7
+        TooltipMask = 1 << 12,      ///< @since 3.5.7
+        NotificationMask = 1 << 13, ///< @since 3.5.7
+        ComboBoxMask = 1 << 14,     ///< @since 3.5.7
+        DNDIconMask = 1 << 15       ///< @since 3.5.7
     };
 
     // KDE4 move to WindowTypeMask
-    enum { AllTypesMask = 0LU-1 };
+    enum
+    {
+        AllTypesMask = 0LU - 1
+    };
 
     /**
      * Returns true if the given window type matches the mask given
      * using WindowTypeMask flags.
-     */    
-    static bool typeMatchesMask( WindowType type, unsigned long mask );
+     */
+    static bool typeMatchesMask(WindowType type, unsigned long mask);
 
     /**
        Window state.
@@ -377,7 +408,7 @@ public:
        @li KeepBelow indicates that a window should be below most windows (but above any desktop windows).
 
        @li StaysOnTop is an obsolete name for KeepAbove.
-       
+
        @li DemandsAttention there was an attempt to activate this window, but the window manager prevented
            this. E.g. taskbar should mark such window specially to bring user's attention to this window.
            Only the window manager is allowed to change it.
@@ -386,21 +417,22 @@ public:
        should avoid setting these states themselves.
     **/
 
-    enum State {
-	Modal        = 1<<0,
-	Sticky       = 1<<1,
-	MaxVert      = 1<<2,
-	MaxHoriz     = 1<<3,
-	Max = MaxVert | MaxHoriz,
-	Shaded       = 1<<4,
-	SkipTaskbar  = 1<<5,
-	KeepAbove    = 1<<6,	///< @since 3.2
-	StaysOnTop   = KeepAbove,	// NOT STANDARD
-	SkipPager    = 1<<7,
-	Hidden       = 1<<8,	///< @since 3.2
-	FullScreen   = 1<<9,	///< @since 3.2
-	KeepBelow    = 1<<10,	///< @since 3.2
-        DemandsAttention = 1<<11  ///< @since 3.2
+    enum State
+    {
+        Modal = 1 << 0,
+        Sticky = 1 << 1,
+        MaxVert = 1 << 2,
+        MaxHoriz = 1 << 3,
+        Max = MaxVert | MaxHoriz,
+        Shaded = 1 << 4,
+        SkipTaskbar = 1 << 5,
+        KeepAbove = 1 << 6,     ///< @since 3.2
+        StaysOnTop = KeepAbove, // NOT STANDARD
+        SkipPager = 1 << 7,
+        Hidden = 1 << 8,           ///< @since 3.2
+        FullScreen = 1 << 9,       ///< @since 3.2
+        KeepBelow = 1 << 10,       ///< @since 3.2
+        DemandsAttention = 1 << 11 ///< @since 3.2
     };
 
     /**
@@ -422,28 +454,29 @@ public:
        @li KeyboardMove (movement via keyboard)
     **/
 
-    enum Direction {
-	TopLeft      = 0,
-	Top          = 1,
-	TopRight     = 2,
-	Right        = 3,
-	BottomRight  = 4,
-	Bottom       = 5,
-	BottomLeft   = 6,
-	Left         = 7,
-	Move         = 8,  // movement only
-    /**
-       @since 3.2
-    **/
-	KeyboardSize = 9,  // size via keyboard
-    /**
-       @since 3.2
-    **/
-	KeyboardMove = 10, // move via keyboard
-    /**
-      @since 3.5.1
-    **/
-	MoveResizeCancel = 11 // to ask the WM to stop moving a window
+    enum Direction
+    {
+        TopLeft = 0,
+        Top = 1,
+        TopRight = 2,
+        Right = 3,
+        BottomRight = 4,
+        Bottom = 5,
+        BottomLeft = 6,
+        Left = 7,
+        Move = 8,             // movement only
+                              /**
+                                 @since 3.2
+                              **/
+        KeyboardSize = 9,     // size via keyboard
+                              /**
+                                 @since 3.2
+                              **/
+        KeyboardMove = 10,    // move via keyboard
+                              /**
+                                @since 3.5.1
+                              **/
+        MoveResizeCancel = 11 // to ask the WM to stop moving a window
     };
 
     /**
@@ -461,30 +494,32 @@ public:
     **/
 
     // KDE4 aaarghl, this doesn't map correctly to Xlib #defines
-    enum MappingState {
-	Visible, // ie. NormalState
-	Withdrawn,
-	Iconic
+    enum MappingState
+    {
+        Visible, // ie. NormalState
+        Withdrawn,
+        Iconic
     };
 
     /**
       Actions that can be done with a window (_NET_WM_ALLOWED_ACTIONS).
       @since 3.2
     **/
-    enum Action {
-        ActionMove           = 1<<0,
-        ActionResize         = 1<<1,
-        ActionMinimize       = 1<<2,
-        ActionShade          = 1<<3,
-        ActionStick          = 1<<4,
-        ActionMaxVert        = 1<<5,
-        ActionMaxHoriz       = 1<<6,
-        ActionMax            = ActionMaxVert | ActionMaxHoriz,
-        ActionFullScreen     = 1<<7,
-        ActionChangeDesktop  = 1<<8,
-        ActionClose          = 1<<9
+    enum Action
+    {
+        ActionMove = 1 << 0,
+        ActionResize = 1 << 1,
+        ActionMinimize = 1 << 2,
+        ActionShade = 1 << 3,
+        ActionStick = 1 << 4,
+        ActionMaxVert = 1 << 5,
+        ActionMaxHoriz = 1 << 6,
+        ActionMax = ActionMaxVert | ActionMaxHoriz,
+        ActionFullScreen = 1 << 7,
+        ActionChangeDesktop = 1 << 8,
+        ActionClose = 1 << 9
     };
-    
+
     /**
        Supported properties.  Clients and Window Managers must define which
        properties/protocols it wants to support.
@@ -531,47 +566,48 @@ public:
        @li WMKDEFrameStrut
     **/
 
-    enum Property {
-	// root
-	Supported             = 1<<0,
-	ClientList            = 1<<1,
-	ClientListStacking    = 1<<2,
-	NumberOfDesktops      = 1<<3,
-	DesktopGeometry       = 1<<4,
-	DesktopViewport       = 1<<5,
-	CurrentDesktop        = 1<<6,
-	DesktopNames          = 1<<7,
-	ActiveWindow          = 1<<8,
-	WorkArea              = 1<<9,
-	SupportingWMCheck     = 1<<10,
-	VirtualRoots          = 1<<11,
-	KDESystemTrayWindows  = 1<<12, // NOT STANDARD
-	CloseWindow           = 1<<13,
-	WMMoveResize          = 1<<14,
+    enum Property
+    {
+        // root
+        Supported = 1 << 0,
+        ClientList = 1 << 1,
+        ClientListStacking = 1 << 2,
+        NumberOfDesktops = 1 << 3,
+        DesktopGeometry = 1 << 4,
+        DesktopViewport = 1 << 5,
+        CurrentDesktop = 1 << 6,
+        DesktopNames = 1 << 7,
+        ActiveWindow = 1 << 8,
+        WorkArea = 1 << 9,
+        SupportingWMCheck = 1 << 10,
+        VirtualRoots = 1 << 11,
+        KDESystemTrayWindows = 1 << 12, // NOT STANDARD
+        CloseWindow = 1 << 13,
+        WMMoveResize = 1 << 14,
 
-	// window
-	WMName                = 1<<15,
-	WMVisibleName         = 1<<16,
-	WMDesktop             = 1<<17,
-	WMWindowType          = 1<<18,
-	WMState               = 1<<19,
-	WMStrut               = 1<<20,
-	WMIconGeometry        = 1<<21,
-	WMIcon                = 1<<22,
-	WMPid                 = 1<<23,
-	WMHandledIcons        = 1<<24,
-	WMPing                = 1<<25,
-	WMKDESystemTrayWinFor = 1<<26, // NOT STANDARD
-	XAWMState             = 1<<27, // NOT STANDARD
-        WMFrameExtents        = 1<<28, ///< @since 3.5
-	WMKDEFrameStrut       = WMFrameExtents, // NOT STANDARD
+        // window
+        WMName = 1 << 15,
+        WMVisibleName = 1 << 16,
+        WMDesktop = 1 << 17,
+        WMWindowType = 1 << 18,
+        WMState = 1 << 19,
+        WMStrut = 1 << 20,
+        WMIconGeometry = 1 << 21,
+        WMIcon = 1 << 22,
+        WMPid = 1 << 23,
+        WMHandledIcons = 1 << 24,
+        WMPing = 1 << 25,
+        WMKDESystemTrayWinFor = 1 << 26,  // NOT STANDARD
+        XAWMState = 1 << 27,              // NOT STANDARD
+        WMFrameExtents = 1 << 28,         ///< @since 3.5
+        WMKDEFrameStrut = WMFrameExtents, // NOT STANDARD
 
-	// Need to be reordered
-	WMIconName            = 1<<29,
-	WMVisibleIconName     = 1<<30,
-	WMGeometry	      = 1<<31
+        // Need to be reordered
+        WMIconName = 1 << 29,
+        WMVisibleIconName = 1 << 30,
+        WMGeometry = 1 << 31
     };
-    
+
     /**
         Supported properties. This enum is an extension to NET::Property,
         because them enum is limited only to 32 bits.
@@ -591,35 +627,39 @@ public:
         @li WM2WindowRole   WM_WINDOW_ROLE
         @li WM2ClientMachine WM_CLIENT_MACHINE
         @li WM2DesktopLayout _NET_DESKTOP_LAYOUT
-        
+
         @since 3.2
 
     **/
-    enum Property2 {
-        WM2UserTime            = 1<<0,
-        WM2StartupId           = 1<<1,
-        WM2TransientFor        = 1<<2,
-        WM2GroupLeader         = 1<<3,
-        WM2AllowedActions      = 1<<4,
-        WM2RestackWindow       = 1<<5,
-        WM2MoveResizeWindow    = 1<<6,
-        WM2ExtendedStrut       = 1<<7,
-        WM2TakeActivity        = 1<<8,
-        WM2KDETemporaryRules   = 1<<9,  // NOT STANDARD
-        WM2WindowClass         = 1<<10, ///< @since 3.3
-        WM2WindowRole          = 1<<11, ///< @since 3.3
-        WM2ClientMachine       = 1<<12, ///< @since 3.3
-        WM2ShowingDesktop      = 1<<13, ///< @since 3.5
-        WM2DesktopLayout       = 1<<15  ///< @since 3.5.8
+    enum Property2
+    {
+        WM2UserTime = 1 << 0,
+        WM2StartupId = 1 << 1,
+        WM2TransientFor = 1 << 2,
+        WM2GroupLeader = 1 << 3,
+        WM2AllowedActions = 1 << 4,
+        WM2RestackWindow = 1 << 5,
+        WM2MoveResizeWindow = 1 << 6,
+        WM2ExtendedStrut = 1 << 7,
+        WM2TakeActivity = 1 << 8,
+        WM2KDETemporaryRules = 1 << 9, // NOT STANDARD
+        WM2WindowClass = 1 << 10,      ///< @since 3.3
+        WM2WindowRole = 1 << 11,       ///< @since 3.3
+        WM2ClientMachine = 1 << 12,    ///< @since 3.3
+        WM2ShowingDesktop = 1 << 13,   ///< @since 3.5
+        WM2DesktopLayout = 1 << 15     ///< @since 3.5.8
     };
 
     /**
        Sentinel value to indicate that the client wishes to be visible on
        all desktops.
        @since 3.2
-     **/ 
-    enum { OnAllDesktops = -1 };
-    
+     **/
+    enum
+    {
+        OnAllDesktops = -1
+    };
+
     /**
        Source of the request.
        @li FromApplication the request comes from a normal application
@@ -627,43 +667,45 @@ public:
        @since 3.2
     **/
     // must match the values for data.l[0] field in _NET_ACTIVE_WINDOW message
-    enum RequestSource {
+    enum RequestSource
+    {
         FromUnknown, // internal
         FromApplication,
         FromTool
     };
-    
+
     /**
       Orientation.
     **/
-    enum Orientation {
+    enum Orientation
+    {
         OrientationHorizontal = 0,
         OrientationVertical = 1
     };
-    
+
     /**
      Starting corner for desktop layout.
     **/
-    enum DesktopLayoutCorner {
+    enum DesktopLayoutCorner
+    {
         DesktopLayoutCornerTopLeft = 0,
         DesktopLayoutCornerTopRight = 1,
         DesktopLayoutCornerBottomLeft = 2,
         DesktopLayoutCornerBottomRight = 3
     };
-    
+
     /**
      Compares two X timestamps, taking into account wrapping and 64bit architectures.
      Return value is like with strcmp(), 0 for equal, -1 for time1 < time2, 1 for time1 > time2.
      @since 3.5.3
     */
-    static int timestampCompare( unsigned long time1, unsigned long time2 );
+    static int timestampCompare(unsigned long time1, unsigned long time2);
     /**
      Returns a difference of two X timestamps, time2 - time1, where time2 must be later than time1,
      as returned by timestampCompare().
      @since 3.5.3
     */
-    static int timestampDiff( unsigned long time1_, unsigned long time2_ );
-
+    static int timestampDiff(unsigned long time1_, unsigned long time2_);
 };
 
 

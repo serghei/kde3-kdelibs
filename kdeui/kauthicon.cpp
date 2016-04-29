@@ -30,101 +30,96 @@
 #include "kauthicon.h"
 
 /* XPM */
-static const char * const lock_xpm[] = {
-"22 22 5 1",
-"       c None",
-".      c #808080",
-"+      c #000000",
-"@      c #FFFFFF",
-"#      c #C0C0C0",
-"                      ",
-"                      ",
-"                      ",
-"                      ",
-"        .+++.         ",
-"        .@@@.+        ",
-"      ..@+++@..       ",
-"      +@+...+@+       ",
-"      +@+.  +@+.      ",
-"      +@+.  +@+.      ",
-"     +++++++++++      ",
-"     +#########+.     ",
-"     +#.......#+.     ",
-"     +#@@@@@@@#+.     ",
-"     +#.......#+.     ",
-"     +#########+.     ",
-"     +++++++++++.     ",
-"      ...........     ",
-"                      ",
-"                      ",
-"                      ",
-"                      "};
+static const char *const lock_xpm[] = {"22 22 5 1",
+                                       "       c None",
+                                       ".      c #808080",
+                                       "+      c #000000",
+                                       "@      c #FFFFFF",
+                                       "#      c #C0C0C0",
+                                       "                      ",
+                                       "                      ",
+                                       "                      ",
+                                       "                      ",
+                                       "        .+++.         ",
+                                       "        .@@@.+        ",
+                                       "      ..@+++@..       ",
+                                       "      +@+...+@+       ",
+                                       "      +@+.  +@+.      ",
+                                       "      +@+.  +@+.      ",
+                                       "     +++++++++++      ",
+                                       "     +#########+.     ",
+                                       "     +#.......#+.     ",
+                                       "     +#@@@@@@@#+.     ",
+                                       "     +#.......#+.     ",
+                                       "     +#########+.     ",
+                                       "     +++++++++++.     ",
+                                       "      ...........     ",
+                                       "                      ",
+                                       "                      ",
+                                       "                      ",
+                                       "                      "};
 
 /* XPM */
-static const char * const openlock_xpm[] = {
-"22 22 5 1",
-"       c None",
-".      c #808080",
-"+      c #000000",
-"@      c #FFFFFF",
-"#      c #C0C0C0",
-"                      ",
-"                      ",
-"        .+++.         ",
-"        .@@@.+        ",
-"      ..@+++@..       ",
-"      +@+...+@+       ",
-"      +@+.  +@+.      ",
-"      +@+.  +@+.      ",
-"      +++.  +@+.      ",
-"       ...  +@+.      ",
-"            +@+.      ",
-"     +++++++++++      ",
-"     +#########+.     ",
-"     +#.......#+.     ",
-"     +#@@@@@@@#+.     ",
-"     +#.......#+.     ",
-"     +#########+.     ",
-"     +++++++++++.     ",
-"      ...........     ",
-"                      ",
-"                      ",
-"                      "};
+static const char *const openlock_xpm[] = {"22 22 5 1",
+                                           "       c None",
+                                           ".      c #808080",
+                                           "+      c #000000",
+                                           "@      c #FFFFFF",
+                                           "#      c #C0C0C0",
+                                           "                      ",
+                                           "                      ",
+                                           "        .+++.         ",
+                                           "        .@@@.+        ",
+                                           "      ..@+++@..       ",
+                                           "      +@+...+@+       ",
+                                           "      +@+.  +@+.      ",
+                                           "      +@+.  +@+.      ",
+                                           "      +++.  +@+.      ",
+                                           "       ...  +@+.      ",
+                                           "            +@+.      ",
+                                           "     +++++++++++      ",
+                                           "     +#########+.     ",
+                                           "     +#.......#+.     ",
+                                           "     +#@@@@@@@#+.     ",
+                                           "     +#.......#+.     ",
+                                           "     +#########+.     ",
+                                           "     +++++++++++.     ",
+                                           "      ...........     ",
+                                           "                      ",
+                                           "                      ",
+                                           "                      "};
 
 KAuthIcon::KAuthIcon(QWidget *parent, const char *name)
-  : QWidget(parent, name),
-   lockPM( const_cast< const char** >( lock_xpm)),
-   openLockPM( const_cast< const char** >(openlock_xpm))
+    : QWidget(parent, name), lockPM(const_cast< const char ** >(lock_xpm)), openLockPM(const_cast< const char ** >(openlock_xpm))
 {
-  lockText = i18n("Editing disabled");
-  openLockText = i18n("Editing enabled");
+    lockText = i18n("Editing disabled");
+    openLockText = i18n("Editing enabled");
 
-  lockBox = new QLabel(this);
-  lockBox->setFrameStyle(QFrame::WinPanel|QFrame::Raised);
-  lockBox->setPixmap(lockPM);
-  lockBox->setFixedSize(lockBox->sizeHint());
+    lockBox = new QLabel(this);
+    lockBox->setFrameStyle(QFrame::WinPanel | QFrame::Raised);
+    lockBox->setPixmap(lockPM);
+    lockBox->setFixedSize(lockBox->sizeHint());
 
-  lockLabel = new QLabel(this);
-  lockLabel->setFrameStyle(QFrame::NoFrame);
+    lockLabel = new QLabel(this);
+    lockLabel->setFrameStyle(QFrame::NoFrame);
 
-  // set fixed size of this frame to whichever phrase is longer
-  if (lockLabel->fontMetrics().boundingRect(lockText).width() >
-      lockLabel->fontMetrics().boundingRect(openLockText).width())
+    // set fixed size of this frame to whichever phrase is longer
+    if(lockLabel->fontMetrics().boundingRect(lockText).width() > lockLabel->fontMetrics().boundingRect(openLockText).width())
+        lockLabel->setText(lockText);
+    else
+        lockLabel->setText(openLockText);
+    lockLabel->setAlignment(AlignCenter);
+    lockLabel->setMinimumSize(lockLabel->sizeHint());
     lockLabel->setText(lockText);
-  else
-    lockLabel->setText(openLockText);
-  lockLabel->setAlignment(AlignCenter);
-  lockLabel->setMinimumSize(lockLabel->sizeHint());
-  lockLabel->setText(lockText);
 
-  layout = new QHBoxLayout(this);
+    layout = new QHBoxLayout(this);
 
-  layout->addWidget(lockBox, 0, AlignLeft|AlignVCenter);
-  layout->addSpacing(5);
-  layout->addWidget(lockLabel, 0, AlignRight|AlignVCenter);
+    layout->addWidget(lockBox, 0, AlignLeft | AlignVCenter);
+    layout->addSpacing(5);
+    layout->addWidget(lockLabel, 0, AlignRight | AlignVCenter);
 
-  layout->activate();
-  resize(sizeHint());
+    layout->activate();
+    resize(sizeHint());
 }
 
 KAuthIcon::~KAuthIcon()
@@ -134,16 +129,15 @@ KAuthIcon::~KAuthIcon()
 
 QSize KAuthIcon::sizeHint() const
 {
-  return layout->minimumSize();
+    return layout->minimumSize();
 }
 
 
 /************************************************************************/
 
-KRootPermsIcon::KRootPermsIcon(QWidget *parent, const char *name)
-  : KAuthIcon(parent, name)
+KRootPermsIcon::KRootPermsIcon(QWidget *parent, const char *name) : KAuthIcon(parent, name)
 {
-  updateStatus();
+    updateStatus();
 }
 
 
@@ -153,24 +147,23 @@ KRootPermsIcon::~KRootPermsIcon()
 
 void KRootPermsIcon::updateStatus()
 {
-  const bool newRoot = (geteuid() == 0);
-  lockBox->setPixmap(newRoot ? openLockPM : lockPM);
-  lockLabel->setText(newRoot ? openLockText : lockText);
-  update();
-  if (root != newRoot) {
-    root = newRoot;
-    emit authChanged(newRoot);
-  }
+    const bool newRoot = (geteuid() == 0);
+    lockBox->setPixmap(newRoot ? openLockPM : lockPM);
+    lockLabel->setText(newRoot ? openLockText : lockText);
+    update();
+    if(root != newRoot)
+    {
+        root = newRoot;
+        emit authChanged(newRoot);
+    }
 }
 
 /************************************************************************/
 
-KWritePermsIcon::KWritePermsIcon(const QString & fileName,
-				 QWidget *parent, const char *name)
-  : KAuthIcon(parent, name)
+KWritePermsIcon::KWritePermsIcon(const QString &fileName, QWidget *parent, const char *name) : KAuthIcon(parent, name)
 {
-  fi.setFile(fileName);
-  updateStatus();
+    fi.setFile(fileName);
+    updateStatus();
 }
 
 
@@ -180,24 +173,30 @@ KWritePermsIcon::~KWritePermsIcon()
 
 void KWritePermsIcon::updateStatus()
 {
-  bool newwrite;
-  newwrite = fi.isWritable();
-  lockBox->setPixmap(newwrite ? openLockPM : lockPM);
-  lockLabel->setText(newwrite ? openLockText : lockText);
-  update();
-  if (writable != newwrite) {
-    writable = newwrite;
-    emit authChanged(newwrite);
-  }
+    bool newwrite;
+    newwrite = fi.isWritable();
+    lockBox->setPixmap(newwrite ? openLockPM : lockPM);
+    lockLabel->setText(newwrite ? openLockText : lockText);
+    update();
+    if(writable != newwrite)
+    {
+        writable = newwrite;
+        emit authChanged(newwrite);
+    }
 }
 
-void KAuthIcon::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KAuthIcon::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
-void KRootPermsIcon::virtual_hook( int id, void* data )
-{ KAuthIcon::virtual_hook( id, data ); }
+void KRootPermsIcon::virtual_hook(int id, void *data)
+{
+    KAuthIcon::virtual_hook(id, data);
+}
 
-void KWritePermsIcon::virtual_hook( int id, void* data )
-{ KAuthIcon::virtual_hook( id, data ); }
+void KWritePermsIcon::virtual_hook(int id, void *data)
+{
+    KAuthIcon::virtual_hook(id, data);
+}
 
 #include "kauthicon.moc"

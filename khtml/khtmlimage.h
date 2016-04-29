@@ -29,26 +29,26 @@
 class KHTMLPart;
 class KInstance;
 
-namespace khtml
-{
-    class CachedImage;
+namespace khtml {
+class CachedImage;
 }
 
 /**
  * @internal
  */
-class KHTMLImageFactory : public KParts::Factory
-{
+class KHTMLImageFactory : public KParts::Factory {
     Q_OBJECT
 public:
     KHTMLImageFactory();
     virtual ~KHTMLImageFactory();
 
-    virtual KParts::Part *createPartObject( QWidget *parentWidget, const char *widgetName,
-                                            QObject *parent, const char *name,
-                                            const char *className, const QStringList &args );
+    virtual KParts::Part *createPartObject(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, const char *className,
+                                           const QStringList &args);
 
-    static KInstance *instance() { return s_instance; }
+    static KInstance *instance()
+    {
+        return s_instance;
+    }
 
 private:
     static KInstance *s_instance;
@@ -57,38 +57,42 @@ private:
 /**
  * @internal
  */
-class KHTMLImage : public KParts::ReadOnlyPart, public khtml::CachedObjectClient
-{
+class KHTMLImage : public KParts::ReadOnlyPart, public khtml::CachedObjectClient {
     Q_OBJECT
 public:
-    KHTMLImage( QWidget *parentWidget, const char *widgetName,
-                QObject *parent, const char *name, KHTMLPart::GUIProfile prof );
+    KHTMLImage(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, KHTMLPart::GUIProfile prof);
     virtual ~KHTMLImage();
 
-    virtual bool openFile() { return true; } // grmbl, should be non-pure in part.h, IMHO
+    virtual bool openFile()
+    {
+        return true;
+    } // grmbl, should be non-pure in part.h, IMHO
 
-    virtual bool openURL( const KURL &url );
+    virtual bool openURL(const KURL &url);
 
     virtual bool closeURL();
 
-    KHTMLPart *doc() const { return m_khtml; }
+    KHTMLPart *doc() const
+    {
+        return m_khtml;
+    }
 
-    virtual void notifyFinished( khtml::CachedObject *o );
+    virtual void notifyFinished(khtml::CachedObject *o);
 
 protected:
-    virtual void guiActivateEvent( KParts::GUIActivateEvent *e );
-    virtual bool eventFilter( QObject *filterTarget, QEvent *e );
+    virtual void guiActivateEvent(KParts::GUIActivateEvent *e);
+    virtual bool eventFilter(QObject *filterTarget, QEvent *e);
 
 private slots:
     void restoreScrollPosition();
-//    void slotImageJobFinished( KIO::Job *job );
+    //    void slotImageJobFinished( KIO::Job *job );
 
-//    void updateWindowCaption();
+    //    void updateWindowCaption();
 
 private:
     void disposeImage();
 
-    QGuardedPtr<KHTMLPart> m_khtml;
+    QGuardedPtr< KHTMLPart > m_khtml;
     KParts::BrowserExtension *m_ext;
     QString m_mimeType;
     khtml::CachedImage *m_image;
@@ -98,11 +102,10 @@ private:
 /**
  * @internal
  */
-class KHTMLImageBrowserExtension : public KParts::BrowserExtension
-{
+class KHTMLImageBrowserExtension : public KParts::BrowserExtension {
     Q_OBJECT
 public:
-    KHTMLImageBrowserExtension( KHTMLImage *parent, const char *name = 0 );
+    KHTMLImageBrowserExtension(KHTMLImage *parent, const char *name = 0);
 
     virtual int xOffset();
     virtual int yOffset();

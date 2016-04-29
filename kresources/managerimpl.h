@@ -43,50 +43,49 @@ class ManagerNotifier;
 
   Do not use this class directly. Use ResourceManager instead
 */
-class KRESOURCES_EXPORT ManagerImpl : virtual public ManagerIface
-{
-  public:
-    ManagerImpl( ManagerNotifier *, const QString &family );
+class KRESOURCES_EXPORT ManagerImpl : virtual public ManagerIface {
+public:
+    ManagerImpl(ManagerNotifier *, const QString &family);
     ~ManagerImpl();
 
-    void readConfig( KConfig * );
-    void writeConfig( KConfig * );
+    void readConfig(KConfig *);
+    void writeConfig(KConfig *);
 
-    void add( Resource *resource );
-    void remove( Resource *resource );
-    void change( Resource *resource );
+    void add(Resource *resource);
+    void remove(Resource *resource);
+    void change(Resource *resource);
 
     Resource *standardResource();
-    void setStandardResource( Resource *resource );
+    void setStandardResource(Resource *resource);
 
-    void setActive( Resource *resource, bool active );
+    void setActive(Resource *resource, bool active);
 
     Resource::List *resourceList();
 
-    QPtrList<Resource> resources();
+    QPtrList< Resource > resources();
 
     // Get only active or passive resources
-    QPtrList<Resource> resources( bool active );
+    QPtrList< Resource > resources(bool active);
 
     QStringList resourceNames();
 
-    static QString defaultConfigFile( const QString &family );
+    static QString defaultConfigFile(const QString &family);
 
-  private:
+private:
     // dcop calls
-    void dcopKResourceAdded( QString managerId, QString resourceId );
-    void dcopKResourceModified( QString managerId, QString resourceId );
-    void dcopKResourceDeleted( QString managerId, QString resourceId );
+    void dcopKResourceAdded(QString managerId, QString resourceId);
+    void dcopKResourceModified(QString managerId, QString resourceId);
+    void dcopKResourceDeleted(QString managerId, QString resourceId);
 
-  private:
+private:
     void createStandardConfig();
 
-    Resource *readResourceConfig( const QString& identifier, bool checkActive );
-    void writeResourceConfig( Resource *resource, bool checkActive );
+    Resource *readResourceConfig(const QString &identifier, bool checkActive);
+    void writeResourceConfig(Resource *resource, bool checkActive);
 
-    void removeResource( Resource *resource );
-    Resource *getResource( Resource *resource );
-    Resource *getResource( const QString& identifier );
+    void removeResource(Resource *resource);
+    Resource *getResource(Resource *resource);
+    Resource *getResource(const QString &identifier);
 
     ManagerNotifier *mNotifier;
     QString mFamily;
@@ -101,7 +100,6 @@ class KRESOURCES_EXPORT ManagerImpl : virtual public ManagerIface
     class ManagerImplPrivate;
     ManagerImplPrivate *d;
 };
-
 }
 
 #endif

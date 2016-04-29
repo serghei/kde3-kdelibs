@@ -25,7 +25,7 @@
 #define KJAVAAPPLETWIDGET_H
 
 #include <qwidget.h>
-#ifndef Q_WS_QWS //FIXME(?) I don't think this is possible with Qt Embedded
+#ifndef Q_WS_QWS // FIXME(?) I don't think this is possible with Qt Embedded
 #include "java/kjavaappletcontext.h"
 #include "java/kjavaapplet.h"
 #include <qxembed.h>
@@ -75,20 +75,22 @@
 
 class KJavaAppletWidgetPrivate;
 
-class KJavaAppletWidget : public QXEmbed
-{
+class KJavaAppletWidget : public QXEmbed {
     Q_OBJECT
 public:
-    KJavaAppletWidget( QWidget* parent=0, const char* name=0 );
+    KJavaAppletWidget(QWidget *parent = 0, const char *name = 0);
 
-   ~KJavaAppletWidget();
+    ~KJavaAppletWidget();
 
     /**
      * Returns a pointer to the KJavaApplet.  Use this to
      * configure the applet's parameters. You can also
      * use it to start and stop the Applet.
      */
-    KJavaApplet* applet() { return m_applet; }
+    KJavaApplet *applet()
+    {
+        return m_applet;
+    }
 
     /**
      * Tells the AppletServer to create, initialize, and
@@ -97,29 +99,27 @@ public:
     void showApplet();
 
     QSize sizeHint() const;
-    void resize( int, int );
+    void resize(int, int);
 
 protected slots:
     /**
      * This slot is called by KWin when new windows are added.  We check
      * to see if the window has the title we set.  If so we embed it.
      */
-    void setWindow( WId w );
+    void setWindow(WId w);
 
 protected:
-    //The counter to generate ID's for the applets
+    // The counter to generate ID's for the applets
     static int appletCount;
-    void showEvent (QShowEvent *);
+    void showEvent(QShowEvent *);
 
 private:
-    KJavaAppletWidgetPrivate* d;
+    KJavaAppletWidgetPrivate *d;
 
-    KJavaApplet* m_applet;
-    KWinModule*  m_kwm;
-    QString      m_swallowTitle;
-
+    KJavaApplet *m_applet;
+    KWinModule *m_kwm;
+    QString m_swallowTitle;
 };
 
 #endif
 #endif // KJAVAAPPLETWIDGET_H
-

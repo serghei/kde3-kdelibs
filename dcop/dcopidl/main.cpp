@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <qcstring.h>
 #include <stdlib.h>
 
-void dcopidlParse( const char *_code );
+void dcopidlParse(const char *_code);
 
 int idl_line_no;
 
@@ -33,15 +33,15 @@ int idl_line_no;
 extern int yydebug;
 #endif
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-    if (argc != 2)
+    if(argc != 2)
     {
         fprintf(stderr, "Usage : dcopidl input_file\n");
         return -1;
     }
-    QFile file( argv[1] );
-    if ( !file.open( IO_ReadOnly ) )
+    QFile file(argv[1]);
+    if(!file.open(IO_ReadOnly))
     {
         fprintf(stderr, "Can't open input file\n");
         return -1;
@@ -50,36 +50,40 @@ int main( int argc, char** argv )
     QByteArray arr = file.readAll();
     uint len = arr.size();
     uint j = 1;
-    for (uint i = 1; i<len; i++, j++) {
-        if (arr[ i-1 ] == '\r' && ((i+1)==len || arr[ i ] != '\n')) {
+    for(uint i = 1; i < len; i++, j++)
+    {
+        if(arr[i - 1] == '\r' && ((i + 1) == len || arr[i] != '\n'))
+        {
             // change single \r's (Mac OS line endings) to \n
-            arr[ j-1 ] = '\n';
-            if ((i+1)==len) //special case: cut last character
+            arr[j - 1] = '\n';
+            if((i + 1) == len) // special case: cut last character
                 j--;
         }
-        else if (arr[ i-1 ] == '\r' && arr[ i ] == '\n') {
+        else if(arr[i - 1] == '\r' && arr[i] == '\n')
+        {
             // change \r\n's (win32 line endings) to \n
-            arr[ j-1 ] = '\n';
-            i++; //skip \n
+            arr[j - 1] = '\n';
+            i++; // skip \n
         }
-        else if (i!=j) {
-            arr[ j-1 ] = arr[ i-1 ];
+        else if(i != j)
+        {
+            arr[j - 1] = arr[i - 1];
         }
     }
     len = j;
-    arr.resize( len + 1 );
-    arr[ len ] = 0;
+    arr.resize(len + 1);
+    arr[len] = 0;
 
 #if YYDEBUG
     char *debug = getenv("DEBUG");
-    if (debug)
-	yydebug = 1;
+    if(debug)
+        yydebug = 1;
 #endif
     idl_line_no = 1;
 
     printf("<!DOCTYPE DCOP-IDL><DCOP-IDL>\n");
-    printf("<SOURCE>%s</SOURCE>\n", argv[1] );
-    dcopidlParse( arr.data() );
+    printf("<SOURCE>%s</SOURCE>\n", argv[1]);
+    dcopidlParse(arr.data());
     printf("</DCOP-IDL>\n");
 
     file.close();

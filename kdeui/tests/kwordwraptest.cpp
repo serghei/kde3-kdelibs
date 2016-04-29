@@ -23,21 +23,21 @@
 
 int main(int argc, char *argv[])
 {
-	KApplication app(argc, argv, "KWordWrapTest");
-	
-	QFont font( "helvetica", 12 ); // let's hope we all have the same...
-	QFontMetrics fm( font );
-	QRect r( 0, 0, 100, -1 );
-	QString str = "test wadabada [/foo/bar/waba]";
-	KWordWrap* ww = KWordWrap::formatText( fm, r, 0, str );
-	kdDebug() << str << " => " << ww->truncatedString() << endl;
-	delete ww;
+    KApplication app(argc, argv, "KWordWrapTest");
 
-	str = "</p></p></p></p>";
-	for ( ; r.width() > 0 ; r.setWidth( r.width()-10 ) )
-	{
-	    ww = KWordWrap::formatText( fm, r, 0, str );
-	    kdDebug() << str << " => " << ww->truncatedString() << endl;
-	    delete ww;
-	}
+    QFont font("helvetica", 12); // let's hope we all have the same...
+    QFontMetrics fm(font);
+    QRect r(0, 0, 100, -1);
+    QString str = "test wadabada [/foo/bar/waba]";
+    KWordWrap *ww = KWordWrap::formatText(fm, r, 0, str);
+    kdDebug() << str << " => " << ww->truncatedString() << endl;
+    delete ww;
+
+    str = "</p></p></p></p>";
+    for(; r.width() > 0; r.setWidth(r.width() - 10))
+    {
+        ww = KWordWrap::formatText(fm, r, 0, str);
+        kdDebug() << str << " => " << ww->truncatedString() << endl;
+        delete ww;
+    }
 }

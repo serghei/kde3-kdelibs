@@ -25,20 +25,18 @@
 
 namespace KABC {
 
-class VCardParser
-{
-  public:
+class VCardParser {
+public:
     VCardParser();
     ~VCardParser();
 
-    static VCard::List parseVCards( const QString& text );
-    static QString createVCards( const VCard::List& list );
+    static VCard::List parseVCards(const QString &text);
+    static QString createVCards(const VCard::List &list);
 
-  private:
+private:
     class VCardParserPrivate;
     VCardParserPrivate *d;
 };
-
 }
 
 #endif

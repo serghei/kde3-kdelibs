@@ -32,20 +32,21 @@ namespace KJS {
 /**
 * Defines a Javascript reference.
 */
-  class KJS_EXPORT Reference : public Value {
-// fixme
-/*   class Reference : private Value { */
+class KJS_EXPORT Reference : public Value {
+    // fixme
+    /*   class Reference : private Value { */
     friend class ReferenceList;
     friend class ReferenceListIterator;
-  public:
-    Reference(const Object& b, const Identifier& p);
-    Reference(const Object& b, unsigned p);
-    Reference(ObjectImp *b, const Identifier& p);
+
+public:
+    Reference(const Object &b, const Identifier &p);
+    Reference(const Object &b, unsigned p);
+    Reference(ObjectImp *b, const Identifier &p);
     Reference(ObjectImp *b, unsigned p);
-    Reference(const Null& b, const Identifier& p);
-    Reference(const Null& b, unsigned p);
-    static Reference makeValueReference(const Value& v);
-    
+    Reference(const Null &b, const Identifier &p);
+    Reference(const Null &b, unsigned p);
+    static Reference makeValueReference(const Value &v);
+
     /**
      * Performs the GetBase type conversion operation on this value (ECMA 8.7)
      *
@@ -75,7 +76,7 @@ namespace KJS {
 
     bool isMutable();
 
-  private:
+private:
     Reference();
 
     Value base;
@@ -83,7 +84,7 @@ namespace KJS {
     bool baseIsValue;
     bool propertyNameIsNumber;
     mutable Identifier prop;
-  };
+};
 }
 
 #endif

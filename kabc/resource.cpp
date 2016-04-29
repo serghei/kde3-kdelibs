@@ -25,180 +25,178 @@
 
 using namespace KABC;
 
-Ticket::Ticket( Resource *resource )
-  : mResource( resource )
+Ticket::Ticket(Resource *resource) : mResource(resource)
 {
 }
 
 Ticket::~Ticket()
 {
-/* FIXME: avoid cycle deletion
-  if ( mResource )
-    mResource->releaseSaveTicket( this );
-*/
+    /* FIXME: avoid cycle deletion
+      if ( mResource )
+        mResource->releaseSaveTicket( this );
+    */
 }
 
 Resource *Ticket::resource()
 {
-  return mResource;
+    return mResource;
 }
 
 struct Resource::Iterator::IteratorData
 {
-  Addressee::Map::Iterator mIt;
+    Addressee::Map::Iterator mIt;
 };
 
 struct Resource::ConstIterator::ConstIteratorData
 {
-  Addressee::Map::ConstIterator mIt;
+    Addressee::Map::ConstIterator mIt;
 };
 
 Resource::Iterator::Iterator()
 {
-  d = new IteratorData;
+    d = new IteratorData;
 }
 
-Resource::Iterator::Iterator( const Resource::Iterator &i )
+Resource::Iterator::Iterator(const Resource::Iterator &i)
 {
-  d = new IteratorData;
-  d->mIt = i.d->mIt;
+    d = new IteratorData;
+    d->mIt = i.d->mIt;
 }
 
-Resource::Iterator &Resource::Iterator::operator=( const Resource::Iterator &i )
+Resource::Iterator &Resource::Iterator::operator=(const Resource::Iterator &i)
 {
-  if ( this == &i )
+    if(this == &i)
+        return *this;
+    delete d;
+
+    d = new IteratorData;
+    d->mIt = i.d->mIt;
     return *this;
-  delete d;
-
-  d = new IteratorData;
-  d->mIt = i.d->mIt;
-  return *this;
 }
 
 Resource::Iterator::~Iterator()
 {
-  delete d;
+    delete d;
 }
 
 const Addressee &Resource::Iterator::operator*() const
 {
-  return d->mIt.data();
+    return d->mIt.data();
 }
 
 Addressee &Resource::Iterator::operator*()
 {
-  return d->mIt.data();
+    return d->mIt.data();
 }
 
 Resource::Iterator &Resource::Iterator::operator++()
 {
-  (d->mIt)++;
-  return *this;
+    (d->mIt)++;
+    return *this;
 }
 
-Resource::Iterator &Resource::Iterator::operator++( int )
+Resource::Iterator &Resource::Iterator::operator++(int)
 {
-  (d->mIt)++;
-  return *this;
+    (d->mIt)++;
+    return *this;
 }
 
 Resource::Iterator &Resource::Iterator::operator--()
 {
-  (d->mIt)--;
-  return *this;
+    (d->mIt)--;
+    return *this;
 }
 
-Resource::Iterator &Resource::Iterator::operator--( int )
+Resource::Iterator &Resource::Iterator::operator--(int)
 {
-  (d->mIt)--;
-  return *this;
+    (d->mIt)--;
+    return *this;
 }
 
-bool Resource::Iterator::operator==( const Iterator &it )
+bool Resource::Iterator::operator==(const Iterator &it)
 {
-  return ( d->mIt == it.d->mIt );
+    return (d->mIt == it.d->mIt);
 }
 
-bool Resource::Iterator::operator!=( const Iterator &it )
+bool Resource::Iterator::operator!=(const Iterator &it)
 {
-  return ( d->mIt != it.d->mIt );
+    return (d->mIt != it.d->mIt);
 }
 
 Resource::ConstIterator::ConstIterator()
 {
-  d = new ConstIteratorData;
+    d = new ConstIteratorData;
 }
 
-Resource::ConstIterator::ConstIterator( const Resource::ConstIterator &i )
+Resource::ConstIterator::ConstIterator(const Resource::ConstIterator &i)
 {
-  d = new ConstIteratorData;
-  d->mIt = i.d->mIt;
+    d = new ConstIteratorData;
+    d->mIt = i.d->mIt;
 }
 
-Resource::ConstIterator::ConstIterator( const Resource::Iterator &i )
+Resource::ConstIterator::ConstIterator(const Resource::Iterator &i)
 {
-  d = new ConstIteratorData;
-  d->mIt = i.d->mIt;
+    d = new ConstIteratorData;
+    d->mIt = i.d->mIt;
 }
 
-Resource::ConstIterator &Resource::ConstIterator::operator=( const Resource::ConstIterator &i )
+Resource::ConstIterator &Resource::ConstIterator::operator=(const Resource::ConstIterator &i)
 {
-  if ( this  == &i )
+    if(this == &i)
+        return *this;
+    delete d;
+
+    d = new ConstIteratorData;
+    d->mIt = i.d->mIt;
     return *this;
-  delete d;
-
-  d = new ConstIteratorData;
-  d->mIt = i.d->mIt;
-  return *this;
 }
 
 Resource::ConstIterator::~ConstIterator()
 {
-  delete d;
+    delete d;
 }
 
 const Addressee &Resource::ConstIterator::operator*() const
 {
-  return *(d->mIt);
+    return *(d->mIt);
 }
 
 Resource::ConstIterator &Resource::ConstIterator::operator++()
 {
-  (d->mIt)++;
-  return *this;
+    (d->mIt)++;
+    return *this;
 }
 
-Resource::ConstIterator &Resource::ConstIterator::operator++( int )
+Resource::ConstIterator &Resource::ConstIterator::operator++(int)
 {
-  (d->mIt)++;
-  return *this;
+    (d->mIt)++;
+    return *this;
 }
 
 Resource::ConstIterator &Resource::ConstIterator::operator--()
 {
-  (d->mIt)--;
-  return *this;
+    (d->mIt)--;
+    return *this;
 }
 
-Resource::ConstIterator &Resource::ConstIterator::operator--( int )
+Resource::ConstIterator &Resource::ConstIterator::operator--(int)
 {
-  (d->mIt)--;
-  return *this;
+    (d->mIt)--;
+    return *this;
 }
 
-bool Resource::ConstIterator::operator==( const ConstIterator &it )
+bool Resource::ConstIterator::operator==(const ConstIterator &it)
 {
-  return ( d->mIt == it.d->mIt );
+    return (d->mIt == it.d->mIt);
 }
 
-bool Resource::ConstIterator::operator!=( const ConstIterator &it )
+bool Resource::ConstIterator::operator!=(const ConstIterator &it)
 {
-  return ( d->mIt != it.d->mIt );
+    return (d->mIt != it.d->mIt);
 }
 
 
-Resource::Resource( const KConfig *config )
-  : KRES::Resource( config ), mAddressBook( 0 )
+Resource::Resource(const KConfig *config) : KRES::Resource(config), mAddressBook(0)
 {
 }
 
@@ -208,144 +206,148 @@ Resource::~Resource()
 
 Resource::Iterator Resource::begin()
 {
-  Iterator it;
-  it.d->mIt = mAddrMap.begin();
+    Iterator it;
+    it.d->mIt = mAddrMap.begin();
 
-  return it;
+    return it;
 }
 
 Resource::ConstIterator Resource::begin() const
 {
-  ConstIterator it;
-  it.d->mIt = mAddrMap.constBegin();
-  return it;
+    ConstIterator it;
+    it.d->mIt = mAddrMap.constBegin();
+    return it;
 }
 
 Resource::Iterator Resource::end()
 {
-  Iterator it;
-  it.d->mIt = mAddrMap.end();
+    Iterator it;
+    it.d->mIt = mAddrMap.end();
 
-  return it;
+    return it;
 }
 
 Resource::ConstIterator Resource::end() const
 {
-  ConstIterator it;
-  it.d->mIt = mAddrMap.constEnd();
-  return it;
+    ConstIterator it;
+    it.d->mIt = mAddrMap.constEnd();
+    return it;
 }
 
-void Resource::writeConfig( KConfig *config )
+void Resource::writeConfig(KConfig *config)
 {
-  KRES::Resource::writeConfig( config );
+    KRES::Resource::writeConfig(config);
 }
 
-void Resource::setAddressBook( AddressBook *ab )
+void Resource::setAddressBook(AddressBook *ab)
 {
-  mAddressBook = ab;
+    mAddressBook = ab;
 }
 
 AddressBook *Resource::addressBook()
 {
-  return mAddressBook;
+    return mAddressBook;
 }
 
-Ticket *Resource::createTicket( Resource *resource )
+Ticket *Resource::createTicket(Resource *resource)
 {
-  return new Ticket( resource );
+    return new Ticket(resource);
 }
 
-void Resource::insertAddressee( const Addressee &addr )
+void Resource::insertAddressee(const Addressee &addr)
 {
-  mAddrMap.insert( addr.uid(), addr );
+    mAddrMap.insert(addr.uid(), addr);
 }
 
-void Resource::removeAddressee( const Addressee &addr )
+void Resource::removeAddressee(const Addressee &addr)
 {
-  mAddrMap.erase( addr.uid() );
+    mAddrMap.erase(addr.uid());
 }
 
-Addressee Resource::findByUid( const QString &uid )
+Addressee Resource::findByUid(const QString &uid)
 {
-  Addressee::Map::ConstIterator it = mAddrMap.find( uid );
+    Addressee::Map::ConstIterator it = mAddrMap.find(uid);
 
-  if ( it != mAddrMap.end() )
-    return it.data();
+    if(it != mAddrMap.end())
+        return it.data();
 
-  return Addressee();
+    return Addressee();
 }
 
-Addressee::List Resource::findByName( const QString &name )
+Addressee::List Resource::findByName(const QString &name)
 {
-  Addressee::List results;
+    Addressee::List results;
 
-  ConstIterator it;
-  for ( it = begin(); it != end(); ++it ) {
-    if ( name == (*it).name() )
-      results.append( *it );
-  }
-
-  return results;
-}
-
-Addressee::List Resource::findByEmail( const QString &email )
-{
-  Addressee::List results;
-  const QString lowerEmail = email.lower();
-
-  ConstIterator it;
-  for ( it = begin(); it != end(); ++it ) {
-    const QStringList mailList = (*it).emails();
-    for ( QStringList::ConstIterator ite = mailList.begin(); ite != mailList.end(); ++ite ) {
-      if ( lowerEmail == (*ite).lower() )
-        results.append( *it );
+    ConstIterator it;
+    for(it = begin(); it != end(); ++it)
+    {
+        if(name == (*it).name())
+            results.append(*it);
     }
-  }
 
-  return results;
+    return results;
 }
 
-Addressee::List Resource::findByCategory( const QString &category )
+Addressee::List Resource::findByEmail(const QString &email)
 {
-  Addressee::List results;
+    Addressee::List results;
+    const QString lowerEmail = email.lower();
 
-  ConstIterator it;
-  for ( it = begin(); it != end(); ++it ) {
-    if ( (*it).hasCategory( category) ) {
-      results.append( *it );
+    ConstIterator it;
+    for(it = begin(); it != end(); ++it)
+    {
+        const QStringList mailList = (*it).emails();
+        for(QStringList::ConstIterator ite = mailList.begin(); ite != mailList.end(); ++ite)
+        {
+            if(lowerEmail == (*ite).lower())
+                results.append(*it);
+        }
     }
-  }
 
-  return results;
+    return results;
+}
+
+Addressee::List Resource::findByCategory(const QString &category)
+{
+    Addressee::List results;
+
+    ConstIterator it;
+    for(it = begin(); it != end(); ++it)
+    {
+        if((*it).hasCategory(category))
+        {
+            results.append(*it);
+        }
+    }
+
+    return results;
 }
 
 void Resource::clear()
 {
-  mAddrMap.clear();
+    mAddrMap.clear();
 }
 
 bool Resource::asyncLoad()
 {
-  bool ok = load();
-  if ( !ok )
-    emit loadingError( this, i18n( "Loading resource '%1' failed!" )
-                       .arg( resourceName() ) );
-  else
-    emit loadingFinished( this );
+    bool ok = load();
+    if(!ok)
+        emit loadingError(this, i18n("Loading resource '%1' failed!").arg(resourceName()));
+    else
+        emit loadingFinished(this);
 
-  return ok;
+    return ok;
 }
 
-bool Resource::asyncSave( Ticket *ticket ) {
-  bool ok = save( ticket );
-  if ( !ok )
-    emit savingError( this, i18n( "Saving resource '%1' failed!" )
-                      .arg( resourceName() ) );
-  else
-    emit savingFinished( this );
+bool Resource::asyncSave(Ticket *ticket)
+{
+    bool ok = save(ticket);
+    if(!ok)
+        emit savingError(this, i18n("Saving resource '%1' failed!").arg(resourceName()));
+    else
+        emit savingFinished(this);
 
-  return ok;
+    return ok;
 }
 
 #include "resource.moc"

@@ -29,46 +29,46 @@
 #include <kconfig.h>
 #include <kdialog.h>
 
-KMConfigPreview::KMConfigPreview(QWidget *parent, const char *name)
-: KMConfigPage(parent, name)
+KMConfigPreview::KMConfigPreview(QWidget *parent, const char *name) : KMConfigPage(parent, name)
 {
-	setPageName(i18n("Preview"));
-	setPageHeader(i18n("Preview Settings"));
-	setPagePixmap("filefind");
+    setPageName(i18n("Preview"));
+    setPageHeader(i18n("Preview Settings"));
+    setPagePixmap("filefind");
 
-	QGroupBox *box = new QGroupBox(0, Qt::Vertical, i18n("Preview Program"), this);
+    QGroupBox *box = new QGroupBox(0, Qt::Vertical, i18n("Preview Program"), this);
 
-	m_useext = new QCheckBox(i18n("&Use external preview program"), box);
-	m_program = new KURLRequester(box);
-	QLabel	*lab = new QLabel(box);
-	lab->setText(i18n("You can use an external preview program (PS viewer) instead of the "
-					  "KDE built-in preview system. Note that if the KDE default PS viewer "
-					  "(KGhostView) cannot be found, KDE tries automatically to find another "
-					  "external PostScript viewer"));
-	lab->setTextFormat(Qt::RichText);
+    m_useext = new QCheckBox(i18n("&Use external preview program"), box);
+    m_program = new KURLRequester(box);
+    QLabel *lab = new QLabel(box);
+    lab->setText(
+        i18n("You can use an external preview program (PS viewer) instead of the "
+             "KDE built-in preview system. Note that if the KDE default PS viewer "
+             "(KGhostView) cannot be found, KDE tries automatically to find another "
+             "external PostScript viewer"));
+    lab->setTextFormat(Qt::RichText);
 
-	QVBoxLayout	*l0 = new QVBoxLayout(this, 0, KDialog::spacingHint());
-	l0->addWidget(box);
-	l0->addStretch(1);
-	QVBoxLayout	*l1 = new QVBoxLayout(box->layout(), KDialog::spacingHint());
-	l1->addWidget(lab);
-	l1->addWidget(m_useext);
-	l1->addWidget(m_program);
+    QVBoxLayout *l0 = new QVBoxLayout(this, 0, KDialog::spacingHint());
+    l0->addWidget(box);
+    l0->addStretch(1);
+    QVBoxLayout *l1 = new QVBoxLayout(box->layout(), KDialog::spacingHint());
+    l1->addWidget(lab);
+    l1->addWidget(m_useext);
+    l1->addWidget(m_program);
 
-	connect(m_useext, SIGNAL(toggled(bool)), m_program, SLOT(setEnabled(bool)));
-	m_program->setEnabled(false);
+    connect(m_useext, SIGNAL(toggled(bool)), m_program, SLOT(setEnabled(bool)));
+    m_program->setEnabled(false);
 }
 
 void KMConfigPreview::loadConfig(KConfig *conf)
 {
-	conf->setGroup("General");
-	m_useext->setChecked(conf->readBoolEntry("ExternalPreview", false));
-	m_program->setURL(conf->readPathEntry("PreviewCommand", "gv"));
+    conf->setGroup("General");
+    m_useext->setChecked(conf->readBoolEntry("ExternalPreview", false));
+    m_program->setURL(conf->readPathEntry("PreviewCommand", "gv"));
 }
 
 void KMConfigPreview::saveConfig(KConfig *conf)
 {
-	conf->setGroup("General");
-	conf->writeEntry("ExternalPreview", m_useext->isChecked());
-	conf->writePathEntry("PreviewCommand", m_program->url());
+    conf->setGroup("General");
+    conf->writeEntry("ExternalPreview", m_useext->isChecked());
+    conf->writePathEntry("PreviewCommand", m_program->url());
 }

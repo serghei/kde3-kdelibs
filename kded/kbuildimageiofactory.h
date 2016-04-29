@@ -1,15 +1,15 @@
 /* This file is part of the KDE project
    Copyright (C) 2000 Waldo Bastian <bastian@kde.org>
- 
+
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
    License version 2as published by the Free Software Foundation.
- 
+
    This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Library General Public License for more details.
- 
+
    You should have received a copy of the GNU Library General Public License
    along with this library; see the file COPYING.LIB.  If not, write to
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -26,39 +26,42 @@
  * Service group factory for building ksycoca
  * @internal
  */
-class KBuildImageIOFactory : public KImageIOFactory
-{
+class KBuildImageIOFactory : public KImageIOFactory {
 public:
-  /**
-   * Create factory
-   */
-  KBuildImageIOFactory();
-  
-  virtual ~KBuildImageIOFactory();
+    /**
+     * Create factory
+     */
+    KBuildImageIOFactory();
 
-  /**
-   * Save header info to database
-   */
-  virtual void saveHeader(QDataStream &);
+    virtual ~KBuildImageIOFactory();
 
-  /**
-   * Write out service type specific index files.
-   */
-  virtual void save(QDataStream &str);
+    /**
+     * Save header info to database
+     */
+    virtual void saveHeader(QDataStream &);
 
-  /**
-   * Create new entry.
-   */
-  virtual KSycocaEntry* createEntry(const QString &, const char *);
+    /**
+     * Write out service type specific index files.
+     */
+    virtual void save(QDataStream &str);
 
-  virtual KSycocaEntry * createEntry( int ) { assert(0); return 0L; }
+    /**
+     * Create new entry.
+     */
+    virtual KSycocaEntry *createEntry(const QString &, const char *);
 
-  virtual void addEntry(KSycocaEntry *newEntry, const char *);
+    virtual KSycocaEntry *createEntry(int)
+    {
+        assert(0);
+        return 0L;
+    }
 
-  /**
-   * Returns all resource types for this service factory
-   */  
-  static QStringList resourceTypes();
+    virtual void addEntry(KSycocaEntry *newEntry, const char *);
+
+    /**
+     * Returns all resource types for this service factory
+     */
+    static QStringList resourceTypes();
 };
 
 #endif

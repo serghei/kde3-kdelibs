@@ -46,39 +46,51 @@ class DOMException;
 // Introduced in DOM Level 2:
 class KHTML_EXPORT RangeException {
 public:
-    RangeException(unsigned short _code) { code = _code; }
-    RangeException(const RangeException &other) { code = other.code; }
+    RangeException(unsigned short _code)
+    {
+        code = _code;
+    }
+    RangeException(const RangeException &other)
+    {
+        code = other.code;
+    }
 
-    RangeException & operator = (const RangeException &other)
-	{ code = other.code; return *this; }
+    RangeException &operator=(const RangeException &other)
+    {
+        code = other.code;
+        return *this;
+    }
 
-    virtual ~RangeException() {}
+    virtual ~RangeException()
+    {
+    }
     /**
      * An integer indicating the type of error generated.
      *
      */
-    enum RangeExceptionCode {
-        BAD_BOUNDARYPOINTS_ERR         = 1,
-        INVALID_NODE_TYPE_ERR          = 2,
-        _EXCEPTION_OFFSET              = 2000,
-        _EXCEPTION_MAX                 = 2999
+    enum RangeExceptionCode
+    {
+        BAD_BOUNDARYPOINTS_ERR = 1,
+        INVALID_NODE_TYPE_ERR = 2,
+        _EXCEPTION_OFFSET = 2000,
+        _EXCEPTION_MAX = 2999
     };
     unsigned short code;
 };
 
 
-class KHTML_EXPORT Range
-{
+class KHTML_EXPORT Range {
     friend class DocumentImpl;
     friend class Document;
     friend class RangeImpl;
+
 public:
     Range();
     Range(const Document rootContainer);
     Range(const Range &other);
     Range(const Node startContainer, const long startOffset, const Node endContainer, const long endOffset);
 
-    Range & operator = (const Range &other);
+    Range &operator=(const Range &other);
 
     ~Range();
 
@@ -141,7 +153,7 @@ public:
      * should an exception be raised.
      *
      */
-    void setStart ( const Node &refNode, long offset );
+    void setStart(const Node &refNode, long offset);
 
     /**
      * Sets the attributes describing the end of a range.
@@ -161,7 +173,7 @@ public:
      * Notation, or DocumentType node.
      *
      */
-    void setEnd ( const Node &refNode, long offset );
+    void setEnd(const Node &refNode, long offset);
 
     /**
      * Sets the start position to be before a node
@@ -177,7 +189,7 @@ public:
      * Attr, Entity, or Notation node.
      *
      */
-    void setStartBefore ( const Node &refNode );
+    void setStartBefore(const Node &refNode);
 
     /**
      * Sets the start position to be after a node
@@ -193,7 +205,7 @@ public:
      * Attr, Entity, or Notation node.
      *
      */
-    void setStartAfter ( const Node &refNode );
+    void setStartAfter(const Node &refNode);
 
     /**
      * Sets the end position to be before a node.
@@ -209,7 +221,7 @@ public:
      * Attr, Entity, or Notation node.
      *
      */
-    void setEndBefore ( const Node &refNode );
+    void setEndBefore(const Node &refNode);
 
     /**
      * Sets the end of a range to be after a node
@@ -225,7 +237,7 @@ public:
      * Entity, or Notation node.
      *
      */
-    void setEndAfter ( const Node &refNode );
+    void setEndAfter(const Node &refNode);
 
     /**
      * Collapse a range onto one of its end-points
@@ -236,7 +248,7 @@ public:
      * @return
      *
      */
-    void collapse ( bool toStart );
+    void collapse(bool toStart);
 
     /**
      * Select a node and its contents
@@ -252,7 +264,7 @@ public:
      * Entity, or Notation node.
      *
      */
-    void selectNode ( const Node &refNode );
+    void selectNode(const Node &refNode);
 
     /**
      * Select the contents within a node
@@ -267,13 +279,14 @@ public:
      * or DocumentType node.
      *
      */
-    void selectNodeContents ( const Node &refNode );
+    void selectNodeContents(const Node &refNode);
 
-    enum CompareHow {
-	START_TO_START = 0,
-	START_TO_END = 1,
-	END_TO_END = 2,
-	END_TO_START = 3
+    enum CompareHow
+    {
+        START_TO_START = 0,
+        START_TO_END = 1,
+        END_TO_END = 2,
+        END_TO_START = 3
     };
 
     /**
@@ -292,7 +305,7 @@ public:
      * same document or document fragment.
      *
      */
-    short compareBoundaryPoints ( CompareHow how, const Range &sourceRange );
+    short compareBoundaryPoints(CompareHow how, const Range &sourceRange);
 
     /**
      * @internal
@@ -305,7 +318,7 @@ public:
      * Return false if the startContainer is after the endContainer.
      *
      */
-    bool boundaryPointsValid (  );
+    bool boundaryPointsValid();
 
     /**
      * Removes the contents of a range from the containing document or
@@ -320,7 +333,7 @@ public:
      * contain any of the content of the range are read-only.
      *
      */
-    void deleteContents (  );
+    void deleteContents();
 
     /**
      * Moves the contents of a range from the containing document or
@@ -337,7 +350,7 @@ public:
      * extracted into the new DocumentFragment.
      *
      */
-    DocumentFragment extractContents (  );
+    DocumentFragment extractContents();
 
     /**
      * Duplicates the contents of a range
@@ -350,7 +363,7 @@ public:
      * extracted into the new DocumentFragment.
      *
      */
-    DocumentFragment cloneContents (  );
+    DocumentFragment cloneContents();
 
     /**
      * Inserts a node into the document or document fragment at the
@@ -378,7 +391,7 @@ public:
      * Attr, Entity, Notation, DocumentFragment, or Document node.
      *
      */
-    void insertNode ( const Node &newNode );
+    void insertNode(const Node &newNode);
 
     /**
      * Reparents the contents of the range to the given node and
@@ -412,7 +425,7 @@ public:
      * DocumentFragment node.
      *
      */
-    void surroundContents ( const Node &newParent );
+    void surroundContents(const Node &newParent);
 
     /**
      * Produces a new range whose end-points are equal to the
@@ -421,7 +434,7 @@ public:
      * @return The duplicated range.
      *
      */
-    Range cloneRange (  );
+    Range cloneRange();
 
     /**
      * Returns the contents of a range as a string.
@@ -429,15 +442,15 @@ public:
      * @return The contents of the range.
      *
      */
-    DOMString toString (  );
+    DOMString toString();
 
     /**
      * @internal Not part of DOM
      */
-    DOMString toHTML (  );
+    DOMString toHTML();
 
     /* Mozilla extension - only works for HTML documents. */
-    DocumentFragment createContextualFragment (const DOMString &html);
+    DocumentFragment createContextualFragment(const DOMString &html);
 
     /**
      * Called to indicate that the range is no longer in use and that
@@ -447,7 +460,7 @@ public:
      * error code of INVALID_STATE_ERR.
      *
      */
-    void detach (  );
+    void detach();
 
     /**
      * not part of the DOM
@@ -466,6 +479,7 @@ public:
 protected:
     RangeImpl *impl;
     Range(RangeImpl *i);
+
 private:
     void throwException(int exceptioncode) const;
 };

@@ -29,32 +29,29 @@ class QCheckBox;
 class KButtonBox;
 
 namespace KRES {
-  class Resource;
-  class ConfigWidget;
+class Resource;
+class ConfigWidget;
 
-class KRESOURCES_EXPORT ConfigDialog : public KDialogBase
-{
+class KRESOURCES_EXPORT ConfigDialog : public KDialogBase {
     Q_OBJECT
-  public:
+public:
     // Resource=0: create new resource
-    ConfigDialog( QWidget *parent, const QString& resourceFamily,
-	          Resource* resource, const char *name = 0);
+    ConfigDialog(QWidget *parent, const QString &resourceFamily, Resource *resource, const char *name = 0);
 
-    void setInEditMode( bool value );
+    void setInEditMode(bool value);
 
-  protected slots:
+protected slots:
     void accept();
-    void setReadOnly( bool value );
-    void slotNameChanged( const QString &text);
+    void setReadOnly(bool value);
+    void slotNameChanged(const QString &text);
 
-  private:
+private:
     ConfigWidget *mConfigWidget;
-    Resource* mResource;
+    Resource *mResource;
 
     KLineEdit *mName;
     QCheckBox *mReadOnly;
 };
-
 }
 
 #endif

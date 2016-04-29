@@ -32,8 +32,7 @@
 
 struct DBusMessage;
 
-class QDBusMessagePrivate
-{
+class QDBusMessagePrivate {
 public:
     QDBusMessagePrivate(QDBusMessage *qq);
     ~QDBusMessagePrivate();

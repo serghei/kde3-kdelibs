@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,56 +27,48 @@
 
 using namespace VCARD;
 
-DateParam::DateParam()
-	:	Param()
+DateParam::DateParam() : Param()
 {
 }
 
-DateParam::DateParam(const DateParam & x)
-	:	Param(x)
+DateParam::DateParam(const DateParam &x) : Param(x)
 {
 }
 
-DateParam::DateParam(const QCString & s)
-	:	Param(s)
+DateParam::DateParam(const QCString &s) : Param(s)
 {
 }
 
-	DateParam &
-DateParam::operator = (DateParam & x)
+DateParam &DateParam::operator=(DateParam &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Param::operator = (x);
-	return *this;
+    Param::operator=(x);
+    return *this;
 }
 
-	DateParam &
-DateParam::operator = (const QCString & s)
+DateParam &DateParam::operator=(const QCString &s)
 {
-	Param::operator = (s);
-	return *this;
+    Param::operator=(s);
+    return *this;
 }
 
-	bool
-DateParam::operator == (DateParam & x)
+bool DateParam::operator==(DateParam &x)
 {
-	x.parse();
-	
-	return false;
+    x.parse();
+
+    return false;
 }
 
 DateParam::~DateParam()
 {
 }
 
-	void
-DateParam::_parse()
+void DateParam::_parse()
 {
 }
 
-	void
-DateParam::_assemble()
+void DateParam::_assemble()
 {
 }
-

@@ -24,31 +24,29 @@
 #include <qptrdict.h>
 #include "dom/dom_core.h"
 
-class DOMTreeView : public KListView
-{
+class DOMTreeView : public KListView {
     Q_OBJECT
-    public: 
-	DOMTreeView(QWidget *parent, KHTMLPart *part, const char * name = 0);
-	~DOMTreeView();
+public:
+    DOMTreeView(QWidget *parent, KHTMLPart *part, const char *name = 0);
+    ~DOMTreeView();
 
-	void recursive(const DOM::Node &pNode, const DOM::Node &node);
+    void recursive(const DOM::Node &pNode, const DOM::Node &node);
 
-    signals:
-	void sigNodeClicked(const DOM::Node &);
-	
-    public slots:
-	void showTree(const DOM::Node &pNode);
+signals:
+    void sigNodeClicked(const DOM::Node &);
 
-    protected slots:
-	void slotItemClicked(QListViewItem *);
+public slots:
+    void showTree(const DOM::Node &pNode);
 
-    private:
-	QPtrDict<QListViewItem> m_itemdict;
-	QPtrDict<DOM::Node> m_nodedict;
-	DOM::Node document;
+protected slots:
+    void slotItemClicked(QListViewItem *);
 
-	KHTMLPart *part;
+private:
+    QPtrDict< QListViewItem > m_itemdict;
+    QPtrDict< DOM::Node > m_nodedict;
+    DOM::Node document;
 
+    KHTMLPart *part;
 };
 
 #endif

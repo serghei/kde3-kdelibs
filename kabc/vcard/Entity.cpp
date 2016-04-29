@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -25,110 +25,95 @@
 
 using namespace VCARD;
 
-Entity::Entity()
-	:	parsed_		(false),
-		assembled_	(true)
+Entity::Entity() : parsed_(false), assembled_(true)
 {
-	// empty
+    // empty
 }
-		
-Entity::Entity(const Entity & e)
-	:	strRep_		(e.strRep_),
-		parsed_		(e.parsed_),
-		assembled_	(e.assembled_)
-{
-	// empty
-}
-		
-Entity::Entity(const QCString & s)
-	:	strRep_		(s),
-		parsed_		(false),
-		assembled_	(true)
-{
-	// empty
-}
-		
-	Entity &
-Entity::operator = (const Entity & e)
-{
-	if (this == &e) return *this;
-	
-	strRep_		= e.strRep_;
-	parsed_		= e.parsed_;
-	assembled_	= e.assembled_;
 
-	return *this;
-}
-		
-	Entity &
-Entity::operator = (const QCString & s)
+Entity::Entity(const Entity &e) : strRep_(e.strRep_), parsed_(e.parsed_), assembled_(e.assembled_)
 {
-	strRep_		= s;
-	parsed_		= false;
-	assembled_	= true;
-	
-	return *this;
+    // empty
 }
-		
-	bool
-Entity::operator == (Entity & e)
+
+Entity::Entity(const QCString &s) : strRep_(s), parsed_(false), assembled_(true)
 {
-	return asString() == e.asString();
+    // empty
 }
-		
-	bool
-Entity::operator != (Entity & e)
+
+Entity &Entity::operator=(const Entity &e)
 {
-	return !(*this == e);
+    if(this == &e)
+        return *this;
+
+    strRep_ = e.strRep_;
+    parsed_ = e.parsed_;
+    assembled_ = e.assembled_;
+
+    return *this;
 }
-		
-	bool
-Entity::operator == (const QCString & s)
+
+Entity &Entity::operator=(const QCString &s)
 {
-	return asString() == s;
+    strRep_ = s;
+    parsed_ = false;
+    assembled_ = true;
+
+    return *this;
 }
-		
-	bool
-Entity::operator != (const QCString & s)
+
+bool Entity::operator==(Entity &e)
 {
-	return !(*this == s);
+    return asString() == e.asString();
 }
-		
+
+bool Entity::operator!=(Entity &e)
+{
+    return !(*this == e);
+}
+
+bool Entity::operator==(const QCString &s)
+{
+    return asString() == s;
+}
+
+bool Entity::operator!=(const QCString &s)
+{
+    return !(*this == s);
+}
+
 Entity::~Entity()
 {
-	// empty
+    // empty
 }
-		
-	QCString
-Entity::asString()
+
+QCString Entity::asString()
 {
-//	vDebug("Entity::asString()");
-	assemble();
+    //	vDebug("Entity::asString()");
+    assemble();
 
-	return strRep_;
+    return strRep_;
 }
-		
-	void
-Entity::parse()
+
+void Entity::parse()
 {
-//	vDebug( "Entity::parse()" );
+    //	vDebug( "Entity::parse()" );
 
-	if (!parsed_) _parse();
-	
-	parsed_		= true;
-	assembled_	= false;
+    if(!parsed_)
+        _parse();
+
+    parsed_ = true;
+    assembled_ = false;
 }
-		
-	void
-Entity::assemble()
+
+void Entity::assemble()
 {
-//	vDebug( "Entity::assemble()" );
+    //	vDebug( "Entity::assemble()" );
 
-	if (assembled_) return;
+    if(assembled_)
+        return;
 
-	parse();
-	_assemble();
-	
-	assembled_	= true;
+    parse();
+    _assemble();
+
+    assembled_ = true;
 }
-

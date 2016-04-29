@@ -59,8 +59,8 @@ extern "C" {
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern IcePoAuthStatus _kde_IcePoMagicCookie1Proc (IceConn, void **, int, int, int, void *, int *, void **, char **);
-extern IcePaAuthStatus _kde_IcePaMagicCookie1Proc (IceConn, void **, int, int, void *, int *, void **, char **);
+extern IcePoAuthStatus _kde_IcePoMagicCookie1Proc(IceConn, void **, int, int, int, void *, int *, void **, char **);
+extern IcePaAuthStatus _kde_IcePaMagicCookie1Proc(IceConn, void **, int, int, void *, int *, void **, char **);
 #ifdef __cplusplus
 }
 #endif
@@ -73,12 +73,13 @@ static const char *DCOPAuthNames[] = {"MIT-MAGIC-COOKIE-1"};
 /**
  * @internal
  */
-struct DCOPMsg {
-  CARD8 majorOpcode;
-  CARD8 minorOpcode;
-  CARD8 data[2];
-  CARD32 length B32;
-  CARD32 key;
+struct DCOPMsg
+{
+    CARD8 majorOpcode;
+    CARD8 minorOpcode;
+    CARD8 data[2];
+    CARD32 length B32;
+    CARD32 key;
 };
 
 #endif

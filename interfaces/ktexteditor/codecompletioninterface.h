@@ -24,8 +24,7 @@
 
 #include <kdelibs_export.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
  * An item for the completion popup. <code>text</code> is the completed string,
@@ -39,9 +38,8 @@ namespace KTextEditor
  *
  *
  */
-class KTEXTEDITOR_EXPORT CompletionEntry
-{
-  public:
+class KTEXTEDITOR_EXPORT CompletionEntry {
+public:
     QString type;
     QString text;
     QString prefix;
@@ -50,13 +48,9 @@ class KTEXTEDITOR_EXPORT CompletionEntry
 
     QString userdata;
 
-    bool operator==( const CompletionEntry &c ) const {
-      return ( c.type == type &&
-	       c.text == text &&
-	       c.postfix == postfix &&
-	       c.prefix == prefix &&
-	       c.comment == comment &&
-               c.userdata == userdata);
+    bool operator==(const CompletionEntry &c) const
+    {
+        return (c.type == type && c.text == text && c.postfix == postfix && c.prefix == prefix && c.comment == comment && c.userdata == userdata);
     }
 };
 
@@ -83,28 +77,27 @@ class KTEXTEDITOR_EXPORT CompletionEntry
  * void aboutToShowCompletionBox()
  *
  */
-class KTEXTEDITOR_EXPORT CodeCompletionInterface
-{
-  friend class PrivateCodeCompletionInterface;
+class KTEXTEDITOR_EXPORT CodeCompletionInterface {
+    friend class PrivateCodeCompletionInterface;
 
-  public:
-	CodeCompletionInterface();
-	virtual ~CodeCompletionInterface();
+public:
+    CodeCompletionInterface();
+    virtual ~CodeCompletionInterface();
 
-	unsigned int codeCompletionInterfaceNumber () const;
+    unsigned int codeCompletionInterfaceNumber() const;
 
-  protected:
-    void setCodeCompletionInterfaceDCOPSuffix (const QCString &suffix);
+protected:
+    void setCodeCompletionInterfaceDCOPSuffix(const QCString &suffix);
 
 
-  public:
-	//
-	// slots !!!
-	//
+public:
+    //
+    // slots !!!
+    //
     /**
      * This shows an argument hint.
      */
-    virtual void showArgHint (QStringList functionList, const QString& strWrapping, const QString& strDelimiter) = 0;
+    virtual void showArgHint(QStringList functionList, const QString &strWrapping, const QString &strDelimiter) = 0;
 
     /**
      * This shows a completion list. @p offset is the real start of the text that
@@ -112,91 +105,88 @@ class KTEXTEDITOR_EXPORT CodeCompletionInterface
      * position. if @p casesensitive is @p true, the popup will only contain completions
      * that match the input text regarding case.
      */
-    virtual void showCompletionBox (QValueList<CompletionEntry> complList,int offset=0, bool casesensitive=true)=0;
+    virtual void showCompletionBox(QValueList< CompletionEntry > complList, int offset = 0, bool casesensitive = true) = 0;
 
-	//
-	// signals !!!
-	//
-	public:
+    //
+    // signals !!!
+    //
+public:
+    /**
+     * This signal is emitted when the completion list disappears and no completion has
+     * been done. This is the case e.g. when the user presses Escape.
+     *
+     * IMPORTANT: Please check if a connect to this signal worked, and implement some fallback
+     * when the implementation doesn't support it
+     *
+     * IMPORTANT FOR IMPLEMENTERS: When you don't support this signal, please just override the inherited
+     * function, if you support it, declare it as a signal
+     */
+    virtual void completionAborted() = 0;
 
+    /**
+     * This signal is emitted when the completion list disappears and a completion has
+     * been inserted into text. This is the case e.g. when the user presses Return
+     * on a selected item in the completion list.
+     *
+     * IMPORTANT: Please check if a connect to this signal worked, and implement some fallback
+     * when the implementation doesn't support it
+     *
+     * IMPORTANT FOR IMPLEMENTERS: When you don't support this signal, please just override the inherited
+     * function, if you support it, declare it as a signal
+     */
+    virtual void completionDone() = 0;
 
-	/**
-	 * This signal is emitted when the completion list disappears and no completion has
-	 * been done. This is the case e.g. when the user presses Escape.
-	 *
-	 * IMPORTANT: Please check if a connect to this signal worked, and implement some fallback
-	 * when the implementation doesn't support it
-	 *
-	 * IMPORTANT FOR IMPLEMENTERS: When you don't support this signal, please just override the inherited
-	 * function, if you support it, declare it as a signal
-	 */
-    virtual void completionAborted()=0;
-
-	/**
-	 * This signal is emitted when the completion list disappears and a completion has
-	 * been inserted into text. This is the case e.g. when the user presses Return
-	 * on a selected item in the completion list.
-	 *
-	 * IMPORTANT: Please check if a connect to this signal worked, and implement some fallback
-	 * when the implementation doesn't support it
-	 *
-	 * IMPORTANT FOR IMPLEMENTERS: When you don't support this signal, please just override the inherited
-	 * function, if you support it, declare it as a signal
-	 */
-    virtual void completionDone()=0;
-
-	/**
-	 * This signal is the same as completionDone(), but additionally it carries
-	 * the information which completion item was used.
-	 *
-	 * IMPORTANT: Please check if a connect to this signal worked, and implement some fallback
-	 * when the implementation doesn't support it
+    /**
+     * This signal is the same as completionDone(), but additionally it carries
+     * the information which completion item was used.
+     *
+     * IMPORTANT: Please check if a connect to this signal worked, and implement some fallback
+     * when the implementation doesn't support it
          *
          * IMPORTANT: The pointer to the CompleteionEntry, is only valid in the slots connected to this signal
          * when the connected slots are left, the data element may be destroyed, depending on the implementation
-	 *
-	 * IMPORTANT FOR IMPLEMENTERS: When you don't support this signal, please just override the inherited
-	 * function, if you support it, declare it as a signal.
+     *
+     * IMPORTANT FOR IMPLEMENTERS: When you don't support this signal, please just override the inherited
+     * function, if you support it, declare it as a signal.
          *
-	 */
-    virtual void completionDone(CompletionEntry)=0;
+     */
+    virtual void completionDone(CompletionEntry) = 0;
 
-	/**
-	 * This signal is emitted when the argument hint disappears.
-	 * This is the case e.g. when the user moves the cursor somewhere else.
-	 *
-	 * IMPORTANT: Please check if a connect to this signal worked, and implement some fallback
-	 * when the implementation doesn't support it
-	 *
-	 * IMPORTANT FOR IMPLEMENTERS: When you don't support this signal, please just override the inherited
-	 * function, if you support it, declare it as a signal
-	 */
-    virtual void argHintHidden()=0;
+    /**
+     * This signal is emitted when the argument hint disappears.
+     * This is the case e.g. when the user moves the cursor somewhere else.
+     *
+     * IMPORTANT: Please check if a connect to this signal worked, and implement some fallback
+     * when the implementation doesn't support it
+     *
+     * IMPORTANT FOR IMPLEMENTERS: When you don't support this signal, please just override the inherited
+     * function, if you support it, declare it as a signal
+     */
+    virtual void argHintHidden() = 0;
 
-	/**
-	 * This signal is emitted just before a completion takes place.
-	 * You can use it to modify the CompletionEntry. The modified
-	 * entry will not be visible in the completion list (because that has
-	 * just disappeared) but it will be used when the completion is
-	 * inserted into the text.
-	 *
-	 * IMPORTANT: Please check if a connect to this signal worked, and implement some fallback
-	 * when the implementation doesn't support it
-	 *
-	 * IMPORTANT FOR IMPLEMENTERS: When you don't support this signal, please just override the inherited
-	 * function, if you support it, declare it as a signal
-	 */
-    virtual void filterInsertString(CompletionEntry*,QString*)=0;
+    /**
+     * This signal is emitted just before a completion takes place.
+     * You can use it to modify the CompletionEntry. The modified
+     * entry will not be visible in the completion list (because that has
+     * just disappeared) but it will be used when the completion is
+     * inserted into the text.
+     *
+     * IMPORTANT: Please check if a connect to this signal worked, and implement some fallback
+     * when the implementation doesn't support it
+     *
+     * IMPORTANT FOR IMPLEMENTERS: When you don't support this signal, please just override the inherited
+     * function, if you support it, declare it as a signal
+     */
+    virtual void filterInsertString(CompletionEntry *, QString *) = 0;
 
 
-  private:
+private:
     class PrivateCodeCompletionInterface *d;
     static unsigned int globalCodeCompletionInterfaceNumber;
     unsigned int myCodeCompletionInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT CodeCompletionInterface *codeCompletionInterface (class View *view);
-
+KTEXTEDITOR_EXPORT CodeCompletionInterface *codeCompletionInterface(class View *view);
 }
 
 #endif

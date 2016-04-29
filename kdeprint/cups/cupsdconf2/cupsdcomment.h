@@ -18,38 +18,37 @@
  **/
 
 #ifndef CUPSDCOMMENT_H
-#define	CUPSDCOMMENT_H
+#define CUPSDCOMMENT_H
 
 #include <qstringlist.h>
 #include <qdict.h>
 
 class QFile;
 
-class Comment
-{
+class Comment {
 public:
-        bool load(QFile* f);
-        QString toolTip();
-        QString comment();
-	QString key();
+    bool load(QFile *f);
+    QString toolTip();
+    QString comment();
+    QString key();
+
 private:
-        QString comment_;
-        QString example_;
-	QString key_;
+    QString comment_;
+    QString example_;
+    QString key_;
 };
 
-class CupsdComment
-{
+class CupsdComment {
 public:
-	QString operator[] (const QString& key);
-        QString comment(const QString& key);
-        QString toolTip(const QString& key);
+    QString operator[](const QString &key);
+    QString comment(const QString &key);
+    QString toolTip(const QString &key);
 
 private:
-	bool loadComments();
+    bool loadComments();
 
 private:
-	QDict<Comment> comments_;
+    QDict< Comment > comments_;
 };
 
 #endif

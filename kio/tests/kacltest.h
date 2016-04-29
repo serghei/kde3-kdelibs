@@ -23,8 +23,7 @@
 #include <qobject.h>
 #include <kacl.h>
 
-class KACLTest
-{
+class KACLTest {
 public:
     KACLTest();
     void setup();

@@ -28,11 +28,10 @@
 #include <klocale.h>
 #include <assert.h>
 
-KBuildProtocolInfoFactory::KBuildProtocolInfoFactory() :
-  KProtocolInfoFactory()
+KBuildProtocolInfoFactory::KBuildProtocolInfoFactory() : KProtocolInfoFactory()
 {
-   m_resourceList = new KSycocaResourceList();
-   m_resourceList->add( "services", "*.protocol" );
+    m_resourceList = new KSycocaResourceList();
+    m_resourceList->add("services", "*.protocol");
 }
 
 // return all service types for this factory
@@ -44,18 +43,15 @@ QStringList KBuildProtocolInfoFactory::resourceTypes()
 
 KBuildProtocolInfoFactory::~KBuildProtocolInfoFactory()
 {
-   delete m_resourceList;
+    delete m_resourceList;
 }
 
-KProtocolInfo *
-KBuildProtocolInfoFactory::createEntry( const QString& file, const char * )
+KProtocolInfo *KBuildProtocolInfoFactory::createEntry(const QString &file, const char *)
 {
-   return new KProtocolInfo(file);
+    return new KProtocolInfo(file);
 }
 
-void
-KBuildProtocolInfoFactory::addEntry( KSycocaEntry *newEntry, const char *resource)
+void KBuildProtocolInfoFactory::addEntry(KSycocaEntry *newEntry, const char *resource)
 {
-   KSycocaFactory::addEntry(newEntry, resource);
+    KSycocaFactory::addEntry(newEntry, resource);
 }
-

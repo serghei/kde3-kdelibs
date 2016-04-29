@@ -24,48 +24,45 @@
 class QCString;
 class KConfig;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 * This is an interface to session-specific configuration of the
 * Document, Plugin and PluginViewInterface classes.
 */
-class KTEXTEDITOR_EXPORT SessionConfigInterface
-{
-  friend class PrivateSessionConfigInterface;
+class KTEXTEDITOR_EXPORT SessionConfigInterface {
+    friend class PrivateSessionConfigInterface;
 
-  public:
+public:
     SessionConfigInterface();
     virtual ~SessionConfigInterface();
 
-    unsigned int configInterfaceNumber () const;
+    unsigned int configInterfaceNumber() const;
 
-  protected:
-    void setSessionConfigInterfaceDCOPSuffix (const QCString &suffix);
+protected:
+    void setSessionConfigInterfaceDCOPSuffix(const QCString &suffix);
 
-  //
-  // slots !!!
-  //
-  public:
+    //
+    // slots !!!
+    //
+public:
     /**
      * Read/Write session config of only this document/view/plugin
      * In case of the document, that means for example it should reload the file,
      * restore all marks, ...
     */
-    virtual void readSessionConfig (KConfig *) = 0;
-    virtual void writeSessionConfig (KConfig *) = 0;
+    virtual void readSessionConfig(KConfig *) = 0;
+    virtual void writeSessionConfig(KConfig *) = 0;
 
-  private:
+private:
     class PrivateSessionConfigInterface *d;
     static unsigned int globalSessionConfigInterfaceNumber;
     unsigned int mySessionConfigInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT SessionConfigInterface *sessionConfigInterface (class Document *doc);
-KTEXTEDITOR_EXPORT SessionConfigInterface *sessionConfigInterface (class View *view);
-KTEXTEDITOR_EXPORT SessionConfigInterface *sessionConfigInterface (class Plugin *plugin);
-
+KTEXTEDITOR_EXPORT SessionConfigInterface *sessionConfigInterface(class Document *doc);
+KTEXTEDITOR_EXPORT SessionConfigInterface *sessionConfigInterface(class View *view);
+KTEXTEDITOR_EXPORT SessionConfigInterface *sessionConfigInterface(class Plugin *plugin);
 }
 
 #endif

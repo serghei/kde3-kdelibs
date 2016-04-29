@@ -1,23 +1,23 @@
-	/*
+/*
 
-	Copyright (C) 2002 Nikolas Zimmermann <wildfox@kde.org>
+Copyright (C) 2002 Nikolas Zimmermann <wildfox@kde.org>
 
-	This library is free software; you can redistribute it and/or
-	modify it under the terms of the GNU Library General Public
-	License as published by the Free Software Foundation; either
-	version 2 of the License, or (at your option) any later version.
-  
-	This library is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	Library General Public License for more details.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-	You should have received a copy of the GNU Library General Public License
-	along with this library; see the file COPYING.LIB.  If not, write to
-	the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-	Boston, MA 02110-1301, USA.
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
 
-	*/
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.
+
+*/
 
 #include <kdebug.h>
 #include "flowsystem.h"
@@ -28,13 +28,13 @@ using namespace Arts;
 
 KDataRequest_impl::KDataRequest_impl()
 {
-	m_lastBlockSize = 0;
-	m_outBlock = 0;
+    m_lastBlockSize = 0;
+    m_outBlock = 0;
 }
 
 KDataRequest_impl::~KDataRequest_impl()
 {
-	delete []m_outBlock;
+    delete[] m_outBlock;
 }
 
 void KDataRequest_impl::streamInit()
@@ -47,22 +47,22 @@ void KDataRequest_impl::streamEnd()
 
 void KDataRequest_impl::calculateBlock(unsigned long samples)
 {
-	long blockSize = samples * 4;
+    long blockSize = samples * 4;
 
-	if(m_lastBlockSize != blockSize)
-	{
-		delete []m_outBlock;
-		emit newBlockSize(blockSize);
-	
-		m_outBlock = new unsigned char[blockSize]; // 2 channels, 16 bit
-	
-		emit newBlockPointer((long) m_outBlock);
+    if(m_lastBlockSize != blockSize)
+    {
+        delete[] m_outBlock;
+        emit newBlockSize(blockSize);
 
-		m_lastBlockSize = blockSize;
-	}
+        m_outBlock = new unsigned char[blockSize]; // 2 channels, 16 bit
 
-	convert_stereo_2float_i16le(samples, left, right, m_outBlock);
-	emit newData();
+        emit newBlockPointer((long)m_outBlock);
+
+        m_lastBlockSize = blockSize;
+    }
+
+    convert_stereo_2float_i16le(samples, left, right, m_outBlock);
+    emit newData();
 }
 
 /*
@@ -74,7 +74,7 @@ void KDataRequest_impl::calculateBlock(unsigned long samples)
  */
 void KDataRequest_impl::goOn()
 {
-	_node()->requireFlow();
+    _node()->requireFlow();
 }
 
 REGISTER_IMPLEMENTATION(KDataRequest_impl);

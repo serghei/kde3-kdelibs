@@ -37,125 +37,152 @@ class MD5Digest;
 /* @internal
  */
 class KDE_EXPORT Backend {
-	public:
-		Backend(const QString& name = "kdewallet", bool isPath = false);
-		~Backend();
+public:
+    Backend(const QString &name = "kdewallet", bool isPath = false);
+    ~Backend();
 
-		// Open and unlock the wallet.
-		int open(const QByteArray& password);
+    // Open and unlock the wallet.
+    int open(const QByteArray &password);
 
-		// Close and lock the wallet (saving changes).
-		int close(const QByteArray& password);
+    // Close and lock the wallet (saving changes).
+    int close(const QByteArray &password);
 
-		// Close the wallet, losing any changes.
-		int close();
+    // Close the wallet, losing any changes.
+    int close();
 
-		// Write the wallet to disk
-		int sync(const QByteArray& password);
+    // Write the wallet to disk
+    int sync(const QByteArray &password);
 
-		// Returns true if the current wallet is open.
-		bool isOpen() const;
+    // Returns true if the current wallet is open.
+    bool isOpen() const;
 
-		// Returns the current wallet name.
-		const QString& walletName() const;
+    // Returns the current wallet name.
+    const QString &walletName() const;
 
-		// The list of folders.
-		QStringList folderList() const;
+    // The list of folders.
+    QStringList folderList() const;
 
-		// Force creation of a folder.
-		bool createFolder(const QString& f);
+    // Force creation of a folder.
+    bool createFolder(const QString &f);
 
-		// Change the folder.
-		void setFolder(const QString& f) { _folder = f; }
+    // Change the folder.
+    void setFolder(const QString &f)
+    {
+        _folder = f;
+    }
 
-		// Current folder.  If empty, it's the global folder.
-		const QString& folder() const { return _folder; }
+    // Current folder.  If empty, it's the global folder.
+    const QString &folder() const
+    {
+        return _folder;
+    }
 
-		// Does it have this folder?
-		bool hasFolder(const QString& f) const { return _entries.contains(f); }
+    // Does it have this folder?
+    bool hasFolder(const QString &f) const
+    {
+        return _entries.contains(f);
+    }
 
-		// Look up an entry.  Returns null if it doesn't exist.
-		Entry *readEntry(const QString& key);
-		
-		// Look up a list of entries.  Supports wildcards.
-		// You delete the list.
-		QPtrList<Entry> readEntryList(const QString& key);
+    // Look up an entry.  Returns null if it doesn't exist.
+    Entry *readEntry(const QString &key);
 
-		// Store an entry.
-		void writeEntry(Entry *e);
+    // Look up a list of entries.  Supports wildcards.
+    // You delete the list.
+    QPtrList< Entry > readEntryList(const QString &key);
 
-		// Does this folder contain this entry?
-		bool hasEntry(const QString& key) const;
+    // Store an entry.
+    void writeEntry(Entry *e);
 
-		// Returns true if the entry was removed
-		bool removeEntry(const QString& key);
+    // Does this folder contain this entry?
+    bool hasEntry(const QString &key) const;
 
-		// Returns true if the folder was removed
-		bool removeFolder(const QString& f);
+    // Returns true if the entry was removed
+    bool removeEntry(const QString &key);
 
-		// The list of entries in this folder.
-		QStringList entryList() const;
+    // Returns true if the folder was removed
+    bool removeFolder(const QString &f);
 
-		// Rename an entry in this folder.
-		int renameEntry(const QString& oldName, const QString& newName);
+    // The list of entries in this folder.
+    QStringList entryList() const;
 
-		int ref() { return ++_ref; }
+    // Rename an entry in this folder.
+    int renameEntry(const QString &oldName, const QString &newName);
 
-		int deref() { return --_ref; }
+    int ref()
+    {
+        return ++_ref;
+    }
 
-		int refCount() const { return _ref; }
+    int deref()
+    {
+        return --_ref;
+    }
 
-		static bool exists(const QString& wallet);
+    int refCount() const
+    {
+        return _ref;
+    }
 
-		bool folderDoesNotExist(const QString& folder) const;
+    static bool exists(const QString &wallet);
 
-		bool entryDoesNotExist(const QString& folder, const QString& entry) const;
+    bool folderDoesNotExist(const QString &folder) const;
 
-		static QString openRCToString(int rc);
+    bool entryDoesNotExist(const QString &folder, const QString &entry) const;
 
-	private:
-		class BackendPrivate;
-		BackendPrivate *d;
-		QString _name;
-		QString _path;
-		bool _open;
-		QString _folder;
-		int _ref;
-		// Map Folder->Entries
-		typedef QMap< QString, Entry* > EntryMap;
-		typedef QMap< QString, EntryMap > FolderMap;
-		FolderMap _entries;
-		typedef QMap<MD5Digest, QValueList<MD5Digest> > HashMap;
-		HashMap _hashes;
+    static QString openRCToString(int rc);
+
+private:
+    class BackendPrivate;
+    BackendPrivate *d;
+    QString _name;
+    QString _path;
+    bool _open;
+    QString _folder;
+    int _ref;
+    // Map Folder->Entries
+    typedef QMap< QString, Entry * > EntryMap;
+    typedef QMap< QString, EntryMap > FolderMap;
+    FolderMap _entries;
+    typedef QMap< MD5Digest, QValueList< MD5Digest > > HashMap;
+    HashMap _hashes;
 };
 
 /**
  * @internal
  */
 class MD5Digest : public QByteArray {
-	public:
-		MD5Digest() : QByteArray(16) {}
-		MD5Digest(const KMD5::Digest d) : QByteArray() { duplicate(reinterpret_cast<const char *>(d), 16); }
-		virtual ~MD5Digest() {}
+public:
+    MD5Digest() : QByteArray(16)
+    {
+    }
+    MD5Digest(const KMD5::Digest d) : QByteArray()
+    {
+        duplicate(reinterpret_cast< const char * >(d), 16);
+    }
+    virtual ~MD5Digest()
+    {
+    }
 
-		int operator<(const MD5Digest& r) const {
-				int i = 0;
-				char x, y;
-				for (; i < 16; ++i) {
-					x = at(i);
-					y = r.at(i);
-					if (x != y) {
-						break;
-					}
-				}
-				if (i < 16 && x < y) {
-					return 1;
-				}
-				return 0;
-			}
+    int operator<(const MD5Digest &r) const
+    {
+        int i = 0;
+        char x, y;
+        for(; i < 16; ++i)
+        {
+            x = at(i);
+            y = r.at(i);
+            if(x != y)
+            {
+                break;
+            }
+        }
+        if(i < 16 && x < y)
+        {
+            return 1;
+        }
+        return 0;
+    }
 };
-
 }
 
 #endif
-

@@ -26,35 +26,34 @@
 class KListBox;
 class QPushButton;
 
-class EditList : public QWidget
-{
-	Q_OBJECT
+class EditList : public QWidget {
+    Q_OBJECT
 
 public:
-	EditList(QWidget *parent = 0, const char *name = 0);
+    EditList(QWidget *parent = 0, const char *name = 0);
 
-	QString text(int);
-	void setText(int, const QString&);
-	void insertItem(const QString&);
-	void insertItem(const QPixmap&, const QString&);
-	void insertItems(const QStringList&);
-	QStringList items();
-	void clear();
+    QString text(int);
+    void setText(int, const QString &);
+    void insertItem(const QString &);
+    void insertItem(const QPixmap &, const QString &);
+    void insertItems(const QStringList &);
+    QStringList items();
+    void clear();
 
 signals:
-	void add();
-	void edit(int);
-	void defaultList();
-	void deleted(int);
+    void add();
+    void edit(int);
+    void defaultList();
+    void deleted(int);
 
 protected slots:
-	void slotDelete();
-	void slotEdit();
-	void slotSelected(int);
+    void slotDelete();
+    void slotEdit();
+    void slotSelected(int);
 
 private:
-	KListBox	*list_;
-	QPushButton	*addbtn_, *editbtn_, *delbtn_, *defbtn_;
+    KListBox *list_;
+    QPushButton *addbtn_, *editbtn_, *delbtn_, *defbtn_;
 };
 
 #endif

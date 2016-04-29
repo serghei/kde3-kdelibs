@@ -25,23 +25,28 @@
 
 class DrBase;
 
-class DriverItem : public QListViewItem
-{
+class DriverItem : public QListViewItem {
 public:
-	DriverItem(QListView *parent, DrBase *item);
-	DriverItem(QListViewItem *parent, QListViewItem *after, DrBase *item);
+    DriverItem(QListView *parent, DrBase *item);
+    DriverItem(QListViewItem *parent, QListViewItem *after, DrBase *item);
 
-	void updateText();
-	void updateTextRecursive();
-	DrBase* drItem() const 	{ return m_item; }
-	bool hasConflict()	{ return m_conflict; }
-	bool updateConflict();
+    void updateText();
+    void updateTextRecursive();
+    DrBase *drItem() const
+    {
+        return m_item;
+    }
+    bool hasConflict()
+    {
+        return m_conflict;
+    }
+    bool updateConflict();
 
-	void paintCell(QPainter*, const QColorGroup&, int, int, int);
+    void paintCell(QPainter *, const QColorGroup &, int, int, int);
 
 private:
-	DrBase	*m_item;
-	bool	m_conflict;
+    DrBase *m_item;
+    bool m_conflict;
 };
 
 #endif

@@ -26,7 +26,7 @@
 
 #include "qdbusdata.h"
 
-template <typename T> class QValueList;
+template < typename T > class QValueList;
 class QDBusObjectPath;
 class QDBusVariant;
 class QString;
@@ -67,8 +67,7 @@ class QStringList;
  *
  * @see QDBusDataMap
  */
-class QDBUS_EXPORT QDBusDataList
-{
+class QDBUS_EXPORT QDBusDataList {
 public:
     /**
      * @brief Creates an empty and invalid list
@@ -100,7 +99,7 @@ public:
      *
      * @see hasContainerItemType()
      */
-    explicit QDBusDataList(const QDBusData& containerItemType);
+    explicit QDBusDataList(const QDBusData &containerItemType);
 
     /**
      * @brief Creates a list from the given @p other list
@@ -110,7 +109,7 @@ public:
      *
      * @param other the other list object to copy from
      */
-    QDBusDataList(const QDBusDataList& other);
+    QDBusDataList(const QDBusDataList &other);
 
     /**
      * @brief Creates a list from the given QValueList of QDBusData objects
@@ -128,7 +127,7 @@ public:
      *
      * @see toQValueList()
      */
-    QDBusDataList(const QValueList<QDBusData>& other);
+    QDBusDataList(const QValueList< QDBusData > &other);
 
     /**
      * @brief Creates a list from the given QValueList of boolean values
@@ -142,7 +141,7 @@ public:
      *
      * @see toBoolList()
      */
-    QDBusDataList(const QValueList<bool>& other);
+    QDBusDataList(const QValueList< bool > &other);
 
     /**
      * @brief Creates a list from the given QValueList of byte (unsigned char) values
@@ -156,7 +155,7 @@ public:
      *
      * @see toByteList()
      */
-    QDBusDataList(const QValueList<Q_UINT8>& other);
+    QDBusDataList(const QValueList< Q_UINT8 > &other);
 
     /**
      * @brief Creates a list from the given QValueList of signed 16-bit integer values
@@ -170,7 +169,7 @@ public:
      *
      * @see toInt16List()
      */
-    QDBusDataList(const QValueList<Q_INT16>& other);
+    QDBusDataList(const QValueList< Q_INT16 > &other);
 
     /**
      * @brief Creates a list from the given QValueList of unsigned 16-bit integer values
@@ -184,7 +183,7 @@ public:
      *
      * @see toUInt16List()
      */
-    QDBusDataList(const QValueList<Q_UINT16>& other);
+    QDBusDataList(const QValueList< Q_UINT16 > &other);
 
     /**
      * @brief Creates a list from the given QValueList of signed 32-bit integer values
@@ -198,7 +197,7 @@ public:
      *
      * @see toInt32List()
      */
-    QDBusDataList(const QValueList<Q_INT32>& other);
+    QDBusDataList(const QValueList< Q_INT32 > &other);
 
     /**
      * @brief Creates a list from the given QValueList of unsigned 32-bit integer values
@@ -212,7 +211,7 @@ public:
      *
      * @see toUInt32List()
      */
-    QDBusDataList(const QValueList<Q_UINT32>& other);
+    QDBusDataList(const QValueList< Q_UINT32 > &other);
 
     /**
      * @brief Creates a list from the given QValueList of signed 64-bit integer values
@@ -226,7 +225,7 @@ public:
      *
      * @see toInt64List()
      */
-    QDBusDataList(const QValueList<Q_INT64>& other);
+    QDBusDataList(const QValueList< Q_INT64 > &other);
 
     /**
      * @brief Creates a list from the given QValueList of unsigned 64-bit integer values
@@ -240,7 +239,7 @@ public:
      *
      * @see toUInt64List()
      */
-    QDBusDataList(const QValueList<Q_UINT64>& other);
+    QDBusDataList(const QValueList< Q_UINT64 > &other);
 
     /**
      * @brief Creates a list from the given QValueList of double values
@@ -254,7 +253,7 @@ public:
      *
      * @see toDoubleList()
      */
-    QDBusDataList(const QValueList<double>& other);
+    QDBusDataList(const QValueList< double > &other);
 
     /**
      * @brief Creates a list from the given QValueList of QDBusVariant values
@@ -268,7 +267,7 @@ public:
      *
      * @see toVariantList()
      */
-    QDBusDataList(const QValueList<QDBusVariant>& other);
+    QDBusDataList(const QValueList< QDBusVariant > &other);
 
     /**
      * @brief Creates a list from the given QStringList's values
@@ -282,7 +281,7 @@ public:
      *
      * @see toQStringList()
      */
-    QDBusDataList(const QStringList& other);
+    QDBusDataList(const QStringList &other);
 
     /**
      * @brief Creates a list from the given QValueList of object path values
@@ -296,7 +295,7 @@ public:
      *
      * @see toObjectPathList()
      */
-    QDBusDataList(const QValueList<QDBusObjectPath>& other);
+    QDBusDataList(const QValueList< QDBusObjectPath > &other);
 
     /**
      * @brief Destroys the list object
@@ -313,7 +312,7 @@ public:
      *
      * @return a reference to this list object
      */
-    QDBusDataList& operator=(const QDBusDataList& other);
+    QDBusDataList &operator=(const QDBusDataList &other);
 
     /**
      * @brief Copies from the given @p other list
@@ -329,7 +328,7 @@ public:
      *
      * @return a reference to this list object
      */
-    QDBusDataList& operator=(const QValueList<QDBusData>& other);
+    QDBusDataList &operator=(const QValueList< QDBusData > &other);
 
     /**
      * @brief Copies from the given @p other list
@@ -345,7 +344,7 @@ public:
      *
      * @return a reference to this list object
      */
-    QDBusDataList& operator=(const QStringList& other);
+    QDBusDataList &operator=(const QStringList &other);
 
     /**
      * @brief Returns the element type of the list object
@@ -396,7 +395,10 @@ public:
      *
      * @return @c true if the list object is valid, otherwise @c false
      */
-    inline bool isValid() const { return type() != QDBusData::Invalid; }
+    inline bool isValid() const
+    {
+        return type() != QDBusData::Invalid;
+    }
 
     /**
      * @brief Checks whether this list object has any elements
@@ -429,7 +431,7 @@ public:
      *
      * @see QDBusData::operator==()
      */
-    bool operator==(const QDBusDataList& other) const;
+    bool operator==(const QDBusDataList &other) const;
 
     /**
      * @brief Checks whether the given @p other list is different from this one
@@ -444,7 +446,7 @@ public:
      *
      * @see QDBusData::operator!=()
      */
-    bool operator!=(const QDBusDataList& other) const;
+    bool operator!=(const QDBusDataList &other) const;
 
     /**
      * @brief Clears the list
@@ -470,14 +472,14 @@ public:
      *
      * @return a reference to this list object
      */
-    QDBusDataList& operator<<(const QDBusData& data);
+    QDBusDataList &operator<<(const QDBusData &data);
 
     /**
      * @brief Converts the list object into a QValueList with QDBusData elements
      *
      * @return the values of the list object as a QValueList
      */
-    QValueList<QDBusData> toQValueList() const;
+    QValueList< QDBusData > toQValueList() const;
 
     /**
      * @brief Tries to get the list object's elements as a QStringList
@@ -496,7 +498,7 @@ public:
      * @see toStringList()
      * @see QDBusData::toString()
      */
-    QStringList toQStringList(bool* ok = 0) const;
+    QStringList toQStringList(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of bool
@@ -514,7 +516,7 @@ public:
      *
      * @see QDBusData::toBool()
      */
-    QValueList<bool> toBoolList(bool* ok = 0) const;
+    QValueList< bool > toBoolList(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of Q_UINT8
@@ -532,7 +534,7 @@ public:
      *
      * @see QDBusData::toByte()
      */
-    QValueList<Q_UINT8> toByteList(bool* ok = 0) const;
+    QValueList< Q_UINT8 > toByteList(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of Q_INT16
@@ -551,7 +553,7 @@ public:
      *
      * @see QDBusData::toInt16()
      */
-    QValueList<Q_INT16> toInt16List(bool* ok = 0) const;
+    QValueList< Q_INT16 > toInt16List(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of Q_UINT16
@@ -570,7 +572,7 @@ public:
      *
      * @see QDBusData::toUInt16()
      */
-    QValueList<Q_UINT16> toUInt16List(bool* ok = 0) const;
+    QValueList< Q_UINT16 > toUInt16List(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of Q_INT32
@@ -589,7 +591,7 @@ public:
      *
      * @see QDBusData::toInt32()
      */
-    QValueList<Q_INT32> toInt32List(bool* ok = 0) const;
+    QValueList< Q_INT32 > toInt32List(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of Q_UINT32
@@ -608,7 +610,7 @@ public:
      *
      * @see QDBusData::toUInt32()
      */
-    QValueList<Q_UINT32> toUInt32List(bool* ok = 0) const;
+    QValueList< Q_UINT32 > toUInt32List(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of Q_INT64
@@ -627,7 +629,7 @@ public:
      *
      * @see QDBusData::toInt64()
      */
-    QValueList<Q_INT64> toInt64List(bool* ok = 0) const;
+    QValueList< Q_INT64 > toInt64List(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of Q_UINT64
@@ -646,7 +648,7 @@ public:
      *
      * @see QDBusData::toUInt64()
      */
-    QValueList<Q_UINT64> toUInt64List(bool* ok = 0) const;
+    QValueList< Q_UINT64 > toUInt64List(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of double
@@ -664,7 +666,7 @@ public:
      *
      * @see QDBusData::toDouble()
      */
-    QValueList<double> toDoubleList(bool* ok = 0) const;
+    QValueList< double > toDoubleList(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of QString
@@ -682,7 +684,7 @@ public:
      *
      * @see QDBusData::toString()
      */
-    QValueList<QString> toStringList(bool* ok = 0) const;
+    QValueList< QString > toStringList(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of object paths
@@ -697,7 +699,7 @@ public:
      *
      * @see QDBusData::toObjectPath()
      */
-    QValueList<QDBusObjectPath> toObjectPathList(bool* ok = 0) const;
+    QValueList< QDBusObjectPath > toObjectPathList(bool *ok = 0) const;
 
     /**
      * @brief Tries to get the list object's elements as a QValueList of QDBusVariant
@@ -715,11 +717,11 @@ public:
      *
      * @see QDBusData::toVariant()
      */
-    QValueList<QDBusVariant> toVariantList(bool* ok = 0) const;
+    QValueList< QDBusVariant > toVariantList(bool *ok = 0) const;
 
 private:
     class Private;
-    Private* d;
+    Private *d;
 };
 
 #endif

@@ -26,54 +26,52 @@
 #define KDE_VERSION_MAJOR 3
 #define KDE_VERSION_MINOR 5
 #define KDE_VERSION_RELEASE 10
-#define KDE_MAKE_VERSION( a,b,c ) (((a) << 16) | ((b) << 8) | (c))
+#define KDE_MAKE_VERSION(a, b, c) (((a) << 16) | ((b) << 8) | (c))
 
-#define KDE_VERSION \
-  KDE_MAKE_VERSION(KDE_VERSION_MAJOR,KDE_VERSION_MINOR,KDE_VERSION_RELEASE)
+#define KDE_VERSION KDE_MAKE_VERSION(KDE_VERSION_MAJOR, KDE_VERSION_MINOR, KDE_VERSION_RELEASE)
 
-#define KDE_IS_VERSION(a,b,c) ( KDE_VERSION >= KDE_MAKE_VERSION(a,b,c) )
+#define KDE_IS_VERSION(a, b, c) (KDE_VERSION >= KDE_MAKE_VERSION(a, b, c))
 
 /**
  * Namespace for general KDE functions.
  */
-namespace KDE
-{
-    /**
-     * Returns the encoded number of KDE's version, see the KDE_VERSION macro.
-     * In contrary to that macro this function returns the number of the actully
-     * installed KDE version, not the number of the KDE version that was
-     * installed when the program was compiled.
-     * @return the version number, encoded in a single uint
-     * @since 3.2
-     */
-    KDECORE_EXPORT unsigned int version();
-    /**
-     * Returns the major number of KDE's version, e.g.
-     * 3 for KDE 3.1.2. 
-     * @return the major version number
-     * @since 3.1
-     */
-    KDECORE_EXPORT unsigned int versionMajor();
-    /**
-     * Returns the minor number of KDE's version, e.g.
-     * 1 for KDE 3.1.2. 
-     * @return the minor version number
-     * @since 3.1
-     */
-    KDECORE_EXPORT unsigned int versionMinor();
-    /**
-     * Returns the release of KDE's version, e.g.
-     * 2 for KDE 3.1.2. 
-     * @return the release number
-     * @since 3.1
-     */
-    KDECORE_EXPORT unsigned int versionRelease();
-    /**
-     * Returns the KDE version as string, e.g. "3.1.2".
-     * @return the KDE version. You can keep the string forever
-     * @since 3.1
-     */
-    KDECORE_EXPORT const char *versionString();
+namespace KDE {
+/**
+ * Returns the encoded number of KDE's version, see the KDE_VERSION macro.
+ * In contrary to that macro this function returns the number of the actully
+ * installed KDE version, not the number of the KDE version that was
+ * installed when the program was compiled.
+ * @return the version number, encoded in a single uint
+ * @since 3.2
+ */
+KDECORE_EXPORT unsigned int version();
+/**
+ * Returns the major number of KDE's version, e.g.
+ * 3 for KDE 3.1.2.
+ * @return the major version number
+ * @since 3.1
+ */
+KDECORE_EXPORT unsigned int versionMajor();
+/**
+ * Returns the minor number of KDE's version, e.g.
+ * 1 for KDE 3.1.2.
+ * @return the minor version number
+ * @since 3.1
+ */
+KDECORE_EXPORT unsigned int versionMinor();
+/**
+ * Returns the release of KDE's version, e.g.
+ * 2 for KDE 3.1.2.
+ * @return the release number
+ * @since 3.1
+ */
+KDECORE_EXPORT unsigned int versionRelease();
+/**
+ * Returns the KDE version as string, e.g. "3.1.2".
+ * @return the KDE version. You can keep the string forever
+ * @since 3.1
+ */
+KDECORE_EXPORT const char *versionString();
 }
 
 #endif // _KDE_VERSION_H_

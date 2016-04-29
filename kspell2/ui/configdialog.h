@@ -23,27 +23,25 @@
 
 #include <kdialogbase.h>
 
-namespace KSpell2
-{
-    class Broker;
-    class ConfigDialog : public KDialogBase
-    {
-        Q_OBJECT
-    public:
-        ConfigDialog( Broker *broker,
-                      QWidget *parent );
-        ~ConfigDialog();
+namespace KSpell2 {
+class Broker;
+class ConfigDialog : public KDialogBase {
+    Q_OBJECT
+public:
+    ConfigDialog(Broker *broker, QWidget *parent);
+    ~ConfigDialog();
 
-    protected slots:
-        virtual void slotOk();
-        virtual void slotApply();
+protected slots:
+    virtual void slotOk();
+    virtual void slotApply();
 
-    private:
-        void init( Broker *broker );
-    private:
-        class Private;
-        Private *d;
-    };
+private:
+    void init(Broker *broker);
+
+private:
+    class Private;
+    Private *d;
+};
 }
 
 #endif

@@ -11,17 +11,17 @@
 #include <qimage.h>
 #include <knuminput.h>
 
-class KDesatWidget : public QWidget
-{
-Q_OBJECT
+class KDesatWidget : public QWidget {
+    Q_OBJECT
 public:
-    KDesatWidget(QWidget *parent=0, const char *name=0);
+    KDesatWidget(QWidget *parent = 0, const char *name = 0);
 
 public slots:
     void change(double);
 
 protected:
     void paintEvent(QPaintEvent *ev);
+
 private:
     float desat_value;
     QImage image;

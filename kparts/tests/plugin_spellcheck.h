@@ -3,12 +3,10 @@
 
 #include <kparts/plugin.h>
 
-class PluginSpellCheck : public KParts::Plugin
-{
+class PluginSpellCheck : public KParts::Plugin {
     Q_OBJECT
 public:
-    PluginSpellCheck( QObject* parent = 0, const char* name = 0, 
-                      const QStringList& = QStringList() );
+    PluginSpellCheck(QObject *parent = 0, const char *name = 0, const QStringList & = QStringList());
     virtual ~PluginSpellCheck();
 
 public slots:

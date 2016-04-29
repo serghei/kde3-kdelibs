@@ -31,19 +31,17 @@ class AddressBook;
 /**
   @deprecated use FormatPlugin instead
 */
-class KABC_EXPORT_DEPRECATED Format
-{
-  public:
+class KABC_EXPORT_DEPRECATED Format {
+public:
     /**
       Load addressbook from file.
     */
-    virtual bool load( AddressBook *, const QString &fileName ) = 0;
+    virtual bool load(AddressBook *, const QString &fileName) = 0;
     /**
       Save addressbook to file.
     */
-    virtual bool save( AddressBook *, const QString &fileName ) = 0;
+    virtual bool save(AddressBook *, const QString &fileName) = 0;
 };
-
 }
 
 #endif

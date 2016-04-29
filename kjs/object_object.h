@@ -27,57 +27,60 @@
 
 namespace KJS {
 
-  class FunctionPrototypeImp;
+class FunctionPrototypeImp;
 
-  /**
-   * @internal
-   *
-   * The initial value of Object.prototype (and thus all objects created
-   * with the Object constructor
-   */
-  class ObjectPrototypeImp : public ObjectImp {
-  public:
+/**
+ * @internal
+ *
+ * The initial value of Object.prototype (and thus all objects created
+ * with the Object constructor
+ */
+class ObjectPrototypeImp : public ObjectImp {
+public:
     ObjectPrototypeImp(ExecState *exec, FunctionPrototypeImp *funcProto);
-  };
+};
 
-  /**
-   * @internal
-   *
-   * Class to implement all methods that are properties of the
-   * Object.prototype object
-   */
-  class ObjectProtoFuncImp : public InternalFunctionImp {
-  public:
-    ObjectProtoFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto,
-                       int i, int len, const Identifier &_ident);
+/**
+ * @internal
+ *
+ * Class to implement all methods that are properties of the
+ * Object.prototype object
+ */
+class ObjectProtoFuncImp : public InternalFunctionImp {
+public:
+    ObjectProtoFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto, int i, int len, const Identifier &_ident);
 
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
 
-    enum { ToString, ToLocaleString, ValueOf, HasOwnProperty,
-	   IsPrototypeOf, PropertyIsEnumerable };
+    enum
+    {
+        ToString,
+        ToLocaleString,
+        ValueOf,
+        HasOwnProperty,
+        IsPrototypeOf,
+        PropertyIsEnumerable
+    };
 
-  private:
+private:
     int id;
-  };
+};
 
-  /**
-   * @internal
-   *
-   * The initial value of the the global variable's "Object" property
-   */
-  class ObjectObjectImp : public InternalFunctionImp {
-  public:
-
-    ObjectObjectImp(ExecState *exec,
-                    ObjectPrototypeImp *objProto,
-                    FunctionPrototypeImp *funcProto);
+/**
+ * @internal
+ *
+ * The initial value of the the global variable's "Object" property
+ */
+class ObjectObjectImp : public InternalFunctionImp {
+public:
+    ObjectObjectImp(ExecState *exec, ObjectPrototypeImp *objProto, FunctionPrototypeImp *funcProto);
 
     virtual bool implementsConstruct() const;
     virtual Object construct(ExecState *exec, const List &args);
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
-  };
+};
 
 } // namespace
 

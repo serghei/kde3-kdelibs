@@ -1,7 +1,7 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
@@ -33,251 +33,240 @@
 
 using namespace VCARD;
 
-VCard::VCard()
-	:	Entity()
+VCard::VCard() : Entity()
 {
-    contentLineList_.setAutoDelete( true );
+    contentLineList_.setAutoDelete(true);
 }
 
-VCard::VCard(const VCard & x)
-	:	Entity(x),
-		group_(x.group_),
-		contentLineList_(x.contentLineList_)
+VCard::VCard(const VCard &x) : Entity(x), group_(x.group_), contentLineList_(x.contentLineList_)
 {
 }
 
-VCard::VCard(const QCString & s)
-	:	Entity(s)
+VCard::VCard(const QCString &s) : Entity(s)
 {
 }
 
-	VCard &
-VCard::operator = (VCard & x)
+VCard &VCard::operator=(VCard &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	group_				= x.group();
-	contentLineList_	= x.contentLineList_;
+    group_ = x.group();
+    contentLineList_ = x.contentLineList_;
 
-	Entity::operator = (x);
-	return *this;
+    Entity::operator=(x);
+    return *this;
 }
 
-	VCard &
-VCard::operator = (const QCString & s)
+VCard &VCard::operator=(const QCString &s)
 {
-	Entity::operator = (s);
-	return *this;
+    Entity::operator=(s);
+    return *this;
 }
 
-	bool
-VCard::operator == (VCard & x)
+bool VCard::operator==(VCard &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 VCard::~VCard()
 {
 }
 
-	void
-VCard::_parse()
+void VCard::_parse()
 {
-	vDebug("parse() called");
-	QStrList l;
+    vDebug("parse() called");
+    QStrList l;
 
-	RTokenise(strRep_, "\r\n", l);
+    RTokenise(strRep_, "\r\n", l);
 
-	if (l.count() < 3) { // Invalid VCARD !
-		vDebug("Invalid vcard");
-		return;
-	}
+    if(l.count() < 3)
+    { // Invalid VCARD !
+        vDebug("Invalid vcard");
+        return;
+    }
 
-	// Get the first line
-	QCString beginLine = QCString(l.at(0)).stripWhiteSpace();
+    // Get the first line
+    QCString beginLine = QCString(l.at(0)).stripWhiteSpace();
 
-	vDebug("Begin line == \"" + beginLine + "\"");
+    vDebug("Begin line == \"" + beginLine + "\"");
 
-	// Remove extra blank lines
-	while (QCString(l.last()).isEmpty())
-		l.remove(l.last());
+    // Remove extra blank lines
+    while(QCString(l.last()).isEmpty())
+        l.remove(l.last());
 
-	// Now we know this is the last line
-	QCString endLine = l.last();
+    // Now we know this is the last line
+    QCString endLine = l.last();
 
-	// Trash the first and last lines as we have seen them.
-	l.remove(0u);
-	l.remove(l.last());
+    // Trash the first and last lines as we have seen them.
+    l.remove(0u);
+    l.remove(l.last());
 
-	///////////////////////////////////////////////////////////////
-	// FIRST LINE
+    ///////////////////////////////////////////////////////////////
+    // FIRST LINE
 
-	int split = beginLine.find(':');
+    int split = beginLine.find(':');
 
-	if (split == -1) { // invalid, no BEGIN
-		vDebug("No split");
-		return;
-	}
+    if(split == -1)
+    { // invalid, no BEGIN
+        vDebug("No split");
+        return;
+    }
 
-	QCString firstPart(beginLine.left(split));
-	QCString valuePart(beginLine.mid(split + 1));
+    QCString firstPart(beginLine.left(split));
+    QCString valuePart(beginLine.mid(split + 1));
 
-	split = firstPart.find('.');
+    split = firstPart.find('.');
 
-	if (split != -1) {
-		group_		= firstPart.left(split);
-		firstPart	= firstPart.right(firstPart.length() - split - 1);
-	}
+    if(split != -1)
+    {
+        group_ = firstPart.left(split);
+        firstPart = firstPart.right(firstPart.length() - split - 1);
+    }
 
-	if (qstrnicmp(firstPart, "BEGIN", 5) != 0) { // No BEGIN !
-		vDebug("No BEGIN");
-		return;
-	}
+    if(qstrnicmp(firstPart, "BEGIN", 5) != 0)
+    { // No BEGIN !
+        vDebug("No BEGIN");
+        return;
+    }
 
-	if (qstrnicmp(valuePart, "VCARD", 5) != 0) { // Not a vcard !
-		vDebug("No VCARD");
-		return;
-	}
+    if(qstrnicmp(valuePart, "VCARD", 5) != 0)
+    { // Not a vcard !
+        vDebug("No VCARD");
+        return;
+    }
 
-	///////////////////////////////////////////////////////////////
-	// CONTENT LINES
-	//
-	vDebug("Content lines");
+    ///////////////////////////////////////////////////////////////
+    // CONTENT LINES
+    //
+    vDebug("Content lines");
 
-	// Handle folded lines.
+    // Handle folded lines.
 
-	QStrList refolded;
+    QStrList refolded;
 
-	QStrListIterator it(l);
+    QStrListIterator it(l);
 
-	QCString cur;
+    QCString cur;
 
-	for (; it.current(); ++it) {
+    for(; it.current(); ++it)
+    {
 
-		cur = it.current();
+        cur = it.current();
 
-		++it;
+        ++it;
 
-		while (
-			it.current()		&&
-			it.current()[0] == ' '	&&
-			strlen(it.current()) != 1)
-		{
-			cur += it.current() + 1;
-			++it;
-		}
+        while(it.current() && it.current()[0] == ' ' && strlen(it.current()) != 1)
+        {
+            cur += it.current() + 1;
+            ++it;
+        }
 
-		--it;
+        --it;
 
-		refolded.append(cur);
-	}
+        refolded.append(cur);
+    }
 
-	QStrListIterator it2(refolded);
+    QStrListIterator it2(refolded);
 
-	for (; it2.current(); ++it2) {
+    for(; it2.current(); ++it2)
+    {
 
-		vDebug("New contentline using \"" + QCString(it2.current()) + "\"");
-		ContentLine * cl = new ContentLine(it2.current());
+        vDebug("New contentline using \"" + QCString(it2.current()) + "\"");
+        ContentLine *cl = new ContentLine(it2.current());
 
-		cl->parse();
+        cl->parse();
 
-		contentLineList_.append(cl);
-	}
+        contentLineList_.append(cl);
+    }
 
-	///////////////////////////////////////////////////////////////
-	// LAST LINE
+    ///////////////////////////////////////////////////////////////
+    // LAST LINE
 
-	split = endLine.find(':');
+    split = endLine.find(':');
 
-	if (split == -1) // invalid, no END
-		return;
+    if(split == -1) // invalid, no END
+        return;
 
-	firstPart = endLine.left(split);
-	valuePart = endLine.right(firstPart.length() - split - 1);
+    firstPart = endLine.left(split);
+    valuePart = endLine.right(firstPart.length() - split - 1);
 
-	split = firstPart.find('.');
+    split = firstPart.find('.');
 
-	if (split != -1) {
-		group_		= firstPart.left(split);
-		firstPart	= firstPart.right(firstPart.length() - split - 1);
-	}
+    if(split != -1)
+    {
+        group_ = firstPart.left(split);
+        firstPart = firstPart.right(firstPart.length() - split - 1);
+    }
 
-	if (qstricmp(firstPart, "END") != 0) // No END !
-		return;
+    if(qstricmp(firstPart, "END") != 0) // No END !
+        return;
 
-	if (qstricmp(valuePart, "VCARD") != 0) // Not a vcard !
-		return;
+    if(qstricmp(valuePart, "VCARD") != 0) // Not a vcard !
+        return;
 }
 
-	void
-VCard::_assemble()
+void VCard::_assemble()
 {
-	vDebug("Assembling vcard");
-	strRep_ = "BEGIN:VCARD\r\n";
-	strRep_ += "VERSION:3.0\r\n";
+    vDebug("Assembling vcard");
+    strRep_ = "BEGIN:VCARD\r\n";
+    strRep_ += "VERSION:3.0\r\n";
 
-	QPtrListIterator<ContentLine> it(contentLineList_);
+    QPtrListIterator< ContentLine > it(contentLineList_);
 
-	for (; it.current(); ++it)
-		strRep_ += it.current()->asString() + "\r\n";
+    for(; it.current(); ++it)
+        strRep_ += it.current()->asString() + "\r\n";
 
-	strRep_ += "END:VCARD\r\n";
+    strRep_ += "END:VCARD\r\n";
 }
 
-	bool
-VCard::has(EntityType t)
+bool VCard::has(EntityType t)
 {
-	parse();
-	return contentLine(t) == 0 ? false : true;
+    parse();
+    return contentLine(t) == 0 ? false : true;
 }
 
-	bool
-VCard::has(const QCString & s)
+bool VCard::has(const QCString &s)
 {
-	parse();
-	return contentLine(s) == 0 ? false : true;
+    parse();
+    return contentLine(s) == 0 ? false : true;
 }
 
-	void
-VCard::add(const ContentLine & cl)
+void VCard::add(const ContentLine &cl)
 {
-	parse();
-	ContentLine * c = new ContentLine(cl);
-	contentLineList_.append(c);
+    parse();
+    ContentLine *c = new ContentLine(cl);
+    contentLineList_.append(c);
 }
 
-	void
-VCard::add(const QCString & s)
+void VCard::add(const QCString &s)
 {
-	parse();
-	ContentLine * c = new ContentLine(s);
-	contentLineList_.append(c);
+    parse();
+    ContentLine *c = new ContentLine(s);
+    contentLineList_.append(c);
 }
 
-	ContentLine *
-VCard::contentLine(EntityType t)
+ContentLine *VCard::contentLine(EntityType t)
 {
-	parse();
-	QPtrListIterator<ContentLine> it(contentLineList_);
+    parse();
+    QPtrListIterator< ContentLine > it(contentLineList_);
 
-	for (; it.current(); ++it)
-		if (it.current()->entityType() == t)
-			return it.current();
+    for(; it.current(); ++it)
+        if(it.current()->entityType() == t)
+            return it.current();
 
-	return 0;
+    return 0;
 }
 
-	ContentLine *
-VCard::contentLine(const QCString & s)
+ContentLine *VCard::contentLine(const QCString &s)
 {
-	parse();
-	QPtrListIterator<ContentLine> it(contentLineList_);
+    parse();
+    QPtrListIterator< ContentLine > it(contentLineList_);
 
-	for (; it.current(); ++it)
-		if (it.current()->entityType() == EntityNameToEntityType(s))
-			return it.current();
+    for(; it.current(); ++it)
+        if(it.current()->entityType() == EntityNameToEntityType(s))
+            return it.current();
 
-	return 0;
+    return 0;
 }
-

@@ -27,19 +27,18 @@ QDBusObjectPath::QDBusObjectPath() : QCString()
 {
 }
 
-QDBusObjectPath::QDBusObjectPath(const QDBusObjectPath& other) : QCString(other)
+QDBusObjectPath::QDBusObjectPath(const QDBusObjectPath &other) : QCString(other)
 {
 }
 
-QDBusObjectPath::QDBusObjectPath(const QCString& other) : QCString(other)
+QDBusObjectPath::QDBusObjectPath(const QCString &other) : QCString(other)
 {
 }
 
-QDBusObjectPath::QDBusObjectPath(const QDBusObjectPath& parentNode,
-                                 const QCString& nodeName)
-    : QCString(parentNode)
+QDBusObjectPath::QDBusObjectPath(const QDBusObjectPath &parentNode, const QCString &nodeName) : QCString(parentNode)
 {
-    if (parentNode.length() != 1) append("/");
+    if(parentNode.length() != 1)
+        append("/");
 
     append(nodeName);
 }
@@ -51,29 +50,35 @@ bool QDBusObjectPath::isValid() const
 
 QDBusObjectPath QDBusObjectPath::parentNode() const
 {
-    if (length() == 1) return QDBusObjectPath();
+    if(length() == 1)
+        return QDBusObjectPath();
 
     int index = findRev('/');
 
-    if (index == -1) return QDBusObjectPath();
+    if(index == -1)
+        return QDBusObjectPath();
 
-    if (index == 0) return left(1);
+    if(index == 0)
+        return left(1);
 
     return left(index);
 }
 
-int QDBusObjectPath::validate(const QCString& path)
+int QDBusObjectPath::validate(const QCString &path)
 {
-    if (path.isEmpty()) return 0;
+    if(path.isEmpty())
+        return 0;
 
-    if (path[0] != '/') return 0;
+    if(path[0] != '/')
+        return 0;
 
     // TODO add additional checks
 
     uint len = path.length();
 
     // only root node allowed to end in slash
-    if (path[len - 1] == '/' && len > 1) return (len - 1);
+    if(path[len - 1] == '/' && len > 1)
+        return (len - 1);
 
     return -1;
 }

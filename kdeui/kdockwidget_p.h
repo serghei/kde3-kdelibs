@@ -40,50 +40,50 @@ COMPATIBLE. THIS HEADER IS ONLY INSTALLED, BECAUSE IT IS NEEDED IN
 #include <qstringlist.h>
 // Add some describing comment !!
 
-class KDEUI_EXPORT KDockContainer
-{
+class KDEUI_EXPORT KDockContainer {
 public:
-  KDockContainer();
-  virtual ~KDockContainer();
-  virtual KDockWidget *parentDockWidget();
-  virtual void insertWidget (KDockWidget *, QPixmap, const QString &, int &);
-  virtual void showWidget(KDockWidget *);
-  virtual void removeWidget(KDockWidget*);
-  virtual void undockWidget(KDockWidget*);
-  virtual void save(KConfig *cfg,const QString& group_or_prefix);
-  virtual void save(QDomElement& dockElement);
-  virtual void load(KConfig *cfg,const QString& group_or_prefix);
-  virtual void load(QDomElement& dockElement);
-  virtual void setToolTip (KDockWidget *, QString &);
-  virtual void  setPixmap(KDockWidget*,const QPixmap&);
-  QStringList containedWidgets() const;
-  virtual bool dockDragEnter(KDockWidget* dockWidget, QMouseEvent *event);
-  virtual bool dockDragMove(KDockWidget* dockWidget, QMouseEvent *event);
-  virtual bool dockDragLeave(KDockWidget* dockWidget, QMouseEvent *event);
+    KDockContainer();
+    virtual ~KDockContainer();
+    virtual KDockWidget *parentDockWidget();
+    virtual void insertWidget(KDockWidget *, QPixmap, const QString &, int &);
+    virtual void showWidget(KDockWidget *);
+    virtual void removeWidget(KDockWidget *);
+    virtual void undockWidget(KDockWidget *);
+    virtual void save(KConfig *cfg, const QString &group_or_prefix);
+    virtual void save(QDomElement &dockElement);
+    virtual void load(KConfig *cfg, const QString &group_or_prefix);
+    virtual void load(QDomElement &dockElement);
+    virtual void setToolTip(KDockWidget *, QString &);
+    virtual void setPixmap(KDockWidget *, const QPixmap &);
+    QStringList containedWidgets() const;
+    virtual bool dockDragEnter(KDockWidget *dockWidget, QMouseEvent *event);
+    virtual bool dockDragMove(KDockWidget *dockWidget, QMouseEvent *event);
+    virtual bool dockDragLeave(KDockWidget *dockWidget, QMouseEvent *event);
+
 protected:
-  friend class KDockManager;
-  friend class KDockSplitter;
-  void prepareSave(QStringList &names);
-  void activateOverlapMode(int nonOverlapSize);
-  void deactivateOverlapMode();
-  bool isOverlapMode();
+    friend class KDockManager;
+    friend class KDockSplitter;
+    void prepareSave(QStringList &names);
+    void activateOverlapMode(int nonOverlapSize);
+    void deactivateOverlapMode();
+    bool isOverlapMode();
+
 private:
+    struct ListItem
+    {
+        struct ListItem *prev;
+        struct ListItem *next;
+        char *data;
+    };
 
-	struct ListItem {
-		struct ListItem *prev;
-		struct ListItem *next;
-		char *data;
-	};
 
+    struct ListItem *m_childrenListBegin;
+    struct ListItem *m_childrenListEnd;
 
-
-  struct ListItem *m_childrenListBegin;
-  struct ListItem *m_childrenListEnd;
-
-  class KDockContainerPrivate;
-  KDockContainerPrivate *d;
-  bool m_overlapMode;
-  int m_nonOverlapSize;
+    class KDockContainerPrivate;
+    KDockContainerPrivate *d;
+    bool m_overlapMode;
+    int m_nonOverlapSize;
 };
 
 #endif

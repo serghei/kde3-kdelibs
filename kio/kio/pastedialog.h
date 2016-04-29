@@ -32,33 +32,32 @@ namespace KIO {
  * Internal class used by paste.h. DO NOT USE.
  * @since 3.5
  */
-class PasteDialog : public KDialogBase
-{
+class PasteDialog : public KDialogBase {
     Q_OBJECT
 public:
-    PasteDialog( const QString &caption, const QString &label,
-                 const QString &value, const QStringList& items,
-                 QWidget *parent, bool clipboard );
+    PasteDialog(const QString &caption, const QString &label, const QString &value, const QStringList &items, QWidget *parent, bool clipboard);
 
     QString lineEditText() const;
     int comboItem() const;
-    bool clipboardChanged() const { return m_clipboardChanged; }
+    bool clipboardChanged() const
+    {
+        return m_clipboardChanged;
+    }
 
 private slots:
     void slotClipboardDataChanged();
 
 private:
-    QLabel* m_label;
-    KLineEdit* m_lineEdit;
-    QComboBox* m_comboBox;
+    QLabel *m_label;
+    KLineEdit *m_lineEdit;
+    QComboBox *m_comboBox;
     bool m_clipboardChanged;
 
     class Private;
-    Private* d;
+    Private *d;
 };
 
 } // namespace
 
 
 #endif /* PASTEDIALOG_H */
-

@@ -37,11 +37,11 @@ Author: Ralph Mor, X Consortium
 #include <sys/access.h>
 #endif
 
-static Bool auth_valid (const char *auth_name, int num_auth_names, const char **auth_names, int *index_ret);
+static Bool auth_valid(const char *auth_name, int num_auth_names, const char **auth_names, int *index_ret);
 
 extern IceAuthDataEntry _IcePaAuthDataEntries[];
 
-
+
 /*
  * The functions in this file are not a standard part of ICElib.
  *
@@ -59,193 +59,174 @@ extern IceAuthDataEntry _IcePaAuthDataEntries[];
  * .ICEauthority file behind our back.
  */
 
-void
-_IceGetPoAuthData (protocolName, networkId, authName,
-    authDataLenRet, authDataRet)
+void _IceGetPoAuthData(protocolName, networkId, authName, authDataLenRet, authDataRet)
 
-const char		*protocolName;
-const char		*networkId;
-const char		*authName;
-unsigned short		*authDataLenRet;
-char			**authDataRet;
+    const char *protocolName;
+const char *networkId;
+const char *authName;
+unsigned short *authDataLenRet;
+char **authDataRet;
 
 {
-    IceAuthFileEntry    *entry;
+    IceAuthFileEntry *entry;
 
-    entry = IceGetAuthFileEntry (protocolName, networkId, authName);
+    entry = IceGetAuthFileEntry(protocolName, networkId, authName);
 
-    if (entry)
+    if(entry)
     {
-	*authDataLenRet = entry->auth_data_length;
+        *authDataLenRet = entry->auth_data_length;
 
-	if ((*authDataRet = (char *) malloc (entry->auth_data_length)) != NULL)
-	    memcpy (*authDataRet, entry->auth_data, entry->auth_data_length);
+        if((*authDataRet = (char *)malloc(entry->auth_data_length)) != NULL)
+            memcpy(*authDataRet, entry->auth_data, entry->auth_data_length);
     }
     else
     {
-	*authDataLenRet = 0;
-	*authDataRet = NULL;
+        *authDataLenRet = 0;
+        *authDataRet = NULL;
     }
 
-    IceFreeAuthFileEntry (entry);
+    IceFreeAuthFileEntry(entry);
 }
 
 
-
-void
-_IceGetPaAuthData (protocolName, networkId, authName,
-    authDataLenRet, authDataRet)
+void _IceGetPaAuthData(protocolName, networkId, authName, authDataLenRet, authDataRet)
 
-const char		*protocolName;
-const char		*networkId;
-const char		*authName;
-unsigned short	*authDataLenRet;
-char		**authDataRet;
+    const char *protocolName;
+const char *networkId;
+const char *authName;
+unsigned short *authDataLenRet;
+char **authDataRet;
 
 {
-    IceAuthDataEntry	*entry = NULL;
-    int			found = 0;
-    int			i;
+    IceAuthDataEntry *entry = NULL;
+    int found = 0;
+    int i;
 
-    for (i = 0; i < _IcePaAuthDataEntryCount && !found; i++)
+    for(i = 0; i < _IcePaAuthDataEntryCount && !found; i++)
     {
-	entry = &_IcePaAuthDataEntries[i];
+        entry = &_IcePaAuthDataEntries[i];
 
-	found =
-	    strcmp (protocolName, entry->protocol_name) == 0 &&
-            strcmp (networkId, entry->network_id) == 0 &&
-            strcmp (authName, entry->auth_name) == 0;
+        found =
+            strcmp(protocolName, entry->protocol_name) == 0 && strcmp(networkId, entry->network_id) == 0 && strcmp(authName, entry->auth_name) == 0;
     }
 
-    if (found)
+    if(found)
     {
-	*authDataLenRet = entry->auth_data_length;
+        *authDataLenRet = entry->auth_data_length;
 
-	if ((*authDataRet = (char *) malloc (entry->auth_data_length)) != NULL)
-	    memcpy (*authDataRet, entry->auth_data, entry->auth_data_length);
+        if((*authDataRet = (char *)malloc(entry->auth_data_length)) != NULL)
+            memcpy(*authDataRet, entry->auth_data, entry->auth_data_length);
     }
     else
     {
-	*authDataLenRet = 0;
-	*authDataRet = NULL;
+        *authDataLenRet = 0;
+        *authDataRet = NULL;
     }
 }
 
 
-
-void
-_IceGetPoValidAuthIndices (protocol_name, network_id,
-    num_auth_names, auth_names, num_indices_ret, indices_ret)
+void _IceGetPoValidAuthIndices(protocol_name, network_id, num_auth_names, auth_names, num_indices_ret, indices_ret)
 
-const char	*protocol_name;
-const char	*network_id;
-int		num_auth_names;
-const char	**auth_names;
-int		*num_indices_ret;
-int		*indices_ret;		/* in/out arg */
+    const char *protocol_name;
+const char *network_id;
+int num_auth_names;
+const char **auth_names;
+int *num_indices_ret;
+int *indices_ret; /* in/out arg */
 
 {
-    FILE    		*auth_file;
-    char    		*filename;
-    IceAuthFileEntry    *entry;
-    int			index_ret, i;
+    FILE *auth_file;
+    char *filename;
+    IceAuthFileEntry *entry;
+    int index_ret, i;
 
     *num_indices_ret = 0;
 
-    if (!(filename = IceAuthFileName ()))
-	return;
+    if(!(filename = IceAuthFileName()))
+        return;
 
-    if (access (filename, R_OK) != 0)		/* checks REAL id */
-	return;
+    if(access(filename, R_OK) != 0) /* checks REAL id */
+        return;
 
-    if (!(auth_file = fopen (filename, "rb")))
-	return;
+    if(!(auth_file = fopen(filename, "rb")))
+        return;
 
-    for (;;)
+    for(;;)
     {
-	if (!(entry = IceReadAuthFileEntry (auth_file)))
-	    break;
+        if(!(entry = IceReadAuthFileEntry(auth_file)))
+            break;
 
-	if (strcmp (protocol_name, entry->protocol_name) == 0 &&
-	    strcmp (network_id, entry->network_id) == 0 &&
-	    auth_valid (entry->auth_name, num_auth_names,
-	    auth_names, &index_ret))
-	{
-	    /*
-	     * Make sure we didn't store this index already.
-	     */
+        if(strcmp(protocol_name, entry->protocol_name) == 0 && strcmp(network_id, entry->network_id) == 0
+           && auth_valid(entry->auth_name, num_auth_names, auth_names, &index_ret))
+        {
+            /*
+             * Make sure we didn't store this index already.
+             */
 
-	    for (i = 0; i < *num_indices_ret; i++)
-		if (index_ret == indices_ret[i])
-		    break;
+            for(i = 0; i < *num_indices_ret; i++)
+                if(index_ret == indices_ret[i])
+                    break;
 
-	    if (i >= *num_indices_ret)
-	    {
-		indices_ret[*num_indices_ret] = index_ret;
-		*num_indices_ret += 1;
-	    }
-	}
+            if(i >= *num_indices_ret)
+            {
+                indices_ret[*num_indices_ret] = index_ret;
+                *num_indices_ret += 1;
+            }
+        }
 
-	IceFreeAuthFileEntry (entry);
+        IceFreeAuthFileEntry(entry);
     }
 
-    fclose (auth_file);
+    fclose(auth_file);
 }
 
 
-
-void
-_IceGetPaValidAuthIndices (protocol_name, network_id,
-    num_auth_names, auth_names, num_indices_ret, indices_ret)
+void _IceGetPaValidAuthIndices(protocol_name, network_id, num_auth_names, auth_names, num_indices_ret, indices_ret)
 
-const char	*protocol_name;
-const char	*network_id;
-int		num_auth_names;
-const char	**auth_names;
-int		*num_indices_ret;
-int		*indices_ret;		/* in/out arg */
+    const char *protocol_name;
+const char *network_id;
+int num_auth_names;
+const char **auth_names;
+int *num_indices_ret;
+int *indices_ret; /* in/out arg */
 
 {
-    int			index_ret;
-    int			i, j;
-    IceAuthDataEntry	*entry;
+    int index_ret;
+    int i, j;
+    IceAuthDataEntry *entry;
 
     *num_indices_ret = 0;
 
-    for (i = 0;	i < _IcePaAuthDataEntryCount; i++)
+    for(i = 0; i < _IcePaAuthDataEntryCount; i++)
     {
-	entry = &_IcePaAuthDataEntries[i];
+        entry = &_IcePaAuthDataEntries[i];
 
-	if (strcmp (protocol_name, entry->protocol_name) == 0 &&
-            strcmp (network_id, entry->network_id) == 0 &&
-	    auth_valid (entry->auth_name, num_auth_names,
-	    auth_names, &index_ret))
-	{
-	    /*
-	     * Make sure we didn't store this index already.
-	     */
+        if(strcmp(protocol_name, entry->protocol_name) == 0 && strcmp(network_id, entry->network_id) == 0
+           && auth_valid(entry->auth_name, num_auth_names, auth_names, &index_ret))
+        {
+            /*
+             * Make sure we didn't store this index already.
+             */
 
-	    for (j = 0; j < *num_indices_ret; j++)
-		if (index_ret == indices_ret[j])
-		    break;
+            for(j = 0; j < *num_indices_ret; j++)
+                if(index_ret == indices_ret[j])
+                    break;
 
-	    if (j >= *num_indices_ret)
-	    {
-		indices_ret[*num_indices_ret] = index_ret;
-		*num_indices_ret += 1;
-	    }
-	}
+            if(j >= *num_indices_ret)
+            {
+                indices_ret[*num_indices_ret] = index_ret;
+                *num_indices_ret += 1;
+            }
+        }
     }
 }
 
 
-
 /*
  * local routines
  */
 
-static Bool
-auth_valid (const char *auth_name, int num_auth_names, const char **auth_names, int *index_ret)
+static Bool auth_valid(const char *auth_name, int num_auth_names, const char **auth_names, int *index_ret)
 {
     /*
      * Check if auth_name is in auth_names.  Return index.
@@ -253,17 +234,17 @@ auth_valid (const char *auth_name, int num_auth_names, const char **auth_names, 
 
     int i;
 
-    for (i = 0; i < num_auth_names; i++)
-	if (strcmp (auth_name, auth_names[i]) == 0)
-	{
-	    break;
-	}
+    for(i = 0; i < num_auth_names; i++)
+        if(strcmp(auth_name, auth_names[i]) == 0)
+        {
+            break;
+        }
 
-    if (i < num_auth_names)
+    if(i < num_auth_names)
     {
-	*index_ret = i;
-	return (1);
+        *index_ret = i;
+        return (1);
     }
     else
-	return (0);
+        return (0);
 }

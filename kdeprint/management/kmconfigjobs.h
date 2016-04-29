@@ -24,17 +24,16 @@
 
 class KIntNumInput;
 
-class KMConfigJobs : public KMConfigPage
-{
-	Q_OBJECT
+class KMConfigJobs : public KMConfigPage {
+    Q_OBJECT
 public:
-	KMConfigJobs(QWidget *parent = 0, const char *name = 0);
+    KMConfigJobs(QWidget *parent = 0, const char *name = 0);
 
-	void loadConfig(KConfig*);
-	void saveConfig(KConfig*);
+    void loadConfig(KConfig *);
+    void saveConfig(KConfig *);
 
 private:
-	KIntNumInput	*m_limit;
+    KIntNumInput *m_limit;
 };
 
 #endif

@@ -76,89 +76,92 @@
  accelerators.
 */
 
-KCheckAccelerators::KCheckAccelerators( QObject* parent )
-    : QObject( parent, "kapp_accel_filter" ), key(0), block( false ), drklash(0)
+KCheckAccelerators::KCheckAccelerators(QObject *parent) : QObject(parent, "kapp_accel_filter"), key(0), block(false), drklash(0)
 {
-    parent->installEventFilter( this );
-    KConfigGroupSaver saver( KGlobal::config(), "Development" );
-    QString sKey = KGlobal::config()->readEntry( "CheckAccelerators" ).stripWhiteSpace();
-    if( !sKey.isEmpty() ) {
-      KShortcut cuts( sKey );
-      if( cuts.count() > 0 )
-        key = int(cuts.seq(0).qt());
+    parent->installEventFilter(this);
+    KConfigGroupSaver saver(KGlobal::config(), "Development");
+    QString sKey = KGlobal::config()->readEntry("CheckAccelerators").stripWhiteSpace();
+    if(!sKey.isEmpty())
+    {
+        KShortcut cuts(sKey);
+        if(cuts.count() > 0)
+            key = int(cuts.seq(0).qt());
     }
-    alwaysShow = KGlobal::config()->readBoolEntry( "AlwaysShowCheckAccelerators", false );
-    autoCheck = KGlobal::config()->readBoolEntry( "AutoCheckAccelerators", true );
-    connect( &autoCheckTimer, SIGNAL( timeout()), SLOT( autoCheckSlot()));
+    alwaysShow = KGlobal::config()->readBoolEntry("AlwaysShowCheckAccelerators", false);
+    autoCheck = KGlobal::config()->readBoolEntry("AutoCheckAccelerators", true);
+    connect(&autoCheckTimer, SIGNAL(timeout()), SLOT(autoCheckSlot()));
 }
 
-bool KCheckAccelerators::eventFilter( QObject * , QEvent * e)
+bool KCheckAccelerators::eventFilter(QObject *, QEvent *e)
 {
-    if ( block )
+    if(block)
         return false;
 
-    switch ( e->type() ) { // just simplify debuggin
-    case QEvent::Accel:
-        if ( key && (static_cast<QKeyEvent *>(e)->key() == key) ) {
-    	    block = true;
-	    checkAccelerators( false );
-	    block = false;
-	    static_cast<QKeyEvent *>(e)->accept();
-	    return true;
-	}
-        break;
-    case QEvent::ChildInserted:
-    case QEvent::ChildRemoved:
-    case QEvent::Resize:
-    case QEvent::LayoutHint:
-    case QEvent::WindowActivate:
-    case QEvent::WindowDeactivate:
-        if( autoCheck )
-            autoCheckTimer.start( 20, true ); // 20 ms
-        break;
-    case QEvent::Timer:
-    case QEvent::MouseMove:
-    case QEvent::Paint:
-        return false;
-    default:
-        // kdDebug(125) << "KCheckAccelerators::eventFilter " << e->type() << " " << autoCheck << endl;
-        break;
+    switch(e->type())
+    { // just simplify debuggin
+        case QEvent::Accel:
+            if(key && (static_cast< QKeyEvent * >(e)->key() == key))
+            {
+                block = true;
+                checkAccelerators(false);
+                block = false;
+                static_cast< QKeyEvent * >(e)->accept();
+                return true;
+            }
+            break;
+        case QEvent::ChildInserted:
+        case QEvent::ChildRemoved:
+        case QEvent::Resize:
+        case QEvent::LayoutHint:
+        case QEvent::WindowActivate:
+        case QEvent::WindowDeactivate:
+            if(autoCheck)
+                autoCheckTimer.start(20, true); // 20 ms
+            break;
+        case QEvent::Timer:
+        case QEvent::MouseMove:
+        case QEvent::Paint:
+            return false;
+        default:
+            // kdDebug(125) << "KCheckAccelerators::eventFilter " << e->type() << " " << autoCheck << endl;
+            break;
     }
     return false;
 }
 
 void KCheckAccelerators::autoCheckSlot()
 {
-    if( block )
+    if(block)
     {
-        autoCheckTimer.start( 20, true );
+        autoCheckTimer.start(20, true);
         return;
     }
     block = true;
-    checkAccelerators( !alwaysShow );
+    checkAccelerators(!alwaysShow);
     block = false;
 }
 
 void KCheckAccelerators::createDialog(QWidget *actWin, bool automatic)
 {
-    if ( drklash )
+    if(drklash)
         return;
 
-    drklash = new QDialog( actWin, "kapp_accel_check_dlg", false, Qt::WDestructiveClose);
-    drklash->setCaption( i18n( "Dr. Klash' Accelerator Diagnosis" ));
-    drklash->resize( 500, 460 );
-    QVBoxLayout* layout = new QVBoxLayout( drklash, 11, 6 );
-    layout->setAutoAdd( true );
-    drklash_view = new QTextView( drklash );
-    QCheckBox* disableAutoCheck = NULL;
-    if( automatic )  {
-        disableAutoCheck = new QCheckBox( i18n( "&Disable automatic checking" ), drklash );
+    drklash = new QDialog(actWin, "kapp_accel_check_dlg", false, Qt::WDestructiveClose);
+    drklash->setCaption(i18n("Dr. Klash' Accelerator Diagnosis"));
+    drklash->resize(500, 460);
+    QVBoxLayout *layout = new QVBoxLayout(drklash, 11, 6);
+    layout->setAutoAdd(true);
+    drklash_view = new QTextView(drklash);
+    QCheckBox *disableAutoCheck = NULL;
+    if(automatic)
+    {
+        disableAutoCheck = new QCheckBox(i18n("&Disable automatic checking"), drklash);
         connect(disableAutoCheck, SIGNAL(toggled(bool)), SLOT(slotDisableCheck(bool)));
     }
-    QPushButton* btnClose = new QPushButton( i18n( "&Close" ), drklash );
-    btnClose->setDefault( true );
-    connect( btnClose, SIGNAL( clicked() ), drklash, SLOT( close() ) );
-    if (disableAutoCheck)
+    QPushButton *btnClose = new QPushButton(i18n("&Close"), drklash);
+    btnClose->setDefault(true);
+    connect(btnClose, SIGNAL(clicked()), drklash, SLOT(close()));
+    if(disableAutoCheck)
         disableAutoCheck->setFocus();
     else
         drklash_view->setFocus();
@@ -167,40 +170,42 @@ void KCheckAccelerators::createDialog(QWidget *actWin, bool automatic)
 void KCheckAccelerators::slotDisableCheck(bool on)
 {
     autoCheck = !on;
-    if (!on)
+    if(!on)
         autoCheckSlot();
 }
 
-void KCheckAccelerators::checkAccelerators( bool automatic )
+void KCheckAccelerators::checkAccelerators(bool automatic)
 {
-    QWidget* actWin = qApp->activeWindow();
-    if ( !actWin )
+    QWidget *actWin = qApp->activeWindow();
+    if(!actWin)
         return;
 
     KAcceleratorManager::manage(actWin);
     QString a, c, r;
-    KAcceleratorManager::last_manage(a, c,  r);
+    KAcceleratorManager::last_manage(a, c, r);
 
-    if (automatic) // for now we only show dialogs on F12 checks
+    if(automatic) // for now we only show dialogs on F12 checks
         return;
 
-    if (c.isEmpty() && r.isEmpty() && (automatic || a.isEmpty()))
+    if(c.isEmpty() && r.isEmpty() && (automatic || a.isEmpty()))
         return;
 
     QString s;
 
-    if ( ! c.isEmpty() )  {
+    if(!c.isEmpty())
+    {
         s += i18n("<h2>Accelerators changed</h2>");
-        s += "<table border><tr><th><b>Old Text</b></th><th><b>New Text</b></th></tr>"
-             + c + "</table>";
+        s += "<table border><tr><th><b>Old Text</b></th><th><b>New Text</b></th></tr>" + c + "</table>";
     }
 
-    if ( ! r.isEmpty() )  {
+    if(!r.isEmpty())
+    {
         s += i18n("<h2>Accelerators removed</h2>");
         s += "<table border><tr><th><b>Old Text</b></th></tr>" + r + "</table>";
     }
 
-    if ( ! a.isEmpty() )  {
+    if(!a.isEmpty())
+    {
         s += i18n("<h2>Accelerators added (just for your info)</h2>");
         s += "<table border><tr><th><b>New Text</b></th></tr>" + a + "</table>";
     }

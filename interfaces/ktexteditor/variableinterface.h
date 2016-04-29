@@ -38,9 +38,8 @@ namespace KTextEditor {
  *
  * @short KTextEditor interface to Document Variables
  */
-class KTEXTEDITOR_EXPORT VariableInterface
-{
-  public:
+class KTEXTEDITOR_EXPORT VariableInterface {
+public:
     VariableInterface();
     virtual ~VariableInterface();
 
@@ -50,23 +49,23 @@ class KTEXTEDITOR_EXPORT VariableInterface
     * @return the value of the variable @p name, or an empty string if the
     * variable is not set or has no value.
     */
-    virtual QString variable( const QString &name ) const = 0;
+    virtual QString variable(const QString &name) const = 0;
 
     //
     // signals!!
     //
-  public:
+public:
     /**
     * Signal: emitted when a variable is set
     */
-    virtual void variableChanged( const QString &variable, const QString &value ) = 0;
+    virtual void variableChanged(const QString &variable, const QString &value) = 0;
 
-  private:
+private:
     static unsigned int globalVariableInterfaceNumber;
     unsigned int myVariableInterfaceNumber;
 };
 
 
-KTEXTEDITOR_EXPORT VariableInterface *variableInterface( class Document * );
+KTEXTEDITOR_EXPORT VariableInterface *variableInterface(class Document *);
 } // namespace KTextEditor
 #endif //_KTEXTEDITOR_VARIABLE_INTERFACE_H_

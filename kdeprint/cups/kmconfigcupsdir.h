@@ -25,17 +25,16 @@
 class KURLRequester;
 class QCheckBox;
 
-class KMConfigCupsDir : public KMConfigPage
-{
+class KMConfigCupsDir : public KMConfigPage {
 public:
-	KMConfigCupsDir(QWidget *parent = 0);
+    KMConfigCupsDir(QWidget *parent = 0);
 
-	void loadConfig(KConfig*);
-	void saveConfig(KConfig*);
+    void loadConfig(KConfig *);
+    void saveConfig(KConfig *);
 
 private:
-	KURLRequester		*m_installdir;
-	QCheckBox		*m_stddir;
+    KURLRequester *m_installdir;
+    QCheckBox *m_stddir;
 };
 
 #endif

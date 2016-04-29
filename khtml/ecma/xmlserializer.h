@@ -28,26 +28,35 @@
 
 namespace KJS {
 
-  class JSEventListener;
+class JSEventListener;
 
-  class XMLSerializerConstructorImp : public ObjectImp {
-  public:
+class XMLSerializerConstructorImp : public ObjectImp {
+public:
     XMLSerializerConstructorImp(ExecState *);
     virtual bool implementsConstruct() const;
     virtual Object construct(ExecState *exec, const List &args);
-  };
+};
 
-  class XMLSerializer : public DOMObject {
-  public:
+class XMLSerializer : public DOMObject {
+public:
     XMLSerializer(ExecState *);
-    virtual bool toBoolean(ExecState *) const { return true; }
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual bool toBoolean(ExecState *) const
+    {
+        return true;
+    }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    enum { SerializeToString };
+    enum
+    {
+        SerializeToString
+    };
 
-  private:
+private:
     friend class XMLSerializerProtoFunc;
-  };
+};
 
 } // namespace
 

@@ -25,13 +25,13 @@
 #include <klocale.h>
 #include <dcopclient.h>
 
-static KStaticDeleter<KDCOPServiceStarter> dss_sd;
-KDCOPServiceStarter* KDCOPServiceStarter::s_self;
+static KStaticDeleter< KDCOPServiceStarter > dss_sd;
+KDCOPServiceStarter *KDCOPServiceStarter::s_self;
 
-KDCOPServiceStarter* KDCOPServiceStarter::self()
+KDCOPServiceStarter *KDCOPServiceStarter::self()
 {
-    if ( !s_self )
-        dss_sd.setObject( s_self, new KDCOPServiceStarter );
+    if(!s_self)
+        dss_sd.setObject(s_self, new KDCOPServiceStarter);
     return s_self;
 }
 
@@ -46,52 +46,48 @@ KDCOPServiceStarter::~KDCOPServiceStarter()
 {
 }
 
-int KDCOPServiceStarter::findServiceFor( const QString& serviceType,
-                                         const QString& _constraint,
-                                         const QString& preferences,
-                                         QString *error, QCString* pDcopService,
-                                         int flags )
+int KDCOPServiceStarter::findServiceFor(const QString &serviceType, const QString &_constraint, const QString &preferences, QString *error,
+                                        QCString *pDcopService, int flags)
 {
     // Ask the trader which service is preferred for this servicetype
     // We want one that provides a DCOP interface
     QString constraint = _constraint;
-    if ( !constraint.isEmpty() )
+    if(!constraint.isEmpty())
         constraint += " and ";
     constraint += "exist [X-DCOP-ServiceName]";
     KTrader::OfferList offers = KTrader::self()->query(serviceType, "Application", constraint, preferences);
-    if ( offers.isEmpty() ) {
-        if ( error )
-            *error = i18n("No service implementing %1").arg( serviceType );
+    if(offers.isEmpty())
+    {
+        if(error)
+            *error = i18n("No service implementing %1").arg(serviceType);
         kdWarning() << "KDCOPServiceStarter: No service implementing " << serviceType << endl;
         return -1;
     }
     KService::Ptr ptr = offers.first();
     QCString dcopService = ptr->property("X-DCOP-ServiceName").toString().latin1();
 
-    if ( !kapp->dcopClient()->isApplicationRegistered( dcopService ) )
+    if(!kapp->dcopClient()->isApplicationRegistered(dcopService))
     {
         QString error;
-        if ( startServiceFor( serviceType, constraint, preferences, &error, &dcopService, flags ) != 0 )
+        if(startServiceFor(serviceType, constraint, preferences, &error, &dcopService, flags) != 0)
         {
             kdDebug() << "KDCOPServiceStarter: Couldn't start service: " << error << endl;
             return -2;
         }
     }
     kdDebug() << "KDCOPServiceStarter: DCOP service is available now, as " << dcopService << endl;
-    if ( pDcopService )
+    if(pDcopService)
         *pDcopService = dcopService;
     return 0;
 }
 
-int KDCOPServiceStarter::startServiceFor( const QString& serviceType,
-                                          const QString& constraint,
-                                          const QString& preferences,
-                                          QString *error, QCString* dcopService, int /*flags*/ )
+int KDCOPServiceStarter::startServiceFor(const QString &serviceType, const QString &constraint, const QString &preferences, QString *error,
+                                         QCString *dcopService, int /*flags*/)
 {
     KTrader::OfferList offers = KTrader::self()->query(serviceType, "Application", constraint, preferences);
-    if ( offers.isEmpty() )
+    if(offers.isEmpty())
         return -1;
     KService::Ptr ptr = offers.first();
     kdDebug() << "KDCOPServiceStarter: starting " << ptr->desktopEntryPath() << endl;
-    return kapp->startServiceByDesktopPath( ptr->desktopEntryPath(), QStringList(), error, dcopService );
+    return kapp->startServiceByDesktopPath(ptr->desktopEntryPath(), QStringList(), error, dcopService);
 }

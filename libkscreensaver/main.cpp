@@ -34,52 +34,47 @@
 #include "kscreensaver.h"
 #include "kscreensaver_vroot.h"
 
-extern "C"
-{
-    extern const char *kss_applicationName;
-    extern const char *kss_description;
-    extern const char *kss_version;
-    KScreenSaver *kss_create( WId d );
-    QDialog *kss_setup();
+extern "C" {
+extern const char *kss_applicationName;
+extern const char *kss_description;
+extern const char *kss_version;
+KScreenSaver *kss_create(WId d);
+QDialog *kss_setup();
 }
 
-static const KCmdLineOptions options[] =
-{
-  { "setup", I18N_NOOP("Setup screen saver"), 0 },
-  { "window-id wid", I18N_NOOP("Run in the specified XWindow"), 0 },
-  { "root", I18N_NOOP("Run in the root XWindow"), 0 },
-  { "demo", I18N_NOOP("Start screen saver in demo mode"), "default"},
-  KCmdLineLastOption
-};
+static const KCmdLineOptions options[] = {{"setup", I18N_NOOP("Setup screen saver"), 0},
+                                          {"window-id wid", I18N_NOOP("Run in the specified XWindow"), 0},
+                                          {"root", I18N_NOOP("Run in the root XWindow"), 0},
+                                          {"demo", I18N_NOOP("Start screen saver in demo mode"), "default"},
+                                          KCmdLineLastOption};
 
-static void crashHandler( int  )
+static void crashHandler(int)
 {
 #ifdef SIGABRT
-    signal (SIGABRT, SIG_DFL);
+    signal(SIGABRT, SIG_DFL);
 #endif
     abort();
 }
 
 //----------------------------------------------------------------------------
 
-class DemoWindow : public QWidget
-{
+class DemoWindow : public QWidget {
 public:
     DemoWindow() : QWidget()
     {
-	setFixedSize(600, 420);
+        setFixedSize(600, 420);
     }
 
 protected:
     virtual void keyPressEvent(QKeyEvent *e)
     {
-        if (e->ascii() == 'q')
+        if(e->ascii() == 'q')
         {
             kapp->quit();
         }
     }
 
-    virtual void closeEvent( QCloseEvent * )
+    virtual void closeEvent(QCloseEvent *)
     {
         kapp->quit();
     }
@@ -100,7 +95,7 @@ KDE_EXPORT int main(int argc, char *argv[])
 
     KApplication app;
 
-    KCrash::setCrashHandler( crashHandler );
+    KCrash::setCrashHandler(crashHandler);
     KGlobal::locale()->insertCatalogue("klock");
     KGlobal::locale()->insertCatalogue("kscreensaver");
 
@@ -110,33 +105,33 @@ KDE_EXPORT int main(int argc, char *argv[])
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-    if (args->isSet("setup"))
+    if(args->isSet("setup"))
     {
-       QDialog *dlg = kss_setup();
-       args->clear();
-       dlg->exec();
-       delete dlg;
-       exit(0);
+        QDialog *dlg = kss_setup();
+        args->clear();
+        dlg->exec();
+        delete dlg;
+        exit(0);
     }
 
-    if (args->isSet("window-id"))
+    if(args->isSet("window-id"))
     {
         saveWin = atol(args->getOption("window-id"));
     }
 
-#ifdef Q_WS_X11 //FIXME
-    if (args->isSet("root"))
+#ifdef Q_WS_X11 // FIXME
+    if(args->isSet("root"))
     {
         saveWin = RootWindow(qt_xdisplay(), qt_xscreen());
     }
 #endif
 
-    if (args->isSet("demo"))
+    if(args->isSet("demo"))
     {
         saveWin = 0;
     }
 
-    if (saveWin == 0)
+    if(saveWin == 0)
     {
         demoWidget = new DemoWindow();
         demoWidget->setBackgroundMode(QWidget::NoBackground);
@@ -145,11 +140,11 @@ KDE_EXPORT int main(int argc, char *argv[])
         app.processEvents();
     }
 
-    target = kss_create( saveWin );
+    target = kss_create(saveWin);
 
-    if ( demoWidget )
+    if(demoWidget)
     {
-        demoWidget->setFixedSize( 600, 420 );
+        demoWidget->setFixedSize(600, 420);
         demoWidget->show();
     }
     args->clear();
@@ -160,4 +155,3 @@ KDE_EXPORT int main(int argc, char *argv[])
 
     return 0;
 }
-

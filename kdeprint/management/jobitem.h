@@ -25,31 +25,36 @@
 
 class KMJob;
 
-class JobItem : public QListViewItem, public KMObject
-{
+class JobItem : public QListViewItem, public KMObject {
 public:
-	JobItem(QListView *parent, KMJob *job = 0);
-	~JobItem();
-	void init(KMJob *job);
-	int compare(QListViewItem*, int, bool) const;
+    JobItem(QListView *parent, KMJob *job = 0);
+    ~JobItem();
+    void init(KMJob *job);
+    int compare(QListViewItem *, int, bool) const;
 
-	int jobID() const;
-	QString jobUri() const;
-	KMJob* job() const;
+    int jobID() const;
+    QString jobUri() const;
+    KMJob *job() const;
 
 private:
-	KMJob	*m_job;
-	int	m_ID;
-	QString	m_uri;
+    KMJob *m_job;
+    int m_ID;
+    QString m_uri;
 };
 
 inline int JobItem::jobID() const
-{ return m_ID; }
+{
+    return m_ID;
+}
 
-inline KMJob* JobItem::job() const
-{ return m_job; }
+inline KMJob *JobItem::job() const
+{
+    return m_job;
+}
 
 inline QString JobItem::jobUri() const
-{ return m_uri; }
+{
+    return m_uri;
+}
 
 #endif

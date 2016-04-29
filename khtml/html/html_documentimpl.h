@@ -34,52 +34,60 @@ class QString;
 
 namespace DOM {
 
-    class Element;
-    class HTMLElement;
-    class HTMLElementImpl;
-    class DOMString;
-    class CSSStyleSheetImpl;
-    class HTMLMapElementImpl;
+class Element;
+class HTMLElement;
+class HTMLElementImpl;
+class DOMString;
+class CSSStyleSheetImpl;
+class HTMLMapElementImpl;
 
-class HTMLDocumentImpl : public DOM::DocumentImpl
-{
+class HTMLDocumentImpl : public DOM::DocumentImpl {
     Q_OBJECT
 public:
     HTMLDocumentImpl(DOMImplementationImpl *_implementation, KHTMLView *v = 0);
     ~HTMLDocumentImpl();
 
-    virtual bool isHTMLDocument() const { return true; }
+    virtual bool isHTMLDocument() const
+    {
+        return true;
+    }
 
     DOMString referrer() const;
     DOMString lastModified() const;
     DOMString cookie() const;
-    void setCookie( const DOMString &);
+    void setCookie(const DOMString &);
 
     HTMLElementImpl *body();
-    void setBody(HTMLElementImpl *_body, int& exceptioncode);
+    void setBody(HTMLElementImpl *_body, int &exceptioncode);
 
     virtual khtml::Tokenizer *createTokenizer();
 
-    virtual bool childAllowed( NodeImpl *newChild );
+    virtual bool childAllowed(NodeImpl *newChild);
 
-    virtual ElementImpl *createElement ( const DOMString &tagName, int* pExceptioncode );
+    virtual ElementImpl *createElement(const DOMString &tagName, int *pExceptioncode);
 
-    HTMLMapElementImpl* getMap(const DOMString& url_);
+    HTMLMapElementImpl *getMap(const DOMString &url_);
 
-    virtual void determineParseMode( const QString &str );
+    virtual void determineParseMode(const QString &str);
     virtual void close();
 
-    void setAutoFill() { m_doAutoFill = true; }
+    void setAutoFill()
+    {
+        m_doAutoFill = true;
+    }
 
     // If true, HTML was requested by mimetype (e.g. HTTP Content-Type). Otherwise XHTML was requested.
     // This is independent of the actual doctype, of course. (#86446)
-    void setHTMLRequested( bool html ) { m_htmlRequested = html; }
+    void setHTMLRequested(bool html)
+    {
+        m_htmlRequested = html;
+    }
 
 protected:
     HTMLElementImpl *htmlElement;
     friend class HTMLMapElementImpl;
     friend class HTMLImageElementImpl;
-    QMap<QString,HTMLMapElementImpl*> mapMap;
+    QMap< QString, HTMLMapElementImpl * > mapMap;
     bool m_doAutoFill;
     bool m_htmlRequested;
 
@@ -90,6 +98,6 @@ protected slots:
     void slotHistoryChanged();
 };
 
-} //namespace
+} // namespace
 
 #endif

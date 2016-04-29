@@ -32,51 +32,53 @@ class PrintcapEntry;
 class LpcHelper;
 class KPrinter;
 
-class KMLprManager : public KMManager
-{
-	Q_OBJECT
+class KMLprManager : public KMManager {
+    Q_OBJECT
 public:
-	KMLprManager(QObject *parent, const char *name, const QStringList & /*args*/);
+    KMLprManager(QObject *parent, const char *name, const QStringList & /*args*/);
 
-	bool completePrinter(KMPrinter*);
-	bool completePrinterShort(KMPrinter*);
-	bool enablePrinter(KMPrinter*, bool);
-	bool startPrinter(KMPrinter*, bool);
-	bool savePrinterDriver(KMPrinter*, DrMain*);
-	DrMain* loadPrinterDriver(KMPrinter*, bool = false);
-	DrMain* loadFileDriver(const QString&);
-	bool createPrinter(KMPrinter*);
-	bool removePrinter(KMPrinter*);
+    bool completePrinter(KMPrinter *);
+    bool completePrinterShort(KMPrinter *);
+    bool enablePrinter(KMPrinter *, bool);
+    bool startPrinter(KMPrinter *, bool);
+    bool savePrinterDriver(KMPrinter *, DrMain *);
+    DrMain *loadPrinterDriver(KMPrinter *, bool = false);
+    DrMain *loadFileDriver(const QString &);
+    bool createPrinter(KMPrinter *);
+    bool removePrinter(KMPrinter *);
 
-	QString driverDbCreationProgram();
-	QString driverDirectory();
+    QString driverDbCreationProgram();
+    QString driverDirectory();
 
-	LpcHelper* lpcHelper()	{ return m_lpchelper; }
-	QString printOptions(KPrinter*);
+    LpcHelper *lpcHelper()
+    {
+        return m_lpchelper;
+    }
+    QString printOptions(KPrinter *);
 
-	void createPluginActions(KActionCollection*);
-	void validatePluginActions(KActionCollection*, KMPrinter*);
-	QString stateInformation();
+    void createPluginActions(KActionCollection *);
+    void validatePluginActions(KActionCollection *, KMPrinter *);
+    QString stateInformation();
 
 protected slots:
-	void slotEditPrintcap();
+    void slotEditPrintcap();
 
 protected:
-	void listPrinters();
-	void initHandlers();
-	void insertHandler(LprHandler*);
-	PrintcapEntry* findEntry(KMPrinter*);
-	LprHandler* findHandler(KMPrinter*);
-	void checkPrinterState(KMPrinter*);
-	bool savePrintcapFile();
+    void listPrinters();
+    void initHandlers();
+    void insertHandler(LprHandler *);
+    PrintcapEntry *findEntry(KMPrinter *);
+    LprHandler *findHandler(KMPrinter *);
+    void checkPrinterState(KMPrinter *);
+    bool savePrintcapFile();
 
 private:
-	QDict<LprHandler>	m_handlers;
-	QPtrList<LprHandler>    m_handlerlist;
-	QDict<PrintcapEntry>	m_entries;
-	QDateTime		m_updtime;
-	LpcHelper		*m_lpchelper;
-	KMPrinter		*m_currentprinter;
+    QDict< LprHandler > m_handlers;
+    QPtrList< LprHandler > m_handlerlist;
+    QDict< PrintcapEntry > m_entries;
+    QDateTime m_updtime;
+    LpcHelper *m_lpchelper;
+    KMPrinter *m_currentprinter;
 };
 
 #endif

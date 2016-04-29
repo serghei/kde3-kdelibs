@@ -28,9 +28,9 @@
 #endif
 
 #ifdef __CYGWIN__
-#undef kde_socklen_t 
-#define kde_socklen_t ksocklen_t 
-#endif 
+#undef kde_socklen_t
+#define kde_socklen_t ksocklen_t
+#endif
 
 #include "kapplication.h"
 
@@ -43,15 +43,13 @@ using namespace KNetwork;
 
 // constructor
 // nothing to do
-KSocksSocketDevice::KSocksSocketDevice(const KSocketBase* obj)
-  : KSocketDevice(obj)
+KSocksSocketDevice::KSocksSocketDevice(const KSocketBase *obj) : KSocketDevice(obj)
 {
 }
 
 // constructor with argument
 // nothing to do
-KSocksSocketDevice::KSocksSocketDevice(int fd)
-  : KSocketDevice(fd)
+KSocksSocketDevice::KSocksSocketDevice(int fd) : KSocketDevice(fd)
 {
 }
 
@@ -64,417 +62,412 @@ KSocksSocketDevice::~KSocksSocketDevice()
 // returns the capabilities
 int KSocksSocketDevice::capabilities() const
 {
-  return 0;			// can do everything!
+    return 0; // can do everything!
 }
 
 // From here on, the code is almost exactly a copy of KSocketDevice
 // the differences are the use of KSocks where appropriate
 
-bool KSocksSocketDevice::bind(const KResolverEntry& address)
+bool KSocksSocketDevice::bind(const KResolverEntry &address)
 {
-  resetError();
+    resetError();
 
-  if (m_sockfd == -1 && !create(address))
-    return false;		// failed creating
+    if(m_sockfd == -1 && !create(address))
+        return false; // failed creating
 
-  // we have a socket, so try and bind
-  if (KSocks::self()->bind(m_sockfd, address.address(), address.length()) == -1)
+    // we have a socket, so try and bind
+    if(KSocks::self()->bind(m_sockfd, address.address(), address.length()) == -1)
     {
-      if (errno == EADDRINUSE)
-	setError(IO_BindError, AddressInUse);
-      else if (errno == EINVAL)
-	setError(IO_BindError, AlreadyBound);
-      else
-	// assume the address is the cause
-	setError(IO_BindError, NotSupported);
-      return false;
+        if(errno == EADDRINUSE)
+            setError(IO_BindError, AddressInUse);
+        else if(errno == EINVAL)
+            setError(IO_BindError, AlreadyBound);
+        else
+            // assume the address is the cause
+            setError(IO_BindError, NotSupported);
+        return false;
     }
 
-  return true;
+    return true;
 }
 
 
 bool KSocksSocketDevice::listen(int backlog)
 {
-  if (m_sockfd != -1)
+    if(m_sockfd != -1)
     {
-      if (KSocks::self()->listen(m_sockfd, backlog) == -1)
-	{
-	  setError(IO_ListenError, NotSupported);
-	  return false;
-	}
+        if(KSocks::self()->listen(m_sockfd, backlog) == -1)
+        {
+            setError(IO_ListenError, NotSupported);
+            return false;
+        }
 
-      resetError();
-      setFlags(IO_Sequential | IO_Raw | IO_ReadWrite);
-      setState(IO_Open);
-      return true;
+        resetError();
+        setFlags(IO_Sequential | IO_Raw | IO_ReadWrite);
+        setState(IO_Open);
+        return true;
     }
 
-  // we don't have a socket
-  // can't listen
-  setError(IO_ListenError, NotCreated);
-  return false;
+    // we don't have a socket
+    // can't listen
+    setError(IO_ListenError, NotCreated);
+    return false;
 }
 
-bool KSocksSocketDevice::connect(const KResolverEntry& address)
+bool KSocksSocketDevice::connect(const KResolverEntry &address)
 {
-  resetError();
+    resetError();
 
-  if (m_sockfd == -1 && !create(address))
-    return false;		// failed creating!
+    if(m_sockfd == -1 && !create(address))
+        return false; // failed creating!
 
-  int retval;
-  if (KSocks::self()->hasWorkingAsyncConnect())
-    retval = KSocks::self()->connect(m_sockfd, address.address(), 
-				     address.length());
-  else
+    int retval;
+    if(KSocks::self()->hasWorkingAsyncConnect())
+        retval = KSocks::self()->connect(m_sockfd, address.address(), address.length());
+    else
     {
-      // work around some SOCKS implementation bugs
-      // we will do a *synchronous* connection here!
-      // FIXME: KDE4, write a proper SOCKS implementation
-      bool isBlocking = blocking();
-      setBlocking(true);
-      retval = KSocks::self()->connect(m_sockfd, address.address(), 
-				       address.length());
-      setBlocking(isBlocking);
+        // work around some SOCKS implementation bugs
+        // we will do a *synchronous* connection here!
+        // FIXME: KDE4, write a proper SOCKS implementation
+        bool isBlocking = blocking();
+        setBlocking(true);
+        retval = KSocks::self()->connect(m_sockfd, address.address(), address.length());
+        setBlocking(isBlocking);
     }
 
-  if (retval == -1)
+    if(retval == -1)
     {
-      if (errno == EISCONN)
-	return true;		// we're already connected
-      else if (errno == EALREADY || errno == EINPROGRESS)
-	{
-	  setError(IO_ConnectError, InProgress);
-	  return true;
-	}
-      else if (errno == ECONNREFUSED)
-	setError(IO_ConnectError, ConnectionRefused);
-      else if (errno == ENETDOWN || errno == ENETUNREACH ||
-	       errno == ENETRESET || errno == ECONNABORTED ||
-	       errno == ECONNRESET || errno == EHOSTDOWN ||
-	       errno == EHOSTUNREACH)
-	setError(IO_ConnectError, NetFailure);
-      else
-	setError(IO_ConnectError, NotSupported);
+        if(errno == EISCONN)
+            return true; // we're already connected
+        else if(errno == EALREADY || errno == EINPROGRESS)
+        {
+            setError(IO_ConnectError, InProgress);
+            return true;
+        }
+        else if(errno == ECONNREFUSED)
+            setError(IO_ConnectError, ConnectionRefused);
+        else if(errno == ENETDOWN || errno == ENETUNREACH || errno == ENETRESET || errno == ECONNABORTED || errno == ECONNRESET || errno == EHOSTDOWN
+                || errno == EHOSTUNREACH)
+            setError(IO_ConnectError, NetFailure);
+        else
+            setError(IO_ConnectError, NotSupported);
 
-      return false;
+        return false;
     }
 
-  setFlags(IO_Sequential | IO_Raw | IO_ReadWrite);
-  setState(IO_Open);
-  return true;			// all is well
+    setFlags(IO_Sequential | IO_Raw | IO_ReadWrite);
+    setState(IO_Open);
+    return true; // all is well
 }
 
-KSocksSocketDevice* KSocksSocketDevice::accept()
+KSocksSocketDevice *KSocksSocketDevice::accept()
 {
-  if (m_sockfd == -1)
+    if(m_sockfd == -1)
     {
-      // can't accept without a socket
-      setError(IO_AcceptError, NotCreated);
-      return 0L;
+        // can't accept without a socket
+        setError(IO_AcceptError, NotCreated);
+        return 0L;
     }
 
-  struct sockaddr sa;
-  kde_socklen_t len = sizeof(sa);
-  int newfd = KSocks::self()->accept(m_sockfd, &sa, &len);
-  if (newfd == -1)
+    struct sockaddr sa;
+    kde_socklen_t len = sizeof(sa);
+    int newfd = KSocks::self()->accept(m_sockfd, &sa, &len);
+    if(newfd == -1)
     {
-      if (errno == EAGAIN || errno == EWOULDBLOCK)
-	setError(IO_AcceptError, WouldBlock);
-      else
-	setError(IO_AcceptError, UnknownError);
-      return NULL;
+        if(errno == EAGAIN || errno == EWOULDBLOCK)
+            setError(IO_AcceptError, WouldBlock);
+        else
+            setError(IO_AcceptError, UnknownError);
+        return NULL;
     }
 
-  return new KSocksSocketDevice(newfd);
+    return new KSocksSocketDevice(newfd);
 }
 
-static int socks_read_common(int sockfd, char *data, Q_ULONG maxlen, KSocketAddress* from, ssize_t &retval, bool peek = false)
+static int socks_read_common(int sockfd, char *data, Q_ULONG maxlen, KSocketAddress *from, ssize_t &retval, bool peek = false)
 {
-  kde_socklen_t len;
-  if (from)
+    kde_socklen_t len;
+    if(from)
     {
-      from->setLength(len = 128); // arbitrary length
-      retval = KSocks::self()->recvfrom(sockfd, data, maxlen, peek ? MSG_PEEK : 0, from->address(), &len);
+        from->setLength(len = 128); // arbitrary length
+        retval = KSocks::self()->recvfrom(sockfd, data, maxlen, peek ? MSG_PEEK : 0, from->address(), &len);
     }
-  else
-    retval = KSocks::self()->recvfrom(sockfd, data, maxlen, peek ? MSG_PEEK : 0, NULL, NULL);
+    else
+        retval = KSocks::self()->recvfrom(sockfd, data, maxlen, peek ? MSG_PEEK : 0, NULL, NULL);
 
-  if (retval == -1)
+    if(retval == -1)
     {
-      if (errno == EAGAIN || errno == EWOULDBLOCK)
-	return KSocketDevice::WouldBlock;
-      else
-	return KSocketDevice::UnknownError;
+        if(errno == EAGAIN || errno == EWOULDBLOCK)
+            return KSocketDevice::WouldBlock;
+        else
+            return KSocketDevice::UnknownError;
     }
 
-  if (from)
-    from->setLength(len);
-  return 0;
+    if(from)
+        from->setLength(len);
+    return 0;
 }
 
 Q_LONG KSocksSocketDevice::readBlock(char *data, Q_ULONG maxlen)
 {
-  resetError();
-  if (m_sockfd == -1)
-    return -1;
+    resetError();
+    if(m_sockfd == -1)
+        return -1;
 
-  if (maxlen == 0 || data == 0L)
-    return 0;			// can't read
+    if(maxlen == 0 || data == 0L)
+        return 0; // can't read
 
-  ssize_t retval;
-  int err = socks_read_common(m_sockfd, data, maxlen, 0L, retval);
+    ssize_t retval;
+    int err = socks_read_common(m_sockfd, data, maxlen, 0L, retval);
 
-  if (err)
+    if(err)
     {
-      setError(IO_ReadError, static_cast<SocketError>(err));
-      return -1;
+        setError(IO_ReadError, static_cast< SocketError >(err));
+        return -1;
     }
 
-  return retval;
+    return retval;
 }
 
 Q_LONG KSocksSocketDevice::readBlock(char *data, Q_ULONG maxlen, KSocketAddress &from)
 {
-  resetError();
-  if (m_sockfd == -1)
-    return -1;			// nothing to do here
+    resetError();
+    if(m_sockfd == -1)
+        return -1; // nothing to do here
 
-  if (data == 0L || maxlen == 0)
-    return 0;			// user doesn't want to read
+    if(data == 0L || maxlen == 0)
+        return 0; // user doesn't want to read
 
-  ssize_t retval;
-  int err = socks_read_common(m_sockfd, data, maxlen, &from, retval);
+    ssize_t retval;
+    int err = socks_read_common(m_sockfd, data, maxlen, &from, retval);
 
-  if (err)
+    if(err)
     {
-      setError(IO_ReadError, static_cast<SocketError>(err));
-      return -1;
+        setError(IO_ReadError, static_cast< SocketError >(err));
+        return -1;
     }
 
-  return retval;
+    return retval;
 }
 
 Q_LONG KSocksSocketDevice::peekBlock(char *data, Q_ULONG maxlen)
 {
-  resetError();
-  if (m_sockfd == -1)
-    return -1;
+    resetError();
+    if(m_sockfd == -1)
+        return -1;
 
-  if (maxlen == 0 || data == 0L)
-    return 0;			// can't read
+    if(maxlen == 0 || data == 0L)
+        return 0; // can't read
 
-  ssize_t retval;
-  int err = socks_read_common(m_sockfd, data, maxlen, 0L, retval, true);
+    ssize_t retval;
+    int err = socks_read_common(m_sockfd, data, maxlen, 0L, retval, true);
 
-  if (err)
+    if(err)
     {
-      setError(IO_ReadError, static_cast<SocketError>(err));
-      return -1;
+        setError(IO_ReadError, static_cast< SocketError >(err));
+        return -1;
     }
 
-  return retval;
+    return retval;
 }
 
-Q_LONG KSocksSocketDevice::peekBlock(char *data, Q_ULONG maxlen, KSocketAddress& from)
+Q_LONG KSocksSocketDevice::peekBlock(char *data, Q_ULONG maxlen, KSocketAddress &from)
 {
-  resetError();
-  if (m_sockfd == -1)
-    return -1;			// nothing to do here
+    resetError();
+    if(m_sockfd == -1)
+        return -1; // nothing to do here
 
-  if (data == 0L || maxlen == 0)
-    return 0;			// user doesn't want to read
+    if(data == 0L || maxlen == 0)
+        return 0; // user doesn't want to read
 
-  ssize_t retval;
-  int err = socks_read_common(m_sockfd, data, maxlen, &from, retval, true);
+    ssize_t retval;
+    int err = socks_read_common(m_sockfd, data, maxlen, &from, retval, true);
 
-  if (err)
+    if(err)
     {
-      setError(IO_ReadError, static_cast<SocketError>(err));
-      return -1;
+        setError(IO_ReadError, static_cast< SocketError >(err));
+        return -1;
     }
 
-  return retval;
+    return retval;
 }
 
 Q_LONG KSocksSocketDevice::writeBlock(const char *data, Q_ULONG len)
 {
-  return writeBlock(data, len, KSocketAddress());
+    return writeBlock(data, len, KSocketAddress());
 }
 
-Q_LONG KSocksSocketDevice::writeBlock(const char *data, Q_ULONG len, const KSocketAddress& to)
+Q_LONG KSocksSocketDevice::writeBlock(const char *data, Q_ULONG len, const KSocketAddress &to)
 {
-  resetError();
-  if (m_sockfd == -1)
-    return -1;			// can't write to unopen socket
+    resetError();
+    if(m_sockfd == -1)
+        return -1; // can't write to unopen socket
 
-  if (data == 0L || len == 0)
-    return 0;			// nothing to be written
+    if(data == 0L || len == 0)
+        return 0; // nothing to be written
 
-  ssize_t retval = KSocks::self()->sendto(m_sockfd, data, len, 0, to.address(), to.length());
-  if (retval == -1)
+    ssize_t retval = KSocks::self()->sendto(m_sockfd, data, len, 0, to.address(), to.length());
+    if(retval == -1)
     {
-      if (errno == EAGAIN || errno == EWOULDBLOCK)
-	setError(IO_WriteError, WouldBlock);
-      else
-	setError(IO_WriteError, UnknownError);
-      return -1;		// nothing written
+        if(errno == EAGAIN || errno == EWOULDBLOCK)
+            setError(IO_WriteError, WouldBlock);
+        else
+            setError(IO_WriteError, UnknownError);
+        return -1; // nothing written
     }
 
-  return retval;
+    return retval;
 }
 
 KSocketAddress KSocksSocketDevice::localAddress() const
 {
-  if (m_sockfd == -1)
-    return KSocketAddress();	// not open, empty value
+    if(m_sockfd == -1)
+        return KSocketAddress(); // not open, empty value
 
-  kde_socklen_t len;
-  KSocketAddress localAddress;
-  localAddress.setLength(len = 32);	// arbitrary value
-  if (KSocks::self()->getsockname(m_sockfd, localAddress.address(), &len) == -1)
-    // error!
-    return KSocketAddress();
+    kde_socklen_t len;
+    KSocketAddress localAddress;
+    localAddress.setLength(len = 32); // arbitrary value
+    if(KSocks::self()->getsockname(m_sockfd, localAddress.address(), &len) == -1)
+        // error!
+        return KSocketAddress();
 
-  if (len <= localAddress.length())
+    if(len <= localAddress.length())
     {
-      // it has fit already
-      localAddress.setLength(len);
-      return localAddress;
+        // it has fit already
+        localAddress.setLength(len);
+        return localAddress;
     }
 
-  // no, the socket address is actually larger than we had anticipated
-  // call again
-  localAddress.setLength(len);
-  if (KSocks::self()->getsockname(m_sockfd, localAddress.address(), &len) == -1)
-    // error!
-    return KSocketAddress();
+    // no, the socket address is actually larger than we had anticipated
+    // call again
+    localAddress.setLength(len);
+    if(KSocks::self()->getsockname(m_sockfd, localAddress.address(), &len) == -1)
+        // error!
+        return KSocketAddress();
 
-  return localAddress;
+    return localAddress;
 }
 
 KSocketAddress KSocksSocketDevice::peerAddress() const
 {
-  if (m_sockfd == -1)
-    return KSocketAddress();	// not open, empty value
+    if(m_sockfd == -1)
+        return KSocketAddress(); // not open, empty value
 
-  kde_socklen_t len;
-  KSocketAddress peerAddress;
-  peerAddress.setLength(len = 32);	// arbitrary value
-  if (KSocks::self()->getpeername(m_sockfd, peerAddress.address(), &len) == -1)
-    // error!
-    return KSocketAddress();
+    kde_socklen_t len;
+    KSocketAddress peerAddress;
+    peerAddress.setLength(len = 32); // arbitrary value
+    if(KSocks::self()->getpeername(m_sockfd, peerAddress.address(), &len) == -1)
+        // error!
+        return KSocketAddress();
 
-  if (len <= peerAddress.length())
+    if(len <= peerAddress.length())
     {
-      // it has fit already
-      peerAddress.setLength(len);
-      return peerAddress;
+        // it has fit already
+        peerAddress.setLength(len);
+        return peerAddress;
     }
 
-  // no, the socket address is actually larger than we had anticipated
-  // call again
-  peerAddress.setLength(len);
-  if (KSocks::self()->getpeername(m_sockfd, peerAddress.address(), &len) == -1)
-    // error!
-    return KSocketAddress();
+    // no, the socket address is actually larger than we had anticipated
+    // call again
+    peerAddress.setLength(len);
+    if(KSocks::self()->getpeername(m_sockfd, peerAddress.address(), &len) == -1)
+        // error!
+        return KSocketAddress();
 
-  return peerAddress;
+    return peerAddress;
 }
 
 KSocketAddress KSocksSocketDevice::externalAddress() const
 {
-  // return empty, indicating unknown external address
-  return KSocketAddress();
+    // return empty, indicating unknown external address
+    return KSocketAddress();
 }
 
-bool KSocksSocketDevice::poll(bool *input, bool *output, bool *exception,
-			      int timeout, bool *timedout)
+bool KSocksSocketDevice::poll(bool *input, bool *output, bool *exception, int timeout, bool *timedout)
 {
-  if (m_sockfd == -1)
+    if(m_sockfd == -1)
     {
-      setError(IO_UnspecifiedError, NotCreated);
-      return false;
+        setError(IO_UnspecifiedError, NotCreated);
+        return false;
     }
 
-  resetError();
-  fd_set readfds, writefds, exceptfds;
-  fd_set *preadfds = 0L, *pwritefds = 0L, *pexceptfds = 0L;
+    resetError();
+    fd_set readfds, writefds, exceptfds;
+    fd_set *preadfds = 0L, *pwritefds = 0L, *pexceptfds = 0L;
 
-  if (input)
+    if(input)
     {
-      preadfds = &readfds;
-      FD_ZERO(preadfds);
-      FD_SET(m_sockfd, preadfds);
-      *input = false;
+        preadfds = &readfds;
+        FD_ZERO(preadfds);
+        FD_SET(m_sockfd, preadfds);
+        *input = false;
     }
-  if (output)
+    if(output)
     {
-      pwritefds = &writefds;
-      FD_ZERO(pwritefds);
-      FD_SET(m_sockfd, pwritefds);
-      *output = false;
+        pwritefds = &writefds;
+        FD_ZERO(pwritefds);
+        FD_SET(m_sockfd, pwritefds);
+        *output = false;
     }
-  if (exception)
+    if(exception)
     {
-      pexceptfds = &exceptfds;
-      FD_ZERO(pexceptfds);
-      FD_SET(m_sockfd, pexceptfds);
-      *exception = false;
-    }
-
-  int retval;
-  if (timeout < 0)
-    retval = KSocks::self()->select(m_sockfd + 1, preadfds, pwritefds, pexceptfds, 0L);
-  else
-    {
-      // convert the milliseconds to timeval
-      struct timeval tv;
-      tv.tv_sec = timeout / 1000;
-      tv.tv_usec = timeout % 1000 * 1000;
-
-      retval = select(m_sockfd + 1, preadfds, pwritefds, pexceptfds, &tv);
+        pexceptfds = &exceptfds;
+        FD_ZERO(pexceptfds);
+        FD_SET(m_sockfd, pexceptfds);
+        *exception = false;
     }
 
-  if (retval == -1)
+    int retval;
+    if(timeout < 0)
+        retval = KSocks::self()->select(m_sockfd + 1, preadfds, pwritefds, pexceptfds, 0L);
+    else
     {
-      setError(IO_UnspecifiedError, UnknownError);
-      return false;
-    }
-  if (retval == 0)
-    {
-      // timeout
-      if (timedout)
-	*timedout = true;
-      return true;
+        // convert the milliseconds to timeval
+        struct timeval tv;
+        tv.tv_sec = timeout / 1000;
+        tv.tv_usec = timeout % 1000 * 1000;
+
+        retval = select(m_sockfd + 1, preadfds, pwritefds, pexceptfds, &tv);
     }
 
-  if (input && FD_ISSET(m_sockfd, preadfds))
-    *input = true;
-  if (output && FD_ISSET(m_sockfd, pwritefds))
-    *output = true;
-  if (exception && FD_ISSET(m_sockfd, pexceptfds))
-    *exception = true;
+    if(retval == -1)
+    {
+        setError(IO_UnspecifiedError, UnknownError);
+        return false;
+    }
+    if(retval == 0)
+    {
+        // timeout
+        if(timedout)
+            *timedout = true;
+        return true;
+    }
 
-  return true;
+    if(input && FD_ISSET(m_sockfd, preadfds))
+        *input = true;
+    if(output && FD_ISSET(m_sockfd, pwritefds))
+        *output = true;
+    if(exception && FD_ISSET(m_sockfd, pexceptfds))
+        *exception = true;
+
+    return true;
 }
 
 void KSocksSocketDevice::initSocks()
 {
-  static bool init = false;
+    static bool init = false;
 
-  if (init)
-    return;
+    if(init)
+        return;
 
-  if (kapp == 0L)
-    return;			// no KApplication, so don't initialise
-                                // this should, however, test for KInstance
+    if(kapp == 0L)
+        return; // no KApplication, so don't initialise
+                // this should, however, test for KInstance
 
-  init = true;
+    init = true;
 
-  if (KSocks::self()->hasSocks())
-    delete KSocketDevice::setDefaultImpl(new KSocketDeviceFactory<KSocksSocketDevice>);
+    if(KSocks::self()->hasSocks())
+        delete KSocketDevice::setDefaultImpl(new KSocketDeviceFactory< KSocksSocketDevice >);
 }
 
 #if 0

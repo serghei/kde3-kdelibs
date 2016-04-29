@@ -34,60 +34,58 @@
 
 namespace KSpell2 {
 
-class Highlighter::Private
-{
+class Highlighter::Private {
 public:
-    Filter     *filter;
+    Filter *filter;
     Broker::Ptr broker;
     Dictionary *dict;
-    QDict<Dictionary>  dictCache;
+    QDict< Dictionary > dictCache;
 };
 
-Highlighter::Highlighter( QTextEdit *textEdit,
-                          const QString& configFile,
-                          Filter *filter)
-    : QSyntaxHighlighter( textEdit )
+Highlighter::Highlighter(QTextEdit *textEdit, const QString &configFile, Filter *filter) : QSyntaxHighlighter(textEdit)
 {
     d = new Private;
     d->filter = filter;
-    if ( !configFile.isEmpty() )
-        d->broker = Broker::openBroker( KSharedConfig::openConfig( configFile ) );
+    if(!configFile.isEmpty())
+        d->broker = Broker::openBroker(KSharedConfig::openConfig(configFile));
     else
         d->broker = Broker::openBroker();
 
-    d->filter->setSettings( d->broker->settings() );
-    d->dict   = d->broker->dictionary();
-    Q_ASSERT( d->dict );
-    d->dictCache.insert( d->broker->settings()->defaultLanguage(),
-                         d->dict );
+    d->filter->setSettings(d->broker->settings());
+    d->dict = d->broker->dictionary();
+    Q_ASSERT(d->dict);
+    d->dictCache.insert(d->broker->settings()->defaultLanguage(), d->dict);
 }
 
 Highlighter::~Highlighter()
 {
-    delete d; d = 0;
+    delete d;
+    d = 0;
 }
 
-int Highlighter::highlightParagraph( const QString& text,
-                                     int endStateOfLastPara )
+int Highlighter::highlightParagraph(const QString &text, int endStateOfLastPara)
 {
-    Q_UNUSED( endStateOfLastPara );
+    Q_UNUSED(endStateOfLastPara);
     int para, index;
-    textEdit()->getCursorPosition( &para, &index );
+    textEdit()->getCursorPosition(&para, &index);
     const int lengthPosition = text.length() - 1;
 
-    if ( index != lengthPosition ||
-         ( lengthPosition > 0 && !text[lengthPosition-1].isLetter() ) ) {
-        d->filter->setBuffer( text );
+    if(index != lengthPosition || (lengthPosition > 0 && !text[lengthPosition - 1].isLetter()))
+    {
+        d->filter->setBuffer(text);
         Word w = d->filter->nextWord();
-        while ( !w.end ) {
-            if ( !d->dict->check( w.word ) ) {
-                setMisspelled( w.start, w.word.length() );
-            } else
-                unsetMisspelled( w.start, w.word.length() );
+        while(!w.end)
+        {
+            if(!d->dict->check(w.word))
+            {
+                setMisspelled(w.start, w.word.length());
+            }
+            else
+                unsetMisspelled(w.start, w.word.length());
             w = d->filter->nextWord();
         }
     }
-    //QTimer::singleShot( 0, this, SLOT(checkWords()) );
+    // QTimer::singleShot( 0, this, SLOT(checkWords()) );
 
     return 0;
 }
@@ -97,10 +95,10 @@ Filter *Highlighter::currentFilter() const
     return d->filter;
 }
 
-void Highlighter::setCurrentFilter( Filter *filter )
+void Highlighter::setCurrentFilter(Filter *filter)
 {
     d->filter = filter;
-    d->filter->setSettings( d->broker->settings() );
+    d->filter->setSettings(d->broker->settings());
 }
 
 QString Highlighter::currentLanguage() const
@@ -108,31 +106,32 @@ QString Highlighter::currentLanguage() const
     return d->dict->language();
 }
 
-void Highlighter::setCurrentLanguage( const QString& lang )
+void Highlighter::setCurrentLanguage(const QString &lang)
 {
-    if ( !d->dictCache.find( lang ) ) {
-        Dictionary *dict = d->broker->dictionary( lang );
-        if ( dict ) {
-            d->dictCache.insert( lang, dict );
-        } else {
-            kdDebug()<<"No dictionary for \""
-                     <<lang
-                     <<"\" staying with the current language."
-                     <<endl;
+    if(!d->dictCache.find(lang))
+    {
+        Dictionary *dict = d->broker->dictionary(lang);
+        if(dict)
+        {
+            d->dictCache.insert(lang, dict);
+        }
+        else
+        {
+            kdDebug() << "No dictionary for \"" << lang << "\" staying with the current language." << endl;
             return;
         }
     }
     d->dict = d->dictCache[lang];
 }
 
-void Highlighter::setMisspelled( int start, int count )
+void Highlighter::setMisspelled(int start, int count)
 {
-    setFormat( start , count, Qt::red );
+    setFormat(start, count, Qt::red);
 }
 
-void Highlighter::unsetMisspelled( int start, int count )
+void Highlighter::unsetMisspelled(int start, int count)
 {
-    setFormat( start, count, Qt::black );
+    setFormat(start, count, Qt::black);
 }
 
 /*
@@ -146,5 +145,4 @@ void Highlighter::checkWords()
         }
     }
 }*/
-
 }

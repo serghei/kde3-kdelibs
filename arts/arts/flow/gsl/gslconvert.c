@@ -20,38 +20,33 @@
 #include <string.h>
 
 
-
 /* --- functions --- */
-gchar*
-gsl_convert_from_utf8 (const gchar *codeset,
-		       const gchar *string)
+gchar *gsl_convert_from_utf8(const gchar *codeset, const gchar *string)
 {
-  gchar *result;
+    gchar *result;
 
-  g_return_val_if_fail (codeset != NULL, NULL);
-  if (!string)
-    return NULL;
+    g_return_val_if_fail(codeset != NULL, NULL);
+    if(!string)
+        return NULL;
 
-  result = g_convert (string, strlen (string), codeset, GSL_CODESET_UTF8, NULL, NULL, NULL);
-  if (!result)
-    result = g_strconcat ("??unknown-codeset:", codeset, "??", NULL);
+    result = g_convert(string, strlen(string), codeset, GSL_CODESET_UTF8, NULL, NULL, NULL);
+    if(!result)
+        result = g_strconcat("??unknown-codeset:", codeset, "??", NULL);
 
-  return result;
+    return result;
 }
 
-gchar*
-gsl_convert_to_utf8 (const gchar *codeset,
-		     const gchar *string)
+gchar *gsl_convert_to_utf8(const gchar *codeset, const gchar *string)
 {
-  gchar *result;
+    gchar *result;
 
-  g_return_val_if_fail (codeset != NULL, NULL);
-  if (!string)
-    return NULL;
+    g_return_val_if_fail(codeset != NULL, NULL);
+    if(!string)
+        return NULL;
 
-  result = g_convert (string, strlen (string), GSL_CODESET_UTF8, codeset, NULL, NULL, NULL);
-  if (!result)
-    result = g_strconcat ("??unknown-codeset:", codeset, "??", NULL);
+    result = g_convert(string, strlen(string), GSL_CODESET_UTF8, codeset, NULL, NULL, NULL);
+    if(!result)
+        result = g_strconcat("??unknown-codeset:", codeset, "??", NULL);
 
-  return result;
+    return result;
 }

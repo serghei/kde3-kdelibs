@@ -1,16 +1,16 @@
 /* This file is part of the KDE libraries
    Copyright (C) 2001-2002 Michael Häckel <haeckel@kde.org>
    $Id: kdesasl.h 465272 2005-09-29 09:47:40Z mueller $
- 
+
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
    License version 2 as published by the Free Software Foundation.
- 
+
    This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Library General Public License for more details.
- 
+
    You should have received a copy of the GNU Library General Public License
    along with this library; see the file COPYING.LIB.  If not, write to
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -69,101 +69,101 @@ class QStrIList;
  * @version $Id: kdesasl.h 465272 2005-09-29 09:47:40Z mueller $
  */
 
-class KIO_EXPORT KDESasl
-{
+class KIO_EXPORT KDESasl {
 
 public:
-  /**
-   * Construct a sasl object and initialize it with the username and password
-   * passed via the url.
-   */
-  KDESasl(const KURL &aUrl);
-  /**
-   * This is a conveniece function and differs from the above function only by
-   * what arguments it accepts.
-   */
-  KDESasl(const QString &aUser, const QString &aPass, const QString &aProtocol);
-  /*
-   * You need to have a virtual destructor!
-   */
-  virtual ~KDESasl();
-  /**
-   * @returns the most secure method from the given methods and use it for
-   * further operations.
-   */
-  virtual QCString chooseMethod(const QStrIList aMethods);
-  /**
-   * Explicitely set the SASL method used.
-   */
-  virtual void setMethod(const QCString &aMethod);
-  /**
-   * @return the SASL method used.
-   * @since 3.2
-   */
-  QCString method() const;
-  /**
-   * @param numCalls number of times getResponse() has been called.
-   * @return whether the challenge/response dialog has completed
-   *
-   * @since 3.2
-   */
-  bool dialogComplete( int numCalls ) const;
-  /**
-   * @return whether the currently selected mechanism results in
-   * cleartext passwords being sent over the network and thus should
-   * be used only under TLS/SSL cover or for legacy servers.
-   *
-   * @since 3.2
-   */
-  bool isClearTextMethod() const;
-  /**
-   * Creates a response using the formerly chosen SASL method.
-   * For LOGIN authentication you have to call this function twice. KDESasl
-   * realizes on its own, if you are calling it for the first or for the
-   * second time.
-   * @param aChallenge is the challenge sent to create a response for
-   * @param aBase64 specifies, whether the authentication protocol uses base64
-   * encoding. The challenge is decoded from base64 and the response is
-   * encoded base64 if set to true.
-   */
-   QCString getResponse(const QByteArray &aChallenge=QByteArray(), bool aBase64 = true);
-  /**
-   * Create a response as above but place it in a QByteArray
-   */
-  QByteArray getBinaryResponse(const QByteArray &aChallenge=QByteArray(), bool aBase64=true); 
-  /**
-   * Returns true if the client is supposed to initiate the
-   * challenge-respinse dialog with an initial response (which most
-   * protocols can transfer alongside the authentication command as an
-   * optional second parameter). This method relieves the sasl user
-   * from knowing details about the mechanism. If true, use 
-   * #getResponse() with a null challenge.
-   *
-   * @since 3.2
-   */
-  bool clientStarts() const;
+    /**
+     * Construct a sasl object and initialize it with the username and password
+     * passed via the url.
+     */
+    KDESasl(const KURL &aUrl);
+    /**
+     * This is a conveniece function and differs from the above function only by
+     * what arguments it accepts.
+     */
+    KDESasl(const QString &aUser, const QString &aPass, const QString &aProtocol);
+    /*
+     * You need to have a virtual destructor!
+     */
+    virtual ~KDESasl();
+    /**
+     * @returns the most secure method from the given methods and use it for
+     * further operations.
+     */
+    virtual QCString chooseMethod(const QStrIList aMethods);
+    /**
+     * Explicitely set the SASL method used.
+     */
+    virtual void setMethod(const QCString &aMethod);
+    /**
+     * @return the SASL method used.
+     * @since 3.2
+     */
+    QCString method() const;
+    /**
+     * @param numCalls number of times getResponse() has been called.
+     * @return whether the challenge/response dialog has completed
+     *
+     * @since 3.2
+     */
+    bool dialogComplete(int numCalls) const;
+    /**
+     * @return whether the currently selected mechanism results in
+     * cleartext passwords being sent over the network and thus should
+     * be used only under TLS/SSL cover or for legacy servers.
+     *
+     * @since 3.2
+     */
+    bool isClearTextMethod() const;
+    /**
+     * Creates a response using the formerly chosen SASL method.
+     * For LOGIN authentication you have to call this function twice. KDESasl
+     * realizes on its own, if you are calling it for the first or for the
+     * second time.
+     * @param aChallenge is the challenge sent to create a response for
+     * @param aBase64 specifies, whether the authentication protocol uses base64
+     * encoding. The challenge is decoded from base64 and the response is
+     * encoded base64 if set to true.
+     */
+    QCString getResponse(const QByteArray &aChallenge = QByteArray(), bool aBase64 = true);
+    /**
+     * Create a response as above but place it in a QByteArray
+     */
+    QByteArray getBinaryResponse(const QByteArray &aChallenge = QByteArray(), bool aBase64 = true);
+    /**
+     * Returns true if the client is supposed to initiate the
+     * challenge-respinse dialog with an initial response (which most
+     * protocols can transfer alongside the authentication command as an
+     * optional second parameter). This method relieves the sasl user
+     * from knowing details about the mechanism. If true, use
+     * #getResponse() with a null challenge.
+     *
+     * @since 3.2
+     */
+    bool clientStarts() const;
+
 protected:
-  /**
-   * PLAIN authentication as described in RFC 2595
-   */
-  virtual QByteArray getPlainResponse();
-  /**
-   * LOGIN authentication
-   */
-  virtual QByteArray getLoginResponse();
-  /**
-   * CRAM-MD5 authentication as described in RFC 2195
-   */
-  virtual QByteArray getCramMd5Response(const QByteArray &aChallenge);
-  /**
-   * DIGEST-MD5 authentication as described in RFC 2831
-   */
-  virtual QByteArray getDigestMd5Response(const QByteArray &aChallenge);
+    /**
+     * PLAIN authentication as described in RFC 2595
+     */
+    virtual QByteArray getPlainResponse();
+    /**
+     * LOGIN authentication
+     */
+    virtual QByteArray getLoginResponse();
+    /**
+     * CRAM-MD5 authentication as described in RFC 2195
+     */
+    virtual QByteArray getCramMd5Response(const QByteArray &aChallenge);
+    /**
+     * DIGEST-MD5 authentication as described in RFC 2831
+     */
+    virtual QByteArray getDigestMd5Response(const QByteArray &aChallenge);
 
 private:
-  QString mProtocol, mUser, mPass;
-  QCString mMethod;
-  bool mFirst;
+    QString mProtocol, mUser, mPass;
+    QCString mMethod;
+    bool mFirst;
 };
 
 #endif

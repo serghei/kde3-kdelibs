@@ -166,39 +166,38 @@
  * by Geoff Kuenning to reflect the results of testing with the English
  * dictionaries actually distributed with ispell.
  */
-#define HASHSHIFT   5
+#define HASHSHIFT 5
 
 #ifdef NO_CAPITALIZATION_SUPPORT
-#define HASHUPPER(c)	c
+#define HASHUPPER(c) c
 #else /* NO_CAPITALIZATION_SUPPORT */
-#define HASHUPPER(c)	mytoupper(c)
+#define HASHUPPER(c) mytoupper(c)
 #endif /* NO_CAPITALIZATION_SUPPORT */
 
 /*
  * \param s
  * \param hashtblsize
  */
-int ISpellChecker::hash (ichar_t *s, int hashtblsize)
+int ISpellChecker::hash(ichar_t *s, int hashtblsize)
 {
-    register long	h = 0;
-    register int	i;
+    register long h = 0;
+    register int i;
 
 #ifdef ICHAR_IS_CHAR
-    for (i = 4;  i--  &&  *s != 0;  )
-		h = (h << 8) | HASHUPPER (*s++);
-#else /* ICHAR_IS_CHAR */
-    for (i = 2;  i--  &&  *s != 0;  )
-		h = (h << 16) | HASHUPPER (*s++);
+    for(i = 4; i-- && *s != 0;)
+        h = (h << 8) | HASHUPPER(*s++);
+#else  /* ICHAR_IS_CHAR */
+    for(i = 2; i-- && *s != 0;)
+        h = (h << 16) | HASHUPPER(*s++);
 #endif /* ICHAR_IS_CHAR */
-    while (*s != 0)
-	{
-		/*
-		 * We have to do circular shifts the hard way, since C doesn't
-		 * have them even though the hardware probably does.  Oh, well.
-		 */
-		h = (h << HASHSHIFT)
-		  | ((h >> (32 - HASHSHIFT)) & ((1 << HASHSHIFT) - 1));
-		h ^= HASHUPPER (*s++);
-	}
-    return static_cast<unsigned long>(h) % hashtblsize;
+    while(*s != 0)
+    {
+        /*
+         * We have to do circular shifts the hard way, since C doesn't
+         * have them even though the hardware probably does.  Oh, well.
+         */
+        h = (h << HASHSHIFT) | ((h >> (32 - HASHSHIFT)) & ((1 << HASHSHIFT) - 1));
+        h ^= HASHUPPER(*s++);
+    }
+    return static_cast< unsigned long >(h) % hashtblsize;
 }

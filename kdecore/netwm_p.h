@@ -24,8 +24,8 @@
 */
 
 
-#ifndef   __net_wm_p_h
-#define   __net_wm_p_h
+#ifndef __net_wm_p_h
+#define __net_wm_p_h
 
 /**
    Resizable array class.
@@ -33,10 +33,10 @@
    This resizable array is used to simplify the implementation.  The existence of
    this class is to keep the implementation from depending on a separate
    framework/library.
-   @internal  
+   @internal
 **/
 
-template <class Z> class NETRArray {
+template < class Z > class NETRArray {
 public:
     /**
        Constructs an empty (size == 0) array.
@@ -61,8 +61,11 @@ public:
        Returns the size of the array.
      **/
 
-    int size() const { return sz; }
-    
+    int size() const
+    {
+        return sz;
+    }
+
     /**
        Resets the array (size == 0).
      **/
@@ -77,10 +80,11 @@ private:
 
 /**
    Private data for the NETRootInfo class.
-   @internal  
+   @internal
 **/
 
-struct NETRootInfoPrivate {
+struct NETRootInfoPrivate
+{
     // information about the X server
     Display *display;
     NETSize rootSize;
@@ -91,24 +95,23 @@ struct NETRootInfoPrivate {
 
     // data that changes (either by the window manager or by a client)
     // and requires updates
-    NETRArray<NETPoint> viewport;
-    NETRArray<NETRect> workarea;
+    NETRArray< NETPoint > viewport;
+    NETRArray< NETRect > workarea;
     NETSize geometry;
     Window active;
     Window *clients, *stacking, *virtual_roots, *kde_system_tray_windows;
-    NETRArray<const char *> desktop_names;
+    NETRArray< const char * > desktop_names;
     int number_of_desktops;
     int current_desktop;
 
-    unsigned long clients_count, stacking_count, virtual_roots_count,
-	kde_system_tray_windows_count;
+    unsigned long clients_count, stacking_count, virtual_roots_count, kde_system_tray_windows_count;
     bool showing_desktop;
     NET::Orientation desktop_layout_orientation;
     NET::DesktopLayoutCorner desktop_layout_corner;
     int desktop_layout_columns, desktop_layout_rows;
 
-    unsigned long properties[ 5 ];
-    unsigned long client_properties[ 5 ]; // properties the client is interested in
+    unsigned long properties[5];
+    unsigned long client_properties[5]; // properties the client is interested in
 
     int ref;
 };
@@ -116,16 +119,17 @@ struct NETRootInfoPrivate {
 
 /**
    Private data for the NETWinInfo class.
-   @internal  
+   @internal
 **/
 
-struct NETWinInfoPrivate {
+struct NETWinInfoPrivate
+{
     Display *display;
     Window window, root;
     NET::MappingState mapping_state;
     Bool mapping_state_dirty;
 
-    NETRArray<NETIcon> icons;
+    NETRArray< NETIcon > icons;
     int icon_count;
 
     NETRect icon_geom, win_geom;
@@ -133,19 +137,19 @@ struct NETWinInfoPrivate {
     NETExtendedStrut extended_strut;
     NETStrut strut;
     NETStrut frame_strut; // strut?
-    NETRArray<NET::WindowType> types;
+    NETRArray< NET::WindowType > types;
     char *name, *visible_name, *icon_name, *visible_icon_name;
     int desktop;
     int pid;
     int handled_icons;
     Window kde_system_tray_win_for;
     Time user_time;
-    char* startup_id;
+    char *startup_id;
     Window transient_for, window_group;
     unsigned long allowed_actions;
-    char* class_class, *class_name, *role, *client_machine;
+    char *class_class, *class_name, *role, *client_machine;
 
-    unsigned long properties[ 2 ];
+    unsigned long properties[2];
     bool has_net_support;
 
     int ref;

@@ -27,30 +27,31 @@
 #include "ispell_checker.h"
 
 namespace KSpell2 {
-    class Dictionary;
+class Dictionary;
 }
 using KSpell2::Dictionary;
 
-class ISpellClient : public KSpell2::Client
-{
+class ISpellClient : public KSpell2::Client {
     Q_OBJECT
 public:
-    ISpellClient( QObject *parent, const char *name, const QStringList & /* args */  );
+    ISpellClient(QObject *parent, const char *name, const QStringList & /* args */);
     ~ISpellClient();
 
-    virtual int reliability() const {
+    virtual int reliability() const
+    {
         return 10;
     }
 
-    virtual Dictionary* dictionary( const QString& language );
+    virtual Dictionary *dictionary(const QString &language);
 
     virtual QStringList languages() const;
 
-    virtual QString name() const {
+    virtual QString name() const
+    {
         return "ISpell";
     }
-private:
 
+private:
 };
 
 #endif

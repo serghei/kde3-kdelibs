@@ -22,14 +22,13 @@
 
 #include "kmuimanager.h"
 
-class KMExtUiManager : public KMUiManager
-{
+class KMExtUiManager : public KMUiManager {
 public:
-	KMExtUiManager(QObject *parent, const char *name, const QStringList & /*args*/);
-	~KMExtUiManager();
+    KMExtUiManager(QObject *parent, const char *name, const QStringList & /*args*/);
+    ~KMExtUiManager();
 
-	int pluginPageCap();
-	void setupPrinterPropertyDialog( KPrinterPropertyDialog* );
+    int pluginPageCap();
+    void setupPrinterPropertyDialog(KPrinterPropertyDialog *);
 };
 
 #endif

@@ -24,16 +24,15 @@
 
 class KListBox;
 
-class KMWFax : public KMWizardPage
-{
+class KMWFax : public KMWizardPage {
 public:
-	KMWFax(QWidget *parent = 0, const char *name = 0);
+    KMWFax(QWidget *parent = 0, const char *name = 0);
 
-	bool isValid(QString&);
-	void updatePrinter(KMPrinter*);
+    bool isValid(QString &);
+    void updatePrinter(KMPrinter *);
 
 private:
-	KListBox	*m_list;
+    KListBox *m_list;
 };
 
 #endif

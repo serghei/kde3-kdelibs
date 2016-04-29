@@ -28,45 +28,50 @@
 
 namespace KJS {
 
-  /**
-   * The initial value of Function.prototype (and thus all objects created
-   * with the Function constructor)
-   */
-  class FunctionPrototypeImp : public InternalFunctionImp {
-  public:
+/**
+ * The initial value of Function.prototype (and thus all objects created
+ * with the Function constructor)
+ */
+class FunctionPrototypeImp : public InternalFunctionImp {
+public:
     FunctionPrototypeImp(ExecState *exec);
     virtual ~FunctionPrototypeImp();
 
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
-  };
+};
 
-  /**
-   * @internal
-   *
-   * Class to implement all methods that are properties of the
-   * Function.prototype object
-   */
-  class FunctionProtoFuncImp : public InternalFunctionImp {
-  public:
-    FunctionProtoFuncImp(ExecState *exec,
-                        FunctionPrototypeImp *funcProto, int i, int len, const Identifier &_ident);
+/**
+ * @internal
+ *
+ * Class to implement all methods that are properties of the
+ * Function.prototype object
+ */
+class FunctionProtoFuncImp : public InternalFunctionImp {
+public:
+    FunctionProtoFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto, int i, int len, const Identifier &_ident);
 
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
 
-    enum { ToString, Apply, Call };
-  private:
-    int id;
-  };
+    enum
+    {
+        ToString,
+        Apply,
+        Call
+    };
 
-  /**
-   * @internal
-   *
-   * The initial value of the the global variable's "Function" property
-   */
-  class FunctionObjectImp : public InternalFunctionImp {
-  public:
+private:
+    int id;
+};
+
+/**
+ * @internal
+ *
+ * The initial value of the the global variable's "Function" property
+ */
+class FunctionObjectImp : public InternalFunctionImp {
+public:
     FunctionObjectImp(ExecState *exec, FunctionPrototypeImp *funcProto);
     virtual ~FunctionObjectImp();
 
@@ -74,7 +79,7 @@ namespace KJS {
     virtual Object construct(ExecState *exec, const List &args);
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
-  };
+};
 
 } // namespace
 

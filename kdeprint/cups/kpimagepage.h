@@ -28,29 +28,28 @@ class QButtonGroup;
 class ImagePreview;
 class ImagePosition;
 
-class KPImagePage : public KPrintDialogPage
-{
-	Q_OBJECT
+class KPImagePage : public KPrintDialogPage {
+    Q_OBJECT
 public:
-	KPImagePage(DrMain *driver = 0, QWidget *parent = 0, const char *name = 0);
-	~KPImagePage();
+    KPImagePage(DrMain *driver = 0, QWidget *parent = 0, const char *name = 0);
+    ~KPImagePage();
 
-	void setOptions(const QMap<QString,QString>& opts);
-	void getOptions(QMap<QString,QString>& opts, bool incldef = false);
+    void setOptions(const QMap< QString, QString > &opts);
+    void getOptions(QMap< QString, QString > &opts, bool incldef = false);
 
 protected slots:
-	void slotSizeTypeChanged(int);
-	void slotPositionChanged();
-	void slotImageSettingsChanged();
-	void slotDefaultClicked();
+    void slotSizeTypeChanged(int);
+    void slotPositionChanged();
+    void slotImageSettingsChanged();
+    void slotDefaultClicked();
 
 private:
-	KIntNumInput	*m_brightness, *m_hue, *m_saturation, *m_gamma;
-	QComboBox		*m_sizetype;
-	KIntNumInput	*m_size;
-	QButtonGroup	*m_vertgrp, *m_horizgrp;
-	ImagePreview	*m_preview;
-	ImagePosition	*m_position;
+    KIntNumInput *m_brightness, *m_hue, *m_saturation, *m_gamma;
+    QComboBox *m_sizetype;
+    KIntNumInput *m_size;
+    QButtonGroup *m_vertgrp, *m_horizgrp;
+    ImagePreview *m_preview;
+    ImagePosition *m_position;
 };
 
 #endif

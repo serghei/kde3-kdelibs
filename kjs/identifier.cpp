@@ -34,7 +34,10 @@ namespace KJS {
 static int numProbes;
 static int numCollisions;
 
-struct IdentifierStatisticsExitLogger { ~IdentifierStatisticsExitLogger(); };
+struct IdentifierStatisticsExitLogger
+{
+    ~IdentifierStatisticsExitLogger();
+};
 
 static IdentifierStatisticsExitLogger logger;
 
@@ -71,19 +74,19 @@ bool Identifier::equal(UString::Rep *r, const char *s)
 {
     int length = r->len;
     const UChar *d = r->data();
-    for (int i = 0; i != length; ++i)
-        if (d[i].uc != (unsigned char)s[i])
+    for(int i = 0; i != length; ++i)
+        if(d[i].uc != (unsigned char)s[i])
             return false;
     return s[length] == 0;
 }
 
 bool Identifier::equal(UString::Rep *r, const UChar *s, int length)
 {
-    if (r->len != length)
+    if(r->len != length)
         return false;
     const UChar *d = r->data();
-    for (int i = 0; i != length; ++i)
-        if (d[i].uc != s[i].uc)
+    for(int i = 0; i != length; ++i)
+        if(d[i].uc != s[i].uc)
             return false;
     return true;
 }
@@ -91,25 +94,25 @@ bool Identifier::equal(UString::Rep *r, const UChar *s, int length)
 bool Identifier::equal(UString::Rep *r, UString::Rep *b)
 {
     int length = r->len;
-    if (length != b->len)
+    if(length != b->len)
         return false;
     const UChar *d = r->data();
     const UChar *s = b->data();
-    for (int i = 0; i != length; ++i)
-        if (d[i].uc != s[i].uc)
+    for(int i = 0; i != length; ++i)
+        if(d[i].uc != s[i].uc)
             return false;
     return true;
 }
 
 UString::Rep *Identifier::add(const char *c)
 {
-    if (!c)
+    if(!c)
         return &UString::Rep::null;
     int length = strlen(c);
-    if (length == 0)
+    if(length == 0)
         return &UString::Rep::empty;
 
-    if (!_table)
+    if(!_table)
         expand();
 
     unsigned hash = UString::Rep::computeHash(c);
@@ -119,14 +122,15 @@ UString::Rep *Identifier::add(const char *c)
     ++numProbes;
     numCollisions += _table[i] && !equal(_table[i], c);
 #endif
-    while (UString::Rep *key = _table[i]) {
-        if (equal(key, c))
+    while(UString::Rep *key = _table[i])
+    {
+        if(equal(key, c))
             return key;
         i = (i + 1) & _tableSizeMask;
     }
 
     UChar *d = new UChar[length];
-    for (int j = 0; j != length; j++)
+    for(int j = 0; j != length; j++)
         d[j] = c[j];
 
     UString::Rep *r = new UString::Rep;
@@ -139,7 +143,7 @@ UString::Rep *Identifier::add(const char *c)
     _table[i] = r;
     ++_keyCount;
 
-    if (_keyCount * 2 >= _tableSize)
+    if(_keyCount * 2 >= _tableSize)
         expand();
 
     return r;
@@ -147,10 +151,10 @@ UString::Rep *Identifier::add(const char *c)
 
 UString::Rep *Identifier::add(const UChar *s, int length)
 {
-    if (length == 0)
+    if(length == 0)
         return &UString::Rep::empty;
 
-    if (!_table)
+    if(!_table)
         expand();
 
     unsigned hash = UString::Rep::computeHash(s, length);
@@ -160,14 +164,15 @@ UString::Rep *Identifier::add(const UChar *s, int length)
     ++numProbes;
     numCollisions += _table[i] && !equal(_table[i], s, length);
 #endif
-    while (UString::Rep *key = _table[i]) {
-        if (equal(key, s, length))
+    while(UString::Rep *key = _table[i])
+    {
+        if(equal(key, s, length))
             return key;
         i = (i + 1) & _tableSizeMask;
     }
 
     UChar *d = new UChar[length];
-    for (int j = 0; j != length; j++)
+    for(int j = 0; j != length; j++)
         d[j] = s[j];
 
     UString::Rep *r = new UString::Rep;
@@ -180,7 +185,7 @@ UString::Rep *Identifier::add(const UChar *s, int length)
     _table[i] = r;
     ++_keyCount;
 
-    if (_keyCount * 2 >= _tableSize)
+    if(_keyCount * 2 >= _tableSize)
         expand();
 
     return r;
@@ -188,12 +193,12 @@ UString::Rep *Identifier::add(const UChar *s, int length)
 
 UString::Rep *Identifier::add(UString::Rep *r)
 {
-    if (r->capacity == UString::Rep::capacityForIdentifier)
+    if(r->capacity == UString::Rep::capacityForIdentifier)
         return r;
-    if (r->len == 0)
+    if(r->len == 0)
         return &UString::Rep::empty;
 
-    if (!_table)
+    if(!_table)
         expand();
 
     unsigned hash = r->hash();
@@ -203,8 +208,9 @@ UString::Rep *Identifier::add(UString::Rep *r)
     ++numProbes;
     numCollisions += _table[i] && !equal(_table[i], r);
 #endif
-    while (UString::Rep *key = _table[i]) {
-        if (equal(key, r))
+    while(UString::Rep *key = _table[i])
+    {
+        if(equal(key, r))
             return key;
         i = (i + 1) & _tableSizeMask;
     }
@@ -214,7 +220,7 @@ UString::Rep *Identifier::add(UString::Rep *r)
     _table[i] = r;
     ++_keyCount;
 
-    if (_keyCount * 2 >= _tableSize)
+    if(_keyCount * 2 >= _tableSize)
         expand();
 
     return r;
@@ -229,7 +235,7 @@ inline void Identifier::insert(UString::Rep *key)
     ++numProbes;
     numCollisions += _table[i] != 0;
 #endif
-    while (_table[i])
+    while(_table[i])
         i = (i + 1) & _tableSizeMask;
 
     _table[i] = key;
@@ -246,27 +252,30 @@ void Identifier::remove(UString::Rep *r)
     ++numProbes;
     numCollisions += _table[i] && equal(_table[i], r);
 #endif
-    while ((key = _table[i])) {
-        if (equal(key, r))
+    while((key = _table[i]))
+    {
+        if(equal(key, r))
             break;
         i = (i + 1) & _tableSizeMask;
     }
-    if (!key)
+    if(!key)
         return;
 
     _table[i] = 0;
     --_keyCount;
 
-    if (_keyCount * 6 < _tableSize && _tableSize > _minTableSize) {
+    if(_keyCount * 6 < _tableSize && _tableSize > _minTableSize)
+    {
         shrink();
         return;
     }
 
     // Reinsert all the items to the right in the same cluster.
-    while (1) {
+    while(1)
+    {
         i = (i + 1) & _tableSizeMask;
         key = _table[i];
-        if (!key)
+        if(!key)
             break;
         _table[i] = 0;
         insert(key);
@@ -292,8 +301,8 @@ void Identifier::rehash(int newTableSize)
     _tableSizeMask = newTableSize - 1;
     _table = (UString::Rep **)calloc(newTableSize, sizeof(UString::Rep *));
 
-    for (int i = 0; i != oldTableSize; ++i)
-        if (UString::Rep *key = oldTable[i])
+    for(int i = 0; i != oldTableSize; ++i)
+        if(UString::Rep *key = oldTable[i])
             insert(key);
 
     free(oldTable);

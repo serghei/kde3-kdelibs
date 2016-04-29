@@ -29,27 +29,22 @@
 
 using namespace KSpell2;
 
-class BackgroundChecker::Private
-{
+class BackgroundChecker::Private {
 public:
-    //BackgroundThread thread;
+    // BackgroundThread thread;
     BackgroundEngine *engine;
     QString currentText;
 };
 
-BackgroundChecker::BackgroundChecker( const Broker::Ptr& broker, QObject* parent,
-                                      const char *name )
-    : QObject( parent, name )
+BackgroundChecker::BackgroundChecker(const Broker::Ptr &broker, QObject *parent, const char *name) : QObject(parent, name)
 {
     d = new Private;
-    //d->thread.setReceiver( this );
-    //d->thread.setBroker( broker );
-    d->engine = new BackgroundEngine( this );
-    d->engine->setBroker( broker );
-    connect( d->engine, SIGNAL(misspelling( const QString&, int )),
-             SIGNAL(misspelling( const QString&, int )) );
-    connect( d->engine, SIGNAL(done()),
-             SLOT(slotEngineDone()) );
+    // d->thread.setReceiver( this );
+    // d->thread.setBroker( broker );
+    d->engine = new BackgroundEngine(this);
+    d->engine->setBroker(broker);
+    connect(d->engine, SIGNAL(misspelling(const QString &, int)), SIGNAL(misspelling(const QString &, int)));
+    connect(d->engine, SIGNAL(done()), SLOT(slotEngineDone()));
 }
 
 BackgroundChecker::~BackgroundChecker()
@@ -57,11 +52,11 @@ BackgroundChecker::~BackgroundChecker()
     delete d;
 }
 
-void BackgroundChecker::checkText( const QString& text )
+void BackgroundChecker::checkText(const QString &text)
 {
     d->currentText = text;
-    //d->thread.setText( text );
-    d->engine->setText( text );
+    // d->thread.setText( text );
+    d->engine->setText(text);
     d->engine->start();
 }
 
@@ -69,15 +64,15 @@ void BackgroundChecker::start()
 {
     d->currentText = getMoreText();
     // ## what if d->currentText.isEmpty()?
-    //kdDebug()<<"KSpell BackgroundChecker: starting with : \"" << d->currentText << "\""<<endl;
-    //d->thread.setText( d->currentText );
-    d->engine->setText( d->currentText );
+    // kdDebug()<<"KSpell BackgroundChecker: starting with : \"" << d->currentText << "\""<<endl;
+    // d->thread.setText( d->currentText );
+    d->engine->setText(d->currentText);
     d->engine->start();
 }
 
 void BackgroundChecker::stop()
 {
-    //d->thread.stop();
+    // d->thread.stop();
     d->engine->stop();
 }
 
@@ -90,45 +85,45 @@ void BackgroundChecker::finishedCurrentFeed()
 {
 }
 
-void BackgroundChecker::setFilter( Filter *filter )
+void BackgroundChecker::setFilter(Filter *filter)
 {
-    //d->thread.setFilter( filter );
-    d->engine->setFilter( filter );
+    // d->thread.setFilter( filter );
+    d->engine->setFilter(filter);
 }
 
 Filter *BackgroundChecker::filter() const
 {
-    //return d->thread.filter();
+    // return d->thread.filter();
     return d->engine->filter();
 }
 
 Broker *BackgroundChecker::broker() const
 {
-    //return d->thread.broker();
+    // return d->thread.broker();
     return d->engine->broker();
 }
 
-bool BackgroundChecker::checkWord( const QString& word )
+bool BackgroundChecker::checkWord(const QString &word)
 {
-    //kdDebug()<<"checking word \""<<word<< "\""<<endl;
-    return d->engine->checkWord( word );
+    // kdDebug()<<"checking word \""<<word<< "\""<<endl;
+    return d->engine->checkWord(word);
 }
 
-bool BackgroundChecker::addWord( const QString& word )
+bool BackgroundChecker::addWord(const QString &word)
 {
-    return d->engine->addWord( word );
+    return d->engine->addWord(word);
 }
 
-QStringList BackgroundChecker::suggest( const QString& word ) const
+QStringList BackgroundChecker::suggest(const QString &word) const
 {
-    //return d->thread.suggest( word );
-    return d->engine->suggest( word );
+    // return d->thread.suggest( word );
+    return d->engine->suggest(word);
 }
 
-void BackgroundChecker::changeLanguage( const QString& lang )
+void BackgroundChecker::changeLanguage(const QString &lang)
 {
-    //d->thread.changeLanguage( lang );
-    d->engine->changeLanguage( lang );
+    // d->thread.changeLanguage( lang );
+    d->engine->changeLanguage(lang);
 }
 
 void BackgroundChecker::continueChecking()
@@ -141,11 +136,14 @@ void BackgroundChecker::slotEngineDone()
     finishedCurrentFeed();
     d->currentText = getMoreText();
 
-    if ( d->currentText.isNull() ) {
+    if(d->currentText.isNull())
+    {
         emit done();
-    } else {
-        //d->thread.setText( d->currentText );
-        d->engine->setText( d->currentText );
+    }
+    else
+    {
+        // d->thread.setText( d->currentText );
+        d->engine->setText(d->currentText);
         d->engine->start();
     }
 }

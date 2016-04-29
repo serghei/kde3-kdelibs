@@ -23,21 +23,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <kdebug.h>
 #include <qdir.h>
 
-int main( int, char*[] )
+int main(int, char *[])
 {
-  KInstance i("test");
-  Test9 *t = new Test9( QString::null, QString::null );
+    KInstance i("test");
+    Test9 *t = new Test9(QString::null, QString::null);
 
-  QStringList myPathsList2 = t->myPathsList2();
-  kdWarning() << myPathsList2 << endl;
+    QStringList myPathsList2 = t->myPathsList2();
+    kdWarning() << myPathsList2 << endl;
 
-  // add another path
-  QStringList newlist = QDir::homeDirPath() + QString::fromLatin1("/.kde");
-  myPathsList2 = myPathsList2 + newlist;
-  kdWarning() << myPathsList2 << endl;
+    // add another path
+    QStringList newlist = QDir::homeDirPath() + QString::fromLatin1("/.kde");
+    myPathsList2 = myPathsList2 + newlist;
+    kdWarning() << myPathsList2 << endl;
 
-  t->setMyPathsList2(myPathsList2);
-  kdWarning() << t->myPathsList2() << endl;
+    t->setMyPathsList2(myPathsList2);
+    kdWarning() << t->myPathsList2() << endl;
 
-  delete t;
+    delete t;
 }

@@ -26,25 +26,24 @@ class KMPropWidget;
 class QPushButton;
 class KMPrinter;
 
-class KMPropContainer : public QWidget
-{
-	Q_OBJECT
+class KMPropContainer : public QWidget {
+    Q_OBJECT
 public:
-	KMPropContainer(QWidget *parent = 0, const char *name = 0);
-	~KMPropContainer();
+    KMPropContainer(QWidget *parent = 0, const char *name = 0);
+    ~KMPropContainer();
 
-	void setWidget(KMPropWidget*);
-	void setPrinter(KMPrinter*);
+    void setWidget(KMPropWidget *);
+    void setPrinter(KMPrinter *);
 
 signals:
-	void enable(bool);
+    void enable(bool);
 
 protected slots:
-	void slotEnableChange(bool);
+    void slotEnableChange(bool);
 
 private:
-	KMPropWidget	*m_widget;
-	QPushButton	*m_button;
+    KMPropWidget *m_widget;
+    QPushButton *m_button;
 };
 
 #endif

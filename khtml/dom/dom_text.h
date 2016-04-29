@@ -46,18 +46,19 @@ class CharacterDataImpl;
  * <code>offset</code>s in this interface start from 0.
  *
  */
-class KHTML_EXPORT CharacterData : public Node
-{
+class KHTML_EXPORT CharacterData : public Node {
     friend class CharacterDataImpl;
 
 public:
     CharacterData();
     CharacterData(const CharacterData &other);
     CharacterData(const Node &other) : Node()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
 
-    CharacterData & operator = (const Node &other);
-    CharacterData & operator = (const CharacterData &other);
+    CharacterData &operator=(const Node &other);
+    CharacterData &operator=(const CharacterData &other);
 
     ~CharacterData();
 
@@ -85,7 +86,7 @@ public:
      * NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
      *
      */
-    void setData( const DOMString & );
+    void setData(const DOMString &);
 
     /**
      * The number of characters that are available through \c data
@@ -117,7 +118,7 @@ public:
      * not fit into a \c DOMString .
      *
      */
-    DOMString substringData ( const unsigned long offset, const unsigned long count );
+    DOMString substringData(const unsigned long offset, const unsigned long count);
 
     /**
      * Append the string to the end of the character data of the node.
@@ -133,7 +134,7 @@ public:
      * NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      *
      */
-    void appendData ( const DOMString &arg );
+    void appendData(const DOMString &arg);
 
     /**
      * Insert a string at the specified character offset.
@@ -151,7 +152,7 @@ public:
      *  NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      *
      */
-    void insertData ( const unsigned long offset, const DOMString &arg );
+    void insertData(const unsigned long offset, const DOMString &arg);
 
     /**
      * Remove a range of characters from the node. Upon success,
@@ -175,7 +176,7 @@ public:
      *  NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      *
      */
-    void deleteData ( const unsigned long offset, const unsigned long count );
+    void deleteData(const unsigned long offset, const unsigned long count);
 
     /**
      * Replace the characters starting at the specified character
@@ -203,7 +204,7 @@ public:
      *  NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      *
      */
-    void replaceData ( const unsigned long offset, const unsigned long count, const DOMString &arg );
+    void replaceData(const unsigned long offset, const unsigned long count, const DOMString &arg);
 
 protected:
     CharacterData(CharacterDataImpl *i);
@@ -220,8 +221,7 @@ class CommentImpl;
  * the full SGML comment structure.
  *
  */
-class KHTML_EXPORT Comment : public CharacterData
-{
+class KHTML_EXPORT Comment : public CharacterData {
     friend class Document;
     friend class TextImpl;
 
@@ -229,10 +229,12 @@ public:
     Comment();
     Comment(const Comment &other);
     Comment(const Node &other) : CharacterData()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
 
-    Comment & operator = (const Node &other);
-    Comment & operator = (const Comment &other);
+    Comment &operator=(const Node &other);
+    Comment &operator=(const Comment &other);
 
     ~Comment();
 
@@ -266,8 +268,7 @@ class TextImpl;
  * \c XPointers.
  *
  */
-class KHTML_EXPORT Text : public CharacterData
-{
+class KHTML_EXPORT Text : public CharacterData {
     friend class Document;
     friend class TextImpl;
 
@@ -275,10 +276,12 @@ public:
     Text();
     Text(const Text &other);
     Text(const Node &other) : CharacterData()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
 
-    Text & operator = (const Node &other);
-    Text & operator = (const Text &other);
+    Text &operator=(const Node &other);
+    Text &operator=(const Text &other);
 
     ~Text();
 
@@ -301,12 +304,11 @@ public:
      *  NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      *
      */
-    Text splitText ( const unsigned long offset );
+    Text splitText(const unsigned long offset);
 
 protected:
     Text(TextImpl *i);
-
 };
 
-} //namespace
+} // namespace
 #endif

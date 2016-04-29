@@ -26,24 +26,23 @@ class QLineEdit;
 class QCheckBox;
 class QComboBox;
 
-class CupsdServerPage : public CupsdPage
-{
-	Q_OBJECT
+class CupsdServerPage : public CupsdPage {
+    Q_OBJECT
 
 public:
-	CupsdServerPage(QWidget *parent = 0, const char *name = 0);
+    CupsdServerPage(QWidget *parent = 0, const char *name = 0);
 
-	bool loadConfig(CupsdConf*, QString&);
-	bool saveConfig(CupsdConf*, QString&);
-	void setInfos(CupsdConf*);
+    bool loadConfig(CupsdConf *, QString &);
+    bool saveConfig(CupsdConf *, QString &);
+    void setInfos(CupsdConf *);
 
 protected slots:
-	void classChanged(int);
+    void classChanged(int);
 
 private:
-	QLineEdit	*servername_, *serveradmin_, *language_, *printcap_, *otherclassname_;
-	QComboBox	*classification_, *charset_, *printcapformat_;
-	QCheckBox	*classoverride_;
+    QLineEdit *servername_, *serveradmin_, *language_, *printcap_, *otherclassname_;
+    QComboBox *classification_, *charset_, *printcapformat_;
+    QCheckBox *classoverride_;
 };
 
 #endif

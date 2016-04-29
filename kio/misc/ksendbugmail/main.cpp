@@ -18,17 +18,17 @@
 
 #include "smtp.h"
 
-static KCmdLineOptions options[] = {
-    { "subject <argument>", I18N_NOOP("Subject line"), 0 },
-    { "recipient <argument>", I18N_NOOP("Recipient"), "submit@bugs.kde.org" },
-    KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"subject <argument>", I18N_NOOP("Subject line"), 0},
+                                    {"recipient <argument>", I18N_NOOP("Recipient"), "submit@bugs.kde.org"},
+                                    KCmdLineLastOption};
 
-void BugMailer::slotError(int errornum) {
+void BugMailer::slotError(int errornum)
+{
     kdDebug() << "slotError\n";
     QString str, lstr;
 
-    switch(errornum) {
+    switch(errornum)
+    {
         case SMTP::CONNECTERROR:
             lstr = i18n("Error connecting to server.");
             break;
@@ -51,16 +51,17 @@ void BugMailer::slotError(int errornum) {
     ::exit(1);
 }
 
-void BugMailer::slotSend() {
+void BugMailer::slotSend()
+{
     kdDebug() << "slotSend\n";
     ::exit(0);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 
     KLocale::setMainCatalogue("kdelibs");
-    KAboutData d("ksendbugmail", I18N_NOOP("KSendBugMail"), "1.0",
-                 I18N_NOOP("Sends a short bug report to submit@bugs.kde.org"),
+    KAboutData d("ksendbugmail", I18N_NOOP("KSendBugMail"), "1.0", I18N_NOOP("Sends a short bug report to submit@bugs.kde.org"),
                  KAboutData::License_GPL, "(c) 2000 Stephan Kulow");
     d.addAuthor("Stephan Kulow", I18N_NOOP("Author"), "coolo@kde.org");
 
@@ -71,25 +72,29 @@ int main(int argc, char **argv) {
     KApplication a(false, false);
 
     QCString recipient = args->getOption("recipient");
-    if (recipient.isEmpty())
+    if(recipient.isEmpty())
         recipient = "submit@bugs.kde.org";
-    else {
-        if (recipient.at(0) == '\'') {
+    else
+    {
+        if(recipient.at(0) == '\'')
+        {
             recipient = recipient.mid(1).left(recipient.length() - 2);
         }
     }
     kdDebug() << "recp \"" << recipient << "\"\n";
 
     QCString subject = args->getOption("subject");
-    if (subject.isEmpty())
+    if(subject.isEmpty())
         subject = "(no subject)";
-    else {
-        if (subject.at(0) == '\'')
+    else
+    {
+        if(subject.at(0) == '\'')
             subject = subject.mid(1).left(subject.length() - 2);
     }
     QTextIStream input(stdin);
     QString text, line;
-    while (!input.eof()) {
+    while(!input.eof())
+    {
         line = input.readLine();
         text += line + "\r\n";
     }
@@ -98,26 +103,29 @@ int main(int argc, char **argv) {
     KEMailSettings emailConfig;
     emailConfig.setProfile(emailConfig.defaultProfileName());
     QString fromaddr = emailConfig.getSetting(KEMailSettings::EmailAddress);
-    if (!fromaddr.isEmpty()) {
+    if(!fromaddr.isEmpty())
+    {
         QString name = emailConfig.getSetting(KEMailSettings::RealName);
-        if (!name.isEmpty())
+        if(!name.isEmpty())
             fromaddr = name + QString::fromLatin1(" <") + fromaddr + QString::fromLatin1(">");
-    } else {
+    }
+    else
+    {
         struct passwd *p;
         p = getpwuid(getuid());
         fromaddr = QString::fromLatin1(p->pw_name);
         fromaddr += "@";
         char buffer[256];
-	buffer[0] = '\0';
+        buffer[0] = '\0';
         if(!gethostname(buffer, sizeof(buffer)))
-	    buffer[sizeof(buffer)-1] = '\0';
+            buffer[sizeof(buffer) - 1] = '\0';
         fromaddr += buffer;
     }
     kdDebug() << "fromaddr \"" << fromaddr << "\"" << endl;
 
-    QString  server = emailConfig.getSetting(KEMailSettings::OutServer);
-    if (server.isEmpty())
-        server=QString::fromLatin1("bugs.kde.org");
+    QString server = emailConfig.getSetting(KEMailSettings::OutServer);
+    if(server.isEmpty())
+        server = QString::fromLatin1("bugs.kde.org");
 
     SMTP *sm = new SMTP;
     BugMailer bm(sm);

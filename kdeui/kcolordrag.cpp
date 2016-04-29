@@ -20,93 +20,87 @@
 #include <qpainter.h>
 #include "kcolordrag.h"
 
-static const char * const color_mime_string = "application/x-color";
-static const char * const text_mime_string = "text/plain";
+static const char *const color_mime_string = "application/x-color";
+static const char *const text_mime_string = "text/plain";
 
-KColorDrag::KColorDrag( const QColor &color, QWidget *dragsource,
-			const char *name)
-     : QStoredDrag( color_mime_string, dragsource, name)
+KColorDrag::KColorDrag(const QColor &color, QWidget *dragsource, const char *name) : QStoredDrag(color_mime_string, dragsource, name)
 {
-     setColor( color);
+    setColor(color);
 }
 
-KColorDrag::KColorDrag( QWidget *dragsource, const char *name)
-     : QStoredDrag( color_mime_string, dragsource, name)
+KColorDrag::KColorDrag(QWidget *dragsource, const char *name) : QStoredDrag(color_mime_string, dragsource, name)
 {
-     setColor( white );
+    setColor(white);
 }
 
-void
-KColorDrag::setColor( const QColor &color)
+void KColorDrag::setColor(const QColor &color)
 {
-     QColorDrag tmp(color, 0, 0);
-     setEncodedData(tmp.encodedData(color_mime_string));
+    QColorDrag tmp(color, 0, 0);
+    setEncodedData(tmp.encodedData(color_mime_string));
 
-     QPixmap colorpix( 25, 20);
-     colorpix.fill( color);
-     QPainter p( &colorpix );
-     p.setPen( black );
-     p.drawRect(0,0,25,20);
-     p.end();
-     setPixmap(colorpix, QPoint(-5,-7));
+    QPixmap colorpix(25, 20);
+    colorpix.fill(color);
+    QPainter p(&colorpix);
+    p.setPen(black);
+    p.drawRect(0, 0, 25, 20);
+    p.end();
+    setPixmap(colorpix, QPoint(-5, -7));
 }
 
 const char *KColorDrag::format(int i) const
 {
-     if (i==1)
+    if(i == 1)
         return text_mime_string;
-     else
+    else
         return QStoredDrag::format(i);
 }
 
-QByteArray KColorDrag::encodedData ( const char * m ) const
+QByteArray KColorDrag::encodedData(const char *m) const
 {
-     if (!qstrcmp(m, text_mime_string) )
-     {
+    if(!qstrcmp(m, text_mime_string))
+    {
         QColor color;
-        QColorDrag::decode(const_cast<KColorDrag *>(this), color);
+        QColorDrag::decode(const_cast< KColorDrag * >(this), color);
         QCString result = color.name().latin1();
-        ((QByteArray&)result).resize(result.length());
+        ((QByteArray &)result).resize(result.length());
         return result;
-     }
-     return QStoredDrag::encodedData(m);
+    }
+    return QStoredDrag::encodedData(m);
 }
 
-bool
-KColorDrag::canDecode( QMimeSource *e)
+bool KColorDrag::canDecode(QMimeSource *e)
 {
-     if (e->provides(color_mime_string))
+    if(e->provides(color_mime_string))
         return true;
-     if (e->provides(text_mime_string))
-     {
+    if(e->provides(text_mime_string))
+    {
         QColor dummy;
         return decode(e, dummy);
-     }
-     return false;
+    }
+    return false;
 }
 
-bool
-KColorDrag::decode( QMimeSource *e, QColor &color)
+bool KColorDrag::decode(QMimeSource *e, QColor &color)
 {
-     if (QColorDrag::decode(e, color))
+    if(QColorDrag::decode(e, color))
         return true;
 
-     QByteArray data = e->encodedData( text_mime_string);
-     QString colorName = QString::fromLatin1(data.data(), data.size());
-     if ((colorName.length() < 4) || (colorName[0] != '#'))
+    QByteArray data = e->encodedData(text_mime_string);
+    QString colorName = QString::fromLatin1(data.data(), data.size());
+    if((colorName.length() < 4) || (colorName[0] != '#'))
         return false;
-     color.setNamedColor(colorName);
-     return color.isValid();
+    color.setNamedColor(colorName);
+    return color.isValid();
 }
 
 
-KColorDrag*
-KColorDrag::makeDrag( const QColor &color,QWidget *dragsource)
+KColorDrag *KColorDrag::makeDrag(const QColor &color, QWidget *dragsource)
 {
-     return new KColorDrag( color, dragsource);
+    return new KColorDrag(color, dragsource);
 }
 
-void KColorDrag::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KColorDrag::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kcolordrag.moc"

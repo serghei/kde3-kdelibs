@@ -29,20 +29,22 @@
 // KateFontMetrics implementation
 //
 
-class KateFontMetrics : public QFontMetrics
-{
-  public:
-    KateFontMetrics(const QFont& f);
+class KateFontMetrics : public QFontMetrics {
+public:
+    KateFontMetrics(const QFont &f);
     ~KateFontMetrics();
 
     int width(QChar c);
 
-    int width(QString s) { return QFontMetrics::width(s); }
+    int width(QString s)
+    {
+        return QFontMetrics::width(s);
+    }
 
-  private:
-    short *createRow (short *wa, uchar row);
+private:
+    short *createRow(short *wa, uchar row);
 
-  private:
+private:
     short *warray[256];
 };
 
@@ -50,56 +52,46 @@ class KateFontMetrics : public QFontMetrics
 // KateFontStruct definition
 //
 
-class KateFontStruct
-{
-  public:
+class KateFontStruct {
+public:
     KateFontStruct();
     ~KateFontStruct();
-  
-    void setFont(const QFont & font);
-      
-  private:
-    void updateFontData ();
 
-  public:
-    inline int width (const QString& text, int col, bool bold, bool italic, int tabWidth)
+    void setFont(const QFont &font);
+
+private:
+    void updateFontData();
+
+public:
+    inline int width(const QString &text, int col, bool bold, bool italic, int tabWidth)
     {
-      if (text[col] == QChar('\t'))
-        return tabWidth * myFontMetrics.width(' ');
-    
-      return (bold) ?
-        ( (italic) ?
-          myFontMetricsBI.charWidth(text, col) :
-          myFontMetricsBold.charWidth(text, col) ) :
-        ( (italic) ?
-          myFontMetricsItalic.charWidth(text, col) :
-          myFontMetrics.charWidth(text, col) );
-    }
-    
-    inline int width (const QChar& c, bool bold, bool italic, int tabWidth)
-    {
-      if (c == QChar('\t'))
-        return tabWidth * myFontMetrics.width(' ');
-    
-      return (bold) ?
-        ( (italic) ?
-          myFontMetricsBI.width(c) :
-          myFontMetricsBold.width(c) ) :
-        ( (italic) ?
-          myFontMetricsItalic.width(c) :
-          myFontMetrics.width(c) );
-    }
-    
-    inline const QFont& font(bool bold, bool italic) const
-    {
-      return (bold) ?
-        ( (italic) ? myFontBI : myFontBold ) :
-        ( (italic) ? myFontItalic : myFont );
+        if(text[col] == QChar('\t'))
+            return tabWidth * myFontMetrics.width(' ');
+
+        return (bold) ? ((italic) ? myFontMetricsBI.charWidth(text, col) : myFontMetricsBold.charWidth(text, col))
+                      : ((italic) ? myFontMetricsItalic.charWidth(text, col) : myFontMetrics.charWidth(text, col));
     }
 
-    inline bool fixedPitch() const { return m_fixedPitch; }
-    
-  public:
+    inline int width(const QChar &c, bool bold, bool italic, int tabWidth)
+    {
+        if(c == QChar('\t'))
+            return tabWidth * myFontMetrics.width(' ');
+
+        return (bold) ? ((italic) ? myFontMetricsBI.width(c) : myFontMetricsBold.width(c))
+                      : ((italic) ? myFontMetricsItalic.width(c) : myFontMetrics.width(c));
+    }
+
+    inline const QFont &font(bool bold, bool italic) const
+    {
+        return (bold) ? ((italic) ? myFontBI : myFontBold) : ((italic) ? myFontItalic : myFont);
+    }
+
+    inline bool fixedPitch() const
+    {
+        return m_fixedPitch;
+    }
+
+public:
     QFont myFont, myFontBold, myFontItalic, myFontBI;
 
     KateFontMetrics myFontMetrics, myFontMetricsBold, myFontMetricsItalic, myFontMetricsBI;
@@ -107,7 +99,7 @@ class KateFontStruct
     int fontHeight;
     int fontAscent;
 
-  private:
+private:
     bool m_fixedPitch;
 };
 

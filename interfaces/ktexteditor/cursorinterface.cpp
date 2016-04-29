@@ -21,16 +21,17 @@
 #include "cursorinterface.h"
 #include "document.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateCursorInterface
-{
-  public:
-    PrivateCursorInterface() {}
-    ~PrivateCursorInterface() {}
+class PrivateCursorInterface {
+public:
+    PrivateCursorInterface()
+    {
+    }
+    ~PrivateCursorInterface()
+    {
+    }
 };
-
 }
 
 using namespace KTextEditor;
@@ -39,31 +40,31 @@ unsigned int CursorInterface::globalCursorInterfaceNumber = 0;
 
 CursorInterface::CursorInterface()
 {
-  globalCursorInterfaceNumber++;
-  myCursorInterfaceNumber = globalCursorInterfaceNumber++;
+    globalCursorInterfaceNumber++;
+    myCursorInterfaceNumber = globalCursorInterfaceNumber++;
 
-  d = new PrivateCursorInterface();
+    d = new PrivateCursorInterface();
 }
 
 CursorInterface::~CursorInterface()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int CursorInterface::cursorInterfaceNumber () const
+unsigned int CursorInterface::cursorInterfaceNumber() const
 {
-  return myCursorInterfaceNumber;
+    return myCursorInterfaceNumber;
 }
 
-void CursorInterface::setCursorInterfaceDCOPSuffix (const QCString &/*suffix*/)
+void CursorInterface::setCursorInterfaceDCOPSuffix(const QCString & /*suffix*/)
 {
-  //d->interface->setObjId ("CursorInterface#"+suffix);
+    // d->interface->setObjId ("CursorInterface#"+suffix);
 }
 
-CursorInterface *KTextEditor::cursorInterface (Document *doc)
-{               
-  if (!doc)
-    return 0;
+CursorInterface *KTextEditor::cursorInterface(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<CursorInterface*>(doc->qt_cast("KTextEditor::CursorInterface"));
+    return static_cast< CursorInterface * >(doc->qt_cast("KTextEditor::CursorInterface"));
 }

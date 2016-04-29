@@ -39,8 +39,7 @@ class CSSStyleSheetImpl;
 class StyleSheetImpl;
 class DOMString;
 
-class EntityImpl : public NodeBaseImpl
-{
+class EntityImpl : public NodeBaseImpl {
 public:
     EntityImpl(DocumentImpl *doc);
     EntityImpl(DocumentImpl *doc, DOMString _name);
@@ -57,11 +56,11 @@ public:
 
     virtual DOMString nodeName() const;
     virtual unsigned short nodeType() const;
-    virtual NodeImpl *cloneNode ( bool deep );
+    virtual NodeImpl *cloneNode(bool deep);
 
     // Other methods (not part of DOM)
 
-    virtual bool childTypeAllowed( unsigned short type );
+    virtual bool childTypeAllowed(unsigned short type);
 
     virtual DOMString toString() const;
 
@@ -73,8 +72,7 @@ protected:
 };
 
 
-class EntityReferenceImpl : public NodeBaseImpl
-{
+class EntityReferenceImpl : public NodeBaseImpl {
 public:
     EntityReferenceImpl(DocumentImpl *doc);
     EntityReferenceImpl(DocumentImpl *doc, DOMStringImpl *_entityName);
@@ -84,19 +82,19 @@ public:
 
     virtual DOMString nodeName() const;
     virtual unsigned short nodeType() const;
-    virtual NodeImpl *cloneNode ( bool deep );
+    virtual NodeImpl *cloneNode(bool deep);
 
     // Other methods (not part of DOM)
 
-    virtual bool childTypeAllowed( unsigned short type );
+    virtual bool childTypeAllowed(unsigned short type);
 
     virtual DOMString toString() const;
+
 protected:
     DOMStringImpl *m_entityName;
 };
 
-class NotationImpl : public NodeBaseImpl
-{
+class NotationImpl : public NodeBaseImpl {
 public:
     NotationImpl(DocumentImpl *doc);
     NotationImpl(DocumentImpl *doc, DOMString _name, DOMString _publicId, DOMString _systemId);
@@ -111,11 +109,12 @@ public:
 
     virtual DOMString nodeName() const;
     virtual unsigned short nodeType() const;
-    virtual NodeImpl *cloneNode ( bool deep );
+    virtual NodeImpl *cloneNode(bool deep);
 
     // Other methods (not part of DOM)
 
-    virtual bool childTypeAllowed( unsigned short type );
+    virtual bool childTypeAllowed(unsigned short type);
+
 protected:
     DOMStringImpl *m_name;
     DOMStringImpl *m_publicId;
@@ -123,8 +122,7 @@ protected:
 };
 
 
-class ProcessingInstructionImpl : public NodeBaseImpl, private khtml::CachedObjectClient
-{
+class ProcessingInstructionImpl : public NodeBaseImpl, private khtml::CachedObjectClient {
 public:
     ProcessingInstructionImpl(DocumentImpl *doc);
     ProcessingInstructionImpl(DocumentImpl *doc, DOMString _target, DOMString _data);
@@ -133,25 +131,28 @@ public:
     // DOM methods & attributes for Notation
 
     virtual DOMString target() const;
-    DOMString data() const { return m_data; }
-    virtual void setData( const DOMString &_data, int &exceptioncode );
+    DOMString data() const
+    {
+        return m_data;
+    }
+    virtual void setData(const DOMString &_data, int &exceptioncode);
 
     // DOM methods overridden from  parent classes
 
     virtual DOMString nodeName() const;
     virtual unsigned short nodeType() const;
     virtual DOMString nodeValue() const;
-    virtual void setNodeValue( const DOMString &_nodeValue, int &exceptioncode );
-    virtual NodeImpl *cloneNode ( bool deep );
+    virtual void setNodeValue(const DOMString &_nodeValue, int &exceptioncode);
+    virtual NodeImpl *cloneNode(bool deep);
 
     // Other methods (not part of DOM)
 
     virtual DOMString localHref() const;
-    virtual bool childTypeAllowed( unsigned short type );
+    virtual bool childTypeAllowed(unsigned short type);
     StyleSheetImpl *sheet() const;
     void checkStyleSheet();
     virtual void setStyleSheet(const DOM::DOMString &url, const DOM::DOMString &sheet, const DOM::DOMString &charset);
-    virtual void setStyleSheet(CSSStyleSheetImpl* sheet);
+    virtual void setStyleSheet(CSSStyleSheetImpl *sheet);
 
     virtual DOMString toString() const;
 
@@ -163,19 +164,18 @@ protected:
     CSSStyleSheetImpl *m_sheet;
 };
 
-class XMLAttributeReader : public QXmlDefaultHandler
-{
+class XMLAttributeReader : public QXmlDefaultHandler {
 public:
-    XMLAttributeReader(const QString& _attrString);
+    XMLAttributeReader(const QString &_attrString);
     virtual ~XMLAttributeReader();
     QXmlAttributes readAttrs(bool &ok);
-    bool startElement(const QString& namespaceURI, const QString& localName, const QString& qName, const QXmlAttributes& atts);
+    bool startElement(const QString &namespaceURI, const QString &localName, const QString &qName, const QXmlAttributes &atts);
 
 protected:
     QXmlAttributes attrs;
     QString m_attrString;
 };
 
-} //namespace
+} // namespace
 
 #endif

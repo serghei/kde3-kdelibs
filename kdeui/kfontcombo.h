@@ -32,8 +32,7 @@
  *
  * @author Malte Starostik <malte@kde.org>
  */
-class KDEUI_EXPORT KFontCombo : public KComboBox
-{
+class KDEUI_EXPORT KFontCombo : public KComboBox {
     Q_OBJECT
     Q_PROPERTY(QString family READ currentFont WRITE setCurrentFont)
     Q_PROPERTY(bool bold READ bold WRITE setBold DESIGNABLE true)
@@ -155,7 +154,7 @@ protected slots:
      * @internal
      * Listens to highlighted(int)
      */
-    void slotModified( int i );
+    void slotModified(int i);
 
 protected:
     /**
@@ -169,11 +168,12 @@ private:
 
 private:
     friend class KFontListItem;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     struct KFontComboPrivate *d;
 };
 
 #endif
-

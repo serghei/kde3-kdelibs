@@ -77,160 +77,156 @@ class QSqlPropertyMap;
  */
 class KDECORE_EXPORT KConfigDialogManager : public QObject {
 
-Q_OBJECT
+    Q_OBJECT
 
 signals:
-  /**
-   * One or more of the settings have been saved (such as when the user
-   * clicks on the Apply button).  This is only emitted by updateSettings()
-   * whenever one or more setting were changed and consequently saved.
-   */
-  void settingsChanged();
+    /**
+     * One or more of the settings have been saved (such as when the user
+     * clicks on the Apply button).  This is only emitted by updateSettings()
+     * whenever one or more setting were changed and consequently saved.
+     */
+    void settingsChanged();
 
-  /**
-   * TODO: Verify
-   * One or more of the settings have been changed.
-   * @param widget - The widget group (pass in via addWidget()) that
-   * contains the one or more modified setting.
-   * @see settingsChanged()
-   */
-  void settingsChanged( QWidget *widget );
+    /**
+     * TODO: Verify
+     * One or more of the settings have been changed.
+     * @param widget - The widget group (pass in via addWidget()) that
+     * contains the one or more modified setting.
+     * @see settingsChanged()
+     */
+    void settingsChanged(QWidget *widget);
 
-  /**
-   * If retrieveSettings() was told to track changes then if
-   * any known setting was changed this signal will be emitted.  Note
-   * that a settings can be modified several times and might go back to the
-   * original saved state. hasChanged() will tell you if anything has
-   * actually changed from the saved values.
-   */
-  void widgetModified();
+    /**
+     * If retrieveSettings() was told to track changes then if
+     * any known setting was changed this signal will be emitted.  Note
+     * that a settings can be modified several times and might go back to the
+     * original saved state. hasChanged() will tell you if anything has
+     * actually changed from the saved values.
+     */
+    void widgetModified();
 
 
 public:
+    /**
+     * Constructor.
+     * @param parent  Dialog widget to manage
+     * @param conf Object that contains settings
+     * @param name - Object name.
+     */
+    KConfigDialogManager(QWidget *parent, KConfigSkeleton *conf, const char *name = 0);
 
-  /**
-   * Constructor.
-   * @param parent  Dialog widget to manage
-   * @param conf Object that contains settings
-   * @param name - Object name.
-   */
-   KConfigDialogManager(QWidget *parent, KConfigSkeleton *conf, const char *name=0);
+    /**
+     * Destructor.
+     */
+    ~KConfigDialogManager();
 
-  /**
-   * Destructor.
-   */
-  ~KConfigDialogManager();
+    /**
+     * Add additional widgets to manage
+     * @param widget Additional widget to manage, inlcuding all its children
+     */
+    void addWidget(QWidget *widget);
 
-  /**
-   * Add additional widgets to manage
-   * @param widget Additional widget to manage, inlcuding all its children
-   */
-  void addWidget(QWidget *widget);
+    /**
+     * Returns whether the current state of the known widgets are
+     * different from the state in the config object.
+     */
+    bool hasChanged();
 
-  /**
-   * Returns whether the current state of the known widgets are
-   * different from the state in the config object.
-   */
-  bool hasChanged();
-
-  /**
-   * Returns whether the current state of the known widgets are
-   * the same as the default state in the config object.
-   */
-  bool isDefault();
+    /**
+     * Returns whether the current state of the known widgets are
+     * the same as the default state in the config object.
+     */
+    bool isDefault();
 
 public slots:
-  /**
-   * Traverse the specified widgets, saving the settings of all known
-   * widgets in the settings object.
-   *
-   * Example use: User clicks Ok or Apply button in a configure dialog.
-   */
-  void updateSettings();
+    /**
+     * Traverse the specified widgets, saving the settings of all known
+     * widgets in the settings object.
+     *
+     * Example use: User clicks Ok or Apply button in a configure dialog.
+     */
+    void updateSettings();
 
-  /**
-   * Traverse the specified widgets, sets the state of all known
-   * widgets according to the state in the settings object.
-   *
-   * Example use: Initialisation of dialog.
-   * Example use: User clicks Reset button in a configure dialog.
-   */
-  void updateWidgets();
+    /**
+     * Traverse the specified widgets, sets the state of all known
+     * widgets according to the state in the settings object.
+     *
+     * Example use: Initialisation of dialog.
+     * Example use: User clicks Reset button in a configure dialog.
+     */
+    void updateWidgets();
 
-  /**
-   * Traverse the specified widgets, sets the state of all known
-   * widgets according to the default state in the settings object.
-   *
-   * Example use: User clicks Defaults button in a configure dialog.
-   */
-  void updateWidgetsDefault();
-
-protected:
-
-  /**
-   * @param trackChanges - If any changes by the widgets should be tracked
-   * set true.  This causes the emitting the modified() signal when
-   * something changes.
-   * TODO: @return bool - True if any setting was changed from the default.
-   */
-  void init(bool trackChanges);
-
-  /**
-   * Recursive function that finds all known children.
-   * Goes through the children of widget and if any are known and not being
-   * ignored, stores them in currentGroup.  Also checks if the widget
-   * should be disabled because it is set immutable.
-   * @param widget - Parent of the children to look at.
-   * @param trackChanges - If true then tracks any changes to the children of
-   * widget that are known.
-   * @return bool - If a widget was set to something other then its default.
-   */
-  bool parseChildren(const QWidget *widget, bool trackChanges);
-
-  /**
-   * Set a property
-   */
-  void setProperty(QWidget *w, const QVariant &v);
-
-  /**
-   * Retrieve a property
-   */
-  QVariant property(QWidget *w);
-
-  /**
-   * Setup secondary widget properties
-   */
-  void setupWidget(QWidget *widget, KConfigSkeletonItem *item);
+    /**
+     * Traverse the specified widgets, sets the state of all known
+     * widgets according to the default state in the settings object.
+     *
+     * Example use: User clicks Defaults button in a configure dialog.
+     */
+    void updateWidgetsDefault();
 
 protected:
-  /**
-   * KConfigSkeleton object used to store settings
-   */
-  KConfigSkeleton *m_conf;
+    /**
+     * @param trackChanges - If any changes by the widgets should be tracked
+     * set true.  This causes the emitting the modified() signal when
+     * something changes.
+     * TODO: @return bool - True if any setting was changed from the default.
+     */
+    void init(bool trackChanges);
 
-  /**
-   * Dialog being managed
-   */
-  QWidget *m_dialog;
+    /**
+     * Recursive function that finds all known children.
+     * Goes through the children of widget and if any are known and not being
+     * ignored, stores them in currentGroup.  Also checks if the widget
+     * should be disabled because it is set immutable.
+     * @param widget - Parent of the children to look at.
+     * @param trackChanges - If true then tracks any changes to the children of
+     * widget that are known.
+     * @return bool - If a widget was set to something other then its default.
+     */
+    bool parseChildren(const QWidget *widget, bool trackChanges);
 
-  /**
-   * Pointer to the property map for easy access.
-   */
-  QSqlPropertyMap *propertyMap;
+    /**
+     * Set a property
+     */
+    void setProperty(QWidget *w, const QVariant &v);
 
-  /**
-   * Map of the classes and the signals that they emit when changed.
-   */
-  QMap<QString, QCString> changedMap;
+    /**
+     * Retrieve a property
+     */
+    QVariant property(QWidget *w);
+
+    /**
+     * Setup secondary widget properties
+     */
+    void setupWidget(QWidget *widget, KConfigSkeletonItem *item);
+
+protected:
+    /**
+     * KConfigSkeleton object used to store settings
+     */
+    KConfigSkeleton *m_conf;
+
+    /**
+     * Dialog being managed
+     */
+    QWidget *m_dialog;
+
+    /**
+     * Pointer to the property map for easy access.
+     */
+    QSqlPropertyMap *propertyMap;
+
+    /**
+     * Map of the classes and the signals that they emit when changed.
+     */
+    QMap< QString, QCString > changedMap;
 
 private:
-  class Private;
-  /**
-   * KConfigDialogManager Private class.
-   */
-  Private *d;
-
+    class Private;
+    /**
+     * KConfigDialogManager Private class.
+     */
+    Private *d;
 };
 
 #endif // KCONFIGDIALOGMANAGER_H
-

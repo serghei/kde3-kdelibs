@@ -46,67 +46,67 @@ IMPLEMENT_PROTOFUNC_DOM(DOMParserProtoFunc)
 KJS_IMPLEMENT_PROTOTYPE("DOMParser", DOMParserProto, DOMParserProtoFunc)
 
 
-DOMParserConstructorImp::DOMParserConstructorImp(ExecState *, DOM::DocumentImpl *d)
-    : doc(d)
+DOMParserConstructorImp::DOMParserConstructorImp(ExecState *, DOM::DocumentImpl *d) : doc(d)
 {
 }
 
 bool DOMParserConstructorImp::implementsConstruct() const
 {
-  return true;
+    return true;
 }
 
 Object DOMParserConstructorImp::construct(ExecState *exec, const List &)
 {
-  return Object(new DOMParser(exec, doc.get()));
+    return Object(new DOMParser(exec, doc.get()));
 }
 
-const ClassInfo DOMParser::info = { "DOMParser", 0, 0 /* &DOMParserTable*/, 0 };
+const ClassInfo DOMParser::info = {"DOMParser", 0, 0 /* &DOMParserTable*/, 0};
 
 
-DOMParser::DOMParser(ExecState *exec, DOM::DocumentImpl *d)
-  : DOMObject(DOMParserProto::self(exec)), doc(d)
+DOMParser::DOMParser(ExecState *exec, DOM::DocumentImpl *d) : DOMObject(DOMParserProto::self(exec)), doc(d)
 {
-//   setPrototype(DOMParserProto::self(exec));
+    //   setPrototype(DOMParserProto::self(exec));
 }
 
 
 Value DOMParserProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  if (!thisObj.inherits(&DOMParser::info)) {
-    Object err = Error::create(exec,TypeError);
-    exec->setException(err);
-    return err;
-  }
-
-  DOMParser *parser = static_cast<DOMParser *>(thisObj.imp());
-
-  switch (id) {
-  case DOMParser::ParseFromString:
+    if(!thisObj.inherits(&DOMParser::info))
     {
-      if (args.size() != 2) {
-				return Undefined();
-      }
-
-      QString str = args[0].toString(exec).qstring();
-      QString contentType = args[1].toString(exec).qstring().stripWhiteSpace();
-
-      if (contentType == "text/xml" || contentType == "application/xml" || contentType == "application/xhtml+xml") {
-        DocumentImpl *docImpl = parser->doc->implementation()->createDocument();
-
-        docImpl->open();
-        docImpl->write(str);
-        docImpl->finishParsing();
-        docImpl->close();
-
-        return getDOMNode(exec, docImpl);
-      }
+        Object err = Error::create(exec, TypeError);
+        exec->setException(err);
+        return err;
     }
-  }
 
-  return Undefined();
+    DOMParser *parser = static_cast< DOMParser * >(thisObj.imp());
+
+    switch(id)
+    {
+        case DOMParser::ParseFromString:
+        {
+            if(args.size() != 2)
+            {
+                return Undefined();
+            }
+
+            QString str = args[0].toString(exec).qstring();
+            QString contentType = args[1].toString(exec).qstring().stripWhiteSpace();
+
+            if(contentType == "text/xml" || contentType == "application/xml" || contentType == "application/xhtml+xml")
+            {
+                DocumentImpl *docImpl = parser->doc->implementation()->createDocument();
+
+                docImpl->open();
+                docImpl->write(str);
+                docImpl->finishParsing();
+                docImpl->close();
+
+                return getDOMNode(exec, docImpl);
+            }
+        }
+    }
+
+    return Undefined();
 }
 
 } // end namespace
-
-

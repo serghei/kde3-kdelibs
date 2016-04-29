@@ -33,7 +33,7 @@ class QDBusData;
  *
  * Any data to transport over D-Bus, i.e. method/signal paramaters or properties, need
  * to be converted into a QDBusData instance.
- * 
+ *
  * For complex types, e.g. structures or nested containers, this can be quite some code,
  * and will likely be needed for more than one call.
  * Therefore it is more convenient to implement the conversions once per complex type.
@@ -43,7 +43,7 @@ class QDBusData;
  * this manually looks like this:
  * @code
  * QRect rect(0, 0, 100, 100);
- * 
+ *
  * QValueList<QDBusData> structMembers;
  * structMembers << QDBusData::fromInt32(rect.x());
  * structMembers << QDBusData::fromInt32(rect.y());
@@ -55,9 +55,9 @@ class QDBusData;
  * and reverse (without the error checking)
  * @code
  * QDBusData dbusData; // assume we got this from a D-Bus call
- * 
+ *
  * QValueList<QDBusData> structMembers = dbudData.toStruct();
- * 
+ *
  * int x = structMembers[0].toInt32();
  * int y = structMembers[1].toInt32();
  * int w = structMembers[2].toInt32();
@@ -84,8 +84,7 @@ class QDBusData;
  *
  * @note The bindings library contains the spezialisations for QRect, QPoint and QSize.
  */
-class QDBUS_EXPORT QDBusDataConverter
-{
+class QDBUS_EXPORT QDBusDataConverter {
 public:
     /**
      * @brief Conversion result values
@@ -96,7 +95,7 @@ public:
          * Conversion successfull
          */
         Success,
-        
+
         /**
          * Conversion failed because the passed QDBusData instance does not contain data
          * of the needed signature, e.g. too few to too many members for a struct or wrong types.
@@ -104,7 +103,7 @@ public:
          * @see QDBusError::stdInvalidSignature()
          */
         InvalidSignature,
-        
+
         /**
          * Conversion failed because the passed QDBusData contained values which are not allowed,
          * e.g. out of range for a numerical type used a an enum or flags.
@@ -124,7 +123,7 @@ public:
      * QDBusDataConverter::convertFromQDBusData<QPoint>(const QDBusData& dbusData, QPoint& typeData)
      * {
      *     if (dbusData.type() != QDBusData::Struct) return InvalidSignature;
-     *     
+     *
      *     QValueList<QDBusData> members = dbusData.toStruct();
      *     if (members.count() != 2) return InvalidSignature;
      *
@@ -157,8 +156,7 @@ public:
      *
      * @return the conversion result value
      */
-    template <class T>
-    static Result convertFromQDBusData(const QDBusData& dbusData, T& typeData);
+    template < class T > static Result convertFromQDBusData(const QDBusData &dbusData, T &typeData);
 
     /**
      * @brief Conversion from a native type to a QDBusData instance
@@ -200,8 +198,7 @@ public:
      *
      * @return the conversion result value
      */
-    template <class T>
-    static Result convertToQDBusData(const T& typeData, QDBusData& dbusData);
+    template < class T > static Result convertToQDBusData(const T &typeData, QDBusData &dbusData);
 };
 
 #endif

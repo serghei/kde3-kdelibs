@@ -32,17 +32,16 @@ namespace KABC {
   This class provides locking functionality for a file, directory or an
   arbitrary string-represented resource.
 */
-class KABC_EXPORT Lock : public QObject
-{
+class KABC_EXPORT Lock : public QObject {
     Q_OBJECT
-  public:
+public:
     /**
       Constructor.
 
       @param identifier An identifier for the resource to be locked, e.g. a file
                         name.
      */
-    Lock( const QString &identifier );
+    Lock(const QString &identifier);
 
     /**
       Destruct lock object. This also removes the lock on the resource.
@@ -53,7 +52,7 @@ class KABC_EXPORT Lock : public QObject
       Lock resource.
     */
     virtual bool lock();
-    
+
     /**
       Unlock resource.
     */
@@ -63,18 +62,18 @@ class KABC_EXPORT Lock : public QObject
 
     QString lockFileName() const;
 
-    static bool readLockFile( const QString &filename, int &pid, QString &app );
-    static bool writeLockFile( const QString &filename );
+    static bool readLockFile(const QString &filename, int &pid, QString &app);
+    static bool writeLockFile(const QString &filename);
 
     static QString locksDir();
 
-  signals:
+signals:
     void locked();
     void unlocked();
 
-  private:
+private:
     QString mIdentifier;
-    
+
     QString mLockUniqueName;
 
     QString mError;
@@ -82,7 +81,6 @@ class KABC_EXPORT Lock : public QObject
     class Private;
     Private *d;
 };
-
 }
 
 #endif

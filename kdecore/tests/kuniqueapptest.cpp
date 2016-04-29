@@ -25,35 +25,34 @@
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 
-class TestApp : public KUniqueApplication
-{
+class TestApp : public KUniqueApplication {
 public:
-   TestApp() : KUniqueApplication("TestApp") { }
-   virtual int newInstance( );
+    TestApp() : KUniqueApplication("TestApp")
+    {
+    }
+    virtual int newInstance();
 };
 
 
-int
-TestApp::newInstance( )
+int TestApp::newInstance()
 {
-   qWarning("NewInstance");
-   return 0;
+    qWarning("NewInstance");
+    return 0;
 }
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-   KAboutData about("kuniqueapptest", "kuniqueapptest", "version");
-   KCmdLineArgs::init(argc, argv, &about);
-   KUniqueApplication::addCmdLineOptions();
+    KAboutData about("kuniqueapptest", "kuniqueapptest", "version");
+    KCmdLineArgs::init(argc, argv, &about);
+    KUniqueApplication::addCmdLineOptions();
 
-   if (!TestApp::start())
-   {
-      exit(0);
-   }
-   TestApp a;
+    if(!TestApp::start())
+    {
+        exit(0);
+    }
+    TestApp a;
 
-   printf("Running.\n");
-   kapp->exec();
-   printf("Terminating.\n");
+    printf("Running.\n");
+    kapp->exec();
+    printf("Terminating.\n");
 }

@@ -22,21 +22,20 @@
 
 #include <kaction.h>
 
-class KDEPRINT_EXPORT PluginAction : public KAction
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT PluginAction : public KAction {
+    Q_OBJECT
 
 public:
-	PluginAction(int ID, const QString& txt, const QString& icon, int accel, QObject *parent = 0, const char *name = 0);
+    PluginAction(int ID, const QString &txt, const QString &icon, int accel, QObject *parent = 0, const char *name = 0);
 
 signals:
-	void activated(int);
+    void activated(int);
 
 protected slots:
-	void slotActivated();
+    void slotActivated();
 
 private:
-	int	m_id;
+    int m_id;
 };
 
 #endif

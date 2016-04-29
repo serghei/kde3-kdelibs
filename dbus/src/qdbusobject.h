@@ -299,14 +299,16 @@ class QDBusMessage;
  *
  * See section @ref dbusservice for documentation on how to use QDBusObjectBase
  */
-class QDBUS_EXPORT QDBusObjectBase
-{
+class QDBUS_EXPORT QDBusObjectBase {
     friend class QDBusConnectionPrivate;
+
 public:
     /**
      * @brief Destroys the object
      */
-    virtual ~QDBusObjectBase() {}
+    virtual ~QDBusObjectBase()
+    {
+    }
 
 protected:
     /**
@@ -337,7 +339,7 @@ protected:
      *         error reply. Returns @c false only if interface or method are
      *         unknown
      */
-    virtual bool handleMethodCall(const QDBusMessage& message) = 0;
+    virtual bool handleMethodCall(const QDBusMessage &message) = 0;
 
     /**
      * @brief Delegate a method call to another object
@@ -362,11 +364,10 @@ protected:
      *         unknown
      *
      */
-    bool delegateMethodCall(const QDBusMessage& message, QDBusObjectBase* delegate)
+    bool delegateMethodCall(const QDBusMessage &message, QDBusObjectBase *delegate)
     {
         return delegate->handleMethodCall(message);
     }
 };
 
 #endif
-

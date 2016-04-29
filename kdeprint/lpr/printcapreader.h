@@ -26,18 +26,17 @@
 class QFile;
 class PrintcapEntry;
 
-class PrintcapReader
-{
+class PrintcapReader {
 public:
-    void setPrintcapFile(QFile*);
-    PrintcapEntry* nextEntry();
+    void setPrintcapFile(QFile *);
+    PrintcapEntry *nextEntry();
 
 private:
     QString m_buffer;
     QTextStream m_stream;
-    
-    bool nextLine(QString&);
-    void unputLine(const QString&);
+
+    bool nextLine(QString &);
+    void unputLine(const QString &);
 };
 
 #endif

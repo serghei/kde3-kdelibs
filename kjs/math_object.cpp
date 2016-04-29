@@ -36,7 +36,7 @@
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
-#endif  /*  M_PI  */
+#endif /*  M_PI  */
 
 #ifndef signbit
 #define signbit(x) ((x) < 0.0 || IS_NEGATIVE_ZERO(x))
@@ -46,7 +46,7 @@ using namespace KJS;
 
 // ------------------------------ MathObjectImp --------------------------------
 
-const ClassInfo MathObjectImp::info = { "Math", 0, &mathTable, 0 };
+const ClassInfo MathObjectImp::info = {"Math", 0, &mathTable, 0};
 
 /* Source for math_object.lut.h
 @begin mathTable 31
@@ -79,190 +79,192 @@ const ClassInfo MathObjectImp::info = { "Math", 0, &mathTable, 0 };
 @end
 */
 
-MathObjectImp::MathObjectImp(ExecState * /*exec*/,
-                             ObjectPrototypeImp *objProto)
-  : ObjectImp(objProto)
+MathObjectImp::MathObjectImp(ExecState * /*exec*/, ObjectPrototypeImp *objProto) : ObjectImp(objProto)
 {
-   unsigned int seed = time(NULL);
-   ::srand(seed);
+    unsigned int seed = time(NULL);
+    ::srand(seed);
 }
 
 // ECMA 15.8
 Value MathObjectImp::get(ExecState *exec, const Identifier &propertyName) const
 {
-  return lookupGet<MathFuncImp, MathObjectImp, ObjectImp>( exec, propertyName, &mathTable, this );
+    return lookupGet< MathFuncImp, MathObjectImp, ObjectImp >(exec, propertyName, &mathTable, this);
 }
 
 Value MathObjectImp::getValueProperty(ExecState *, int token) const
 {
-  double d = -42; // ;)
-  switch (token) {
-  case Euler:
-    d = exp(1.0);
-    break;
-  case Ln2:
-    d = log(2.0);
-    break;
-  case Ln10:
-    d = log(10.0);
-    break;
-  case Log2E:
-    d = 1.0/log(2.0);
-    break;
-  case Log10E:
-    d = 1.0/log(10.0);
-    break;
-  case Pi:
-    d = M_PI;
-    break;
-  case Sqrt1_2:
-    d = sqrt(0.5);
-    break;
-  case Sqrt2:
-    d = sqrt(2.0);
-    break;
-  default:
-    fprintf( stderr, "Internal error in MathObjectImp: unhandled token %d\n", token );
-    break;
-  }
+    double d = -42; // ;)
+    switch(token)
+    {
+        case Euler:
+            d = exp(1.0);
+            break;
+        case Ln2:
+            d = log(2.0);
+            break;
+        case Ln10:
+            d = log(10.0);
+            break;
+        case Log2E:
+            d = 1.0 / log(2.0);
+            break;
+        case Log10E:
+            d = 1.0 / log(10.0);
+            break;
+        case Pi:
+            d = M_PI;
+            break;
+        case Sqrt1_2:
+            d = sqrt(0.5);
+            break;
+        case Sqrt2:
+            d = sqrt(2.0);
+            break;
+        default:
+            fprintf(stderr, "Internal error in MathObjectImp: unhandled token %d\n", token);
+            break;
+    }
 
-  return Number(d);
+    return Number(d);
 }
 
 // ------------------------------ MathObjectImp --------------------------------
 
 MathFuncImp::MathFuncImp(ExecState *exec, int i, int l)
-  : InternalFunctionImp(
-    static_cast<FunctionPrototypeImp*>(exec->lexicalInterpreter()->builtinFunctionPrototype().imp())
-    ), id(i)
+    : InternalFunctionImp(static_cast< FunctionPrototypeImp * >(exec->lexicalInterpreter()->builtinFunctionPrototype().imp())), id(i)
 {
-  Value protect(this);
-  putDirect(lengthPropertyName, l, DontDelete|ReadOnly|DontEnum);
+    Value protect(this);
+    putDirect(lengthPropertyName, l, DontDelete | ReadOnly | DontEnum);
 }
 
 bool MathFuncImp::implementsCall() const
 {
-  return true;
+    return true;
 }
 
-Value MathFuncImp::call(ExecState *exec, Object &/*thisObj*/, const List &args)
+Value MathFuncImp::call(ExecState *exec, Object & /*thisObj*/, const List &args)
 {
-  double arg = args[0].toNumber(exec);
-  double arg2 = args[1].toNumber(exec);
-  double result;
+    double arg = args[0].toNumber(exec);
+    double arg2 = args[1].toNumber(exec);
+    double result;
 
-  switch (id) {
-  case MathObjectImp::Abs:
-    result = ( arg < 0 || arg == -0) ? (-arg) : arg;
-    break;
-  case MathObjectImp::ACos:
-    result = ::acos(arg);
-    break;
-  case MathObjectImp::ASin:
-    result = ::asin(arg);
-    break;
-  case MathObjectImp::ATan:
-    result = ::atan(arg);
-    break;
-  case MathObjectImp::ATan2:
-    result = ::atan2(arg, arg2);
-    break;
-  case MathObjectImp::Ceil:
-    result = ::ceil(arg);
-    break;
-  case MathObjectImp::Cos:
-    result = ::cos(arg);
-    break;
-  case MathObjectImp::Exp:
-    result = ::exp(arg);
-    break;
-  case MathObjectImp::Floor:
-    result = ::floor(arg);
-    break;
-  case MathObjectImp::Log:
-    result = ::log(arg);
-    break;
-  case MathObjectImp::Max: {
-    unsigned int argsCount = args.size();
-    result = -Inf;
-    for ( unsigned int k = 0 ; k < argsCount ; ++k ) {
-      double val = args[k].toNumber(exec);
-      if ( isNaN( val ) )
-      {
-        result = NaN;
-        break;
-      }
-      if ( val > result || (val == 0 && result == 0 && !signbit(val)) )
-        result = val;
+    switch(id)
+    {
+        case MathObjectImp::Abs:
+            result = (arg < 0 || arg == -0) ? (-arg) : arg;
+            break;
+        case MathObjectImp::ACos:
+            result = ::acos(arg);
+            break;
+        case MathObjectImp::ASin:
+            result = ::asin(arg);
+            break;
+        case MathObjectImp::ATan:
+            result = ::atan(arg);
+            break;
+        case MathObjectImp::ATan2:
+            result = ::atan2(arg, arg2);
+            break;
+        case MathObjectImp::Ceil:
+            result = ::ceil(arg);
+            break;
+        case MathObjectImp::Cos:
+            result = ::cos(arg);
+            break;
+        case MathObjectImp::Exp:
+            result = ::exp(arg);
+            break;
+        case MathObjectImp::Floor:
+            result = ::floor(arg);
+            break;
+        case MathObjectImp::Log:
+            result = ::log(arg);
+            break;
+        case MathObjectImp::Max:
+        {
+            unsigned int argsCount = args.size();
+            result = -Inf;
+            for(unsigned int k = 0; k < argsCount; ++k)
+            {
+                double val = args[k].toNumber(exec);
+                if(isNaN(val))
+                {
+                    result = NaN;
+                    break;
+                }
+                if(val > result || (val == 0 && result == 0 && !signbit(val)))
+                    result = val;
+            }
+            break;
+        }
+        case MathObjectImp::Min:
+        {
+            unsigned int argsCount = args.size();
+            result = +Inf;
+            for(unsigned int k = 0; k < argsCount; ++k)
+            {
+                double val = args[k].toNumber(exec);
+                if(isNaN(val))
+                {
+                    result = NaN;
+                    break;
+                }
+                if(val < result || (val == 0 && result == 0 && signbit(val)))
+                    result = val;
+            }
+            break;
+        }
+        case MathObjectImp::Pow:
+            // ECMA 15.8.2.1.13 (::pow takes care of most of the critera)
+            if(KJS::isNaN(arg2))
+                result = NaN;
+#ifndef APPLE_CHANGES
+            else if(arg2 == 0)
+                result = 1;
+#endif
+            else if(KJS::isNaN(arg) && arg2 != 0)
+                result = NaN;
+#ifndef APPLE_CHANGES
+            else if(::fabs(arg) > 1 && KJS::isPosInf(arg2))
+                result = Inf;
+            else if(::fabs(arg) > 1 && KJS::isNegInf(arg2))
+                result = +0;
+#endif
+            else if(::fabs(arg) == 1 && KJS::isInf(arg2))
+                result = NaN;
+#ifndef APPLE_CHANGES
+            else if(::fabs(arg) < 1 && KJS::isPosInf(arg2))
+                result = +0;
+            else if(::fabs(arg) < 1 && KJS::isNegInf(arg2))
+                result = Inf;
+#endif
+            else
+                result = ::pow(arg, arg2);
+            break;
+        case MathObjectImp::Random:
+            result = ::rand();
+            result = result / RAND_MAX;
+            break;
+        case MathObjectImp::Round:
+            if(signbit(arg) && arg >= -0.5)
+                result = -0.0;
+            else
+                result = ::floor(arg + 0.5);
+            break;
+        case MathObjectImp::Sin:
+            result = ::sin(arg);
+            break;
+        case MathObjectImp::Sqrt:
+            result = ::sqrt(arg);
+            break;
+        case MathObjectImp::Tan:
+            result = ::tan(arg);
+            break;
+
+        default:
+            result = 0.0;
+            assert(0);
     }
-    break;
-  }
-  case MathObjectImp::Min: {
-    unsigned int argsCount = args.size();
-    result = +Inf;
-    for ( unsigned int k = 0 ; k < argsCount ; ++k ) {
-      double val = args[k].toNumber(exec);
-      if ( isNaN( val ) )
-      {
-        result = NaN;
-        break;
-      }
-      if ( val < result || (val == 0 && result == 0 && signbit(val)) )
-        result = val;
-    }
-    break;
-  }
-  case MathObjectImp::Pow:
-    // ECMA 15.8.2.1.13 (::pow takes care of most of the critera)
-    if (KJS::isNaN(arg2))
-      result = NaN;
-#ifndef APPLE_CHANGES
-    else if (arg2 == 0)
-      result = 1;
-#endif
-    else if (KJS::isNaN(arg) && arg2 != 0)
-      result = NaN;
-#ifndef APPLE_CHANGES
-    else if (::fabs(arg) > 1 && KJS::isPosInf(arg2))
-      result = Inf;
-    else if (::fabs(arg) > 1 && KJS::isNegInf(arg2))
-      result = +0;
-#endif
-    else if (::fabs(arg) == 1 && KJS::isInf(arg2))
-      result = NaN;
-#ifndef APPLE_CHANGES
-    else if (::fabs(arg) < 1 && KJS::isPosInf(arg2))
-      result = +0;
-    else if (::fabs(arg) < 1 && KJS::isNegInf(arg2))
-      result = Inf;
-#endif
-    else
-      result = ::pow(arg, arg2);
-    break;
-  case MathObjectImp::Random:
-    result = ::rand();
-    result = result / RAND_MAX;
-    break;
-  case MathObjectImp::Round:
-    if (signbit(arg) && arg >= -0.5)
-        result = -0.0;
-    else
-        result = ::floor(arg + 0.5);
-    break;
-  case MathObjectImp::Sin:
-    result = ::sin(arg);
-    break;
-  case MathObjectImp::Sqrt:
-    result = ::sqrt(arg);
-    break;
-  case MathObjectImp::Tan:
-    result = ::tan(arg);
-    break;
 
-  default:
-    result = 0.0;
-    assert(0);
-  }
-
-  return Number(result);
+    return Number(result);
 }

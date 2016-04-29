@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (c) 2003 Malte Starostik <malte@kde.org>
 
    This library is free software; you can redistribute it and/or
@@ -27,27 +27,25 @@
 
 class KProcIO;
 
-namespace KPAC
-{
-    class Discovery : public Downloader
-    {
-        Q_OBJECT
-    public:
-        Discovery( QObject* );
+namespace KPAC {
+class Discovery : public Downloader {
+    Q_OBJECT
+public:
+    Discovery(QObject *);
 
-    protected slots:
-        virtual void failed();
+protected slots:
+    virtual void failed();
 
-    private slots:
-        void helperOutput();
+private slots:
+    void helperOutput();
 
-    private:
-        bool initHostName();
-        bool checkDomain() const;
+private:
+    bool initHostName();
+    bool checkDomain() const;
 
-        KProcIO* m_helper;
-        QString m_hostname;
-    };
+    KProcIO *m_helper;
+    QString m_hostname;
+};
 }
 
 #endif // KPAC_DISCOVERY_H

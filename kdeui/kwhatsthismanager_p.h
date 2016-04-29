@@ -43,16 +43,17 @@ class QTextEdit;
  * @see QWhatsThis
  * @author Peter Rockai (mornfall) <mornfall@danill.sk>
  **/
-class KDEUI_EXPORT KWhatsThisManager : public QObject
-{
+class KDEUI_EXPORT KWhatsThisManager : public QObject {
     Q_OBJECT
-    public:
-        static void init ();
-        bool eventFilter (QObject *o, QEvent *e);
-    protected:
-        static KWhatsThisManager *s_instance;
-    private:
-        KWhatsThisManager ();
+public:
+    static void init();
+    bool eventFilter(QObject *o, QEvent *e);
+
+protected:
+    static KWhatsThisManager *s_instance;
+
+private:
+    KWhatsThisManager();
 };
 
 #endif

@@ -19,7 +19,7 @@
 #ifndef _KATE_CODEFOLDING_HELPERS_
 #define _KATE_CODEFOLDING_HELPERS_
 
-//BEGIN INCLUDES + FORWARDS
+// BEGIN INCLUDES + FORWARDS
 #include <qptrlist.h>
 #include <qvaluelist.h>
 #include <qobject.h>
@@ -31,18 +31,16 @@ class KateTextCursor;
 class KateBuffer;
 
 class QString;
-//END
+// END
 
-class KateHiddenLineBlock
-{
-  public:
+class KateHiddenLineBlock {
+public:
     unsigned int start;
     unsigned int length;
 };
 
-class KateLineInfo
-{
-  public:
+class KateLineInfo {
+public:
     bool topLevel;
     bool startsVisibleBlock;
     bool startsInVisibleBlock;
@@ -50,52 +48,76 @@ class KateLineInfo
     bool invalidBlockEnd;
 };
 
-class KateCodeFoldingNode
-{
-  friend class KateCodeFoldingTree;
+class KateCodeFoldingNode {
+    friend class KateCodeFoldingTree;
 
-  public:
-    KateCodeFoldingNode ();
-    KateCodeFoldingNode (KateCodeFoldingNode *par, signed char typ, unsigned int sLRel);
+public:
+    KateCodeFoldingNode();
+    KateCodeFoldingNode(KateCodeFoldingNode *par, signed char typ, unsigned int sLRel);
 
-    ~KateCodeFoldingNode ();
+    ~KateCodeFoldingNode();
 
-    inline int nodeType () { return type;}
+    inline int nodeType()
+    {
+        return type;
+    }
 
-    inline bool isVisible () {return visible;}
+    inline bool isVisible()
+    {
+        return visible;
+    }
 
-    inline KateCodeFoldingNode *getParentNode () {return parentNode;}
+    inline KateCodeFoldingNode *getParentNode()
+    {
+        return parentNode;
+    }
 
-    bool getBegin (KateCodeFoldingTree *tree, KateTextCursor* begin);
-    bool getEnd (KateCodeFoldingTree *tree, KateTextCursor *end);
+    bool getBegin(KateCodeFoldingTree *tree, KateTextCursor *begin);
+    bool getEnd(KateCodeFoldingTree *tree, KateTextCursor *end);
 
-  /**
-   * accessors for the child nodes
-   */
-  protected:
-    inline bool noChildren () const { return m_children.isEmpty(); }
+    /**
+     * accessors for the child nodes
+     */
+protected:
+    inline bool noChildren() const
+    {
+        return m_children.isEmpty();
+    }
 
-    inline uint childCount () const { return m_children.size(); }
+    inline uint childCount() const
+    {
+        return m_children.size();
+    }
 
-    inline KateCodeFoldingNode *child (uint index) const { return m_children[index]; }
+    inline KateCodeFoldingNode *child(uint index) const
+    {
+        return m_children[index];
+    }
 
-    inline int findChild (KateCodeFoldingNode *node, uint start = 0) const { return m_children.find (node, start); }
+    inline int findChild(KateCodeFoldingNode *node, uint start = 0) const
+    {
+        return m_children.find(node, start);
+    }
 
-    inline void appendChild (KateCodeFoldingNode *node) { m_children.resize(m_children.size()+1); m_children[m_children.size()-1] = node; }
+    inline void appendChild(KateCodeFoldingNode *node)
+    {
+        m_children.resize(m_children.size() + 1);
+        m_children[m_children.size() - 1] = node;
+    }
 
-    void insertChild (uint index, KateCodeFoldingNode *node);
+    void insertChild(uint index, KateCodeFoldingNode *node);
 
-    KateCodeFoldingNode *takeChild (uint index);
+    KateCodeFoldingNode *takeChild(uint index);
 
-    void clearChildren ();
+    void clearChildren();
 
     int cmpPos(KateCodeFoldingTree *tree, uint line, uint col);
 
-  /**
-   * data members
-   */
-  private:
-    KateCodeFoldingNode                *parentNode;
+    /**
+     * data members
+     */
+private:
+    KateCodeFoldingNode *parentNode;
     unsigned int startLineRel;
     unsigned int endLineRel;
 
@@ -105,116 +127,115 @@ class KateCodeFoldingNode
     bool startLineValid;
     bool endLineValid;
 
-    signed char type;                // 0 -> toplevel / invalid
+    signed char type; // 0 -> toplevel / invalid
     bool visible;
     bool deleteOpening;
     bool deleteEnding;
 
-    QMemArray<KateCodeFoldingNode*> m_children;
+    QMemArray< KateCodeFoldingNode * > m_children;
 };
 
-class KateCodeFoldingTree : public QObject
-{
-  friend class KateCodeFoldingNode;
+class KateCodeFoldingTree : public QObject {
+    friend class KateCodeFoldingNode;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    KateCodeFoldingTree (KateBuffer *buffer);
-    ~KateCodeFoldingTree ();
+public:
+    KateCodeFoldingTree(KateBuffer *buffer);
+    ~KateCodeFoldingTree();
 
-    KateCodeFoldingNode *findNodeForLine (unsigned int line);
+    KateCodeFoldingNode *findNodeForLine(unsigned int line);
 
-    unsigned int getRealLine         (unsigned int virtualLine);
-    unsigned int getVirtualLine      (unsigned int realLine);
-    unsigned int getHiddenLinesCount (unsigned int docLine);
+    unsigned int getRealLine(unsigned int virtualLine);
+    unsigned int getVirtualLine(unsigned int realLine);
+    unsigned int getHiddenLinesCount(unsigned int docLine);
 
-    bool isTopLevel (unsigned int line);
+    bool isTopLevel(unsigned int line);
 
-    void lineHasBeenInserted (unsigned int line);
-    void lineHasBeenRemoved  (unsigned int line);
-    void debugDump ();
-    void getLineInfo (KateLineInfo *info,unsigned int line);
+    void lineHasBeenInserted(unsigned int line);
+    void lineHasBeenRemoved(unsigned int line);
+    void debugDump();
+    void getLineInfo(KateLineInfo *info, unsigned int line);
 
-    unsigned int getStartLine (KateCodeFoldingNode *node);
+    unsigned int getStartLine(KateCodeFoldingNode *node);
 
-    void fixRoot (int endLRel);
-    void clear ();
+    void fixRoot(int endLRel);
+    void clear();
 
     KateCodeFoldingNode *findNodeForPosition(unsigned int line, unsigned int column);
-  private:
 
+private:
     KateCodeFoldingNode m_root;
 
     KateBuffer *m_buffer;
 
-    QIntDict<unsigned int> lineMapping;
-    QIntDict<bool>         dontIgnoreUnchangedLines;
+    QIntDict< unsigned int > lineMapping;
+    QIntDict< bool > dontIgnoreUnchangedLines;
 
-    QPtrList<KateCodeFoldingNode> markedForDeleting;
-    QPtrList<KateCodeFoldingNode> nodesForLine;
-    QValueList<KateHiddenLineBlock>   hiddenLines;
+    QPtrList< KateCodeFoldingNode > markedForDeleting;
+    QPtrList< KateCodeFoldingNode > nodesForLine;
+    QValueList< KateHiddenLineBlock > hiddenLines;
 
     unsigned int hiddenLinesCountCache;
-    bool         something_changed;
-    bool         hiddenLinesCountCacheValid;
+    bool something_changed;
+    bool hiddenLinesCountCacheValid;
 
     static bool trueVal;
 
-    KateCodeFoldingNode *findNodeForLineDescending (KateCodeFoldingNode *, unsigned int, unsigned int, bool oneStepOnly=false);
+    KateCodeFoldingNode *findNodeForLineDescending(KateCodeFoldingNode *, unsigned int, unsigned int, bool oneStepOnly = false);
 
-    bool correctEndings (signed char data, KateCodeFoldingNode *node, unsigned int line, unsigned int endCol, int insertPos);
+    bool correctEndings(signed char data, KateCodeFoldingNode *node, unsigned int line, unsigned int endCol, int insertPos);
 
-    void dumpNode    (KateCodeFoldingNode *node, const QString &prefix);
-    void addOpening  (KateCodeFoldingNode *node, signed char nType,QMemArray<uint>* list, unsigned int line,unsigned int charPos);
-    void addOpening_further_iterations (KateCodeFoldingNode *node,signed char nType, QMemArray<uint>*
-                                        list,unsigned int line,int current,unsigned int startLine,unsigned int charPos);
+    void dumpNode(KateCodeFoldingNode *node, const QString &prefix);
+    void addOpening(KateCodeFoldingNode *node, signed char nType, QMemArray< uint > *list, unsigned int line, unsigned int charPos);
+    void addOpening_further_iterations(KateCodeFoldingNode *node, signed char nType, QMemArray< uint > *list, unsigned int line, int current,
+                                       unsigned int startLine, unsigned int charPos);
 
-    void incrementBy1 (KateCodeFoldingNode *node, KateCodeFoldingNode *after);
-    void decrementBy1 (KateCodeFoldingNode *node, KateCodeFoldingNode *after);
+    void incrementBy1(KateCodeFoldingNode *node, KateCodeFoldingNode *after);
+    void decrementBy1(KateCodeFoldingNode *node, KateCodeFoldingNode *after);
 
-    void cleanupUnneededNodes (unsigned int line);
-
-    /**
-     * if returns true, this node has been deleted !!
-     */
-    bool removeEnding (KateCodeFoldingNode *node,unsigned int line);
+    void cleanupUnneededNodes(unsigned int line);
 
     /**
      * if returns true, this node has been deleted !!
      */
-    bool removeOpening (KateCodeFoldingNode *node,unsigned int line);
+    bool removeEnding(KateCodeFoldingNode *node, unsigned int line);
 
-    void findAndMarkAllNodesforRemovalOpenedOrClosedAt (unsigned int line);
-    void findAllNodesOpenedOrClosedAt (unsigned int line);
+    /**
+     * if returns true, this node has been deleted !!
+     */
+    bool removeOpening(KateCodeFoldingNode *node, unsigned int line);
 
-    void addNodeToFoundList  (KateCodeFoldingNode *node,unsigned int line,int childpos);
-    void addNodeToRemoveList (KateCodeFoldingNode *node,unsigned int line);
-    void addHiddenLineBlock  (KateCodeFoldingNode *node,unsigned int line);
+    void findAndMarkAllNodesforRemovalOpenedOrClosedAt(unsigned int line);
+    void findAllNodesOpenedOrClosedAt(unsigned int line);
+
+    void addNodeToFoundList(KateCodeFoldingNode *node, unsigned int line, int childpos);
+    void addNodeToRemoveList(KateCodeFoldingNode *node, unsigned int line);
+    void addHiddenLineBlock(KateCodeFoldingNode *node, unsigned int line);
 
     bool existsOpeningAtLineAfter(unsigned int line, KateCodeFoldingNode *node);
 
-    void dontDeleteEnding  (KateCodeFoldingNode*);
-    void dontDeleteOpening (KateCodeFoldingNode*);
+    void dontDeleteEnding(KateCodeFoldingNode *);
+    void dontDeleteOpening(KateCodeFoldingNode *);
 
-    void updateHiddenSubNodes (KateCodeFoldingNode *node);
-    void moveSubNodesUp (KateCodeFoldingNode *node);
+    void updateHiddenSubNodes(KateCodeFoldingNode *node);
+    void moveSubNodesUp(KateCodeFoldingNode *node);
 
-  public slots:
-    void updateLine (unsigned int line,QMemArray<uint>* regionChanges, bool *updated, bool changed,bool colschanged);
-    void toggleRegionVisibility (unsigned int);
-    void collapseToplevelNodes ();
-    void expandToplevelNodes (int numLines);
-    int collapseOne (int realLine);
-    void expandOne  (int realLine, int numLines);
+public slots:
+    void updateLine(unsigned int line, QMemArray< uint > *regionChanges, bool *updated, bool changed, bool colschanged);
+    void toggleRegionVisibility(unsigned int);
+    void collapseToplevelNodes();
+    void expandToplevelNodes(int numLines);
+    int collapseOne(int realLine);
+    void expandOne(int realLine, int numLines);
     /**
       Ensures that all nodes surrounding @p line are open
     */
-    void ensureVisible( uint line );
+    void ensureVisible(uint line);
 
-  signals:
-    void regionVisibilityChangedAt  (unsigned int);
-    void regionBeginEndAddedRemoved (unsigned int);
+signals:
+    void regionVisibilityChangedAt(unsigned int);
+    void regionBeginEndAddedRemoved(unsigned int);
 };
 
 #endif

@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,8 +21,8 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  VCARD_VCARD_H
-#define  VCARD_VCARD_H
+#ifndef VCARD_VCARD_H
+#define VCARD_VCARD_H
 
 #include <qstring.h>
 #include <qptrlist.h>
@@ -31,33 +31,37 @@
 #include <VCardEntity.h>
 #include <VCardContentLine.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT VCard : public Entity
-{
+class KVCARD_EXPORT VCard : public Entity {
 
 #include "VCard-generated.h"
-	
-	bool has(EntityType);
-	bool has(const QCString &);
-	
-	void add(const ContentLine &);
-	void add(const QCString &);
-	
-	ContentLine * contentLine(EntityType);
-	ContentLine * contentLine(const QCString &);
-	
-	QCString group() { parse(); return group_; }
-	
-	QPtrList<ContentLine>	contentLineList() { parse(); return contentLineList_; }
-	
-	private:
 
-	QCString		group_;
-	QPtrList<ContentLine>	contentLineList_;
+    bool has(EntityType);
+    bool has(const QCString &);
+
+    void add(const ContentLine &);
+    void add(const QCString &);
+
+    ContentLine *contentLine(EntityType);
+    ContentLine *contentLine(const QCString &);
+
+    QCString group()
+    {
+        parse();
+        return group_;
+    }
+
+    QPtrList< ContentLine > contentLineList()
+    {
+        parse();
+        return contentLineList_;
+    }
+
+private:
+    QCString group_;
+    QPtrList< ContentLine > contentLineList_;
 };
-
 }
 
 #endif

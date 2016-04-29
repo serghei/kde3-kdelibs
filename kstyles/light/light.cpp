@@ -24,8 +24,7 @@
 #include "lightstyle-v2.h"
 #include "lightstyle-v3.h"
 
-class LightStylePlugin : public QStylePlugin
-{
+class LightStylePlugin : public QStylePlugin {
 public:
     LightStylePlugin();
 
@@ -33,8 +32,7 @@ public:
     QStyle *create(const QString &);
 };
 
-LightStylePlugin::LightStylePlugin()
-    : QStylePlugin()
+LightStylePlugin::LightStylePlugin() : QStylePlugin()
 {
 }
 
@@ -48,11 +46,11 @@ QStringList LightStylePlugin::keys() const
 
 QStyle *LightStylePlugin::create(const QString &s)
 {
-    if (s.lower() == "light, 2nd revision")
-	return new LightStyleV2;
-    if (s.lower() == "light, 3rd revision")
-	return new LightStyleV3;
+    if(s.lower() == "light, 2nd revision")
+        return new LightStyleV2;
+    if(s.lower() == "light, 3rd revision")
+        return new LightStyleV3;
     return 0;
 }
 
-KDE_Q_EXPORT_PLUGIN( LightStylePlugin )
+KDE_Q_EXPORT_PLUGIN(LightStylePlugin)

@@ -28,42 +28,37 @@ class KFileMetaInfoItem;
  * 'MetaProps plugin
  * In this plugin you can modify meta information like id3 tags of mp3 files
  */
-class KIO_EXPORT KFileMetaPropsPlugin : public KPropsDlgPlugin
-{
-  Q_OBJECT
+class KIO_EXPORT KFileMetaPropsPlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KFileMetaPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KFileMetaPropsPlugin();
+    /**
+     * Constructor
+     */
+    KFileMetaPropsPlugin(KPropertiesDialog *_props);
+    virtual ~KFileMetaPropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  /**
-   * Tests whether the file specified by _items has a 'MetaInfo' plugin.
-   */
-  static bool supports( KFileItemList _items );
+    /**
+     * Tests whether the file specified by _items has a 'MetaInfo' plugin.
+     */
+    static bool supports(KFileItemList _items);
 
 private:
     void createLayout();
 
-    QWidget* makeBoolWidget(const KFileMetaInfoItem& item, QWidget* parent);
-    QWidget* makeIntWidget(const KFileMetaInfoItem& item, QWidget* parent,
-                                                    QString& valClass);
-    QWidget* makeStringWidget(const KFileMetaInfoItem& item, QWidget* parent,
-                                                       QString& valClass);
-    QWidget* makeDateTimeWidget(const KFileMetaInfoItem& item, QWidget* parent,
-                                                     QString& valClass);
+    QWidget *makeBoolWidget(const KFileMetaInfoItem &item, QWidget *parent);
+    QWidget *makeIntWidget(const KFileMetaInfoItem &item, QWidget *parent, QString &valClass);
+    QWidget *makeStringWidget(const KFileMetaInfoItem &item, QWidget *parent, QString &valClass);
+    QWidget *makeDateTimeWidget(const KFileMetaInfoItem &item, QWidget *parent, QString &valClass);
 
 private slots:
     // Code disabled until the "Add" button is implemented
-//    void slotAdd();
+    //    void slotAdd();
 
 private:
-
-  class KFileMetaPropsPluginPrivate;
-  KFileMetaPropsPluginPrivate *d;
+    class KFileMetaPropsPluginPrivate;
+    KFileMetaPropsPluginPrivate *d;
 };
 
 #endif

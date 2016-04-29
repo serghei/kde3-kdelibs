@@ -40,8 +40,7 @@ class QTextCodec;
  *
  * @author Lars Knoll <knoll@kde.org>
  */
-class KDECORE_EXPORT KCharsets
-{
+class KDECORE_EXPORT KCharsets {
     friend class KGlobal;
 
 protected:
@@ -51,7 +50,6 @@ protected:
     KCharsets();
 
 public:
-
     /**
      * Destructor.
      */
@@ -107,7 +105,7 @@ public:
      * @return the clean string
      * @since 3.1
      */
-    static QString resolveEntities( const QString &text );
+    static QString resolveEntities(const QString &text);
 
     /**
      * Lists all available encodings as names.
@@ -126,14 +124,14 @@ public:
      * @param encoding the encoding for the language
      * @return the language of the encoding
      */
-    QString languageForEncoding( const QString &encoding );
+    QString languageForEncoding(const QString &encoding);
 
     /**
      * Returns the encoding for a string obtained with descriptiveEncodingNames().
      * @param descriptiveName the descriptive name for the encoding
      * @return the name of the encoding
      */
-    QString encodingForName( const QString &descriptiveName );
+    QString encodingForName(const QString &descriptiveName);
 
 private:
     KCharsetsPrivate *d;

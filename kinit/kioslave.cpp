@@ -32,49 +32,52 @@
 #include <qstring.h>
 
 #ifdef HAVE_DLFCN_H
-# include <dlfcn.h>
+#include <dlfcn.h>
 #endif
 
 /* These are to link libkio even if 'smart' linker is used */
 #include <kio/authinfo.h>
-extern "C" KIO::AuthInfo* _kioslave_init_kio() { return new KIO::AuthInfo(); }
+extern "C" KIO::AuthInfo *_kioslave_init_kio()
+{
+    return new KIO::AuthInfo();
+}
 
 int main(int argc, char **argv)
 {
-     if (argc < 5)
-     {
+    if(argc < 5)
+    {
         fprintf(stderr, "Usage: kioslave <slave-lib> <protocol> <klauncher-socket> <app-socket>\n\nThis program is part of KDE.\n");
         exit(1);
-     }
-     QCString libpath = argv[1];     
+    }
+    QCString libpath = argv[1];
 
-     if (libpath.isEmpty())
-     {
+    if(libpath.isEmpty())
+    {
         fprintf(stderr, "library path is empty.\n");
-        exit(1); 
-     }
-
-     void *handle = dlopen( libpath.data(), RTLD_LAZY );
-     if (!handle )
-     {
-        const char * dlError = dlerror();
-        fprintf(stderr, "could not open %s: %s", libpath.data(), dlError != 0 ? dlError : "(null)" );
         exit(1);
-     }  
+    }
 
-     void *sym = dlsym( handle, "kdemain");
-     if (!sym )
-     {
-        sym = dlsym( handle, "main");
-        if (!sym )
+    void *handle = dlopen(libpath.data(), RTLD_LAZY);
+    if(!handle)
+    {
+        const char *dlError = dlerror();
+        fprintf(stderr, "could not open %s: %s", libpath.data(), dlError != 0 ? dlError : "(null)");
+        exit(1);
+    }
+
+    void *sym = dlsym(handle, "kdemain");
+    if(!sym)
+    {
+        sym = dlsym(handle, "main");
+        if(!sym)
         {
-           const char * dlError = dlerror();
-           fprintf(stderr, "Could not find main: %s\n", dlError != 0 ? dlError : "(null)" );
-           exit(1);
+            const char *dlError = dlerror();
+            fprintf(stderr, "Could not find main: %s\n", dlError != 0 ? dlError : "(null)");
+            exit(1);
         }
-     }
+    }
 
-     int (*func)(int, char *[]) = (int (*)(int, char *[])) sym;
+    int (*func)(int, char *[]) = (int (*)(int, char *[]))sym;
 
-     exit( func(argc-1, argv+1)); /* Launch! */
+    exit(func(argc - 1, argv + 1)); /* Launch! */
 }

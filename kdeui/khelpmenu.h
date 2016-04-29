@@ -128,19 +128,18 @@ class KHelpMenuPrivate;
  * @author Espen Sand (espen@kde.org)
  */
 
-class KDEUI_EXPORT KHelpMenu : public QObject
-{
-  Q_OBJECT
+class KDEUI_EXPORT KHelpMenu : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     enum MenuId
     {
-      menuHelpContents = 0,
-      menuWhatsThis = 1,
-      menuAboutApp = 2,
-      menuAboutKDE = 3,
-      menuReportBug = 4,
-      menuSwitchLanguage = 5
+        menuHelpContents = 0,
+        menuWhatsThis = 1,
+        menuAboutApp = 2,
+        menuAboutKDE = 3,
+        menuReportBug = 4,
+        menuSwitchLanguage = 5
     };
 
     /**
@@ -156,8 +155,7 @@ class KDEUI_EXPORT KHelpMenu : public QObject
      *        added to the dialog.
      *
      */
-    KHelpMenu( QWidget *parent=0, const QString &aboutAppText=QString::null,
-	       bool showWhatsThis=true );
+    KHelpMenu(QWidget *parent = 0, const QString &aboutAppText = QString::null, bool showWhatsThis = true);
 
     /**
      * Constructor.
@@ -175,8 +173,7 @@ class KDEUI_EXPORT KHelpMenu : public QObject
      *        standard actions.
      *
      */
-    KHelpMenu( QWidget *parent, const KAboutData *aboutData,
-	       bool showWhatsThis=true, KActionCollection *actions = 0 );
+    KHelpMenu(QWidget *parent, const KAboutData *aboutData, bool showWhatsThis = true, KActionCollection *actions = 0);
 
     /**
      * Destructor
@@ -194,7 +191,7 @@ class KDEUI_EXPORT KHelpMenu : public QObject
      */
     KPopupMenu *menu();
 
-  public slots:
+public slots:
     /**
      * Opens the help page for the application. The application name is
      * used as a key to determine what to display and the system will attempt
@@ -223,13 +220,13 @@ class KDEUI_EXPORT KHelpMenu : public QObject
      * Opens the standard "Report Bugs" dialog box.
      */
     void reportBug();
-    
+
     /**
      * Opens changing default application language dialog box.
      */
     void switchApplicationLanguage();
 
-  private slots:
+private slots:
     /**
      * Connected to the menu pointer (if created) to detect a delete
      * operation on the pointer. You should not delete the pointer in your
@@ -250,7 +247,7 @@ class KDEUI_EXPORT KHelpMenu : public QObject
      */
     void timerExpired();
 
-  signals:
+signals:
     /**
      * This signal is emitted from aboutApplication() if no
      * "about application" string has been defined. The standard
@@ -260,20 +257,21 @@ class KDEUI_EXPORT KHelpMenu : public QObject
      */
     void showAboutApplication();
 
-  private:
-    KPopupMenu   *mMenu;
-    KDialogBase  *mAboutApp;
-    KAboutKDE    *mAboutKDE;
-    KBugReport   *mBugReport;
+private:
+    KPopupMenu *mMenu;
+    KDialogBase *mAboutApp;
+    KAboutKDE *mAboutKDE;
+    KBugReport *mBugReport;
 
-    QString      mAboutAppText;
-    QWidget      *mParent;
+    QString mAboutAppText;
+    QWidget *mParent;
 
-    bool         mShowWhatsThis;
+    bool mShowWhatsThis;
 
-  protected:
-    virtual void virtual_hook( int id, void* data );
-  private:
+protected:
+    virtual void virtual_hook(int id, void *data);
+
+private:
     KHelpMenuPrivate *d;
 };
 

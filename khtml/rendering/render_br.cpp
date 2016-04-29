@@ -24,8 +24,7 @@
 using namespace khtml;
 
 
-RenderBR::RenderBR(DOM::NodeImpl* node)
-    : RenderText(node, new DOM::DOMStringImpl(QChar('\n')))
+RenderBR::RenderBR(DOM::NodeImpl *node) : RenderText(node, new DOM::DOMStringImpl(QChar('\n')))
 {
     m_hasReturn = true;
 }
@@ -67,13 +66,13 @@ void RenderBR::caretPos(int offset, int flags, int &_x, int &_y, int &width, int
 }
 #endif
 
-FindSelectionResult RenderBR::checkSelectionPoint(int _x, int _y, int _tx, int _ty, DOM::NodeImpl*& node, int &offset, SelPointState &state)
+FindSelectionResult RenderBR::checkSelectionPoint(int _x, int _y, int _tx, int _ty, DOM::NodeImpl *&node, int &offset, SelPointState &state)
 {
-  // Simply take result of previous one
-  RenderText *prev = static_cast<RenderText *>(previousSibling());
-  if (!prev || !prev->isText() || !prev->inlineTextBoxCount() || prev->isBR())
-    prev = this;
+    // Simply take result of previous one
+    RenderText *prev = static_cast< RenderText * >(previousSibling());
+    if(!prev || !prev->isText() || !prev->inlineTextBoxCount() || prev->isBR())
+        prev = this;
 
-  //kdDebug(6040) << "delegated to " << prev->renderName() << "@" << prev << endl;
-  return prev->RenderText::checkSelectionPoint(_x, _y, _tx, _ty, node, offset, state);
+    // kdDebug(6040) << "delegated to " << prev->renderName() << "@" << prev << endl;
+    return prev->RenderText::checkSelectionPoint(_x, _y, _tx, _ty, node, offset, state);
 }

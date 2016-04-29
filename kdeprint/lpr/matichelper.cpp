@@ -23,16 +23,16 @@
 
 QString maticFile(PrintcapEntry *entry)
 {
-	QString	s(entry->field("af"));
-	if (s.isEmpty())
-	{
-		s = entry->field("filter_options");
-		if (!s.isEmpty())
-		{
-			int	p = s.findRev(' ');
-			if (p != -1)
-				s = s.mid(p+1);
-		}
-	}
-	return s;
+    QString s(entry->field("af"));
+    if(s.isEmpty())
+    {
+        s = entry->field("filter_options");
+        if(!s.isEmpty())
+        {
+            int p = s.findRev(' ');
+            if(p != -1)
+                s = s.mid(p + 1);
+        }
+    }
+    return s;
 }

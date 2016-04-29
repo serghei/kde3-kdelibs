@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,84 +27,78 @@
 
 using namespace VCARD;
 
-UTCValue::UTCValue()
-	:	Value()
+UTCValue::UTCValue() : Value()
 {
 }
 
-UTCValue::UTCValue(const UTCValue & x)
-	:	Value(x),	positive_(x.positive_), hour_(x.hour_), minute_(x.minute_)
+UTCValue::UTCValue(const UTCValue &x) : Value(x), positive_(x.positive_), hour_(x.hour_), minute_(x.minute_)
 
 {
 }
 
-UTCValue::UTCValue(const QCString & s)
-	:	Value(s)
+UTCValue::UTCValue(const QCString &s) : Value(s)
 {
 }
 
-	UTCValue &
-UTCValue::operator = (UTCValue & x)
+UTCValue &UTCValue::operator=(UTCValue &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-  positive_ = x.positive_;
-  hour_ = x.hour_;
-  minute_ = x.minute_;
+    positive_ = x.positive_;
+    hour_ = x.hour_;
+    minute_ = x.minute_;
 
-	Value::operator = (x);
-	return *this;
+    Value::operator=(x);
+    return *this;
 }
 
-	UTCValue &
-UTCValue::operator = (const QCString & s)
+UTCValue &UTCValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-UTCValue::operator == (UTCValue & x)
+bool UTCValue::operator==(UTCValue &x)
 {
-	x.parse();
+    x.parse();
 
-  if (positive_ != x.positive_) return false;
-  if (hour_ != x.hour_) return false;
-  if (minute_ != x.minute_) return false;
+    if(positive_ != x.positive_)
+        return false;
+    if(hour_ != x.hour_)
+        return false;
+    if(minute_ != x.minute_)
+        return false;
 
-	return true;
+    return true;
 }
 
 UTCValue::~UTCValue()
 {
 }
 
-  UTCValue *
-UTCValue::clone()
+UTCValue *UTCValue::clone()
 {
-  return new UTCValue( *this );
+    return new UTCValue(*this);
 }
 
-	void
-UTCValue::_parse()
+void UTCValue::_parse()
 {
-  if ( strRep_.isEmpty() )
-    return;
+    if(strRep_.isEmpty())
+        return;
 
-	positive_ = ( strRep_[0] == '+' );
-	
-	int colon = strRep_.find( ':' );
-	
-	if ( colon == -1 ) // Not valid.
-		return;
+    positive_ = (strRep_[0] == '+');
 
-	hour_	= strRep_.mid( 1, 2 ).toInt();
-	minute_	= strRep_.right( 2 ).toInt();
+    int colon = strRep_.find(':');
+
+    if(colon == -1) // Not valid.
+        return;
+
+    hour_ = strRep_.mid(1, 2).toInt();
+    minute_ = strRep_.right(2).toInt();
 }
 
-	void
-UTCValue::_assemble()
+void UTCValue::_assemble()
 {
-  strRep_.sprintf( "%c%.2i:%.2i", (positive_ ? '+' : '-'), hour_, minute_ );
+    strRep_.sprintf("%c%.2i:%.2i", (positive_ ? '+' : '-'), hour_, minute_);
 }
-

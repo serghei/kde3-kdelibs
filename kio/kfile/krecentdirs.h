@@ -33,8 +33,8 @@
 #include <kdelibs_export.h>
 
 /**
- * The goal of this class is to make sure that, when the user needs to 
- * specify a file via the file selection dialog, this dialog will start 
+ * The goal of this class is to make sure that, when the user needs to
+ * specify a file via the file selection dialog, this dialog will start
  * in the directory most likely to contain the desired files.
  *
  * This works as follows: Each time the file selection dialog is
@@ -47,20 +47,19 @@
  * a single ':' the file-class is specific to the current application.
  * If the file-class starts with '::' it is global to all applications.
  */
-class KIO_EXPORT KRecentDirs
-{
+class KIO_EXPORT KRecentDirs {
 public:
     /**
      * Returns a list of directories associated with this file-class.
      * The most recently used directory is at the front of the list.
      */
     static QStringList list(const QString &fileClass);
-    
+
     /**
      * Returns the most recently used directory accociated with this file-class.
      */
     static QString dir(const QString &fileClass);
-    
+
     /**
      * Associates @p directory with @p fileClass
      */

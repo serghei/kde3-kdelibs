@@ -23,6 +23,5 @@
 
 #include <kgenericfactory.h>
 
-typedef K_TYPELIST_3( KMRlprManager, KMRlprUiManager, KRlprPrinterImpl ) Products;
-K_EXPORT_COMPONENT_FACTORY( kdeprint_rlpr, KGenericFactory< Products > )
-
+typedef K_TYPELIST_3(KMRlprManager, KMRlprUiManager, KRlprPrinterImpl) Products;
+K_EXPORT_COMPONENT_FACTORY(kdeprint_rlpr, KGenericFactory< Products >)

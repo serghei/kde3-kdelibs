@@ -41,53 +41,53 @@ using namespace std;
 
 GhnsWidget::GhnsWidget()
 {
-  mWallpapers = new KNewStuffGeneric( "kdesktop/wallpaper", this );
+    mWallpapers = new KNewStuffGeneric("kdesktop/wallpaper", this);
 
-  QBoxLayout *topLayout = new QVBoxLayout( this );
-  topLayout->setMargin( KDialog::marginHint() );
-  topLayout->setSpacing( KDialog::spacingHint() );
+    QBoxLayout *topLayout = new QVBoxLayout(this);
+    topLayout->setMargin(KDialog::marginHint());
+    topLayout->setSpacing(KDialog::spacingHint());
 
-  topLayout->addWidget( new QLabel( i18n("Get hot new stuff:"), this ) );
+    topLayout->addWidget(new QLabel(i18n("Get hot new stuff:"), this));
 
-  QPushButton *button = new QPushButton( "Wallpapers", this );
-  topLayout->addWidget( button );
-  connect( button, SIGNAL( clicked() ), SLOT( downloadWallpapers() ) );
+    QPushButton *button = new QPushButton("Wallpapers", this);
+    topLayout->addWidget(button);
+    connect(button, SIGNAL(clicked()), SLOT(downloadWallpapers()));
 
-  topLayout->addSpacing( 5 );
+    topLayout->addSpacing(5);
 
-  QBoxLayout *buttonLayout = new QHBoxLayout( topLayout );
+    QBoxLayout *buttonLayout = new QHBoxLayout(topLayout);
 
-  buttonLayout->addStretch();
+    buttonLayout->addStretch();
 
-  QPushButton *closeButton = new QPushButton( "Close", this );
-  buttonLayout->addWidget( closeButton );
-  connect( closeButton, SIGNAL( clicked() ), kapp, SLOT( quit() ) );
+    QPushButton *closeButton = new QPushButton("Close", this);
+    buttonLayout->addWidget(closeButton);
+    connect(closeButton, SIGNAL(clicked()), kapp, SLOT(quit()));
 }
 
 GhnsWidget::~GhnsWidget()
 {
-  delete mWallpapers;
+    delete mWallpapers;
 }
 
 void GhnsWidget::downloadWallpapers()
 {
-  kdDebug() << "downloadWallpapers()" << endl;
+    kdDebug() << "downloadWallpapers()" << endl;
 
-  mWallpapers->download();
+    mWallpapers->download();
 }
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KAboutData aboutData("ghns","Get Hot New Stuff","0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
+    KAboutData aboutData("ghns", "Get Hot New Stuff", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  GhnsWidget wid;
-  app.setMainWidget( &wid );
-  wid.show();
+    GhnsWidget wid;
+    app.setMainWidget(&wid);
+    wid.show();
 
-  app.exec();
+    app.exec();
 }
 
 #include "ghns.moc"

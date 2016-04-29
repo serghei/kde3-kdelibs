@@ -30,32 +30,32 @@ Plugin::~Plugin()
 {
 }
 
-void Plugin::setType( const QString& type )
+void Plugin::setType(const QString &type)
 {
-  mType = type;
+    mType = type;
 }
 
 QString Plugin::type() const
 {
-  return mType;
+    return mType;
 }
 
-void Plugin::setNameLabel( const QString& label )
+void Plugin::setNameLabel(const QString &label)
 {
-  mNameLabel = label;
+    mNameLabel = label;
 }
 
 QString Plugin::nameLabel() const
 {
-  return mNameLabel;
+    return mNameLabel;
 }
 
-void Plugin::setDescriptionLabel( const QString& label )
+void Plugin::setDescriptionLabel(const QString &label)
 {
-  mDescriptionLabel = label;
+    mDescriptionLabel = label;
 }
 
 QString Plugin::descriptionLabel() const
 {
-  return mDescriptionLabel;
+    return mDescriptionLabel;
 }

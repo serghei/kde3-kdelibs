@@ -57,15 +57,14 @@ class CSSValue;
  * interface.
  *
  */
-class KHTML_EXPORT CSSStyleDeclaration
-{
+class KHTML_EXPORT CSSStyleDeclaration {
 public:
     CSSStyleDeclaration();
     CSSStyleDeclaration(const CSSStyleDeclaration &other);
     CSSStyleDeclaration(CSSStyleDeclarationImpl *impl);
-public:
 
-    CSSStyleDeclaration & operator = (const CSSStyleDeclaration &other);
+public:
+    CSSStyleDeclaration &operator=(const CSSStyleDeclaration &other);
 
     ~CSSStyleDeclaration();
 
@@ -89,7 +88,7 @@ public:
      * readonly.
      *
      */
-    void setCssText( const DOM::DOMString & );
+    void setCssText(const DOM::DOMString &);
 
     /**
      * The number of properties that have been explicitly set in this
@@ -117,8 +116,8 @@ public:
      * string if the property has not been set.
      *
      */
-    DOM::DOMString getPropertyValue ( const DOM::DOMString &propertyName ) const;
-    DOM::DOMString getPropertyValue ( const DOM::DOMString &propertyName );
+    DOM::DOMString getPropertyValue(const DOM::DOMString &propertyName) const;
+    DOM::DOMString getPropertyValue(const DOM::DOMString &propertyName);
 
     /**
      * Used to retrieve the object representation of the value of a
@@ -139,8 +138,8 @@ public:
      * \c null if the property has not been set.
      *
      */
-    CSSValue getPropertyCSSValue ( const DOM::DOMString &propertyName ) const;
-    CSSValue getPropertyCSSValue ( const DOM::DOMString &propertyName );
+    CSSValue getPropertyCSSValue(const DOM::DOMString &propertyName) const;
+    CSSValue getPropertyCSSValue(const DOM::DOMString &propertyName);
 
     /**
      * Used to remove a CSS property if it has been explicitly set
@@ -160,7 +159,7 @@ public:
      * readonly.
      *
      */
-    DOM::DOMString removeProperty ( const DOM::DOMString &propertyName );
+    DOM::DOMString removeProperty(const DOM::DOMString &propertyName);
 
     /**
      * Used to retrieve the priority of a CSS property (e.g. the
@@ -176,8 +175,8 @@ public:
      * exists.
      *
      */
-    DOM::DOMString getPropertyPriority ( const DOM::DOMString &propertyName ) const;
-    DOM::DOMString getPropertyPriority ( const DOM::DOMString &propertyName );
+    DOM::DOMString getPropertyPriority(const DOM::DOMString &propertyName) const;
+    DOM::DOMString getPropertyPriority(const DOM::DOMString &propertyName);
 
     /**
      * Used to set a property value and priority within this
@@ -203,7 +202,7 @@ public:
      * readonly.
      *
      */
-    void setProperty ( const DOM::DOMString &propertyName, const DOM::DOMString &value, const DOM::DOMString &priority );
+    void setProperty(const DOM::DOMString &propertyName, const DOM::DOMString &value, const DOM::DOMString &priority);
 
     /**
      * Used to retrieve the properties that have been explicitly set
@@ -218,8 +217,8 @@ public:
      * empty string if no property exists at this position.
      *
      */
-    DOM::DOMString item ( unsigned long index ) const;
-    DOM::DOMString item ( unsigned long index );
+    DOM::DOMString item(unsigned long index) const;
+    DOM::DOMString item(unsigned long index);
 
     /**
      * @internal
@@ -240,15 +239,14 @@ class CSSValueImpl;
  * complexe value.
  *
  */
-class KHTML_EXPORT CSSValue
-{
+class KHTML_EXPORT CSSValue {
 public:
     CSSValue();
     CSSValue(const CSSValue &other);
     CSSValue(CSSValueImpl *impl);
-public:
 
-    CSSValue & operator = (const CSSValue &other);
+public:
+    CSSValue &operator=(const CSSValue &other);
 
     ~CSSValue();
     /**
@@ -258,8 +256,9 @@ public:
      * implementation since all CSS2 interfaces are optionals.
      *
      */
-    enum UnitTypes {
-	CSS_INHERIT = 0,
+    enum UnitTypes
+    {
+        CSS_INHERIT = 0,
         CSS_PRIMITIVE_VALUE = 1,
         CSS_VALUE_LIST = 2,
         CSS_CUSTOM = 3,
@@ -283,7 +282,7 @@ public:
      * readonly.
      *
      */
-    void setCssText( const DOM::DOMString & );
+    void setCssText(const DOM::DOMString &);
 
     /**
      * A code defining the type of the value as defined above.
@@ -313,17 +312,16 @@ class CSSValue;
  * of an ordered collection of CSS values.
  *
  */
-class KHTML_EXPORT CSSValueList : public CSSValue
-{
+class KHTML_EXPORT CSSValueList : public CSSValue {
 public:
     CSSValueList();
     CSSValueList(const CSSValueList &other);
     CSSValueList(const CSSValue &other);
     CSSValueList(CSSValueListImpl *impl);
-public:
 
-    CSSValueList & operator = (const CSSValueList &other);
-    CSSValueList & operator = (const CSSValue &other);
+public:
+    CSSValueList &operator=(const CSSValueList &other);
+    CSSValueList &operator=(const CSSValue &other);
 
     ~CSSValueList();
 
@@ -347,7 +345,7 @@ public:
      * that is not valid index.
      *
      */
-    CSSValue item ( unsigned long index );
+    CSSValue item(unsigned long index);
 
 protected:
     CSSValueListImpl *vimpl;
@@ -370,24 +368,24 @@ class Rect;
  * \c CSSStyleDeclaration interface.
  *
  */
-class KHTML_EXPORT CSSPrimitiveValue : public CSSValue
-{
+class KHTML_EXPORT CSSPrimitiveValue : public CSSValue {
 public:
     CSSPrimitiveValue();
     CSSPrimitiveValue(const CSSPrimitiveValue &other);
     CSSPrimitiveValue(const CSSValue &other);
     CSSPrimitiveValue(CSSPrimitiveValueImpl *impl);
-public:
 
-    CSSPrimitiveValue & operator = (const CSSPrimitiveValue &other);
-    CSSPrimitiveValue & operator = (const CSSValue &other);
+public:
+    CSSPrimitiveValue &operator=(const CSSPrimitiveValue &other);
+    CSSPrimitiveValue &operator=(const CSSValue &other);
 
     ~CSSPrimitiveValue();
     /**
      * An integer indicating which type of unit applies to the value.
      *
      */
-    enum UnitTypes {
+    enum UnitTypes
+    {
         CSS_UNKNOWN = 0,
         CSS_NUMBER = 1,
         CSS_PERCENTAGE = 2,
@@ -414,7 +412,7 @@ public:
         CSS_COUNTER = 23,
         CSS_RECT = 24,
         CSS_RGBCOLOR = 25,
-        CSS_PAIR = 100, // We envision this being exposed as a means of getting computed style values for pairs 
+        CSS_PAIR = 100, // We envision this being exposed as a means of getting computed style values for pairs
         CSS_HTML_RELATIVE = 255
     };
 
@@ -453,7 +451,7 @@ public:
      * readonly.
      *
      */
-    void setFloatValue ( unsigned short unitType, float floatValue );
+    void setFloatValue(unsigned short unitType, float floatValue);
 
     /**
      * This method is used to get a float value in a specified unit.
@@ -481,7 +479,7 @@ public:
      *
      */
     // ### KDE 4: make this const!
-    float getFloatValue ( unsigned short unitType );
+    float getFloatValue(unsigned short unitType);
 
     /**
      * A method to set the string value with a specified unit. If the
@@ -508,7 +506,7 @@ public:
      * readonly.
      *
      */
-    void setStringValue ( unsigned short stringType, const DOM::DOMString &stringValue );
+    void setStringValue(unsigned short stringType, const DOM::DOMString &stringValue);
 
     /**
      * This method is used to get the string value in a specified
@@ -526,7 +524,7 @@ public:
      *
      */
     // ### KDE4: make this const!
-    DOM::DOMString getStringValue (  );
+    DOM::DOMString getStringValue();
 
     /**
      * This method is used to get the Counter value. If this CSS value
@@ -542,7 +540,7 @@ public:
      *
      */
     // ### KDE4: make this const!
-    Counter getCounterValue (  );
+    Counter getCounterValue();
 
     /**
      * This method is used to get the Rect value. If this CSS value
@@ -558,7 +556,7 @@ public:
      *
      */
     // ### KDE4: make this const!
-    Rect getRectValue (  );
+    Rect getRectValue();
 
     /**
      * This method is used to get the RGB color. If this CSS value
@@ -575,9 +573,8 @@ public:
      *
      */
     // ### KDE4: make this const!
-    RGBColor getRGBColorValue (  );
+    RGBColor getRGBColorValue();
 };
-
 
 
 /**
@@ -588,18 +585,20 @@ public:
  * interface modify the style property.
  *
  */
-class KHTML_EXPORT RGBColor
-{
+class KHTML_EXPORT RGBColor {
 public:
     RGBColor();
     /**
      * @deprecated
      */
-    RGBColor(const QColor& c) { m_color = c.rgb(); }
+    RGBColor(const QColor &c)
+    {
+        m_color = c.rgb();
+    }
     RGBColor(QRgb color);
 
     RGBColor(const RGBColor &other);
-    RGBColor & operator = (const RGBColor &other);
+    RGBColor &operator=(const RGBColor &other);
 
     ~RGBColor();
 
@@ -624,7 +623,11 @@ public:
     /**
      * @internal
      */
-    QRgb color() const { return m_color; }
+    QRgb color() const
+    {
+        return m_color;
+    }
+
 protected:
     QRgb m_color;
 };
@@ -639,14 +642,14 @@ class RectImpl;
  * interface modify the style property.
  *
  */
-class KHTML_EXPORT Rect
-{
+class KHTML_EXPORT Rect {
     friend class CSSPrimitiveValue;
+
 public:
     Rect();
     Rect(const Rect &other);
 
-    Rect & operator = (const Rect &other);
+    Rect &operator=(const Rect &other);
 
     ~Rect();
 
@@ -696,15 +699,15 @@ class CounterImpl;
  * made through this interface modify the style property.
  *
  */
-class KHTML_EXPORT Counter
-{
+class KHTML_EXPORT Counter {
     friend class CSSPrimitiveValue;
+
 public:
     Counter();
     Counter(const Counter &other);
-public:
 
-    Counter & operator = (const Counter &other);
+public:
+    Counter &operator=(const Counter &other);
 
     ~Counter();
 

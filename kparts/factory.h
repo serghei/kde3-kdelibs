@@ -24,25 +24,23 @@
 
 class QWidget;
 
-namespace KParts
-{
+namespace KParts {
 
 class Part;
 
 /**
  * A generic factory object to create a Part.
  *
- * Factory is an abstract class. Reimplement the 
+ * Factory is an abstract class. Reimplement the
  * createPartObject() method to give it functionality.
  *
  * @see KLibFactory.
  */
-class KPARTS_EXPORT Factory : public KLibFactory
-{
-  Q_OBJECT
+class KPARTS_EXPORT Factory : public KLibFactory {
+    Q_OBJECT
 public:
-  Factory( QObject *parent = 0, const char *name = 0 );
-  virtual ~Factory();
+    Factory(QObject *parent = 0, const char *name = 0);
+    virtual ~Factory();
 
     /**
      * Creates a part.
@@ -71,27 +69,27 @@ public:
      * important for reference counting, and allows unloading the
      * library automatically once all its objects have been destroyed.
      */
-     Part *createPart( QWidget *parentWidget = 0, const char *widgetName = 0, QObject *parent = 0, const char *name = 0, const char *classname = "KParts::Part", const QStringList &args = QStringList() );
+    Part *createPart(QWidget *parentWidget = 0, const char *widgetName = 0, QObject *parent = 0, const char *name = 0,
+                     const char *classname = "KParts::Part", const QStringList &args = QStringList());
 
-     /**
-      * If you have a part contained in a shared library you might want to query
-      * for meta-information like the about-data, or the KInstance in general.
-      * If the part is exported using KParts::GenericFactory then this method will
-      * return the instance that belongs to the part without the need to instantiate
-      * the part component.
-      */
-     const KInstance *partInstance();
+    /**
+     * If you have a part contained in a shared library you might want to query
+     * for meta-information like the about-data, or the KInstance in general.
+     * If the part is exported using KParts::GenericFactory then this method will
+     * return the instance that belongs to the part without the need to instantiate
+     * the part component.
+     */
+    const KInstance *partInstance();
 
-     /**
-      * A convenience method for partInstance() that takes care of retrieving
-      * the factory for a given library name and calling partInstance() on it.
-      *
-      * @param libraryName name of the library to query the instance from
-      */
-     static const KInstance *partInstanceFromLibrary( const QCString &libraryName );
+    /**
+     * A convenience method for partInstance() that takes care of retrieving
+     * the factory for a given library name and calling partInstance() on it.
+     *
+     * @param libraryName name of the library to query the instance from
+     */
+    static const KInstance *partInstanceFromLibrary(const QCString &libraryName);
 
 protected:
-
     /**
      * Reimplement this method in your implementation to create the Part.
      *
@@ -114,25 +112,29 @@ protected:
      *
      * @returns the newly created part.
      */
-    virtual Part *createPartObject( QWidget *parentWidget = 0, const char *widgetName = 0, QObject *parent = 0, const char *name = 0, const char *classname = "KParts::Part", const QStringList &args = QStringList() ) = 0;
-    
+    virtual Part *createPartObject(QWidget *parentWidget = 0, const char *widgetName = 0, QObject *parent = 0, const char *name = 0,
+                                   const char *classname = "KParts::Part", const QStringList &args = QStringList()) = 0;
+
     /**
      * Reimplemented from KLibFactory. Calls createPart()
      */
-    virtual QObject *createObject( QObject *parent = 0, const char *name = 0, const char *classname = "QObject", const QStringList &args = QStringList() );
+    virtual QObject *createObject(QObject *parent = 0, const char *name = 0, const char *classname = "QObject",
+                                  const QStringList &args = QStringList());
 
     /** This 'enum' along with the structure below is NOT part of the public API.
       * It's going to disappear in KDE 4.0 and is likely to change inbetween.
       *
       * @internal
       */
-    enum { VIRTUAL_QUERY_INSTANCE_PARAMS = 0x10 };
+    enum
+    {
+        VIRTUAL_QUERY_INSTANCE_PARAMS = 0x10
+    };
     struct QueryInstanceParams
     {
         const KInstance *instance;
     };
 };
-
 }
 
 /*

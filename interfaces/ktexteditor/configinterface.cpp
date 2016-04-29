@@ -18,21 +18,22 @@
 
 // $Id: configinterface.cpp 465272 2005-09-29 09:47:40Z mueller $
 
-#include "configinterface.h"    
+#include "configinterface.h"
 
 #include "document.h"
 #include "plugin.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateConfigInterface
-{
-  public:
-    PrivateConfigInterface() {}
-    ~PrivateConfigInterface() {}
+class PrivateConfigInterface {
+public:
+    PrivateConfigInterface()
+    {
+    }
+    ~PrivateConfigInterface()
+    {
+    }
 };
-
 }
 
 using namespace KTextEditor;
@@ -41,39 +42,39 @@ unsigned int ConfigInterface::globalConfigInterfaceNumber = 0;
 
 ConfigInterface::ConfigInterface()
 {
-  globalConfigInterfaceNumber++;
-  myConfigInterfaceNumber = globalConfigInterfaceNumber++;
+    globalConfigInterfaceNumber++;
+    myConfigInterfaceNumber = globalConfigInterfaceNumber++;
 
-  d = new PrivateConfigInterface();
+    d = new PrivateConfigInterface();
 }
 
 ConfigInterface::~ConfigInterface()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int ConfigInterface::configInterfaceNumber () const
+unsigned int ConfigInterface::configInterfaceNumber() const
 {
-  return myConfigInterfaceNumber;
+    return myConfigInterfaceNumber;
 }
 
-void ConfigInterface::setConfigInterfaceDCOPSuffix (const QCString &/*suffix*/)
+void ConfigInterface::setConfigInterfaceDCOPSuffix(const QCString & /*suffix*/)
 {
-  //d->interface->setObjId ("ConfigInterface#"+suffix);
+    // d->interface->setObjId ("ConfigInterface#"+suffix);
 }
 
-ConfigInterface *KTextEditor::configInterface (Document *doc)
-{                       
-  if (!doc)
-    return 0;
+ConfigInterface *KTextEditor::configInterface(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<ConfigInterface*>(doc->qt_cast("KTextEditor::ConfigInterface"));
-}      
+    return static_cast< ConfigInterface * >(doc->qt_cast("KTextEditor::ConfigInterface"));
+}
 
-ConfigInterface *KTextEditor::configInterface (Plugin *plugin)
-{                       
-  if (!plugin)
-    return 0;
+ConfigInterface *KTextEditor::configInterface(Plugin *plugin)
+{
+    if(!plugin)
+        return 0;
 
-  return static_cast<ConfigInterface*>(plugin->qt_cast("KTextEditor::ConfigInterface"));
+    return static_cast< ConfigInterface * >(plugin->qt_cast("KTextEditor::ConfigInterface"));
 }

@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,55 +27,47 @@
 
 using namespace VCARD;
 
-AgentValue::AgentValue()
-	:	Value()
+AgentValue::AgentValue() : Value()
 {
 }
 
-AgentValue::AgentValue(const AgentValue & x)
-	:	Value(x)
+AgentValue::AgentValue(const AgentValue &x) : Value(x)
 {
 }
 
-AgentValue::AgentValue(const QCString & s)
-	:	Value(s)
+AgentValue::AgentValue(const QCString &s) : Value(s)
 {
 }
 
-	AgentValue &
-AgentValue::operator = (AgentValue & x)
+AgentValue &AgentValue::operator=(AgentValue &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Value::operator = (x);
-	return *this;
+    Value::operator=(x);
+    return *this;
 }
 
-	AgentValue &
-AgentValue::operator = (const QCString & s)
+AgentValue &AgentValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-AgentValue::operator == (AgentValue & x)
+bool AgentValue::operator==(AgentValue &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 AgentValue::~AgentValue()
 {
 }
 
-	void
-AgentValue::_parse()
+void AgentValue::_parse()
 {
 }
 
-	void
-AgentValue::_assemble()
+void AgentValue::_assemble()
 {
 }
-

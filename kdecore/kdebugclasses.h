@@ -21,13 +21,12 @@
 */
 
 #ifndef _KDEBUG_CLASSES_H_
-#define _KDEBUG_CLASSES_H_ 
+#define _KDEBUG_CLASSES_H_
 
-#if defined(__GNUC__) 
+#if defined(__GNUC__)
 #warning include kdebug.h instead, except if KDE 3.1 compatibility is needed
 #endif
 
 #include <kdebug.h>
 
 #endif
-

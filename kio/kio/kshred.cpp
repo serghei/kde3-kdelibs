@@ -30,168 +30,160 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // antlarr: KDE 4: Make it const QString &
 KShred::KShred(QString fileName)
 {
-  if (fileName.isEmpty())
-  {
-    kdError() << "KShred: missing file name in constructor" << endl;
-    file = 0L;
-  }
-  else
-  {
-    file = new QFile();
-    file->setName(fileName);
-    if (!file->open(IO_ReadWrite))
+    if(fileName.isEmpty())
     {
-      kdError() << "KShred: cannot open file '" << fileName.local8Bit().data() << "' for writing\n" << endl;
-      file = 0L;
-      fileSize = 0;
+        kdError() << "KShred: missing file name in constructor" << endl;
+        file = 0L;
     }
     else
-      fileSize = file->size();
+    {
+        file = new QFile();
+        file->setName(fileName);
+        if(!file->open(IO_ReadWrite))
+        {
+            kdError() << "KShred: cannot open file '" << fileName.local8Bit().data() << "' for writing\n" << endl;
+            file = 0L;
+            fileSize = 0;
+        }
+        else
+            fileSize = file->size();
 
-    totalBytes    = 0;
-    bytesWritten  = 0;
-    lastSignalled = 0;
-    tbpc          = 0;
-    fspc          = 0;
-  }
+        totalBytes = 0;
+        bytesWritten = 0;
+        lastSignalled = 0;
+        tbpc = 0;
+        fspc = 0;
+    }
 }
 
 
 KShred::~KShred()
 {
-  if (file != 0L)
-    delete file;
+    if(file != 0L)
+        delete file;
 }
 
 
-bool
-KShred::fill1s()
+bool KShred::fill1s()
 {
-  return fillbyte(0xFF);
+    return fillbyte(0xFF);
 }
 
 
-bool
-KShred::fill0s()
+bool KShred::fill0s()
 {
-  return fillbyte(0x0);
+    return fillbyte(0x0);
 }
 
 
-bool
-KShred::fillbyte(unsigned int byte)
+bool KShred::fillbyte(unsigned int byte)
 {
-  if (file == 0L)
-    return false;
-  unsigned char buff[4096];
-  memset((void *) buff, byte, 4096);
+    if(file == 0L)
+        return false;
+    unsigned char buff[4096];
+    memset((void *)buff, byte, 4096);
 
-  unsigned int n;
-  for (unsigned int todo = fileSize; todo > 0; todo -= n)
-  {
-    n = (todo > 4096 ? 4096 : todo);
-    if (!writeData(buff, n))
-      return false;
-  }
-  if (!flush())
-    return false;
-  return file->at(0);
+    unsigned int n;
+    for(unsigned int todo = fileSize; todo > 0; todo -= n)
+    {
+        n = (todo > 4096 ? 4096 : todo);
+        if(!writeData(buff, n))
+            return false;
+    }
+    if(!flush())
+        return false;
+    return file->at(0);
 }
 
 
-bool
-KShred::fillpattern(unsigned char *data, unsigned int size)
+bool KShred::fillpattern(unsigned char *data, unsigned int size)
 {
-  if (file == 0L)
-    return false;
+    if(file == 0L)
+        return false;
 
-  unsigned int n;
-  for (unsigned int todo = fileSize; todo > 0; todo -= n)
-  {
-    n = (todo > size ? size : todo);
-    if (!writeData(data, n))
-      return false;
-  }
-  if (!flush())
-    return false;
-  return file->at(0);
+    unsigned int n;
+    for(unsigned int todo = fileSize; todo > 0; todo -= n)
+    {
+        n = (todo > size ? size : todo);
+        if(!writeData(data, n))
+            return false;
+    }
+    if(!flush())
+        return false;
+    return file->at(0);
 }
 
 
-bool
-KShred::fillrandom()
+bool KShred::fillrandom()
 {
-  if (file == 0L)
-    return false;
+    if(file == 0L)
+        return false;
 
-  long int buff[4096 / sizeof(long int)];
-  unsigned int n;
+    long int buff[4096 / sizeof(long int)];
+    unsigned int n;
 
-  for (unsigned int todo = fileSize; todo > 0; todo -= n)
-  {
-    n = (todo > 4096 ? 4096 : todo);
-    // assumes that 4096 is a multipe of sizeof(long int)
-    int limit = (n + sizeof(long int) - 1) / sizeof(long int);
-    for (int i = 0; i < limit; i++)
-      buff[i] = kapp->random();
+    for(unsigned int todo = fileSize; todo > 0; todo -= n)
+    {
+        n = (todo > 4096 ? 4096 : todo);
+        // assumes that 4096 is a multipe of sizeof(long int)
+        int limit = (n + sizeof(long int) - 1) / sizeof(long int);
+        for(int i = 0; i < limit; i++)
+            buff[i] = kapp->random();
 
-    if (!writeData((unsigned char *) buff, n))
-      return false;
-  }
-  if (!flush())
-    return false;
-  return file->at(0);
+        if(!writeData((unsigned char *)buff, n))
+            return false;
+    }
+    if(!flush())
+        return false;
+    return file->at(0);
 }
 
 
 // antlarr: KDE 4: Make it const QString &
-bool
-KShred::shred(QString fileName)
+bool KShred::shred(QString fileName)
 {
-  if (fileName.isEmpty())
-    return false;
+    if(fileName.isEmpty())
+        return false;
 
-  KShred shredder(fileName);
-  return shredder.shred();
+    KShred shredder(fileName);
+    return shredder.shred();
 }
 
 
-bool
-KShred::writeData(unsigned char *data, unsigned int size)
+bool KShred::writeData(unsigned char *data, unsigned int size)
 {
-  unsigned int ret                  = 0;
+    unsigned int ret = 0;
 
-  // write 'data' of size 'size' to the file
-  while ((ret < size) && (file->putch((int) data[ret]) >= 0))
-    ret++;
+    // write 'data' of size 'size' to the file
+    while((ret < size) && (file->putch((int)data[ret]) >= 0))
+        ret++;
 
-  if ((totalBytes > 0) && (ret > 0))
-  {
-    if (tbpc == 0)
+    if((totalBytes > 0) && (ret > 0))
     {
-      tbpc = ((unsigned int) (totalBytes / 100)) == 0 ? 1 : totalBytes / 100;
-      fspc = ((unsigned int) (fileSize / 100)) == 0 ? 1 : fileSize / 100;
+        if(tbpc == 0)
+        {
+            tbpc = ((unsigned int)(totalBytes / 100)) == 0 ? 1 : totalBytes / 100;
+            fspc = ((unsigned int)(fileSize / 100)) == 0 ? 1 : fileSize / 100;
+        }
+        bytesWritten += ret;
+        unsigned int pc = (unsigned int)(bytesWritten / tbpc);
+        if(pc > lastSignalled)
+        {
+            emit processedSize(fspc * pc);
+            lastSignalled = pc;
+        }
     }
-    bytesWritten += ret;
-    unsigned int pc = (unsigned int) (bytesWritten / tbpc);
-    if (pc > lastSignalled)
-    {
-      emit processedSize(fspc * pc);
-      lastSignalled = pc;
-    }
-  }
-  return ret == size;
+    return ret == size;
 }
 
 
-bool
-KShred::flush()
+bool KShred::flush()
 {
-  if (file == 0L)
-    return false;
+    if(file == 0L)
+        return false;
 
-  file->flush();
-  return (fsync(file->handle()) == 0);
+    file->flush();
+    return (fsync(file->handle()) == 0);
 }
 
 
@@ -203,75 +195,71 @@ KShred::flush()
 // Proceedings, San Jose, CA, July 22-25, 1996 (available online at
 // http://rootprompt.org/article.php3?article=473)
 
-bool
-KShred::shred()
+bool KShred::shred()
 {
-  unsigned char p[6][3] = {{0222, 0111, 0044}, {0111, 0044, 0222},
-                           {0044, 0222, 0111}, {0155, 0266, 0333},
-                           {0266, 0333, 0155}, {0333, 0155, 0266}};
+    unsigned char p[6][3] = {{0222, 0111, 0044}, {0111, 0044, 0222}, {0044, 0222, 0111}, {0155, 0266, 0333}, {0266, 0333, 0155}, {0333, 0155, 0266}};
 
-  QString msg = i18n("Shredding:  pass %1 of 35");
+    QString msg = i18n("Shredding:  pass %1 of 35");
 
-  emit processedSize(0);
+    emit processedSize(0);
 
-  // thirty-five times writing the entire file size
-  totalBytes = fileSize * 35;
-  int iteration = 1;
+    // thirty-five times writing the entire file size
+    totalBytes = fileSize * 35;
+    int iteration = 1;
 
-  for (int ctr = 0; ctr < 4; ctr++)
-    if (!fillrandom())
-      return false;
-    else
-    {
-      emit infoMessage(msg.arg(iteration));
-    }
+    for(int ctr = 0; ctr < 4; ctr++)
+        if(!fillrandom())
+            return false;
+        else
+        {
+            emit infoMessage(msg.arg(iteration));
+        }
 
-  if (!fillbyte((unsigned int) 0x55))     // '0x55' is 01010101
-    return false;
-  emit infoMessage(msg.arg(iteration));
+    if(!fillbyte((unsigned int)0x55)) // '0x55' is 01010101
+        return false;
+    emit infoMessage(msg.arg(iteration));
 
-  if (!fillbyte((unsigned int) 0xAA))     // '0xAA' is 10101010
-    return false;
-  emit infoMessage(msg.arg(iteration));
+    if(!fillbyte((unsigned int)0xAA)) // '0xAA' is 10101010
+        return false;
+    emit infoMessage(msg.arg(iteration));
 
-  for (unsigned int ctr = 0; ctr < 3; ctr++)
-    if (!fillpattern(p[ctr], 3))  // '0x92', '0x49', '0x24'
-      return false;
-    else
-    {
-      emit infoMessage(msg.arg(iteration));
-    }
+    for(unsigned int ctr = 0; ctr < 3; ctr++)
+        if(!fillpattern(p[ctr], 3)) // '0x92', '0x49', '0x24'
+            return false;
+        else
+        {
+            emit infoMessage(msg.arg(iteration));
+        }
 
-  for (unsigned int ctr = 0; ctr <= 255 ; ctr += 17)
-    if (!fillbyte(ctr))    // sequence of '0x00', '0x11', ..., '0xFF'
-      return false;
-    else
-    {
-      emit infoMessage(msg.arg(iteration));
-    }
+    for(unsigned int ctr = 0; ctr <= 255; ctr += 17)
+        if(!fillbyte(ctr)) // sequence of '0x00', '0x11', ..., '0xFF'
+            return false;
+        else
+        {
+            emit infoMessage(msg.arg(iteration));
+        }
 
-  for (unsigned int ctr = 0; ctr < 6; ctr++)
-    if (!fillpattern(p[ctr], 3))  // '0x92', '0x49', '0x24'
-      return false;
-    else
-    {
-      emit infoMessage(msg.arg(iteration));
-    }
+    for(unsigned int ctr = 0; ctr < 6; ctr++)
+        if(!fillpattern(p[ctr], 3)) // '0x92', '0x49', '0x24'
+            return false;
+        else
+        {
+            emit infoMessage(msg.arg(iteration));
+        }
 
-  for (int ctr = 0; ctr < 4; ctr++)
-    if (!fillrandom())
-      return false;
-    else
-    {
-      emit infoMessage(msg.arg(iteration));
-    }
+    for(int ctr = 0; ctr < 4; ctr++)
+        if(!fillrandom())
+            return false;
+        else
+        {
+            emit infoMessage(msg.arg(iteration));
+        }
 
-  if (!file->remove())
-    return false;
-  file = 0L;
-  emit processedSize(fileSize);
-  return true;
+    if(!file->remove())
+        return false;
+    file = 0L;
+    emit processedSize(fileSize);
+    return true;
 }
 
 #include "kshred.moc"
-

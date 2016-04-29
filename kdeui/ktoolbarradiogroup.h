@@ -33,56 +33,55 @@ class KToolBarRadioGroupPrivate;
 /*************************************************************************
  *                          KToolBarRadioGroup                                  *
  *************************************************************************/
- /**
-  * @short Class for group of radio butons in toolbar.
-  *
-  * KToolBarRadioGroup is class for group of radio butons in toolbar.
-  * Take toggle buttons which you already inserted into toolbar,
-  * create KToolBarRadioGroup instance and add them here.
-  * All buttons will emit signals toggled (bool) (or you can
-  * use sitgnal toggled (int id) from toolbar). When one button is set
-  * down, all others are unset. All buttons emit signals - those who
-  * "go down" and those who "go up".
-  *
-  * @author Sven Radej <radej@kde.org>
-  */
-class KDEUI_EXPORT KToolBarRadioGroup : public QObject
-{
-  Q_OBJECT
+/**
+ * @short Class for group of radio butons in toolbar.
+ *
+ * KToolBarRadioGroup is class for group of radio butons in toolbar.
+ * Take toggle buttons which you already inserted into toolbar,
+ * create KToolBarRadioGroup instance and add them here.
+ * All buttons will emit signals toggled (bool) (or you can
+ * use sitgnal toggled (int id) from toolbar). When one button is set
+ * down, all others are unset. All buttons emit signals - those who
+ * "go down" and those who "go up".
+ *
+ * @author Sven Radej <radej@kde.org>
+ */
+class KDEUI_EXPORT KToolBarRadioGroup : public QObject {
+    Q_OBJECT
 
 public:
-  /**
-   * Constructor. Parent must be KToolBar .
-   */
-  KToolBarRadioGroup (KToolBar *_parent, const char *_name=0);
-  /**
-   * Destructor.
-   */
-  ~KToolBarRadioGroup ();
+    /**
+     * Constructor. Parent must be KToolBar .
+     */
+    KToolBarRadioGroup(KToolBar *_parent, const char *_name = 0);
+    /**
+     * Destructor.
+     */
+    ~KToolBarRadioGroup();
 
-  /**
-   * Adds button to group. Button cannot be unset by mouse clicks (you
-   * must press some other button tounset this one)
-   */
-  void addButton (int id);
+    /**
+     * Adds button to group. Button cannot be unset by mouse clicks (you
+     * must press some other button tounset this one)
+     */
+    void addButton(int id);
 
-  /**
-   * Removes button from group, making it again toggle button (i.e.
-   * You can unset it with mouse).
-   */
-  void removeButton (int id);
+    /**
+     * Removes button from group, making it again toggle button (i.e.
+     * You can unset it with mouse).
+     */
+    void removeButton(int id);
 
 public slots:
-  /**
-   * Internal - nothing for you here.
-   */
-  void slotToggled (int);
+    /**
+     * Internal - nothing for you here.
+     */
+    void slotToggled(int);
 
 private:
-  KToolBarButtonList *buttons;
-  KToolBar *tb;
+    KToolBarButtonList *buttons;
+    KToolBar *tb;
 
-  KToolBarRadioGroupPrivate *d;
+    KToolBarRadioGroupPrivate *d;
 };
 
 #endif

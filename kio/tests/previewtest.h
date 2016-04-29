@@ -6,8 +6,7 @@ class KLineEdit;
 class QLabel;
 class KFileItem;
 
-class PreviewTest : public QWidget
-{
+class PreviewTest : public QWidget {
     Q_OBJECT
 public:
     PreviewTest();
@@ -15,11 +14,10 @@ public:
 private slots:
     void slotGenerate();
     void slotResult(KIO::Job *);
-    void slotPreview( const KFileItem *, const QPixmap & );
+    void slotPreview(const KFileItem *, const QPixmap &);
     void slotFailed();
 
 private:
     KLineEdit *m_url;
     QLabel *m_preview;
 };
-

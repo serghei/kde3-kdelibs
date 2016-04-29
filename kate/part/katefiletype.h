@@ -28,9 +28,8 @@
 
 class KateDocument;
 
-class KateFileType
-{
-  public:
+class KateFileType {
+public:
     int number;
     QString name;
     QString section;
@@ -40,64 +39,65 @@ class KateFileType
     QString varLine;
 };
 
-class KateFileTypeManager
-{
-  public:
-    KateFileTypeManager ();
-    ~KateFileTypeManager ();
+class KateFileTypeManager {
+public:
+    KateFileTypeManager();
+    ~KateFileTypeManager();
 
     /**
      * File Type Config changed, update all docs (which will take care of views/renderers)
      */
-    void update ();
+    void update();
 
-    void save (QPtrList<KateFileType> *v);
+    void save(QPtrList< KateFileType > *v);
 
     /**
      * get the right fileType for the given document
      * -1 if none found !
      */
-    int fileType (KateDocument *doc);
+    int fileType(KateDocument *doc);
 
     /**
      * Don't store the pointer somewhere longer times, won't be valid after the next update()
      */
-    const KateFileType *fileType (uint number);
+    const KateFileType *fileType(uint number);
 
     /**
      * Don't modify
      */
-    QPtrList<KateFileType> *list () { return &m_types; }
+    QPtrList< KateFileType > *list()
+    {
+        return &m_types;
+    }
 
-  private:
-    int wildcardsFind (const QString &fileName);
+private:
+    int wildcardsFind(const QString &fileName);
 
-  private:
-    QPtrList<KateFileType> m_types;
+private:
+    QPtrList< KateFileType > m_types;
 };
 
-class KateFileTypeConfigTab : public KateConfigPage
-{
-  Q_OBJECT
+class KateFileTypeConfigTab : public KateConfigPage {
+    Q_OBJECT
 
-  public:
-    KateFileTypeConfigTab( QWidget *parent );
+public:
+    KateFileTypeConfigTab(QWidget *parent);
 
-  public slots:
+public slots:
     void apply();
     void reload();
     void reset();
     void defaults();
 
-  private slots:
-    void update ();
-    void deleteType ();
-    void newType ();
-    void typeChanged (int type);
+private slots:
+    void update();
+    void deleteType();
+    void newType();
+    void typeChanged(int type);
     void showMTDlg();
-    void save ();
+    void save();
 
-  private:
+private:
     class QGroupBox *gbProps;
     class QPushButton *btndel;
     class QComboBox *typeCombo;
@@ -108,35 +108,39 @@ class KateFileTypeConfigTab : public KateConfigPage
     class QLineEdit *section;
     class QLineEdit *varLine;
 
-    QPtrList<KateFileType> m_types;
+    QPtrList< KateFileType > m_types;
     KateFileType *m_lastType;
 };
 
-class KateViewFileTypeAction : public Kate::ActionMenu
-{
-  Q_OBJECT
+class KateViewFileTypeAction : public Kate::ActionMenu {
+    Q_OBJECT
 
-  public:
-    KateViewFileTypeAction(const QString& text, QObject* parent = 0, const char* name = 0)
-       : Kate::ActionMenu(text, parent, name) { init(); };
+public:
+    KateViewFileTypeAction(const QString &text, QObject *parent = 0, const char *name = 0) : Kate::ActionMenu(text, parent, name)
+    {
+        init();
+    };
 
-    ~KateViewFileTypeAction(){;};
+    ~KateViewFileTypeAction()
+    {
+        ;
+    };
 
-    void updateMenu (Kate::Document *doc);
+    void updateMenu(Kate::Document *doc);
 
-  private:
+private:
     void init();
 
-    QGuardedPtr<KateDocument> m_doc;
+    QGuardedPtr< KateDocument > m_doc;
     QStringList subMenusName;
     QStringList names;
-    QPtrList<QPopupMenu> subMenus;
+    QPtrList< QPopupMenu > subMenus;
 
-  public  slots:
+public slots:
     void slotAboutToShow();
 
-  private slots:
-    void setType (int mode);
+private slots:
+    void setType(int mode);
 };
 
 #endif

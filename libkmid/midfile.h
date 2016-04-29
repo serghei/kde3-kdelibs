@@ -7,12 +7,12 @@
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
- 
+
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     Library General Public License for more details.
- 
+
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -38,44 +38,43 @@
  */
 struct MidiFileInfo
 {
-  /**
-   * Format of MIDI file.
-   */ 
-  int format;
+    /**
+     * Format of MIDI file.
+     */
+    int format;
 
-  /**
-   * Number of tracks.
-   */
-  int ntracks;
+    /**
+     * Number of tracks.
+     */
+    int ntracks;
 
-  /**
-   * Ticks per cuarter note.
-   */
-  int ticksPerCuarterNote;
+    /**
+     * Ticks per cuarter note.
+     */
+    int ticksPerCuarterNote;
 
-  /**
-   * Total number of MIDI ticks
-   */ 
-  ulong ticksTotal;
+    /**
+     * Total number of MIDI ticks
+     */
+    ulong ticksTotal;
 
-  /**
-   * Total number of milliseconds
-   */ 
-  double millisecsTotal;
+    /**
+     * Total number of milliseconds
+     */
+    double millisecsTotal;
 
-  ulong ticksPlayed;
+    ulong ticksPlayed;
 
-  /**
-   * Patches used in the MIDI file.
-   *
-   * In each position of the array it stores the number of times the
-   * corresponding patch is used. So, if a MIDI file plays 782 notes
-   * with a piano, patchesUsed[0] will store 782. In the same way, 
-   * if it doesn't use the Music Box patch, patchesUsed[10] will be 0. 
-   * 
-   */
-  int patchesUsed[256];
-
+    /**
+     * Patches used in the MIDI file.
+     *
+     * In each position of the array it stores the number of times the
+     * corresponding patch is used. So, if a MIDI file plays 782 notes
+     * with a piano, patchesUsed[0] will store 782. In the same way,
+     * if it doesn't use the Music Box patch, patchesUsed[10] will be 0.
+     *
+     */
+    int patchesUsed[256];
 };
 
 double KMID_EXPORT tempoToMetronomeTempo(ulong x);
@@ -83,17 +82,17 @@ double metronomeTempoToTempo(ulong x);
 
 /**
  * Reads a midi file.
- * 
+ *
  * @param name the filename of the midi file to load.
  * @param info a pointer to the MidiFileInfo struct that will be
  *     filled with the information of the loaded file.
  * @param ok return status.
  * @return an array of MidiTrack objects with the contents of the file.
- */ 
-MidiTrack **readMidiFile( const char *name, MidiFileInfo *info, int &ok);
+ */
+MidiTrack **readMidiFile(const char *name, MidiFileInfo *info, int &ok);
 
-void parseInfoData( MidiFileInfo *info, MidiTrack **tracks, float ratioTempo);
+void parseInfoData(MidiFileInfo *info, MidiTrack **tracks, float ratioTempo);
 
-void parsePatchesUsed( MidiTrack **tracks, MidiFileInfo *info, int gm);
+void parsePatchesUsed(MidiTrack **tracks, MidiFileInfo *info, int gm);
 
 #endif

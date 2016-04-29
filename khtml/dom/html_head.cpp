@@ -40,15 +40,15 @@ HTMLBaseElement::HTMLBaseElement(HTMLBaseElementImpl *impl) : HTMLElement(impl)
 {
 }
 
-HTMLBaseElement &HTMLBaseElement::operator = (const Node &other)
+HTMLBaseElement &HTMLBaseElement::operator=(const Node &other)
 {
-    assignOther( other, ID_BASE );
+    assignOther(other, ID_BASE);
     return *this;
 }
 
-HTMLBaseElement &HTMLBaseElement::operator = (const HTMLBaseElement &other)
+HTMLBaseElement &HTMLBaseElement::operator=(const HTMLBaseElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -58,25 +58,29 @@ HTMLBaseElement::~HTMLBaseElement()
 
 DOMString HTMLBaseElement::href() const
 {
-    if(!impl) return DOMString();
-    DOMString href = static_cast<ElementImpl*>(impl)->getAttribute(ATTR_HREF);
+    if(!impl)
+        return DOMString();
+    DOMString href = static_cast< ElementImpl * >(impl)->getAttribute(ATTR_HREF);
     return !href.isNull() ? impl->getDocument()->completeURL(href.string()) : href;
 }
 
-void HTMLBaseElement::setHref( const DOMString &value )
+void HTMLBaseElement::setHref(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_HREF, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_HREF, value);
 }
 
 DOMString HTMLBaseElement::target() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_TARGET);
 }
 
-void HTMLBaseElement::setTarget( const DOMString &value )
+void HTMLBaseElement::setTarget(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_TARGET, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_TARGET, value);
 }
 
 // --------------------------------------------------------------------------
@@ -93,15 +97,15 @@ HTMLLinkElement::HTMLLinkElement(HTMLLinkElementImpl *impl) : HTMLElement(impl)
 {
 }
 
-HTMLLinkElement &HTMLLinkElement::operator = (const Node &other)
+HTMLLinkElement &HTMLLinkElement::operator=(const Node &other)
 {
-    assignOther( other, ID_LINK );
+    assignOther(other, ID_LINK);
     return *this;
 }
 
-HTMLLinkElement &HTMLLinkElement::operator = (const HTMLLinkElement &other)
+HTMLLinkElement &HTMLLinkElement::operator=(const HTMLLinkElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -111,11 +115,12 @@ HTMLLinkElement::~HTMLLinkElement()
 
 bool HTMLLinkElement::disabled() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return !((ElementImpl *)impl)->getAttribute(ATTR_DISABLED).isNull();
 }
 
-void HTMLLinkElement::setDisabled( bool _disabled )
+void HTMLLinkElement::setDisabled(bool _disabled)
 {
     if(impl)
         ((ElementImpl *)impl)->setAttribute(ATTR_DISABLED, _disabled ? "" : 0);
@@ -123,96 +128,113 @@ void HTMLLinkElement::setDisabled( bool _disabled )
 
 DOMString HTMLLinkElement::charset() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_CHARSET);
 }
 
-void HTMLLinkElement::setCharset( const DOMString &value )
+void HTMLLinkElement::setCharset(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_CHARSET, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_CHARSET, value);
 }
 
 DOMString HTMLLinkElement::href() const
 {
-    if(!impl) return DOMString();
-    DOMString href = static_cast<ElementImpl*>(impl)->getAttribute(ATTR_HREF);
+    if(!impl)
+        return DOMString();
+    DOMString href = static_cast< ElementImpl * >(impl)->getAttribute(ATTR_HREF);
     return !href.isNull() ? impl->getDocument()->completeURL(href.string()) : href;
 }
 
-void HTMLLinkElement::setHref( const DOMString &value )
+void HTMLLinkElement::setHref(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_HREF, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_HREF, value);
 }
 
 DOMString HTMLLinkElement::hreflang() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_HREFLANG);
 }
 
-void HTMLLinkElement::setHreflang( const DOMString &value )
+void HTMLLinkElement::setHreflang(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_HREFLANG, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_HREFLANG, value);
 }
 
 DOMString HTMLLinkElement::media() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_MEDIA);
 }
 
-void HTMLLinkElement::setMedia( const DOMString &value )
+void HTMLLinkElement::setMedia(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_MEDIA, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_MEDIA, value);
 }
 
 DOMString HTMLLinkElement::rel() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_REL);
 }
 
-void HTMLLinkElement::setRel( const DOMString &value )
+void HTMLLinkElement::setRel(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_REL, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_REL, value);
 }
 
 DOMString HTMLLinkElement::rev() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_REV);
 }
 
-void HTMLLinkElement::setRev( const DOMString &value )
+void HTMLLinkElement::setRev(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_REV, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_REV, value);
 }
 
 DOMString HTMLLinkElement::target() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_TARGET);
 }
 
-void HTMLLinkElement::setTarget( const DOMString &value )
+void HTMLLinkElement::setTarget(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_TARGET, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_TARGET, value);
 }
 
 DOMString HTMLLinkElement::type() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_TYPE);
 }
 
-void HTMLLinkElement::setType( const DOMString &value )
+void HTMLLinkElement::setType(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_TYPE, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_TYPE, value);
 }
 
 StyleSheet HTMLLinkElement::sheet() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((HTMLLinkElementImpl *)impl)->sheet();
 }
 
@@ -230,15 +252,15 @@ HTMLMetaElement::HTMLMetaElement(HTMLMetaElementImpl *impl) : HTMLElement(impl)
 {
 }
 
-HTMLMetaElement &HTMLMetaElement::operator = (const Node &other)
+HTMLMetaElement &HTMLMetaElement::operator=(const Node &other)
 {
-    assignOther( other, ID_META );
+    assignOther(other, ID_META);
     return *this;
 }
 
-HTMLMetaElement &HTMLMetaElement::operator = (const HTMLMetaElement &other)
+HTMLMetaElement &HTMLMetaElement::operator=(const HTMLMetaElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -248,46 +270,54 @@ HTMLMetaElement::~HTMLMetaElement()
 
 DOMString HTMLMetaElement::content() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_CONTENT);
 }
 
-void HTMLMetaElement::setContent( const DOMString &value )
+void HTMLMetaElement::setContent(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_CONTENT, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_CONTENT, value);
 }
 
 DOMString HTMLMetaElement::httpEquiv() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_HTTP_EQUIV);
 }
 
-void HTMLMetaElement::setHttpEquiv( const DOMString &value )
+void HTMLMetaElement::setHttpEquiv(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_HTTP_EQUIV, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_HTTP_EQUIV, value);
 }
 
 DOMString HTMLMetaElement::name() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_NAME);
 }
 
-void HTMLMetaElement::setName( const DOMString &value )
+void HTMLMetaElement::setName(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_NAME, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_NAME, value);
 }
 
 DOMString HTMLMetaElement::scheme() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_SCHEME);
 }
 
-void HTMLMetaElement::setScheme( const DOMString &value )
+void HTMLMetaElement::setScheme(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_SCHEME, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_SCHEME, value);
 }
 
 // --------------------------------------------------------------------------
@@ -304,15 +334,15 @@ HTMLScriptElement::HTMLScriptElement(HTMLScriptElementImpl *impl) : HTMLElement(
 {
 }
 
-HTMLScriptElement &HTMLScriptElement::operator = (const Node &other)
+HTMLScriptElement &HTMLScriptElement::operator=(const Node &other)
 {
-    assignOther( other, ID_SCRIPT );
+    assignOther(other, ID_SCRIPT);
     return *this;
 }
 
-HTMLScriptElement &HTMLScriptElement::operator = (const HTMLScriptElement &other)
+HTMLScriptElement &HTMLScriptElement::operator=(const HTMLScriptElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -322,13 +352,15 @@ HTMLScriptElement::~HTMLScriptElement()
 
 DOMString HTMLScriptElement::text() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((HTMLScriptElementImpl *)impl)->text();
 }
 
-void HTMLScriptElement::setText( const DOMString &value )
+void HTMLScriptElement::setText(const DOMString &value)
 {
-    if(impl) ((HTMLScriptElementImpl *)impl)->setText(value);
+    if(impl)
+        ((HTMLScriptElementImpl *)impl)->setText(value);
 }
 
 DOMString HTMLScriptElement::htmlFor() const
@@ -337,7 +369,7 @@ DOMString HTMLScriptElement::htmlFor() const
     return DOMString();
 }
 
-void HTMLScriptElement::setHtmlFor( const DOMString &/*value*/ )
+void HTMLScriptElement::setHtmlFor(const DOMString & /*value*/)
 {
     // DOM Level 1 says: reserved for future use...
 }
@@ -348,56 +380,63 @@ DOMString HTMLScriptElement::event() const
     return DOMString();
 }
 
-void HTMLScriptElement::setEvent( const DOMString &/*value*/ )
+void HTMLScriptElement::setEvent(const DOMString & /*value*/)
 {
     // DOM Level 1 says: reserved for future use...
 }
 
 DOMString HTMLScriptElement::charset() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_CHARSET);
 }
 
-void HTMLScriptElement::setCharset( const DOMString &value )
+void HTMLScriptElement::setCharset(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_CHARSET, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_CHARSET, value);
 }
 
 bool HTMLScriptElement::defer() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return !((ElementImpl *)impl)->getAttribute(ATTR_DEFER).isNull();
 }
 
-void HTMLScriptElement::setDefer( bool _defer )
+void HTMLScriptElement::setDefer(bool _defer)
 {
 
     if(impl)
-        ((ElementImpl *)impl)->setAttribute(ATTR_DEFER,_defer ? "" : 0);
+        ((ElementImpl *)impl)->setAttribute(ATTR_DEFER, _defer ? "" : 0);
 }
 
 DOMString HTMLScriptElement::src() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     DOMString s = ((ElementImpl *)impl)->getAttribute(ATTR_SRC);
     return !s.isNull() ? impl->getDocument()->completeURL(s.string()) : s;
 }
 
-void HTMLScriptElement::setSrc( const DOMString &value )
+void HTMLScriptElement::setSrc(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_SRC, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_SRC, value);
 }
 
 DOMString HTMLScriptElement::type() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_TYPE);
 }
 
-void HTMLScriptElement::setType( const DOMString &value )
+void HTMLScriptElement::setType(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_TYPE, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_TYPE, value);
 }
 
 // --------------------------------------------------------------------------
@@ -414,15 +453,15 @@ HTMLStyleElement::HTMLStyleElement(HTMLStyleElementImpl *impl) : HTMLElement(imp
 {
 }
 
-HTMLStyleElement &HTMLStyleElement::operator = (const Node &other)
+HTMLStyleElement &HTMLStyleElement::operator=(const Node &other)
 {
-    assignOther( other, ID_STYLE );
+    assignOther(other, ID_STYLE);
     return *this;
 }
 
-HTMLStyleElement &HTMLStyleElement::operator = (const HTMLStyleElement &other)
+HTMLStyleElement &HTMLStyleElement::operator=(const HTMLStyleElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -432,42 +471,48 @@ HTMLStyleElement::~HTMLStyleElement()
 
 bool HTMLStyleElement::disabled() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return !((HTMLStyleElementImpl *)impl)->getAttribute(ATTR_DISABLED).isNull();
 }
 
-void HTMLStyleElement::setDisabled( bool _disabled )
+void HTMLStyleElement::setDisabled(bool _disabled)
 {
 
     if(impl)
-        ((ElementImpl *)impl)->setAttribute(ATTR_DISABLED,_disabled ? "" : 0);
+        ((ElementImpl *)impl)->setAttribute(ATTR_DISABLED, _disabled ? "" : 0);
 }
 
 DOMString HTMLStyleElement::media() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_MEDIA);
 }
 
-void HTMLStyleElement::setMedia( const DOMString &value )
+void HTMLStyleElement::setMedia(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_MEDIA, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_MEDIA, value);
 }
 
 DOMString HTMLStyleElement::type() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_TYPE);
 }
 
-void HTMLStyleElement::setType( const DOMString &value )
+void HTMLStyleElement::setType(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_TYPE, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_TYPE, value);
 }
 
 StyleSheet HTMLStyleElement::sheet() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((HTMLStyleElementImpl *)impl)->sheet();
 }
 
@@ -486,15 +531,15 @@ HTMLTitleElement::HTMLTitleElement(HTMLTitleElementImpl *impl) : HTMLElement(imp
 {
 }
 
-HTMLTitleElement &HTMLTitleElement::operator = (const Node &other)
+HTMLTitleElement &HTMLTitleElement::operator=(const Node &other)
 {
-    assignOther( other, ID_TITLE );
+    assignOther(other, ID_TITLE);
     return *this;
 }
 
-HTMLTitleElement &HTMLTitleElement::operator = (const HTMLTitleElement &other)
+HTMLTitleElement &HTMLTitleElement::operator=(const HTMLTitleElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -504,12 +549,13 @@ HTMLTitleElement::~HTMLTitleElement()
 
 DOMString HTMLTitleElement::text() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((HTMLTitleElementImpl *)impl)->text();
 }
 
-void HTMLTitleElement::setText( const DOMString &value )
+void HTMLTitleElement::setText(const DOMString &value)
 {
-    if(impl) ((HTMLTitleElementImpl *)impl)->setText(value);
+    if(impl)
+        ((HTMLTitleElementImpl *)impl)->setText(value);
 }
-

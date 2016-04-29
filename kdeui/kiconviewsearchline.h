@@ -35,144 +35,139 @@ class QIconViewItem;
  *
  * @since 3.3
  */
-class KDEUI_EXPORT KIconViewSearchLine : public KLineEdit
-{
-  Q_OBJECT
+class KDEUI_EXPORT KIconViewSearchLine : public KLineEdit {
+    Q_OBJECT
 
 public:
+    /**
+     * Constructs a KIconViewSearchLine with \a iconView being the QIconView to
+     * be filtered.
+     *
+     * If \a iconView is null then the widget will be disabled until a iconview
+     * is set with setIconView().
+     */
+    KIconViewSearchLine(QWidget *parent = 0, QIconView *iconView = 0, const char *name = 0);
 
-  /**
-   * Constructs a KIconViewSearchLine with \a iconView being the QIconView to
-   * be filtered.
-   *
-   * If \a iconView is null then the widget will be disabled until a iconview
-   * is set with setIconView().
-   */
-  KIconViewSearchLine( QWidget *parent = 0,
-		       QIconView *iconView = 0,
-		       const char *name = 0 );
+    /**
+     * Constructs a KIconViewSearchLine without any QIconView to filter. The
+     * QIconView object has to be set later with setIconView().
+     */
+    KIconViewSearchLine(QWidget *parent, const char *name);
 
-  /**
-   * Constructs a KIconViewSearchLine without any QIconView to filter. The
-   * QIconView object has to be set later with setIconView().
-   */
-  KIconViewSearchLine( QWidget *parent, const char *name );
+    /**
+     * Destroys the KIconViewSearchLine.
+     */
+    virtual ~KIconViewSearchLine();
 
-  /**
-   * Destroys the KIconViewSearchLine.
-   */
-  virtual ~KIconViewSearchLine();
+    /**
+     * Returns true if the search is case sensitive.  This defaults to false.
+     *
+     * @see setCaseSensitive()
+     */
+    bool caseSensitive() const;
 
-  /**
-   * Returns true if the search is case sensitive.  This defaults to false.
-   *
-   * @see setCaseSensitive()
-   */
-  bool caseSensitive() const;
-
-  /**
-   * Returns the iconview that is currently filtered by the search.
-   *
-   * @see setIconView()
-   */
-  QIconView *iconView() const;
+    /**
+     * Returns the iconview that is currently filtered by the search.
+     *
+     * @see setIconView()
+     */
+    QIconView *iconView() const;
 
 
 public slots:
-  /**
-   * Updates search to only make visible the items that match \a s.  If
-   * \a s is null then the line edit's text will be used.
-   */
-  virtual void updateSearch( const QString &s = QString::null );
+    /**
+     * Updates search to only make visible the items that match \a s.  If
+     * \a s is null then the line edit's text will be used.
+     */
+    virtual void updateSearch(const QString &s = QString::null);
 
-  /**
-   * Make the search case sensitive or case insensitive.
-   *
-   * @see caseSenstive()
-   */
-  void setCaseSensitive( bool cs );
+    /**
+     * Make the search case sensitive or case insensitive.
+     *
+     * @see caseSenstive()
+     */
+    void setCaseSensitive(bool cs);
 
-  /**
-   * Sets the QIconView that is filtered by this search line.  If \a lv is null
-   * then the widget will be disabled.
-   *
-   * @see iconView()
-   */
-  void setIconView( QIconView *iv );
+    /**
+     * Sets the QIconView that is filtered by this search line.  If \a lv is null
+     * then the widget will be disabled.
+     *
+     * @see iconView()
+     */
+    void setIconView(QIconView *iv);
 
 
-  /**
-   * Clear line edit and empty hiddenItems, returning elements to iconView.
-   */
-  void clear();
+    /**
+     * Clear line edit and empty hiddenItems, returning elements to iconView.
+     */
+    void clear();
 
 
 protected:
-  /**
-   * Returns true if \a item matches the search \a s.  This will be evaluated
-   * based on the value of caseSensitive().  This can be overridden in
-   * subclasses to implement more complicated matching schemes.
-   */
-  virtual bool itemMatches( const QIconViewItem *item,
-			    const QString &s ) const;
+    /**
+     * Returns true if \a item matches the search \a s.  This will be evaluated
+     * based on the value of caseSensitive().  This can be overridden in
+     * subclasses to implement more complicated matching schemes.
+     */
+    virtual bool itemMatches(const QIconViewItem *item, const QString &s) const;
 
 
-  /**
-   * Do initialization common to both constructors.
-   */
-  void init( QIconView *iconView = 0 );
+    /**
+     * Do initialization common to both constructors.
+     */
+    void init(QIconView *iconView = 0);
 
-  /**
-   * Hide item.
-   */
-  void hideItem( QIconViewItem *item );
+    /**
+     * Hide item.
+     */
+    void hideItem(QIconViewItem *item);
 
-  /**
-   * Show item.
-   *
-   * Just unhide it, doesn't necessary show it on screen, for that use
-   * iconView->ensureItemVisible()
-   */
-  void showItem( QIconViewItem *item );
+    /**
+     * Show item.
+     *
+     * Just unhide it, doesn't necessary show it on screen, for that use
+     * iconView->ensureItemVisible()
+     */
+    void showItem(QIconViewItem *item);
 
 
 protected slots:
-  /**
-   * When keys are pressed a new search string is created and a timer is
-   * activated.  The most recent search is activated when this timer runs out
-   * if another key has not yet been pressed.
-   *
-   * This method makes @param s the most recent search and starts the
-   * timer.
-   *
-   * Together with activateSearch() this makes it such that searches are not
-   * started until there is a short break in the users typing.
-   *
-   * @see activateSearch()
-   */
-  void queueSearch( const QString &s );
+    /**
+     * When keys are pressed a new search string is created and a timer is
+     * activated.  The most recent search is activated when this timer runs out
+     * if another key has not yet been pressed.
+     *
+     * This method makes @param s the most recent search and starts the
+     * timer.
+     *
+     * Together with activateSearch() this makes it such that searches are not
+     * started until there is a short break in the users typing.
+     *
+     * @see activateSearch()
+     */
+    void queueSearch(const QString &s);
 
-  /**
-   * When the timer started with queueSearch() expires this slot is called.
-   * If there has been another timer started then this slot does nothing.
-   * However if there are no other pending searches this starts the icon view
-   * search.
-   *
-   * @see queueSearch()
-   */
-  void activateSearch();
+    /**
+     * When the timer started with queueSearch() expires this slot is called.
+     * If there has been another timer started then this slot does nothing.
+     * However if there are no other pending searches this starts the icon view
+     * search.
+     *
+     * @see queueSearch()
+     */
+    void activateSearch();
 
 
 private slots:
-  /**
-   * Take action need when iconView is deleted.
-   */
-  void iconViewDeleted();
+    /**
+     * Take action need when iconView is deleted.
+     */
+    void iconViewDeleted();
 
 
 private:
-  class KIconViewSearchLinePrivate;
-  KIconViewSearchLinePrivate *d;
+    class KIconViewSearchLinePrivate;
+    KIconViewSearchLinePrivate *d;
 };
 
 

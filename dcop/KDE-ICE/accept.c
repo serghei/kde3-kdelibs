@@ -35,29 +35,28 @@ Author: Ralph Mor, X Consortium
 #include "KDE-ICE/Xtrans.h"
 #include "KDE-ICE/globals.h"
 
-IceConn
-IceAcceptConnection (listenObj, statusRet)
+IceConn IceAcceptConnection(listenObj, statusRet)
 
-IceListenObj 	listenObj;
-IceAcceptStatus	*statusRet;
+    IceListenObj listenObj;
+IceAcceptStatus *statusRet;
 
 {
-    IceConn    		iceConn;
-    XtransConnInfo	newconn;
-    iceByteOrderMsg 	*pMsg;
-    int   		endian, status;
+    IceConn iceConn;
+    XtransConnInfo newconn;
+    iceByteOrderMsg *pMsg;
+    int endian, status;
 
     /*
      * Accept the connection.
      */
 
-    if ((newconn = (XtransConnInfo)_kde_IceTransAccept (listenObj->trans_conn, &status)) == 0)
+    if((newconn = (XtransConnInfo)_kde_IceTransAccept(listenObj->trans_conn, &status)) == 0)
     {
-	if (status == TRANS_ACCEPT_BAD_MALLOC)
-	    *statusRet = IceAcceptBadMalloc;
-	else
-	    *statusRet = IceAcceptFailure;
-	return (NULL);
+        if(status == TRANS_ACCEPT_BAD_MALLOC)
+            *statusRet = IceAcceptBadMalloc;
+        else
+            *statusRet = IceAcceptFailure;
+        return (NULL);
     }
 
 
@@ -65,18 +64,18 @@ IceAcceptStatus	*statusRet;
      * Set close-on-exec so that programs that fork() don't get confused.
      */
 
-    _kde_IceTransSetOption (newconn, TRANS_CLOSEONEXEC, 1);
+    _kde_IceTransSetOption(newconn, TRANS_CLOSEONEXEC, 1);
 
 
     /*
      * Create an ICE object for this connection.
      */
 
-    if ((iceConn = (IceConn) malloc (sizeof (struct _IceConn))) == NULL)
+    if((iceConn = (IceConn)malloc(sizeof(struct _IceConn))) == NULL)
     {
-	_kde_IceTransClose (newconn);
-	*statusRet = IceAcceptBadMalloc;
-	return (NULL);
+        _kde_IceTransClose(newconn);
+        *statusRet = IceAcceptBadMalloc;
+        return (NULL);
     }
 
     iceConn->listen_obj = listenObj;
@@ -92,48 +91,45 @@ IceAcceptStatus	*statusRet;
     iceConn->send_sequence = 0;
     iceConn->receive_sequence = 0;
 
-    iceConn->connection_string = (char *) malloc (
-	strlen (listenObj->network_id) + 1);
+    iceConn->connection_string = (char *)malloc(strlen(listenObj->network_id) + 1);
 
-    if (iceConn->connection_string == NULL)
+    if(iceConn->connection_string == NULL)
     {
-	_kde_IceTransClose (newconn);
-	free ((char *) iceConn);
-	*statusRet = IceAcceptBadMalloc;
-	return (NULL);
+        _kde_IceTransClose(newconn);
+        free((char *)iceConn);
+        *statusRet = IceAcceptBadMalloc;
+        return (NULL);
     }
     else
-	strcpy (iceConn->connection_string, listenObj->network_id);
+        strcpy(iceConn->connection_string, listenObj->network_id);
 
     iceConn->vendor = NULL;
     iceConn->release = NULL;
 
-    if ((iceConn->inbuf = iceConn->inbufptr =
-	(char *) malloc (ICE_INBUFSIZE)) != NULL)
+    if((iceConn->inbuf = iceConn->inbufptr = (char *)malloc(ICE_INBUFSIZE)) != NULL)
     {
-	iceConn->inbufmax = iceConn->inbuf + ICE_INBUFSIZE;
+        iceConn->inbufmax = iceConn->inbuf + ICE_INBUFSIZE;
     }
     else
     {
-	_kde_IceTransClose (newconn);
-	free ((char *) iceConn);
-	*statusRet = IceAcceptBadMalloc;
-	return (NULL);
+        _kde_IceTransClose(newconn);
+        free((char *)iceConn);
+        *statusRet = IceAcceptBadMalloc;
+        return (NULL);
     }
 
-    if ((iceConn->outbuf = iceConn->outbufptr =
-	(char *) malloc (ICE_OUTBUFSIZE)) != NULL)
+    if((iceConn->outbuf = iceConn->outbufptr = (char *)malloc(ICE_OUTBUFSIZE)) != NULL)
     {
-	memset(iceConn->outbuf, 0, ICE_OUTBUFSIZE);
-	iceConn->outbufmax = iceConn->outbuf + ICE_OUTBUFSIZE;
+        memset(iceConn->outbuf, 0, ICE_OUTBUFSIZE);
+        iceConn->outbufmax = iceConn->outbuf + ICE_OUTBUFSIZE;
     }
     else
     {
-	_kde_IceTransClose (newconn);
-	free (iceConn->inbuf);
-	free ((char *) iceConn);
-	*statusRet = IceAcceptBadMalloc;
-	return (NULL);
+        _kde_IceTransClose(newconn);
+        free(iceConn->inbuf);
+        free((char *)iceConn);
+        *statusRet = IceAcceptBadMalloc;
+        return (NULL);
     }
 
     iceConn->scratch = NULL;
@@ -162,25 +158,24 @@ IceAcceptStatus	*statusRet;
      * Send our byte order.
      */
 
-    IceGetHeader (iceConn, 0, ICE_ByteOrder,
-	SIZEOF (iceByteOrderMsg), iceByteOrderMsg, pMsg);
+    IceGetHeader(iceConn, 0, ICE_ByteOrder, SIZEOF(iceByteOrderMsg), iceByteOrderMsg, pMsg);
 
     endian = 1;
-    if (*(char *) &endian)
-	pMsg->byteOrder = IceLSBfirst;
+    if(*(char *)&endian)
+        pMsg->byteOrder = IceLSBfirst;
     else
-	pMsg->byteOrder = IceMSBfirst;
+        pMsg->byteOrder = IceMSBfirst;
 
-    IceFlush (iceConn);
+    IceFlush(iceConn);
 
 
-    if (_IceWatchProcs)
+    if(_IceWatchProcs)
     {
-	/*
-	 * Notify the watch procedures that an iceConn was opened.
-	 */
+        /*
+         * Notify the watch procedures that an iceConn was opened.
+         */
 
-	_IceConnectionOpened (iceConn);
+        _IceConnectionOpened(iceConn);
     }
 
     *statusRet = IceAcceptSuccess;

@@ -26,39 +26,44 @@
  * Service group factory for building ksycoca
  * @internal
  */
-class KCTimeInfo : public KSycocaFactory
-{
-  K_SYCOCAFACTORY( KST_CTimeInfo )
+class KCTimeInfo : public KSycocaFactory {
+    K_SYCOCAFACTORY(KST_CTimeInfo)
 public:
-  /**
-   * Create factory
-   */
-  KCTimeInfo();
+    /**
+     * Create factory
+     */
+    KCTimeInfo();
 
-  virtual ~KCTimeInfo();
+    virtual ~KCTimeInfo();
 
-  /**
-   * Write out header information
-   */
-  virtual void saveHeader(QDataStream &str);
+    /**
+     * Write out header information
+     */
+    virtual void saveHeader(QDataStream &str);
 
-  /**
-   * Write out data 
-   */
-  virtual void save(QDataStream &str);
+    /**
+     * Write out data
+     */
+    virtual void save(QDataStream &str);
 
-  KSycocaEntry * createEntry(const QString &, const char *) { return 0; }
-  KSycocaEntry * createEntry(int) { return 0; }
-  
-  void addCTime(const QString &path, Q_UINT32 ctime);
+    KSycocaEntry *createEntry(const QString &, const char *)
+    {
+        return 0;
+    }
+    KSycocaEntry *createEntry(int)
+    {
+        return 0;
+    }
 
-  Q_UINT32 ctime(const QString &path);
+    void addCTime(const QString &path, Q_UINT32 ctime);
 
-  void fillCTimeDict(QDict<Q_UINT32> &dict);
+    Q_UINT32 ctime(const QString &path);
+
+    void fillCTimeDict(QDict< Q_UINT32 > &dict);
 
 protected:
-  QDict<Q_UINT32> ctimeDict;
-  int m_dictOffset;
+    QDict< Q_UINT32 > ctimeDict;
+    int m_dictOffset;
 };
 
 #endif

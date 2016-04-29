@@ -35,8 +35,8 @@
 #define XHTML_NAMESPACE "http://www.w3.org/1999/xhtml"
 
 class QPainter;
-template <class type> class QPtrList;
-template <class type> class QValueList;
+template < class type > class QPtrList;
+template < class type > class QValueList;
 class KHTMLView;
 class QRect;
 class QMouseEvent;
@@ -44,9 +44,9 @@ class QKeyEvent;
 class QTextStream;
 
 namespace khtml {
-    class RenderStyle;
-    class RenderObject;
-    class RenderArena;
+class RenderStyle;
+class RenderObject;
+class RenderArena;
 }
 
 namespace DOM {
@@ -58,9 +58,11 @@ class CSSStyleDeclarationImpl;
 class RegisteredEventListener;
 class EventImpl;
 
-struct RegisteredListenerList {
+struct RegisteredListenerList
+{
     RegisteredListenerList() : listeners(0)
-    {}
+    {
+    }
 
     ~RegisteredListenerList();
 
@@ -74,16 +76,16 @@ struct RegisteredListenerList {
     void clear();
 
     //### KDE4: should disappear
-    bool stillContainsListener(const RegisteredEventListener& listener);
+    bool stillContainsListener(const RegisteredEventListener &listener);
 
-    QValueList<RegisteredEventListener>* listeners;//The actual listener list - may be 0
+    QValueList< RegisteredEventListener > *listeners; // The actual listener list - may be 0
 private:
-    bool isHTMLEventListener(EventListener* listener);
+    bool isHTMLEventListener(EventListener *listener);
 };
 
 
 // this class implements nodes, which can have a parent but no children:
-#define NodeImpl_IdNSMask    0xffff0000
+#define NodeImpl_IdNSMask 0xffff0000
 #define NodeImpl_IdLocalMask 0x0000ffff
 
 const Q_UINT16 defaultNamespace = 0;
@@ -92,15 +94,24 @@ const Q_UINT16 emptyNamespace = 2;
 const Q_UINT16 anyNamespace = 0xffff;
 const Q_UINT16 anyLocalName = 0xffff;
 
-inline Q_UINT16 localNamePart(Q_UINT32 id) { return id & NodeImpl_IdLocalMask; }
-inline Q_UINT16 namespacePart(Q_UINT32 id) { return (((unsigned int)id) & NodeImpl_IdNSMask) >> 16; }
-inline Q_UINT32 makeId(Q_UINT16 n, Q_UINT16 l) { return (n << 16) | l; }
+inline Q_UINT16 localNamePart(Q_UINT32 id)
+{
+    return id & NodeImpl_IdLocalMask;
+}
+inline Q_UINT16 namespacePart(Q_UINT32 id)
+{
+    return (((unsigned int)id) & NodeImpl_IdNSMask) >> 16;
+}
+inline Q_UINT32 makeId(Q_UINT16 n, Q_UINT16 l)
+{
+    return (n << 16) | l;
+}
 
 const Q_UINT32 anyQName = makeId(anyNamespace, anyLocalName);
 
-class NodeImpl : public khtml::TreeShared<NodeImpl>
-{
+class NodeImpl : public khtml::TreeShared< NodeImpl > {
     friend class DocumentImpl;
+
 public:
     NodeImpl(DocumentImpl *doc);
     virtual ~NodeImpl();
@@ -108,45 +119,84 @@ public:
     // DOM methods & attributes for Node
     virtual DOMString nodeName() const;
     virtual DOMString nodeValue() const;
-    virtual void setNodeValue( const DOMString &_nodeValue, int &exceptioncode );
+    virtual void setNodeValue(const DOMString &_nodeValue, int &exceptioncode);
     virtual unsigned short nodeType() const;
-    NodeImpl *parentNode() const { return m_parent; }
-    NodeImpl *previousSibling() const { return m_previous; }
-    NodeImpl *nextSibling() const { return m_next; }
+    NodeImpl *parentNode() const
+    {
+        return m_parent;
+    }
+    NodeImpl *previousSibling() const
+    {
+        return m_previous;
+    }
+    NodeImpl *nextSibling() const
+    {
+        return m_next;
+    }
     virtual NodeListImpl *childNodes();
     virtual NodeImpl *firstChild() const;
     virtual NodeImpl *lastChild() const;
     // insertBefore, replaceChild and appendChild also close newChild
     // unlike the speed optimized addChild (which is used by the parser)
-    virtual NodeImpl *insertBefore ( NodeImpl *newChild, NodeImpl *refChild, int &exceptioncode );
-    
+    virtual NodeImpl *insertBefore(NodeImpl *newChild, NodeImpl *refChild, int &exceptioncode);
+
     /* These two methods may delete the old node, so make sure to reference it if you need it */
-    virtual void replaceChild ( NodeImpl *newChild, NodeImpl *oldChild, int &exceptioncode );
-    virtual void removeChild ( NodeImpl *oldChild, int &exceptioncode );
-    virtual NodeImpl *appendChild ( NodeImpl *newChild, int &exceptioncode );
-    virtual bool hasChildNodes (  ) const;
-    virtual NodeImpl *cloneNode ( bool deep ) = 0;
+    virtual void replaceChild(NodeImpl *newChild, NodeImpl *oldChild, int &exceptioncode);
+    virtual void removeChild(NodeImpl *oldChild, int &exceptioncode);
+    virtual NodeImpl *appendChild(NodeImpl *newChild, int &exceptioncode);
+    virtual bool hasChildNodes() const;
+    virtual NodeImpl *cloneNode(bool deep) = 0;
     virtual DOMString localName() const;
     virtual DOMString prefix() const;
     virtual DOMString namespaceURI() const;
-    virtual void setPrefix(const DOMString &_prefix, int &exceptioncode );
-    void normalize ();
+    virtual void setPrefix(const DOMString &_prefix, int &exceptioncode);
+    void normalize();
 
     // Other methods (not part of DOM)
-    virtual bool isElementNode() const { return false; }
-    virtual bool isHTMLElement() const { return false; }
-    virtual bool isAttributeNode() const { return false; }
-    virtual bool isTextNode() const { return false; }
-    virtual bool isDocumentNode() const { return false; }
-    virtual bool isXMLElementNode() const { return false; }
-    virtual bool isGenericFormElement() const { return false; }
-    virtual bool containsOnlyWhitespace() const { return false; }
+    virtual bool isElementNode() const
+    {
+        return false;
+    }
+    virtual bool isHTMLElement() const
+    {
+        return false;
+    }
+    virtual bool isAttributeNode() const
+    {
+        return false;
+    }
+    virtual bool isTextNode() const
+    {
+        return false;
+    }
+    virtual bool isDocumentNode() const
+    {
+        return false;
+    }
+    virtual bool isXMLElementNode() const
+    {
+        return false;
+    }
+    virtual bool isGenericFormElement() const
+    {
+        return false;
+    }
+    virtual bool containsOnlyWhitespace() const
+    {
+        return false;
+    }
     virtual bool contentEditable() const;
 
     // helper functions not being part of the DOM
     // Attention: they assume that the caller did the consistency checking!
-    void setPreviousSibling(NodeImpl *previous) { m_previous = previous; }
-    void setNextSibling(NodeImpl *next) { m_next = next; }
+    void setPreviousSibling(NodeImpl *previous)
+    {
+        m_previous = previous;
+    }
+    void setNextSibling(NodeImpl *next)
+    {
+        m_next = next;
+    }
 
     virtual void setFirstChild(NodeImpl *child);
     virtual void setLastChild(NodeImpl *child);
@@ -170,22 +220,27 @@ public:
     //                 the upper 16 bit identify the namespace
     //                 the lower 16 bit identify the local part of the
     //                 qualified element name.
-    virtual Id id() const { return 0; }
+    virtual Id id() const
+    {
+        return 0;
+    }
 
     // These are the DOM 3 Core answer to innerText/setInnerText, and are used
-    // quite a bit since Mozilla doesn't do innerText. They do, however, behave slightly 
-    // differently. The default implementation is for ELEMENT_NODE, ATTRIBUTE_NODE, 
-    // ENTITY_NODE, ENTITY_REFERENCE_NODE, DOCUMENT_FRAGMENT_NODE. 
-    virtual DOMStringImpl* textContent() const;
-    virtual void           setTextContent( const DOMString &text, int& exceptioncode ) = 0;
+    // quite a bit since Mozilla doesn't do innerText. They do, however, behave slightly
+    // differently. The default implementation is for ELEMENT_NODE, ATTRIBUTE_NODE,
+    // ENTITY_NODE, ENTITY_REFERENCE_NODE, DOCUMENT_FRAGMENT_NODE.
+    virtual DOMStringImpl *textContent() const;
+    virtual void setTextContent(const DOMString &text, int &exceptioncode) = 0;
 
-    enum IdType {
+    enum IdType
+    {
         AttributeId,
         ElementId,
         NamespaceId
     };
 
-    enum MouseEventType {
+    enum MouseEventType
+    {
         MousePress,
         MouseRelease,
         MouseClick,
@@ -195,79 +250,184 @@ public:
 
     struct MouseEvent
     {
-        MouseEvent( int _button, MouseEventType _type,
-                    const DOMString &_url = DOMString(), const DOMString& _target = DOMString(),
-                    NodeImpl *_innerNode = 0, NodeImpl *_innerNonSharedNode = 0)
-            {
-                button = _button; type = _type;
-                url = _url; target = _target;
-                innerNode = _innerNode;
-		innerNonSharedNode = _innerNonSharedNode;
-            }
+        MouseEvent(int _button, MouseEventType _type, const DOMString &_url = DOMString(), const DOMString &_target = DOMString(),
+                   NodeImpl *_innerNode = 0, NodeImpl *_innerNonSharedNode = 0)
+        {
+            button = _button;
+            type = _type;
+            url = _url;
+            target = _target;
+            innerNode = _innerNode;
+            innerNonSharedNode = _innerNonSharedNode;
+        }
 
         int button;
         MouseEventType type;
         DOMString url; // url under mouse or empty
         DOMString target;
         Node innerNode;
-	Node innerNonSharedNode;
+        Node innerNonSharedNode;
     };
 
     // for LINK and STYLE
-    virtual void sheetLoaded() {}
+    virtual void sheetLoaded()
+    {
+    }
 
-    bool hasID() const      { return m_hasId; }
-    bool hasClass() const   { return m_hasClass; }
-    bool active() const     { return m_active; }
-    bool focused() const    { return m_focused; }
-    bool hovered() const    { return m_hovered; }
-    bool attached() const   { return m_attached; }
-    bool closed() const     { return m_closed; }
-    bool changed() const    { return m_changed; }
-    bool hasChangedChild() const { return m_hasChangedChild; }
-    bool hasAnchor() const { return m_hasAnchor; }
-    bool inDocument() const { return m_inDocument; }
-    bool implicitNode() const { return m_implicit; }
-    bool htmlCompat() const { return m_htmlCompat; }
-    void setHasID(bool b=true) { m_hasId = b; }
-    void setHasClass(bool b=true) { m_hasClass = b; }
-    void setHasChangedChild( bool b = true ) { m_hasChangedChild = b; }
-    void setInDocument(bool b=true) { m_inDocument = b; }
-    void setHTMLCompat(bool b) { m_htmlCompat = b; }
-    virtual void setFocus(bool b=true) { m_focused = b; }
-    virtual void setActive(bool b=true) { m_active = b; }
-    virtual void setHovered(bool b=true) { m_hovered = b; }
-    virtual void setChanged(bool b=true);
+    bool hasID() const
+    {
+        return m_hasId;
+    }
+    bool hasClass() const
+    {
+        return m_hasClass;
+    }
+    bool active() const
+    {
+        return m_active;
+    }
+    bool focused() const
+    {
+        return m_focused;
+    }
+    bool hovered() const
+    {
+        return m_hovered;
+    }
+    bool attached() const
+    {
+        return m_attached;
+    }
+    bool closed() const
+    {
+        return m_closed;
+    }
+    bool changed() const
+    {
+        return m_changed;
+    }
+    bool hasChangedChild() const
+    {
+        return m_hasChangedChild;
+    }
+    bool hasAnchor() const
+    {
+        return m_hasAnchor;
+    }
+    bool inDocument() const
+    {
+        return m_inDocument;
+    }
+    bool implicitNode() const
+    {
+        return m_implicit;
+    }
+    bool htmlCompat() const
+    {
+        return m_htmlCompat;
+    }
+    void setHasID(bool b = true)
+    {
+        m_hasId = b;
+    }
+    void setHasClass(bool b = true)
+    {
+        m_hasClass = b;
+    }
+    void setHasChangedChild(bool b = true)
+    {
+        m_hasChangedChild = b;
+    }
+    void setInDocument(bool b = true)
+    {
+        m_inDocument = b;
+    }
+    void setHTMLCompat(bool b)
+    {
+        m_htmlCompat = b;
+    }
+    virtual void setFocus(bool b = true)
+    {
+        m_focused = b;
+    }
+    virtual void setActive(bool b = true)
+    {
+        m_active = b;
+    }
+    virtual void setHovered(bool b = true)
+    {
+        m_hovered = b;
+    }
+    virtual void setChanged(bool b = true);
 
     // for descending restyle when ID or CLASS changes
-    bool changedAscendentAttribute() const { return m_changedAscendentAttribute; }
-    void setChangedAscendentAttribute(bool b) { m_changedAscendentAttribute = b; }
+    bool changedAscendentAttribute() const
+    {
+        return m_changedAscendentAttribute;
+    }
+    void setChangedAscendentAttribute(bool b)
+    {
+        m_changedAscendentAttribute = b;
+    }
 
     // for style selection performance: whether the element matches several CSS Classes
-    bool hasClassList() const { return m_hasClassList; }
-    void setHasClassList(bool b) { m_hasClassList = b; }
+    bool hasClassList() const
+    {
+        return m_hasClassList;
+    }
+    void setHasClassList(bool b)
+    {
+        m_hasClassList = b;
+    }
 
-    unsigned short tabIndex() const { return m_tabIndex; }
-    void setTabIndex(unsigned short _tabIndex) { m_tabIndex = _tabIndex; }
+    unsigned short tabIndex() const
+    {
+        return m_tabIndex;
+    }
+    void setTabIndex(unsigned short _tabIndex)
+    {
+        m_tabIndex = _tabIndex;
+    }
 
-    virtual bool isFocusable() const { return false; }
-    virtual bool isMouseFocusable() const { return isFocusable(); }
-    virtual bool isTabFocusable() const { return isFocusable(); }
+    virtual bool isFocusable() const
+    {
+        return false;
+    }
+    virtual bool isMouseFocusable() const
+    {
+        return isFocusable();
+    }
+    virtual bool isTabFocusable() const
+    {
+        return isFocusable();
+    }
 
     virtual bool isInline() const;
 
     virtual void getCaret(int offset, bool override, int &_x, int &_y, int &width, int &height);
     virtual QRect getRect() const;
 
-    enum StyleChange { NoChange, NoInherit, Inherit, Detach, Force };
-    virtual void recalcStyle( StyleChange = NoChange ) {}
-    static StyleChange diff( khtml::RenderStyle *s1, khtml::RenderStyle *s2 );
-    static bool pseudoDiff( khtml::RenderStyle *s1, khtml::RenderStyle *s2, unsigned int pid);
+    enum StyleChange
+    {
+        NoChange,
+        NoInherit,
+        Inherit,
+        Detach,
+        Force
+    };
+    virtual void recalcStyle(StyleChange = NoChange)
+    {
+    }
+    static StyleChange diff(khtml::RenderStyle *s1, khtml::RenderStyle *s2);
+    static bool pseudoDiff(khtml::RenderStyle *s1, khtml::RenderStyle *s2, unsigned int pid);
 
     unsigned long nodeIndex() const;
     // Returns the document that this node is associated with. This is guaranteed to always be non-null, as opposed to
     // DOM's ownerDocument() which is null for Document nodes (and sometimes DocumentType nodes).
-    DocumentImpl* getDocument() const { return m_document.get(); }
+    DocumentImpl *getDocument() const
+    {
+        return m_document.get();
+    }
 
     void addEventListener(int id, EventListener *listener, const bool useCapture);
     void removeEventListener(int id, EventListener *listener, bool useCapture);
@@ -275,7 +435,7 @@ public:
     EventListener *getHTMLEventListener(int id);
 
     void dispatchEvent(EventImpl *evt, int &exceptioncode, bool tempEvent = false);
-    void dispatchGenericEvent( EventImpl *evt, int &exceptioncode);
+    void dispatchGenericEvent(EventImpl *evt, int &exceptioncode);
     // return true if event not prevented
     bool dispatchHTMLEvent(int _id, bool canBubbleArg, bool cancelableArg);
     void dispatchWindowEvent(int _id, bool canBubbleArg, bool cancelableArg);
@@ -294,7 +454,10 @@ public:
     virtual void defaultEventHandler(EventImpl *evt);
 
     virtual bool isReadOnly();
-    virtual bool childTypeAllowed( unsigned short /*type*/ ) { return false; }
+    virtual bool childTypeAllowed(unsigned short /*type*/)
+    {
+        return false;
+    }
     virtual unsigned long childNodeCount();
     virtual NodeImpl *childNode(unsigned long index);
 
@@ -318,17 +481,26 @@ public:
      */
     NodeImpl *traversePreviousNode() const;
 
-    DocumentImpl *docPtr() const { return m_document.get(); }
+    DocumentImpl *docPtr() const
+    {
+        return m_document.get();
+    }
 
-    khtml::RenderObject *renderer() const { return m_render; }
+    khtml::RenderObject *renderer() const
+    {
+        return m_render;
+    }
     khtml::RenderObject *nextRenderer();
     khtml::RenderObject *previousRenderer();
-    void setRenderer(khtml::RenderObject* renderer) { m_render = renderer; }
+    void setRenderer(khtml::RenderObject *renderer)
+    {
+        m_render = renderer;
+    }
 
     void checkSetPrefix(const DOMString &_prefix, int &exceptioncode);
     void checkAddChild(NodeImpl *newChild, int &exceptioncode);
-    bool isAncestor( NodeImpl *other );
-    virtual bool childAllowed( NodeImpl *newChild );
+    bool isAncestor(NodeImpl *other);
+    virtual bool childAllowed(NodeImpl *newChild);
 
     /**
      * Returns the minimum caret offset that is allowed for this node.
@@ -367,8 +539,8 @@ public:
      */
     virtual void close();
 
-    virtual void structureChanged() {};
-    virtual void backwardsStructureChanged() {};
+    virtual void structureChanged(){};
+    virtual void backwardsStructureChanged(){};
 
     void createRendererIfNeeded();
     virtual khtml::RenderStyle *styleForRenderer(khtml::RenderObject *parent);
@@ -442,29 +614,27 @@ public:
      * @param found          When this is set to true, don't print anymore but closing tags.
      * @return An html formatted string for this node and its children between the selectionStart and selectionEnd.
      */
-    virtual DOMString selectionToString(NodeImpl * selectionStart, 
-                                        NodeImpl * selectionEnd, 
-                                        int startOffset, 
-                                        int endOffset, 
-                                        bool &found) const 
-    { Q_UNUSED(selectionStart);
-      Q_UNUSED(selectionEnd);
-      Q_UNUSED(startOffset);
-      Q_UNUSED(endOffset);
-      Q_UNUSED(found);
-      return toString(); 
+    virtual DOMString selectionToString(NodeImpl *selectionStart, NodeImpl *selectionEnd, int startOffset, int endOffset, bool &found) const
+    {
+        Q_UNUSED(selectionStart);
+        Q_UNUSED(selectionEnd);
+        Q_UNUSED(startOffset);
+        Q_UNUSED(endOffset);
+        Q_UNUSED(found);
+        return toString();
     }
 
 private: // members
-    khtml::DocPtr<DocumentImpl> m_document;
+    khtml::DocPtr< DocumentImpl > m_document;
     NodeImpl *m_previous;
     NodeImpl *m_next;
+
 protected:
     khtml::RenderObject *m_render;
     RegisteredListenerList m_regdListeners;
 
     unsigned short m_tabIndex : 15;
-    bool m_hasTabIndex  : 1;
+    bool m_hasTabIndex : 1;
 
     bool m_hasId : 1;
     bool m_attached : 1;
@@ -479,30 +649,30 @@ protected:
     bool m_hovered : 1;
     bool m_focused : 1;
     bool m_active : 1;
-    bool m_implicit : 1; // implicitely generated by the parser
+    bool m_implicit : 1;   // implicitely generated by the parser
     bool m_htmlCompat : 1; // true if element was created in HTML compat mode
     bool m_hasClassList : 1;
-    bool m_hasClass : 1;   // true if element has a class property, as relevant to CSS
+    bool m_hasClass : 1; // true if element has a class property, as relevant to CSS
 };
 
 // this is the full Node Implementation with parents and children.
-class NodeBaseImpl : public NodeImpl
-{
+class NodeBaseImpl : public NodeImpl {
 public:
-    NodeBaseImpl(DocumentImpl *doc)
-        : NodeImpl(doc), _first(0), _last(0) {}
+    NodeBaseImpl(DocumentImpl *doc) : NodeImpl(doc), _first(0), _last(0)
+    {
+    }
     virtual ~NodeBaseImpl();
 
     // DOM methods overridden from  parent classes
     virtual NodeImpl *firstChild() const;
     virtual NodeImpl *lastChild() const;
-    virtual NodeImpl *insertBefore ( NodeImpl *newChild, NodeImpl *refChild, int &exceptioncode );
-    virtual void replaceChild ( NodeImpl *newChild, NodeImpl *oldChild, int &exceptioncode );
-    virtual void removeChild ( NodeImpl *oldChild, int &exceptioncode );
-    virtual NodeImpl *appendChild ( NodeImpl *newChild, int &exceptioncode );
-    virtual bool hasChildNodes (  ) const;
+    virtual NodeImpl *insertBefore(NodeImpl *newChild, NodeImpl *refChild, int &exceptioncode);
+    virtual void replaceChild(NodeImpl *newChild, NodeImpl *oldChild, int &exceptioncode);
+    virtual void removeChild(NodeImpl *oldChild, int &exceptioncode);
+    virtual NodeImpl *appendChild(NodeImpl *newChild, int &exceptioncode);
+    virtual bool hasChildNodes() const;
 
-    virtual void setTextContent( const DOMString &text, int& exceptioncode );
+    virtual void setTextContent(const DOMString &text, int &exceptioncode);
 
     // Other methods (not part of DOM)
     void removeChildren();
@@ -518,9 +688,9 @@ public:
     bool getUpperLeftCorner(int &xPos, int &yPos) const;
     bool getLowerRightCorner(int &xPos, int &yPos) const;
 
-    virtual void setFocus(bool=true);
-    virtual void setActive(bool=true);
-    virtual void setHovered(bool=true);
+    virtual void setFocus(bool = true);
+    virtual void setActive(bool = true);
+    virtual void setHovered(bool = true);
     virtual unsigned long childNodeCount();
     virtual NodeImpl *childNode(unsigned long index);
 
@@ -532,84 +702,86 @@ protected:
 
     // ### this should vanish. do it in dom/ !
     // check for same source document:
-    bool checkSameDocument( NodeImpl *newchild, int &exceptioncode );
+    bool checkSameDocument(NodeImpl *newchild, int &exceptioncode);
     // check for being child:
-    bool checkIsChild( NodeImpl *oldchild, int &exceptioncode );
+    bool checkIsChild(NodeImpl *oldchild, int &exceptioncode);
     // ###
 
     // find out if a node is allowed to be our child
-    void dispatchChildInsertedEvents( NodeImpl *child, int &exceptioncode );
-    void dispatchChildRemovalEvents( NodeImpl *child, int &exceptioncode );
+    void dispatchChildInsertedEvents(NodeImpl *child, int &exceptioncode);
+    void dispatchChildRemovalEvents(NodeImpl *child, int &exceptioncode);
 };
 
 // --------------------------------------------------------------------------
 class Node;
 class NodeImpl;
 
-class NodeListImpl : public khtml::Shared<NodeListImpl>
-{
+class NodeListImpl : public khtml::Shared< NodeListImpl > {
 public:
-    //Type of the item stored in the cache.
-    enum Type {
-        UNCACHEABLE, //Too complex to be cached like this
+    // Type of the item stored in the cache.
+    enum Type
+    {
+        UNCACHEABLE, // Too complex to be cached like this
         CHILD_NODES,
         LAST_NODE_LIST = CHILD_NODES
     };
 
     struct CacheKey
     {
-        NodeImpl* baseNode;
-        int       type;
+        NodeImpl *baseNode;
+        int type;
 
-        CacheKey(): type(UNCACHEABLE) {}
+        CacheKey() : type(UNCACHEABLE)
+        {
+        }
 
-        CacheKey(NodeImpl* _baseNode, int _type):
-            baseNode(_baseNode), type(_type)
-        {}
+        CacheKey(NodeImpl *_baseNode, int _type) : baseNode(_baseNode), type(_type)
+        {
+        }
 
         int hash() const
         {
-            return int(reinterpret_cast<unsigned long>(baseNode) >> 2) ^
-                       (unsigned(type) << 26);
+            return int(reinterpret_cast< unsigned long >(baseNode) >> 2) ^ (unsigned(type) << 26);
         }
 
-        bool operator==(const CacheKey& other) const
+        bool operator==(const CacheKey &other) const
         {
-            return baseNode == other.baseNode &&
-                   type     == other.type;
+            return baseNode == other.baseNode && type == other.type;
         }
     };
 
-    struct Cache: public khtml::Shared<Cache>
+    struct Cache : public khtml::Shared< Cache >
     {
-        static Cache* make() { return new Cache; }
+        static Cache *make()
+        {
+            return new Cache;
+        }
 
-        CacheKey key;//### We must store this in here due to QCache in Qt3 sucking
+        CacheKey key; //### We must store this in here due to QCache in Qt3 sucking
 
         unsigned int version;
-        union
-        {
-            NodeImpl*    node;
+        union {
+            NodeImpl *node;
             unsigned int index;
         } current;
         unsigned int position;
         unsigned int length;
-        bool         hasLength;
+        bool hasLength;
 
-        void updateNodeListInfo(DocumentImpl* doc);
+        void updateNodeListInfo(DocumentImpl *doc);
 
-        virtual void clear(DocumentImpl* doc);
+        virtual void clear(DocumentImpl *doc);
         virtual ~Cache();
     };
 
-    typedef Cache* CacheFactory();
+    typedef Cache *CacheFactory();
 
-    NodeListImpl(NodeImpl* node, int type, CacheFactory* factory = 0);
+    NodeListImpl(NodeImpl *node, int type, CacheFactory *factory = 0);
     virtual ~NodeListImpl();
 
     // DOM methods & attributes for NodeList
     virtual unsigned long length() const;
-    virtual NodeImpl *item ( unsigned long index ) const;
+    virtual NodeImpl *item(unsigned long index) const;
 
     // Other methods (not part of DOM)
 
@@ -617,41 +789,38 @@ protected:
     virtual unsigned long calcLength(NodeImpl *start) const;
     // helper functions for searching all ElementImpls in a tree
 
-    NodeImpl *recursiveItem    ( NodeImpl* absStart, NodeImpl *start, unsigned long &offset ) const;
-    NodeImpl *recursiveItemBack( NodeImpl* absStart, NodeImpl *start, unsigned long &offset ) const;
+    NodeImpl *recursiveItem(NodeImpl *absStart, NodeImpl *start, unsigned long &offset) const;
+    NodeImpl *recursiveItemBack(NodeImpl *absStart, NodeImpl *start, unsigned long &offset) const;
 
     // Override this to determine what nodes to return. Set doRecurse to
     // false if the children of this node do not need to be entered.
-    virtual bool nodeMatches( NodeImpl *testNode, bool& doRecurse ) const = 0;
+    virtual bool nodeMatches(NodeImpl *testNode, bool &doRecurse) const = 0;
 
-    NodeImpl*      m_refNode;
-    mutable Cache* m_cache;
+    NodeImpl *m_refNode;
+    mutable Cache *m_cache;
 };
 
-class ChildNodeListImpl : public NodeListImpl
-{
+class ChildNodeListImpl : public NodeListImpl {
 public:
-
-    ChildNodeListImpl( NodeImpl *n);
+    ChildNodeListImpl(NodeImpl *n);
 
 protected:
-    virtual bool nodeMatches( NodeImpl *testNode, bool& doRecurse ) const;
+    virtual bool nodeMatches(NodeImpl *testNode, bool &doRecurse) const;
 };
 
 
 /**
  * NodeList which lists all Nodes in a document with a given tag name
  */
-class TagNodeListImpl : public NodeListImpl
-{
+class TagNodeListImpl : public NodeListImpl {
 public:
-    TagNodeListImpl( NodeImpl *n, NodeImpl::Id id );
-    TagNodeListImpl( NodeImpl *n, const DOMString &namespaceURI, const DOMString &localName );
+    TagNodeListImpl(NodeImpl *n, NodeImpl::Id id);
+    TagNodeListImpl(NodeImpl *n, const DOMString &namespaceURI, const DOMString &localName);
 
     // Other methods (not part of DOM)
 
 protected:
-    virtual bool nodeMatches( NodeImpl *testNode, bool& doRecurse ) const;
+    virtual bool nodeMatches(NodeImpl *testNode, bool &doRecurse) const;
     NodeImpl::Id m_id;
     DOMString m_namespaceURI;
     DOMString m_localName;
@@ -665,15 +834,14 @@ protected:
 /**
  * NodeList which lists all Nodes in a Element with a given "name=" tag
  */
-class NameNodeListImpl : public NodeListImpl
-{
+class NameNodeListImpl : public NodeListImpl {
 public:
-    NameNodeListImpl( NodeImpl *doc, const DOMString &t );
+    NameNodeListImpl(NodeImpl *doc, const DOMString &t);
 
     // Other methods (not part of DOM)
 
 protected:
-    virtual bool nodeMatches( NodeImpl *testNode, bool& doRecurse ) const;
+    virtual bool nodeMatches(NodeImpl *testNode, bool &doRecurse) const;
 
     DOMString nodeName;
 };
@@ -681,56 +849,58 @@ protected:
 // Generic NamedNodeMap interface
 // Other classes implement this for more specific situations e.g. attributes
 // of an element
-class NamedNodeMapImpl : public khtml::Shared<NamedNodeMapImpl>
-{
+class NamedNodeMapImpl : public khtml::Shared< NamedNodeMapImpl > {
 public:
     NamedNodeMapImpl();
     virtual ~NamedNodeMapImpl();
 
     // DOM methods & attributes for NamedNodeMap
-    virtual NodeImpl *getNamedItem ( NodeImpl::Id id, bool nsAware = false, DOMStringImpl* qName = 0 ) const = 0;
-    virtual Node removeNamedItem ( NodeImpl::Id id, bool nsAware, DOMStringImpl* qName, int &exceptioncode ) = 0;
-    virtual Node setNamedItem ( NodeImpl* arg, bool nsAware, DOMStringImpl* qName, int &exceptioncode ) = 0;
+    virtual NodeImpl *getNamedItem(NodeImpl::Id id, bool nsAware = false, DOMStringImpl *qName = 0) const = 0;
+    virtual Node removeNamedItem(NodeImpl::Id id, bool nsAware, DOMStringImpl *qName, int &exceptioncode) = 0;
+    virtual Node setNamedItem(NodeImpl *arg, bool nsAware, DOMStringImpl *qName, int &exceptioncode) = 0;
 
-    virtual NodeImpl *item ( unsigned long index ) const = 0;
-    virtual unsigned long length(  ) const = 0;
+    virtual NodeImpl *item(unsigned long index) const = 0;
+    virtual unsigned long length() const = 0;
 
     // Other methods (not part of DOM)
-    virtual NodeImpl::Id mapId(DOMStringImpl* namespaceURI,
-				DOMStringImpl* localName, bool readonly) = 0;
-    virtual bool isReadOnly() { return false; }
+    virtual NodeImpl::Id mapId(DOMStringImpl *namespaceURI, DOMStringImpl *localName, bool readonly) = 0;
+    virtual bool isReadOnly()
+    {
+        return false;
+    }
 };
 
 // Generic read-only NamedNodeMap implementation
 // Used for e.g. entities and notations in DocumentType.
 // You can add nodes using addNode
-class GenericRONamedNodeMapImpl : public NamedNodeMapImpl
-{
+class GenericRONamedNodeMapImpl : public NamedNodeMapImpl {
 public:
-    GenericRONamedNodeMapImpl(DocumentImpl* doc);
+    GenericRONamedNodeMapImpl(DocumentImpl *doc);
     virtual ~GenericRONamedNodeMapImpl();
 
     // DOM methods & attributes for NamedNodeMap
 
-    virtual NodeImpl *getNamedItem ( NodeImpl::Id id, bool nsAware = false, DOMStringImpl* qName = 0 ) const;
-    virtual Node removeNamedItem ( NodeImpl::Id id, bool nsAware, DOMStringImpl* qName, int &exceptioncode );
-    virtual Node setNamedItem ( NodeImpl* arg, bool nsAware, DOMStringImpl* qName, int &exceptioncode );
+    virtual NodeImpl *getNamedItem(NodeImpl::Id id, bool nsAware = false, DOMStringImpl *qName = 0) const;
+    virtual Node removeNamedItem(NodeImpl::Id id, bool nsAware, DOMStringImpl *qName, int &exceptioncode);
+    virtual Node setNamedItem(NodeImpl *arg, bool nsAware, DOMStringImpl *qName, int &exceptioncode);
 
-    virtual NodeImpl *item ( unsigned long index ) const;
-    virtual unsigned long length(  ) const;
+    virtual NodeImpl *item(unsigned long index) const;
+    virtual unsigned long length() const;
 
     // Other methods (not part of DOM)
-    virtual NodeImpl::Id mapId(DOMStringImpl* namespaceURI,
-                               DOMStringImpl* localName, bool readonly);
+    virtual NodeImpl::Id mapId(DOMStringImpl *namespaceURI, DOMStringImpl *localName, bool readonly);
 
-    virtual bool isReadOnly() { return true; }
+    virtual bool isReadOnly()
+    {
+        return true;
+    }
 
     void addNode(NodeImpl *n);
 
 protected:
-    DocumentImpl* m_doc;
-    QPtrList<NodeImpl> *m_contents;
+    DocumentImpl *m_doc;
+    QPtrList< NodeImpl > *m_contents;
 };
 
-} //namespace
+} // namespace
 #endif

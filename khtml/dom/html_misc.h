@@ -45,19 +45,21 @@ class HTMLCollectionImpl;
  * deprecated in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLBaseFontElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLBaseFontElement : public HTMLElement {
 public:
     HTMLBaseFontElement();
     HTMLBaseFontElement(const HTMLBaseFontElement &other);
     HTMLBaseFontElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLBaseFontElement(HTMLBaseFontElementImpl *impl);
-public:
 
-    HTMLBaseFontElement & operator = (const HTMLBaseFontElement &other);
-    HTMLBaseFontElement & operator = (const Node &other);
+public:
+    HTMLBaseFontElement &operator=(const HTMLBaseFontElement &other);
+    HTMLBaseFontElement &operator=(const Node &other);
 
     ~HTMLBaseFontElement();
 
@@ -72,7 +74,7 @@ public:
     /**
      * see color
      */
-    void setColor( const DOMString & );
+    void setColor(const DOMString &);
 
     /**
      * Font face identifier. See the <a
@@ -86,7 +88,7 @@ public:
     /**
      * see face
      */
-    void setFace( const DOMString & );
+    void setFace(const DOMString &);
 
     /**
      * Computed Font size. See the <a
@@ -97,10 +99,10 @@ public:
      */
     long getSize() const;
 
-     /**
-      * see size
-      */
-    void setSize( long );
+    /**
+     * see size
+     */
+    void setSize(long);
 
     /**
      * @deprecated
@@ -110,7 +112,7 @@ public:
     /**
      * @deprecated
      */
-    void setSize( const DOMString & ) KDE_DEPRECATED;
+    void setSize(const DOMString &) KDE_DEPRECATED;
 };
 
 // --------------------------------------------------------------------------
@@ -123,8 +125,7 @@ public:
  * automatically updated when the underlying document is changed.
  *
  */
-class KHTML_EXPORT HTMLCollection
-{
+class KHTML_EXPORT HTMLCollection {
     friend class HTMLDocument;
     friend class HTMLSelectElement;
     friend class HTMLImageElement;
@@ -138,11 +139,12 @@ class KHTML_EXPORT HTMLCollection
 public:
     HTMLCollection();
     HTMLCollection(const HTMLCollection &other);
+
 protected:
     HTMLCollection(NodeImpl *base, int type);
-public:
 
-    HTMLCollection & operator = (const HTMLCollection &other);
+public:
+    HTMLCollection &operator=(const HTMLCollection &other);
 
     ~HTMLCollection();
 
@@ -164,7 +166,7 @@ public:
      * index is out of range.
      *
      */
-    Node item ( unsigned long index ) const;
+    Node item(unsigned long index) const;
 
     /**
      * This method retrieves a \c Node using a name. It
@@ -182,7 +184,7 @@ public:
      * exists), returns \c null .
      *
      */
-    Node namedItem ( const DOMString &name ) const;
+    Node namedItem(const DOMString &name) const;
 
     /**
      * @internal
@@ -195,15 +197,15 @@ public:
     Node firstItem() const;
     Node nextItem() const;
     // In case of multiple items named the same way
-    Node nextNamedItem( const DOMString &name ) const;
+    Node nextNamedItem(const DOMString &name) const;
 
 protected:
     HTMLCollectionImpl *impl;
 };
 
-class KHTML_EXPORT HTMLFormCollection : public HTMLCollection
-{
+class KHTML_EXPORT HTMLFormCollection : public HTMLCollection {
     friend class HTMLFormElement;
+
 protected:
     HTMLFormCollection(NodeImpl *base);
 };
@@ -211,12 +213,11 @@ protected:
 /**
   @internal. Not part of the public API
 */
-class KHTML_EXPORT HTMLMappedNameCollection : public HTMLCollection
-{
+class KHTML_EXPORT HTMLMappedNameCollection : public HTMLCollection {
 public:
-    HTMLMappedNameCollection(NodeImpl *base, int type, const DOMString &name );
+    HTMLMappedNameCollection(NodeImpl *base, int type, const DOMString &name);
 };
 
-} //namespace
+} // namespace
 
 #endif

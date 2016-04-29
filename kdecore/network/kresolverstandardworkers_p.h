@@ -10,7 +10,7 @@
  *  permit persons to whom the Software is furnished to do so, subject to
  *  the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
@@ -37,75 +37,79 @@
 
 #include <config.h>
 
-namespace KNetwork { namespace Internal
-{
-  extern void initStandardWorkers() KDE_NO_EXPORT;
+namespace KNetwork {
+namespace Internal {
+    extern void initStandardWorkers() KDE_NO_EXPORT;
 
-  /**
-   * @internal
-   * The blacklist worker.
-   */
-  class KBlacklistWorker: public KNetwork::KResolverWorkerBase
-  {
-  public:
-    static QStringList blacklist;
-    
-    static void loadBlacklist();
-    static void init();
-    static bool isBlacklisted(const QString&);
-    
-    virtual bool preprocess();
-    virtual bool run();
-    virtual bool postprocess() { return true; }
-  };
+    /**
+     * @internal
+     * The blacklist worker.
+     */
+    class KBlacklistWorker : public KNetwork::KResolverWorkerBase {
+    public:
+        static QStringList blacklist;
 
-  /** @internal
-   * Standard worker.
-   */
-  class KStandardWorker: public KNetwork::KResolverWorkerBase
-  {
-  protected:
-    mutable QCString m_encodedName;
-    Q_UINT16 port;
-    int scopeid;
-    QPtrList<KNetwork::KResolverResults> resultList;
+        static void loadBlacklist();
+        static void init();
+        static bool isBlacklisted(const QString &);
 
-  public:
-    bool sanityCheck();
+        virtual bool preprocess();
+        virtual bool run();
+        virtual bool postprocess()
+        {
+            return true;
+        }
+    };
 
-    virtual bool preprocess();
-    virtual bool run();
-    virtual bool postprocess();
+    /** @internal
+     * Standard worker.
+     */
+    class KStandardWorker : public KNetwork::KResolverWorkerBase {
+    protected:
+        mutable QCString m_encodedName;
+        Q_UINT16 port;
+        int scopeid;
+        QPtrList< KNetwork::KResolverResults > resultList;
 
-    bool resolveScopeId();
-    bool resolveService();
-    bool resolveNumerically();
+    public:
+        bool sanityCheck();
 
-    KNetwork::KResolver::ErrorCodes addUnix();
-  };
+        virtual bool preprocess();
+        virtual bool run();
+        virtual bool postprocess();
+
+        bool resolveScopeId();
+        bool resolveService();
+        bool resolveNumerically();
+
+        KNetwork::KResolver::ErrorCodes addUnix();
+    };
 
 #if defined(HAVE_GETADDRINFO)
-  /** @internal
-   * Worker class based on getaddrinfo(3).
-   *
-   * This class does not do post-processing.
-   */
-  class KGetAddrinfoWorker: public KStandardWorker
-  {
-  public:
-    KGetAddrinfoWorker()
-    { }
+    /** @internal
+     * Worker class based on getaddrinfo(3).
+     *
+     * This class does not do post-processing.
+     */
+    class KGetAddrinfoWorker : public KStandardWorker {
+    public:
+        KGetAddrinfoWorker()
+        {
+        }
 
-    virtual ~KGetAddrinfoWorker();
-    virtual bool preprocess();
-    virtual bool run();
-    virtual bool postprocess() { return true; }
+        virtual ~KGetAddrinfoWorker();
+        virtual bool preprocess();
+        virtual bool run();
+        virtual bool postprocess()
+        {
+            return true;
+        }
 
-    bool wantThis(int family);
-  };
+        bool wantThis(int family);
+    };
 #endif // HAVE_GETADDRINFO
-
-} } // namespace KNetwork::Internal
+}
+} // namespace KNetwork::Internal
 
 
 #endif

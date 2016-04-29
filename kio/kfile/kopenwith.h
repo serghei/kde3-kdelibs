@@ -47,7 +47,6 @@ class KIO_EXPORT KOpenWithDlg : public QDialog //#TODO: Use KDialogBase for KDE4
 {
     Q_OBJECT
 public:
-
     /**
      * Create a dialog that asks for a application to open a given
      * URL(s) with.
@@ -56,7 +55,7 @@ public:
      * if the dialog is used to choose an application but not for some particular URLs.
      * @param parent parent widget
      */
-    KOpenWithDlg( const KURL::List& urls, QWidget *parent = 0L );
+    KOpenWithDlg(const KURL::List &urls, QWidget *parent = 0L);
 
     /**
      * Create a dialog that asks for a application to open a given
@@ -67,8 +66,7 @@ public:
      * @param value  is the initial value of the line
      * @param parent parent widget
      */
-    KOpenWithDlg( const KURL::List& urls, const QString& text, const QString& value,
-                  QWidget *parent = 0L );
+    KOpenWithDlg(const KURL::List &urls, const QString &text, const QString &value, QWidget *parent = 0L);
 
     /**
      * Create a dialog to select a service for a given service type.
@@ -78,8 +76,7 @@ public:
      * @param value  is the initial value of the line
      * @param parent parent widget
      */
-    KOpenWithDlg( const QString& serviceType, const QString& value,
-                  QWidget *parent = 0L );
+    KOpenWithDlg(const QString &serviceType, const QString &value, QWidget *parent = 0L);
 
     /**
      * Create a dialog to select an application
@@ -88,7 +85,7 @@ public:
      * @param parent parent widget
      * @since 3.1
      */
-    KOpenWithDlg( QWidget *parent = 0L );
+    KOpenWithDlg(QWidget *parent = 0L);
 
     /**
      * Destructor
@@ -111,7 +108,10 @@ public:
      * @return the chosen service in the application tree
      * Can be null, if the user typed some text and didn't select a service.
      */
-    KService::Ptr service() const { return m_pService; }
+    KService::Ptr service() const
+    {
+        return m_pService;
+    }
     /**
      * Set whether a new .desktop file should be created if the user selects an
      * application for which no corresponding .desktop file can be found.
@@ -129,8 +129,8 @@ public slots:
     * The slot for clearing the edit widget
     */
     void slotClear();
-    void slotSelected( const QString&_name, const QString& _exec );
-    void slotHighlighted( const QString& _name, const QString& _exec );
+    void slotSelected(const QString &_name, const QString &_exec);
+    void slotHighlighted(const QString &_name, const QString &_exec);
     void slotTextChanged();
     void slotTerminalToggled(bool);
     void slotDbClick();
@@ -143,11 +143,10 @@ protected slots:
     virtual void accept();
 
 protected:
-
     /**
      * Determine service type from URLs
      */
-    void setServiceType( const KURL::List& _urls );
+    void setServiceType(const KURL::List &_urls);
 
     /**
      * Create a dialog that asks for a application to open a given
@@ -156,17 +155,17 @@ protected:
      * @param text   appears as a label on top of the entry box.
      * @param value  is the initial value of the line
      */
-    void init( const QString& text, const QString& value );
+    void init(const QString &text, const QString &value);
 
-    KURLRequester * edit;
+    KURLRequester *edit;
     QString m_command;
 
-    KApplicationTree* m_pTree;
+    KApplicationTree *m_pTree;
     QLabel *label;
 
     QString qName, qServiceType;
     bool m_terminaldirty;
-    QCheckBox   *terminal, *remember, *nocloseonexit;
+    QCheckBox *terminal, *remember, *nocloseonexit;
     QPushButton *UNUSED;
     QPushButton *UNUSED2;
 
@@ -189,17 +188,20 @@ protected:
  *
  *
  */
-class KIO_EXPORT_DEPRECATED KFileOpenWithHandler : public KOpenWithHandler
-{
+class KIO_EXPORT_DEPRECATED KFileOpenWithHandler : public KOpenWithHandler {
 public:
-  KFileOpenWithHandler() : KOpenWithHandler() {}
-  virtual ~KFileOpenWithHandler() {}
+    KFileOpenWithHandler() : KOpenWithHandler()
+    {
+    }
+    virtual ~KFileOpenWithHandler()
+    {
+    }
 
-  /**
-   * Opens an open-with dialog box for @p urls
-   * @returns true if the operation succeeded
-   */
-  virtual bool displayOpenWithDialog( const KURL::List& urls );
+    /**
+     * Opens an open-with dialog box for @p urls
+     * @returns true if the operation succeeded
+     */
+    virtual bool displayOpenWithDialog(const KURL::List &urls);
 };
 #endif
 

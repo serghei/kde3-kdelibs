@@ -38,42 +38,45 @@ class Job;
  *
  * @short This class implements synchronous mounting of devices.
  */
-class KIO_EXPORT KAutoMount : public QObject
-{
-  Q_OBJECT
-  friend class gcc_gives_a_warning_without_this;
+class KIO_EXPORT KAutoMount : public QObject {
+    Q_OBJECT
+    friend class gcc_gives_a_warning_without_this;
+
 public:
-  /**
-   * Mounts a device.
-   * @param readonly if true, the device is mounted read-only
-   * @param format the file system (e.g. vfat, ext2...) [optional, fstab is used otherwise]
-   * @param device the path to the device (e.g. /dev/fd0)
-   * @param mountpoint the directory where to mount the device [optional, fstab is used otherwise]
-   * @param desktopFile the file the user clicked on - to notify KDirWatch of the fact that
-   * it should emit fileDirty for it (to have the icon change)
-   * @param show_filemanager_window if true, a file-manager window for that mountpoint is shown after
-   * the mount, if successful.
-   */
-  KAutoMount( bool readonly, const QString& format, const QString& device, const QString& mountpoint,
-              const QString & desktopFile, bool show_filemanager_window = true );
+    /**
+     * Mounts a device.
+     * @param readonly if true, the device is mounted read-only
+     * @param format the file system (e.g. vfat, ext2...) [optional, fstab is used otherwise]
+     * @param device the path to the device (e.g. /dev/fd0)
+     * @param mountpoint the directory where to mount the device [optional, fstab is used otherwise]
+     * @param desktopFile the file the user clicked on - to notify KDirWatch of the fact that
+     * it should emit fileDirty for it (to have the icon change)
+     * @param show_filemanager_window if true, a file-manager window for that mountpoint is shown after
+     * the mount, if successful.
+     */
+    KAutoMount(bool readonly, const QString &format, const QString &device, const QString &mountpoint, const QString &desktopFile,
+               bool show_filemanager_window = true);
 
 signals:
-  /** Emitted when the directory has been mounted */
-  void finished();
-  /** Emitted in case the directory could not been mounted */
-  void error();
+    /** Emitted when the directory has been mounted */
+    void finished();
+    /** Emitted in case the directory could not been mounted */
+    void error();
 
 protected slots:
-  void slotResult( KIO::Job * );
+    void slotResult(KIO::Job *);
 
 protected:
-  QString m_strDevice;
-  bool m_bShowFilemanagerWindow;
-  QString m_desktopFile;
+    QString m_strDevice;
+    bool m_bShowFilemanagerWindow;
+    QString m_desktopFile;
+
 private:
-  /** KAutoMount deletes itself. Don't delete it manually. */
-  ~KAutoMount() {}
-  class KAutoMountPrivate* d;
+    /** KAutoMount deletes itself. Don't delete it manually. */
+    ~KAutoMount()
+    {
+    }
+    class KAutoMountPrivate *d;
 };
 
 /**
@@ -83,36 +86,40 @@ private:
  *
  * @short This class implements synchronous unmounting of devices,
  */
-class KIO_EXPORT KAutoUnmount : public QObject
-{
-  Q_OBJECT
-  friend class gcc_gives_a_warning_without_this;
+class KIO_EXPORT KAutoUnmount : public QObject {
+    Q_OBJECT
+    friend class gcc_gives_a_warning_without_this;
+
 public:
-  /**
-   * Unmounts a device.
-   * @param mountpoint the mount point - KAutoUnmount finds the device from that
-   * @param desktopFile the file the user clicked on - to notify KDirWatch of the fact that
-   * it should emit fileDirty for it (to have the icon change)
-   */
-  KAutoUnmount( const QString & mountpoint, const QString & desktopFile );
+    /**
+     * Unmounts a device.
+     * @param mountpoint the mount point - KAutoUnmount finds the device from that
+     * @param desktopFile the file the user clicked on - to notify KDirWatch of the fact that
+     * it should emit fileDirty for it (to have the icon change)
+     */
+    KAutoUnmount(const QString &mountpoint, const QString &desktopFile);
 
 signals:
-  /** Emitted when the directory has been unmounted */
-  void finished();
-  /** Emitted in case the directory could not been unmounted */
-  void error();
+    /** Emitted when the directory has been unmounted */
+    void finished();
+    /** Emitted in case the directory could not been unmounted */
+    void error();
 
 protected slots:
-  void slotResult( KIO::Job * );
+    void slotResult(KIO::Job *);
+
 private:
-  QString m_desktopFile;
-  QString m_mountpoint;
+    QString m_desktopFile;
+    QString m_mountpoint;
+
 private:
-  /** KAutoUnmount deletes itself. Don't delete it manually. */
-  ~KAutoUnmount() {}
-  class KAutoUnmountPrivate* d;
+    /** KAutoUnmount deletes itself. Don't delete it manually. */
+    ~KAutoUnmount()
+    {
+    }
+    class KAutoUnmountPrivate *d;
 };
 
-#endif //Q_OS_UNIX
+#endif // Q_OS_UNIX
 
 #endif

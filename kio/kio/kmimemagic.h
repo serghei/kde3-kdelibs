@@ -43,35 +43,57 @@ class KMimeMagic; // see below (read this one first)
  * It contains the mimetype and the encoding of
  * the file or buffer read.
  */
-class KIO_EXPORT_DEPRECATED KMimeMagicResult
-{
+class KIO_EXPORT_DEPRECATED KMimeMagicResult {
 public:
-  KMimeMagicResult() { m_iAccuracy = 100; }
-  ~KMimeMagicResult() { }
+    KMimeMagicResult()
+    {
+        m_iAccuracy = 100;
+    }
+    ~KMimeMagicResult()
+    {
+    }
 
-  /**
-   * Retrieve the mimetype (e.g. "text/html") of the file or buffer parsed.
-   */
-  QString mimeType() const { return m_strMimeType; }
-  /**
-   * Retrieve the accuracy of the matching.
-   */
-  int accuracy() const { return m_iAccuracy; }
-  /**
-   * Returns whether the result is valid (i.e. mimetype not empty).
-   */
-  bool isValid() const { return !m_strMimeType.isEmpty(); }
+    /**
+     * Retrieve the mimetype (e.g. "text/html") of the file or buffer parsed.
+     */
+    QString mimeType() const
+    {
+        return m_strMimeType;
+    }
+    /**
+     * Retrieve the accuracy of the matching.
+     */
+    int accuracy() const
+    {
+        return m_iAccuracy;
+    }
+    /**
+     * Returns whether the result is valid (i.e. mimetype not empty).
+     */
+    bool isValid() const
+    {
+        return !m_strMimeType.isEmpty();
+    }
 
-  /////////////////
-  // Internal functions only
-  /////////////////
-  void setMimeType( const QString& _mime ) { m_strMimeType = _mime; }
-  void setAccuracy( int _accuracy ) { m_iAccuracy = _accuracy; }
-  void setInvalid() { m_strMimeType = QString::null; }
+    /////////////////
+    // Internal functions only
+    /////////////////
+    void setMimeType(const QString &_mime)
+    {
+        m_strMimeType = _mime;
+    }
+    void setAccuracy(int _accuracy)
+    {
+        m_iAccuracy = _accuracy;
+    }
+    void setInvalid()
+    {
+        m_strMimeType = QString::null;
+    }
 
 protected:
-  QString m_strMimeType;
-  int m_iAccuracy;
+    QString m_strMimeType;
+    int m_iAccuracy;
 };
 
 /**
@@ -98,121 +120,119 @@ protected:
  *
  * The result is contained in the class KMimeMagicResult.
  */
-class KIO_EXPORT_DEPRECATED KMimeMagic
-{
+class KIO_EXPORT_DEPRECATED KMimeMagic {
 public:
-  /**
-   * Create a parser and initialize it with the KDE-global data:
-   * the "magic" config file as well as the snippets from share/config/magic.
-   * @since 3.1
-   */
-  KMimeMagic();
+    /**
+     * Create a parser and initialize it with the KDE-global data:
+     * the "magic" config file as well as the snippets from share/config/magic.
+     * @since 3.1
+     */
+    KMimeMagic();
 
-  /**
-   * Create a parser and initialize it with the given config file.
-   */
-  KMimeMagic( const QString & configFile );
+    /**
+     * Create a parser and initialize it with the given config file.
+     */
+    KMimeMagic(const QString &configFile);
 
-  /**
-   * Destroy the parser.
-   */
-  ~KMimeMagic();
+    /**
+     * Destroy the parser.
+     */
+    ~KMimeMagic();
 
-  /**
-   * Merge an existing parse table with the data from the
-   * given file.
-   *
-   * @return @p true on success.
-   */
-  bool mergeConfig( const QString & configFile );
+    /**
+     * Merge an existing parse table with the data from the
+     * given file.
+     *
+     * @return @p true on success.
+     */
+    bool mergeConfig(const QString &configFile);
 
-  /**
-   * Merge an existing parse table with the data from the
-   * given buffer.
-   *
-   * @return @p true on success.
-   */
-  bool mergeBufConfig(char *);
+    /**
+     * Merge an existing parse table with the data from the
+     * given buffer.
+     *
+     * @return @p true on success.
+     */
+    bool mergeBufConfig(char *);
 
-  /**
-   * Enable/Disable follow-links.
-   *
-   * (Default is disabled.)
-   */
-  void setFollowLinks( bool _enable );
+    /**
+     * Enable/Disable follow-links.
+     *
+     * (Default is disabled.)
+     */
+    void setFollowLinks(bool _enable);
 
-  /**
-   * Try to find a MimeType for the given file.
-   *
-   * If no special
-   * MimeType is found, the default MimeType is returned.
-   * This function looks at the content of the file.
-   *
-   * @return A pointer to the result object. Do @em not delete the
-   *         result object. After another call to KMimeMagic
-   *         the returned result object changes its value
-   *         since it is reused by KMimeMagic.
-   */
-  KMimeMagicResult* findFileType( const QString & _filename );
+    /**
+     * Try to find a MimeType for the given file.
+     *
+     * If no special
+     * MimeType is found, the default MimeType is returned.
+     * This function looks at the content of the file.
+     *
+     * @return A pointer to the result object. Do @em not delete the
+     *         result object. After another call to KMimeMagic
+     *         the returned result object changes its value
+     *         since it is reused by KMimeMagic.
+     */
+    KMimeMagicResult *findFileType(const QString &_filename);
 
-  /**
-   * Same functionality as above, except data is not
-   * read from a file.
-   *
-   * Instead a buffer can be supplied which
-   * is examined.
-   *
-   * @return A pointer to the result object. Do @em not delete the
-   *         result object. After another call to KMimeMagic
-   *         the returned result object changes its value
-   *         since it is reused by KMimeMagic.
-   */
-  KMimeMagicResult* findBufferType( const QByteArray &p );
+    /**
+     * Same functionality as above, except data is not
+     * read from a file.
+     *
+     * Instead a buffer can be supplied which
+     * is examined.
+     *
+     * @return A pointer to the result object. Do @em not delete the
+     *         result object. After another call to KMimeMagic
+     *         the returned result object changes its value
+     *         since it is reused by KMimeMagic.
+     */
+    KMimeMagicResult *findBufferType(const QByteArray &p);
 
-  /**
-   * Same functionality as findBufferType() but with
-   * additional capability of distinguishing between
-   * C-headers and C-Source.
-   *
-   * For this purpose this function looks
-   * at the extension of the filename. This means that 'filename'
-   * can be a filename on some FTP server, too.
-   *
-   * @return A pointer to the result object. Do @em not delete the
-   *         result object. After another call to KMimeMagic
-   *         the returned result object changes its value
-   *         since it is reused by KMimeMagic.
-   */
-  KMimeMagicResult * findBufferFileType( const QByteArray &, const QString & filename );
+    /**
+     * Same functionality as findBufferType() but with
+     * additional capability of distinguishing between
+     * C-headers and C-Source.
+     *
+     * For this purpose this function looks
+     * at the extension of the filename. This means that 'filename'
+     * can be a filename on some FTP server, too.
+     *
+     * @return A pointer to the result object. Do @em not delete the
+     *         result object. After another call to KMimeMagic
+     *         the returned result object changes its value
+     *         since it is reused by KMimeMagic.
+     */
+    KMimeMagicResult *findBufferFileType(const QByteArray &, const QString &filename);
 
-  /**
-   * Returns a pointer to the unique KMimeMagic instance in this process.
-   */
-  static KMimeMagic* self();
+    /**
+     * Returns a pointer to the unique KMimeMagic instance in this process.
+     */
+    static KMimeMagic *self();
 
 protected:
-  /**
-   * The result type.
-   */
-  KMimeMagicResult * magicResult;
+    /**
+     * The result type.
+     */
+    KMimeMagicResult *magicResult;
 
-  static void initStatic();
-  static KMimeMagic* s_pSelf;
+    static void initStatic();
+    static KMimeMagic *s_pSelf;
 
 private:
-  void init( const QString& configFile );
+    void init(const QString &configFile);
 
-  bool bunused;
-  QString sunused;
+    bool bunused;
+    QString sunused;
 
-  int parse_line(char *line, int *rule, int lineno);
-  int parse(char *, int);
-  int buff_apprentice(char*buff);
-  int apprentice(const QString &configFile);
+    int parse_line(char *line, int *rule, int lineno);
+    int parse(char *, int);
+    int buff_apprentice(char *buff);
+    int apprentice(const QString &configFile);
 
-  struct config_rec *conf; // this is also our "d pointer"
-  int iunused;
+    struct config_rec *conf; // this is also our "d pointer"
+    int iunused;
 };
 
 #endif
-

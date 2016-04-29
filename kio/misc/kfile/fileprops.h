@@ -23,44 +23,55 @@
 
 #include <kfilemetainfo.h>
 
-class FileProps
-{
+class FileProps {
 public:
-    FileProps( const QString& path, const QStringList& suppliedGroups );
+    FileProps(const QString &path, const QStringList &suppliedGroups);
     virtual ~FileProps();
 
     bool isValid() const;
 
-    QString fileName() const { return m_info->path(); }
-    
+    QString fileName() const
+    {
+        return m_info->path();
+    }
+
     QStringList supportedGroups() const;
     QStringList availableGroups() const;
     QStringList translatedGroups();
 
-    const QStringList& groupsToUse() const { return m_groupsToUse; }
-    bool userSuppliedGroups() const { return m_userSuppliedGroups; }
+    const QStringList &groupsToUse() const
+    {
+        return m_groupsToUse;
+    }
+    bool userSuppliedGroups() const
+    {
+        return m_userSuppliedGroups;
+    }
 
-    QStringList supportedKeys( const QString& group ) const;
-    QStringList availableKeys( const QString& group ) const;
-    QStringList preferredKeys( const QString& group ) const;
+    QStringList supportedKeys(const QString &group) const;
+    QStringList availableKeys(const QString &group) const;
+    QStringList preferredKeys(const QString &group) const;
 
-    QStringList supportedKeys() const { return m_info->supportedKeys(); }
-    QStringList preferredKeys() const { return m_info->preferredKeys(); }
+    QStringList supportedKeys() const
+    {
+        return m_info->supportedKeys();
+    }
+    QStringList preferredKeys() const
+    {
+        return m_info->preferredKeys();
+    }
 
-    QString getValue( const QString& group, const QString& key ) const;
-    bool setValue( const QString& group,
-                   const QString& key, const QString &value );
+    QString getValue(const QString &group, const QString &key) const;
+    bool setValue(const QString &group, const QString &key, const QString &value);
 
-    QStringList allValues( const QString& group ) const;
-    QStringList preferredValues( const QString& group ) const;
+    QStringList allValues(const QString &group) const;
+    QStringList preferredValues(const QString &group) const;
 
-    bool isReadOnly( const QString& group, const QString& key );
+    bool isReadOnly(const QString &group, const QString &key);
 
 private:
-    static QString createKeyValue( const KFileMetaInfoGroup& g,
-                                   const QString& key );
-    static QStringList createKeyValueList( const KFileMetaInfoGroup&,
-                                           const QStringList& );
+    static QString createKeyValue(const KFileMetaInfoGroup &g, const QString &key);
+    static QStringList createKeyValueList(const KFileMetaInfoGroup &, const QStringList &);
     bool sync();
 
     KFileMetaInfo *m_info;
@@ -68,7 +79,6 @@ private:
     bool m_userSuppliedGroups;
 
     QStringList m_groupsToUse;
-
 };
 
 #endif // KFILEPROPS_H

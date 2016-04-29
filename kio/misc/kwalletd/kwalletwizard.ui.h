@@ -10,27 +10,38 @@
 void KWalletWizard::passwordPageUpdate()
 {
     bool fe = !_useWallet->isChecked() || _pass1->text() == _pass2->text();
-    if (_basic->isChecked()) {
+    if(_basic->isChecked())
+    {
         setFinishEnabled(page2, fe);
-    } else {
+    }
+    else
+    {
         setNextEnabled(page2, fe);
         setFinishEnabled(page3, fe);
     }
-    
-    if (_useWallet->isChecked()) {
-	if (_pass1->text() == _pass2->text()) {
-            if (_pass1->text().isEmpty()) {
+
+    if(_useWallet->isChecked())
+    {
+        if(_pass1->text() == _pass2->text())
+        {
+            if(_pass1->text().isEmpty())
+            {
                 _matchLabel->setText(i18n("<qt>Password is empty.  <b>(WARNING: Insecure)"));
-            } else {
+            }
+            else
+            {
                 _matchLabel->setText(i18n("Passwords match."));
             }
-	} else {
-	    _matchLabel->setText(i18n("Passwords do not match."));
-	}
-    } else {
-	_matchLabel->setText(QString::null);
+        }
+        else
+        {
+            _matchLabel->setText(i18n("Passwords do not match."));
+        }
     }
-    
+    else
+    {
+        _matchLabel->setText(QString::null);
+    }
 }
 
 

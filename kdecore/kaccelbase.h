@@ -118,165 +118,184 @@ class QWidget;
  * @short Configurable key binding support.
  */
 
-class KDECORE_EXPORT KAccelBase
-{
- public:
-	/** Initialization mode of the KAccelBase, used in constructor. */
-	enum Init { QT_KEYS = 0x00, NATIVE_KEYS = 0x01 };
+class KDECORE_EXPORT KAccelBase {
+public:
+    /** Initialization mode of the KAccelBase, used in constructor. */
+    enum Init
+    {
+        QT_KEYS = 0x00,
+        NATIVE_KEYS = 0x01
+    };
 
-	/** Enum for kinds of signals which may be emitted. */
-	enum Signal { KEYCODE_CHANGED };
+    /** Enum for kinds of signals which may be emitted. */
+    enum Signal
+    {
+        KEYCODE_CHANGED
+    };
 
-	/** Constructor. @p fInitCode should be a bitwise OR of
-	*   values from the Init enum.
-	*/
-	KAccelBase( int fInitCode );
-	virtual ~KAccelBase();
+    /** Constructor. @p fInitCode should be a bitwise OR of
+    *   values from the Init enum.
+    */
+    KAccelBase(int fInitCode);
+    virtual ~KAccelBase();
 
-	/** Returns number of actions in this handler. */
-	uint actionCount() const;
-	/** Returns a list of all the actions in this handler. */
-	KAccelActions& actions();
-	/** Returns whether this accelerator handler is enabled or not. */
-	bool isEnabled() const;
+    /** Returns number of actions in this handler. */
+    uint actionCount() const;
+    /** Returns a list of all the actions in this handler. */
+    KAccelActions &actions();
+    /** Returns whether this accelerator handler is enabled or not. */
+    bool isEnabled() const;
 
-	/** Returns a pointer to the KAccelAction named @p sAction. */
-	KAccelAction* actionPtr( const QString& sAction );
-	/** Const version of the above. */
-	const KAccelAction* actionPtr( const QString& sAction ) const;
-	/** Returns a pointer to the KAccelAction associated with
-	*   the key @p key. This function takes into account the
-	*   key mapping defined in the constructor.
-	*
-	*   May return 0 if no (or more than one)
-	*   action is associated with the key.
-	*/
-	KAccelAction* actionPtr( const KKey& key );
-	/** Basically the same as above, except a KKeyServer::Key
-	*   already has a key mapping defined (either NATIVE_KEYS or not).
-	*/
-	KAccelAction* actionPtr( const KKeyServer::Key& key );
+    /** Returns a pointer to the KAccelAction named @p sAction. */
+    KAccelAction *actionPtr(const QString &sAction);
+    /** Const version of the above. */
+    const KAccelAction *actionPtr(const QString &sAction) const;
+    /** Returns a pointer to the KAccelAction associated with
+    *   the key @p key. This function takes into account the
+    *   key mapping defined in the constructor.
+    *
+    *   May return 0 if no (or more than one)
+    *   action is associated with the key.
+    */
+    KAccelAction *actionPtr(const KKey &key);
+    /** Basically the same as above, except a KKeyServer::Key
+    *   already has a key mapping defined (either NATIVE_KEYS or not).
+    */
+    KAccelAction *actionPtr(const KKeyServer::Key &key);
 
-	/** Returns the name of the configuration group these
-	*   accelerators are stored in. The default is "Shortcuts".
-	*/
-	const QString& configGroup() const { return m_sConfigGroup; }
-	/** Set the group (in the configuration file) for storing
-	*   accelerators.
-	*/
-	void setConfigGroup( const QString& group );
-	void setConfigGlobal( bool global );
-	/** Enables or disables the accelerator.
-	 * @param bEnabled determines whether the accelerator should be enabled or
-	 * disabled.
-	 */
-	virtual void setEnabled( bool bEnabled ) = 0;
-	/** Returns whether autoupdate is enabled for these accelerators. */
-	bool getAutoUpdate() { return m_bAutoUpdate; }
-	/** Enables (or disables) autoupdate for these accelerators.
-	*   @return the value of autoupdate before the call.
-	*/
-	bool setAutoUpdate( bool bAuto );
+    /** Returns the name of the configuration group these
+    *   accelerators are stored in. The default is "Shortcuts".
+    */
+    const QString &configGroup() const
+    {
+        return m_sConfigGroup;
+    }
+    /** Set the group (in the configuration file) for storing
+    *   accelerators.
+    */
+    void setConfigGroup(const QString &group);
+    void setConfigGlobal(bool global);
+    /** Enables or disables the accelerator.
+     * @param bEnabled determines whether the accelerator should be enabled or
+     * disabled.
+     */
+    virtual void setEnabled(bool bEnabled) = 0;
+    /** Returns whether autoupdate is enabled for these accelerators. */
+    bool getAutoUpdate()
+    {
+        return m_bAutoUpdate;
+    }
+    /** Enables (or disables) autoupdate for these accelerators.
+    *   @return the value of autoupdate before the call.
+    */
+    bool setAutoUpdate(bool bAuto);
 
-// Procedures for manipulating Actions.
-	//void clearActions();
+    // Procedures for manipulating Actions.
+    // void clearActions();
 
-	KAccelAction* insert( const QString& sName, const QString& sDesc );
-	KAccelAction* insert(
-	                 const QString& sAction, const QString& sDesc, const QString& sHelp,
-	                 const KShortcut& rgCutDefaults3, const KShortcut& rgCutDefaults4,
-	                 const QObject* pObjSlot, const char* psMethodSlot,
-			 bool bConfigurable = true, bool bEnabled = true );
-	bool remove( const QString& sAction );
-	bool setActionSlot( const QString& sAction, const QObject* pObjSlot, const char* psMethodSlot );
+    KAccelAction *insert(const QString &sName, const QString &sDesc);
+    KAccelAction *insert(const QString &sAction, const QString &sDesc, const QString &sHelp, const KShortcut &rgCutDefaults3,
+                         const KShortcut &rgCutDefaults4, const QObject *pObjSlot, const char *psMethodSlot, bool bConfigurable = true,
+                         bool bEnabled = true);
+    bool remove(const QString &sAction);
+    bool setActionSlot(const QString &sAction, const QObject *pObjSlot, const char *psMethodSlot);
 
-	bool updateConnections();
+    bool updateConnections();
 
-	bool setShortcut( const QString& sAction, const KShortcut& cut );
+    bool setShortcut(const QString &sAction, const KShortcut &cut);
 
-// Modify individual Action sub-items
-	bool setActionEnabled( const QString& sAction, bool bEnable );
+    // Modify individual Action sub-items
+    bool setActionEnabled(const QString &sAction, bool bEnable);
 
-	/**
-	 * Read all key associations from @p config, or (if @p config
-	 * is zero) from the application's configuration file
-	 * KGlobal::config().
-	 *
-	 * The group in which the configuration is stored can be
-	 * set with setConfigGroup().
-	 */
-	void readSettings( KConfigBase* pConfig = 0 );
+    /**
+     * Read all key associations from @p config, or (if @p config
+     * is zero) from the application's configuration file
+     * KGlobal::config().
+     *
+     * The group in which the configuration is stored can be
+     * set with setConfigGroup().
+     */
+    void readSettings(KConfigBase *pConfig = 0);
 
-	/**
-	 * Write the current configurable associations to @p config,
+    /**
+     * Write the current configurable associations to @p config,
          * or (if @p config is zero) to the application's
-	 * configuration file.
-	 */
-	void writeSettings( KConfigBase* pConfig = 0 ) const;
+     * configuration file.
+     */
+    void writeSettings(KConfigBase *pConfig = 0) const;
 
-	QPopupMenu* createPopupMenu( QWidget* pParent, const KKeySequence& );
+    QPopupMenu *createPopupMenu(QWidget *pParent, const KKeySequence &);
 
- // Protected methods
- protected:
-	void slotRemoveAction( KAccelAction* );
+    // Protected methods
+protected:
+    void slotRemoveAction(KAccelAction *);
 
-	struct X;
+    struct X;
 
-	/** Constructs a list of keys to be connected, sorted highest priority first.
-	 * @param rgKeys constructed list of keys
-	 */
-	void createKeyList( QValueVector<struct X>& rgKeys );
-	bool insertConnection( KAccelAction* );
-	bool removeConnection( KAccelAction* );
+    /** Constructs a list of keys to be connected, sorted highest priority first.
+     * @param rgKeys constructed list of keys
+     */
+    void createKeyList(QValueVector< struct X > &rgKeys);
+    bool insertConnection(KAccelAction *);
+    bool removeConnection(KAccelAction *);
 
-	/** Emits a signal.
-	 * @param signal signal to be emitted
-	 */
-	virtual bool emitSignal( Signal signal ) = 0;
-	/** Defines a key which activates the accelerator and executes the action
-	 * @param action action to be executed when key is pressed
-	 * @param key key which causes the action to be executed
-	 */
-	virtual bool connectKey( KAccelAction& action, const KKeyServer::Key& key ) = 0;
-	/** Defines a key which activates the accelerator
-	 * @param key key which causes the action to be executed
-	 */
-	virtual bool connectKey( const KKeyServer::Key& key) = 0;
-	/** Removes the key from accelerator so it no longer executes the action
-	 */
-	virtual bool disconnectKey( KAccelAction&, const KKeyServer::Key& ) = 0;
-	/** Removes the key from accelerator
-	 */
-	virtual bool disconnectKey( const KKeyServer::Key& ) = 0;
+    /** Emits a signal.
+     * @param signal signal to be emitted
+     */
+    virtual bool emitSignal(Signal signal) = 0;
+    /** Defines a key which activates the accelerator and executes the action
+     * @param action action to be executed when key is pressed
+     * @param key key which causes the action to be executed
+     */
+    virtual bool connectKey(KAccelAction &action, const KKeyServer::Key &key) = 0;
+    /** Defines a key which activates the accelerator
+     * @param key key which causes the action to be executed
+     */
+    virtual bool connectKey(const KKeyServer::Key &key) = 0;
+    /** Removes the key from accelerator so it no longer executes the action
+     */
+    virtual bool disconnectKey(KAccelAction &, const KKeyServer::Key &) = 0;
+    /** Removes the key from accelerator
+     */
+    virtual bool disconnectKey(const KKeyServer::Key &) = 0;
 
- protected:
-        virtual bool isEnabledInternal() const;
-	struct ActionInfo
-	{
-		KAccelAction* pAction;
-		uint iSeq, iVariation;
-		//ActionInfo* pInfoNext; // nil if only one action uses this key.
+protected:
+    virtual bool isEnabledInternal() const;
+    struct ActionInfo
+    {
+        KAccelAction *pAction;
+        uint iSeq, iVariation;
+        // ActionInfo* pInfoNext; // nil if only one action uses this key.
 
-		ActionInfo() { pAction = 0; iSeq = 0xffff; iVariation = 0xffff; }
-		ActionInfo( KAccelAction* _pAction, uint _iSeq, uint _iVariation )
-			{ pAction = _pAction; iSeq = _iSeq; iVariation = _iVariation; }
-	};
-	typedef QMap<KKeyServer::Key, ActionInfo> KKeyToActionMap;
+        ActionInfo()
+        {
+            pAction = 0;
+            iSeq = 0xffff;
+            iVariation = 0xffff;
+        }
+        ActionInfo(KAccelAction *_pAction, uint _iSeq, uint _iVariation)
+        {
+            pAction = _pAction;
+            iSeq = _iSeq;
+            iVariation = _iVariation;
+        }
+    };
+    typedef QMap< KKeyServer::Key, ActionInfo > KKeyToActionMap;
 
-	KAccelActions m_rgActions;
-	KKeyToActionMap m_mapKeyToAction;
-	QValueList<KAccelAction*> m_rgActionsNonUnique;
-	bool m_bNativeKeys; // Use native key codes instead of Qt codes
-	bool m_bEnabled;
-	bool m_bConfigIsGlobal;
-	QString m_sConfigGroup;
-	bool m_bAutoUpdate;
-	KAccelAction* mtemp_pActionRemoving;
+    KAccelActions m_rgActions;
+    KKeyToActionMap m_mapKeyToAction;
+    QValueList< KAccelAction * > m_rgActionsNonUnique;
+    bool m_bNativeKeys; // Use native key codes instead of Qt codes
+    bool m_bEnabled;
+    bool m_bConfigIsGlobal;
+    QString m_sConfigGroup;
+    bool m_bAutoUpdate;
+    KAccelAction *mtemp_pActionRemoving;
 
- private:
-	KAccelBase& operator =( const KAccelBase& );
+private:
+    KAccelBase &operator=(const KAccelBase &);
 
-	friend class KAccelActions;
+    friend class KAccelActions;
 };
 
 #endif // _KACCELBASE_H

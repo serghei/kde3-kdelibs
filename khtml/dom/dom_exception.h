@@ -54,21 +54,32 @@ namespace DOM {
  * the corresponding method descriptions.
  *
  */
-class KHTML_EXPORT DOMException
-{
+class KHTML_EXPORT DOMException {
 public:
-    DOMException(unsigned short _code) { code = _code; }
-    DOMException(const DOMException &other) { code = other.code; }
+    DOMException(unsigned short _code)
+    {
+        code = _code;
+    }
+    DOMException(const DOMException &other)
+    {
+        code = other.code;
+    }
 
-    DOMException & operator = (const DOMException &other)
-	{ code = other.code; return *this; }
+    DOMException &operator=(const DOMException &other)
+    {
+        code = other.code;
+        return *this;
+    }
 
-    virtual ~DOMException() {}
+    virtual ~DOMException()
+    {
+    }
     /**
      * An integer indicating the type of error generated.
      *
      */
-    enum ExceptionCode {
+    enum ExceptionCode
+    {
         INDEX_SIZE_ERR = 1,
         DOMSTRING_SIZE_ERR = 2,
         HIERARCHY_REQUEST_ERR = 3,
@@ -88,5 +99,5 @@ public:
     unsigned short code;
 };
 
-} //namespace
+} // namespace
 #endif

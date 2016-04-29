@@ -24,104 +24,101 @@
 
 #include "katecmd.h"
 
-namespace Kate
-{
+namespace Kate {
 
 bool Document::s_openErrorDialogsActivated = true;
 bool Document::s_fileChangedDialogsActivated = false;
 QString Document::s_defaultEncoding;
 
-Document::Document (QObject* parent, const char* name)
-    : KTextEditor::Document (parent, name)
+Document::Document(QObject *parent, const char *name) : KTextEditor::Document(parent, name)
 {
 }
 
-Document::Document () : KTextEditor::Document (0L, "Kate::Document")
+Document::Document() : KTextEditor::Document(0L, "Kate::Document")
 {
 }
 
-Document::~Document ()
+Document::~Document()
 {
 }
 
-void Document::setOpenErrorDialogsActivated (bool on)
+void Document::setOpenErrorDialogsActivated(bool on)
 {
-  s_openErrorDialogsActivated = on;
+    s_openErrorDialogsActivated = on;
 }
 
-void Document::setFileChangedDialogsActivated (bool on)
+void Document::setFileChangedDialogsActivated(bool on)
 {
-  s_fileChangedDialogsActivated = on;
+    s_fileChangedDialogsActivated = on;
 }
 
-const QString &Document::defaultEncoding ()
+const QString &Document::defaultEncoding()
 {
-  return s_defaultEncoding;
+    return s_defaultEncoding;
 }
 
-bool Document::registerCommand (Command *cmd)
+bool Document::registerCommand(Command *cmd)
 {
-  return KateCmd::self()->registerCommand (cmd);
+    return KateCmd::self()->registerCommand(cmd);
 }
 
-bool Document::unregisterCommand (Command *cmd)
+bool Document::unregisterCommand(Command *cmd)
 {
-  return KateCmd::self()->unregisterCommand (cmd);
+    return KateCmd::self()->unregisterCommand(cmd);
 }
 
-Command *Document::queryCommand (const QString &cmd)
+Command *Document::queryCommand(const QString &cmd)
 {
-  return KateCmd::self()->queryCommand (cmd);
+    return KateCmd::self()->queryCommand(cmd);
 }
 
-View::View ( KTextEditor::Document *doc, QWidget *parent, const char *name ) : KTextEditor::View (doc, parent, name)
+View::View(KTextEditor::Document *doc, QWidget *parent, const char *name) : KTextEditor::View(doc, parent, name)
 {
 }
 
-View::~View ()
+View::~View()
 {
 }
 
 void ConfigPage::slotChanged()
 {
-  emit changed();
+    emit changed();
 }
 
-DocumentExt::DocumentExt ()
+DocumentExt::DocumentExt()
 {
 }
 
-DocumentExt::~DocumentExt ()
+DocumentExt::~DocumentExt()
 {
 }
 
-Document *document (KTextEditor::Document *doc)
+Document *document(KTextEditor::Document *doc)
 {
-  if (!doc)
-    return 0;
+    if(!doc)
+        return 0;
 
-  return static_cast<Document*>(doc->qt_cast("Kate::Document"));
+    return static_cast< Document * >(doc->qt_cast("Kate::Document"));
 }
 
-DocumentExt *documentExt (KTextEditor::Document *doc)
+DocumentExt *documentExt(KTextEditor::Document *doc)
 {
-  if (!doc)
-    return 0;
+    if(!doc)
+        return 0;
 
-  return static_cast<DocumentExt*>(doc->qt_cast("Kate::DocumentExt"));
+    return static_cast< DocumentExt * >(doc->qt_cast("Kate::DocumentExt"));
 }
 
-Document *createDocument ( QObject *parent, const char *name )
+Document *createDocument(QObject *parent, const char *name)
 {
-  return (Document* ) KTextEditor::createDocument ("libkatepart", parent, name);
+    return (Document *)KTextEditor::createDocument("libkatepart", parent, name);
 }
 
-View *view (KTextEditor::View *view)
+View *view(KTextEditor::View *view)
 {
-  if (!view)
-    return 0;
+    if(!view)
+        return 0;
 
-  return static_cast<View*>(view->qt_cast("Kate::View"));
+    return static_cast< View * >(view->qt_cast("Kate::View"));
 }
-
 }

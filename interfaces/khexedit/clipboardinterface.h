@@ -18,8 +18,7 @@
 #ifndef CLIPBOARDINTERFACE_H
 #define CLIPBOARDINTERFACE_H
 
-namespace KHE
-{
+namespace KHE {
 
 /**
  * @short A simple interface for interaction with the clipboard
@@ -37,50 +36,47 @@ namespace KHE
  *   // Yes, use BytesEditWidget, not Clipboard, because that's the QObject, indeed hacky...
  *   connect( BytesEditWidget, SIGNAL(copyAvailable(bool)), this, SLOT(offerCopy(bool)) );
  * }
- * \endcode 
+ * \endcode
  *
  * @author Friedrich W. H. Kossebau <Friedrich.W.H@Kossebau.de>
  * @see createBytesEditWidget(), clipboardInterface()
  * @since 3.2
  */
-class ClipboardInterface
-{
-  public: // slots
+class ClipboardInterface {
+public: // slots
     /** tries to copy. If there is nothing to copy this call is a noop. */
     virtual void copy() = 0;
     /** tries to cut. If there is nothing to cut this call is a noop. */
     virtual void cut() = 0;
-    /** tries to paste. 
+    /** tries to paste.
       * If there is nothing to paste or paste is not possible this call is a noop.
       * Use BytesEditInterface::isReadOnly() to find out if you can paste at all.
       */
     virtual void paste() = 0;
 
-  public: // signals
-    /** signal: tells whether copy is possible or not.
-      * Remember to use the created object, not the interface for connecting
-      * Use BytesEditInterface::isReadOnly() to find out if you can also cut
-      * As this function symbol serves as a signal, this is a noop. Don't use it
-      * for anything else.
-      */
-    virtual void copyAvailable( bool Really ) = 0;
+public: // signals
+        /** signal: tells whether copy is possible or not.
+          * Remember to use the created object, not the interface for connecting
+          * Use BytesEditInterface::isReadOnly() to find out if you can also cut
+          * As this function symbol serves as a signal, this is a noop. Don't use it
+          * for anything else.
+          */
+    virtual void copyAvailable(bool Really) = 0;
 };
 
 
-/** tries to get the clipboard interface of t   
+/** tries to get the clipboard interface of t
   * @return a pointer to the interface, otherwise 0
   * @author Friedrich W. H. Kossebau <Friedrich.W.H@Kossebau.de>
   * @since 3.2
 */
-template<class T>
-ClipboardInterface *clipboardInterface( T *t )
+template < class T > ClipboardInterface *clipboardInterface(T *t)
 {
-  if( !t )
-    return 0;
+    if(!t)
+        return 0;
 
-  return static_cast<ClipboardInterface*>( t->qt_cast("KHE::ClipboardInterface") );
+    return static_cast< ClipboardInterface * >(t->qt_cast("KHE::ClipboardInterface"));
 }
-
 }
 
 #endif

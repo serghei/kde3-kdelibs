@@ -23,7 +23,7 @@
 #ifndef _KKEYSERVER_H
 #define _KKEYSERVER_H
 
-//FOR COMPATIBILITY
+// FOR COMPATIBILITY
 #include "kkeyserver_x11.h"
 
 #endif // !_KKEYSERVER_H

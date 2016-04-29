@@ -25,79 +25,77 @@
 #include <dnssd/remoteservice.h>
 
 
-namespace DNSSD
-{
+namespace DNSSD {
 class QueryPrivate;
 
 /**
 This class provides way to search for specified service type in one domain. Depending on domain
 name, either multicast or unicast DNS will be used.
- 
+
 @short Class that represents service query in one domain.
 @author Jakub Stachowski
  */
-class KDNSSD_EXPORT Query : public QObject
-{
-	Q_OBJECT
+class KDNSSD_EXPORT Query : public QObject {
+    Q_OBJECT
 public:
-	/**
-	Creates new query. 
+    /**
+    Creates new query.
 
-	@param type Type of services to browse for
-	@param domain Domain name - if set to "local." multicast query will be performed,
-			otherwise unicast
-	 */
-	Query(const QString& type, const QString& domain);
+    @param type Type of services to browse for
+    @param domain Domain name - if set to "local." multicast query will be performed,
+            otherwise unicast
+     */
+    Query(const QString &type, const QString &domain);
 
-	virtual ~Query();
+    virtual ~Query();
 
-	/**
-	Starts query. Ignored if query is already running
-	 */
-	virtual void startQuery();
+    /**
+    Starts query. Ignored if query is already running
+     */
+    virtual void startQuery();
 
-	/**
-	Returns TRUE if query is already running
-	 */
-	bool isRunning() const;
+    /**
+    Returns TRUE if query is already running
+     */
+    bool isRunning() const;
 
-	/**
-	Returns TRUE if all currently announced services has
-	been reported. It does not mean that no more services can
-	be found later and it is not related to isRunning()
-	 */
-	bool isFinished() const;
+    /**
+    Returns TRUE if all currently announced services has
+    been reported. It does not mean that no more services can
+    be found later and it is not related to isRunning()
+     */
+    bool isFinished() const;
 
-	/**
-	Returns queried domain
-	 */
-	const QString& domain() const;
+    /**
+    Returns queried domain
+     */
+    const QString &domain() const;
 
 signals:
-	/**
-	Emitted when new service has been discovered
-	 */
-	void serviceAdded(DNSSD::RemoteService::Ptr);
+    /**
+    Emitted when new service has been discovered
+     */
+    void serviceAdded(DNSSD::RemoteService::Ptr);
 
-	/**
-	Emitted when previously discovered service is not longer published
-	 */
-	void serviceRemoved(DNSSD::RemoteService::Ptr);
+    /**
+    Emitted when previously discovered service is not longer published
+     */
+    void serviceRemoved(DNSSD::RemoteService::Ptr);
 
-	/**
-	Emitted when all announced services has been reported. 
-	 */
-	void finished();
+    /**
+    Emitted when all announced services has been reported.
+     */
+    void finished();
 
 protected:
-	virtual void virtual_hook(int, void*);
-	virtual void customEvent(QCustomEvent* event);
-private:
-	QueryPrivate *d;
-private slots:
-	void timeout();
-};
+    virtual void virtual_hook(int, void *);
+    virtual void customEvent(QCustomEvent *event);
 
+private:
+    QueryPrivate *d;
+private slots:
+    void timeout();
+};
 }
 
 #endif

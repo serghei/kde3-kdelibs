@@ -26,38 +26,37 @@
 
 using namespace KABC;
 
-LockNull::LockNull( bool allowAccess )
-  : Lock( QString::null ), mAllowAccess( allowAccess )
+LockNull::LockNull(bool allowAccess) : Lock(QString::null), mAllowAccess(allowAccess)
 {
 }
 
 LockNull::~LockNull()
 {
-  unlock();
+    unlock();
 }
 
 bool LockNull::lock()
 {
-  if ( !mAllowAccess ) return false;
-  
-  kdWarning() << "LockNull::lock() force success. Doesn't actually lock."
-              << endl;
-  
-  emit locked();
-  
-  return true;
+    if(!mAllowAccess)
+        return false;
+
+    kdWarning() << "LockNull::lock() force success. Doesn't actually lock." << endl;
+
+    emit locked();
+
+    return true;
 }
 
 bool LockNull::unlock()
 {
-  emit unlocked();
-  return true;
+    emit unlocked();
+    return true;
 }
 
 QString LockNull::error() const
 {
-  if ( mAllowAccess )
-    return i18n("LockNull: All locks succeed but no actual locking is done.");
-  else
-    return i18n("LockNull: All locks fail.");
+    if(mAllowAccess)
+        return i18n("LockNull: All locks succeed but no actual locking is done.");
+    else
+        return i18n("LockNull: All locks fail.");
 }

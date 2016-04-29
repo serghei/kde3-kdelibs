@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -34,19 +34,16 @@
 
 #if 0
 #ifndef NDEBUG
-#	include <qcstring.h>
-#	include <iostream>
-#	ifdef __GNUG__
-#		define vDebug(a) cerr << className() << ":" << __FUNCTION__ << " (" \
-						<< __LINE__ << "): " << QCString((a)).data() << endl;
-#	else
-#		define vDebug(a) cerr << className() << ": " \
-						<< QCString((a)).data() << endl;
-#	endif
+#include <qcstring.h>
+#include <iostream>
+#ifdef __GNUG__
+#define vDebug(a) cerr << className() << ":" << __FUNCTION__ << " (" << __LINE__ << "): " << QCString((a)).data() << endl;
 #else
-#	define vDebug(a)
+#define vDebug(a) cerr << className() << ": " << QCString((a)).data() << endl;
+#endif
+#else
+#define vDebug(a)
 #endif
 #endif
 
 #endif // Included this file
-						

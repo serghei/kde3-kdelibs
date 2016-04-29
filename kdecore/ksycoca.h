@@ -41,146 +41,149 @@ class KSycocaFactoryList;
  * @internal
  * Read-only SYstem COnfiguration CAche
  */
-class KDECORE_EXPORT KSycoca : public QObject, public DCOPObject
-{
-  Q_OBJECT
-  K_DCOP
+class KDECORE_EXPORT KSycoca : public QObject, public DCOPObject {
+    Q_OBJECT
+    K_DCOP
 
 protected:
-   /**
-    * @internal
-    * Building database
-    */
-   KSycoca( bool /* buildDatabase */ );
+    /**
+     * @internal
+     * Building database
+     */
+    KSycoca(bool /* buildDatabase */);
 
 public:
+    /**
+     * Read-only database
+     */
+    KSycoca();
 
-   /**
-    * Read-only database
-    */
-   KSycoca();
+    /**
+     * Get or create the only instance of KSycoca (read-only)
+     */
+    static KSycoca *self();
 
-   /**
-    * Get or create the only instance of KSycoca (read-only)
-    */
-   static KSycoca *self();
+    virtual ~KSycoca();
 
-   virtual ~KSycoca();
+    static int version();
 
-   static int version();
+    /**
+     * @internal - called by factories in read-only mode
+     * This is how factories get a stream to an entry
+     */
+    QDataStream *findEntry(int offset, KSycocaType &type);
+    /**
+     * @internal - called by factories in read-only mode
+     */
+    QDataStream *findFactory(KSycocaFactoryId id);
+    /**
+     * @internal - returns kfsstnd stored inside database
+     */
+    QString kfsstnd_prefixes();
+    /**
+     * @internal - returns language stored inside database
+     */
+    QString language();
 
-   /**
-    * @internal - called by factories in read-only mode
-    * This is how factories get a stream to an entry
-    */
-   QDataStream *findEntry(int offset, KSycocaType &type);
-   /**
-    * @internal - called by factories in read-only mode
-    */
-   QDataStream *findFactory( KSycocaFactoryId id);
-   /**
-    * @internal - returns kfsstnd stored inside database
-    */
-   QString kfsstnd_prefixes();
-   /**
-    * @internal - returns language stored inside database
-    */
-   QString language();
+    /**
+     * @internal - returns timestamp of database
+     *
+     * The database contains all changes made _before_ this time and
+     * _might_ contain changes made after that.
+     */
+    Q_UINT32 timeStamp();
 
-   /**
-    * @internal - returns timestamp of database
-    *
-    * The database contains all changes made _before_ this time and
-    * _might_ contain changes made after that.
-    */
-   Q_UINT32 timeStamp();
+    /**
+     * @internal - returns update signature of database
+     *
+     * Signature that keeps track of changes to
+     * $KDEDIR/share/services/update_ksycoca
+     *
+     * Touching this file causes the database to be recreated
+     * from scratch.
+     */
+    Q_UINT32 updateSignature();
 
-   /**
-    * @internal - returns update signature of database
-    *
-    * Signature that keeps track of changes to
-    * $KDEDIR/share/services/update_ksycoca
-    *
-    * Touching this file causes the database to be recreated
-    * from scratch.
-    */
-   Q_UINT32 updateSignature();
+    /**
+     * @internal - returns all directories with information
+     * stored inside sycoca.
+     */
+    QStringList allResourceDirs();
 
-   /**
-    * @internal - returns all directories with information
-    * stored inside sycoca.
-    */
-   QStringList allResourceDirs();
+    /**
+     * @internal - add a factory
+     */
+    void addFactory(KSycocaFactory *);
 
-   /**
-    * @internal - add a factory
-    */
-   void addFactory( KSycocaFactory * );
+    /**
+     * @internal
+     * @return true if building (i.e. if a KBuildSycoca);
+     */
+    virtual bool isBuilding()
+    {
+        return false;
+    }
 
-   /**
-    * @internal
-    * @return true if building (i.e. if a KBuildSycoca);
-    */
-   virtual bool isBuilding() { return false; }
+    /**
+     * @internal - disables launching of kbuildsycoca
+     */
+    void disableAutoRebuild();
 
-   /**
-    * @internal - disables launching of kbuildsycoca
-    */
-   void disableAutoRebuild();
+    /**
+     * Determine relative path for a .desktop file from a full path and a resource name
+     */
+    static QString determineRelativePath(const QString &_fullpath, const char *_resource);
 
-   /**
-    * Determine relative path for a .desktop file from a full path and a resource name
-    */
-   static QString determineRelativePath( const QString & _fullpath, const char *_resource );
+    /**
+     * When you receive a "databaseChanged" signal, you can query here if
+     * a change has occurred in a specific resource type.
+     * @see KStandardDirs for the various resource types.
+     */
+    static bool isChanged(const char *type);
 
-   /**
-    * When you receive a "databaseChanged" signal, you can query here if
-    * a change has occurred in a specific resource type.
-    * @see KStandardDirs for the various resource types.
-    */
-   static bool isChanged(const char *type);
+    /**
+     * A read error occurs.
+     */
+    static void flagError();
 
-   /**
-    * A read error occurs.
-    */
-   static void flagError();
+    /**
+     * Returns read error status and clears flag.
+     */
+    static bool readError();
 
-   /**
-    * Returns read error status and clears flag.
-    */
-   static bool readError();
-
-k_dcop:
-   /**
-    * internal function for receiving kded/kbuildsycoca's signal, when the sycoca file changes
-    */
-   void notifyDatabaseChanged(const QStringList &);
+    k_dcop :
+        /**
+         * internal function for receiving kded/kbuildsycoca's signal, when the sycoca file changes
+         */
+        void
+        notifyDatabaseChanged(const QStringList &);
 
 signals:
-   /**
-        * Connect to this to get notified when the database changes
-        * (Usually apps showing icons do a 'refresh' to take into account the new mimetypes)
-        */
-   void databaseChanged();
+    /**
+         * Connect to this to get notified when the database changes
+         * (Usually apps showing icons do a 'refresh' to take into account the new mimetypes)
+         */
+    void databaseChanged();
 
 protected:
-   bool checkVersion(bool abortOnError=true);
-   bool openDatabase(bool openDummyIfNotFound=true);
-   void closeDatabase();
-   KSycocaFactoryList *m_lstFactories;
-   QDataStream *m_str;
-   bool bNoDatabase;
-   size_t m_sycoca_size;
-   const char *m_sycoca_mmap;
-   Q_UINT32 m_timeStamp;
+    bool checkVersion(bool abortOnError = true);
+    bool openDatabase(bool openDummyIfNotFound = true);
+    void closeDatabase();
+    KSycocaFactoryList *m_lstFactories;
+    QDataStream *m_str;
+    bool bNoDatabase;
+    size_t m_sycoca_size;
+    const char *m_sycoca_mmap;
+    Q_UINT32 m_timeStamp;
 
 public:
-   static KSycoca *_self; // Internal use only.
+    static KSycoca *_self; // Internal use only.
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-   KSycocaPrivate *d;
+    KSycocaPrivate *d;
 };
 
 #endif

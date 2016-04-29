@@ -51,8 +51,7 @@ class KMultipleDragPrivate;
  *
  * @author David Faure <faure@kde.org>
  */
-class KDECORE_EXPORT KMultipleDrag : public QDragObject
-{
+class KDECORE_EXPORT KMultipleDrag : public QDragObject {
     Q_OBJECT
 
 public:
@@ -62,7 +61,7 @@ public:
      *                   0 for a parent-less object
      * @param name the name of the object, can be 0
      */
-    KMultipleDrag( QWidget *dragSource = 0, const char *name = 0 );
+    KMultipleDrag(QWidget *dragSource = 0, const char *name = 0);
 
     /**
      * Call this to add each underlying drag object to the multiple drag object.
@@ -71,7 +70,7 @@ public:
      *
      * @param dragObject the drag object to add. Should have no parent object.
      */
-    void addDragObject( QDragObject *dragObject );
+    void addDragObject(QDragObject *dragObject);
 
     /**
      * Returns the data of a drag object with that supports the given
@@ -80,7 +79,7 @@ public:
      * @return the data, or a null byte array if not found
      * @reimp
      */
-    virtual QByteArray encodedData( const char *mime ) const;
+    virtual QByteArray encodedData(const char *mime) const;
 
     /**
      * Returns the @p i'th supported format, or 0.
@@ -88,16 +87,18 @@ public:
      * @return the format with the number @p i, or 0 otherwise
      * @reimp
      */
-    virtual const char* format( int i ) const;
+    virtual const char *format(int i) const;
 
 protected:
-// KDE4: make private
-    QPtrList<QDragObject> m_dragObjects;
-    QValueList<int> m_numberFormats;
+    // KDE4: make private
+    QPtrList< QDragObject > m_dragObjects;
+    QValueList< int > m_numberFormats;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-    KMultipleDragPrivate* d;
+    KMultipleDragPrivate *d;
 };
 
 #endif // QT_NO_DRAGANDDROP

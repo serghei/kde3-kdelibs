@@ -140,4 +140,3 @@ DOM::DOMString getPropertyName(unsigned short id) KDE_NO_EXPORT;
 #define CSS_PROP_MAX CSS_PROP_Z_INDEX
 #define CSS_PROP_TOTAL 129
 #endif
-

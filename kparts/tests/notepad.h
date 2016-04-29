@@ -13,30 +13,27 @@ class QMultiLineEdit;
  * Here is a very simple kedit-like part
  * @internal
  */
-class NotepadPart : public KParts::ReadWritePart
-{
-  Q_OBJECT
+class NotepadPart : public KParts::ReadWritePart {
+    Q_OBJECT
 public:
-  NotepadPart( QWidget*, const char* widgetName,
-               QObject* parent, const char* name,
-               const QStringList& args = QStringList() );
-  virtual ~NotepadPart();
+    NotepadPart(QWidget *, const char *widgetName, QObject *parent, const char *name, const QStringList &args = QStringList());
+    virtual ~NotepadPart();
 
-  virtual void setReadWrite( bool rw );
+    virtual void setReadWrite(bool rw);
 
-  static KAboutData* createAboutData();
+    static KAboutData *createAboutData();
 
 protected:
-  virtual bool openFile();
-  virtual bool saveFile();
+    virtual bool openFile();
+    virtual bool saveFile();
 
 protected slots:
-  void slotSearchReplace();
+    void slotSearchReplace();
 
 protected:
-  QMultiLineEdit * m_edit;
+    QMultiLineEdit *m_edit;
 };
 
-typedef KParts::GenericFactory<NotepadPart> NotepadFactory;
+typedef KParts::GenericFactory< NotepadPart > NotepadFactory;
 
 #endif

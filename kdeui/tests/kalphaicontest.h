@@ -5,20 +5,20 @@
 #include <kimageeffect.h>
 #include <kalphapainter.h>
 
-class KAlphaTest : public QWidget
-{
-  public:
+class KAlphaTest : public QWidget {
+public:
     KAlphaTest();
-  protected:
+
+protected:
     void paintEvent(QPaintEvent *);
-  private:
+
+private:
     QImage m_image;
     QPixmap m_pixmap;
     QImage m_bg;
 
-  public:
+public:
     static bool m_useDblBuffer;
     static bool m_usePixmap;
     static bool m_correctOverlapping;
 };
-

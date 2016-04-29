@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (c) 2003 Malte Starostik <malte@kde.org>
 
    This library is free software; you can redistribute it and/or
@@ -30,60 +30,56 @@
 
 #include "downloader.moc"
 
-namespace KPAC
+namespace KPAC {
+Downloader::Downloader(QObject *parent) : QObject(parent)
 {
-    Downloader::Downloader( QObject* parent )
-        : QObject( parent )
+}
+
+void Downloader::download(const KURL &url)
+{
+    m_data.resize(0);
+    m_script = QString::null;
+    m_scriptURL = url;
+
+    KIO::TransferJob *job = KIO::get(url, false, false);
+    connect(job, SIGNAL(data(KIO::Job *, const QByteArray &)), SLOT(data(KIO::Job *, const QByteArray &)));
+    connect(job, SIGNAL(result(KIO::Job *)), SLOT(result(KIO::Job *)));
+}
+
+void Downloader::failed()
+{
+    emit result(false);
+}
+
+void Downloader::setError(const QString &error)
+{
+    m_error = error;
+}
+
+void Downloader::data(KIO::Job *, const QByteArray &data)
+{
+    unsigned offset = m_data.size();
+    m_data.resize(offset + data.size());
+    std::memcpy(m_data.data() + offset, data.data(), data.size());
+}
+
+void Downloader::result(KIO::Job *job)
+{
+    if(!job->error() && !static_cast< KIO::TransferJob * >(job)->isErrorPage())
     {
+        bool dummy;
+        m_script = KGlobal::charsets()->codecForName(job->queryMetaData("charset"), dummy)->toUnicode(m_data);
+        emit result(true);
     }
-
-    void Downloader::download( const KURL& url )
+    else
     {
-        m_data.resize( 0 );
-        m_script = QString::null;
-        m_scriptURL = url;
-
-        KIO::TransferJob* job = KIO::get( url, false, false );
-        connect( job, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
-                 SLOT( data( KIO::Job*, const QByteArray& ) ) );
-        connect( job, SIGNAL( result( KIO::Job* ) ), SLOT( result( KIO::Job* ) ) );
-    }
-
-    void Downloader::failed()
-    {
-        emit result( false );
-    }
-
-    void Downloader::setError( const QString& error )
-    {
-        m_error = error;
-    }
-
-    void Downloader::data( KIO::Job*, const QByteArray& data )
-    {
-        unsigned offset = m_data.size();
-        m_data.resize( offset + data.size() );
-        std::memcpy( m_data.data() + offset, data.data(), data.size() );
-    }
-
-    void Downloader::result( KIO::Job* job )
-    {
-        if ( !job->error() && !static_cast< KIO::TransferJob* >( job )->isErrorPage() )
-        {
-            bool dummy;
-            m_script = KGlobal::charsets()->codecForName(
-                job->queryMetaData( "charset" ), dummy )->toUnicode( m_data );
-            emit result( true );
-        }
+        if(job->error())
+            setError(i18n("Could not download the proxy configuration script:\n%1").arg(job->errorString()));
         else
-        {
-            if ( job->error() )
-                setError( i18n( "Could not download the proxy configuration script:\n%1" )
-                              .arg( job->errorString() ) );
-            else setError( i18n( "Could not download the proxy configuration script" ) ); // error page
-            failed();
-        }
+            setError(i18n("Could not download the proxy configuration script")); // error page
+        failed();
     }
+}
 }
 
 // vim: ts=4 sw=4 et

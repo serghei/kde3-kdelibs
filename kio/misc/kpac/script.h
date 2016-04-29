@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (c) 2003 Malte Starostik <malte@kde.org>
 
    This library is free software; you can redistribute it and/or
@@ -27,28 +27,29 @@
 
 class KURL;
 
-namespace KPAC
-{
-    class Script
-    {
+namespace KPAC {
+class Script {
+public:
+    class Error {
     public:
-        class Error
+        Error(const QString &message) : m_message(message)
         {
-        public:
-            Error( const QString& message )
-                : m_message( message ) {}
-            const QString& message() const { return m_message; }
-
-        private:
-            QString m_message;
-        };
-
-        Script( const QString& code );
-        QString evaluate( const KURL& );
+        }
+        const QString &message() const
+        {
+            return m_message;
+        }
 
     private:
-        KJS::Interpreter m_interpreter;
+        QString m_message;
     };
+
+    Script(const QString &code);
+    QString evaluate(const KURL &);
+
+private:
+    KJS::Interpreter m_interpreter;
+};
 }
 
 #endif // KPAC_SCRIPT_H

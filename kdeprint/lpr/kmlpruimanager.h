@@ -22,16 +22,15 @@
 
 #include "kmuimanager.h"
 
-class KMLprUiManager : public KMUiManager
-{
+class KMLprUiManager : public KMUiManager {
 public:
-	KMLprUiManager(QObject *parent, const char *name, const QStringList & /*args*/);
-	~KMLprUiManager();
+    KMLprUiManager(QObject *parent, const char *name, const QStringList & /*args*/);
+    ~KMLprUiManager();
 
-	void setupPropertyPages(KMPropertyPage*);
-	void setupPrinterPropertyDialog(KPrinterPropertyDialog*);
-	void setupWizard(KMWizard*);
-	void setupConfigDialog(KMConfigDialog*);
+    void setupPropertyPages(KMPropertyPage *);
+    void setupPrinterPropertyDialog(KPrinterPropertyDialog *);
+    void setupWizard(KMWizard *);
+    void setupConfigDialog(KMConfigDialog *);
 };
 
 #endif

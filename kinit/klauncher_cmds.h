@@ -22,13 +22,13 @@
 
 typedef struct
 {
-   long cmd;
-   long arg_length;
+    long cmd;
+    long arg_length;
 } klauncher_header;
 
 /* Launcher commands: */
 
-#define LAUNCHER_EXEC	1
+#define LAUNCHER_EXEC 1
 /*
  * LAUNCHER_EXEC
  *
@@ -40,7 +40,7 @@ typedef struct
  */
 
 
-#define LAUNCHER_SETENV	2
+#define LAUNCHER_SETENV 2
 /*
  * LAUNCHER_SETENV
  *
@@ -80,7 +80,7 @@ typedef struct
  * char *error msg (utf8)
  */
 
-#define LAUNCHER_SHELL	6
+#define LAUNCHER_SHELL 6
 /*
  * LAUNCHER_SHELL
  *
@@ -106,9 +106,9 @@ typedef struct
  *
  * Suicide is painless
  */
-#define LAUNCHER_TERMINATE_KDEINIT	8
+#define LAUNCHER_TERMINATE_KDEINIT 8
 
-#define LAUNCHER_DEBUG_WAIT		9
+#define LAUNCHER_DEBUG_WAIT 9
 /*
  * LAUNCHER_DEBUG_WAIT
  *
@@ -118,7 +118,7 @@ typedef struct
  * (Used for debugging io-slaves)
  */
 
-#define LAUNCHER_EXT_EXEC	10
+#define LAUNCHER_EXT_EXEC 10
 /*
  * LAUNCHER_EXT_EXEC
  *
@@ -135,11 +135,11 @@ typedef struct
  *    infinite loop by binary->kdeinit_wrapper link in $PATH
  * char* startup_id: app startup notification id, "0" for none,
  *   "" ( empty string ) is the default
- * 
+ *
  */
 
 
-#define LAUNCHER_KWRAPPER	11
+#define LAUNCHER_KWRAPPER 11
 /*
  * LAUNCHER_KWRAPPER
  *
@@ -159,7 +159,7 @@ typedef struct
  *   "" ( empty string ) is the default
  */
 
-#define LAUNCHER_EXEC_NEW	12
+#define LAUNCHER_EXEC_NEW 12
 /*
  * LAUNCHER_EXEC_NEW
  *
@@ -177,7 +177,7 @@ typedef struct
  *    infinite loop by binary->kdeinit_wrapper link in $PATH
  */
 
-#define LAUNCHER_FD	42
+#define LAUNCHER_FD 42
 /*
  * File descriptor to use for communication with kdeinit.
  */

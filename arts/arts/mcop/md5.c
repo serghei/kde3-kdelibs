@@ -1,29 +1,29 @@
-    /*
+/*
 
-    Copyright (C) 2000 Stefan Westerfeld
-                       stefan@space.twc.de
+Copyright (C) 2000 Stefan Westerfeld
+                   stefan@space.twc.de
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-  
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-   
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-    */
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
+
+*/
 
 #include "md5.h"
 
 /*
- * this is okay for all architectures with int = 32bit, so IMHO all 
+ * this is okay for all architectures with int = 32bit, so IMHO all
  * current architectures supported by KDE.
  */
 typedef unsigned int uint32;
@@ -32,53 +32,67 @@ static void MD5Transform(uint32 buf[4], uint32 in[MD5_BINARY_LEN]);
 
 void arts_md5sum(unsigned char *message, long len, char *md5sum)
 {
-	long finalsize = len+1; /* in bytes */
-	int i = 0, j = 0;
-	unsigned char w = '\0';
-	uint32 buffer[4] = { 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
-	uint32 in[MD5_BINARY_LEN];
+    long finalsize = len + 1; /* in bytes */
+    int i = 0, j = 0;
+    unsigned char w = '\0';
+    uint32 buffer[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
+    uint32 in[MD5_BINARY_LEN];
 
-	while((finalsize & 63) != 56) finalsize++;
-	finalsize += 8;
-	
-	for( i=0, j=0;i<finalsize;i++)
-	{
-		if(i < len) {
-			w = message[i];
-		} else if(i == len) {
-			w = 0x80;
-		} else if((finalsize-i > 8) || (finalsize-i <= 4)) {
-			w = 0;
-		} else {
-			/* well, the length thing encoded in here will only
-			   work until 2^32 bits (though md5 would support 2^64
+    while((finalsize & 63) != 56)
+        finalsize++;
+    finalsize += 8;
+
+    for(i = 0, j = 0; i < finalsize; i++)
+    {
+        if(i < len)
+        {
+            w = message[i];
+        }
+        else if(i == len)
+        {
+            w = 0x80;
+        }
+        else if((finalsize - i > 8) || (finalsize - i <= 4))
+        {
+            w = 0;
+        }
+        else
+        {
+            /* well, the length thing encoded in here will only
+               work until 2^32 bits (though md5 would support 2^64
                            bits) */
-			w = ((len*8) >> ((i+8-finalsize)*8)) & 0xff;
-		}
-		switch(i & 3) {
-			case 0: in[j]  = w;
-				break;
-			case 1: in[j] |= w << 8;
-				break;
-			case 2: in[j] |= w << 16;
-				break;
-			case 3: in[j] |= w << 24;
-					j++;
- 					if(j == MD5_BINARY_LEN) {
-						MD5Transform(buffer,in);
-						j = 0;
-					}
-				break;
-		}
-	}
+            w = ((len * 8) >> ((i + 8 - finalsize) * 8)) & 0xff;
+        }
+        switch(i & 3)
+        {
+            case 0:
+                in[j] = w;
+                break;
+            case 1:
+                in[j] |= w << 8;
+                break;
+            case 2:
+                in[j] |= w << 16;
+                break;
+            case 3:
+                in[j] |= w << 24;
+                j++;
+                if(j == MD5_BINARY_LEN)
+                {
+                    MD5Transform(buffer, in);
+                    j = 0;
+                }
+                break;
+        }
+    }
 
-	for( i=0, j=0;j<4;j++)
-	{
-		md5sum[i++] = buffer[j] & 0xff;
-		md5sum[i++] = (buffer[j] >> 8) & 0xff;
-		md5sum[i++] = (buffer[j] >> 16) & 0xff;
-		md5sum[i++] = (buffer[j] >> 24) & 0xff;
-	}
+    for(i = 0, j = 0; j < 4; j++)
+    {
+        md5sum[i++] = buffer[j] & 0xff;
+        md5sum[i++] = (buffer[j] >> 8) & 0xff;
+        md5sum[i++] = (buffer[j] >> 16) & 0xff;
+        md5sum[i++] = (buffer[j] >> 24) & 0xff;
+    }
 }
 
 /*
@@ -107,8 +121,7 @@ void arts_md5sum(unsigned char *message, long len, char *md5sum)
 #define F4(x, y, z) (y ^ (x | ~z))
 
 /* This is the central step in the MD5 algorithm. */
-#define MD5STEP(f, w, x, y, z, data, s) \
-	( w += f(x, y, z) + data,  w = w<<s | w>>(32-s),  w += x )
+#define MD5STEP(f, w, x, y, z, data, s) (w += f(x, y, z) + data, w = w << s | w >> (32 - s), w += x)
 
 /*
  * The core of the MD5 algorithm, this alters an existing MD5 hash to

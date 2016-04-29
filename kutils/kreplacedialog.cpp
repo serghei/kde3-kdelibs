@@ -36,14 +36,17 @@
  * for long replacement texts.
  */
 class KReplaceDialog::KReplaceDialogPrivate {
-  public:
-    KReplaceDialogPrivate() : m_initialShowDone(false) {}
+public:
+    KReplaceDialogPrivate() : m_initialShowDone(false)
+    {
+    }
     QStringList replaceStrings;
     bool m_initialShowDone;
 };
 
-KReplaceDialog::KReplaceDialog(QWidget *parent, const char *name, long options, const QStringList &findStrings, const QStringList &replaceStrings, bool hasSelection) :
-    KFindDialog(parent, name, true)
+KReplaceDialog::KReplaceDialog(QWidget *parent, const char *name, long options, const QStringList &findStrings, const QStringList &replaceStrings,
+                               bool hasSelection)
+    : KFindDialog(parent, name, true)
 {
     d = new KReplaceDialogPrivate;
     d->replaceStrings = replaceStrings;
@@ -56,16 +59,16 @@ KReplaceDialog::~KReplaceDialog()
     delete d;
 }
 
-void KReplaceDialog::showEvent( QShowEvent *e )
+void KReplaceDialog::showEvent(QShowEvent *e)
 {
-    if ( !d->m_initialShowDone )
+    if(!d->m_initialShowDone)
     {
         d->m_initialShowDone = true; // only once
 
-        if (!d->replaceStrings.isEmpty())
+        if(!d->replaceStrings.isEmpty())
         {
-          setReplacementHistory(d->replaceStrings);
-          m_replace->lineEdit()->setText( d->replaceStrings[0] );
+            setReplacementHistory(d->replaceStrings);
+            m_replace->lineEdit()->setText(d->replaceStrings[0]);
         }
     }
 
@@ -77,19 +80,19 @@ long KReplaceDialog::options() const
     long options = 0;
 
     options = KFindDialog::options();
-    if (m_promptOnReplace->isChecked())
+    if(m_promptOnReplace->isChecked())
         options |= PromptOnReplace;
-    if (m_backRef->isChecked())
+    if(m_backRef->isChecked())
         options |= BackReference;
     return options;
 }
 
 QWidget *KReplaceDialog::replaceExtension()
 {
-    if (!m_replaceExtension)
+    if(!m_replaceExtension)
     {
-      m_replaceExtension = new QWidget(m_replaceGrp);
-      m_replaceLayout->addMultiCellWidget(m_replaceExtension, 3, 3, 0, 1);
+        m_replaceExtension = new QWidget(m_replaceGrp);
+        m_replaceLayout->addMultiCellWidget(m_replaceExtension, 3, 3, 0, 1);
     }
 
     return m_replaceExtension;
@@ -104,8 +107,8 @@ QStringList KReplaceDialog::replacementHistory() const
 {
     QStringList lst = m_replace->historyItems();
     // historyItems() doesn't tell us about the case of replacing with an empty string
-    if ( m_replace->lineEdit()->text().isEmpty() )
-        lst.prepend( QString::null );
+    if(m_replace->lineEdit()->text().isEmpty())
+        lst.prepend(QString::null);
     return lst;
 }
 
@@ -118,7 +121,7 @@ void KReplaceDialog::setOptions(long options)
 
 void KReplaceDialog::setReplacementHistory(const QStringList &strings)
 {
-    if (strings.count() > 0)
+    if(strings.count() > 0)
         m_replace->setHistoryItems(strings, true);
     else
         m_replace->clearHistory();
@@ -127,29 +130,26 @@ void KReplaceDialog::setReplacementHistory(const QStringList &strings)
 void KReplaceDialog::slotOk()
 {
     // If regex and backrefs are enabled, do a sanity check.
-    if ( m_regExp->isChecked() && m_backRef->isChecked() )
+    if(m_regExp->isChecked() && m_backRef->isChecked())
     {
-        QRegExp r ( pattern() );
+        QRegExp r(pattern());
         int caps = r.numCaptures();
         QRegExp check(QString("((?:\\\\)+)(\\d+)"));
         int p = 0;
         QString rep = replacement();
-        while ( (p = check.search( rep, p ) ) > -1 )
+        while((p = check.search(rep, p)) > -1)
         {
-            if ( check.cap(1).length()%2 && check.cap(2).toInt() > caps )
+            if(check.cap(1).length() % 2 && check.cap(2).toInt() > caps)
             {
-                KMessageBox::information( this, i18n(
-                        "Your replacement string is referencing a capture greater than '\\%1', ").arg( caps ) +
-                    ( caps ?
-                        i18n("but your pattern only defines 1 capture.",
-                             "but your pattern only defines %n captures.", caps ) :
-                        i18n("but your pattern defines no captures.") ) +
-                    i18n("\nPlease correct.") );
+                KMessageBox::information(
+                    this, i18n("Your replacement string is referencing a capture greater than '\\%1', ").arg(caps)
+                              + (caps ? i18n("but your pattern only defines 1 capture.", "but your pattern only defines %n captures.", caps)
+                                      : i18n("but your pattern defines no captures."))
+                              + i18n("\nPlease correct."));
                 return; // abort OKing
             }
             p += check.matchedLength();
         }
-
     }
 
     KFindDialog::slotOk();

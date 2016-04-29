@@ -33,8 +33,8 @@
 #include <qintdict.h>
 
 namespace khtml {
-    class RenderStyle;
-    class CachedImage;
+class RenderStyle;
+class CachedImage;
 }
 
 
@@ -47,98 +47,125 @@ class CounterImpl;
 class PairImpl;
 
 
-class CSSStyleDeclarationImpl : public StyleBaseImpl
-{
+class CSSStyleDeclarationImpl : public StyleBaseImpl {
 public:
     CSSStyleDeclarationImpl(CSSRuleImpl *parentRule);
-    CSSStyleDeclarationImpl(CSSRuleImpl *parentRule, QPtrList<CSSProperty> *lstValues);
+    CSSStyleDeclarationImpl(CSSRuleImpl *parentRule, QPtrList< CSSProperty > *lstValues);
     virtual ~CSSStyleDeclarationImpl();
 
-    CSSStyleDeclarationImpl& operator=( const CSSStyleDeclarationImpl&);
+    CSSStyleDeclarationImpl &operator=(const CSSStyleDeclarationImpl &);
 
     virtual unsigned long length() const;
     CSSRuleImpl *parentRule() const;
-    virtual DOM::DOMString removeProperty( int propertyID, bool NonCSSHints = false );
-    virtual bool setProperty ( int propertyId, const DOM::DOMString &value, bool important = false, bool nonCSSHint = false);
-    virtual void setProperty ( int propertyId, int value, bool important = false, bool nonCSSHint = false);
+    virtual DOM::DOMString removeProperty(int propertyID, bool NonCSSHints = false);
+    virtual bool setProperty(int propertyId, const DOM::DOMString &value, bool important = false, bool nonCSSHint = false);
+    virtual void setProperty(int propertyId, int value, bool important = false, bool nonCSSHint = false);
     // this treats integers as pixels!
     // needed for conversion of html attributes
     virtual void setLengthProperty(int id, const DOM::DOMString &value, bool important, bool nonCSSHint = true, bool multiLength = false);
 
     // add a whole, unparsed property
-    virtual void setProperty ( const DOMString &propertyString);
-    virtual DOM::DOMString item ( unsigned long index ) const;
+    virtual void setProperty(const DOMString &propertyString);
+    virtual DOM::DOMString item(unsigned long index) const;
 
     DOM::DOMString cssText() const;
     void setCssText(DOM::DOMString str);
 
-    virtual bool isStyleDeclaration() const { return true; }
-    virtual bool parseString( const DOMString &string, bool = false );
+    virtual bool isStyleDeclaration() const
+    {
+        return true;
+    }
+    virtual bool parseString(const DOMString &string, bool = false);
 
-    virtual CSSValueImpl *getPropertyCSSValue( int propertyID ) const;
-    virtual DOMString getPropertyValue( int propertyID ) const;
-    virtual bool getPropertyPriority( int propertyID ) const;
+    virtual CSSValueImpl *getPropertyCSSValue(int propertyID) const;
+    virtual DOMString getPropertyValue(int propertyID) const;
+    virtual bool getPropertyPriority(int propertyID) const;
 
-    QPtrList<CSSProperty> *values() const { return m_lstValues; }
-    void setNode(NodeImpl *_node) { m_node = _node; }
+    QPtrList< CSSProperty > *values() const
+    {
+        return m_lstValues;
+    }
+    void setNode(NodeImpl *_node)
+    {
+        m_node = _node;
+    }
 
     void setChanged();
 
     void removeCSSHints();
 
 protected:
-    DOMString getShortHandValue( const int* properties, int number ) const;
-    DOMString get4Values( const int* properties ) const;
+    DOMString getShortHandValue(const int *properties, int number) const;
+    DOMString get4Values(const int *properties) const;
 
-    QPtrList<CSSProperty> *m_lstValues;
+    QPtrList< CSSProperty > *m_lstValues;
     NodeImpl *m_node;
 
 private:
     // currently not needed - make sure its not used
-    CSSStyleDeclarationImpl(const CSSStyleDeclarationImpl& o);
+    CSSStyleDeclarationImpl(const CSSStyleDeclarationImpl &o);
 };
 
-class CSSValueImpl : public StyleBaseImpl
-{
+class CSSValueImpl : public StyleBaseImpl {
 public:
-    CSSValueImpl() : StyleBaseImpl() {}
+    CSSValueImpl() : StyleBaseImpl()
+    {
+    }
 
     virtual unsigned short cssValueType() const = 0;
 
     virtual DOM::DOMString cssText() const = 0;
 
-    virtual bool isValue() const { return true; }
-    virtual bool isFontValue() const { return false; }
+    virtual bool isValue() const
+    {
+        return true;
+    }
+    virtual bool isFontValue() const
+    {
+        return false;
+    }
 };
 
-class CSSInheritedValueImpl : public CSSValueImpl
-{
+class CSSInheritedValueImpl : public CSSValueImpl {
 public:
-    CSSInheritedValueImpl() : CSSValueImpl() {}
-    virtual ~CSSInheritedValueImpl() {}
+    CSSInheritedValueImpl() : CSSValueImpl()
+    {
+    }
+    virtual ~CSSInheritedValueImpl()
+    {
+    }
 
     virtual unsigned short cssValueType() const;
     virtual DOM::DOMString cssText() const;
 };
 
-class CSSInitialValueImpl : public CSSValueImpl
-{
+class CSSInitialValueImpl : public CSSValueImpl {
 public:
     virtual unsigned short cssValueType() const;
     virtual DOM::DOMString cssText() const;
 };
 
-class CSSValueListImpl : public CSSValueImpl
-{
+class CSSValueListImpl : public CSSValueImpl {
 public:
-    CSSValueListImpl() : CSSValueImpl() {}
+    CSSValueListImpl() : CSSValueImpl()
+    {
+    }
 
     virtual ~CSSValueListImpl();
 
-    unsigned long length() const { return m_values.count(); }
-    CSSValueImpl *item ( unsigned long index ) { return m_values.at(index); }
+    unsigned long length() const
+    {
+        return m_values.count();
+    }
+    CSSValueImpl *item(unsigned long index)
+    {
+        return m_values.at(index);
+    }
 
-    virtual bool isValueList() const { return true; }
+    virtual bool isValueList() const
+    {
+        return true;
+    }
 
     virtual unsigned short cssValueType() const;
 
@@ -146,7 +173,7 @@ public:
     virtual DOM::DOMString cssText() const;
 
 protected:
-    QPtrList<CSSValueImpl> m_values;
+    QPtrList< CSSValueImpl > m_values;
 };
 
 
@@ -154,15 +181,14 @@ class Counter;
 class RGBColor;
 class Rect;
 
-class CSSPrimitiveValueImpl : public CSSValueImpl
-{
+class CSSPrimitiveValueImpl : public CSSValueImpl {
 public:
     CSSPrimitiveValueImpl();
     CSSPrimitiveValueImpl(int ident);
     CSSPrimitiveValueImpl(double num, CSSPrimitiveValue::UnitTypes type);
     CSSPrimitiveValueImpl(const DOMString &str, CSSPrimitiveValue::UnitTypes type);
     CSSPrimitiveValueImpl(CounterImpl *c);
-    CSSPrimitiveValueImpl( RectImpl *r);
+    CSSPrimitiveValueImpl(RectImpl *r);
     CSSPrimitiveValueImpl(QRgb color);
     CSSPrimitiveValueImpl(PairImpl *p);
 
@@ -170,7 +196,10 @@ public:
 
     void cleanup();
 
-    unsigned short primitiveType() const { return m_type; }
+    unsigned short primitiveType() const
+    {
+        return m_type;
+    }
 
     /*
      * computes a length in pixels out of the given CSSValue. Need the RenderStyle to get
@@ -182,58 +211,75 @@ public:
      * this is screen/printer dependent, so we probably need a config option for this,
      * and some tool to calibrate.
      */
-    int computeLength( khtml::RenderStyle *style, QPaintDeviceMetrics *devMetrics );
+    int computeLength(khtml::RenderStyle *style, QPaintDeviceMetrics *devMetrics);
 
-    double computeLengthFloat( khtml::RenderStyle *style, QPaintDeviceMetrics *devMetrics );
+    double computeLengthFloat(khtml::RenderStyle *style, QPaintDeviceMetrics *devMetrics);
 
     // use with care!!!
-    void setPrimitiveType(unsigned short type) { m_type = type; }
-    void setFloatValue ( unsigned short unitType, double floatValue, int &exceptioncode );
-    double floatValue ( unsigned short/* unitType */) const { return m_value.num; }
-
-    void setStringValue ( unsigned short stringType, const DOM::DOMString &stringValue, int &exceptioncode );
-    DOM::DOMStringImpl *getStringValue () const {
-	return ( ( m_type < CSSPrimitiveValue::CSS_STRING ||
-		   m_type > CSSPrimitiveValue::CSS_ATTR ||
-		   m_type == CSSPrimitiveValue::CSS_IDENT ) ? // fix IDENT
-		 0 : m_value.string );
+    void setPrimitiveType(unsigned short type)
+    {
+        m_type = type;
     }
-    CounterImpl *getCounterValue () const {
-        return ( m_type != CSSPrimitiveValue::CSS_COUNTER ? 0 : m_value.counter );
+    void setFloatValue(unsigned short unitType, double floatValue, int &exceptioncode);
+    double floatValue(unsigned short /* unitType */) const
+    {
+        return m_value.num;
     }
 
-    RectImpl *getRectValue () const {
-	return ( m_type != CSSPrimitiveValue::CSS_RECT ? 0 : m_value.rect );
+    void setStringValue(unsigned short stringType, const DOM::DOMString &stringValue, int &exceptioncode);
+    DOM::DOMStringImpl *getStringValue() const
+    {
+        return ((m_type < CSSPrimitiveValue::CSS_STRING || m_type > CSSPrimitiveValue::CSS_ATTR || m_type == CSSPrimitiveValue::CSS_IDENT)
+                    ? // fix IDENT
+                    0
+                    : m_value.string);
+    }
+    CounterImpl *getCounterValue() const
+    {
+        return (m_type != CSSPrimitiveValue::CSS_COUNTER ? 0 : m_value.counter);
     }
 
-    QRgb getRGBColorValue () const {
-	return ( m_type != CSSPrimitiveValue::CSS_RGBCOLOR ? 0 : m_value.rgbcolor );
+    RectImpl *getRectValue() const
+    {
+        return (m_type != CSSPrimitiveValue::CSS_RECT ? 0 : m_value.rect);
     }
 
-    PairImpl* getPairValue() const {
+    QRgb getRGBColorValue() const
+    {
+        return (m_type != CSSPrimitiveValue::CSS_RGBCOLOR ? 0 : m_value.rgbcolor);
+    }
+
+    PairImpl *getPairValue() const
+    {
         return (m_type != CSSPrimitiveValue::CSS_PAIR ? 0 : m_value.pair);
     }
 
-    virtual bool isPrimitiveValue() const { return true; }
+    virtual bool isPrimitiveValue() const
+    {
+        return true;
+    }
     virtual unsigned short cssValueType() const;
 
     int getIdent();
 
-    virtual bool parseString( const DOMString &string, bool = false);
+    virtual bool parseString(const DOMString &string, bool = false);
     virtual DOM::DOMString cssText() const;
 
-    virtual bool isQuirkValue() const { return false; }
+    virtual bool isQuirkValue() const
+    {
+        return false;
+    }
 
 protected:
     int m_type;
     union {
-	int ident;
-	double num;
-	DOM::DOMStringImpl *string;
-	CounterImpl *counter;
-	RectImpl *rect;
+        int ident;
+        double num;
+        DOM::DOMStringImpl *string;
+        CounterImpl *counter;
+        RectImpl *rect;
         QRgb rgbcolor;
-        PairImpl* pair;
+        PairImpl *pair;
     } m_value;
 };
 
@@ -241,43 +287,72 @@ protected:
 // The basic idea is that a stylesheet can use the value __qem (for quirky em) instead of em
 // in a stylesheet.  When the quirky value is used, if you're in quirks mode, the margin will
 // collapse away inside a table cell.
-class CSSQuirkPrimitiveValueImpl : public CSSPrimitiveValueImpl
-{
+class CSSQuirkPrimitiveValueImpl : public CSSPrimitiveValueImpl {
 public:
-    CSSQuirkPrimitiveValueImpl(double num, CSSPrimitiveValue::UnitTypes type)
-      :CSSPrimitiveValueImpl(num, type) {}
+    CSSQuirkPrimitiveValueImpl(double num, CSSPrimitiveValue::UnitTypes type) : CSSPrimitiveValueImpl(num, type)
+    {
+    }
 
-    virtual ~CSSQuirkPrimitiveValueImpl() {}
+    virtual ~CSSQuirkPrimitiveValueImpl()
+    {
+    }
 
-    virtual bool isQuirkValue() const { return true; }
+    virtual bool isQuirkValue() const
+    {
+        return true;
+    }
 };
 
-class CounterImpl : public khtml::Shared<CounterImpl> {
+class CounterImpl : public khtml::Shared< CounterImpl > {
 public:
-    CounterImpl() : m_listStyle(0) { }
-    DOMString identifier() const { return m_identifier; }
-    unsigned int listStyle() const { return m_listStyle; }
-    DOMString separator() const { return m_separator; }
+    CounterImpl() : m_listStyle(0)
+    {
+    }
+    DOMString identifier() const
+    {
+        return m_identifier;
+    }
+    unsigned int listStyle() const
+    {
+        return m_listStyle;
+    }
+    DOMString separator() const
+    {
+        return m_separator;
+    }
 
     DOMString m_identifier;
     unsigned int m_listStyle;
     DOMString m_separator;
 };
 
-class RectImpl : public khtml::Shared<RectImpl> {
+class RectImpl : public khtml::Shared< RectImpl > {
 public:
     RectImpl();
     ~RectImpl();
 
-    CSSPrimitiveValueImpl *top() const { return m_top; }
-    CSSPrimitiveValueImpl *right() const { return m_right; }
-    CSSPrimitiveValueImpl *bottom() const { return m_bottom; }
-    CSSPrimitiveValueImpl *left() const { return m_left; }
+    CSSPrimitiveValueImpl *top() const
+    {
+        return m_top;
+    }
+    CSSPrimitiveValueImpl *right() const
+    {
+        return m_right;
+    }
+    CSSPrimitiveValueImpl *bottom() const
+    {
+        return m_bottom;
+    }
+    CSSPrimitiveValueImpl *left() const
+    {
+        return m_left;
+    }
 
-    void setTop( CSSPrimitiveValueImpl *top );
-    void setRight( CSSPrimitiveValueImpl *right );
-    void setBottom( CSSPrimitiveValueImpl *bottom );
-    void setLeft( CSSPrimitiveValueImpl *left );
+    void setTop(CSSPrimitiveValueImpl *top);
+    void setRight(CSSPrimitiveValueImpl *right);
+    void setBottom(CSSPrimitiveValueImpl *bottom);
+    void setLeft(CSSPrimitiveValueImpl *left);
+
 protected:
     CSSPrimitiveValueImpl *m_top;
     CSSPrimitiveValueImpl *m_right;
@@ -289,60 +364,88 @@ protected:
 // and border-spacing (all of which are space-separated sets of two values).  At the moment we are only using it for
 // border-radius and background-size, but (FIXME) border-spacing and background-position could be converted over to use
 // it (eliminating some extra -webkit- internal properties).
-class PairImpl : public khtml::Shared<PairImpl> {
+class PairImpl : public khtml::Shared< PairImpl > {
 public:
-    PairImpl() : m_first(0), m_second(0) { }
-    PairImpl(CSSPrimitiveValueImpl* first, CSSPrimitiveValueImpl* second)
-        : m_first(first), m_second(second) { if (first) first->ref(); if (second) second->ref(); }
+    PairImpl() : m_first(0), m_second(0)
+    {
+    }
+    PairImpl(CSSPrimitiveValueImpl *first, CSSPrimitiveValueImpl *second) : m_first(first), m_second(second)
+    {
+        if(first)
+            first->ref();
+        if(second)
+            second->ref();
+    }
     virtual ~PairImpl();
 
-    CSSPrimitiveValueImpl* first() const { return m_first; }
-    CSSPrimitiveValueImpl* second() const { return m_second; }
+    CSSPrimitiveValueImpl *first() const
+    {
+        return m_first;
+    }
+    CSSPrimitiveValueImpl *second() const
+    {
+        return m_second;
+    }
 
-    void setFirst(CSSPrimitiveValueImpl* first);
-    void setSecond(CSSPrimitiveValueImpl* second);
+    void setFirst(CSSPrimitiveValueImpl *first);
+    void setSecond(CSSPrimitiveValueImpl *second);
 
 protected:
-    CSSPrimitiveValueImpl* m_first;
-    CSSPrimitiveValueImpl* m_second;
+    CSSPrimitiveValueImpl *m_first;
+    CSSPrimitiveValueImpl *m_second;
 };
 
 
-class CSSImageValueImpl : public CSSPrimitiveValueImpl, public khtml::CachedObjectClient
-{
+class CSSImageValueImpl : public CSSPrimitiveValueImpl, public khtml::CachedObjectClient {
 public:
     CSSImageValueImpl(const DOMString &url, const StyleBaseImpl *style);
     CSSImageValueImpl();
     virtual ~CSSImageValueImpl();
 
-    khtml::CachedImage *image() { return m_image; }
+    khtml::CachedImage *image()
+    {
+        return m_image;
+    }
+
 protected:
     khtml::CachedImage *m_image;
 };
 
-class FontFamilyValueImpl : public CSSPrimitiveValueImpl
-{
+class FontFamilyValueImpl : public CSSPrimitiveValueImpl {
 public:
-    FontFamilyValueImpl( const QString &string);
-    const QString &fontName() const { return parsedFontName; }
-    int genericFamilyType() const { return _genericFamilyType; }
+    FontFamilyValueImpl(const QString &string);
+    const QString &fontName() const
+    {
+        return parsedFontName;
+    }
+    int genericFamilyType() const
+    {
+        return _genericFamilyType;
+    }
+
 protected:
     QString parsedFontName;
+
 private:
     int _genericFamilyType;
 };
 
-class FontValueImpl : public CSSValueImpl
-{
+class FontValueImpl : public CSSValueImpl {
 public:
     FontValueImpl();
     virtual ~FontValueImpl();
 
-    virtual unsigned short cssValueType() const { return CSSValue::CSS_CUSTOM; }
+    virtual unsigned short cssValueType() const
+    {
+        return CSSValue::CSS_CUSTOM;
+    }
 
     virtual DOM::DOMString cssText() const;
 
-    virtual bool isFontValue() const { return true; }
+    virtual bool isFontValue() const
+    {
+        return true;
+    }
 
     CSSPrimitiveValueImpl *style;
     CSSPrimitiveValueImpl *variant;
@@ -353,16 +456,18 @@ public:
 };
 
 // Used for quotes
-class QuotesValueImpl : public CSSValueImpl
-{
+class QuotesValueImpl : public CSSValueImpl {
 public:
     QuotesValueImpl();
-//    virtual ~QuotesValueImpl();
+    //    virtual ~QuotesValueImpl();
 
-    virtual unsigned short cssValueType() const { return CSSValue::CSS_CUSTOM; }
+    virtual unsigned short cssValueType() const
+    {
+        return CSSValue::CSS_CUSTOM;
+    }
     virtual DOM::DOMString cssText() const;
 
-    void addLevel(const QString& open, const QString& close);
+    void addLevel(const QString &open, const QString &close);
     QString openQuote(int level) const;
     QString closeQuote(int level) const;
 
@@ -371,86 +476,117 @@ public:
 };
 
 // Used for text-shadow and box-shadow
-class ShadowValueImpl : public CSSValueImpl
-{
+class ShadowValueImpl : public CSSValueImpl {
 public:
-    ShadowValueImpl(CSSPrimitiveValueImpl* _x, CSSPrimitiveValueImpl* _y,
-                    CSSPrimitiveValueImpl* _blur, CSSPrimitiveValueImpl* _color);
+    ShadowValueImpl(CSSPrimitiveValueImpl *_x, CSSPrimitiveValueImpl *_y, CSSPrimitiveValueImpl *_blur, CSSPrimitiveValueImpl *_color);
     virtual ~ShadowValueImpl();
 
-    virtual unsigned short cssValueType() const { return CSSValue::CSS_CUSTOM; }
+    virtual unsigned short cssValueType() const
+    {
+        return CSSValue::CSS_CUSTOM;
+    }
 
     virtual DOM::DOMString cssText() const;
 
-    CSSPrimitiveValueImpl* x;
-    CSSPrimitiveValueImpl* y;
-    CSSPrimitiveValueImpl* blur;
-    CSSPrimitiveValueImpl* color;
+    CSSPrimitiveValueImpl *x;
+    CSSPrimitiveValueImpl *y;
+    CSSPrimitiveValueImpl *blur;
+    CSSPrimitiveValueImpl *color;
 };
 
 // Used for counter-reset and counter-increment
 class CounterActImpl : public CSSValueImpl {
-    public:
-        CounterActImpl(const DOMString &c, short v) : m_counter(c), m_value(v) { }
-        virtual ~CounterActImpl() {};
+public:
+    CounterActImpl(const DOMString &c, short v) : m_counter(c), m_value(v)
+    {
+    }
+    virtual ~CounterActImpl(){};
 
-        virtual unsigned short cssValueType() const { return CSSValue::CSS_CUSTOM; }
-        virtual DOM::DOMString cssText() const;
+    virtual unsigned short cssValueType() const
+    {
+        return CSSValue::CSS_CUSTOM;
+    }
+    virtual DOM::DOMString cssText() const;
 
-        const DOMString& counter() const { return m_counter; }
-        short value() const { return m_value; }
-        void setValue( const short v ) { m_value = v; }
+    const DOMString &counter() const
+    {
+        return m_counter;
+    }
+    short value() const
+    {
+        return m_value;
+    }
+    void setValue(const short v)
+    {
+        m_value = v;
+    }
 
-        DOM::DOMString m_counter;
-        short m_value;
+    DOM::DOMString m_counter;
+    short m_value;
 };
 
 
 // ------------------------------------------------------------------------------
 
 // another helper class
-class CSSProperty
-{
+class CSSProperty {
 public:
     CSSProperty()
     {
-	m_id = -1;
-	m_important = false;
-	nonCSSHint = false;
+        m_id = -1;
+        m_important = false;
+        nonCSSHint = false;
         m_value = 0;
     }
-    CSSProperty(const CSSProperty& o)
+    CSSProperty(const CSSProperty &o)
     {
         m_id = o.m_id;
         m_important = o.m_important;
         nonCSSHint = o.nonCSSHint;
         m_value = o.m_value;
-        if (m_value) m_value->ref();
+        if(m_value)
+            m_value->ref();
     }
-    ~CSSProperty() {
-	if(m_value) m_value->deref();
-    }
-
-    void setValue(CSSValueImpl *val) {
-	if ( val != m_value ) {
-	    if(m_value) m_value->deref();
-	    m_value = val;
-	    if(m_value) m_value->ref();
-	}
+    ~CSSProperty()
+    {
+        if(m_value)
+            m_value->deref();
     }
 
-    int id() const { return m_id; }
+    void setValue(CSSValueImpl *val)
+    {
+        if(val != m_value)
+        {
+            if(m_value)
+                m_value->deref();
+            m_value = val;
+            if(m_value)
+                m_value->ref();
+        }
+    }
 
-    bool isImportant() const { return m_important; }
+    int id() const
+    {
+        return m_id;
+    }
 
-    CSSValueImpl *value() const { return m_value; }
+    bool isImportant() const
+    {
+        return m_important;
+    }
+
+    CSSValueImpl *value() const
+    {
+        return m_value;
+    }
 
     DOM::DOMString cssText() const;
 
     // make sure the following fits in 4 bytes.
-    signed int  m_id   : 29;
-    bool m_important   : 1;
-    bool nonCSSHint    : 1;
+    signed int m_id : 29;
+    bool m_important : 1;
+    bool nonCSSHint : 1;
+
 protected:
     CSSValueImpl *m_value;
 };

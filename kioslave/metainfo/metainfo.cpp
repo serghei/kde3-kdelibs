@@ -32,19 +32,18 @@
 // Recognized metadata entries:
 // mimeType     - the mime type of the file, so we need not extra determine it
 // what         - what to load
- 
+
 using namespace KIO;
 
-extern "C"
-{
-    KDE_EXPORT int kdemain(int argc, char **argv);
+extern "C" {
+KDE_EXPORT int kdemain(int argc, char **argv);
 }
 
 int kdemain(int argc, char **argv)
 {
     KApplication app(argc, argv, "kio_metainfo", false, true);
 
-    if (argc != 4)
+    if(argc != 4)
     {
         kdError() << "Usage: kio_metainfo protocol domain-socket1 domain-socket2" << endl;
         exit(-1);
@@ -56,8 +55,7 @@ int kdemain(int argc, char **argv)
     return 0;
 }
 
-MetaInfoProtocol::MetaInfoProtocol(const QCString &pool, const QCString &app)
-    : SlaveBase("metainfo", pool, app)
+MetaInfoProtocol::MetaInfoProtocol(const QCString &pool, const QCString &app) : SlaveBase("metainfo", pool, app)
 {
 }
 
@@ -69,7 +67,7 @@ void MetaInfoProtocol::get(const KURL &url)
 {
     QString mimeType = metaData("mimeType");
     KFileMetaInfo info(url.path(), mimeType);
-    
+
     QByteArray arr;
     QDataStream stream(arr, IO_WriteOnly);
 
@@ -79,25 +77,25 @@ void MetaInfoProtocol::get(const KURL &url)
     finished();
 }
 
-void MetaInfoProtocol::put(const KURL& url, int, bool, bool) 
+void MetaInfoProtocol::put(const KURL &url, int, bool, bool)
 {
     QString mimeType = metaData("mimeType");
     KFileMetaInfo info;
-    
+
     QByteArray arr;
     readData(arr);
     QDataStream stream(arr, IO_ReadOnly);
-    
+
     stream >> info;
 
-    if (info.isValid())
+    if(info.isValid())
     {
         info.applyChanges();
-    } 
-    else 
+    }
+    else
     {
         error(ERR_NO_CONTENT, i18n("No metainfo for %1").arg(url.path()));
         return;
     }
     finished();
-}  
+}

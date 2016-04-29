@@ -24,34 +24,40 @@
 
 class KPrinter;
 
-class KDEPRINT_EXPORT KPrintAction : public KActionMenu
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT KPrintAction : public KActionMenu {
+    Q_OBJECT
 public:
-	enum PrinterType { All, Regular, Specials };
+    enum PrinterType
+    {
+        All,
+        Regular,
+        Specials
+    };
 
-	KPrintAction(const QString& text, PrinterType type = All, QWidget *parentWidget = 0, QObject *parent = 0, const char *name = 0);
-	KPrintAction(const QString& text, const QIconSet& icon, PrinterType type = All, QWidget *parentWidget = 0, QObject *parent = 0, const char *name = 0);
-	KPrintAction(const QString& text, const QString& icon, PrinterType type = All, QWidget *parentWidget = 0, QObject *parent = 0, const char *name = 0);
-	virtual ~KPrintAction();
+    KPrintAction(const QString &text, PrinterType type = All, QWidget *parentWidget = 0, QObject *parent = 0, const char *name = 0);
+    KPrintAction(const QString &text, const QIconSet &icon, PrinterType type = All, QWidget *parentWidget = 0, QObject *parent = 0,
+                 const char *name = 0);
+    KPrintAction(const QString &text, const QString &icon, PrinterType type = All, QWidget *parentWidget = 0, QObject *parent = 0,
+                 const char *name = 0);
+    virtual ~KPrintAction();
 
-	static KPrintAction* exportAll(QWidget *parentWidget = 0, QObject *parent = 0, const char *name = 0);
-	static KPrintAction* exportRegular(QWidget *parentWidget = 0, QObject *parent = 0, const char *name = 0);
-	static KPrintAction* exportSpecial(QWidget *parentWidget = 0, QObject *parent = 0, const char *name = 0);
+    static KPrintAction *exportAll(QWidget *parentWidget = 0, QObject *parent = 0, const char *name = 0);
+    static KPrintAction *exportRegular(QWidget *parentWidget = 0, QObject *parent = 0, const char *name = 0);
+    static KPrintAction *exportSpecial(QWidget *parentWidget = 0, QObject *parent = 0, const char *name = 0);
 
 signals:
-	void print(KPrinter*);
+    void print(KPrinter *);
 
 protected slots:
-	void slotAboutToShow();
-	void slotActivated(int);
+    void slotAboutToShow();
+    void slotActivated(int);
 
 protected:
-	void initialize(PrinterType type, QWidget *parentWidget);
+    void initialize(PrinterType type, QWidget *parentWidget);
 
 private:
-	class KPrintActionPrivate;
-	KPrintActionPrivate	*d;
+    class KPrintActionPrivate;
+    KPrintActionPrivate *d;
 };
 
 #endif

@@ -33,31 +33,29 @@ class KLocale;
  * @author Carlos Moro <cfmoro@correo.uniovi.es>
  * @since 3.2
  */
-class KDECORE_EXPORT KCalendarSystemFactory
-{
+class KDECORE_EXPORT KCalendarSystemFactory {
 public:
-  KCalendarSystemFactory ();
-  ~KCalendarSystemFactory ();
+    KCalendarSystemFactory();
+    ~KCalendarSystemFactory();
 
-  /**
-   * Gets specific calendar type number of days in previous month for a
-   * given date
-   *
-   * @param calType string identification of the specific calendar type
-   * to be constructed
-   * @param locale Locale used for translations. Use the global locale when
-   * 0 is specified.
-   * @return a KCalendarSystem object
-   */
-  static KCalendarSystem *create (const QString & calType = QString::fromLatin1("gregorian"),
-                                  const KLocale * locale = 0);
+    /**
+     * Gets specific calendar type number of days in previous month for a
+     * given date
+     *
+     * @param calType string identification of the specific calendar type
+     * to be constructed
+     * @param locale Locale used for translations. Use the global locale when
+     * 0 is specified.
+     * @return a KCalendarSystem object
+     */
+    static KCalendarSystem *create(const QString &calType = QString::fromLatin1("gregorian"), const KLocale *locale = 0);
 
-  /**
-   * Gets list of names of supported calendar systems
-   *
-   * @return A QStringList object
-   */
-  static QStringList calendarSystems();
+    /**
+     * Gets list of names of supported calendar systems
+     *
+     * @return A QStringList object
+     */
+    static QStringList calendarSystems();
 
 private:
 };

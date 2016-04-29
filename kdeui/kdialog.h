@@ -49,19 +49,16 @@ class QLayoutItem;
  * @see KDialogBase
  * @author Thomas Tanghus <tanghus@earthling.net>, Espen Sand <espensa@online.no>
  */
-class KDEUI_EXPORT KDialog : public QDialog
-{
-  Q_OBJECT
+class KDEUI_EXPORT KDialog : public QDialog {
+    Q_OBJECT
 
-  public:
-
+public:
     /**
      * Constructor.
      *
      * Takes the same arguments as QDialog.
      */
-    KDialog(QWidget *parent = 0, const char *name = 0,
-	    bool modal = false, WFlags f = 0);
+    KDialog(QWidget *parent = 0, const char *name = 0, bool modal = false, WFlags f = 0);
 
     /**
      * Return the number of pixels you shall use between a
@@ -82,7 +79,7 @@ class KDEUI_EXPORT KDialog : public QDialog
      * @param margin The new layout margin.
      * @param spacing The new layout spacing.
      */
-    static void resizeLayout( QWidget *widget, int margin, int spacing );
+    static void resizeLayout(QWidget *widget, int margin, int spacing);
 
     /**
      * Resize every layout associated with @p lay and its children.
@@ -91,7 +88,7 @@ class KDEUI_EXPORT KDialog : public QDialog
      * @param margin The new layout margin
      * @param spacing The new layout spacing
      */
-    static void resizeLayout( QLayoutItem *lay, int margin, int spacing );
+    static void resizeLayout(QLayoutItem *lay, int margin, int spacing);
 
     /**
      * Centers @p widget on the desktop, taking multi-head setups into
@@ -103,7 +100,7 @@ class KDEUI_EXPORT KDialog : public QDialog
      * in use, or merged display placement is not enabled in kdeglobals.
      * @since 3.1
      */
-    static void centerOnScreen( QWidget *widget, int screen = -1 );
+    static void centerOnScreen(QWidget *widget, int screen = -1);
 
     /**
      * Places @p widget so that it doesn't cover a certain @p area of the screen.
@@ -114,9 +111,9 @@ class KDEUI_EXPORT KDialog : public QDialog
      * false on failure (not enough space found)
      * @since 3.2
      */
-    static bool avoidArea( QWidget *widget, const QRect& area, int screen = -1 );
+    static bool avoidArea(QWidget *widget, const QRect &area, int screen = -1);
 
-  public slots:
+public slots:
     /**
      * If the dialog starts with focus in a QLineEdit child,
      * then call selectAll() on the child.
@@ -130,7 +127,7 @@ class KDEUI_EXPORT KDialog : public QDialog
      * in this string. It will be added automatically according to the KDE
      * standard.
      */
-    virtual void setCaption( const QString &caption );
+    virtual void setCaption(const QString &caption);
 
     /**
      * Make a plain caption without any modifications.
@@ -138,17 +135,17 @@ class KDEUI_EXPORT KDialog : public QDialog
      * @param caption Your caption. This is the string that will be
      * displayed in the window title.
      */
-    virtual void setPlainCaption( const QString &caption );
+    virtual void setPlainCaption(const QString &caption);
 
 
-  protected:
+protected:
     /**
      * @internal
      */
-    virtual void keyPressEvent(QKeyEvent*);
+    virtual void keyPressEvent(QKeyEvent *);
 
 
-   signals:
+signals:
     /**
      * Emitted when the margin size and/or spacing size
      * have changed.
@@ -158,54 +155,52 @@ class KDEUI_EXPORT KDialog : public QDialog
      */
     void layoutHintChanged();
 
-  private:
+private:
     static const int mMarginSize;
     static const int mSpacingSize;
 
-  protected:
-    virtual void virtual_hook( int id, void* data );
-  private:
-    class KDialogPrivate;
-    KDialogPrivate* const d;
+protected:
+    virtual void virtual_hook(int id, void *data);
 
+private:
+    class KDialogPrivate;
+    KDialogPrivate *const d;
 };
 
 
- /**
-  * \brief Queue for showing modal dialogs one after the other.
-  *
-  * This is useful if you want to show a modal dialog but are not in the
-  * position to start a new event loop at that point in your code.
-  *
-  * The disadvantage is that you will not be able to get any information from
-  * the dialog, so it can currently only be used for simple dialogs.
-  *
-  * You probably want to use KMessageBox::queueMessageBox() instead
-  * of this class directly.
-  *
-  * @author Waldo Bastian <bastian@kde.org>
-  */
+/**
+ * \brief Queue for showing modal dialogs one after the other.
+ *
+ * This is useful if you want to show a modal dialog but are not in the
+ * position to start a new event loop at that point in your code.
+ *
+ * The disadvantage is that you will not be able to get any information from
+ * the dialog, so it can currently only be used for simple dialogs.
+ *
+ * You probably want to use KMessageBox::queueMessageBox() instead
+ * of this class directly.
+ *
+ * @author Waldo Bastian <bastian@kde.org>
+ */
 class KDialogQueuePrivate;
-class KDEUI_EXPORT KDialogQueue : public QObject
-{
-      Q_OBJECT
+class KDEUI_EXPORT KDialogQueue : public QObject {
+    Q_OBJECT
 
 public:
+    static void queueDialog(QDialog *);
 
-      static void queueDialog(QDialog *);
-
-      ~KDialogQueue();
+    ~KDialogQueue();
 
 protected:
-      KDialogQueue();
-      static KDialogQueue *self();
+    KDialogQueue();
+    static KDialogQueue *self();
 
 private slots:
-      void slotShowQueuedDialog();
+    void slotShowQueuedDialog();
 
 protected:
-      KDialogQueuePrivate* const d;
-      static KDialogQueue *_self;
+    KDialogQueuePrivate *const d;
+    static KDialogQueue *_self;
 };
 
 #endif // __KDIALOG_H

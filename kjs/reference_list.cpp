@@ -23,132 +23,141 @@
 #include "reference_list.h"
 
 namespace KJS {
-  class ReferenceListNode {
+class ReferenceListNode {
     friend class ReferenceList;
     friend class ReferenceListIterator;
 
-  protected:
-    ReferenceListNode(const Reference &ref) : reference(ref), next(NULL) {}
+protected:
+    ReferenceListNode(const Reference &ref) : reference(ref), next(NULL)
+    {
+    }
 
-  private:
+private:
     Reference reference;
     ReferenceListNode *next;
-  };
+};
 
-  class ReferenceListHeadNode : private ReferenceListNode {
+class ReferenceListHeadNode : private ReferenceListNode {
     friend class ReferenceList;
     friend class ReferenceListIterator;
 
-    ReferenceListHeadNode(const Reference &ref) : ReferenceListNode(ref), refcount(1), length(0) {}
+    ReferenceListHeadNode(const Reference &ref) : ReferenceListNode(ref), refcount(1), length(0)
+    {
+    }
     int refcount;
     int length;
-  };
-
+};
 }
 
 using namespace KJS;
 
 // ReferenceList
 
-ReferenceList::ReferenceList() :
-  head(NULL),
-  tail(NULL)
+ReferenceList::ReferenceList() : head(NULL), tail(NULL)
 {
 }
 
 ReferenceList::ReferenceList(const ReferenceList &list)
 {
-  head = list.head;
-  tail = list.tail;
-  if (head != NULL) {
-    head->refcount++;
-  }
+    head = list.head;
+    tail = list.tail;
+    if(head != NULL)
+    {
+        head->refcount++;
+    }
 }
 
 ReferenceList &ReferenceList::operator=(const ReferenceList &list)
 {
-  ReferenceList tmp(list);
-  tmp.swap(*this);
+    ReferenceList tmp(list);
+    tmp.swap(*this);
 
-  return *this;
+    return *this;
 }
 
 void ReferenceList::swap(ReferenceList &list)
 {
-  ReferenceListHeadNode *tmpHead = list.head;
-  list.head = head;
-  head = tmpHead;
+    ReferenceListHeadNode *tmpHead = list.head;
+    list.head = head;
+    head = tmpHead;
 
-  ReferenceListNode *tmpTail = list.tail;
-  list.tail = tail;
-  tail = tmpTail;
+    ReferenceListNode *tmpTail = list.tail;
+    list.tail = tail;
+    tail = tmpTail;
 }
 
 
-void ReferenceList::append(const Reference& ref)
+void ReferenceList::append(const Reference &ref)
 {
-  if (tail == NULL) {
-    tail = head = new ReferenceListHeadNode(ref);
-  } else {
-    tail->next = new ReferenceListNode(ref);
-    tail = tail->next;
-  }
-  head->length++;
+    if(tail == NULL)
+    {
+        tail = head = new ReferenceListHeadNode(ref);
+    }
+    else
+    {
+        tail->next = new ReferenceListNode(ref);
+        tail = tail->next;
+    }
+    head->length++;
 }
 
 int ReferenceList::length()
 {
-  return head ? head->length : 0;
+    return head ? head->length : 0;
 }
 
 ReferenceList::~ReferenceList()
 {
-  if (head != NULL && --(head->refcount) == 0) {
-    ReferenceListNode *next;
+    if(head != NULL && --(head->refcount) == 0)
+    {
+        ReferenceListNode *next;
 
-    for (ReferenceListNode *p = head; p != NULL; p = next) {
-      next = p->next;
-      if (p == head) {
-	delete (ReferenceListHeadNode *)p;
-      } else {
-	delete p;
-      }
+        for(ReferenceListNode *p = head; p != NULL; p = next)
+        {
+            next = p->next;
+            if(p == head)
+            {
+                delete(ReferenceListHeadNode *)p;
+            }
+            else
+            {
+                delete p;
+            }
+        }
     }
-  }
 }
 
 ReferenceListIterator ReferenceList::begin() const
 {
-  return ReferenceListIterator(head);
+    return ReferenceListIterator(head);
 }
 
 ReferenceListIterator ReferenceList::end() const
 {
-  return ReferenceListIterator(NULL);
+    return ReferenceListIterator(NULL);
 }
 
 
 // ReferenceListIterator
 
 
-ReferenceListIterator::ReferenceListIterator(ReferenceListNode *n) :
-  node(n)
+ReferenceListIterator::ReferenceListIterator(ReferenceListNode *n) : node(n)
 {
 }
 
 bool ReferenceListIterator::operator!=(const ReferenceListIterator &it) const
 {
-  return node != it.node;
+    return node != it.node;
 }
 
 const Reference *ReferenceListIterator::operator->() const
 {
-  return &node->reference;
+    return &node->reference;
 }
 
 const Reference &ReferenceListIterator::operator++(int /*i*/)
 {
-  const Reference &ref = node->reference;
-  node = node->next;
-  return ref;
+    const Reference &ref = node->reference;
+    node = node->next;
+    return ref;
 }

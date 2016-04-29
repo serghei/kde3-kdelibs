@@ -40,12 +40,11 @@ class QEvent;
  *
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-class KDEUI_EXPORT KCompletionBox : public KListBox
-{
+class KDEUI_EXPORT KCompletionBox : public KListBox {
     Q_OBJECT
-    Q_PROPERTY( bool isTabHandling READ isTabHandling WRITE setTabHandling )
+    Q_PROPERTY(bool isTabHandling READ isTabHandling WRITE setTabHandling)
     Q_PROPERTY(QString cancelledText READ cancelledText WRITE setCancelledText)
-    Q_PROPERTY( bool activateOnSelect READ activateOnSelect WRITE setActivateOnSelect )
+    Q_PROPERTY(bool activateOnSelect READ activateOnSelect WRITE setActivateOnSelect)
 
 public:
     /**
@@ -54,7 +53,7 @@ public:
      * The parent widget is used to give the focus back when pressing the
      * up-button on the very first item.
      */
-    KCompletionBox( QWidget *parent, const char *name = 0 );
+    KCompletionBox(QWidget *parent, const char *name = 0);
 
     /**
      * Destroys the box
@@ -81,12 +80,12 @@ public slots:
      * @p index determines at which position @p items will be inserted.
      * (defaults to appending them at the end)
      */
-    void insertItems( const QStringList& items, int index = -1 );
+    void insertItems(const QStringList &items, int index = -1);
 
     /**
      * Clears the box and inserts @p items.
      */
-    void setItems( const QStringList& items );
+    void setItems(const QStringList &items);
 
     /**
      * Adjusts the size of the box to fit the width of the parent given in the
@@ -110,7 +109,7 @@ public slots:
      *
      * @see isTabHandling
      */
-    void setTabHandling( bool enable );
+    void setTabHandling(bool enable);
 
     /**
      * @returns true if this widget is handling Tab-key events to traverse the
@@ -132,7 +131,7 @@ public slots:
      * @see userCancelled( const QString& )
      * @param txt  the text to be emitted if the user cancels this box
      */
-    void setCancelledText( const QString& txt);
+    void setCancelledText(const QString &txt);
 
     /**
      * @returns the text set via setCancelledText() or QString::null.
@@ -194,13 +193,13 @@ signals:
      * Emitted when an item was selected, contains the text of
      * the selected item.
      */
-    void activated( const QString& );
+    void activated(const QString &);
 
     /**
      * Emitted whenever the user chooses to ignore the available
      * selections and close the this box.
      */
-    void userCancelled( const QString& );
+    void userCancelled(const QString &);
 
 protected:
     /**
@@ -219,27 +218,30 @@ protected:
      * Reimplemented from KListBox to get events from the viewport (to hide
      * this widget on mouse-click, Escape-presses, etc.
      */
-    virtual bool eventFilter( QObject *, QEvent * );
+    virtual bool eventFilter(QObject *, QEvent *);
 
 protected slots:
     /**
      * Called when an item was activated. Emits
      * activated() with the item.
      */
-    virtual void slotActivated( QListBoxItem * );
+    virtual void slotActivated(QListBoxItem *);
 
 private slots:
-    void slotSetCurrentItem( QListBoxItem *i ) { setCurrentItem( i ); } // grrr
+    void slotSetCurrentItem(QListBoxItem *i)
+    {
+        setCurrentItem(i);
+    } // grrr
     void slotCurrentChanged();
     void canceled();
-    void slotItemClicked( QListBoxItem * );
+    void slotItemClicked(QListBoxItem *);
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 
 private:
     class KCompletionBoxPrivate;
-    KCompletionBoxPrivate* const d;
+    KCompletionBoxPrivate *const d;
 };
 
 

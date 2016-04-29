@@ -1,24 +1,24 @@
-    /*
+/*
 
-    Copyright (C) 2000 Stefan Westerfeld
-                       stefan@space.twc.de
+Copyright (C) 2000 Stefan Westerfeld
+                   stefan@space.twc.de
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-  
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-   
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-    */
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
+
+*/
 
 #ifndef FLOWSYSTEM_H
 #define FLOWSYSTEM_H
@@ -43,105 +43,93 @@ class Object_stub;
 class RemoteScheduleNode;
 class ScheduleNodePrivate;
 
-class ARTS_EXPORT ScheduleNode
-{
+class ARTS_EXPORT ScheduleNode {
 private:
-	Object_base *_nodeObject;
-	ScheduleNodePrivate *d;	// unused
+    Object_base *_nodeObject;
+    ScheduleNodePrivate *d; // unused
 
 public:
-	ScheduleNode(Object_base *object);
-	virtual ~ScheduleNode();
+    ScheduleNode(Object_base *object);
+    virtual ~ScheduleNode();
 
-	Object nodeObject();
+    Object nodeObject();
 
-	// check if this is a remote schedule node
+    // check if this is a remote schedule node
 
-	virtual RemoteScheduleNode *remoteScheduleNode();
+    virtual RemoteScheduleNode *remoteScheduleNode();
 
-	// other casts
-	
-	virtual void *cast(const std::string& target);
+    // other casts
 
-	// internal interface against Object_skel
-	
-	typedef bool (*QueryInitStreamFunc)(Object_skel *object,
-											const std::string& name);
+    virtual void *cast(const std::string &target);
 
-	virtual void initStream(const std::string& name, void *ptr, long flags) = 0;
+    // internal interface against Object_skel
 
-	// interface against node implementation
-	
-	virtual void requireFlow() = 0;
-	virtual void virtualize(const std::string& port, ScheduleNode *implNode,
-											const std::string& implPort) = 0;
-	virtual void devirtualize(const std::string& port, ScheduleNode *implNode,
-											const std::string& implPort) = 0;
+    typedef bool (*QueryInitStreamFunc)(Object_skel *object, const std::string &name);
 
-	// interface to modify the node from outside
-	
-	virtual void start() = 0;
-	virtual void stop() = 0;
-	virtual void connect(const std::string& port, ScheduleNode *remoteNode,
-			                        const std::string& remotePort) = 0;
-	virtual void disconnect(const std::string& port, ScheduleNode *remoteNode,
-			                            const std::string& remotePort) = 0;
+    virtual void initStream(const std::string &name, void *ptr, long flags) = 0;
 
-	// constant values
-	virtual void setFloatValue(const std::string& port, float value) = 0;
+    // interface against node implementation
+
+    virtual void requireFlow() = 0;
+    virtual void virtualize(const std::string &port, ScheduleNode *implNode, const std::string &implPort) = 0;
+    virtual void devirtualize(const std::string &port, ScheduleNode *implNode, const std::string &implPort) = 0;
+
+    // interface to modify the node from outside
+
+    virtual void start() = 0;
+    virtual void stop() = 0;
+    virtual void connect(const std::string &port, ScheduleNode *remoteNode, const std::string &remotePort) = 0;
+    virtual void disconnect(const std::string &port, ScheduleNode *remoteNode, const std::string &remotePort) = 0;
+
+    // constant values
+    virtual void setFloatValue(const std::string &port, float value) = 0;
 };
 
 class RemoteScheduleNodePrivate;
 
-class ARTS_EXPORT RemoteScheduleNode : public ScheduleNode
-{
+class ARTS_EXPORT RemoteScheduleNode : public ScheduleNode {
 private:
-	RemoteScheduleNodePrivate *d; // unused
+    RemoteScheduleNodePrivate *d; // unused
 public:
-	RemoteScheduleNode(Object_stub *stub);
+    RemoteScheduleNode(Object_stub *stub);
 
-	RemoteScheduleNode *remoteScheduleNode();
+    RemoteScheduleNode *remoteScheduleNode();
 
-	// internal interface against Object_skel
-	
-	void initStream(const std::string& name, void *ptr, long flags);
+    // internal interface against Object_skel
 
-	// interface against node implementation
-	
-	void requireFlow();
-	virtual void virtualize(const std::string& port, ScheduleNode *implNode,
-											const std::string& implPort);
-	virtual void devirtualize(const std::string& port, ScheduleNode *implNode,
-											const std::string& implPort);
+    void initStream(const std::string &name, void *ptr, long flags);
 
-	// interface to modify the node from outside
-	
-	void start();
-	void stop();
-	void connect(const std::string& port, ScheduleNode *remoteNode,
-			                        const std::string& remotePort);
-	void disconnect(const std::string& port, ScheduleNode *remoteNode,
-			                            const std::string& remotePort);
+    // interface against node implementation
 
-	// constant values
-	void setFloatValue(const std::string& port, float value);
+    void requireFlow();
+    virtual void virtualize(const std::string &port, ScheduleNode *implNode, const std::string &implPort);
+    virtual void devirtualize(const std::string &port, ScheduleNode *implNode, const std::string &implPort);
+
+    // interface to modify the node from outside
+
+    void start();
+    void stop();
+    void connect(const std::string &port, ScheduleNode *remoteNode, const std::string &remotePort);
+    void disconnect(const std::string &port, ScheduleNode *remoteNode, const std::string &remotePort);
+
+    // constant values
+    void setFloatValue(const std::string &port, float value);
 };
 
 class FlowSystem_impl_private;
 
-class FlowSystem_impl :virtual public FlowSystem_skel
-{
+class FlowSystem_impl : virtual public FlowSystem_skel {
 private:
-	FlowSystem_impl_private *d;
-public:
-	virtual ScheduleNode *addObject(Object_skel *object) = 0;
-	virtual void removeObject(ScheduleNode *node) = 0;
-	virtual bool suspendable() = 0;
-	virtual bool suspended() = 0;
-	virtual void suspend() = 0;
-	virtual void restart() = 0;
-};
+    FlowSystem_impl_private *d;
 
+public:
+    virtual ScheduleNode *addObject(Object_skel *object) = 0;
+    virtual void removeObject(ScheduleNode *node) = 0;
+    virtual bool suspendable() = 0;
+    virtual bool suspended() = 0;
+    virtual void suspend() = 0;
+    virtual void restart() = 0;
+};
 }
 
 #endif

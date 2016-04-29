@@ -35,8 +35,7 @@ class KFileDialog;
  * @short Simple dialog to enter a filename/url.
  * @author Wilco Greven <greven@kde.org>
  */
-class KIO_EXPORT KURLRequesterDlg : public KDialogBase
-{
+class KIO_EXPORT KURLRequesterDlg : public KDialogBase {
     Q_OBJECT
 
 public:
@@ -51,8 +50,7 @@ public:
      * @param modal  Specifies whether the dialog should be opened as modal
      *               or not.
      */
-    KURLRequesterDlg( const QString& url, QWidget *parent,
-                      const char *name, bool modal = true );
+    KURLRequesterDlg(const QString &url, QWidget *parent, const char *name, bool modal = true);
 
     /**
      * Constructs a KURLRequesterDlg.
@@ -66,8 +64,7 @@ public:
      * @param modal  Specifies whether the dialog should be opened as modal
      *                  or not.
      */
-    KURLRequesterDlg( const QString& url, const QString& text,
-                      QWidget *parent, const char *name, bool modal=true );
+    KURLRequesterDlg(const QString &url, const QString &text, QWidget *parent, const char *name, bool modal = true);
     /**
      * Destructs the dialog.
      */
@@ -85,13 +82,12 @@ public:
      * @param parent The widget the dialog will be centered on initially.
      * @param caption The caption to use for the dialog.
      */
-    static KURL getURL(const QString& url = QString::null,
-            QWidget *parent= 0, const QString& caption = QString::null);
+    static KURL getURL(const QString &url = QString::null, QWidget *parent = 0, const QString &caption = QString::null);
 
     /**
      * Returns a pointer to the file dialog used by the KURLRequester.
      */
-    KFileDialog * fileDialog();
+    KFileDialog *fileDialog();
     /**
      * Returns a pointer to the KURLRequester.
      */
@@ -100,13 +96,13 @@ public:
 private slots:
     void slotClear();
     void slotTextChanged(const QString &);
+
 private:
     void initDialog(const QString &text, const QString &url);
     KURLRequester *urlRequester_;
 
     class KURLRequesterDlgPrivate;
     KURLRequesterDlgPrivate *d;
-
 };
 
 #endif // KURLREQUESTERDIALOG_H

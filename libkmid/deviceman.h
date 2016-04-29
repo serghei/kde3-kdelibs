@@ -44,10 +44,8 @@ class MidiMapper;
  * @version 0.9.5 17/01/2000
  * @author Antonio Larrosa Jimenez <larrosa@kde.org>
  */
-class KMID_EXPORT DeviceManager
-{
-  protected:
-
+class KMID_EXPORT DeviceManager {
+protected:
     /**
      * @internal
      * The midi devices objects
@@ -150,18 +148,19 @@ class KMID_EXPORT DeviceManager
     /**
      * @internal
      */
-    void seqbuf_dump (void);
+    void seqbuf_dump(void);
 
     /**
      * @internal
      */
-    void seqbuf_clean (void);
+    void seqbuf_clean(void);
 
     /**
      * @internal
      */
-    void checkAlsa (void);
-  public:
+    void checkAlsa(void);
+
+public:
     /**
      * Constructor. It just initializes internal variables, before playing any
      * music, you should call initManager(), setMidiMap()
@@ -169,7 +168,7 @@ class KMID_EXPORT DeviceManager
      * (not required, unless you're playing to a GUS device, which must load
      * the patches), tmrStart(), and finally, play the music.
      */
-    DeviceManager(int def=-1);
+    DeviceManager(int def = -1);
 
     /**
      * Destructor. It closes the device (calling closeDev() ) if it wasn't
@@ -204,7 +203,9 @@ class KMID_EXPORT DeviceManager
      *
      */
     MidiOut *chntodev(int chn)
-		{ return deviceForChannel(chn); }
+    {
+        return deviceForChannel(chn);
+    }
 
     /**
      * It's possible to send different MIDI channels to different MIDI devices,
@@ -215,12 +216,17 @@ class KMID_EXPORT DeviceManager
      * be sent.
      */
     MidiOut *deviceForChannel(int chn)
-		{ return (device!=0L) ? device[chn2dev[chn]] : 0L ; }
+    {
+        return (device != 0L) ? device[chn2dev[chn]] : 0L;
+    }
 
     /**
      * Returns the device number associated with a given channel.
      */
-    int deviceNumberForChannel(int chn) { return chn2dev[chn]; }
+    int deviceNumberForChannel(int chn)
+    {
+        return chn2dev[chn];
+    }
 
     /**
      * Sets the device number associated with a given channel.
@@ -236,7 +242,10 @@ class KMID_EXPORT DeviceManager
     /**
      * Returns true if it's running ALSA and false if OSS is being run
      */
-    int usingAlsa(void) { return alsa; }
+    int usingAlsa(void)
+    {
+        return alsa;
+    }
 
     // The following function are here to emulate a midi, so that the
     // DeviceManager sends the events to the appropriate devices.
@@ -252,21 +261,21 @@ class KMID_EXPORT DeviceManager
      * @see closeDev()
      * @see initDev()
      */
-    void openDev        (void);
+    void openDev(void);
 
     /**
      * Closes the devices, and /dev/sequencer.
      *
      * @see openDev()
      */
-    void closeDev       (void);
+    void closeDev(void);
 
     /**
      * Calls MidiOut::initDev() in turn in each of the available devices.
      *
      * @see MidiOut::initDev()
      */
-    void initDev        (void);
+    void initDev(void);
 
     /**
      * Sends a Note On MIDI event.
@@ -277,7 +286,7 @@ class KMID_EXPORT DeviceManager
      *
      * @see noteOff()
      */
-    void noteOn         ( uchar chn, uchar note, uchar vel );
+    void noteOn(uchar chn, uchar note, uchar vel);
 
     /**
      * Sends a Note Off MIDI event. This is equivalent to send a Note On event
@@ -289,7 +298,7 @@ class KMID_EXPORT DeviceManager
      *
      * @see noteOn()
      */
-    void noteOff        ( uchar chn, uchar note, uchar vel );
+    void noteOff(uchar chn, uchar note, uchar vel);
 
     /**
      * Sends a Key Pressure (or Aftertouch) MIDI event.
@@ -299,7 +308,7 @@ class KMID_EXPORT DeviceManager
      * @param note the key of the note (0 to 127).
      * @param vel the new velocity (or pressure) of the note (0 to 127).
      */
-    void keyPressure    ( uchar chn, uchar note, uchar vel );
+    void keyPressure(uchar chn, uchar note, uchar vel);
 
     /**
      * Changes the patch (instrument) on a MIDI channel.
@@ -309,7 +318,7 @@ class KMID_EXPORT DeviceManager
      * @param chn the MIDI channel (0 to 15) .
      * @param patch the General Midi patch (0 to 127) to use on the channel chn.
      */
-    void chnPatchChange ( uchar chn, uchar patch );
+    void chnPatchChange(uchar chn, uchar patch);
 
     /**
      * Changes the Pressure (Aftertouch) on a MIDI channel. Keep in mind that
@@ -318,7 +327,7 @@ class KMID_EXPORT DeviceManager
      * @param chn the MIDI channel (0 to 15) to change.
      * @param vel the velocity (0 to 127) to use on the channel chn.
      */
-    void chnPressure    ( uchar chn, uchar vel );
+    void chnPressure(uchar chn, uchar vel);
 
     /**
      * Changes the Pitch Bender value on a MIDI channel. This bends the tone of
@@ -330,7 +339,7 @@ class KMID_EXPORT DeviceManager
      * value means not to bend.
      * @param msb the most significant byte
      */
-    void chnPitchBender ( uchar chn, uchar lsb,  uchar msb );
+    void chnPitchBender(uchar chn, uchar lsb, uchar msb);
 
     /**
      * Sends a Controller event to a MIDI channel. This can be used for example
@@ -345,7 +354,7 @@ class KMID_EXPORT DeviceManager
      * @param ctl the controller (0 to 15) to send.
      * @param v the value (data) of the controller.
      */
-    void chnController  ( uchar chn, uchar ctl , uchar v );
+    void chnController(uchar chn, uchar ctl, uchar v);
 
     /**
      * Sends a SYStem EXclusive message to the default MIDI device (usually,
@@ -359,20 +368,20 @@ class KMID_EXPORT DeviceManager
      *
      * @see setDefaultDevice()
      */
-    void sysEx          ( uchar *data,ulong size);
+    void sysEx(uchar *data, ulong size);
 
     /**
      * Sets the number of milliseconds at which the next event will be sent.
      * This way, you can schedule notes and events to send to the MIDI device.
      * @see tmrStart()
      */
-    void wait (double ms);
+    void wait(double ms);
 
     /**
      * Sets the tempo which will be used to convert between ticks and
      * milliseconds.
      */
-     void tmrSetTempo(int v);
+    void tmrSetTempo(int v);
 
     /**
      * Starts the timer. You must call tmrStart before using wait()
@@ -406,7 +415,7 @@ class KMID_EXPORT DeviceManager
      * inmediately. The "force" method is, of course, not recommended, except
      * in rare situations.
      */
-    void sync(bool f=0);
+    void sync(bool f = 0);
 
     /**
      * Changes the "master" volume of the played events by altering next volume
@@ -490,7 +499,10 @@ class KMID_EXPORT DeviceManager
     /**
      * Returns the SNDCTL_SEQ_CTRLRATE ioctl value
      */
-    int rate(void) { return m_rate; }
+    int rate(void)
+    {
+        return m_rate;
+    }
 
     /**
      * Returns the number of MIDI ports available on the system. It's common that
@@ -501,7 +513,10 @@ class KMID_EXPORT DeviceManager
      * @see synthDevices()
      * @see setDefaultDevice()
      */
-    int midiPorts(void) { return n_midi; }
+    int midiPorts(void)
+    {
+        return n_midi;
+    }
 
     /**
      * Returns the number of internal synthesizers available on the system. Some
@@ -512,7 +527,10 @@ class KMID_EXPORT DeviceManager
      * @see setDefaultDevice()
      * @see setPatchesToUse()
      */
-    int synthDevices(void) { return n_synths; }
+    int synthDevices(void)
+    {
+        return n_synths;
+    }
 
     /**
      * Returns the name of the @p i-th device . In case the DeviceManager wasn't
@@ -529,7 +547,7 @@ class KMID_EXPORT DeviceManager
      */
     const char *type(int i);
 
-  private:
+private:
     class DeviceManagerPrivate;
     DeviceManagerPrivate *d;
 };

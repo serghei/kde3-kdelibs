@@ -39,16 +39,16 @@ DOMStringImpl::DOMStringImpl(const char *str)
     if(str && *str)
     {
         l = strlen(str);
-        s = QT_ALLOC_QCHAR_VEC( l );
+        s = QT_ALLOC_QCHAR_VEC(l);
         int i = l;
-        QChar* ptr = s;
-        while( i-- )
+        QChar *ptr = s;
+        while(i--)
             *ptr++ = *str++;
     }
     else
     {
-        s = QT_ALLOC_QCHAR_VEC( 1 );  // crash protection
-        s[0] = 0x0; // == QChar::null;
+        s = QT_ALLOC_QCHAR_VEC(1); // crash protection
+        s[0] = 0x0;                // == QChar::null;
         l = 0;
     }
 }
@@ -56,16 +56,20 @@ DOMStringImpl::DOMStringImpl(const char *str)
 // FIXME: should be a cached flag maybe.
 bool DOMStringImpl::containsOnlyWhitespace() const
 {
-    if (!s)
+    if(!s)
         return true;
 
-    for (uint i = 0; i < l; i++) {
+    for(uint i = 0; i < l; i++)
+    {
         QChar c = s[i];
-        if (c.unicode() <= 0x7F) {
-            if (c.unicode() > ' ')
+        if(c.unicode() <= 0x7F)
+        {
+            if(c.unicode() > ' ')
                 return false;
-        } else {
-            if (c.direction() != QChar::DirWS)
+        }
+        else
+        {
+            if(c.direction() != QChar::DirWS)
                 return false;
         }
     }
@@ -77,11 +81,12 @@ void DOMStringImpl::append(DOMStringImpl *str)
 {
     if(str && str->l != 0)
     {
-        int newlen = l+str->l;
+        int newlen = l + str->l;
         QChar *c = QT_ALLOC_QCHAR_VEC(newlen);
-        memcpy(c, s, l*sizeof(QChar));
-        memcpy(c+l, str->s, str->l*sizeof(QChar));
-        if(s) QT_DELETE_QCHAR_VEC(s);
+        memcpy(c, s, l * sizeof(QChar));
+        memcpy(c + l, str->s, str->l * sizeof(QChar));
+        if(s)
+            QT_DELETE_QCHAR_VEC(s);
         s = c;
         l = newlen;
     }
@@ -96,12 +101,13 @@ void DOMStringImpl::insert(DOMStringImpl *str, unsigned int pos)
     }
     if(str && str->l != 0)
     {
-        int newlen = l+str->l;
+        int newlen = l + str->l;
         QChar *c = QT_ALLOC_QCHAR_VEC(newlen);
-        memcpy(c, s, pos*sizeof(QChar));
-        memcpy(c+pos, str->s, str->l*sizeof(QChar));
-        memcpy(c+pos+str->l, s+pos, (l-pos)*sizeof(QChar));
-        if(s) QT_DELETE_QCHAR_VEC(s);
+        memcpy(c, s, pos * sizeof(QChar));
+        memcpy(c + pos, str->s, str->l * sizeof(QChar));
+        memcpy(c + pos + str->l, s + pos, (l - pos) * sizeof(QChar));
+        if(s)
+            QT_DELETE_QCHAR_VEC(s);
         s = c;
         l = newlen;
     }
@@ -109,54 +115,61 @@ void DOMStringImpl::insert(DOMStringImpl *str, unsigned int pos)
 
 void DOMStringImpl::truncate(int len)
 {
-    if(len > (int)l) return;
+    if(len > (int)l)
+        return;
 
     int nl = len < 1 ? 1 : len;
     QChar *c = QT_ALLOC_QCHAR_VEC(nl);
-    memcpy(c, s, nl*sizeof(QChar));
-    if(s) QT_DELETE_QCHAR_VEC(s);
+    memcpy(c, s, nl * sizeof(QChar));
+    if(s)
+        QT_DELETE_QCHAR_VEC(s);
     s = c;
     l = len;
 }
 
 void DOMStringImpl::remove(unsigned int pos, int len)
 {
-  if(pos >= l ) return;
-  if(pos+len > l)
-    len = l - pos;
+    if(pos >= l)
+        return;
+    if(pos + len > l)
+        len = l - pos;
 
-  uint newLen = l-len;
-  QChar *c = QT_ALLOC_QCHAR_VEC(newLen);
-  memcpy(c, s, pos*sizeof(QChar));
-  memcpy(c+pos, s+pos+len, (l-len-pos)*sizeof(QChar));
-  if(s) QT_DELETE_QCHAR_VEC(s);
-  s = c;
-  l = newLen;
+    uint newLen = l - len;
+    QChar *c = QT_ALLOC_QCHAR_VEC(newLen);
+    memcpy(c, s, pos * sizeof(QChar));
+    memcpy(c + pos, s + pos + len, (l - len - pos) * sizeof(QChar));
+    if(s)
+        QT_DELETE_QCHAR_VEC(s);
+    s = c;
+    l = newLen;
 }
 
 DOMStringImpl *DOMStringImpl::split(unsigned int pos)
 {
-  if( pos >=l ) return new DOMStringImpl();
+    if(pos >= l)
+        return new DOMStringImpl();
 
-  uint newLen = l-pos;
-  DOMStringImpl *str = new DOMStringImpl(s + pos, newLen);
-  truncate(pos);
-  return str;
+    uint newLen = l - pos;
+    DOMStringImpl *str = new DOMStringImpl(s + pos, newLen);
+    truncate(pos);
+    return str;
 }
 
 DOMStringImpl *DOMStringImpl::substring(unsigned int pos, unsigned int len)
 {
-  if( pos >=l ) return new DOMStringImpl();
-  if(pos+len > l)
-    len = l - pos;
+    if(pos >= l)
+        return new DOMStringImpl();
+    if(pos + len > l)
+        len = l - pos;
 
-  return new DOMStringImpl(s + pos, len);
+    return new DOMStringImpl(s + pos, len);
 }
 
 // Collapses white-space according to CSS 2.1 rules
 DOMStringImpl *DOMStringImpl::collapseWhiteSpace(bool preserveLF, bool preserveWS)
 {
-    if (preserveLF && preserveWS) return this;
+    if(preserveLF && preserveWS)
+        return this;
 
     // Notice we are likely allocating more space than needed (worst case)
     QChar *n = QT_ALLOC_QCHAR_VEC(l);
@@ -165,16 +178,20 @@ DOMStringImpl *DOMStringImpl::collapseWhiteSpace(bool preserveLF, bool preserveW
     bool collapsing = false;   // collapsing white-space
     bool collapsingLF = false; // collapsing around linefeed
     bool changedLF = false;
-    for(unsigned int i=0; i<l; i++) {
+    for(unsigned int i = 0; i < l; i++)
+    {
         QChar ch = s[i];
 
         // We act on \r as we would on \n because CSS uses it to indicate new-line
-        if (ch == '\r') ch = '\n';
+        if(ch == '\r')
+            ch = '\n';
         else
-        // ### The XML parser lets \t through, for now treat them as spaces
-        if (ch == '\t') ch = ' ';
+            // ### The XML parser lets \t through, for now treat them as spaces
+            if(ch == '\t')
+            ch = ' ';
 
-        if (!preserveLF && ch == '\n') {
+        if(!preserveLF && ch == '\n')
+        {
             // ### Not strictly correct according to CSS3 text-module.
             // - In ideographic languages linefeed should be ignored
             // - and in Thai and Khmer it should be treated as a zero-width space
@@ -182,10 +199,12 @@ DOMStringImpl *DOMStringImpl::collapseWhiteSpace(bool preserveLF, bool preserveW
             changedLF = true;
         }
 
-        if (collapsing) {
-            if (ch == ' ')
+        if(collapsing)
+        {
+            if(ch == ' ')
                 continue;
-            if (ch == '\n') {
+            if(ch == '\n')
+            {
                 collapsingLF = true;
                 continue;
             }
@@ -194,13 +213,13 @@ DOMStringImpl *DOMStringImpl::collapseWhiteSpace(bool preserveLF, bool preserveW
             collapsing = false;
             collapsingLF = false;
         }
-        else
-        if (!preserveWS && ch == ' ') {
+        else if(!preserveWS && ch == ' ')
+        {
             collapsing = true;
             continue;
         }
-        else
-        if (!preserveWS && ch == '\n') {
+        else if(!preserveWS && ch == '\n')
+        {
             collapsing = true;
             collapsingLF = true;
             continue;
@@ -208,15 +227,17 @@ DOMStringImpl *DOMStringImpl::collapseWhiteSpace(bool preserveLF, bool preserveW
 
         n[pos++] = ch;
     }
-    if (collapsing)
+    if(collapsing)
         n[pos++] = ((collapsingLF) ? '\n' : ' ');
 
-    if (pos == l && !changedLF) {
+    if(pos == l && !changedLF)
+    {
         QT_DELETE_QCHAR_VEC(n);
         return this;
     }
-    else {
-        DOMStringImpl* out = new DOMStringImpl();
+    else
+    {
+        DOMStringImpl *out = new DOMStringImpl();
         out->s = n;
         out->l = pos;
 
@@ -226,83 +247,93 @@ DOMStringImpl *DOMStringImpl::collapseWhiteSpace(bool preserveLF, bool preserveW
 
 static Length parseLength(const QChar *s, unsigned int l)
 {
-    if (l == 0) {
+    if(l == 0)
+    {
         return Length(1, Relative);
     }
 
     unsigned i = 0;
-    while (i < l && s[i].isSpace())
+    while(i < l && s[i].isSpace())
         ++i;
-    if (i < l && (s[i] == '+' || s[i] == '-'))
+    if(i < l && (s[i] == '+' || s[i] == '-'))
         ++i;
-    while (i < l && s[i].isDigit())
+    while(i < l && s[i].isDigit())
         ++i;
 
     bool ok;
     int r = QConstString(s, i).string().toInt(&ok);
 
     /* Skip over any remaining digits, we are not that accurate (5.5% => 5%) */
-    while (i < l && (s[i].isDigit() || s[i] == '.'))
+    while(i < l && (s[i].isDigit() || s[i] == '.'))
         ++i;
 
     /* IE Quirk: Skip any whitespace (20 % => 20%) */
-    while (i < l && s[i].isSpace())
+    while(i < l && s[i].isSpace())
         ++i;
 
-    if (ok) {
-        if (i == l) {
+    if(ok)
+    {
+        if(i == l)
+        {
             return Length(r, Fixed);
-        } else {
-            const QChar* next = s+i;
+        }
+        else
+        {
+            const QChar *next = s + i;
 
-            if (*next == '%')
+            if(*next == '%')
                 return Length(r, Percent);
 
-            if (*next == '*')
+            if(*next == '*')
                 return Length(r, Relative);
         }
         return Length(r, Fixed);
-    } else {
-        if (i < l) {
-            const QChar* next = s+i;
+    }
+    else
+    {
+        if(i < l)
+        {
+            const QChar *next = s + i;
 
-            if (*next == '*')
+            if(*next == '*')
                 return Length(1, Relative);
 
-            if (*next == '%')
+            if(*next == '%')
                 return Length(1, Relative);
         }
     }
     return Length(0, Relative);
 }
 
-khtml::Length* DOMStringImpl::toCoordsArray(int& len) const
+khtml::Length *DOMStringImpl::toCoordsArray(int &len) const
 {
     QString str(s, l);
-    for(unsigned int i=0; i < l; i++) {
+    for(unsigned int i = 0; i < l; i++)
+    {
         QChar cc = s[i];
-        if (cc > '9' || (cc < '0' && cc != '-' && cc != '*' && cc != '.'))
+        if(cc > '9' || (cc < '0' && cc != '-' && cc != '*' && cc != '.'))
             str[i] = ' ';
     }
     str = str.simplifyWhiteSpace();
 
     len = str.contains(' ') + 1;
-    khtml::Length* r = new khtml::Length[len];
+    khtml::Length *r = new khtml::Length[len];
 
     int i = 0;
     int pos = 0;
     int pos2;
 
-    while((pos2 = str.find(' ', pos)) != -1) {
-        r[i++] = parseLength((QChar *) str.unicode()+pos, pos2-pos);
-        pos = pos2+1;
+    while((pos2 = str.find(' ', pos)) != -1)
+    {
+        r[i++] = parseLength((QChar *)str.unicode() + pos, pos2 - pos);
+        pos = pos2 + 1;
     }
-    r[i] = parseLength((QChar *) str.unicode()+pos, str.length()-pos);
+    r[i] = parseLength((QChar *)str.unicode() + pos, str.length() - pos);
 
     return r;
 }
 
-khtml::Length* DOMStringImpl::toLengthArray(int& len) const
+khtml::Length *DOMStringImpl::toLengthArray(int &len) const
 {
     QString str(s, l);
     str = str.simplifyWhiteSpace();
@@ -310,23 +341,24 @@ khtml::Length* DOMStringImpl::toLengthArray(int& len) const
     len = str.contains(',') + 1;
 
     // If we have no commas, we have no array.
-    if( len == 1 )
+    if(len == 1)
         return 0L;
 
-    khtml::Length* r = new khtml::Length[len];
+    khtml::Length *r = new khtml::Length[len];
 
     int i = 0;
     int pos = 0;
     int pos2;
 
-    while((pos2 = str.find(',', pos)) != -1) {
-        r[i++] = parseLength((QChar *) str.unicode()+pos, pos2-pos);
-        pos = pos2+1;
+    while((pos2 = str.find(',', pos)) != -1)
+    {
+        r[i++] = parseLength((QChar *)str.unicode() + pos, pos2 - pos);
+        pos = pos2 + 1;
     }
 
     /* IE Quirk: If the last comma is the last char skip it and reduce len by one */
-    if (str.length()-pos > 0)
-        r[i] = parseLength((QChar *) str.unicode()+pos, str.length()-pos);
+    if(str.length() - pos > 0)
+        r[i] = parseLength((QChar *)str.unicode() + pos, str.length() - pos);
     else
         len--;
 
@@ -336,22 +368,23 @@ khtml::Length* DOMStringImpl::toLengthArray(int& len) const
 bool DOMStringImpl::isLower() const
 {
     unsigned int i;
-    for (i = 0; i < l; i++)
-	if (s[i].lower() != s[i])
-	    return false;
+    for(i = 0; i < l; i++)
+        if(s[i].lower() != s[i])
+            return false;
     return true;
 }
 
 DOMStringImpl *DOMStringImpl::lower() const
 {
     DOMStringImpl *c = new DOMStringImpl;
-    if(!l) return c;
+    if(!l)
+        return c;
 
     c->s = QT_ALLOC_QCHAR_VEC(l);
     c->l = l;
 
-    for (unsigned int i = 0; i < l; i++)
-	c->s[i] = s[i].lower();
+    for(unsigned int i = 0; i < l; i++)
+        c->s[i] = s[i].lower();
 
     return c;
 }
@@ -359,38 +392,40 @@ DOMStringImpl *DOMStringImpl::lower() const
 DOMStringImpl *DOMStringImpl::upper() const
 {
     DOMStringImpl *c = new DOMStringImpl;
-    if(!l) return c;
+    if(!l)
+        return c;
 
     c->s = QT_ALLOC_QCHAR_VEC(l);
     c->l = l;
 
-    for (unsigned int i = 0; i < l; i++)
-	c->s[i] = s[i].upper();
+    for(unsigned int i = 0; i < l; i++)
+        c->s[i] = s[i].upper();
 
     return c;
 }
 
 DOMStringImpl *DOMStringImpl::capitalize(bool noFirstCap) const
 {
-    bool canCapitalize= !noFirstCap;
+    bool canCapitalize = !noFirstCap;
     DOMStringImpl *c = new DOMStringImpl;
-    if(!l) return c;
+    if(!l)
+        return c;
 
     c->s = QT_ALLOC_QCHAR_VEC(l);
     c->l = l;
 
-    for (unsigned int i=0; i<l; i++)
+    for(unsigned int i = 0; i < l; i++)
     {
-        if (s[i].isLetterOrNumber() && canCapitalize)
+        if(s[i].isLetterOrNumber() && canCapitalize)
         {
-            c->s[i]=s[i].upper();
-            canCapitalize=false;
+            c->s[i] = s[i].upper();
+            canCapitalize = false;
         }
         else
         {
-            c->s[i]=s[i];
-            if (s[i].isSpace())
-                canCapitalize=true;
+            c->s[i] = s[i];
+            if(s[i].isSpace())
+                canCapitalize = true;
         }
     }
 
@@ -402,59 +437,67 @@ QString DOMStringImpl::string() const
     return QString(s, l);
 }
 
-int DOMStringImpl::toInt(bool* ok) const
+int DOMStringImpl::toInt(bool *ok) const
 {
     // match \s*[+-]?\d*
     unsigned i = 0;
-    while (i < l && s[i].isSpace())
+    while(i < l && s[i].isSpace())
         ++i;
-    if (i < l && (s[i] == '+' || s[i] == '-'))
+    if(i < l && (s[i] == '+' || s[i] == '-'))
         ++i;
-    while (i < l && s[i].isDigit())
+    while(i < l && s[i].isDigit())
         ++i;
 
     return QConstString(s, i).string().toInt(ok);
 }
 
 static const unsigned short amp[] = {'&', 'a', 'm', 'p', ';'};
-static const unsigned short lt[] =  {'&', 'l', 't', ';'};
-static const unsigned short gt[] =  {'&', 'g', 't', ';'};
+static const unsigned short lt[] = {'&', 'l', 't', ';'};
+static const unsigned short gt[] = {'&', 'g', 't', ';'};
 
 DOMStringImpl *DOMStringImpl::escapeHTML()
 {
     unsigned outL = 0;
-    for (unsigned int i = 0; i < l; ++i ) {
-        if ( s[i] == '&' )
+    for(unsigned int i = 0; i < l; ++i)
+    {
+        if(s[i] == '&')
             outL += 5; //&amp;
-        else if (s[i] == '<' || s[i] == '>')
+        else if(s[i] == '<' || s[i] == '>')
             outL += 4; //&gt;/&lt;
         else
             ++outL;
     }
-    if (outL == l)
+    if(outL == l)
         return this;
 
-    
-    DOMStringImpl* toRet = new DOMStringImpl();
+
+    DOMStringImpl *toRet = new DOMStringImpl();
     toRet->s = QT_ALLOC_QCHAR_VEC(outL);
     toRet->l = outL;
 
     unsigned outP = 0;
-    for (unsigned int i = 0; i < l; ++i ) {
-        if ( s[i] == '&' ) {
+    for(unsigned int i = 0; i < l; ++i)
+    {
+        if(s[i] == '&')
+        {
             memcpy(&toRet->s[outP], amp, sizeof(amp));
-            outP += 5; 
-        } else if (s[i] == '<') {
+            outP += 5;
+        }
+        else if(s[i] == '<')
+        {
             memcpy(&toRet->s[outP], lt, sizeof(lt));
             outP += 4;
-        } else if (s[i] == '>') {
+        }
+        else if(s[i] == '>')
+        {
             memcpy(&toRet->s[outP], gt, sizeof(gt));
             outP += 4;
-        } else {
+        }
+        else
+        {
             toRet->s[outP] = s[i];
             ++outP;
         }
     }
     return toRet;
 }
-

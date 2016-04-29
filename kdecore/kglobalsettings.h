@@ -43,10 +43,8 @@ class KURL;
  *
  * @author David Faure <faure@kde.org>
  */
-class KDECORE_EXPORT KGlobalSettings
-{
-  public:
-
+class KDECORE_EXPORT KGlobalSettings {
+public:
     /**
      * Returns a threshold in pixels for drag & drop operations.
      * As long as the mouse movement has not exceeded this number
@@ -106,10 +104,11 @@ class KDECORE_EXPORT KGlobalSettings
      * should test for Application level before calling the appropriate function in KPopupMenu.
      * @since 3.1
      **/
-    enum TearOffHandle {
-      Disable = 0, ///< disable tear-off handles
-      ApplicationLevel, ///< enable on application level
-      Enable ///< enable tear-off handles
+    enum TearOffHandle
+    {
+        Disable = 0,      ///< disable tear-off handles
+        ApplicationLevel, ///< enable on application level
+        Enable            ///< enable tear-off handles
     };
 
     /**
@@ -152,7 +151,7 @@ class KDECORE_EXPORT KGlobalSettings
      *
      * @return the key that pops up context menus.
      */
-    static int contextMenuKey ();
+    static int contextMenuKey();
 
     /**
      * Returns the KDE setting for context menus.
@@ -160,40 +159,41 @@ class KDECORE_EXPORT KGlobalSettings
      * @return whether context menus should be shown on button press
      * or button release (click).
      */
-    static bool showContextMenusOnPress ();
+    static bool showContextMenusOnPress();
 
     /**
      * This enum describes the completion mode used for by the KCompletion class.
      * See <a href="http://developer.kde.org/documentation/standards/kde/style/keys/completion.html">
      * the styleguide</a>.
      **/
-   enum Completion {
-       /**
-        * No completion is used.
-        */
-       CompletionNone=1,
-       /**
-        * Text is automatically filled in whenever possible.
-        */
-       CompletionAuto,
-       /**
-        * Same as automatic except shortest match is used for completion.
-        */
-       CompletionMan,
-       /**
-        * Complete text much in the same way as a typical *nix shell would.
-        */
-       CompletionShell,
-       /**
-        * Lists all possible matches in a popup list-box to choose from.
-        */
-       CompletionPopup,
-       /**
-        * Lists all possible matches in a popup list-box to choose from, and automatically
-        * fill the result whenever possible.
-        */
-       CompletionPopupAuto
-   };
+    enum Completion
+    {
+        /**
+         * No completion is used.
+         */
+        CompletionNone = 1,
+        /**
+         * Text is automatically filled in whenever possible.
+         */
+        CompletionAuto,
+        /**
+         * Same as automatic except shortest match is used for completion.
+         */
+        CompletionMan,
+        /**
+         * Complete text much in the same way as a typical *nix shell would.
+         */
+        CompletionShell,
+        /**
+         * Lists all possible matches in a popup list-box to choose from.
+         */
+        CompletionPopup,
+        /**
+         * Lists all possible matches in a popup list-box to choose from, and automatically
+         * fill the result whenever possible.
+         */
+        CompletionPopupAuto
+    };
 
     /**
      * Returns the preferred completion mode setting.
@@ -207,7 +207,11 @@ class KDECORE_EXPORT KGlobalSettings
      */
     struct KMouseSettings
     {
-        enum { RightHanded = 0, LeftHanded = 1 };
+        enum
+        {
+            RightHanded = 0,
+            LeftHanded = 1
+        };
         int handed; // left or right
     };
 
@@ -216,26 +220,38 @@ class KDECORE_EXPORT KGlobalSettings
      * On Windows, settings are retrieved from the system.
      * @return the current mouse settings
      */
-    static KMouseSettings & mouseSettings();
+    static KMouseSettings &mouseSettings();
 
     /**
      * The path to the desktop directory of the current user.
      * @return the user's desktop directory
      */
-    static QString desktopPath() { initStatic(); return *s_desktopPath; }
+    static QString desktopPath()
+    {
+        initStatic();
+        return *s_desktopPath;
+    }
 
     /**
      * The path to the autostart directory of the current user.
      * @return the path of the autostart directory
      */
-    static QString autostartPath() { initStatic(); return *s_autostartPath; }
+    static QString autostartPath()
+    {
+        initStatic();
+        return *s_autostartPath;
+    }
 
     /**
      * DEPRECATED (starting from kde-3.4).
      * This isn't where the trash contents is, anymore.
      * Use KIO::trash() to trash files, "trash:/" to list the trash contents.
      */
-    static QString trashPath() { initStatic(); return *s_trashPath; }
+    static QString trashPath()
+    {
+        initStatic();
+        return *s_trashPath;
+    }
     // KDE4: if you want to remove the above, move it to kdesktop/init.cc, which needs
     // to know the old location of the trash
 
@@ -243,7 +259,11 @@ class KDECORE_EXPORT KGlobalSettings
      * The path where documents are stored of the current user.
      * @return the path of the document directory
      */
-    static QString documentPath() { initStatic(); return *s_documentPath; }
+    static QString documentPath()
+    {
+        initStatic();
+        return *s_documentPath;
+    }
 
 
     /**
@@ -354,7 +374,7 @@ class KDECORE_EXPORT KGlobalSettings
      * @return the calculated color
      * @see alternateBackgroundColor
      */
-    static QColor calculateAlternateBackgroundColor(const QColor& base);
+    static QColor calculateAlternateBackgroundColor(const QColor &base);
 
     /**
       * Returns if the sorted column in a KListView shall be drawn with a
@@ -459,7 +479,7 @@ class KDECORE_EXPORT KGlobalSettings
      *         start at (0,0).
      * @since 3.2
      */
-    static QRect desktopGeometry(const QPoint& point);
+    static QRect desktopGeometry(const QPoint &point);
 
     /**
      * This function returns the desktop geometry for an application that needs
@@ -474,7 +494,7 @@ class KDECORE_EXPORT KGlobalSettings
      *         start at (0,0).
      * @since 3.2
      */
-    static QRect desktopGeometry(QWidget* w);
+    static QRect desktopGeometry(QWidget *w);
 
     /**
      * This function determines if the user wishes to see icons on the
@@ -499,7 +519,7 @@ class KDECORE_EXPORT KGlobalSettings
     /**
      * Whether the user wishes to use opaque resizing. Primarily
      * intended for QSplitter::setOpaqueResize()
-     * 
+     *
      * @return Returns true if user wants to use opaque resizing.
      *
      * @since 3.2
@@ -508,7 +528,7 @@ class KDECORE_EXPORT KGlobalSettings
 
     /**
      * The layout scheme to use for dialog buttons
-     * 
+     *
      * @return Returns the number of the scheme to use.
      * @see KDialogBase::setButtonStyle()
      * @since 3.3
@@ -538,10 +558,10 @@ private:
     static void rereadMouseSettings();
 
 
-    static QString* s_desktopPath;
-    static QString* s_autostartPath;
-    static QString* s_trashPath;
-    static QString* s_documentPath;
+    static QString *s_desktopPath;
+    static QString *s_autostartPath;
+    static QString *s_trashPath;
+    static QString *s_documentPath;
     static QFont *_generalFont;
     static QFont *_fixedFont;
     static QFont *_toolBarFont;
@@ -549,15 +569,15 @@ private:
     static QFont *_windowTitleFont;
     static QFont *_taskbarFont;
     static QFont *_largeFont;
-    static QColor * _kde34Blue;
-    static QColor * _inactiveBackground;
-    static QColor * _inactiveForeground;
-    static QColor * _activeBackground;
-    static QColor * _buttonBackground;
-    static QColor * _selectBackground;
-    static QColor * _linkColor;
-    static QColor * _visitedLinkColor;
-    static QColor * alternateColor;
+    static QColor *_kde34Blue;
+    static QColor *_inactiveBackground;
+    static QColor *_inactiveForeground;
+    static QColor *_activeBackground;
+    static QColor *_buttonBackground;
+    static QColor *_selectBackground;
+    static QColor *_linkColor;
+    static QColor *_visitedLinkColor;
+    static QColor *alternateColor;
     static KMouseSettings *s_mouseSettings;
 
     friend class KApplication;

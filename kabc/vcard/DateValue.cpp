@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -31,404 +31,368 @@
 
 using namespace VCARD;
 
-DateValue::DateValue()
-	:	Value()
+DateValue::DateValue() : Value()
 {
-	vDebug("DateValue::DateValue()");
+    vDebug("DateValue::DateValue()");
 }
 
-DateValue::DateValue(
-		unsigned int	year,
-		unsigned int	month,
-		unsigned int	day,
-		unsigned int	hour,
-		unsigned int	minute,
-		unsigned int	second,
-		double		secFrac,
-		bool		zonePositive,
-		unsigned int	zoneHour,
-		unsigned int	zoneMinute)
-	:	Value			(),
-		year_			(year),
-		month_			(month),
-		day_			(day),
-		hour_			(hour),
-		minute_			(minute),
-		second_			(second),
-		zoneHour_		(zoneHour),
-		zoneMinute_		(zoneMinute),
-		secFrac_		(secFrac),
-		zonePositive_	(zonePositive),
-		hasTime_(true)
+DateValue::DateValue(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, unsigned int second,
+                     double secFrac, bool zonePositive, unsigned int zoneHour, unsigned int zoneMinute)
+    : Value()
+    , year_(year)
+    , month_(month)
+    , day_(day)
+    , hour_(hour)
+    , minute_(minute)
+    , second_(second)
+    , zoneHour_(zoneHour)
+    , zoneMinute_(zoneMinute)
+    , secFrac_(secFrac)
+    , zonePositive_(zonePositive)
+    , hasTime_(true)
 {
-	parsed_ = true;
-	assembled_ = false;
+    parsed_ = true;
+    assembled_ = false;
 }
 
-DateValue::DateValue(const QDate & d)
-	:	Value		(),
-		year_		(d.year()),
-		month_		(d.month()),
-		day_		(d.day()),
-		hasTime_(false)
+DateValue::DateValue(const QDate &d) : Value(), year_(d.year()), month_(d.month()), day_(d.day()), hasTime_(false)
 {
-	parsed_ = true;
-	assembled_ = false;
+    parsed_ = true;
+    assembled_ = false;
 }
 
-DateValue::DateValue(const QDateTime & d)
-	:	Value		(),
-		year_		(d.date().year()),
-		month_		(d.date().month()),
-		day_		(d.date().day()),
-		hour_		(d.time().hour()),
-		minute_		(d.time().minute()),
-		second_		(d.time().second()),
-		hasTime_(true)
+DateValue::DateValue(const QDateTime &d)
+    : Value()
+    , year_(d.date().year())
+    , month_(d.date().month())
+    , day_(d.date().day())
+    , hour_(d.time().hour())
+    , minute_(d.time().minute())
+    , second_(d.time().second())
+    , hasTime_(true)
 {
-	parsed_ = true;
-	assembled_ = false;
+    parsed_ = true;
+    assembled_ = false;
 }
 
-DateValue::DateValue(const DateValue & x)
-	:	Value(x)
+DateValue::DateValue(const DateValue &x) : Value(x)
 {
-	year_ = x.year_;
-	month_ = x.month_;
-	day_ = x.day_;
-	hour_ = x.hour_;
-	minute_ = x.minute_;
-	second_ = x.second_;
-	zoneHour_ = x.zoneHour_;
-	zoneMinute_ = x.zoneMinute_;
-	secFrac_ = x.secFrac_;
-	hasTime_ = x.hasTime_;
+    year_ = x.year_;
+    month_ = x.month_;
+    day_ = x.day_;
+    hour_ = x.hour_;
+    minute_ = x.minute_;
+    second_ = x.second_;
+    zoneHour_ = x.zoneHour_;
+    zoneMinute_ = x.zoneMinute_;
+    secFrac_ = x.secFrac_;
+    hasTime_ = x.hasTime_;
 }
 
-DateValue::DateValue(const QCString & s)
-	:	Value(s)
+DateValue::DateValue(const QCString &s) : Value(s)
 {
 }
 
-	DateValue &
-DateValue::operator = (DateValue & x)
+DateValue &DateValue::operator=(DateValue &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Value::operator = (x);
-	return *this;
+    Value::operator=(x);
+    return *this;
 }
 
-	DateValue &
-DateValue::operator = (const QCString & s)
+DateValue &DateValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-DateValue::operator == (DateValue & x)
+bool DateValue::operator==(DateValue &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 DateValue::~DateValue()
 {
 }
 
-	DateValue *
-DateValue::clone()
+DateValue *DateValue::clone()
 {
-	return new DateValue( *this );
+    return new DateValue(*this);
 }
 
-	void
-DateValue::_parse()
+void DateValue::_parse()
 {
-	vDebug("DateValue::_parse()");
+    vDebug("DateValue::_parse()");
 
-	// date = date-full-year ["-"] date-month ["-"] date-mday
-	// time = time-hour [":"] time-minute [":"] time-second [":"]
-	// [time-secfrac] [time-zone]
-	
-	int timeSep = strRep_.find('T');
-	
-	QCString dateStr;
-	QCString timeStr;
-	
-	if (timeSep == -1) {
-		
-		dateStr = strRep_;
-		vDebug("Has date string \"" + dateStr + "\"");
-		
-	} else {
-		
-		dateStr = strRep_.left(timeSep);
-		vDebug("Has date string \"" + dateStr + "\"");
-		
-		timeStr = strRep_.mid(timeSep + 1);
-		vDebug("Has time string \"" + timeStr + "\"");
-	}
-	
-	/////////////////////////////////////////////////////////////// DATE
-	
-	dateStr.replace(QRegExp("-"), "");
+    // date = date-full-year ["-"] date-month ["-"] date-mday
+    // time = time-hour [":"] time-minute [":"] time-second [":"]
+    // [time-secfrac] [time-zone]
 
-	kdDebug(5710) << "dateStr: " << dateStr << endl;
+    int timeSep = strRep_.find('T');
 
-	year_	= dateStr.left(4).toInt();
-	month_	= dateStr.mid(4, 2).toInt();
-	day_	= dateStr.right(2).toInt();
-	
-	if (timeSep == -1) {
-		hasTime_ = false;
-		return; // No time, done.
-	}
-	else
-		hasTime_ = true;
-	
-	/////////////////////////////////////////////////////////////// TIME
+    QCString dateStr;
+    QCString timeStr;
 
-	/////////////////////////////////////////////////////////////// ZONE
-	
-	int zoneSep = timeStr.find('Z');
-	
-	if (zoneSep != -1 && timeStr.length() - zoneSep > 3) {
-		
-		QCString zoneStr(timeStr.mid(zoneSep + 1));
-		vDebug("zoneStr == " + zoneStr);
+    if(timeSep == -1)
+    {
 
-		zonePositive_	= (zoneStr[0] == '+');
-		zoneHour_		= zoneStr.mid(1, 2).toInt();
-		zoneMinute_		= zoneStr.right(2).toInt();
-		
-		timeStr.remove(zoneSep, timeStr.length() - zoneSep);
-	}
+        dateStr = strRep_;
+        vDebug("Has date string \"" + dateStr + "\"");
+    }
+    else
+    {
 
-	//////////////////////////////////////////////////// SECOND FRACTION
-	
-	int secFracSep = timeStr.findRev(',');
-	
-	if (secFracSep != -1 && zoneSep != -1) { // zoneSep checked to avoid errors.
-		QCString quirkafleeg = "0." + timeStr.mid(secFracSep + 1, zoneSep);
-		secFrac_ = quirkafleeg.toDouble();
-	}
-	
-	/////////////////////////////////////////////////////////////// HMS
+        dateStr = strRep_.left(timeSep);
+        vDebug("Has date string \"" + dateStr + "\"");
 
-	timeStr.replace(QRegExp(":"), "");
-	
-	hour_	= timeStr.left(2).toInt();
-	minute_	= timeStr.mid(2, 2).toInt();
-	second_	= timeStr.mid(4, 2).toInt();
+        timeStr = strRep_.mid(timeSep + 1);
+        vDebug("Has time string \"" + timeStr + "\"");
+    }
+
+    /////////////////////////////////////////////////////////////// DATE
+
+    dateStr.replace(QRegExp("-"), "");
+
+    kdDebug(5710) << "dateStr: " << dateStr << endl;
+
+    year_ = dateStr.left(4).toInt();
+    month_ = dateStr.mid(4, 2).toInt();
+    day_ = dateStr.right(2).toInt();
+
+    if(timeSep == -1)
+    {
+        hasTime_ = false;
+        return; // No time, done.
+    }
+    else
+        hasTime_ = true;
+
+    /////////////////////////////////////////////////////////////// TIME
+
+    /////////////////////////////////////////////////////////////// ZONE
+
+    int zoneSep = timeStr.find('Z');
+
+    if(zoneSep != -1 && timeStr.length() - zoneSep > 3)
+    {
+
+        QCString zoneStr(timeStr.mid(zoneSep + 1));
+        vDebug("zoneStr == " + zoneStr);
+
+        zonePositive_ = (zoneStr[0] == '+');
+        zoneHour_ = zoneStr.mid(1, 2).toInt();
+        zoneMinute_ = zoneStr.right(2).toInt();
+
+        timeStr.remove(zoneSep, timeStr.length() - zoneSep);
+    }
+
+    //////////////////////////////////////////////////// SECOND FRACTION
+
+    int secFracSep = timeStr.findRev(',');
+
+    if(secFracSep != -1 && zoneSep != -1)
+    { // zoneSep checked to avoid errors.
+        QCString quirkafleeg = "0." + timeStr.mid(secFracSep + 1, zoneSep);
+        secFrac_ = quirkafleeg.toDouble();
+    }
+
+    /////////////////////////////////////////////////////////////// HMS
+
+    timeStr.replace(QRegExp(":"), "");
+
+    hour_ = timeStr.left(2).toInt();
+    minute_ = timeStr.mid(2, 2).toInt();
+    second_ = timeStr.mid(4, 2).toInt();
 }
 
-	void
-DateValue::_assemble()
+void DateValue::_assemble()
 {
-	vDebug("DateValue::_assemble");
+    vDebug("DateValue::_assemble");
 
-	QCString year;
-	QCString month;
-	QCString day;
-	
-	year.setNum( year_ );
-	month.setNum( month_ );
-	day.setNum( day_ );
+    QCString year;
+    QCString month;
+    QCString day;
 
-	if ( month.length() < 2 ) month.prepend( "0" );
-	if ( day.length() < 2 ) day.prepend( "0" );
+    year.setNum(year_);
+    month.setNum(month_);
+    day.setNum(day_);
 
-	strRep_ = year + '-' + month + '-' + day;
+    if(month.length() < 2)
+        month.prepend("0");
+    if(day.length() < 2)
+        day.prepend("0");
 
-	if ( hasTime_ ) {
-	    QCString hour;
-	    QCString minute;
-	    QCString second;
+    strRep_ = year + '-' + month + '-' + day;
 
-	    hour.setNum( hour_ );
-	    minute.setNum( minute_ );
-	    second.setNum( second_ );
+    if(hasTime_)
+    {
+        QCString hour;
+        QCString minute;
+        QCString second;
 
-	    if ( hour.length() < 2 ) hour.prepend( "0" );
-	    if ( minute.length() < 2 ) minute.prepend( "0" );
-	    if ( second.length() < 2 ) second.prepend( "0" );
+        hour.setNum(hour_);
+        minute.setNum(minute_);
+        second.setNum(second_);
 
-	    strRep_ += 'T' + hour + ':' + minute + ':' + second + 'Z';
-	}
+        if(hour.length() < 2)
+            hour.prepend("0");
+        if(minute.length() < 2)
+            minute.prepend("0");
+        if(second.length() < 2)
+            second.prepend("0");
+
+        strRep_ += 'T' + hour + ':' + minute + ':' + second + 'Z';
+    }
 }
 
-	unsigned int
-DateValue::year()
+unsigned int DateValue::year()
 {
-	parse();
-	return year_;
+    parse();
+    return year_;
 }
 
-	unsigned int
-DateValue::month()
+unsigned int DateValue::month()
 {
-	parse();
-	return month_;
+    parse();
+    return month_;
 }
 
-	unsigned int
-DateValue::day()
+unsigned int DateValue::day()
 {
-	parse();
-	return day_;
+    parse();
+    return day_;
 }
-	unsigned int
-DateValue::hour()
+unsigned int DateValue::hour()
 {
-	parse();
-	return hour_;
+    parse();
+    return hour_;
 }
 
-	unsigned int
-DateValue::minute()
+unsigned int DateValue::minute()
 {
-	parse();
-	return minute_;
+    parse();
+    return minute_;
 }
 
-	unsigned int
-DateValue::second()
+unsigned int DateValue::second()
 {
-	parse();
-	return second_;
+    parse();
+    return second_;
 }
 
-	double
-DateValue::secondFraction()
+double DateValue::secondFraction()
 {
-	parse();
-	return secFrac_;
+    parse();
+    return secFrac_;
 }
 
-	bool
-DateValue::zonePositive()
+bool DateValue::zonePositive()
 {
-	parse();
-	return zonePositive_;
+    parse();
+    return zonePositive_;
 }
 
-	unsigned int
-DateValue::zoneHour()
+unsigned int DateValue::zoneHour()
 {
-	parse();
-	return zoneHour_;
+    parse();
+    return zoneHour_;
 }
 
-	unsigned int
-DateValue::zoneMinute()
+unsigned int DateValue::zoneMinute()
 {
-	parse();
-	return zoneMinute_;
-}
-	
-	void
-DateValue::setYear(unsigned int i)
-{
-	year_ = i;
-	assembled_ = false;
+    parse();
+    return zoneMinute_;
 }
 
-	void
-DateValue::setMonth(unsigned int i)
+void DateValue::setYear(unsigned int i)
 {
-	month_ = i;
-	assembled_ = false;
+    year_ = i;
+    assembled_ = false;
 }
 
-	void
-DateValue::setDay(unsigned int i)
+void DateValue::setMonth(unsigned int i)
 {
-	day_ = i;
-	assembled_ = false;
+    month_ = i;
+    assembled_ = false;
 }
 
-	void
-DateValue::setHour(unsigned int i)
+void DateValue::setDay(unsigned int i)
 {
-	hour_ = i;
-	assembled_ = false;
+    day_ = i;
+    assembled_ = false;
 }
 
-	void
-DateValue::setMinute(unsigned int i)
+void DateValue::setHour(unsigned int i)
 {
-	minute_ = i;
-	assembled_ = false;
+    hour_ = i;
+    assembled_ = false;
 }
 
-	void
-DateValue::setSecond(unsigned int i)
+void DateValue::setMinute(unsigned int i)
 {
-	second_ = i;
-	assembled_ = false;
+    minute_ = i;
+    assembled_ = false;
 }
 
-	void
-DateValue::setSecondFraction(double d)
+void DateValue::setSecond(unsigned int i)
 {
-	secFrac_ = d;
-	assembled_ = false;
+    second_ = i;
+    assembled_ = false;
 }
 
-	void
-DateValue::setZonePositive(bool b)
+void DateValue::setSecondFraction(double d)
 {
-	zonePositive_ = b;
-	assembled_ = false;
-}	
-
-	void
-DateValue::setZoneHour(unsigned int i)
-{
-	zoneHour_ = i;
-	assembled_ = false;
+    secFrac_ = d;
+    assembled_ = false;
 }
 
-	void
-DateValue::setZoneMinute(unsigned int i)
+void DateValue::setZonePositive(bool b)
 {
-	zoneMinute_ = i;
-	assembled_ = false;
+    zonePositive_ = b;
+    assembled_ = false;
 }
 
-	QDate
-DateValue::qdate()
+void DateValue::setZoneHour(unsigned int i)
 {
-	parse();
-	QDate d(year_, month_, day_);
-	return d;
+    zoneHour_ = i;
+    assembled_ = false;
 }
 
-	QTime
-DateValue::qtime()
+void DateValue::setZoneMinute(unsigned int i)
 {
-	parse();
-	QTime t(hour_, minute_, second_);
-//	t.setMs(1 / secFrac_);
-	return t;
+    zoneMinute_ = i;
+    assembled_ = false;
 }
 
-	QDateTime
-DateValue::qdt()
+QDate DateValue::qdate()
 {
-	parse();
-	QDateTime dt;
-	dt.setDate(qdate());
-	dt.setTime(qtime());
-	return dt;
+    parse();
+    QDate d(year_, month_, day_);
+    return d;
 }
 
-	bool
-DateValue::hasTime()
+QTime DateValue::qtime()
 {
-	parse();
-	return hasTime_;
+    parse();
+    QTime t(hour_, minute_, second_);
+    //	t.setMs(1 / secFrac_);
+    return t;
 }
 
+QDateTime DateValue::qdt()
+{
+    parse();
+    QDateTime dt;
+    dt.setDate(qdate());
+    dt.setTime(qtime());
+    return dt;
+}
+
+bool DateValue::hasTime()
+{
+    parse();
+    return hasTime_;
+}

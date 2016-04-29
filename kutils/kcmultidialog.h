@@ -40,8 +40,7 @@ class KCModuleInfo;
  * @author Matthias Elter <elter@kde.org>, Daniel Molkentin <molkentin@kde.org>
  * @since 3.2
  */
-class KUTILS_EXPORT KCMultiDialog : public KDialogBase
-{
+class KUTILS_EXPORT KCMultiDialog : public KDialogBase {
     Q_OBJECT
 
 public:
@@ -52,7 +51,7 @@ public:
      * @param name The widget name
      * @param modal If you pass true here, the dialog will be modal
      **/
-    KCMultiDialog( QWidget *parent=0, const char *name=0, bool modal=false );
+    KCMultiDialog(QWidget *parent = 0, const char *name = 0, bool modal = false);
 
     /**
      * Construct a personalized KCMultiDialog.
@@ -67,48 +66,45 @@ public:
      *        program interface (example: other dialogs) is accessible while
      *        the dialog is open.
      */
-    KCMultiDialog( int dialogFace, const QString & caption, QWidget * parent = 0, 
-            const char * name = 0, bool modal = false );
+    KCMultiDialog(int dialogFace, const QString &caption, QWidget *parent = 0, const char *name = 0, bool modal = false);
 
 
-   /**
-     * Constructor for the predefined layout mode where you specify the
-     * kind of layout (face) and also add buttons. Note that the User1 button
-     * of KDialogBase is already used to provide a "Reset" button so only
-     * two more buttons are available to users of KCMultiDialog. When clicked 
-     * they trigger slotUser2() and slotUser3(). 
-     *
-     * @note If any root modules are added to the dialog when this constructor is 
-     * used, it will not be able to run them with root privileges. Since that will 
-     * render them useless, it is a good idea to use another constructor. In KDE 4 
-     * the argument @p user3 will be removed.
-     *
-     * @param dialogFace You can use TreeList, Tabbed, Plain, Swallow or
-     *        IconList.
-     * @param user2 User button2 text item.
-     * @param user3 User button3 text item.
-     * @param buttonMask Specifies which buttons will be visible. If zero
-     *        (0) no extra buttons will be added. You can only use the User2 and
-     *        User3 buttons. The User1 button is already used internally.  See
-     *        KDialogBase for more information on this.
-     * @param caption The dialog caption. Do not specify the application name
-     *        here. The class will take care of that.
-     * @param parent Parent of the dialog.
-     * @param name Dialog name (for internal use only).
-     * @param modal Controls dialog modality. If @p false, the rest of the
-     *        program interface (example: other dialogs) is accessible while
-     *        the dialog is open.
-     */
-    KCMultiDialog( int dialogFace, const KGuiItem &user2,
-            const KGuiItem &user3=KGuiItem(), int buttonMask=User2,
-            const QString &caption=i18n("Configure"), QWidget *parent=0,
-            const char *name=0, bool modal=false ) KDE_DEPRECATED;
+    /**
+      * Constructor for the predefined layout mode where you specify the
+      * kind of layout (face) and also add buttons. Note that the User1 button
+      * of KDialogBase is already used to provide a "Reset" button so only
+      * two more buttons are available to users of KCMultiDialog. When clicked
+      * they trigger slotUser2() and slotUser3().
+      *
+      * @note If any root modules are added to the dialog when this constructor is
+      * used, it will not be able to run them with root privileges. Since that will
+      * render them useless, it is a good idea to use another constructor. In KDE 4
+      * the argument @p user3 will be removed.
+      *
+      * @param dialogFace You can use TreeList, Tabbed, Plain, Swallow or
+      *        IconList.
+      * @param user2 User button2 text item.
+      * @param user3 User button3 text item.
+      * @param buttonMask Specifies which buttons will be visible. If zero
+      *        (0) no extra buttons will be added. You can only use the User2 and
+      *        User3 buttons. The User1 button is already used internally.  See
+      *        KDialogBase for more information on this.
+      * @param caption The dialog caption. Do not specify the application name
+      *        here. The class will take care of that.
+      * @param parent Parent of the dialog.
+      * @param name Dialog name (for internal use only).
+      * @param modal Controls dialog modality. If @p false, the rest of the
+      *        program interface (example: other dialogs) is accessible while
+      *        the dialog is open.
+      */
+    KCMultiDialog(int dialogFace, const KGuiItem &user2, const KGuiItem &user3 = KGuiItem(), int buttonMask = User2,
+                  const QString &caption = i18n("Configure"), QWidget *parent = 0, const char *name = 0, bool modal = false) KDE_DEPRECATED;
     // KDE4 remove the user3 argument, and instead initialize it to KStdGuiItem::adminMode.
 
     /**
      * Destructor
      **/
-   virtual ~KCMultiDialog();
+    virtual ~KCMultiDialog();
 
     /**
      * Add a module.
@@ -119,7 +115,7 @@ public:
      * @param withfallback Try harder to load the module. Might result
      *                     in the module appearing outside the dialog.
      **/
-    void addModule(const QString& module, bool withfallback=true);
+    void addModule(const QString &module, bool withfallback = true);
 
     /**
      * Add a module.
@@ -136,8 +132,7 @@ public:
      * @param withfallback Try harder to load the module. Might result
      *                     in the module appearing outside the dialog.
      **/
-    void addModule(const KCModuleInfo& moduleinfo, QStringList
-            parentmodulenames = QStringList(), bool withfallback=false);
+    void addModule(const KCModuleInfo &moduleinfo, QStringList parentmodulenames = QStringList(), bool withfallback = false);
 
     /**
      * Remove all modules from the dialog.
@@ -174,7 +169,7 @@ signals:
      * @param instanceName The name of the instance that needs to reload its
      *                     configuration.
      */
-    void configCommitted( const QCString & instanceName );
+    void configCommitted(const QCString &instanceName);
 
 protected slots:
     /**
@@ -214,7 +209,7 @@ protected slots:
      * It reads the DocPath field of the currently selected KControl
      * module's .desktop file to find the path to the documentation,
      * which it then attempts to load.
-     * 
+     *
      * You can reimplement this slot if needed.
      *
      * @note Make sure you call the original implementation.
@@ -237,7 +232,7 @@ private slots:
     void disableRModeButton();
 
     /**
-     * Called when the current module exits from root 
+     * Called when the current module exits from root
      * mode. Enables the Administrator Mode button, again.
      *
      * @since 3.4
@@ -247,7 +242,7 @@ private slots:
     /**
      *
      * Called when the dialog is hidden. It unregisters the modules,
-     * such that they don't hinder the same modules to be opened in 
+     * such that they don't hinder the same modules to be opened in
      * another application.
      *
      * @since 3.4
@@ -255,23 +250,22 @@ private slots:
     void dialogClosed();
 
 private:
-
     void init();
     void apply();
 
     struct CreatedModule
     {
-        KCModuleProxy * kcm;
+        KCModuleProxy *kcm;
         KService::Ptr service;
         /* KDE 4 Move to Private class */
     };
-    typedef QValueList<CreatedModule> ModuleList;
+    typedef QValueList< CreatedModule > ModuleList;
     ModuleList m_modules;
 
-    typedef QMap<KService::Ptr, KCModuleProxy*> OrphanMap;
+    typedef QMap< KService::Ptr, KCModuleProxy * > OrphanMap;
     OrphanMap m_orphanModules;
 
-    QPtrDict<QStringList> moduleParentComponents;
+    QPtrDict< QStringList > moduleParentComponents;
     QString _docPath;
     int dialogface;
 
@@ -279,6 +273,6 @@ private:
     KCMultiDialogPrivate *d;
 };
 
-#endif //KCMULTIDIALOG_H
+#endif // KCMULTIDIALOG_H
 
 // vim: sw=4 sts=4 et

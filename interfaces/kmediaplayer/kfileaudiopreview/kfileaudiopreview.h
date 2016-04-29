@@ -34,12 +34,11 @@ class KFileItem;
 /**
  * Audio "preview" widget for the file dialog.
  */
-class KFileAudioPreview : public KPreviewWidgetBase
-{
+class KFileAudioPreview : public KPreviewWidgetBase {
     Q_OBJECT
 
 public:
-    KFileAudioPreview(QWidget *parent = 0, const char *name = 0 );
+    KFileAudioPreview(QWidget *parent = 0, const char *name = 0);
     ~KFileAudioPreview();
 
 public slots:
@@ -50,12 +49,13 @@ private slots:
     void toggleAuto(bool);
 
 private:
-    QDict<void> m_supportedFormats;
+    QDict< void > m_supportedFormats;
     KURL m_currentURL;
     QCheckBox *m_autoPlay;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KFileAudioPreviewPrivate;
     KFileAudioPreviewPrivate *d;

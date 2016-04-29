@@ -24,55 +24,61 @@
 #include <qpaintdevice.h>
 
 // forward definition
-QImage convertImage(const QImage& image, int hue, int saturation, int brightness, int gamma);
+QImage convertImage(const QImage &image, int hue, int saturation, int brightness, int gamma);
 
-ImagePreview::ImagePreview(QWidget *parent, const char *name ) : QWidget(parent,name) {
-	brightness_ = 100;
-	hue_ = 0;
-	saturation_ = 100;
-	gamma_ = 1000;
-	bw_ = false;
+ImagePreview::ImagePreview(QWidget *parent, const char *name) : QWidget(parent, name)
+{
+    brightness_ = 100;
+    hue_ = 0;
+    saturation_ = 100;
+    gamma_ = 1000;
+    bw_ = false;
 
-	setBackgroundMode(NoBackground);
+    setBackgroundMode(NoBackground);
 }
 
-ImagePreview::~ImagePreview(){
+ImagePreview::~ImagePreview()
+{
 }
 
-void ImagePreview::setImage(const QImage& image){
-	image_ = image.convertDepth(32);
-	image_.detach();
-	resize(image_.size());
-	update();
+void ImagePreview::setImage(const QImage &image)
+{
+    image_ = image.convertDepth(32);
+    image_.detach();
+    resize(image_.size());
+    update();
 }
 
-void ImagePreview::setParameters(int brightness, int hue, int saturation, int gamma){
-	brightness_ = brightness;
-	hue_ = hue;
-	saturation_ = saturation;
-	gamma_ = gamma;
-	repaint();
+void ImagePreview::setParameters(int brightness, int hue, int saturation, int gamma)
+{
+    brightness_ = brightness;
+    hue_ = hue;
+    saturation_ = saturation;
+    gamma_ = gamma;
+    repaint();
 }
 
-void ImagePreview::paintEvent(QPaintEvent*){
-	QImage	tmpImage = convertImage(image_,hue_,(bw_ ? 0 : saturation_),brightness_,gamma_);
-	int	x = (width()-tmpImage.width())/2, y = (height()-tmpImage.height())/2;
+void ImagePreview::paintEvent(QPaintEvent *)
+{
+    QImage tmpImage = convertImage(image_, hue_, (bw_ ? 0 : saturation_), brightness_, gamma_);
+    int x = (width() - tmpImage.width()) / 2, y = (height() - tmpImage.height()) / 2;
 
-	QPixmap	buffer(width(), height());
-	buffer.fill(parentWidget(), 0, 0);
-	QPainter	p(&buffer);
-	p.drawImage(x,y,tmpImage);
-	p.end();
+    QPixmap buffer(width(), height());
+    buffer.fill(parentWidget(), 0, 0);
+    QPainter p(&buffer);
+    p.drawImage(x, y, tmpImage);
+    p.end();
 
-	bitBlt(this, QPoint(0, 0), &buffer, buffer.rect(), Qt::CopyROP);
+    bitBlt(this, QPoint(0, 0), &buffer, buffer.rect(), Qt::CopyROP);
 }
 
-void ImagePreview::setBlackAndWhite(bool on){
-	bw_ = on;
-	update();
+void ImagePreview::setBlackAndWhite(bool on)
+{
+    bw_ = on;
+    update();
 }
 
 QSize ImagePreview::minimumSizeHint() const
 {
-	return image_.size();
+    return image_.size();
 }

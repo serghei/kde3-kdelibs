@@ -286,4 +286,3 @@ DOM::DOMString getValueName(unsigned short id) KDE_NO_EXPORT;
 
 #define CSS_VAL_TOTAL 275
 #endif
-

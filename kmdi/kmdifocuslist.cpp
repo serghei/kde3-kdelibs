@@ -21,50 +21,52 @@
 #include <qobjectlist.h>
 #include <kdebug.h>
 
-KMdiFocusList::KMdiFocusList( QObject *parent ) : QObject( parent )
-{}
+KMdiFocusList::KMdiFocusList(QObject *parent) : QObject(parent)
+{
+}
 
 KMdiFocusList::~KMdiFocusList()
-{}
-
-void KMdiFocusList::addWidgetTree( QWidget* w )
 {
-	//this method should never be called twice on the same hierarchy
-	m_list.insert( w, w->focusPolicy() );
-	w->setFocusPolicy( QWidget::ClickFocus );
-	kdDebug( 760 ) << "KMdiFocusList::addWidgetTree: adding toplevel" << endl;
-	connect( w, SIGNAL( destroyed( QObject * ) ), this, SLOT( objectHasBeenDestroyed( QObject* ) ) );
-	QObjectList *l = w->queryList( "QWidget" );
-	QObjectListIt it( *l );
-	QObject *obj;
-	while ( ( obj = it.current() ) != 0 )
-	{
-		QWidget * wid = ( QWidget* ) obj;
-		m_list.insert( wid, wid->focusPolicy() );
-		wid->setFocusPolicy( QWidget::ClickFocus );
-		kdDebug( 760 ) << "KMdiFocusList::addWidgetTree: adding widget" << endl;
-		connect( wid, SIGNAL( destroyed( QObject * ) ), this, SLOT( objectHasBeenDestroyed( QObject* ) ) );
-		++it;
-	}
-	delete l;
+}
+
+void KMdiFocusList::addWidgetTree(QWidget *w)
+{
+    // this method should never be called twice on the same hierarchy
+    m_list.insert(w, w->focusPolicy());
+    w->setFocusPolicy(QWidget::ClickFocus);
+    kdDebug(760) << "KMdiFocusList::addWidgetTree: adding toplevel" << endl;
+    connect(w, SIGNAL(destroyed(QObject *)), this, SLOT(objectHasBeenDestroyed(QObject *)));
+    QObjectList *l = w->queryList("QWidget");
+    QObjectListIt it(*l);
+    QObject *obj;
+    while((obj = it.current()) != 0)
+    {
+        QWidget *wid = (QWidget *)obj;
+        m_list.insert(wid, wid->focusPolicy());
+        wid->setFocusPolicy(QWidget::ClickFocus);
+        kdDebug(760) << "KMdiFocusList::addWidgetTree: adding widget" << endl;
+        connect(wid, SIGNAL(destroyed(QObject *)), this, SLOT(objectHasBeenDestroyed(QObject *)));
+        ++it;
+    }
+    delete l;
 }
 
 void KMdiFocusList::restore()
 {
-	for ( QMap<QWidget*, QWidget::FocusPolicy>::const_iterator it = m_list.constBegin();it != m_list.constEnd();++it )
-	{
-		it.key() ->setFocusPolicy( it.data() );
-	}
-	m_list.clear();
+    for(QMap< QWidget *, QWidget::FocusPolicy >::const_iterator it = m_list.constBegin(); it != m_list.constEnd(); ++it)
+    {
+        it.key()->setFocusPolicy(it.data());
+    }
+    m_list.clear();
 }
 
 
-void KMdiFocusList::objectHasBeenDestroyed( QObject * o )
+void KMdiFocusList::objectHasBeenDestroyed(QObject *o)
 {
-	if ( !o || !o->isWidgetType() )
-		return ;
-	QWidget *w = ( QWidget* ) o;
-	m_list.remove( w );
+    if(!o || !o->isWidgetType())
+        return;
+    QWidget *w = (QWidget *)o;
+    m_list.remove(w);
 }
 
 // kate: space-indent off; tab-width 4; replace-tabs off; indent-mode csands;

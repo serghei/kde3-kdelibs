@@ -33,38 +33,37 @@
 
 KCalendarSystemFactory::KCalendarSystemFactory()
 {
-  kdDebug(5400) << "Created factory calendar" << endl;
+    kdDebug(5400) << "Created factory calendar" << endl;
 }
 
 KCalendarSystemFactory::~KCalendarSystemFactory()
 {
 }
 
-KCalendarSystem *KCalendarSystemFactory::create( const QString &calType,
-                                                 const KLocale * locale )
+KCalendarSystem *KCalendarSystemFactory::create(const QString &calType, const KLocale *locale)
 {
-  if ( calType == "hebrew" )
-    return new KCalendarSystemHebrew(locale);
-  if ( calType == "hijri" )
-    return new KCalendarSystemHijri(locale);
-  if ( calType == "gregorian" )
+    if(calType == "hebrew")
+        return new KCalendarSystemHebrew(locale);
+    if(calType == "hijri")
+        return new KCalendarSystemHijri(locale);
+    if(calType == "gregorian")
+        return new KCalendarSystemGregorian(locale);
+    if(calType == "jalali")
+        return new KCalendarSystemJalali(locale);
+
+    kdDebug(5400) << "Calendar " << calType << " not found, defaulting to gregorian" << endl;
+
+    // ### HPB: Should it really be a default here?
     return new KCalendarSystemGregorian(locale);
-  if ( calType == "jalali" )
-    return new KCalendarSystemJalali(locale);
-
-  kdDebug(5400) << "Calendar " << calType << " not found, defaulting to gregorian" << endl;
-
-  // ### HPB: Should it really be a default here?
-  return new KCalendarSystemGregorian(locale);
 }
 
 QStringList KCalendarSystemFactory::calendarSystems()
 {
-   QStringList lst;
-   lst.append("hebrew");
-   lst.append("hijri");
-   lst.append("gregorian");
-   lst.append("jalali");
+    QStringList lst;
+    lst.append("hebrew");
+    lst.append("hijri");
+    lst.append("gregorian");
+    lst.append("jalali");
 
-   return lst;
+    return lst;
 }

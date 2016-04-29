@@ -31,19 +31,29 @@ class KCompTreeNode;
 /**
  * @internal
  */
-class KDECORE_EXPORT KCompTreeNodeList
-{
+class KDECORE_EXPORT KCompTreeNodeList {
 public:
-    KCompTreeNodeList() : first(0), last(0), m_count(0) {}
-    KCompTreeNode *begin() const { return first; }
-    KCompTreeNode *end() const { return last; }
+    KCompTreeNodeList() : first(0), last(0), m_count(0)
+    {
+    }
+    KCompTreeNode *begin() const
+    {
+        return first;
+    }
+    KCompTreeNode *end() const
+    {
+        return last;
+    }
 
     KCompTreeNode *at(uint index) const;
-    void append(KCompTreeNode *item); 
-    void prepend(KCompTreeNode *item); 
+    void append(KCompTreeNode *item);
+    void prepend(KCompTreeNode *item);
     void insert(KCompTreeNode *after, KCompTreeNode *item);
     KCompTreeNode *remove(KCompTreeNode *item);
-    uint count() const { return m_count; }
+    uint count() const
+    {
+        return m_count;
+    }
 
 private:
     KCompTreeNode *first, *last;
@@ -81,86 +91,111 @@ typedef KCompTreeNodeList KCompTreeChildren;
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  * @internal
  */
-class KDECORE_EXPORT KCompTreeNode : public QChar
-{
+class KDECORE_EXPORT KCompTreeNode : public QChar {
 public:
-    KCompTreeNode() : QChar(), myWeight(0) {}
-    KCompTreeNode( const QChar& ch, uint weight = 0 )
-        : QChar( ch ),
-          myWeight( weight ) {}
+    KCompTreeNode() : QChar(), myWeight(0)
+    {
+    }
+    KCompTreeNode(const QChar &ch, uint weight = 0) : QChar(ch), myWeight(weight)
+    {
+    }
     ~KCompTreeNode();
 
-    void * operator new( size_t s ) {
-      return alloc.allocate( s );
+    void *operator new(size_t s)
+    {
+        return alloc.allocate(s);
     }
-    void operator delete( void * s ) {
-      alloc.deallocate( s );
+    void operator delete(void *s)
+    {
+        alloc.deallocate(s);
     }
 
     // Returns a child of this node matching ch, if available.
     // Otherwise, returns 0L
-    inline KCompTreeNode * find( const QChar& ch ) const {
-      KCompTreeNode * cur = myChildren.begin();
-      while (cur && (*cur != ch)) cur = cur->next;
-      return cur;
+    inline KCompTreeNode *find(const QChar &ch) const
+    {
+        KCompTreeNode *cur = myChildren.begin();
+        while(cur && (*cur != ch))
+            cur = cur->next;
+        return cur;
     }
-    KCompTreeNode *	insert( const QChar&, bool sorted );
-    void 		remove( const QString& );
+    KCompTreeNode *insert(const QChar &, bool sorted);
+    void remove(const QString &);
 
-    inline int		childrenCount() const { return myChildren.count(); }
+    inline int childrenCount() const
+    {
+        return myChildren.count();
+    }
 
     // weighting
-    inline void confirm() 	{ myWeight++; 		}
-    inline void confirm(uint w) { myWeight += w;	}
-    inline void decline() 	{ myWeight--; 		}
-    inline uint weight() const 	{ return myWeight; 	}
+    inline void confirm()
+    {
+        myWeight++;
+    }
+    inline void confirm(uint w)
+    {
+        myWeight += w;
+    }
+    inline void decline()
+    {
+        myWeight--;
+    }
+    inline uint weight() const
+    {
+        return myWeight;
+    }
 
-    inline const KCompTreeChildren * children() const {
-	return &myChildren;
+    inline const KCompTreeChildren *children() const
+    {
+        return &myChildren;
     }
-    inline const KCompTreeNode * childAt(int index) const {
-	return myChildren.at(index);
+    inline const KCompTreeNode *childAt(int index) const
+    {
+        return myChildren.at(index);
     }
-    inline const KCompTreeNode * firstChild() const {
-	return myChildren.begin();
+    inline const KCompTreeNode *firstChild() const
+    {
+        return myChildren.begin();
     }
-    inline const KCompTreeNode * lastChild()  const {
-	return myChildren.end();
+    inline const KCompTreeNode *lastChild() const
+    {
+        return myChildren.end();
     }
 
     /* We want to handle a list of KCompTreeNodes on our own, to not
        need to use QValueList<>.  And to make it even more fast we don't
        use an accessor, but just a public member.  */
     KCompTreeNode *next;
+
 private:
     uint myWeight;
-    KCompTreeNodeList	myChildren;
+    KCompTreeNodeList myChildren;
     static KZoneAllocator alloc;
 };
 
 
-
 // some more helper stuff
-typedef KSortableValueList<QString> KCompletionMatchesList;
+typedef KSortableValueList< QString > KCompletionMatchesList;
 
 /**
  * @internal
  */
-class KDECORE_EXPORT KCompletionMatchesWrapper
-{
+class KDECORE_EXPORT KCompletionMatchesWrapper {
 public:
-    KCompletionMatchesWrapper( bool sort = false )
-        : sortedList( sort ? new KCompletionMatchesList : 0L ),
-          dirty( false )
-    {}
-    ~KCompletionMatchesWrapper() {
+    KCompletionMatchesWrapper(bool sort = false) : sortedList(sort ? new KCompletionMatchesList : 0L), dirty(false)
+    {
+    }
+    ~KCompletionMatchesWrapper()
+    {
         delete sortedList;
     }
 
-    void setSorting( bool sort ) {
-        if ( sort && !sortedList )
+    void setSorting(bool sort)
+    {
+        if(sort && !sortedList)
             sortedList = new KCompletionMatchesList;
-        else if ( !sort ) {
+        else if(!sort)
+        {
             delete sortedList;
             sortedList = 0L;
         }
@@ -168,40 +203,47 @@ public:
         dirty = false;
     }
 
-    bool sorting() const {
+    bool sorting() const
+    {
         return sortedList != 0L;
     }
 
-    void append( int i, const QString& string ) {
-        if ( sortedList )
-            sortedList->insert( i, string );
+    void append(int i, const QString &string)
+    {
+        if(sortedList)
+            sortedList->insert(i, string);
         else
-            stringList.append( string );
+            stringList.append(string);
         dirty = true;
     }
 
-    void clear() {
-        if ( sortedList )
+    void clear()
+    {
+        if(sortedList)
             sortedList->clear();
         stringList.clear();
         dirty = false;
     }
 
-    uint count() const {
-        if ( sortedList )
+    uint count() const
+    {
+        if(sortedList)
             return sortedList->count();
         return stringList.count();
     }
 
-    bool isEmpty() const {
+    bool isEmpty() const
+    {
         return count() == 0;
     }
 
-    QString first() const {
+    QString first() const
+    {
         return list().first();
     }
 
-    QString last() const {
+    QString last() const
+    {
         return list().last();
     }
 

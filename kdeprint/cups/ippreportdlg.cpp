@@ -31,66 +31,67 @@
 #include <qpaintdevicemetrics.h>
 
 IppReportDlg::IppReportDlg(QWidget *parent, const char *name)
-: KDialogBase(parent, name, true, i18n("IPP Report"), Close|User1, Close, false, KGuiItem(i18n("&Print"), "fileprint"))
+    : KDialogBase(parent, name, true, i18n("IPP Report"), Close | User1, Close, false, KGuiItem(i18n("&Print"), "fileprint"))
 {
-	m_edit = new KTextEdit(this);
-	m_edit->setReadOnly(true);
-	setMainWidget(m_edit);
-	resize(540, 500);
-	setFocusProxy(m_edit);
-	setButtonGuiItem(User1, KGuiItem(i18n("&Print"),"fileprint"));
+    m_edit = new KTextEdit(this);
+    m_edit->setReadOnly(true);
+    setMainWidget(m_edit);
+    resize(540, 500);
+    setFocusProxy(m_edit);
+    setButtonGuiItem(User1, KGuiItem(i18n("&Print"), "fileprint"));
 }
 
 void IppReportDlg::slotUser1()
 {
-	KPrinter	printer;
-	printer.setFullPage(true);
-	printer.setDocName(caption());
-	if (printer.setup(this))
-	{
-		QPainter	painter(&printer);
-		QPaintDeviceMetrics	metrics(&printer);
+    KPrinter printer;
+    printer.setFullPage(true);
+    printer.setDocName(caption());
+    if(printer.setup(this))
+    {
+        QPainter painter(&printer);
+        QPaintDeviceMetrics metrics(&printer);
 
-		// report is printed using QSimpleRichText
-		QSimpleRichText	rich(m_edit->text(), font());
-		rich.setWidth(&painter, metrics.width());
-		int	margin = (int)(1.5 / 2.54 * metrics.logicalDpiY());	// 1.5 cm
-		QRect	r(margin, margin, metrics.width()-2*margin, metrics.height()-2*margin);
-		int	hh = rich.height(), page(1);
-		while (1)
-		{
-			rich.draw(&painter, margin, margin, r, colorGroup());
-			QString	s = caption() + ": " + QString::number(page);
-			QRect	br = painter.fontMetrics().boundingRect(s);
-			painter.drawText(r.right()-br.width()-5, r.top()-br.height()-4, br.width()+5, br.height()+4, Qt::AlignRight|Qt::AlignTop, s);
-			r.moveBy(0, r.height()-10);
-			painter.translate(0, -(r.height()-10));
-			if (r.top() < hh)
-			{
-				printer.newPage();
-				page++;
-			}
-			else
-				break;
-		}
-	}
+        // report is printed using QSimpleRichText
+        QSimpleRichText rich(m_edit->text(), font());
+        rich.setWidth(&painter, metrics.width());
+        int margin = (int)(1.5 / 2.54 * metrics.logicalDpiY()); // 1.5 cm
+        QRect r(margin, margin, metrics.width() - 2 * margin, metrics.height() - 2 * margin);
+        int hh = rich.height(), page(1);
+        while(1)
+        {
+            rich.draw(&painter, margin, margin, r, colorGroup());
+            QString s = caption() + ": " + QString::number(page);
+            QRect br = painter.fontMetrics().boundingRect(s);
+            painter.drawText(r.right() - br.width() - 5, r.top() - br.height() - 4, br.width() + 5, br.height() + 4, Qt::AlignRight | Qt::AlignTop,
+                             s);
+            r.moveBy(0, r.height() - 10);
+            painter.translate(0, -(r.height() - 10));
+            if(r.top() < hh)
+            {
+                printer.newPage();
+                page++;
+            }
+            else
+                break;
+        }
+    }
 }
 
-void IppReportDlg::report(IppRequest *req, int group, const QString& caption)
+void IppReportDlg::report(IppRequest *req, int group, const QString &caption)
 {
-	QString	str_report;
-	QTextStream	t(&str_report, IO_WriteOnly);
+    QString str_report;
+    QTextStream t(&str_report, IO_WriteOnly);
 
-	if (req->htmlReport(group, t))
-	{
-		IppReportDlg	dlg;
-		if (!caption.isEmpty())
-			dlg.setCaption(caption);
-		dlg.m_edit->setText(str_report);
-		dlg.exec();
-	}
-	else
-		KMessageBox::error(0, i18n("Internal error: unable to generate HTML report."));
+    if(req->htmlReport(group, t))
+    {
+        IppReportDlg dlg;
+        if(!caption.isEmpty())
+            dlg.setCaption(caption);
+        dlg.m_edit->setText(str_report);
+        dlg.exec();
+    }
+    else
+        KMessageBox::error(0, i18n("Internal error: unable to generate HTML report."));
 }
 
 #include "ippreportdlg.moc"

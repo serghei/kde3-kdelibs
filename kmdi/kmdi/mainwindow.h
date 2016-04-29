@@ -59,41 +59,39 @@ class QMenuBar;
 #include <kmdi/toolviewaccessor.h>
 
 namespace KMDIPrivate {
-  class MainWindowPrivate;
-  class GUIClient;
+class MainWindowPrivate;
+class GUIClient;
 }
 
-namespace KMDI
-{
+namespace KMDI {
 
 class DockContainer;
 class TabWidget;
 
-class KMDI_EXPORT MainWindow : public KParts::DockMainWindow
-{
-  Q_OBJECT
+class KMDI_EXPORT MainWindow : public KParts::DockMainWindow {
+    Q_OBJECT
 
-  friend class KMDI::ToolViewAccessor;
+    friend class KMDI::ToolViewAccessor;
 
-  public:
+public:
     /**
      * Constructor.
      */
-    MainWindow ( QWidget* parentWidget, const char* name = "");
+    MainWindow(QWidget *parentWidget, const char *name = "");
 
     /**
      * Destructor.
      */
-    virtual ~MainWindow ();
+    virtual ~MainWindow();
 
-  public:
+public:
     /**
      * get the central tabwidget
      * add all your content as child to this widget
      * or as multiple tabs
      * @return tabwidget in central of window
      */
-    TabWidget *tabWidget ();
+    TabWidget *tabWidget();
 
     /**
      * Using this method you have to use the setWidget method of the access object, and it is very recommendet, that you use
@@ -113,19 +111,20 @@ class KMDI_EXPORT MainWindow : public KParts::DockMainWindow
      * @param tabCaption
      * @return created toolview
      */
-    KMDI::ToolViewAccessor *addToolWindow( QWidget* pWnd, KDockWidget::DockPosition pos = KDockWidget::DockNone, QWidget* pTargetWnd = 0L, int percent = 50, const QString& tabToolTip = 0, const QString& tabCaption = 0);
+    KMDI::ToolViewAccessor *addToolWindow(QWidget *pWnd, KDockWidget::DockPosition pos = KDockWidget::DockNone, QWidget *pTargetWnd = 0L,
+                                          int percent = 50, const QString &tabToolTip = 0, const QString &tabCaption = 0);
 
     /**
      * delete the toolview belonging to the given accessor
      * @param accessor toolview to delete
      */
-    void deleteToolWindow( KMDI::ToolViewAccessor *accessor);
+    void deleteToolWindow(KMDI::ToolViewAccessor *accessor);
 
     /**
      * delete the toolview belonging to the given pWnd
      * @param pWnd toolview to be deleted
      */
-    void deleteToolWindow( QWidget* pWnd);
+    void deleteToolWindow(QWidget *pWnd);
 
     /**
      * Sets the appearance of the toolview tabs.
@@ -133,50 +132,50 @@ class KMDI_EXPORT MainWindow : public KParts::DockMainWindow
      */
     void setToolViewStyle(int flags);
 
-  public slots:
+public slots:
     void prevToolViewInDock();
     void nextToolViewInDock();
 
-  signals:
+signals:
     void collapseOverlapContainers();
 
-  protected:
-    void findToolViewsDockedToMain(QPtrList<KDockWidget>* list,KDockWidget::DockPosition dprtmw);
-    void dockToolViewsIntoContainers(QPtrList<KDockWidget>& widgetsToReparent,KDockWidget *container);
+protected:
+    void findToolViewsDockedToMain(QPtrList< KDockWidget > *list, KDockWidget::DockPosition dprtmw);
+    void dockToolViewsIntoContainers(QPtrList< KDockWidget > &widgetsToReparent, KDockWidget *container);
 
-  private:
+private:
     /**
      * setup main dock + tab widget
      */
-    void setupMainDock ();
+    void setupMainDock();
 
     /**
      * setup the sidebars for the toolviews
      * and other internals to get them working
      */
-    void setupToolViews ();
+    void setupToolViews();
 
     /**
      * setup the menuentries
      * must be done AFTER setupToolViews ()
      */
-    void setupGUIClient ();
+    void setupGUIClient();
 
-  private slots:
-    void setActiveToolDock(DockContainer*);
-    void removeFromActiveDockList(DockContainer*);
+private slots:
+    void setActiveToolDock(DockContainer *);
+    void removeFromActiveDockList(DockContainer *);
 
-  #define protected public
-  signals:
-  #undef protected
+#define protected public
+signals:
+#undef protected
     void toggleTop();
     void toggleLeft();
     void toggleRight();
     void toggleBottom();
 
-  protected:
+protected:
     KMDIPrivate::GUIClient *m_guiClient;
-    QMap <QWidget*, KMDI::ToolViewAccessor*> *m_toolViews;
+    QMap< QWidget *, KMDI::ToolViewAccessor * > *m_toolViews;
 
     KDockWidget *m_leftContainer;
     KDockWidget *m_rightContainer;
@@ -185,13 +184,12 @@ class KMDI_EXPORT MainWindow : public KParts::DockMainWindow
 
     KMDI::TabWidget *m_tabWidget;
 
-  private:
+private:
     /**
      * private d-pointer for BC
      */
     KMDIPrivate::MainWindowPrivate *d;
 };
-
 }
 
 #endif //_MainWindow_H_

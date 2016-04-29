@@ -31,104 +31,103 @@
 #include <qptrlist.h>
 #include <qvbox.h>
 
-class AutoBookmarkEnt
-{
-  public:
-  enum REFlags { CaseSensitive=1, MinimalMatching=2 };
-  AutoBookmarkEnt(const QString &p=QString::null,
-                  const QStringList &f=QStringList(),
-                  const QStringList &m=QStringList(),
-                  int flags=1 );
-  ~AutoBookmarkEnt(){};
-  QString pattern;
-  QStringList filemask;
-  QStringList mimemask;
-  int flags;
+class AutoBookmarkEnt {
+public:
+    enum REFlags
+    {
+        CaseSensitive = 1,
+        MinimalMatching = 2
+    };
+    AutoBookmarkEnt(const QString &p = QString::null, const QStringList &f = QStringList(), const QStringList &m = QStringList(), int flags = 1);
+    ~AutoBookmarkEnt(){};
+    QString pattern;
+    QStringList filemask;
+    QStringList mimemask;
+    int flags;
 };
 
-class AutoBookmarker
-  : public KTextEditor::Plugin, public KTextEditor::PluginViewInterface,
-    public KTextEditor::ConfigInterfaceExtension
-{
-  Q_OBJECT
-  public:
-    AutoBookmarker( QObject *parent = 0,
-                        const char* name = 0,
-                        const QStringList &args = QStringList() );
-    virtual ~AutoBookmarker() {};
+class AutoBookmarker : public KTextEditor::Plugin, public KTextEditor::PluginViewInterface, public KTextEditor::ConfigInterfaceExtension {
+    Q_OBJECT
+public:
+    AutoBookmarker(QObject *parent = 0, const char *name = 0, const QStringList &args = QStringList());
+    virtual ~AutoBookmarker(){};
 
-    void addView (KTextEditor::View *view);
-    void removeView (KTextEditor::View *view);
+    void addView(KTextEditor::View *view);
+    void removeView(KTextEditor::View *view);
 
     // ConfigInterfaceExtention
-    uint configPages() const { return 1; };
-    KTextEditor::ConfigPage * configPage( uint number, QWidget *parent, const char *name );
-    QString configPageName( uint ) const;
-    QString configPageFullName( uint ) const;
-    QPixmap configPagePixmap( uint, int ) const;
+    uint configPages() const
+    {
+        return 1;
+    };
+    KTextEditor::ConfigPage *configPage(uint number, QWidget *parent, const char *name);
+    QString configPageName(uint) const;
+    QString configPageFullName(uint) const;
+    QPixmap configPagePixmap(uint, int) const;
     bool abDone;
 
-  private slots:
+private slots:
     void slotCompleted();
-    void applyEntity( AutoBookmarkEnt *e );
+    void applyEntity(AutoBookmarkEnt *e);
 };
 
-typedef QPtrList<AutoBookmarkEnt> ABEntityList;
-typedef QPtrListIterator<AutoBookmarkEnt> ABEntityListIterator;
+typedef QPtrList< AutoBookmarkEnt > ABEntityList;
+typedef QPtrListIterator< AutoBookmarkEnt > ABEntityListIterator;
 
 /* singleton to keep the data */
-class ABGlobal
-{
-  public:
+class ABGlobal {
+public:
     ABGlobal();
     ~ABGlobal();
 
-    static ABGlobal* self();
+    static ABGlobal *self();
 
-    ABEntityList* entities() { return m_ents; };
+    ABEntityList *entities()
+    {
+        return m_ents;
+    };
     void readConfig();
     void writeConfig();
 
-  private:
+private:
     ABEntityList *m_ents;
     static ABGlobal *s_self;
 };
 
-class AutoBookmarkerConfigPage : public KTextEditor::ConfigPage
-{
-  Q_OBJECT
-  public:
-    AutoBookmarkerConfigPage( QWidget *parent, const char *name );
-    virtual ~AutoBookmarkerConfigPage() {};
+class AutoBookmarkerConfigPage : public KTextEditor::ConfigPage {
+    Q_OBJECT
+public:
+    AutoBookmarkerConfigPage(QWidget *parent, const char *name);
+    virtual ~AutoBookmarkerConfigPage(){};
 
     virtual void apply();
     virtual void reset();
     virtual void defaults();
 
-  private slots:
+private slots:
     void slotNew();
     void slotDel();
     void slotEdit();
 
-  private:
+private:
     class KListView *lvPatterns;
     class QPushButton *btnNew, *btnDel, *btnEdit;
     ABEntityList *m_ents;
 };
 
-class AutoBookmarkerEntEditor : public KDialogBase
-{
-  Q_OBJECT
-  public:
-    AutoBookmarkerEntEditor( QWidget *parent, AutoBookmarkEnt *e );
+class AutoBookmarkerEntEditor : public KDialogBase {
+    Q_OBJECT
+public:
+    AutoBookmarkerEntEditor(QWidget *parent, AutoBookmarkEnt *e);
     ~AutoBookmarkerEntEditor(){};
 
     void apply();
 
-  private slots:
-  void showMTDlg();
-    void slotPatternChanged( const QString& );
-  private:
+private slots:
+    void showMTDlg();
+    void slotPatternChanged(const QString &);
+
+private:
     class QLineEdit *lePattern, *leMimeTypes, *leFileMask;
     class QCheckBox *cbCS, *cbMM;
     AutoBookmarkEnt *e;

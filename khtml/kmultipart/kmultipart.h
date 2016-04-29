@@ -36,35 +36,36 @@ class KLineParser;
 /**
  * http://www.netscape.com/assist/net_sites/pushpull.html
  */
-class KMultiPart : public KParts::ReadOnlyPart
-{
+class KMultiPart : public KParts::ReadOnlyPart {
     Q_OBJECT
 public:
-    KMultiPart( QWidget *parentWidget, const char *widgetName,
-                QObject *parent, const char *name, const QStringList& );
+    KMultiPart(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, const QStringList &);
     virtual ~KMultiPart();
 
-    virtual bool openFile() { return false; }
-    virtual bool openURL( const KURL &url );
+    virtual bool openFile()
+    {
+        return false;
+    }
+    virtual bool openURL(const KURL &url);
 
     virtual bool closeURL();
 
-    static KAboutData* createAboutData();
+    static KAboutData *createAboutData();
 
 protected:
-    virtual void guiActivateEvent( KParts::GUIActivateEvent *e );
-    void setPart( const QString& mimeType );
+    virtual void guiActivateEvent(KParts::GUIActivateEvent *e);
+    void setPart(const QString &mimeType);
 
     void startOfData();
-    void sendData( const QByteArray& line );
+    void sendData(const QByteArray &line);
     void endOfData();
 
 private slots:
-    void reallySendData( const QByteArray& line );
-    //void slotPopupMenu( KXMLGUIClient *cl, const QPoint &pos, const KURL &u, const QString &mime, mode_t mode );
-    void slotJobFinished( KIO::Job *job );
-    void slotData( KIO::Job *, const QByteArray & );
-    //void updateWindowCaption();
+    void reallySendData(const QByteArray &line);
+    // void slotPopupMenu( KXMLGUIClient *cl, const QPoint &pos, const KURL &u, const QString &mime, mode_t mode );
+    void slotJobFinished(KIO::Job *job);
+    void slotData(KIO::Job *, const QByteArray &);
+    // void updateWindowCaption();
 
     void slotPartCompleted();
 
@@ -73,17 +74,17 @@ private slots:
     void slotProgressInfo();
 
 private:
-    KParts::BrowserExtension* m_extension;
-    QGuardedPtr<KParts::ReadOnlyPart> m_part;
+    KParts::BrowserExtension *m_extension;
+    QGuardedPtr< KParts::ReadOnlyPart > m_part;
     bool m_isHTMLPart;
     bool m_partIsLoading;
-    KIO::Job* m_job;
+    KIO::Job *m_job;
     QCString m_boundary;
     int m_boundaryLength;
-    QString m_mimeType; // the one handled by m_part - store the kservice instead?
+    QString m_mimeType;     // the one handled by m_part - store the kservice instead?
     QString m_nextMimeType; // while parsing headers
-    KTempFile* m_tempFile;
-    KLineParser* m_lineParser;
+    KTempFile *m_tempFile;
+    KLineParser *m_lineParser;
     bool m_bParsingHeader;
     bool m_bGotAnyHeader;
     bool m_gzip;
@@ -93,7 +94,7 @@ private:
     long m_numberOfFrames;
     long m_numberOfFramesSkipped;
     QTime m_qtime;
-    QTimer* m_timer;
+    QTimer *m_timer;
 };
 
 #if 0

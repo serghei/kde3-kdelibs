@@ -41,7 +41,6 @@ class NotationImpl;
 class ProcessingInstructionImpl;
 
 
-
 /**
  * CDATA sections are used to escape blocks of text containing
  * characters that would otherwise be regarded as markup. The only
@@ -63,19 +62,22 @@ class ProcessingInstructionImpl;
  * merged by use of the Element.normalize() method.
  *
  */
-class KHTML_EXPORT CDATASection : public Text
-{
+class KHTML_EXPORT CDATASection : public Text {
     friend class Document;
+
 public:
     CDATASection();
     CDATASection(const CDATASection &other);
     CDATASection(const Node &other) : Text()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
 
-    CDATASection & operator = (const Node &other);
-    CDATASection & operator = (const CDATASection &other);
+    CDATASection &operator=(const Node &other);
+    CDATASection &operator=(const CDATASection &other);
 
     ~CDATASection();
+
 protected:
     CDATASection(CDATASectionImpl *i);
 };
@@ -121,16 +123,17 @@ class DOMString;
  *  An \c Entity node does not have any parent.
  *
  */
-class KHTML_EXPORT Entity : public Node
-{
+class KHTML_EXPORT Entity : public Node {
 public:
     Entity();
     Entity(const Entity &other);
     Entity(const Node &other) : Node()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
 
-    Entity & operator = (const Node &other);
-    Entity & operator = (const Entity &other);
+    Entity &operator=(const Node &other);
+    Entity &operator=(const Entity &other);
 
     ~Entity();
 
@@ -154,6 +157,7 @@ public:
      *
      */
     DOMString notationName() const;
+
 protected:
     Entity(EntityImpl *i);
 };
@@ -185,19 +189,22 @@ protected:
  * evaluation.
  *
  */
-class KHTML_EXPORT EntityReference : public Node
-{
+class KHTML_EXPORT EntityReference : public Node {
     friend class Document;
+
 public:
     EntityReference();
     EntityReference(const EntityReference &other);
     EntityReference(const Node &other) : Node()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
 
-    EntityReference & operator = (const Node &other);
-    EntityReference & operator = (const EntityReference &other);
+    EntityReference &operator=(const Node &other);
+    EntityReference &operator=(const EntityReference &other);
 
     ~EntityReference();
+
 protected:
     EntityReference(EntityReferenceImpl *i);
 };
@@ -219,16 +226,17 @@ class DOMString;
  *  A \c Notation node does not have any parent.
  *
  */
-class KHTML_EXPORT Notation : public Node
-{
+class KHTML_EXPORT Notation : public Node {
 public:
     Notation();
     Notation(const Notation &other);
     Notation(const Node &other) : Node()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
 
-    Notation & operator = (const Node &other);
-    Notation & operator = (const Notation &other);
+    Notation &operator=(const Node &other);
+    Notation &operator=(const Notation &other);
 
     ~Notation();
 
@@ -245,6 +253,7 @@ public:
      *
      */
     DOMString systemId() const;
+
 protected:
     Notation(NotationImpl *i);
 };
@@ -256,17 +265,19 @@ protected:
  * processor-specific information in the text of the document.
  *
  */
-class KHTML_EXPORT ProcessingInstruction : public Node
-{
+class KHTML_EXPORT ProcessingInstruction : public Node {
     friend class Document;
+
 public:
     ProcessingInstruction();
     ProcessingInstruction(const ProcessingInstruction &other);
     ProcessingInstruction(const Node &other) : Node()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
 
-    ProcessingInstruction & operator = (const Node &other);
-    ProcessingInstruction & operator = (const ProcessingInstruction &other);
+    ProcessingInstruction &operator=(const Node &other);
+    ProcessingInstruction &operator=(const ProcessingInstruction &other);
 
     ~ProcessingInstruction();
 
@@ -292,7 +303,7 @@ public:
      * NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
      *
      */
-    void setData( const DOMString & );
+    void setData(const DOMString &);
 
     /**
      * Introduced in DOM Level 2
@@ -306,5 +317,5 @@ protected:
     ProcessingInstruction(ProcessingInstructionImpl *i);
 };
 
-} //namespace
+} // namespace
 #endif

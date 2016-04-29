@@ -41,202 +41,212 @@ class KDockContainer;
  *
  * @author Max Judin.
  */
-class KDEUI_EXPORT KDockSplitter : public QWidget
-{
-  // NOTE: in theory the KDEUI_EXPORT above shouldn't be there, but it's needed for kexi,
-  // which copies the whole definition of the class to be able to access separatorPosInPercent etc. 
-  // This needs real fixing in KDE4.
-  
-  Q_OBJECT
+class KDEUI_EXPORT KDockSplitter : public QWidget {
+    // NOTE: in theory the KDEUI_EXPORT above shouldn't be there, but it's needed for kexi,
+    // which copies the whole definition of the class to be able to access separatorPosInPercent etc.
+    // This needs real fixing in KDE4.
+
+    Q_OBJECT
 public:
-  /**
-   * Constructor.
-   * @param parent parent widget
-   * @param name name
-   * @param orient orientation. Either @p Vertical or @p Horizontal
-   * @param pos procentual position of the splitter. Must be int [0...100].
-   */
-  KDockSplitter(QWidget *parent= 0, const char *name= 0, Orientation orient= Vertical, int pos= 50);
-  virtual ~KDockSplitter(){}
+    /**
+     * Constructor.
+     * @param parent parent widget
+     * @param name name
+     * @param orient orientation. Either @p Vertical or @p Horizontal
+     * @param pos procentual position of the splitter. Must be int [0...100].
+     */
+    KDockSplitter(QWidget *parent = 0, const char *name = 0, Orientation orient = Vertical, int pos = 50);
+    virtual ~KDockSplitter()
+    {
+    }
 
-  /**
-   * Initialize the splitter. If @p c0 or @p c1 is 0L the child will not
-   * be replaced. So if you want to change @p c1 and not change c0, you'd
-   * call @p activate(0L,new_widget);
-   *
-   * @param c0 the widget on top/left
-   * @param c1 the widget on borrom/right
-   */
-  void activate(QWidget *c0, QWidget *c1 = 0L);
-  /**
-   * Disables the splitter.
-   */
-  void deactivate();
+    /**
+     * Initialize the splitter. If @p c0 or @p c1 is 0L the child will not
+     * be replaced. So if you want to change @p c1 and not change c0, you'd
+     * call @p activate(0L,new_widget);
+     *
+     * @param c0 the widget on top/left
+     * @param c1 the widget on borrom/right
+     */
+    void activate(QWidget *c0, QWidget *c1 = 0L);
+    /**
+     * Disables the splitter.
+     */
+    void deactivate();
 
-  /**
-   * Return the separator position in percent (%), so the range is [0..100]
-   * @return separator position in percent
-   */
-  int separatorPosInPercent();
-  /**
-   * Set the separator position in percent (%), so the range must be [0..100]
-   * @param percent separator position in percent
-   */
-  void setSeparatorPosInPercent(int percent);
+    /**
+     * Return the separator position in percent (%), so the range is [0..100]
+     * @return separator position in percent
+     */
+    int separatorPosInPercent();
+    /**
+     * Set the separator position in percent (%), so the range must be [0..100]
+     * @param percent separator position in percent
+     */
+    void setSeparatorPosInPercent(int percent);
 
-  /**
-   * Return the separator position in the range [0..100000]
-   * To get the separator position in procent (%), call
-   * @p separatorPositionInPercent()!
-   *
-   * @return high resolution separator position in range [0..100000],
-   *         where 100000 is 100%.
-   */
-  int separatorPos() const;
-  /**
-   * set separator position.
-   * @param pos the separator position in range [0..100000]. 100000 is 100%.
-   * @param do_resize if this is true, then a resize event is generated.
-   *                  This may cause the size to change.
-   */
-  void setSeparatorPos(int pos, bool do_resize = true);
-  /**
-   * For usage from outside.
-   * If the splitter is in fixed position when called,
-   * the value of @p pos will be saved and used when the splitter
-   * is restored.
-   * If @p do_resize is true, the size will be changed unless the splitter
-   * is in fixed mode.
-   */
-  // ### please come up with a nicer name
-  void setSeparatorPosX(int pos, bool do_resize=false);
+    /**
+     * Return the separator position in the range [0..100000]
+     * To get the separator position in procent (%), call
+     * @p separatorPositionInPercent()!
+     *
+     * @return high resolution separator position in range [0..100000],
+     *         where 100000 is 100%.
+     */
+    int separatorPos() const;
+    /**
+     * set separator position.
+     * @param pos the separator position in range [0..100000]. 100000 is 100%.
+     * @param do_resize if this is true, then a resize event is generated.
+     *                  This may cause the size to change.
+     */
+    void setSeparatorPos(int pos, bool do_resize = true);
+    /**
+     * For usage from outside.
+     * If the splitter is in fixed position when called,
+     * the value of @p pos will be saved and used when the splitter
+     * is restored.
+     * If @p do_resize is true, the size will be changed unless the splitter
+     * is in fixed mode.
+     */
+    // ### please come up with a nicer name
+    void setSeparatorPosX(int pos, bool do_resize = false);
 
-  /**
-   * The eventfilter installed on the @p divider processes
-   * all splitter resizing events.
-   */
-  virtual bool eventFilter(QObject *, QEvent *);
-  virtual bool event( QEvent * );
+    /**
+     * The eventfilter installed on the @p divider processes
+     * all splitter resizing events.
+     */
+    virtual bool eventFilter(QObject *, QEvent *);
+    virtual bool event(QEvent *);
 
-  /**
-   * @return the top/left child widget.
-   */
-  QWidget* getFirst() const { return child0; }
-  /**
-   * @return the bottom/right child widget.
-   */
-  QWidget* getLast() const { return child1; }
-  /**
-   * If @p w is child0, return child1, otherwise child0.
-   * @return the other child widget
-   */
-  QWidget* getAnother( QWidget* w ) const;
-  void updateName();
+    /**
+     * @return the top/left child widget.
+     */
+    QWidget *getFirst() const
+    {
+        return child0;
+    }
+    /**
+     * @return the bottom/right child widget.
+     */
+    QWidget *getLast() const
+    {
+        return child1;
+    }
+    /**
+     * If @p w is child0, return child1, otherwise child0.
+     * @return the other child widget
+     */
+    QWidget *getAnother(QWidget *w) const;
+    void updateName();
 
-  /**
-   * Set opaque flag.
-   * @param b if true, both child widgets are resized immediately,
-   *          if false, the widgets only resize on MouseUpEvent.
-   */
-  void setOpaqueResize(bool b=true);
-  bool opaqueResize() const;
+    /**
+     * Set opaque flag.
+     * @param b if true, both child widgets are resized immediately,
+     *          if false, the widgets only resize on MouseUpEvent.
+     */
+    void setOpaqueResize(bool b = true);
+    bool opaqueResize() const;
 
-  /**
-   * If @p b is true, the splitter will keep its size on resize events.
-   * If no @p KDockContainer is around, always the left child0 will be fixed size.
-   */
-  void setKeepSize(bool b=true);
-  bool keepSize() const;
+    /**
+     * If @p b is true, the splitter will keep its size on resize events.
+     * If no @p KDockContainer is around, always the left child0 will be fixed size.
+     */
+    void setKeepSize(bool b = true);
+    bool keepSize() const;
 
 
-  void setForcedFixedWidth(KDockWidget *dw,int w);
-  void setForcedFixedHeight(KDockWidget *dw,int h);
-  void restoreFromForcedFixedSize(KDockWidget *dw);
+    void setForcedFixedWidth(KDockWidget *dw, int w);
+    void setForcedFixedHeight(KDockWidget *dw, int h);
+    void restoreFromForcedFixedSize(KDockWidget *dw);
 
-  /**
-   * The orientation is either @p Horizontal or @p Vertical.
-   */
-  Orientation orientation(){return m_orientation;}
+    /**
+     * The orientation is either @p Horizontal or @p Vertical.
+     */
+    Orientation orientation()
+    {
+        return m_orientation;
+    }
 
 protected:
-  friend class  KDockContainer;
-  /**
-   * Make sure the splitter position is not out of bounds.
-   * @param position the current position
-   * @return a (new) valid splitter position.
-   */
-  int checkValue(int position) const;
-  /**
-   * Make sure the splitter position is not out of bounds. It has
-   * to honor all child widgets' mimimumSize.
-   * @param position current divider position
-   * @param child the overlapping child
-   * @return the (new) splitter position.
-   */
-  int checkValueOverlapped(int position, QWidget* child) const;
+    friend class KDockContainer;
+    /**
+     * Make sure the splitter position is not out of bounds.
+     * @param position the current position
+     * @return a (new) valid splitter position.
+     */
+    int checkValue(int position) const;
+    /**
+     * Make sure the splitter position is not out of bounds. It has
+     * to honor all child widgets' mimimumSize.
+     * @param position current divider position
+     * @param child the overlapping child
+     * @return the (new) splitter position.
+     */
+    int checkValueOverlapped(int position, QWidget *child) const;
 
-  /**
-   * The resize event resizes @p child0, @p child1 and the @p divider.
-   * The new sizes are dependant of
-   *   - whether @p child0 or @p child1 is a KDockContainer
-   *   - the current mode which may be
-   *     - Closed
-   *     - Overlapped (opened)
-   *     - Nonoverlap (opened)
-   *     .
-   *   .
-   * So there are 3*2=6 different modes we have to face.
-   * @param ev the resize Event. If @p ev=0L the user changed
-   *        the mode (for example from overlap to nonoverlap mode).
-   */
-  virtual void resizeEvent(QResizeEvent *ev);
+    /**
+     * The resize event resizes @p child0, @p child1 and the @p divider.
+     * The new sizes are dependant of
+     *   - whether @p child0 or @p child1 is a KDockContainer
+     *   - the current mode which may be
+     *     - Closed
+     *     - Overlapped (opened)
+     *     - Nonoverlap (opened)
+     *     .
+     *   .
+     * So there are 3*2=6 different modes we have to face.
+     * @param ev the resize Event. If @p ev=0L the user changed
+     *        the mode (for example from overlap to nonoverlap mode).
+     */
+    virtual void resizeEvent(QResizeEvent *ev);
 
-/*
-protected slots:
-  void delayedResize();*/
+    /*
+    protected slots:
+      void delayedResize();*/
 
 private:
-  /**
-   * updates the minimum and maximun sizes for the KDockSplitter.
-   * The sizes depend on the minimum and maximum sizes of the two child
-   * widgets.
-   */
-  void setupMinMaxSize();
-  /**
-   * child0 and child1 contain the embeded widgets. They are always valid
-   * so no need to make pointer checks.
-   * child[01]->getWidget() may be KDockContainer.
-   */
-  QWidget *child0, *child1;
-  Orientation m_orientation;
-  /**
-   * If initialised is true, the divider!=0L. If false, the divider==0L!
-   */
-  bool initialised;
-  /**
-   * The splitter controller which is between child0 and child1.
-   * Its size is 4 pixel.
-   */
-  QFrame* divider;
-  /**
-   * @p xpos and @p savedXPos represent the current divider position.
-   * If the orientation is Horizontal @p xpos actually is "ypos". So
-   * do not get confused only because of the 'x'.
-   *
-   * xpos and savedXPos are internally high resolution. So *not* 0..100%
-   * but 0..100000=100%. This fixes rounding bugs. In fact, this should
-   * be a double, but due to binary compatibility we can not change this
-   * as we would have to change it in all kdockwidgets.
-   */
-  int xpos, savedXPos;
-  bool mOpaqueResize, mKeepSize;
-  int fixedWidth0,fixedWidth1;
-  int fixedHeight0,fixedHeight1;
-  bool m_dontRecalc;
-  /**
-   * resolution factor, 0 = 0%, 100000=100%
-   */
-  static const int factor = 100000;
+    /**
+     * updates the minimum and maximun sizes for the KDockSplitter.
+     * The sizes depend on the minimum and maximum sizes of the two child
+     * widgets.
+     */
+    void setupMinMaxSize();
+    /**
+     * child0 and child1 contain the embeded widgets. They are always valid
+     * so no need to make pointer checks.
+     * child[01]->getWidget() may be KDockContainer.
+     */
+    QWidget *child0, *child1;
+    Orientation m_orientation;
+    /**
+     * If initialised is true, the divider!=0L. If false, the divider==0L!
+     */
+    bool initialised;
+    /**
+     * The splitter controller which is between child0 and child1.
+     * Its size is 4 pixel.
+     */
+    QFrame *divider;
+    /**
+     * @p xpos and @p savedXPos represent the current divider position.
+     * If the orientation is Horizontal @p xpos actually is "ypos". So
+     * do not get confused only because of the 'x'.
+     *
+     * xpos and savedXPos are internally high resolution. So *not* 0..100%
+     * but 0..100000=100%. This fixes rounding bugs. In fact, this should
+     * be a double, but due to binary compatibility we can not change this
+     * as we would have to change it in all kdockwidgets.
+     */
+    int xpos, savedXPos;
+    bool mOpaqueResize, mKeepSize;
+    int fixedWidth0, fixedWidth1;
+    int fixedHeight0, fixedHeight1;
+    bool m_dontRecalc;
+    /**
+     * resolution factor, 0 = 0%, 100000=100%
+     */
+    static const int factor = 100000;
 };
 
 /**
@@ -245,20 +255,19 @@ private:
  *
  * @author Max Judin.
 */
-class KDEUI_EXPORT KDockButton_Private : public QPushButton
-{
-  Q_OBJECT
+class KDEUI_EXPORT KDockButton_Private : public QPushButton {
+    Q_OBJECT
 public:
-  KDockButton_Private( QWidget *parent=0, const char *name=0 );
-  ~KDockButton_Private();
+    KDockButton_Private(QWidget *parent = 0, const char *name = 0);
+    ~KDockButton_Private();
 
 protected:
-  virtual void drawButton( QPainter * );
-  virtual void enterEvent( QEvent * );
-  virtual void leaveEvent( QEvent * );
+    virtual void drawButton(QPainter *);
+    virtual void enterEvent(QEvent *);
+    virtual void leaveEvent(QEvent *);
 
 private:
-  bool moveMouse;
+    bool moveMouse;
 };
 
 /**
@@ -266,70 +275,74 @@ private:
  **/
 
 
-
 /**
  * additional KDockWidget stuff (private)
 */
-class KDockWidgetPrivate : public QObject
-{
-  Q_OBJECT
+class KDockWidgetPrivate : public QObject {
+    Q_OBJECT
 public:
-  KDockWidgetPrivate();
-  ~KDockWidgetPrivate();
+    KDockWidgetPrivate();
+    ~KDockWidgetPrivate();
 
 public slots:
-  /**
-   * Especially used for Tab page docking. Switching the pages requires additional setFocus() for the embedded widget.
-   */
-  void slotFocusEmbeddedWidget(QWidget* w = 0L);
+    /**
+     * Especially used for Tab page docking. Switching the pages requires additional setFocus() for the embedded widget.
+     */
+    void slotFocusEmbeddedWidget(QWidget *w = 0L);
 
 public:
- enum KDockWidgetResize
-{ResizeLeft,ResizeTop,ResizeRight,ResizeBottom,ResizeBottomLeft,ResizeTopLeft,ResizeBottomRight,ResizeTopRight};
+    enum KDockWidgetResize
+    {
+        ResizeLeft,
+        ResizeTop,
+        ResizeRight,
+        ResizeBottom,
+        ResizeBottomLeft,
+        ResizeTopLeft,
+        ResizeBottomRight,
+        ResizeTopRight
+    };
 
-  int index;
-  int splitPosInPercent;
-  bool pendingFocusInEvent;
-  bool blockHasUndockedSignal;
-  bool pendingDtor;
-  int forcedWidth;
-  int forcedHeight;
-  bool isContainer;
+    int index;
+    int splitPosInPercent;
+    bool pendingFocusInEvent;
+    bool blockHasUndockedSignal;
+    bool pendingDtor;
+    int forcedWidth;
+    int forcedHeight;
+    bool isContainer;
 
 #ifndef NO_KDE2
-  NET::WindowType windowType;
+    NET::WindowType windowType;
 #endif
 
-  QWidget *_parent;
-  bool transient;
+    QWidget *_parent;
+    bool transient;
 
-  QGuardedPtr<QWidget> container;
+    QGuardedPtr< QWidget > container;
 
-  QPoint resizePos;
-  bool resizing;
-  KDockWidgetResize resizeMode;
+    QPoint resizePos;
+    bool resizing;
+    KDockWidgetResize resizeMode;
 };
 
-class KDockWidgetHeaderPrivate
-   : public QObject
-{
+class KDockWidgetHeaderPrivate : public QObject {
 public:
-  KDockWidgetHeaderPrivate( QObject* parent )
-        : QObject( parent )
-  {
-    forceCloseButtonHidden=false;
-    toDesktopButton = 0;
-    showToDesktopButton = true;
-    topLevel = false;
-    dummy=0;
-  }
-  KDockButton_Private* toDesktopButton;
+    KDockWidgetHeaderPrivate(QObject *parent) : QObject(parent)
+    {
+        forceCloseButtonHidden = false;
+        toDesktopButton = 0;
+        showToDesktopButton = true;
+        topLevel = false;
+        dummy = 0;
+    }
+    KDockButton_Private *toDesktopButton;
 
-  bool showToDesktopButton;
-  bool topLevel;
-  QPtrList<KDockButton_Private> btns;
-  bool forceCloseButtonHidden;
-  QWidget *dummy;
+    bool showToDesktopButton;
+    bool topLevel;
+    QPtrList< KDockButton_Private > btns;
+    bool forceCloseButtonHidden;
+    QWidget *dummy;
 };
 
 #endif

@@ -33,38 +33,40 @@
 
 using namespace KABC;
 
-int main(int argc,char **argv)
+int main(int argc, char **argv)
 {
-  KAboutData aboutData("kabcargl","Fix broken pre3.0rc3 format","0.1");
-  aboutData.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
+    KAboutData aboutData("kabcargl", "Fix broken pre3.0rc3 format", "0.1");
+    aboutData.addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
 
-  KCmdLineArgs::init(argc,argv,&aboutData);
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  QString filename = StdAddressBook::fileName();
-  
-  QFile f( filename );
-  if ( !f.open( IO_ReadOnly ) ) {
-    kdDebug() << "Error opening file '" << filename << "' for reading." << endl;
-    return 1;
-  }
-  
-  QTextStream t( &f );
-  t.setEncoding(QTextStream::UnicodeUTF8);
-  QString text = t.read();
-  f.close();
-  
-  text = QString::fromUtf8( text.local8Bit() );
-  text.replace( "\n", "\r\n" );
-  
-  if ( !f.open( IO_WriteOnly ) ) {
-    kdDebug() << "Error opening file '" << filename << "' for writing." << endl;
-    return 1;
-  }
-  
-  QTextStream t2( &f );
-  t2.setEncoding(QTextStream::UnicodeUTF8);
-  t2 << text;
-  f.close();
+    QString filename = StdAddressBook::fileName();
+
+    QFile f(filename);
+    if(!f.open(IO_ReadOnly))
+    {
+        kdDebug() << "Error opening file '" << filename << "' for reading." << endl;
+        return 1;
+    }
+
+    QTextStream t(&f);
+    t.setEncoding(QTextStream::UnicodeUTF8);
+    QString text = t.read();
+    f.close();
+
+    text = QString::fromUtf8(text.local8Bit());
+    text.replace("\n", "\r\n");
+
+    if(!f.open(IO_WriteOnly))
+    {
+        kdDebug() << "Error opening file '" << filename << "' for writing." << endl;
+        return 1;
+    }
+
+    QTextStream t2(&f);
+    t2.setEncoding(QTextStream::UnicodeUTF8);
+    t2 << text;
+    f.close();
 }

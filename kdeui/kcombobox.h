@@ -141,16 +141,14 @@ class KURL;
  *
  * @author Dawit Alemayehu <adawit@kde.org>
  */
-class KDEUI_EXPORT KComboBox : public QComboBox, public KCompletionBase
-{
-  Q_OBJECT
-  Q_PROPERTY( bool autoCompletion READ autoCompletion WRITE setAutoCompletion )
-  Q_PROPERTY( bool contextMenuEnabled READ isContextMenuEnabled WRITE setContextMenuEnabled )
-  Q_PROPERTY( bool urlDropsEnabled READ isURLDropsEnabled WRITE setURLDropsEnabled )
-  Q_PROPERTY( bool trapReturnKey READ trapReturnKey WRITE setTrapReturnKey )
+class KDEUI_EXPORT KComboBox : public QComboBox, public KCompletionBase {
+    Q_OBJECT
+    Q_PROPERTY(bool autoCompletion READ autoCompletion WRITE setAutoCompletion)
+    Q_PROPERTY(bool contextMenuEnabled READ isContextMenuEnabled WRITE setContextMenuEnabled)
+    Q_PROPERTY(bool urlDropsEnabled READ isURLDropsEnabled WRITE setURLDropsEnabled)
+    Q_PROPERTY(bool trapReturnKey READ trapReturnKey WRITE setTrapReturnKey)
 
 public:
-
     /**
     * Constructs a read-only or rather select-only combo box with a
     * parent object and a name.
@@ -158,7 +156,7 @@ public:
     * @param parent The parent object of this widget
     * @param name The name of this widget
     */
-    KComboBox( QWidget *parent=0, const char *name=0 );
+    KComboBox(QWidget *parent = 0, const char *name = 0);
 
     /**
     * Constructs a "read-write" or "read-only" combo box depending on
@@ -169,7 +167,7 @@ public:
     * @param parent The parent object of this widget.
     * @param name The name of this widget.
     */
-    KComboBox( bool rw, QWidget *parent=0, const char *name=0 );
+    KComboBox(bool rw, QWidget *parent = 0, const char *name = 0);
 
     /**
     * Destructor.
@@ -181,14 +179,14 @@ public:
      * KURL::prettyURL() so that the url is properly decoded for
      * displaying.
      */
-    void setEditURL( const KURL& url );
+    void setEditURL(const KURL &url);
 
     /**
      * Inserts @p url at position @p index into the combobox. The item will
      * be appended if @p index is negative. KURL::prettyURL() is used
      * so that the url is properly decoded for displaying.
      */
-    void insertURL( const KURL& url, int index = -1 );
+    void insertURL(const KURL &url, int index = -1);
 
     /**
      * Inserts @p url with the pixmap &p pixmap at position @p index into
@@ -196,21 +194,21 @@ public:
      * KURL::prettyURL() is used so that the url is properly decoded
      * for displaying.
      */
-    void insertURL( const QPixmap& pixmap, const KURL& url, int index = -1 );
+    void insertURL(const QPixmap &pixmap, const KURL &url, int index = -1);
 
     /**
      * Replaces the item at position @p index with @p url.
      * KURL::prettyURL() is used so that the url is properly decoded
      * for displaying.
      */
-    void changeURL( const KURL& url, int index );
+    void changeURL(const KURL &url, int index);
 
     /**
      * Replaces the item at position @p index with @p url and pixmap @p pixmap.
      * KURL::prettyURL() is used so that the url is properly decoded
      * for displaying.
      */
-    void changeURL( const QPixmap& pixmap, const KURL& url, int index );
+    void changeURL(const QPixmap &pixmap, const KURL &url, int index);
 
     /**
     * Returns the current cursor position.
@@ -220,7 +218,10 @@ public:
     *
     * @return Current cursor position.
     */
-    int cursorPosition() const { return ( lineEdit() ) ? lineEdit()->cursorPosition() : -1; }
+    int cursorPosition() const
+    {
+        return (lineEdit()) ? lineEdit()->cursorPosition() : -1;
+    }
 
     /**
     * Re-implemented from QComboBox.
@@ -232,7 +233,7 @@ public:
     *
     * @param autocomplete Flag to enable/disable automatic completion mode.
     */
-    virtual void setAutoCompletion( bool autocomplete );
+    virtual void setAutoCompletion(bool autocomplete);
 
     /**
     * Re-implemented from QComboBox.
@@ -243,7 +244,8 @@ public:
     *
     * @return @p true when completion mode is automatic.
     */
-    bool autoCompletion() const {
+    bool autoCompletion() const
+    {
         return completionMode() == KGlobalSettings::CompletionAuto;
     }
 
@@ -262,12 +264,15 @@ public:
     *
     * @param showMenu If @p true, show the context menu.
     */
-    virtual void setContextMenuEnabled( bool showMenu );
+    virtual void setContextMenuEnabled(bool showMenu);
 
     /**
     * Returns @p true when the context menu is enabled.
     */
-    bool isContextMenuEnabled() const { return m_bEnableMenu; }
+    bool isContextMenuEnabled() const
+    {
+        return m_bEnableMenu;
+    }
 
     /**
      * Enables/Disables handling of URL drops. If enabled and the user
@@ -276,7 +281,7 @@ public:
      *
      * @param enable If @p true, insert decoded URLs
      */
-    void setURLDropsEnabled( bool enable );
+    void setURLDropsEnabled(bool enable);
 
     /**
      * Returns @p true when decoded URL drops are enabled
@@ -292,7 +297,7 @@ public:
      *
      * @return @p true if an item with the string @p text is in the combobox.
      */
-    bool contains( const QString& text ) const;
+    bool contains(const QString &text) const;
 
     /**
      * By default, KComboBox recognizes Key_Return and Key_Enter
@@ -307,7 +312,7 @@ public:
      *
      * @see setTrapReturnKey()
      */
-    void setTrapReturnKey( bool trap );
+    void setTrapReturnKey(bool trap);
 
     /**
      * @return @p true if keyevents of Key_Return or Key_Enter will
@@ -320,7 +325,7 @@ public:
     /**
     * Re-implemented for internal reasons.  API not affected.
     */
-    virtual bool eventFilter( QObject *, QEvent * );
+    virtual bool eventFilter(QObject *, QEvent *);
 
     /**
      * @returns the completion-box, that is used in completion mode
@@ -331,7 +336,7 @@ public:
      * @param create Set this to false if you don't want the box to be created
      *               i.e. to test if it is available.
      */
-    KCompletionBox * completionBox( bool create = true );
+    KCompletionBox *completionBox(bool create = true);
 
     /**
      * Re-implemented for internal reasons.  API remains unaffected.
@@ -339,7 +344,7 @@ public:
      * any attempt to assign a line-edit to a non-editable combobox will
      * simply be ignored.
      */
-    virtual void setLineEdit( QLineEdit * );
+    virtual void setLineEdit(QLineEdit *);
 
 signals:
     /**
@@ -358,7 +363,7 @@ signals:
     * Note that this signal is only emitted when the
     * widget is editable.
     */
-    void returnPressed( const QString& );
+    void returnPressed(const QString &);
 
     /**
     * Emitted when the completion key is pressed.
@@ -368,31 +373,31 @@ signals:
     * Note that this signal is @em not available when the widget is non-editable
     * or the completion mode is set to @p KGlobalSettings::CompletionNone.
     */
-    void completion( const QString& );
+    void completion(const QString &);
 
     /**
      * Emitted when the shortcut for substring completion is pressed.
      */
-    void substringCompletion( const QString& );
+    void substringCompletion(const QString &);
 
-   /**
-    * Emitted when the text rotation key-bindings are pressed.
-    *
-    * The argument indicates which key-binding was pressed. In this
-    * case this can be either one of four values: @p PrevCompletionMatch,
-    * @p NextCompletionMatch, @p RotateUp or @p RotateDown. See
-    * @p setKeyBinding() for details.
-    *
-    * Note that this signal is @em NOT emitted if the completion
-    * mode is set to CompletionNone.
-    */
-    void textRotation( KCompletionBase::KeyBindingType );
+    /**
+     * Emitted when the text rotation key-bindings are pressed.
+     *
+     * The argument indicates which key-binding was pressed. In this
+     * case this can be either one of four values: @p PrevCompletionMatch,
+     * @p NextCompletionMatch, @p RotateUp or @p RotateDown. See
+     * @p setKeyBinding() for details.
+     *
+     * Note that this signal is @em NOT emitted if the completion
+     * mode is set to CompletionNone.
+     */
+    void textRotation(KCompletionBase::KeyBindingType);
 
     /**
      * Emitted whenever the completion mode is changed by the user
      * through the context menu.
      */
-    void completionModeChanged( KGlobalSettings::Completion );
+    void completionModeChanged(KGlobalSettings::Completion);
 
     /**
      * Emitted before the context menu is displayed.
@@ -403,7 +408,7 @@ signals:
      *
      * @param p the context menu about to be displayed
      */
-    void aboutToShowContextMenu( QPopupMenu * p );
+    void aboutToShowContextMenu(QPopupMenu *p);
 
 public slots:
 
@@ -424,40 +429,45 @@ public slots:
     *
     * @param type The key-binding invoked.
     */
-    void rotateText( KCompletionBase::KeyBindingType type );
+    void rotateText(KCompletionBase::KeyBindingType type);
 
     /**
      * Sets the completed text in the line-edit appropriately.
      *
      * This function is a re-implementation of @p setCompletedText.
      */
-    virtual void setCompletedText( const QString& );
+    virtual void setCompletedText(const QString &);
 
     /**
      * Sets @p items into the completion-box if completionMode() is
      * CompletionPopup. The popup will be shown immediately.
      */
-    void setCompletedItems( const QStringList& items );
+    void setCompletedItems(const QStringList &items);
 
     /**
      * Selects the first item that matches @p item. If there is no such item,
      * it is inserted at position @p index if @p insert is true. Otherwise,
      * no item is selected.
      */
-    void setCurrentItem( const QString& item, bool insert = false, int index = -1 );
+    void setCurrentItem(const QString &item, bool insert = false, int index = -1);
 
     /**
      * Simply calls QComboBox' implementation. Only here to not become
      * shadowed.
      */
-    void setCurrentItem(int index) { QComboBox::setCurrentItem(index); }
+    void setCurrentItem(int index)
+    {
+        QComboBox::setCurrentItem(index);
+    }
 
 protected slots:
 
     /**
     * @deprecated
     */
-    virtual void itemSelected( QListBoxItem* ) {}
+    virtual void itemSelected(QListBoxItem *)
+    {
+    }
 
     /**
     * Completes text according to the completion mode.
@@ -470,7 +480,7 @@ protected slots:
     * through the remaining matches.  This way the rotation functionality
     * is left to iterate through the list as usual.
     */
-    virtual void makeCompletion( const QString& );
+    virtual void makeCompletion(const QString &);
 
 protected:
     /*
@@ -481,15 +491,14 @@ protected:
     * @param
     * @param
     */
-    virtual void setCompletedText( const QString& /* */, bool /*marked*/ );
+    virtual void setCompletedText(const QString & /* */, bool /*marked*/);
 
     /**
      * Reimplemented for internal reasons, the API is not affected.
      */
-    virtual void create( WId = 0, bool initializeWindow = true,
-                         bool destroyOldWindow = true );
+    virtual void create(WId = 0, bool initializeWindow = true, bool destroyOldWindow = true);
 
-    virtual void wheelEvent( QWheelEvent *ev );
+    virtual void wheelEvent(QWheelEvent *ev);
 
 private slots:
     void lineEditDeleted();
@@ -499,15 +508,15 @@ private:
      * Initializes the variables upon construction.
      */
     void init();
-    bool m_bEnableMenu; // ### BCI: unused, remove in KDE4
+    bool m_bEnableMenu;   // ### BCI: unused, remove in KDE4
     bool m_trapReturnKey; // ### BCI: unused, remove in KDE4
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 
 private:
     class KComboBoxPrivate;
-    KComboBoxPrivate* const d;
+    KComboBoxPrivate *const d;
 };
 
 
@@ -530,10 +539,9 @@ class KPixmapProvider;
  *
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-class KDEUI_EXPORT KHistoryCombo : public KComboBox
-{
+class KDEUI_EXPORT KHistoryCombo : public KComboBox {
     Q_OBJECT
-    Q_PROPERTY( QStringList historyItems READ historyItems WRITE setHistoryItems )
+    Q_PROPERTY(QStringList historyItems READ historyItems WRITE setHistoryItems)
 
 public:
     /**
@@ -555,7 +563,7 @@ public:
      * @p parent the parent object of this widget.
      * @p name the name of this widget.
      */
-    KHistoryCombo( QWidget *parent = 0L, const char *name = 0L );
+    KHistoryCombo(QWidget *parent = 0L, const char *name = 0L);
 
     // ### merge these two constructors
     /**
@@ -564,8 +572,7 @@ public:
      * or not. If set to @p true, KHistoryCombo will sync the completion to the
      * contents of the combobox.
      */
-    KHistoryCombo( bool useCompletion,
-		   QWidget *parent = 0L, const char *name = 0L );
+    KHistoryCombo(bool useCompletion, QWidget *parent = 0L, const char *name = 0L);
 
     /**
      * Destructs the combo, the completion-object and the pixmap-provider
@@ -578,7 +585,8 @@ public:
      *
      * @see historyItems
      */
-    inline void setHistoryItems( QStringList items ) {
+    inline void setHistoryItems(QStringList items)
+    {
         setHistoryItems(items, false);
     }
 
@@ -623,7 +631,7 @@ public:
      * @see KCompletion::setItems
      * @see KCompletion::items
      */
-    void setHistoryItems( QStringList items, bool setCompletionList );
+    void setHistoryItems(QStringList items, bool setCompletionList);
 
     /**
      * Returns the list of history items. Empty, when this is not a read-write
@@ -640,7 +648,7 @@ public:
      *
      * @see addToHistory
      */
-    bool removeFromHistory( const QString& item );
+    bool removeFromHistory(const QString &item);
 
     /**
      * Sets a pixmap provider, so that items in the combobox can have a pixmap.
@@ -654,20 +662,26 @@ public:
      *
      * @see pixmapProvider
      */
-    void setPixmapProvider( KPixmapProvider *prov );
+    void setPixmapProvider(KPixmapProvider *prov);
 
     /**
      * @returns the current pixmap provider.
      * @see setPixmapProvider
      * @see KPixmapProvider
      */
-    KPixmapProvider * pixmapProvider() const { return myPixProvider; }
+    KPixmapProvider *pixmapProvider() const
+    {
+        return myPixProvider;
+    }
 
     /**
      * Resets the current position of the up/down history. Call this
      * when you manually call setCurrentItem() or clearEdit().
      */
-    void reset() { slotReset(); }
+    void reset()
+    {
+        slotReset();
+    }
 
 public slots:
     /**
@@ -689,7 +703,7 @@ public slots:
      * @see removeFromHistory
      * @see QComboBox::setDuplicatesEnabled
      */
-    void addToHistory( const QString& item );
+    void addToHistory(const QString &item);
 
     /**
      * Clears the history and the completion list.
@@ -706,12 +720,12 @@ protected:
     /**
      * Handling key-events, the shortcuts to rotate the items.
      */
-    virtual void keyPressEvent( QKeyEvent * );
+    virtual void keyPressEvent(QKeyEvent *);
 
     /**
      * Handling wheel-events, to rotate the items.
      */
-    virtual void wheelEvent( QWheelEvent *ev );
+    virtual void wheelEvent(QWheelEvent *ev);
 
     /**
      * Inserts @p items into the combo, honoring pixmapProvider()
@@ -721,12 +735,15 @@ protected:
      *
      * Called from setHistoryItems() and setPixmapProvider()
      */
-    void insertItems( const QStringList& items );
+    void insertItems(const QStringList &items);
 
     /**
      * @returns if we can modify the completion object or not.
      */
-    bool useCompletion() const { return compObj(); }
+    bool useCompletion() const
+    {
+        return compObj();
+    }
 
 private slots:
     /**
@@ -743,10 +760,10 @@ private slots:
     /**
      * Appends our own context menu entry.
      */
-    void addContextMenuItems( QPopupMenu* );
+    void addContextMenuItems(QPopupMenu *);
 
 private:
-    void init( bool useCompletion );
+    void init(bool useCompletion);
     void rotateUp();
     void rotateDown();
 
@@ -768,12 +785,12 @@ private:
     KPixmapProvider *myPixProvider;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KHistoryComboPrivate;
-    KHistoryComboPrivate* const d;
+    KHistoryComboPrivate *const d;
 };
 
 
 #endif
-

@@ -36,22 +36,21 @@ class KColorComboInternal;
 /**
  * Combobox for colors.
  */
-class KDEUI_EXPORT KColorCombo : public QComboBox
-{
+class KDEUI_EXPORT KColorCombo : public QComboBox {
     Q_OBJECT
-    Q_PROPERTY( QColor color READ color WRITE setColor )
+    Q_PROPERTY(QColor color READ color WRITE setColor)
 
 public:
     /**
      * Constructs a color combo box.
      */
-    KColorCombo( QWidget *parent, const char *name = 0L );
+    KColorCombo(QWidget *parent, const char *name = 0L);
     ~KColorCombo();
 
     /**
      * Selects the color @p col.
      */
-    void setColor( const QColor &col );
+    void setColor(const QColor &col);
     /**
      * Returns the currently selected color.
      **/
@@ -61,35 +60,36 @@ public:
     /**
      * Clear the color list and don't show it, till the next setColor() call
      **/
-     void showEmptyList();
+    void showEmptyList();
 
 signals:
     /**
      * Emitted when a new color box has been selected.
      */
-    void activated( const QColor &col );
+    void activated(const QColor &col);
     /**
      * Emitted when a new item has been highlighted.
      */
-    void highlighted( const QColor &col );
+    void highlighted(const QColor &col);
 
 protected:
-	virtual void resizeEvent( QResizeEvent *re );
+    virtual void resizeEvent(QResizeEvent *re);
 
 private slots:
-	void slotActivated( int index );
-	void slotHighlighted( int index );
+    void slotActivated(int index);
+    void slotHighlighted(int index);
 
 private:
-	void addColors();
-	QColor customColor;
-	QColor internalcolor;
+    void addColors();
+    QColor customColor;
+    QColor internalcolor;
 
 protected:
-	virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-	class KColorComboPrivate;
-	KColorComboPrivate *d;
+    class KColorComboPrivate;
+    KColorComboPrivate *d;
 };
 
-#endif	// __KCOLORCOMBO_H__
+#endif // __KCOLORCOMBO_H__

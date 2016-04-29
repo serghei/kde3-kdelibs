@@ -37,55 +37,57 @@
  * @author Mark Donohoe <donohoe@kde.org>
  * @internal
  */
-class KDEUI_EXPORT KKeyButton: public QPushButton
-{
-	Q_OBJECT
+class KDEUI_EXPORT KKeyButton : public QPushButton {
+    Q_OBJECT
 
- public:
-	/**
-	* Constructs  key button widget.
-	*/
-	KKeyButton( QWidget *parent = 0, const char *name = 0 );
-	/**
-	* Destructs the key button widget.
-	*/
-	virtual ~KKeyButton();
+public:
+    /**
+    * Constructs  key button widget.
+    */
+    KKeyButton(QWidget *parent = 0, const char *name = 0);
+    /**
+    * Destructs the key button widget.
+    */
+    virtual ~KKeyButton();
 
-	/** @deprecated Use setShortcut( cut, false ) instead */
-	void setShortcut( const KShortcut& cut ) KDE_DEPRECATED;
-	/// @since 3.1
-	void setShortcut( const KShortcut& cut, bool bQtShortcut );
-	const KShortcut& shortcut() const
-		{ return m_cut; }
+    /** @deprecated Use setShortcut( cut, false ) instead */
+    void setShortcut(const KShortcut &cut) KDE_DEPRECATED;
+    /// @since 3.1
+    void setShortcut(const KShortcut &cut, bool bQtShortcut);
+    const KShortcut &shortcut() const
+    {
+        return m_cut;
+    }
 
-	/**
-	* Reimplemented for internal purposes.
-	*/
-	void setText( const QString& text );
+    /**
+    * Reimplemented for internal purposes.
+    */
+    void setText(const QString &text);
 
- signals:
-	void capturedShortcut( const KShortcut& );
+signals:
+    void capturedShortcut(const KShortcut &);
 
- public slots:
-	/**
-	 * Call this method to capture a shortcut from the keyboard.
-	 * If it succeeds, the capturedShortcut() signal will be emitted.
-	 */
-	void captureShortcut();
+public slots:
+    /**
+     * Call this method to capture a shortcut from the keyboard.
+     * If it succeeds, the capturedShortcut() signal will be emitted.
+     */
+    void captureShortcut();
 
- protected:
-	KShortcut m_cut;
-	bool m_bEditing;
+protected:
+    KShortcut m_cut;
+    bool m_bEditing;
 
-	/**
-	* Reimplemented for internal reasons.
-	*/
-	void drawButton( QPainter* _painter );
+    /**
+    * Reimplemented for internal reasons.
+    */
+    void drawButton(QPainter *_painter);
 
- protected:
-	virtual void virtual_hook( int id, void* data );
- private:
-	class KKeyButtonPrivate* d;
+protected:
+    virtual void virtual_hook(int id, void *data);
+
+private:
+    class KKeyButtonPrivate *d;
 };
 
 #endif

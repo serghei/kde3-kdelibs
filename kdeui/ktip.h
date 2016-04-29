@@ -52,8 +52,7 @@ class KTextBrowser;
  * @author Matthias Hoelzer-Kluepfel <mhk@kde.org>
  *
  */
-class KDEUI_EXPORT KTipDatabase
-{
+class KDEUI_EXPORT KTipDatabase {
 public:
     /**
      * This constructor reads in the tips from a file with the given name. If
@@ -68,7 +67,7 @@ public:
      * essentially behaves like the one above. It returns when tipFiles is empty.
      *
      * @param tipFiles A list of absolute paths to the tips file
-     */ 
+     */
     KTipDatabase(const QStringList &tipFiles);
 
     /**
@@ -105,8 +104,7 @@ private:
  *
  * @author Matthias Hoelzer-Kluepfel <mhk@caldera.de>
  */
-class KDEUI_EXPORT KTipDialog : public KDialog
-{
+class KDEUI_EXPORT KTipDialog : public KDialog {
     Q_OBJECT
 public:
     /**
@@ -135,7 +133,7 @@ public:
      * @param force If true, the dialog is show, even when the users
      *              disabled it.
      */
-    static void showTip(QWidget *parent, const QString &tipFile = QString::null, bool force=false);
+    static void showTip(QWidget *parent, const QString &tipFile = QString::null, bool force = false);
 
     /**
      * Shows a tip
@@ -148,7 +146,7 @@ public:
      * @param force If true, the dialog is show, even when the users
      *              disabled it.
      */
-    static void showMultiTip(QWidget *parent, const QStringList &tipFiles, bool force=false);
+    static void showMultiTip(QWidget *parent, const QStringList &tipFiles, bool force = false);
 
     /**
      * Shows a tip.
@@ -168,7 +166,7 @@ public:
 
 protected:
     bool eventFilter(QObject *, QEvent *);
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 
 private slots:
     void nextTip();
@@ -186,7 +184,7 @@ private:
 
     static KTipDialog *mInstance;
 
-	QColor mBaseColor, mBlendedColor, mTextColor;
+    QColor mBaseColor, mBlendedColor, mTextColor;
 };
 
 #endif

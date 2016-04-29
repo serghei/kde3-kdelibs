@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,47 +21,56 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  TEXTBINVALUE_H
-#define  TEXTBINVALUE_H
+#ifndef TEXTBINVALUE_H
+#define TEXTBINVALUE_H
 
 #include <qcstring.h>
 
 #include <VCardValue.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT TextBinValue : public Value
-{
-	
+class KVCARD_EXPORT TextBinValue : public Value {
+
 #include "TextBinValue-generated.h"
 
-  TextBinValue *clone();
+    TextBinValue *clone();
 
-  bool isBinary() { parse(); return mIsBinary_; }
-  QByteArray data() { parse(); return mData_; }
-  QString url() { parse(); return mUrl_; }
+    bool isBinary()
+    {
+        parse();
+        return mIsBinary_;
+    }
+    QByteArray data()
+    {
+        parse();
+        return mData_;
+    }
+    QString url()
+    {
+        parse();
+        return mUrl_;
+    }
 
-  void setData( const QByteArray &data )
-  {
-    mData_ = data;
-    mIsBinary_ = true;
-    assembled_ = false;
-  }
+    void setData(const QByteArray &data)
+    {
+        mData_ = data;
+        mIsBinary_ = true;
+        assembled_ = false;
+    }
 
-  void setUrl( const QString &url )
-  {
-    mUrl_ = url;
-    mIsBinary_ = false;
-    assembled_ = false;
-  }
+    void setUrl(const QString &url)
+    {
+        mUrl_ = url;
+        mIsBinary_ = false;
+        assembled_ = false;
+    }
 
-	private:
+private:
     int mIsBinary_;
     QByteArray mData_;
     QString mUrl_;
 };
-
 }
 
 #endif

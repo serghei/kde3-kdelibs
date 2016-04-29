@@ -20,22 +20,25 @@
 #ifndef KFILETREEVIEWTEST
 #define KFILETREEVIEWTEST
 
-class testFrame: public KMainWindow
-{
-   Q_OBJECT
+class testFrame : public KMainWindow {
+    Q_OBJECT
 public:
-   testFrame();
-   void showPath( const KURL & );
-   void setDirOnly( ) { dirOnlyMode = true; }
+    testFrame();
+    void showPath(const KURL &);
+    void setDirOnly()
+    {
+        dirOnlyMode = true;
+    }
 public slots:
-   void slotPopulateFinished(KFileTreeViewItem *);
-   void slotSetChildCount( KFileTreeViewItem *item, int c );
+    void slotPopulateFinished(KFileTreeViewItem *);
+    void slotSetChildCount(KFileTreeViewItem *item, int c);
 
-   void urlsDropped( QWidget*, QDropEvent*, KURL::List& );
-   void copyURLs( KURL::List& list, KURL& to ); 
+    void urlsDropped(QWidget *, QDropEvent *, KURL::List &);
+    void copyURLs(KURL::List &list, KURL &to);
+
 private:
-   KFileTreeView *treeView;
-   bool          dirOnlyMode;
+    KFileTreeView *treeView;
+    bool dirOnlyMode;
 };
 
 

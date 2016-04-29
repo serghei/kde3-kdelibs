@@ -74,103 +74,103 @@ Otherwise kdostartupconfig is launched to create or update all the necessary fil
 #include <stdlib.h>
 
 int main()
+{
+    char kdehome[1024];
+    if(getenv("KDEHOME"))
+        strlcpy(kdehome, getenv("KDEHOME"), 1024);
+    else if(getenv("HOME"))
     {
-    char kdehome[ 1024 ];
-    if( getenv( "KDEHOME" ))
-        strlcpy( kdehome, getenv( "KDEHOME" ), 1024 );
-    else if( getenv( "HOME" ))
-        {
-        strlcpy( kdehome, getenv( "HOME" ), 1024 );
-        strlcat( kdehome, "/.kde", 1024  );
-        }
+        strlcpy(kdehome, getenv("HOME"), 1024);
+        strlcat(kdehome, "/.kde", 1024);
+    }
     else
         return 1;
-    char filename[ 1024 ];
-    strlcpy( filename, kdehome, 1024 );
-    strlcat( filename, "/share/config/startupconfig", 1024 );
-    if( access( filename, R_OK ) != 0 )
-        {
-        int ret = system( "kdostartupconfig" );
-        return WEXITSTATUS( ret );
-        }
-    strlcpy( filename, kdehome, 1024 );
-    strlcat( filename, "/share/config/startupconfigfiles", 1024 );
+    char filename[1024];
+    strlcpy(filename, kdehome, 1024);
+    strlcat(filename, "/share/config/startupconfig", 1024);
+    if(access(filename, R_OK) != 0)
+    {
+        int ret = system("kdostartupconfig");
+        return WEXITSTATUS(ret);
+    }
+    strlcpy(filename, kdehome, 1024);
+    strlcat(filename, "/share/config/startupconfigfiles", 1024);
     struct stat st;
-    if( stat( filename, &st ) != 0 )
-        {
-        int ret = system( "kdostartupconfig" );
-        return WEXITSTATUS( ret );
-        }
+    if(stat(filename, &st) != 0)
+    {
+        int ret = system("kdostartupconfig");
+        return WEXITSTATUS(ret);
+    }
     time_t config_time = st.st_mtime;
-    FILE* config = fopen( filename, "r" );
-    if( config == NULL )
-        {
-        int ret = system( "kdostartupconfig" );
-        return WEXITSTATUS( ret );
-        }
-    strlcpy( filename, kdehome, 1024 );
-    strlcat( filename, "/share/config/startupconfigkeys", 1024 );
-    FILE* keys = fopen( filename, "r" );
-    if( keys == NULL )
-        {
-        fclose( config );
+    FILE *config = fopen(filename, "r");
+    if(config == NULL)
+    {
+        int ret = system("kdostartupconfig");
+        return WEXITSTATUS(ret);
+    }
+    strlcpy(filename, kdehome, 1024);
+    strlcat(filename, "/share/config/startupconfigkeys", 1024);
+    FILE *keys = fopen(filename, "r");
+    if(keys == NULL)
+    {
+        fclose(config);
         return 2;
-        }
+    }
     bool need_update = true;
     for(;;)
+    {
+        char keyline[1024];
+        if(fgets(keyline, 1023, keys) == NULL)
         {
-        char keyline[ 1024 ];
-        if( fgets( keyline, 1023, keys ) == NULL )
-            {
             need_update = false;
             break;
-            }
-        if( char* nl = strchr( keyline, '\n' ))
+        }
+        if(char *nl = strchr(keyline, '\n'))
             *nl = '\0';
-        char line[ 1024 ];
-        if( fgets( line, 1023, config ) == NULL )
+        char line[1024];
+        if(fgets(line, 1023, config) == NULL)
             break;
-        if( char* nl = strchr( line, '\n' ))
+        if(char *nl = strchr(line, '\n'))
             *nl = '\0';
-        if( strcmp( keyline, line ) != 0 )
+        if(strcmp(keyline, line) != 0)
             break;
         bool ok = false;
         for(;;)
-            {
-            if( fgets( line, 1023, config ) == NULL )
+        {
+            if(fgets(line, 1023, config) == NULL)
                 break;
-            if( char* nl = strchr( line, '\n' ))
+            if(char *nl = strchr(line, '\n'))
                 *nl = '\0';
-            if( *line == '\0' )
+            if(*line == '\0')
                 break;
-            if( *line == '*' )
-                {
+            if(*line == '*')
+            {
                 ok = true;
                 break;
-                }
-            if( *line == '!' )
-                {
-                if( access( line + 1, R_OK ) == 0 )
-                    break; // file now exists -> update
-                }
-            else
-                {
-                struct stat st;
-                if( stat( line, &st ) != 0 )
-                    break;
-                if( st.st_mtime > config_time )
-                    break;
-                }
             }
-        if( !ok )
+            if(*line == '!')
+            {
+                if(access(line + 1, R_OK) == 0)
+                    break; // file now exists -> update
+            }
+            else
+            {
+                struct stat st;
+                if(stat(line, &st) != 0)
+                    break;
+                if(st.st_mtime > config_time)
+                    break;
+            }
+        }
+        if(!ok)
             break;
-        }
-    fclose( keys );
-    fclose( config );
-    if( need_update )
-        {
-        int ret = system( "kdostartupconfig" );
-        return WEXITSTATUS( ret );
-        }
-    return 0;
     }
+    fclose(keys);
+    fclose(config);
+    if(need_update)
+    {
+        int ret = system("kdostartupconfig");
+        return WEXITSTATUS(ret);
+    }
+    return 0;
+}

@@ -34,13 +34,14 @@ class QPopupMenu;
  * The abstract base class for all Commands. Commands are used to
  * store information needed for Undo/Redo functionality...
  */
-class KDEUI_EXPORT KCommand
-{
+class KDEUI_EXPORT KCommand {
 protected:
     /**
      * Creates a command.
      */
-    KCommand() {}
+    KCommand()
+    {
+    }
 
 public:
     virtual ~KCommand();
@@ -66,8 +67,9 @@ public:
      * in the menus.
      */
     virtual QString name() const = 0;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 };
 
 /**
@@ -75,31 +77,39 @@ protected:
  * It is more memory-efficient to use KCommand and to implement the name() method,
  * but in some cases it's more simple or more flexible to store the name at creation time.
  */
-class KDEUI_EXPORT KNamedCommand : public KCommand
-{
+class KDEUI_EXPORT KNamedCommand : public KCommand {
 protected:
     /**
      * Creates a command.
      * @param name the name of this command, translated, since it will appear
      * in the menus.
      */
-    KNamedCommand(const QString &name) : KCommand(), m_name(name) {}
+    KNamedCommand(const QString &name) : KCommand(), m_name(name)
+    {
+    }
 
 public:
     /**
      * @return the name of this command
      */
-    virtual QString name() const { return m_name; }
+    virtual QString name() const
+    {
+        return m_name;
+    }
     /**
      * Updates the name of this command.
      * Rarely necessary.
      */
-    void setName(const QString &name) { m_name=name; }
+    void setName(const QString &name)
+    {
+        m_name = name;
+    }
 
 private:
     QString m_name;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 };
 
 /**
@@ -107,8 +117,7 @@ protected:
  * It will appear as one to the user and in the command history,
  * but it can use the implementation of multiple commands internally.
  */
-class KDEUI_EXPORT KMacroCommand : public KNamedCommand
-{
+class KDEUI_EXPORT KMacroCommand : public KNamedCommand {
 public:
     /**
      * Creates a macro command. You will then need to call addCommand
@@ -116,8 +125,10 @@ public:
      * @param name the name of this command, translated, since it will appear
      * in the menus.
      */
-    KMacroCommand( const QString & name );
-    virtual ~KMacroCommand() {}
+    KMacroCommand(const QString &name);
+    virtual ~KMacroCommand()
+    {
+    }
 
     /**
      * Appends a command to this macro command.
@@ -137,9 +148,10 @@ public:
     virtual void unexecute();
 
 protected:
-    QPtrList<KCommand> m_commands;
+    QPtrList< KCommand > m_commands;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 };
 
 
@@ -192,12 +204,15 @@ public:
      *    MyCommand * cmd = new MyCommand(i18n("Capitalized Name"), parameters);
      *    m_historyCommand.addCommand( cmd );
      */
-    void addCommand(KCommand *command, bool execute=true);
+    void addCommand(KCommand *command, bool execute = true);
 
     /**
      * @return the maximum number of items in the undo history
      */
-    int undoLimit() const { return m_undoLimit; }
+    int undoLimit() const
+    {
+        return m_undoLimit;
+    }
     /**
      * Sets the maximum number of items in the undo history.
      */
@@ -205,7 +220,10 @@ public:
     /**
      * @return the maximum number of items in the redo history
      */
-    int redoLimit() const { return m_redoLimit; }
+    int redoLimit() const
+    {
+        return m_redoLimit;
+    }
     /**
      * Sets the maximum number of items in the redo history.
      */
@@ -242,9 +260,9 @@ public slots:
 
 protected slots:
     void slotUndoAboutToShow();
-    void slotUndoActivated( int );
+    void slotUndoActivated(int);
     void slotRedoAboutToShow();
-    void slotRedoActivated( int );
+    void slotRedoActivated(int);
 
 signals:
     /**
@@ -272,15 +290,16 @@ signals:
     void documentRestored();
 
 private:
-    void clipCommands();  // ensures that the limits are kept
+    void clipCommands(); // ensures that the limits are kept
 
-    QPtrList<KCommand> m_commands;
+    QPtrList< KCommand > m_commands;
     KAction *m_undo, *m_redo;
     QPopupMenu *m_undoPopup, *m_redoPopup;
     int m_undoLimit, m_redoLimit;
-    bool m_first;  // attention: it's the first command in the list!
+    bool m_first; // attention: it's the first command in the list!
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KCommandHistoryPrivate;
     KCommandHistoryPrivate *d;

@@ -40,55 +40,52 @@ static XtransConnInfo ConnectToPeer(char *networkIdsList, char **actualConnectio
 #ifndef X_NOT_STDC_ENV
 #define Strstr strstr
 #else
-static char *Strstr(s1, s2)
-    char *s1, *s2;
+static char *Strstr(s1, s2) char *s1, *s2;
 {
     int n1, n2;
 
     n1 = strlen(s1);
     n2 = strlen(s2);
-    for ( ; n1 >= n2; s1++, n1--) {
-	if (!strncmp(s1, s2, n2))
-	    return s1;
+    for(; n1 >= n2; s1++, n1--)
+    {
+        if(!strncmp(s1, s2, n2))
+            return s1;
     }
     return NULL;
 }
 #endif
-
-IceConn
-IceOpenConnection (networkIdsList, context, mustAuthenticate, majorOpcodeCheck,
-    errorLength, errorStringRet)
 
-char 	   *networkIdsList;
+IceConn IceOpenConnection(networkIdsList, context, mustAuthenticate, majorOpcodeCheck, errorLength, errorStringRet)
+
+    char *networkIdsList;
 IcePointer context;
-Bool 	   mustAuthenticate;
-int  	   majorOpcodeCheck;
-int  	   errorLength;
-char 	   *errorStringRet;
+Bool mustAuthenticate;
+int majorOpcodeCheck;
+int errorLength;
+char *errorStringRet;
 
 {
-    IceConn			iceConn;
-    int				extra, i, j;
-    int		       		endian;
-    Bool			gotReply, ioErrorOccured;
-    unsigned long		setup_sequence;
-    iceByteOrderMsg		*pByteOrderMsg;
-    iceConnectionSetupMsg	*pSetupMsg;
-    char			*pData;
-    IceReplyWaitInfo 		replyWait;
-    _IceReply		 	reply;
-    int				authUsableCount;
-    int				authUsableFlags[MAX_ICE_AUTH_NAMES];
-    int				authIndices[MAX_ICE_AUTH_NAMES];
+    IceConn iceConn;
+    int extra, i, j;
+    int endian;
+    Bool gotReply, ioErrorOccured;
+    unsigned long setup_sequence;
+    iceByteOrderMsg *pByteOrderMsg;
+    iceConnectionSetupMsg *pSetupMsg;
+    char *pData;
+    IceReplyWaitInfo replyWait;
+    _IceReply reply;
+    int authUsableCount;
+    int authUsableFlags[MAX_ICE_AUTH_NAMES];
+    int authIndices[MAX_ICE_AUTH_NAMES];
 
-    if (errorStringRet && errorLength > 0)
-	*errorStringRet = '\0';
+    if(errorStringRet && errorLength > 0)
+        *errorStringRet = '\0';
 
-    if (networkIdsList == NULL || *networkIdsList == '\0')
+    if(networkIdsList == NULL || *networkIdsList == '\0')
     {
-	strncpy (errorStringRet,
-	    "networkIdsList argument is NULL", errorLength);
-	return (NULL);
+        strncpy(errorStringRet, "networkIdsList argument is NULL", errorLength);
+        return (NULL);
     }
 
     /*
@@ -108,64 +105,55 @@ char 	   *errorStringRet;
      * same protocol to the same destination client.
      */
 
-    for (i = 0; i < _IceConnectionCount; i++)
+    for(i = 0; i < _IceConnectionCount; i++)
     {
-	char *strptr;
-	if ((strptr = (char *) Strstr (
-	    networkIdsList, _IceConnectionStrings[i])) != NULL)
-	{
-	    char ch = *(strptr + strlen (_IceConnectionStrings[i]));
-	    if (ch == ',' || ch == '\0')
-	    {
-		/*
-		 * OK, we found a connection.  Make sure we can reuse it.
-		 */
+        char *strptr;
+        if((strptr = (char *)Strstr(networkIdsList, _IceConnectionStrings[i])) != NULL)
+        {
+            char ch = *(strptr + strlen(_IceConnectionStrings[i]));
+            if(ch == ',' || ch == '\0')
+            {
+                /*
+                 * OK, we found a connection.  Make sure we can reuse it.
+                 */
 
-		IceConn newIceConn = _IceConnectionObjs[i];
+                IceConn newIceConn = _IceConnectionObjs[i];
 
-		if (newIceConn->want_to_close || newIceConn->free_asap ||
-		    (context && newIceConn->context &&
-		     newIceConn->context != context))
-		{
-		    /* force a new connection to be created */
-		    break;
-		}
+                if(newIceConn->want_to_close || newIceConn->free_asap || (context && newIceConn->context && newIceConn->context != context))
+                {
+                    /* force a new connection to be created */
+                    break;
+                }
 
-		if (majorOpcodeCheck)
-		{
-		    for (j = newIceConn->his_min_opcode;
-		        j <= newIceConn->his_max_opcode; j++)
-		    {
-			if (newIceConn->process_msg_info[
-			    j - newIceConn->his_min_opcode].in_use &&
-			    newIceConn->process_msg_info[
-			    j - newIceConn->his_min_opcode].my_opcode ==
-			    majorOpcodeCheck)
-			    break;
-		    }
+                if(majorOpcodeCheck)
+                {
+                    for(j = newIceConn->his_min_opcode; j <= newIceConn->his_max_opcode; j++)
+                    {
+                        if(newIceConn->process_msg_info[j - newIceConn->his_min_opcode].in_use
+                           && newIceConn->process_msg_info[j - newIceConn->his_min_opcode].my_opcode == majorOpcodeCheck)
+                            break;
+                    }
 
-		    if (j <= newIceConn->his_max_opcode ||
-			(newIceConn->protosetup_to_you &&
-			newIceConn->protosetup_to_you->my_opcode ==
-			majorOpcodeCheck))
-		    {
-			/* force a new connection to be created */
-			break;
-		    }
-		}
+                    if(j <= newIceConn->his_max_opcode
+                       || (newIceConn->protosetup_to_you && newIceConn->protosetup_to_you->my_opcode == majorOpcodeCheck))
+                    {
+                        /* force a new connection to be created */
+                        break;
+                    }
+                }
 
-		newIceConn->open_ref_count++;
-		if (context && !newIceConn->context)
-		    newIceConn->context = context;
-		return (newIceConn);
-	    }
-	}
+                newIceConn->open_ref_count++;
+                if(context && !newIceConn->context)
+                    newIceConn->context = context;
+                return (newIceConn);
+            }
+        }
     }
 
-    if ((iceConn = (IceConn) malloc (sizeof (struct _IceConn))) == NULL)
+    if((iceConn = (IceConn)malloc(sizeof(struct _IceConn))) == NULL)
     {
-	strncpy (errorStringRet, "Can't malloc", errorLength);
-	return (NULL);
+        strncpy(errorStringRet, "Can't malloc", errorLength);
+        return (NULL);
     }
 
 
@@ -173,19 +161,18 @@ char 	   *errorStringRet;
      * Open a network connection with the peer client.
      */
 
-    if ((iceConn->trans_conn = ConnectToPeer (networkIdsList,
-	&iceConn->connection_string)) == NULL)
+    if((iceConn->trans_conn = ConnectToPeer(networkIdsList, &iceConn->connection_string)) == NULL)
     {
-	free ((char *) iceConn);
-	strncpy (errorStringRet, "Could not open network socket", errorLength);
-	return (NULL);
+        free((char *)iceConn);
+        strncpy(errorStringRet, "Could not open network socket", errorLength);
+        return (NULL);
     }
 
     /*
      * Set close-on-exec so that programs that fork() don't get confused.
      */
 
-    _kde_IceTransSetOption (iceConn->trans_conn, TRANS_CLOSEONEXEC, 1);
+    _kde_IceTransSetOption(iceConn->trans_conn, TRANS_CLOSEONEXEC, 1);
 
     iceConn->listen_obj = NULL;
 
@@ -212,25 +199,23 @@ char 	   *errorStringRet;
     iceConn->connect_to_me = NULL;
     iceConn->protosetup_to_me = NULL;
 
-    if ((iceConn->inbuf = iceConn->inbufptr =
-	(char *) malloc (ICE_INBUFSIZE)) == NULL)
+    if((iceConn->inbuf = iceConn->inbufptr = (char *)malloc(ICE_INBUFSIZE)) == NULL)
     {
-	_IceFreeConnection (iceConn);
-	strncpy (errorStringRet, "Can't malloc", errorLength);
-	return (NULL);
+        _IceFreeConnection(iceConn);
+        strncpy(errorStringRet, "Can't malloc", errorLength);
+        return (NULL);
     }
-    memset (iceConn->inbuf, 0, ICE_INBUFSIZE);
+    memset(iceConn->inbuf, 0, ICE_INBUFSIZE);
 
     iceConn->inbufmax = iceConn->inbuf + ICE_INBUFSIZE;
 
-    if ((iceConn->outbuf = iceConn->outbufptr =
-	(char *) malloc (ICE_OUTBUFSIZE)) == NULL)
+    if((iceConn->outbuf = iceConn->outbufptr = (char *)malloc(ICE_OUTBUFSIZE)) == NULL)
     {
-	_IceFreeConnection (iceConn);
-	strncpy (errorStringRet, "Can't malloc", errorLength);
-	return (NULL);
+        _IceFreeConnection(iceConn);
+        strncpy(errorStringRet, "Can't malloc", errorLength);
+        return (NULL);
     }
-    memset (iceConn->outbuf, 0, ICE_OUTBUFSIZE);
+    memset(iceConn->outbuf, 0, ICE_OUTBUFSIZE);
 
     iceConn->outbufmax = iceConn->outbuf + ICE_OUTBUFSIZE;
 
@@ -244,24 +229,22 @@ char 	   *errorStringRet;
     iceConn->saved_reply_waits = NULL;
     iceConn->ping_waits = NULL;
 
-    iceConn->connect_to_you = (_IceConnectToYouInfo *) malloc (
-	sizeof (_IceConnectToYouInfo));
+    iceConn->connect_to_you = (_IceConnectToYouInfo *)malloc(sizeof(_IceConnectToYouInfo));
     iceConn->connect_to_you->auth_active = 0;
 
     /*
      * Send our byte order.
      */
 
-    IceGetHeader (iceConn, 0, ICE_ByteOrder,
-	SIZEOF (iceByteOrderMsg), iceByteOrderMsg, pByteOrderMsg);
+    IceGetHeader(iceConn, 0, ICE_ByteOrder, SIZEOF(iceByteOrderMsg), iceByteOrderMsg, pByteOrderMsg);
 
     endian = 1;
-    if (*(char *) &endian)
-	pByteOrderMsg->byteOrder = IceLSBfirst;
+    if(*(char *)&endian)
+        pByteOrderMsg->byteOrder = IceLSBfirst;
     else
-	pByteOrderMsg->byteOrder = IceMSBfirst;
+        pByteOrderMsg->byteOrder = IceMSBfirst;
 
-    IceFlush (iceConn);
+    IceFlush(iceConn);
 
 
     /*
@@ -273,31 +256,27 @@ char 	   *errorStringRet;
     iceConn->waiting_for_byteorder = True;
 
     ioErrorOccured = False;
-    while (iceConn->waiting_for_byteorder == True && !ioErrorOccured)
+    while(iceConn->waiting_for_byteorder == True && !ioErrorOccured)
     {
-	ioErrorOccured = (IceProcessMessages (
-	    iceConn, NULL, NULL) == IceProcessMessagesIOError);
+        ioErrorOccured = (IceProcessMessages(iceConn, NULL, NULL) == IceProcessMessagesIOError);
     }
 
-    if (ioErrorOccured)
+    if(ioErrorOccured)
     {
-	_IceFreeConnection (iceConn);
-	strncpy (errorStringRet, "IO error occurred opening connection",
-	     errorLength);
-	return (NULL);
+        _IceFreeConnection(iceConn);
+        strncpy(errorStringRet, "IO error occurred opening connection", errorLength);
+        return (NULL);
     }
 
-    if (iceConn->connection_status == IceConnectRejected)
+    if(iceConn->connection_status == IceConnectRejected)
     {
-	/*
-	 * We failed to get the required ByteOrder message.
-	 */
+        /*
+         * We failed to get the required ByteOrder message.
+         */
 
-	_IceFreeConnection (iceConn);
-	strncpy (errorStringRet,
-	    "Internal error - did not receive the expected ByteOrder message",
-	     errorLength);
-	return (NULL);
+        _IceFreeConnection(iceConn);
+        strncpy(errorStringRet, "Internal error - did not receive the expected ByteOrder message", errorLength);
+        return (NULL);
     }
 
 
@@ -306,15 +285,13 @@ char 	   *errorStringRet;
      * the Connection Setup authentication.
      */
 
-    _IceGetPoValidAuthIndices (
-	"ICE", iceConn->connection_string,
-	_IceAuthCount, _IceAuthNames, &authUsableCount, authIndices);
+    _IceGetPoValidAuthIndices("ICE", iceConn->connection_string, _IceAuthCount, _IceAuthNames, &authUsableCount, authIndices);
 
-    for (i = 0; i < _IceAuthCount; i++)
+    for(i = 0; i < _IceAuthCount; i++)
     {
-	authUsableFlags[i] = 0;
-	for (j = 0; j < authUsableCount && !authUsableFlags[i]; j++)
-	    authUsableFlags[i] = (authIndices[j] == i);
+        authUsableFlags[i] = 0;
+        for(j = 0; j < authUsableCount && !authUsableFlags[i]; j++)
+            authUsableFlags[i] = (authIndices[j] == i);
     }
 
 
@@ -322,19 +299,17 @@ char 	   *errorStringRet;
      * Now send a Connection Setup message.
      */
 
-    extra = STRING_BYTES (IceVendorString) + STRING_BYTES (IceReleaseString);
+    extra = STRING_BYTES(IceVendorString) + STRING_BYTES(IceReleaseString);
 
-    for (i = 0; i < _IceAuthCount; i++)
-	if (authUsableFlags[i])
-	{
-	    extra += STRING_BYTES (_IceAuthNames[i]);
-	}
+    for(i = 0; i < _IceAuthCount; i++)
+        if(authUsableFlags[i])
+        {
+            extra += STRING_BYTES(_IceAuthNames[i]);
+        }
 
     extra += (_IceVersionCount * 4);
 
-    IceGetHeaderExtra (iceConn, 0, ICE_ConnectionSetup,
-	SIZEOF (iceConnectionSetupMsg), WORD64COUNT (extra),
-	iceConnectionSetupMsg, pSetupMsg, pData);
+    IceGetHeaderExtra(iceConn, 0, ICE_ConnectionSetup, SIZEOF(iceConnectionSetupMsg), WORD64COUNT(extra), iceConnectionSetupMsg, pSetupMsg, pData);
 
     setup_sequence = iceConn->send_sequence;
 
@@ -342,22 +317,22 @@ char 	   *errorStringRet;
     pSetupMsg->authCount = authUsableCount;
     pSetupMsg->mustAuthenticate = mustAuthenticate;
 
-    STORE_STRING (pData, IceVendorString);
-    STORE_STRING (pData, IceReleaseString);
+    STORE_STRING(pData, IceVendorString);
+    STORE_STRING(pData, IceReleaseString);
 
-    for (i = 0; i < _IceAuthCount; i++)
-	if (authUsableFlags[i])
-	{
-	    STORE_STRING (pData, _IceAuthNames[i]);
-	}
+    for(i = 0; i < _IceAuthCount; i++)
+        if(authUsableFlags[i])
+        {
+            STORE_STRING(pData, _IceAuthNames[i]);
+        }
 
-    for (i = 0; i < _IceVersionCount; i++)
+    for(i = 0; i < _IceVersionCount; i++)
     {
-	STORE_CARD16 (pData, _IceVersions[i].major_version);
-	STORE_CARD16 (pData, _IceVersions[i].minor_version);
+        STORE_CARD16(pData, _IceVersions[i].major_version);
+        STORE_CARD16(pData, _IceVersions[i].minor_version);
     }
 
-    IceFlush (iceConn);
+    IceFlush(iceConn);
 
 
     /*
@@ -368,99 +343,89 @@ char 	   *errorStringRet;
     replyWait.sequence_of_request = setup_sequence;
     replyWait.major_opcode_of_request = 0;
     replyWait.minor_opcode_of_request = ICE_ConnectionSetup;
-    replyWait.reply = (IcePointer) &reply;
+    replyWait.reply = (IcePointer)&reply;
 
     gotReply = False;
     ioErrorOccured = False;
 
-    while (!gotReply && !ioErrorOccured)
+    while(!gotReply && !ioErrorOccured)
     {
-	ioErrorOccured = (IceProcessMessages (
-	    iceConn, &replyWait, &gotReply) == IceProcessMessagesIOError);
+        ioErrorOccured = (IceProcessMessages(iceConn, &replyWait, &gotReply) == IceProcessMessagesIOError);
 
-	if (ioErrorOccured)
-	{
-	    strncpy (errorStringRet, "IO error occurred opening connection",
-		errorLength);
-	    _IceFreeConnection (iceConn);
-	    iceConn = NULL;
-	}
-	else if (gotReply)
-	{
-	    if (reply.type == ICE_CONNECTION_REPLY)
-	    {
-		if (reply.connection_reply.version_index >= _IceVersionCount)
-		{
-		    strncpy (errorStringRet,
-	    		"Got a bad version index in the Connection Reply",
-			errorLength);
+        if(ioErrorOccured)
+        {
+            strncpy(errorStringRet, "IO error occurred opening connection", errorLength);
+            _IceFreeConnection(iceConn);
+            iceConn = NULL;
+        }
+        else if(gotReply)
+        {
+            if(reply.type == ICE_CONNECTION_REPLY)
+            {
+                if(reply.connection_reply.version_index >= _IceVersionCount)
+                {
+                    strncpy(errorStringRet, "Got a bad version index in the Connection Reply", errorLength);
 
-		    free (reply.connection_reply.vendor);
-		    free (reply.connection_reply.release);
-		    _IceFreeConnection (iceConn);
-		    iceConn = NULL;
-		}
-		else
-		{
-		    iceConn->my_ice_version_index =
-			reply.connection_reply.version_index;
-		    iceConn->vendor = reply.connection_reply.vendor;
-		    iceConn->release = reply.connection_reply.release;
+                    free(reply.connection_reply.vendor);
+                    free(reply.connection_reply.release);
+                    _IceFreeConnection(iceConn);
+                    iceConn = NULL;
+                }
+                else
+                {
+                    iceConn->my_ice_version_index = reply.connection_reply.version_index;
+                    iceConn->vendor = reply.connection_reply.vendor;
+                    iceConn->release = reply.connection_reply.release;
 
-		    _IceConnectionObjs[_IceConnectionCount] = iceConn;
-		    _IceConnectionStrings[_IceConnectionCount] =
-			iceConn->connection_string;
-		    _IceConnectionCount++;
+                    _IceConnectionObjs[_IceConnectionCount] = iceConn;
+                    _IceConnectionStrings[_IceConnectionCount] = iceConn->connection_string;
+                    _IceConnectionCount++;
 
-		    free ((char *) iceConn->connect_to_you);
-		    iceConn->connect_to_you = NULL;
+                    free((char *)iceConn->connect_to_you);
+                    iceConn->connect_to_you = NULL;
 
-		    iceConn->connection_status = IceConnectAccepted;
-		}
-	    }
-	    else /* reply.type == ICE_CONNECTION_ERROR */
-	    {
-		/* Connection failed */
+                    iceConn->connection_status = IceConnectAccepted;
+                }
+            }
+            else /* reply.type == ICE_CONNECTION_ERROR */
+            {
+                /* Connection failed */
 
-		strncpy (errorStringRet, reply.connection_error.error_message,
-		    errorLength);
+                strncpy(errorStringRet, reply.connection_error.error_message, errorLength);
 
-		free (reply.connection_error.error_message);
+                free(reply.connection_error.error_message);
 
-		_IceFreeConnection (iceConn);
-		iceConn = NULL;
-	    }
-	}
+                _IceFreeConnection(iceConn);
+                iceConn = NULL;
+            }
+        }
     }
 
-    if (iceConn && _IceWatchProcs)
+    if(iceConn && _IceWatchProcs)
     {
 #ifdef MINIX
-    _kde_IceTransSetOption(iceConn->trans_conn, TRANS_NONBLOCKING, 1);
+        _kde_IceTransSetOption(iceConn->trans_conn, TRANS_NONBLOCKING, 1);
 #endif
-	/*
-	 * Notify the watch procedures that an iceConn was opened.
-	 */
+        /*
+         * Notify the watch procedures that an iceConn was opened.
+         */
 
-	_IceConnectionOpened (iceConn);
+        _IceConnectionOpened(iceConn);
     }
 
     return (iceConn);
 }
 
 
-
-IcePointer
-IceGetConnectionContext (iceConn)
+IcePointer IceGetConnectionContext(iceConn)
 
-IceConn    iceConn;
+    IceConn iceConn;
 
 {
     return (iceConn->context);
 }
 
 
-
 /* ------------------------------------------------------------------------- *
  *                            local routines                                 *
  * ------------------------------------------------------------------------- */
@@ -468,80 +433,79 @@ IceConn    iceConn;
 #define ICE_CONNECTION_RETRIES 5
 
 
-static XtransConnInfo
-ConnectToPeer (char *networkIdsList, char **actualConnectionRet)
+static XtransConnInfo ConnectToPeer(char *networkIdsList, char **actualConnectionRet)
 {
     char address[256];
     char *ptr, *endptr, *delim;
-    int  madeConnection = 0;
-    int  len, retry;
-    int  connect_stat;
+    int madeConnection = 0;
+    int len, retry;
+    int connect_stat;
     XtransConnInfo trans_conn = NULL;
 
     *actualConnectionRet = NULL;
 
     ptr = networkIdsList;
-    endptr = networkIdsList + strlen (networkIdsList);
+    endptr = networkIdsList + strlen(networkIdsList);
 
-    while (ptr < endptr && !madeConnection)
+    while(ptr < endptr && !madeConnection)
     {
-	if ((delim = (char *) strchr (ptr, ',')) == NULL)
-	    delim = endptr;
+        if((delim = (char *)strchr(ptr, ',')) == NULL)
+            delim = endptr;
 
-	len = delim - ptr;
-	if (len > (int) sizeof(address) - 1)
-	    len = sizeof(address) - 1;
-	strncpy (address, ptr, len);
-	address[len] = '\0';
+        len = delim - ptr;
+        if(len > (int)sizeof(address) - 1)
+            len = sizeof(address) - 1;
+        strncpy(address, ptr, len);
+        address[len] = '\0';
 
-	ptr = delim + 1;
+        ptr = delim + 1;
 
-	for (retry = ICE_CONNECTION_RETRIES; retry >= 0; retry--)
-	{
-	    if ((trans_conn = (XtransConnInfo)_kde_IceTransOpenCOTSClient (address)) == NULL)
-	    {
-		break;
-	    }
+        for(retry = ICE_CONNECTION_RETRIES; retry >= 0; retry--)
+        {
+            if((trans_conn = (XtransConnInfo)_kde_IceTransOpenCOTSClient(address)) == NULL)
+            {
+                break;
+            }
 
-	    if ((connect_stat = _kde_IceTransConnect (trans_conn, address)) < 0)
-	    {
-		_kde_IceTransClose (trans_conn);
+            if((connect_stat = _kde_IceTransConnect(trans_conn, address)) < 0)
+            {
+                _kde_IceTransClose(trans_conn);
 
-		if (connect_stat == TRANS_TRY_CONNECT_AGAIN)
-		{
-		    sleep(1);
-		    continue;
-		}
-		else
-		    break;
-	    }
-	    else
-	    {
-		madeConnection = 1;
-		break;
-	    }
-	}
+                if(connect_stat == TRANS_TRY_CONNECT_AGAIN)
+                {
+                    sleep(1);
+                    continue;
+                }
+                else
+                    break;
+            }
+            else
+            {
+                madeConnection = 1;
+                break;
+            }
+        }
     }
 
 
-    if (madeConnection)
+    if(madeConnection)
     {
-	/*
-	 * We need to return the actual network connection string
-	 */
+        /*
+         * We need to return the actual network connection string
+         */
 
-	*actualConnectionRet = (char *) malloc (strlen (address) + 1);
-	strcpy (*actualConnectionRet, address);
+        *actualConnectionRet = (char *)malloc(strlen(address) + 1);
+        strcpy(*actualConnectionRet, address);
 
 
-	/*
-	 * Return the file descriptor
-	 */
+        /*
+         * Return the file descriptor
+         */
 
-	return (trans_conn);
+        return (trans_conn);
     }
     else
     {
-	return (NULL);
+        return (NULL);
     }
 }

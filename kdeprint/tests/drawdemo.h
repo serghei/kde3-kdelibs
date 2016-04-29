@@ -6,25 +6,26 @@
 // and a text in the table above.
 //
 
-class DrawView : public QWidget
-{
+class DrawView : public QWidget {
     Q_OBJECT
 public:
     DrawView();
     ~DrawView();
 public slots:
-    void   updateIt( int );
-    void   printIt();
+    void updateIt(int);
+    void printIt();
+
 protected:
-    void   drawIt( QPainter * );
-    void   paintEvent( QPaintEvent * );
-    void   resizeEvent( QResizeEvent * );
+    void drawIt(QPainter *);
+    void paintEvent(QPaintEvent *);
+    void resizeEvent(QResizeEvent *);
+
 private:
-    KPrinter	 *printer;
+    KPrinter *printer;
     QButtonGroup *bgroup;
-    QPushButton	 *print;
-    int		  drawindex;
-    int		  maxindex;
+    QPushButton *print;
+    int drawindex;
+    int maxindex;
 };
 
 #endif

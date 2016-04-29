@@ -44,19 +44,21 @@ class DOMString;
  * AREA element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLAreaElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLAreaElement : public HTMLElement {
 public:
     HTMLAreaElement();
     HTMLAreaElement(const HTMLAreaElement &other);
     HTMLAreaElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLAreaElement(HTMLAreaElementImpl *impl);
-public:
 
-    HTMLAreaElement & operator = (const HTMLAreaElement &other);
-    HTMLAreaElement & operator = (const Node &other);
+public:
+    HTMLAreaElement &operator=(const HTMLAreaElement &other);
+    HTMLAreaElement &operator=(const Node &other);
 
     ~HTMLAreaElement();
 
@@ -72,7 +74,7 @@ public:
     /**
      * see accessKey
      */
-    void setAccessKey( const DOMString & );
+    void setAccessKey(const DOMString &);
 
     /**
      * Alternate text for user agents not rendering the normal content
@@ -86,7 +88,7 @@ public:
     /**
      * see alt
      */
-    void setAlt( const DOMString & );
+    void setAlt(const DOMString &);
 
     /**
      * Comma-separated list of lengths, defining an active region
@@ -101,7 +103,7 @@ public:
     /**
      * see coords
      */
-    void setCoords( const DOMString & );
+    void setCoords(const DOMString &);
 
     /**
      * The URI of the linked resource. See the <a
@@ -114,7 +116,7 @@ public:
     /**
      * see href
      */
-    void setHref( const DOMString & );
+    void setHref(const DOMString &);
 
     /**
      * Specifies that this area is inactive, i.e., has no associated
@@ -128,7 +130,7 @@ public:
     /**
      * see noHref
      */
-    void setNoHref( bool );
+    void setNoHref(bool);
 
     /**
      * The shape of the active area. The coordinates are given by
@@ -142,7 +144,7 @@ public:
     /**
      * see shape
      */
-    void setShape( const DOMString & );
+    void setShape(const DOMString &);
 
     /**
      * Index that represents the element's position in the tabbing
@@ -156,7 +158,7 @@ public:
     /**
      * see tabIndex
      */
-    void setTabIndex( long );
+    void setTabIndex(long);
 
     /**
      * Frame to render the resource in. See the <a
@@ -169,7 +171,7 @@ public:
     /**
      * see target
      */
-    void setTarget( const DOMString & );
+    void setTarget(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -182,19 +184,21 @@ class HTMLImageElementImpl;
  * IMG element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLImageElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLImageElement : public HTMLElement {
 public:
     HTMLImageElement();
     HTMLImageElement(const HTMLImageElement &other);
     HTMLImageElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLImageElement(HTMLImageElementImpl *impl);
-public:
 
-    HTMLImageElement & operator = (const HTMLImageElement &other);
-    HTMLImageElement & operator = (const Node &other);
+public:
+    HTMLImageElement &operator=(const HTMLImageElement &other);
+    HTMLImageElement &operator=(const Node &other);
 
     ~HTMLImageElement();
 
@@ -207,7 +211,7 @@ public:
     /**
      * see name
      */
-    void setName( const DOMString & );
+    void setName(const DOMString &);
 
     /**
      * Aligns this object (vertically or horizontally) with respect to
@@ -222,7 +226,7 @@ public:
     /**
      * see align
      */
-    void setAlign( const DOMString & );
+    void setAlign(const DOMString &);
 
     /**
      * Alternate text for user agents not rendering the normal content
@@ -236,7 +240,7 @@ public:
     /**
      * see alt
      */
-    void setAlt( const DOMString & );
+    void setAlt(const DOMString &);
 
     /**
      * Width of border around image. See the <a
@@ -247,10 +251,10 @@ public:
      */
     DOMString getBorder() const;
 
-     /**
-      * see border
-      */
-    void setBorder( const DOMString& );
+    /**
+     * see border
+     */
+    void setBorder(const DOMString &);
 
 
     /**
@@ -261,7 +265,7 @@ public:
     /**
      * @deprecated
      */
-    void setBorder( long ) KDE_DEPRECATED;
+    void setBorder(long) KDE_DEPRECATED;
 
     /**
      * Override height. See the <a
@@ -274,7 +278,7 @@ public:
     /**
      * see height
      */
-    void setHeight( long );
+    void setHeight(long);
 
     /**
      * Horizontal space to the left and right of this image. See the
@@ -289,7 +293,7 @@ public:
     /**
      * see hspace
      */
-    void setHspace( long );
+    void setHspace(long);
 
     /**
      * Use server-side image map. See the <a
@@ -302,7 +306,7 @@ public:
     /**
      * see isMap
      */
-    void setIsMap( bool );
+    void setIsMap(bool);
 
     /**
      * URI designating a long description of this image or frame. See
@@ -316,7 +320,7 @@ public:
     /**
      * see longDesc
      */
-    void setLongDesc( const DOMString & );
+    void setLongDesc(const DOMString &);
 
     /**
      * URI designating the source of this image. See the <a
@@ -329,7 +333,7 @@ public:
     /**
      * see src
      */
-    void setSrc( const DOMString & );
+    void setSrc(const DOMString &);
 
     /**
      * Use client-side image map. See the <a
@@ -342,7 +346,7 @@ public:
     /**
      * see useMap
      */
-    void setUseMap( const DOMString & );
+    void setUseMap(const DOMString &);
 
     /**
      * Vertical space above and below this image. See the <a
@@ -356,7 +360,7 @@ public:
     /**
      * see vspace
      */
-    void setVspace( long );
+    void setVspace(long);
 
     /**
      * Override width. See the <a
@@ -369,7 +373,7 @@ public:
     /**
      * see width
      */
-    void setWidth( long );
+    void setWidth(long);
 
     /**
      * Nonstandard extension to DOM::ImgElement
@@ -390,19 +394,21 @@ class DOMString;
  * MAP element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLMapElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLMapElement : public HTMLElement {
 public:
     HTMLMapElement();
     HTMLMapElement(const HTMLMapElement &other);
     HTMLMapElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLMapElement(HTMLMapElementImpl *impl);
-public:
 
-    HTMLMapElement & operator = (const HTMLMapElement &other);
-    HTMLMapElement & operator = (const Node &other);
+public:
+    HTMLMapElement &operator=(const HTMLMapElement &other);
+    HTMLMapElement &operator=(const Node &other);
 
     ~HTMLMapElement();
 
@@ -423,9 +429,9 @@ public:
     /**
      * see name
      */
-    void setName( const DOMString & );
+    void setName(const DOMString &);
 };
 
-} //namespace
+} // namespace
 
 #endif

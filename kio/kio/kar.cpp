@@ -33,109 +33,119 @@
 /////////////////////////// KAr ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-class KAr::KArPrivate
-{
+class KAr::KArPrivate {
 public:
-    KArPrivate() {}
+    KArPrivate()
+    {
+    }
 };
 
-KAr::KAr( const QString& filename )
-    : KArchive( 0L )
+KAr::KAr(const QString &filename) : KArchive(0L)
 {
-    //kdDebug(7042) << "KAr(filename) reached." << endl;
+    // kdDebug(7042) << "KAr(filename) reached." << endl;
     m_filename = filename;
     d = new KArPrivate;
-    setDevice( new QFile( filename ) );
+    setDevice(new QFile(filename));
 }
 
-KAr::KAr( QIODevice * dev )
-    : KArchive( dev )
+KAr::KAr(QIODevice *dev) : KArchive(dev)
 {
-    //kdDebug(7042) << "KAr::KAr( QIODevice * dev) reached." << endl;
+    // kdDebug(7042) << "KAr::KAr( QIODevice * dev) reached." << endl;
     d = new KArPrivate;
 }
 
 KAr::~KAr()
 {
     // mjarrett: Closes to prevent ~KArchive from aborting w/o device
-    //kdDebug(7042) << "~KAr reached." << endl;
-    if( isOpened() )
+    // kdDebug(7042) << "~KAr reached." << endl;
+    if(isOpened())
         close();
-    if ( !m_filename.isEmpty() )
+    if(!m_filename.isEmpty())
         delete device(); // we created it ourselves
     delete d;
 }
 
-bool KAr::openArchive( int mode )
+bool KAr::openArchive(int mode)
 {
     // Open archive
 
-    //kdDebug(7042) << "openarchive reached." << endl;
+    // kdDebug(7042) << "openarchive reached." << endl;
 
-    if ( mode == IO_WriteOnly )
+    if(mode == IO_WriteOnly)
         return true;
-    if ( mode != IO_ReadOnly && mode != IO_ReadWrite )
+    if(mode != IO_ReadOnly && mode != IO_ReadWrite)
     {
         kdWarning(7042) << "Unsupported mode " << mode << endl;
         return false;
     }
 
-    QIODevice* dev = device();
-    if ( !dev )
+    QIODevice *dev = device();
+    if(!dev)
         return false;
 
     char magic[8];
-    dev->readBlock (magic, 8);
-    if (qstrncmp(magic, "!<arch>", 7) != 0) {
+    dev->readBlock(magic, 8);
+    if(qstrncmp(magic, "!<arch>", 7) != 0)
+    {
         kdWarning(7042) << "Invalid main magic" << endl;
         return false;
     }
 
     char *ar_longnames = 0;
-    while (! dev->atEnd()) {
+    while(!dev->atEnd())
+    {
         QCString ar_header;
         ar_header.resize(61);
         QCString name;
         int date, uid, gid, mode, size;
 
-        dev->at( dev->at() + (2 - (dev->at() % 2)) % 2 ); // Ar headers are padded to byte boundary
+        dev->at(dev->at() + (2 - (dev->at() % 2)) % 2); // Ar headers are padded to byte boundary
 
-        if ( dev->readBlock (ar_header.data(), 60) != 60 ) { // Read ar header
+        if(dev->readBlock(ar_header.data(), 60) != 60)
+        { // Read ar header
             kdWarning(7042) << "Couldn't read header" << endl;
             delete[] ar_longnames;
-            //return false;
+            // return false;
             return true; // Probably EOF / trailing junk
         }
 
-        if (ar_header.right(2) != "`\n") { // Check header magic
+        if(ar_header.right(2) != "`\n")
+        { // Check header magic
             kdWarning(7042) << "Invalid magic" << endl;
             delete[] ar_longnames;
             return false;
         }
 
-        name = ar_header.mid( 0, 16 ); // Process header
-        date = ar_header.mid( 16, 12 ).toInt();
-        uid = ar_header.mid( 28, 6 ).toInt();
-        gid = ar_header.mid( 34, 6 ).toInt();
-        mode = ar_header.mid( 40, 8 ).toInt();
-        size = ar_header.mid( 48, 10 ).toInt();
+        name = ar_header.mid(0, 16); // Process header
+        date = ar_header.mid(16, 12).toInt();
+        uid = ar_header.mid(28, 6).toInt();
+        gid = ar_header.mid(34, 6).toInt();
+        mode = ar_header.mid(40, 8).toInt();
+        size = ar_header.mid(48, 10).toInt();
 
         bool skip_entry = false; // Deal with special entries
-        if (name.mid(0, 1) == "/") {
-            if (name.mid(1, 1) == "/") { // Longfilename table entry
+        if(name.mid(0, 1) == "/")
+        {
+            if(name.mid(1, 1) == "/")
+            { // Longfilename table entry
                 delete[] ar_longnames;
                 ar_longnames = new char[size + 1];
                 ar_longnames[size] = '\0';
-                dev->readBlock (ar_longnames, size);
+                dev->readBlock(ar_longnames, size);
                 skip_entry = true;
                 kdDebug(7042) << "Read in longnames entry" << endl;
-            } else if (name.mid(1, 1) == " ") { // Symbol table entry
+            }
+            else if(name.mid(1, 1) == " ")
+            { // Symbol table entry
                 kdDebug(7042) << "Skipped symbol entry" << endl;
-                dev->at( dev->at() + size );
+                dev->at(dev->at() + size);
                 skip_entry = true;
-            } else { // Longfilename
+            }
+            else
+            { // Longfilename
                 kdDebug(7042) << "Longfilename #" << name.mid(1, 15).toInt() << endl;
-                if (! ar_longnames) {
+                if(!ar_longnames)
+                {
                     kdWarning(7042) << "Invalid longfilename reference" << endl;
                     return false;
                 }
@@ -143,17 +153,18 @@ bool KAr::openArchive( int mode )
                 name = name.left(name.find("/"));
             }
         }
-        if (skip_entry) continue;
+        if(skip_entry)
+            continue;
 
         name = name.stripWhiteSpace(); // Process filename
-        name.replace( "/", "" );
+        name.replace("/", "");
         kdDebug(7042) << "Filename: " << name << " Size: " << size << endl;
 
-        KArchiveEntry* entry;
+        KArchiveEntry *entry;
         entry = new KArchiveFile(this, name, mode, date, /*uid*/ 0, /*gid*/ 0, 0, dev->at(), size);
         rootDir()->addEntry(entry); // Ar files don't support directorys, so everything in root
 
-        dev->at( dev->at() + size ); // Skip contents
+        dev->at(dev->at() + size); // Skip contents
     }
     delete[] ar_longnames;
 
@@ -166,5 +177,7 @@ bool KAr::closeArchive()
     return true;
 }
 
-void KAr::virtual_hook( int id, void* data )
-{ KArchive::virtual_hook( id, data ); }
+void KAr::virtual_hook(int id, void *data)
+{
+    KArchive::virtual_hook(id, data);
+}

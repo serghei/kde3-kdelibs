@@ -27,31 +27,30 @@
 class QLabel;
 class QCheckBox;
 
-class EscpWidget : public QWidget
-{
-	Q_OBJECT
+class EscpWidget : public QWidget {
+    Q_OBJECT
 
 public:
-	EscpWidget(QWidget *parent = 0, const char *name = 0);
-	void setDevice(const QString&);
-	void setPrinterName(const QString&);
+    EscpWidget(QWidget *parent = 0, const char *name = 0);
+    void setDevice(const QString &);
+    void setPrinterName(const QString &);
 
 protected slots:
-	void slotReceivedStdout(KProcess*, char*, int);
-	void slotReceivedStderr(KProcess*, char*, int);
-	void slotProcessExited(KProcess*);
-	void slotButtonClicked();
+    void slotReceivedStdout(KProcess *, char *, int);
+    void slotReceivedStderr(KProcess *, char *, int);
+    void slotProcessExited(KProcess *);
+    void slotButtonClicked();
 
 protected:
-	void startCommand(const QString& arg);
+    void startCommand(const QString &arg);
 
 private:
-	KProcess	m_proc;
-	KURL		m_deviceURL;
-	QString		m_errorbuffer, m_outbuffer;
-	QLabel		*m_printer, *m_device;
-	QCheckBox	*m_useraw;
-	bool		m_hasoutput;
+    KProcess m_proc;
+    KURL m_deviceURL;
+    QString m_errorbuffer, m_outbuffer;
+    QLabel *m_printer, *m_device;
+    QCheckBox *m_useraw;
+    bool m_hasoutput;
 };
 
 #endif

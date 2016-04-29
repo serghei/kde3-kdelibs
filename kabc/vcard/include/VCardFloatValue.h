@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,31 +21,27 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  FLOATVALUE_H
-#define  FLOATVALUE_H
+#ifndef FLOATVALUE_H
+#define FLOATVALUE_H
 
 #include <qcstring.h>
 
 #include <VCardValue.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT FloatValue : public Value
-{
-	
+class KVCARD_EXPORT FloatValue : public Value {
+
 #include "FloatValue-generated.h"
-	
-	FloatValue(float);
-	
-	float value();
-	void setValue(float);
-	
-	private:
-		
-		float value_;
-};
 
+    FloatValue(float);
+
+    float value();
+    void setValue(float);
+
+private:
+    float value_;
+};
 }
 
 #endif

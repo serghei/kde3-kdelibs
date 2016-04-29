@@ -33,13 +33,12 @@ typedef WId Window;
 
 //-----------------------------------------------------------------------------
 
-class KScreenSaverPrivate
-{
+class KScreenSaverPrivate {
 public:
     QWidget *owner;
 };
 
-KScreenSaver::KScreenSaver( WId id ) : QWidget()
+KScreenSaver::KScreenSaver(WId id) : QWidget()
 {
     Window root;
     int ai;
@@ -48,58 +47,59 @@ KScreenSaver::KScreenSaver( WId id ) : QWidget()
     unsigned int h = 0;
 
     d = new KScreenSaverPrivate;
-    d->owner = find( id );
-    if ( d->owner )
-	installEventFilter( this );
+    d->owner = find(id);
+    if(d->owner)
+        installEventFilter(this);
 
-    if ( id )
+    if(id)
     {
-#ifdef Q_WS_X11 //FIXME
-        XGetGeometry(qt_xdisplay(), (Drawable)id, &root, &ai, &ai,
-            &w, &h, &au, &au); 
+#ifdef Q_WS_X11 // FIXME
+        XGetGeometry(qt_xdisplay(), (Drawable)id, &root, &ai, &ai, &w, &h, &au, &au);
 #endif
 
-        create( id, false, true );
+        create(id, false, true);
     }
 
-    if ( w == 0 ) w = 600;
-    if ( h == 0 ) h = 420;
-    resize( w, h );
+    if(w == 0)
+        w = 600;
+    if(h == 0)
+        h = 420;
+    resize(w, h);
     KApplication::sendPostedEvents();
     show();
 }
 
 KScreenSaver::~KScreenSaver()
 {
-    destroy( false, false );
+    destroy(false, false);
     delete d;
 }
 
-void KScreenSaver::embed( QWidget *w )
+void KScreenSaver::embed(QWidget *w)
 {
     KApplication::sendPostedEvents();
-#ifdef Q_WS_X11 //FIXME
+#ifdef Q_WS_X11 // FIXME
     XReparentWindow(qt_xdisplay(), w->winId(), winId(), 0, 0);
 #endif
-    w->setGeometry( 0, 0, width(), height() );
+    w->setGeometry(0, 0, width(), height());
     KApplication::sendPostedEvents();
 }
 
-bool KScreenSaver::eventFilter( QObject *o, QEvent *e )
+bool KScreenSaver::eventFilter(QObject *o, QEvent *e)
 {
     // make sure events get to the original window owner
-    if ( d->owner && o == this ) {
-	QApplication::sendEvent( d->owner, e );
-	return false;
+    if(d->owner && o == this)
+    {
+        QApplication::sendEvent(d->owner, e);
+        return false;
     }
 
-    return QWidget::eventFilter( o, e );
+    return QWidget::eventFilter(o, e);
 }
 
 //============================================================================
 
-class KBlankEffectPrivate
-{
+class KBlankEffectPrivate {
 public:
     KBlankEffect::BlankEffect currentEffect;
     int effectProgress;
@@ -107,20 +107,16 @@ public:
     QWidget *widget;
 };
 
-KBlankEffect::BlankEffect KBlankEffect::effects[] = {
-    &KBlankEffect::blankNormal,
-    &KBlankEffect::blankSweepRight,
-    &KBlankEffect::blankSweepDown,
-    &KBlankEffect::blankBlocks
-};
+KBlankEffect::BlankEffect KBlankEffect::effects[] = {&KBlankEffect::blankNormal, &KBlankEffect::blankSweepRight, &KBlankEffect::blankSweepDown,
+                                                     &KBlankEffect::blankBlocks};
 
-KBlankEffect::KBlankEffect( QObject *parent ) : QObject( parent )
+KBlankEffect::KBlankEffect(QObject *parent) : QObject(parent)
 {
     d = new KBlankEffectPrivate;
     d->currentEffect = &KBlankEffect::blankNormal;
     d->effectProgress = 0;
-    d->timer = new QTimer( this );
-    connect( d->timer, SIGNAL(timeout()), this, SLOT(timeout()) );
+    d->timer = new QTimer(this);
+    connect(d->timer, SIGNAL(timeout()), this, SLOT(timeout()));
 }
 
 
@@ -137,20 +133,21 @@ void KBlankEffect::finished()
 }
 
 
-void KBlankEffect::blank( QWidget *w, Effect effect )
+void KBlankEffect::blank(QWidget *w, Effect effect)
 {
-    if ( !w ) {
+    if(!w)
+    {
         emit doneBlank();
         return;
     }
 
-    if ( effect == Random )
+    if(effect == Random)
         effect = (Effect)(kapp->random() % MaximumEffects);
 
     d->effectProgress = 0;
     d->widget = w;
-    d->currentEffect = effects[ (int)effect ];
-    d->timer->start( 10 );
+    d->currentEffect = effects[(int)effect];
+    d->timer->start(10);
 }
 
 void KBlankEffect::timeout()
@@ -160,30 +157,30 @@ void KBlankEffect::timeout()
 
 void KBlankEffect::blankNormal()
 {
-    QPainter p( d->widget );
-    p.fillRect( 0, 0, d->widget->width(), d->widget->height(), black );
+    QPainter p(d->widget);
+    p.fillRect(0, 0, d->widget->width(), d->widget->height(), black);
     finished();
 }
 
 
 void KBlankEffect::blankSweepRight()
 {
-    QPainter p( d->widget );
-    p.fillRect( d->effectProgress, 0, 50, d->widget->height(), black );
+    QPainter p(d->widget);
+    p.fillRect(d->effectProgress, 0, 50, d->widget->height(), black);
     kapp->flushX();
     d->effectProgress += 50;
-    if ( d->effectProgress >= d->widget->width() )
+    if(d->effectProgress >= d->widget->width())
         finished();
 }
 
 
 void KBlankEffect::blankSweepDown()
 {
-    QPainter p( d->widget );
-    p.fillRect( 0, d->effectProgress, d->widget->width(), 50, black );
+    QPainter p(d->widget);
+    p.fillRect(0, d->effectProgress, d->widget->width(), 50, black);
     kapp->flushX();
     d->effectProgress += 50;
-    if ( d->effectProgress >= d->widget->height() )
+    if(d->effectProgress >= d->widget->height())
         finished();
 }
 
@@ -192,35 +189,39 @@ void KBlankEffect::blankBlocks()
 {
     static int *block = 0;
 
-    int bx = (d->widget->width()+63)/64;
-    int by = (d->widget->height()+63)/64;
+    int bx = (d->widget->width() + 63) / 64;
+    int by = (d->widget->height() + 63) / 64;
 
-    if ( !d->effectProgress ) {
-        block = new int [ bx*by ];
+    if(!d->effectProgress)
+    {
+        block = new int[bx * by];
 
-        for ( int i = 0; i < bx*by; i++ )
+        for(int i = 0; i < bx * by; i++)
             block[i] = i;
-        for ( int i = 0; i < bx*by; i++ ) {
-            int swap = kapp->random()%(bx*by);
+        for(int i = 0; i < bx * by; i++)
+        {
+            int swap = kapp->random() % (bx * by);
             int tmp = block[i];
             block[i] = block[swap];
             block[swap] = tmp;
         }
     }
 
-    QPainter p( d->widget );
+    QPainter p(d->widget);
 
     // erase a couple of blocks at a time, otherwise it looks too slow
-    for ( int i = 0; i < 2 && d->effectProgress < bx*by; i++ ) {
-        int x = block[d->effectProgress]%bx;
-        int y = block[d->effectProgress]/bx;
-        p.fillRect( x*64, y*64, 64, 64, black );
+    for(int i = 0; i < 2 && d->effectProgress < bx * by; i++)
+    {
+        int x = block[d->effectProgress] % bx;
+        int y = block[d->effectProgress] / bx;
+        p.fillRect(x * 64, y * 64, 64, 64, black);
         d->effectProgress++;
     }
 
     kapp->flushX();
 
-    if ( d->effectProgress >= bx*by ) {
+    if(d->effectProgress >= bx * by)
+    {
         delete[] block;
         finished();
     }

@@ -2,23 +2,20 @@
 
 #include <iostream>
 
-static QCString
-ps(const QString &s)
+static QCString ps(const QString &s)
 {
-  if (s.isNull())
-    return "(null)";
-  else
-    return s.local8Bit();
+    if(s.isNull())
+        return "(null)";
+    else
+        return s.local8Bit();
 }
 
-static void
-tx(const char *t)
+static void tx(const char *t)
 {
     std::cout << t << " -> " << ps(KShell::tildeExpand(t)) << std::endl;
 }
 
-static void
-sj(const char *t, int flg)
+static void sj(const char *t, int flg)
 {
     int err;
     std::cout << t << " (" << flg << ") -> " << ps(KShell::joinArgsDQ(KShell::splitArgs(t, flg, &err))) << " (" << err << ")" << std::endl;
@@ -35,7 +32,9 @@ int main()
 #endif
 #if 1
     QStringList lst;
-    lst << "this" << "is" << "text";
+    lst << "this"
+        << "is"
+        << "text";
     std::cout << KShell::joinArgs(lst).latin1() << std::endl;
 #endif
 #if 1

@@ -30,8 +30,7 @@
 
 class QString;
 
-namespace KParts
-{
+namespace KParts {
 
 class DockMainWindowPrivate;
 
@@ -44,45 +43,43 @@ class DockMainWindowPrivate;
  * It implements all internal interfaces in the case of a KDockMainWindow as host:
  * the builder and servant interface (for menu merging).
  */
-class KPARTS_EXPORT DockMainWindow : public KDockMainWindow, virtual public PartBase
-{
-  Q_OBJECT
- public:
-  /**
-   * Constructor, same signature as KDockMainWindow.
-   */
-  DockMainWindow( QWidget* parent = 0L, const char *name = 0L, WFlags f = WDestructiveClose );
-  /**
-   * Destructor.
-   */
-  virtual ~DockMainWindow();
+class KPARTS_EXPORT DockMainWindow : public KDockMainWindow, virtual public PartBase {
+    Q_OBJECT
+public:
+    /**
+     * Constructor, same signature as KDockMainWindow.
+     */
+    DockMainWindow(QWidget *parent = 0L, const char *name = 0L, WFlags f = WDestructiveClose);
+    /**
+     * Destructor.
+     */
+    virtual ~DockMainWindow();
 
 protected slots:
 
-  /**
-   * Create the GUI (by merging the host's and the active part's)
-   *
-   * Called on startup and whenever the active part changes.
-   * For this you need to connect this slot to the
-   * PartManager::activePartChanged() signal
-   * @param part The active part (set to 0L if no part).
-   */
-  void createGUI( KParts::Part * part );
+    /**
+     * Create the GUI (by merging the host's and the active part's)
+     *
+     * Called on startup and whenever the active part changes.
+     * For this you need to connect this slot to the
+     * PartManager::activePartChanged() signal
+     * @param part The active part (set to 0L if no part).
+     */
+    void createGUI(KParts::Part *part);
 
-  /**
-   * Called when the active part wants to change the statusbar message.
-   * Reimplement if your dock-mainwindow has a complex statusbar
-   * (with several items)
-   */
-  virtual void slotSetStatusBarText( const QString & );
+    /**
+     * Called when the active part wants to change the statusbar message.
+     * Reimplement if your dock-mainwindow has a complex statusbar
+     * (with several items)
+     */
+    virtual void slotSetStatusBarText(const QString &);
 
 protected:
-    virtual void createShellGUI( bool create = true );
+    virtual void createShellGUI(bool create = true);
 
- private:
-  DockMainWindowPrivate *d;
-  };
-
+private:
+    DockMainWindowPrivate *d;
+};
 }
 
 #endif

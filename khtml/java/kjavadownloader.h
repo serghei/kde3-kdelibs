@@ -34,57 +34,53 @@
  */
 
 namespace KIO {
-    class Job;
+class Job;
 }
 
 class KJavaDownloaderPrivate;
 class KJavaUploaderPrivate;
 
-class KJavaKIOJob : public QObject
-{
-Q_OBJECT
+class KJavaKIOJob : public QObject {
+    Q_OBJECT
 public:
     virtual ~KJavaKIOJob();
-    virtual void jobCommand( int cmd ) = 0;
-    virtual void data( const QByteArray& qb );
+    virtual void jobCommand(int cmd) = 0;
+    virtual void data(const QByteArray &qb);
 };
 
-class KJavaDownloader : public KJavaKIOJob
-{
-Q_OBJECT
+class KJavaDownloader : public KJavaKIOJob {
+    Q_OBJECT
 
 public:
-    KJavaDownloader( int ID, const QString& url );
+    KJavaDownloader(int ID, const QString &url);
     ~KJavaDownloader();
 
-    virtual void jobCommand( int cmd );
+    virtual void jobCommand(int cmd);
 protected slots:
-    void slotData( KIO::Job*, const QByteArray& );
-    void slotConnected( KIO::Job* );
-    void slotMimetype( KIO::Job*, const QString& );
-    void slotResult( KIO::Job* );
+    void slotData(KIO::Job *, const QByteArray &);
+    void slotConnected(KIO::Job *);
+    void slotMimetype(KIO::Job *, const QString &);
+    void slotResult(KIO::Job *);
 
 private:
-    KJavaDownloaderPrivate* d;
-
+    KJavaDownloaderPrivate *d;
 };
 
-class KJavaUploader : public KJavaKIOJob
-{
-Q_OBJECT
+class KJavaUploader : public KJavaKIOJob {
+    Q_OBJECT
 
 public:
-    KJavaUploader( int ID, const QString& url );
+    KJavaUploader(int ID, const QString &url);
     ~KJavaUploader();
 
-    virtual void jobCommand( int cmd );
-    virtual void data( const QByteArray& qb );
+    virtual void jobCommand(int cmd);
+    virtual void data(const QByteArray &qb);
     void start();
 protected slots:
-    void slotDataRequest( KIO::Job*, QByteArray& );
-    void slotResult( KIO::Job* );
-private:
-    KJavaUploaderPrivate* d;
+    void slotDataRequest(KIO::Job *, QByteArray &);
+    void slotResult(KIO::Job *);
 
+private:
+    KJavaUploaderPrivate *d;
 };
 #endif

@@ -33,18 +33,17 @@ class KateDocument;
 /**
  * Interface for embedding KateDocument into a browser
  */
-class KateBrowserExtension : public KParts::BrowserExtension
-{
-  Q_OBJECT
+class KateBrowserExtension : public KParts::BrowserExtension {
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Constructor
      * @param doc parent document
      */
-    KateBrowserExtension( KateDocument* doc );
+    KateBrowserExtension(KateDocument *doc);
 
-  public slots:
+public slots:
     /**
      * copy text to clipboard
      */
@@ -60,12 +59,11 @@ class KateBrowserExtension : public KParts::BrowserExtension
      */
     void print();
 
-  private:
+private:
     /**
      * parent document
      */
-    KateDocument* m_doc;
+    KateDocument *m_doc;
 };
 
 #endif
-

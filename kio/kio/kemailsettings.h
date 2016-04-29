@@ -37,111 +37,113 @@ class KEMailSettingsPrivate;
 
 
 /**
-  * This is just a small class to facilitate accessing e-mail settings in 
-  * a sane way, and allowing any program to manage multiple e-mail 
+  * This is just a small class to facilitate accessing e-mail settings in
+  * a sane way, and allowing any program to manage multiple e-mail
   * profiles effortlessly
   *
   * @author Alex Zepeda zipzippy@sonic.net
   **/
 class KIO_EXPORT KEMailSettings {
 public:
-	/**
-	  * The list of settings that I thought of when I wrote this 
-	  * class.  Any extra settings thought of later can be accessed 
-	  * easily with getExtendedSetting and setExtendedSetting.
-	  * @see getSetting()
-	  * @see setSetting()
-	  * @see getExtendedSetting()
-	  * @see setExtendedSetting()
-	  **/
-	enum Setting {
-		ClientProgram,
-		ClientTerminal,
-		RealName,
-		EmailAddress,
-		ReplyToAddress,
-		Organization,
-		OutServer,
-		OutServerLogin,
-		OutServerPass,
-		OutServerType,
-		OutServerCommand,
-		OutServerTLS,
-		InServer,
-		InServerLogin,
-		InServerPass,
-		InServerType,
-		InServerMBXType,
-		InServerTLS
-	};
+    /**
+      * The list of settings that I thought of when I wrote this
+      * class.  Any extra settings thought of later can be accessed
+      * easily with getExtendedSetting and setExtendedSetting.
+      * @see getSetting()
+      * @see setSetting()
+      * @see getExtendedSetting()
+      * @see setExtendedSetting()
+      **/
+    enum Setting
+    {
+        ClientProgram,
+        ClientTerminal,
+        RealName,
+        EmailAddress,
+        ReplyToAddress,
+        Organization,
+        OutServer,
+        OutServerLogin,
+        OutServerPass,
+        OutServerType,
+        OutServerCommand,
+        OutServerTLS,
+        InServer,
+        InServerLogin,
+        InServerPass,
+        InServerType,
+        InServerMBXType,
+        InServerTLS
+    };
 
-	/**
-	  * The various extensions allowed.
-	  **/
-	enum Extension {
-		POP3,
-		SMTP,
-		OTHER
-	};
+    /**
+      * The various extensions allowed.
+      **/
+    enum Extension
+    {
+        POP3,
+        SMTP,
+        OTHER
+    };
 
-	/**
-	  * Default constructor, just sets things up.
-	  **/
-	KEMailSettings();
+    /**
+      * Default constructor, just sets things up.
+      **/
+    KEMailSettings();
 
-	/**
-	  * Default destructor, nothing to see here.
-	  **/
-	~KEMailSettings();
+    /**
+      * Default destructor, nothing to see here.
+      **/
+    ~KEMailSettings();
 
-	/**
-	  * List of profiles available.
-	  * @return the list of profiles
-	  **/
-	QStringList profiles() const;
+    /**
+      * List of profiles available.
+      * @return the list of profiles
+      **/
+    QStringList profiles() const;
 
-	/**
-	 * Returns the name of the current profile.
-	  * @returns what profile we're currently using
-	  **/
-	QString currentProfileName() const;
+    /**
+     * Returns the name of the current profile.
+      * @returns what profile we're currently using
+      **/
+    QString currentProfileName() const;
 
-	/**
-	  * Change the current profile.
-	  * @param s the name of the new profile
-	  **/
-	void setProfile (const QString &s);
+    /**
+      * Change the current profile.
+      * @param s the name of the new profile
+      **/
+    void setProfile(const QString &s);
 
-	/**
-	 * Returns the name of the default profile.
-	 * @returns the name of the one that's currently default QString::null if none
-	 **/
-	QString defaultProfileName() const;
+    /**
+     * Returns the name of the default profile.
+     * @returns the name of the one that's currently default QString::null if none
+     **/
+    QString defaultProfileName() const;
 
-	/**
-	  * Sets a new default.
-	  * @param def the new default
-	  **/
-	void setDefault(const QString &def);
+    /**
+      * Sets a new default.
+      * @param def the new default
+      **/
+    void setDefault(const QString &def);
 
-	/**
-	  * Get one of the predefined "basic" settings.
-	  * @param s the setting to get
-	  * @return the value of the setting, or QString::null if not 
-	  *         set
-	  **/
-	QString getSetting(KEMailSettings::Setting s);
+    /**
+      * Get one of the predefined "basic" settings.
+      * @param s the setting to get
+      * @return the value of the setting, or QString::null if not
+      *         set
+      **/
+    QString getSetting(KEMailSettings::Setting s);
 
-	/**
-	  * Set one of the predefined "basic" settings.
-	  * @param s the setting to set
-	  * @param v the new value of the setting, or QString::null to 
-	  *         unset
-	  **/
-	void setSetting(KEMailSettings::Setting s, const QString &v);
+    /**
+      * Set one of the predefined "basic" settings.
+      * @param s the setting to set
+      * @param v the new value of the setting, or QString::null to
+      *         unset
+      **/
+    void setSetting(KEMailSettings::Setting s, const QString &v);
 
 private:
-	KEMailSettingsPrivate *p;
+    KEMailSettingsPrivate *p;
 };
 
 #endif

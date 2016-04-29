@@ -37,14 +37,15 @@ Author: Ralph Mor, X Consortium
  * Data structure for entry in ICE authority file
  */
 
-typedef struct {
-    char    	    *protocol_name;
-    unsigned short  protocol_data_length;
-    char   	    *protocol_data;
-    char    	    *network_id;
-    char    	    *auth_name;
-    unsigned short  auth_data_length;
-    char   	    *auth_data;
+typedef struct
+{
+    char *protocol_name;
+    unsigned short protocol_data_length;
+    char *protocol_data;
+    char *network_id;
+    char *auth_name;
+    unsigned short auth_data_length;
+    char *auth_data;
 } IceAuthFileEntry;
 
 
@@ -52,12 +53,13 @@ typedef struct {
  * Authentication data maintained in memory.
  */
 
-typedef struct {
-    char    	    *protocol_name;
-    char	    *network_id;
-    char    	    *auth_name;
-    unsigned short  auth_data_length;
-    char   	    *auth_data;
+typedef struct
+{
+    char *protocol_name;
+    char *network_id;
+    char *auth_name;
+    unsigned short auth_data_length;
+    char *auth_data;
 } IceAuthDataEntry;
 
 
@@ -65,9 +67,9 @@ typedef struct {
  * Return values from IceLockAuthFile
  */
 
-#define IceAuthLockSuccess	0   /* lock succeeded */
-#define IceAuthLockError	1   /* lock unexpectely failed, check errno */
-#define IceAuthLockTimeout	2   /* lock failed, timeouts expired */
+#define IceAuthLockSuccess 0 /* lock succeeded */
+#define IceAuthLockError 1   /* lock unexpectely failed, check errno */
+#define IceAuthLockTimeout 2 /* lock failed, timeouts expired */
 
 
 /*
@@ -76,81 +78,74 @@ typedef struct {
 
 #define IceAuthFileName KDE_IceAuthFileName
 
-extern char *IceAuthFileName (
+extern char *IceAuthFileName(
 #if NeedFunctionPrototypes
     void
 #endif
-);
+    );
 
 #define IceLockAuthFile KDE_IceLockAuthFile
 
-extern int IceLockAuthFile (
+extern int IceLockAuthFile(
 #if NeedFunctionPrototypes
-    char *		/* file_name */,
-    int			/* retries */,
-    int			/* timeout */,
-    long		/* dead */
+    char * /* file_name */, int /* retries */, int /* timeout */, long /* dead */
 #endif
-);
+    );
 
 #define IceUnlockAuthFile KDE_IceUnlockAuthFile
 
-extern void IceUnlockAuthFile (
+extern void IceUnlockAuthFile(
 #if NeedFunctionPrototypes
-    char *		/* file_name */
+    char * /* file_name */
 #endif
-);
+    );
 
 #define IceReadAuthFileEntry KDE_IceReadAuthFileEntry
 
-extern IceAuthFileEntry *IceReadAuthFileEntry (
+extern IceAuthFileEntry *IceReadAuthFileEntry(
 #if NeedFunctionPrototypes
-    FILE *		/* auth_file */
+    FILE * /* auth_file */
 #endif
-);
+    );
 
 #define IceFreeAuthFileEntry KDE_IceFreeAuthFileEntry
 
-extern void IceFreeAuthFileEntry (
+extern void IceFreeAuthFileEntry(
 #if NeedFunctionPrototypes
-    IceAuthFileEntry *	/* auth */
+    IceAuthFileEntry * /* auth */
 #endif
-);
+    );
 
 #define IceWriteAuthFileEntry KDE_IceWriteAuthFileEntry
 
-extern Status KDE_IceWriteAuthFileEntry (
+extern Status KDE_IceWriteAuthFileEntry(
 #if NeedFunctionPrototypes
-    FILE *		/* auth_file */,
-    IceAuthFileEntry *	/* auth */
+    FILE * /* auth_file */, IceAuthFileEntry * /* auth */
 #endif
-);
+    );
 
 #define IceGetAuthFileEntry KDE_IceGetAuthFileEntry
 
-extern IceAuthFileEntry *IceGetAuthFileEntry (
+extern IceAuthFileEntry *IceGetAuthFileEntry(
 #if NeedFunctionPrototypes
-    const char *		/* protocol_name */,
-    const char *		/* network_id */,
-    const char *		/* auth_name */
+    const char * /* protocol_name */, const char * /* network_id */, const char * /* auth_name */
 #endif
-);
+    );
 
 #define IceGenerateMagicCookie KDE_IceGenerateMagicCookie
 
-extern char *IceGenerateMagicCookie (
+extern char *IceGenerateMagicCookie(
 #if NeedFunctionPrototypes
-    int			/* len */
+    int /* len */
 #endif
-);
+    );
 
 #define IceSetPaAuthData KDE_IceSetPaAuthData
 
-extern void IceSetPaAuthData (
+extern void IceSetPaAuthData(
 #if NeedFunctionPrototypes
-    int			/* numEntries */,
-    IceAuthDataEntry *	/* entries */
+    int /* numEntries */, IceAuthDataEntry * /* entries */
 #endif
-);
+    );
 
 #endif /* _ICEUTIL_H_ */

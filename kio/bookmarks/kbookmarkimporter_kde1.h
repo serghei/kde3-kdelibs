@@ -31,18 +31,18 @@
  * Separated from KBookmarkManager to save memory (we throw this one
  * out once the import is done)
  */
-class KIO_EXPORT KBookmarkImporter
-{
+class KIO_EXPORT KBookmarkImporter {
 public:
-    KBookmarkImporter( QDomDocument * doc ) : m_pDoc(doc) {}
+    KBookmarkImporter(QDomDocument *doc) : m_pDoc(doc)
+    {
+    }
 
-    void import( const QString & path );
+    void import(const QString &path);
 
 private:
-    void scanIntern( QDomElement & parentElem, const QString & _path );
-    void parseBookmark( QDomElement & parentElem, QCString _text,
-                        KSimpleConfig& _cfg, const QString &_group );
-    QDomDocument * m_pDoc;
+    void scanIntern(QDomElement &parentElem, const QString &_path);
+    void parseBookmark(QDomElement &parentElem, QCString _text, KSimpleConfig &_cfg, const QString &_group);
+    QDomDocument *m_pDoc;
     QStringList m_lstParsedDirs;
 };
 

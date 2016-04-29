@@ -22,17 +22,21 @@
 
 #include <kdelibs_export.h>
 
-class KDEPRINT_EXPORT KPReloadObject
-{
-friend class KMFactory;
+class KDEPRINT_EXPORT KPReloadObject {
+    friend class KMFactory;
+
 public:
-	KPReloadObject(bool priority = false);
-	virtual ~KPReloadObject();
+    KPReloadObject(bool priority = false);
+    virtual ~KPReloadObject();
 
 protected:
-	virtual void reload() = 0;
-	virtual void aboutToReload() {}
-	virtual void configChanged() {}
+    virtual void reload() = 0;
+    virtual void aboutToReload()
+    {
+    }
+    virtual void configChanged()
+    {
+    }
 };
 
 #endif

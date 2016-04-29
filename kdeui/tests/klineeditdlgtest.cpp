@@ -4,16 +4,17 @@
 #include <qstring.h>
 #include <qtextview.h>
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-  KApplication app(argc, argv, "klineedittest");
-  KLineEditDlg dialog( "_text", "_value", 0L );
-  if(dialog.exec())
+    KApplication app(argc, argv, "klineedittest");
+    KLineEditDlg dialog("_text", "_value", 0L);
+    if(dialog.exec())
     {
-      qDebug("Accepted.");
-    } else {
-      qDebug("Rejected.");
+        qDebug("Accepted.");
     }
-  return 0;
+    else
+    {
+        qDebug("Rejected.");
+    }
+    return 0;
 }
-

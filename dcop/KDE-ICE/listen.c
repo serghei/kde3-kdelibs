@@ -35,262 +35,245 @@ Author: Ralph Mor, X Consortium
 #include <time.h>
 #include <string.h>
 
-
-Status
-IceListenForConnections (countRet, listenObjsRet, errorLength, errorStringRet)
 
-int		*countRet;
-IceListenObj	**listenObjsRet;
-int		errorLength;
-char		*errorStringRet;
+Status IceListenForConnections(countRet, listenObjsRet, errorLength, errorStringRet)
+
+    int *countRet;
+IceListenObj **listenObjsRet;
+int errorLength;
+char *errorStringRet;
 
 {
-    struct _IceListenObj	*listenObjs;
-    char			*networkId;
-    int				transCount, partial, i, j;
-    int                         result = -1;
-    int                         count = 0;
-    Status			status = 1;
-    XtransConnInfo		*transConns = NULL;
+    struct _IceListenObj *listenObjs;
+    char *networkId;
+    int transCount, partial, i, j;
+    int result = -1;
+    int count = 0;
+    Status status = 1;
+    XtransConnInfo *transConns = NULL;
 
-    while ((result < 0) && (count < 5))
+    while((result < 0) && (count < 5))
     {
-       char port[128];
+        char port[128];
 #ifdef _WIN32
-       int nTCPPort = ((getpid() + time(NULL) + count) % 32768) + 1024;
-       sprintf(port, "%d", nTCPPort);
+        int nTCPPort = ((getpid() + time(NULL) + count) % 32768) + 1024;
+        sprintf(port, "%d", nTCPPort);
 #else
-       sprintf(port, "dcop%d-%ld", getpid(), time(NULL)+count);
+        sprintf(port, "dcop%d-%ld", getpid(), time(NULL) + count);
 #endif
-       result = _kde_IceTransMakeAllCOTSServerListeners (port, &partial,
-                                              &transCount, &transConns);
-       count++;
+        result = _kde_IceTransMakeAllCOTSServerListeners(port, &partial, &transCount, &transConns);
+        count++;
     }
 
-    if ((result < 0) || (transCount < 1))
+    if((result < 0) || (transCount < 1))
     {
-	*listenObjsRet = NULL;
-	*countRet = 0;
+        *listenObjsRet = NULL;
+        *countRet = 0;
 
-        strncpy (errorStringRet,
-	    "Cannot establish any listening sockets", errorLength);
+        strncpy(errorStringRet, "Cannot establish any listening sockets", errorLength);
 
-	return (0);
+        return (0);
     }
 
-    if ((listenObjs = (struct _IceListenObj *) malloc (
-	transCount * sizeof (struct _IceListenObj))) == NULL)
+    if((listenObjs = (struct _IceListenObj *)malloc(transCount * sizeof(struct _IceListenObj))) == NULL)
     {
-	for (i = 0; i < transCount; i++)
-	    _kde_IceTransClose (transConns[i]);
-	free ((char *) transConns);
-	return (0);
+        for(i = 0; i < transCount; i++)
+            _kde_IceTransClose(transConns[i]);
+        free((char *)transConns);
+        return (0);
     }
 
     *countRet = 0;
 
-    for (i = 0; i < transCount; i++)
+    for(i = 0; i < transCount; i++)
     {
-	networkId = (char*)_kde_IceTransGetMyNetworkId (transConns[i]);
+        networkId = (char *)_kde_IceTransGetMyNetworkId(transConns[i]);
 
-	if (networkId)
-	{
-	    listenObjs[*countRet].trans_conn = transConns[i];
-	    listenObjs[*countRet].network_id = networkId;
+        if(networkId)
+        {
+            listenObjs[*countRet].trans_conn = transConns[i];
+            listenObjs[*countRet].network_id = networkId;
 
-	    (*countRet)++;
-	}
+            (*countRet)++;
+        }
     }
 
-    if (*countRet == 0)
+    if(*countRet == 0)
     {
-	*listenObjsRet = NULL;
+        *listenObjsRet = NULL;
 
-        strncpy (errorStringRet,
-	    "Cannot establish any listening sockets", errorLength);
+        strncpy(errorStringRet, "Cannot establish any listening sockets", errorLength);
 
-	status = 0;
-    }
-    else
-    {
-	*listenObjsRet = (IceListenObj *) malloc (
-	    *countRet * sizeof (IceListenObj));
-
-	if (*listenObjsRet == NULL)
-	{
-	    strncpy (errorStringRet, "Malloc failed", errorLength);
-
-	    status = 0;
-	}
-	else
-	{
-	    for (i = 0; i < *countRet; i++)
-	    {
-		(*listenObjsRet)[i] = (IceListenObj) malloc (
-		    sizeof (struct _IceListenObj));
-
-		if ((*listenObjsRet)[i] == NULL)
-		{
-		    strncpy (errorStringRet, "Malloc failed", errorLength);
-
-		    for (j = 0; j < i; j++)
-			free ((char *) (*listenObjsRet)[j]);
-
-		    free ((char *) *listenObjsRet);
-
-		    status = 0;
-		}
-		else
-		{
-		    *((*listenObjsRet)[i]) = listenObjs[i];
-		}
-	    }
-	}
-    }
-
-    if (status == 1)
-    {
-	if (errorStringRet && errorLength > 0)
-	    *errorStringRet = '\0';
-
-	for (i = 0; i < *countRet; i++)
-	{
-	    (*listenObjsRet)[i]->host_based_auth_proc = NULL;
-	}
+        status = 0;
     }
     else
     {
-	for (i = 0; i < transCount; i++)
-	    _kde_IceTransClose (transConns[i]);
+        *listenObjsRet = (IceListenObj *)malloc(*countRet * sizeof(IceListenObj));
+
+        if(*listenObjsRet == NULL)
+        {
+            strncpy(errorStringRet, "Malloc failed", errorLength);
+
+            status = 0;
+        }
+        else
+        {
+            for(i = 0; i < *countRet; i++)
+            {
+                (*listenObjsRet)[i] = (IceListenObj)malloc(sizeof(struct _IceListenObj));
+
+                if((*listenObjsRet)[i] == NULL)
+                {
+                    strncpy(errorStringRet, "Malloc failed", errorLength);
+
+                    for(j = 0; j < i; j++)
+                        free((char *)(*listenObjsRet)[j]);
+
+                    free((char *)*listenObjsRet);
+
+                    status = 0;
+                }
+                else
+                {
+                    *((*listenObjsRet)[i]) = listenObjs[i];
+                }
+            }
+        }
     }
 
-    free ((char *) listenObjs);
-    free ((char *) transConns);
+    if(status == 1)
+    {
+        if(errorStringRet && errorLength > 0)
+            *errorStringRet = '\0';
+
+        for(i = 0; i < *countRet; i++)
+        {
+            (*listenObjsRet)[i]->host_based_auth_proc = NULL;
+        }
+    }
+    else
+    {
+        for(i = 0; i < transCount; i++)
+            _kde_IceTransClose(transConns[i]);
+    }
+
+    free((char *)listenObjs);
+    free((char *)transConns);
 
     return (status);
 }
 
 
-
-int
-IceGetListenConnectionNumber (listenObj)
+int IceGetListenConnectionNumber(listenObj)
 
-IceListenObj listenObj;
+    IceListenObj listenObj;
 
 {
-    return (_kde_IceTransGetConnectionNumber (listenObj->trans_conn));
+    return (_kde_IceTransGetConnectionNumber(listenObj->trans_conn));
 }
 
 
-
-char *
-IceGetListenConnectionString (listenObj)
+char *IceGetListenConnectionString(listenObj)
 
-IceListenObj listenObj;
+    IceListenObj listenObj;
 
 {
     char *networkId;
 
-    networkId = (char *) malloc (strlen (listenObj->network_id) + 1);
+    networkId = (char *)malloc(strlen(listenObj->network_id) + 1);
 
-    if (networkId)
-	strcpy (networkId, listenObj->network_id);
+    if(networkId)
+        strcpy(networkId, listenObj->network_id);
 
     return (networkId);
 }
 
 
-
-char *
-IceComposeNetworkIdList (count, listenObjs)
+char *IceComposeNetworkIdList(count, listenObjs)
 
-int		count;
-IceListenObj	*listenObjs;
+    int count;
+IceListenObj *listenObjs;
 
 {
     char *list;
     int len = 0;
     int i;
 
-    if (count < 1 || listenObjs == NULL)
-	return (NULL);
+    if(count < 1 || listenObjs == NULL)
+        return (NULL);
 
-    for (i = 0; i < count; i++)
-	len += (strlen (listenObjs[i]->network_id) + 1);
+    for(i = 0; i < count; i++)
+        len += (strlen(listenObjs[i]->network_id) + 1);
 
-    list = (char *) malloc (len);
+    list = (char *)malloc(len);
 
-    if (list == NULL)
-	return (NULL);
+    if(list == NULL)
+        return (NULL);
     else
     {
-	int doneCount = 0;
+        int doneCount = 0;
 
-	list[0] = '\0';
+        list[0] = '\0';
 
-	for (i = 0; i < count; i++)
-	{
-	    if (_kde_IceTransIsLocal (listenObjs[i]->trans_conn))
-	    {
-		strcat (list, listenObjs[i]->network_id);
-		doneCount++;
-		if (doneCount < count)
-		    strcat (list, ",");
-	    }
-	}
+        for(i = 0; i < count; i++)
+        {
+            if(_kde_IceTransIsLocal(listenObjs[i]->trans_conn))
+            {
+                strcat(list, listenObjs[i]->network_id);
+                doneCount++;
+                if(doneCount < count)
+                    strcat(list, ",");
+            }
+        }
 
-	if (doneCount < count)
-	{
-	    for (i = 0; i < count; i++)
-	    {
-		if (!_kde_IceTransIsLocal (listenObjs[i]->trans_conn))
-		{
-		    strcat (list, listenObjs[i]->network_id);
-		    doneCount++;
-		    if (doneCount < count)
-			strcat (list, ",");
-		}
-	    }
-	}
+        if(doneCount < count)
+        {
+            for(i = 0; i < count; i++)
+            {
+                if(!_kde_IceTransIsLocal(listenObjs[i]->trans_conn))
+                {
+                    strcat(list, listenObjs[i]->network_id);
+                    doneCount++;
+                    if(doneCount < count)
+                        strcat(list, ",");
+                }
+            }
+        }
 
-	return (list);
+        return (list);
     }
 }
 
 
-
-void
-IceFreeListenObjs (count, listenObjs)
+void IceFreeListenObjs(count, listenObjs)
 
-int	     count;
+    int count;
 IceListenObj *listenObjs;
 
 {
     int i;
 
-    for (i = 0; i < count; i++)
+    for(i = 0; i < count; i++)
     {
-	free (listenObjs[i]->network_id);
-	_kde_IceTransClose (listenObjs[i]->trans_conn);
-	free ((char *) listenObjs[i]);
+        free(listenObjs[i]->network_id);
+        _kde_IceTransClose(listenObjs[i]->trans_conn);
+        free((char *)listenObjs[i]);
     }
 
-    free ((char *) listenObjs);
+    free((char *)listenObjs);
 }
 
 
-
 /*
  * Allow host based authentication for the ICE Connection Setup.
  * Do not confuse with the host based authentication callbacks that
  * can be set up in IceRegisterForProtocolReply.
  */
 
-void
-IceSetHostBasedAuthProc (listenObj, hostBasedAuthProc)
+void IceSetHostBasedAuthProc(listenObj, hostBasedAuthProc)
 
-IceListenObj		listenObj;
-IceHostBasedAuthProc	hostBasedAuthProc;
+    IceListenObj listenObj;
+IceHostBasedAuthProc hostBasedAuthProc;
 
 {
     listenObj->host_based_auth_proc = hostBasedAuthProc;

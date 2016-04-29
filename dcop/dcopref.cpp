@@ -28,113 +28,111 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <qdatastream.h>
 
-#define STR( s ) ( s.data() ? s.data() : "" )
+#define STR(s) (s.data() ? s.data() : "")
 
-bool DCOPReply::typeCheck( const char* t )
+bool DCOPReply::typeCheck(const char *t)
 {
-    return typeCheck( t, true );
+    return typeCheck(t, true);
 }
 
-bool DCOPReply::typeCheck( const char* t, bool warn )
+bool DCOPReply::typeCheck(const char *t, bool warn)
 {
-    if ( type == t )
-	return true;
-    if( warn
-	|| strcmp( t, "<unknown>" )) // type not listed in dcoptypes.h
-	qWarning( "WARNING: DCOPReply<%s>: cast to '%s' error",
-	         STR( type ), t );
+    if(type == t)
+        return true;
+    if(warn || strcmp(t, "<unknown>")) // type not listed in dcoptypes.h
+        qWarning("WARNING: DCOPReply<%s>: cast to '%s' error", STR(type), t);
     return false;
 }
 
 // this has to stay BC too even if private, because it's called from inlines
-DCOPReply DCOPRef::callInternal( const QCString& fun, const QCString& args, const QByteArray& data )
+DCOPReply DCOPRef::callInternal(const QCString &fun, const QCString &args, const QByteArray &data)
 {
-    return callInternal( fun, args, data, NoEventLoop, -1 );
+    return callInternal(fun, args, data, NoEventLoop, -1);
 }
 
-DCOPReply DCOPRef::callInternal( const QCString& fun, const QCString& args, const QByteArray& data,
-				 EventLoopFlag useEventLoop, int timeout )
+DCOPReply DCOPRef::callInternal(const QCString &fun, const QCString &args, const QByteArray &data, EventLoopFlag useEventLoop, int timeout)
 {
     DCOPReply reply;
-    if ( isNull() ) {
-	qWarning( "DCOPRef: call '%s' on null reference error",
-		  STR( fun ) );
-	return reply;
+    if(isNull())
+    {
+        qWarning("DCOPRef: call '%s' on null reference error", STR(fun));
+        return reply;
     }
     QCString sig = fun;
-    if ( fun.find('(') == -1 ) {
-	sig += args;
-	if( args.find( "<unknown" ) != -1 )
-	    qWarning("DCOPRef: unknown type error "
-		     "<\"%s\",\"%s\">::call(\"%s\",%s",
-		     STR(m_app), STR(m_obj), STR(fun), args.data()+1 );
+    if(fun.find('(') == -1)
+    {
+        sig += args;
+        if(args.find("<unknown") != -1)
+            qWarning(
+                "DCOPRef: unknown type error "
+                "<\"%s\",\"%s\">::call(\"%s\",%s",
+                STR(m_app), STR(m_obj), STR(fun), args.data() + 1);
     }
-    DCOPClient* dc = dcopClient();
-    if ( !dc || !dc->isAttached() ) {
-	qWarning( "DCOPRef::call():  no DCOP client or client not attached error" );
-	return reply;
+    DCOPClient *dc = dcopClient();
+    if(!dc || !dc->isAttached())
+    {
+        qWarning("DCOPRef::call():  no DCOP client or client not attached error");
+        return reply;
     }
-    dc->call( m_app, m_obj, sig, data, reply.type, reply.data, useEventLoop == UseEventLoop, timeout );
+    dc->call(m_app, m_obj, sig, data, reply.type, reply.data, useEventLoop == UseEventLoop, timeout);
     return reply;
 }
 
-bool DCOPRef::sendInternal( const QCString& fun, const QCString& args, const QByteArray& data )
+bool DCOPRef::sendInternal(const QCString &fun, const QCString &args, const QByteArray &data)
 {
-    if ( isNull() ) {
-	qWarning( "DCOPRef: send '%s' on null reference error",
-		  STR( fun ) );
-	return false;
+    if(isNull())
+    {
+        qWarning("DCOPRef: send '%s' on null reference error", STR(fun));
+        return false;
     }
-    Q_UNUSED( data );
+    Q_UNUSED(data);
     QCString sig = fun;
-    if ( fun.find('(') == -1 ) {
-	sig += args;
-	if( args.find( "<unknown" ) != -1 )
-	    qWarning("DCOPRef: unknown type error "
-		     "<\"%s\",\"%s\">::send(\"%s\",%s",
-		     STR(m_app), STR(m_obj), STR(fun), args.data()+1 );
+    if(fun.find('(') == -1)
+    {
+        sig += args;
+        if(args.find("<unknown") != -1)
+            qWarning(
+                "DCOPRef: unknown type error "
+                "<\"%s\",\"%s\">::send(\"%s\",%s",
+                STR(m_app), STR(m_obj), STR(fun), args.data() + 1);
     }
-    DCOPClient* dc = dcopClient();
-    if ( !dc || !dc->isAttached() ) {
-	qWarning( "DCOPRef::send(): no DCOP client or client not attached error" );
-	return false;
+    DCOPClient *dc = dcopClient();
+    if(!dc || !dc->isAttached())
+    {
+        qWarning("DCOPRef::send(): no DCOP client or client not attached error");
+        return false;
     }
-    return dc->send( m_app, m_obj, sig, data );
+    return dc->send(m_app, m_obj, sig, data);
 }
 
-DCOPRef::DCOPRef()
-    :d(0)
+DCOPRef::DCOPRef() : d(0)
 {
 }
 
-DCOPRef::DCOPRef( const DCOPRef& ref )
-    :d( ref.d )
+DCOPRef::DCOPRef(const DCOPRef &ref) : d(ref.d)
 {
     m_app = ref.app();
     m_obj = ref.obj();
     m_type = ref.type();
 }
 
-DCOPRef::DCOPRef( DCOPObject *o )
-    : m_app( DCOPClient::mainClient() ? DCOPClient::mainClient()->appId() : QCString() ),
-    m_obj( o->objId() ), m_type( o->interfaces().last() ), d(0)
+DCOPRef::DCOPRef(DCOPObject *o)
+    : m_app(DCOPClient::mainClient() ? DCOPClient::mainClient()->appId() : QCString()), m_obj(o->objId()), m_type(o->interfaces().last()), d(0)
 
 {
 }
 
-DCOPRef::DCOPRef( const QCString& _app, const QCString& obj )
-    : m_app( _app ), m_obj( obj ), d(0)
+DCOPRef::DCOPRef(const QCString &_app, const QCString &obj) : m_app(_app), m_obj(obj), d(0)
 {
 }
 
-DCOPRef::DCOPRef( const QCString& _app, const QCString& _obj, const QCString& _type )
-    : m_app( _app ), m_obj( _obj ), m_type( _type ), d(0)
+DCOPRef::DCOPRef(const QCString &_app, const QCString &_obj, const QCString &_type) : m_app(_app), m_obj(_obj), m_type(_type), d(0)
 {
 }
 
 bool DCOPRef::isNull() const
 {
-    return ( m_app.isNull() || m_obj.isNull() );
+    return (m_app.isNull() || m_obj.isNull());
 }
 
 QCString DCOPRef::app() const
@@ -158,17 +156,17 @@ QCString DCOPRef::type() const
     return m_type;
 }
 
-void DCOPRef::setDCOPClient( DCOPClient* dc )
+void DCOPRef::setDCOPClient(DCOPClient *dc)
 {
-    d = (DCOPRefPrivate*) dc;
+    d = (DCOPRefPrivate *)dc;
 }
 
-DCOPClient* DCOPRef::dcopClient() const
+DCOPClient *DCOPRef::dcopClient() const
 {
-    return d ? (DCOPClient*)d : DCOPClient::mainClient();
+    return d ? (DCOPClient *)d : DCOPClient::mainClient();
 }
 
-DCOPRef& DCOPRef::operator=( const DCOPRef& ref )
+DCOPRef &DCOPRef::operator=(const DCOPRef &ref)
 {
     d = ref.d;
     m_app = ref.app();
@@ -177,14 +175,14 @@ DCOPRef& DCOPRef::operator=( const DCOPRef& ref )
     return *this;
 }
 
-void DCOPRef::setRef( const QCString& _app, const QCString& _obj )
+void DCOPRef::setRef(const QCString &_app, const QCString &_obj)
 {
     m_app = _app;
     m_obj = _obj;
     m_type = 0;
 }
 
-void DCOPRef::setRef( const QCString& _app, const QCString& _obj, const QCString& _type )
+void DCOPRef::setRef(const QCString &_app, const QCString &_obj, const QCString &_type)
 {
     m_app = _app;
     m_obj = _obj;
@@ -198,7 +196,7 @@ void DCOPRef::clear()
     m_type = 0;
 }
 
-QDataStream& operator<<( QDataStream& str, const DCOPRef& ref )
+QDataStream &operator<<(QDataStream &str, const DCOPRef &ref)
 {
     str << ref.app();
     str << ref.obj();
@@ -207,12 +205,12 @@ QDataStream& operator<<( QDataStream& str, const DCOPRef& ref )
     return str;
 }
 
-QDataStream& operator>>( QDataStream& str, DCOPRef& ref )
+QDataStream &operator>>(QDataStream &str, DCOPRef &ref)
 {
     QCString a, o, t;
     str >> a >> o >> t;
 
-    ref.setRef( a, o, t );
+    ref.setRef(a, o, t);
 
     return str;
 }

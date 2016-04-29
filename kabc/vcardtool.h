@@ -34,9 +34,8 @@ class Picture;
 class Secrecy;
 class Sound;
 
-class KABC_EXPORT VCardTool
-{
-  public:
+class KABC_EXPORT VCardTool {
+public:
     VCardTool();
     ~VCardTool();
 
@@ -44,45 +43,44 @@ class KABC_EXPORT VCardTool
       Creates a string that contains the addressees from the list in
       the vCard format.
      */
-    QString createVCards( Addressee::List list, VCard::Version version = VCard::v3_0 );
+    QString createVCards(Addressee::List list, VCard::Version version = VCard::v3_0);
 
     /**
       Parses the string and returns a list of addressee objects.
      */
-    Addressee::List parseVCards( const QString& vcard );
+    Addressee::List parseVCards(const QString &vcard);
 
-  private:
+private:
     /**
       Split a string and replaces escaped separators on the fly with
       unescaped ones.
      */
-    QStringList splitString( const QChar &sep, const QString &value );
-    
-    QDateTime parseDateTime( const QString &str );
-    QString createDateTime( const QDateTime &dateTime );
+    QStringList splitString(const QChar &sep, const QString &value);
 
-    Picture parsePicture( const VCardLine &line );
-    VCardLine createPicture( const QString &identifier, const Picture &pic );
+    QDateTime parseDateTime(const QString &str);
+    QString createDateTime(const QDateTime &dateTime);
 
-    Sound parseSound( const VCardLine &line );
-    VCardLine createSound( const Sound &snd );
+    Picture parsePicture(const VCardLine &line);
+    VCardLine createPicture(const QString &identifier, const Picture &pic);
 
-    Key parseKey( const VCardLine &line );
-    VCardLine createKey( const Key &key );
+    Sound parseSound(const VCardLine &line);
+    VCardLine createSound(const Sound &snd);
 
-    Secrecy parseSecrecy( const VCardLine &line );
-    VCardLine createSecrecy( const Secrecy &secrecy );
+    Key parseKey(const VCardLine &line);
+    VCardLine createKey(const Key &key);
 
-    Agent parseAgent( const VCardLine &line );
-    VCardLine createAgent( VCard::Version version, const Agent &agent );
+    Secrecy parseSecrecy(const VCardLine &line);
+    VCardLine createSecrecy(const Secrecy &secrecy);
 
-    QMap<QString, int> mAddressTypeMap;
-    QMap<QString, int> mPhoneTypeMap;
+    Agent parseAgent(const VCardLine &line);
+    VCardLine createAgent(VCard::Version version, const Agent &agent);
+
+    QMap< QString, int > mAddressTypeMap;
+    QMap< QString, int > mPhoneTypeMap;
 
     class VCardToolPrivate;
     VCardToolPrivate *d;
 };
-
 }
 
 #endif

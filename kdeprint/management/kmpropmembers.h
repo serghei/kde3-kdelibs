@@ -24,19 +24,18 @@
 
 class QTextView;
 
-class KDEPRINT_EXPORT KMPropMembers : public KMPropWidget
-{
+class KDEPRINT_EXPORT KMPropMembers : public KMPropWidget {
 public:
-	KMPropMembers(QWidget *parent = 0, const char *name = 0);
-	~KMPropMembers();
+    KMPropMembers(QWidget *parent = 0, const char *name = 0);
+    ~KMPropMembers();
 
-	void setPrinter(KMPrinter*);
+    void setPrinter(KMPrinter *);
 
 protected:
-	void configureWizard(KMWizard*);
+    void configureWizard(KMWizard *);
 
 private:
-	QTextView	*m_members;
+    QTextView *m_members;
 };
 
 #endif

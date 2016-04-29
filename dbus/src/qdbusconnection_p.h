@@ -56,8 +56,7 @@ class QTimerEvent;
 struct DBusConnection;
 struct DBusServer;
 
-class QDBusConnectionPrivate: public QObject
-{
+class QDBusConnectionPrivate : public QObject {
     Q_OBJECT
 public:
     QDBusConnectionPrivate(QObject *parent = 0);
@@ -74,18 +73,18 @@ public:
     bool handleObjectCall(DBusMessage *message);
     bool handleError();
 
-    void emitPendingCallReply(const QDBusMessage& message);
+    void emitPendingCallReply(const QDBusMessage &message);
 
 signals:
-    void dbusSignal(const QDBusMessage& message);
+    void dbusSignal(const QDBusMessage &message);
 
-    void dbusPendingCallReply(const QDBusMessage& message);
+    void dbusPendingCallReply(const QDBusMessage &message);
 
 public slots:
     void socketRead(int);
     void socketWrite(int);
 
-    void objectDestroyed(QObject* object);
+    void objectDestroyed(QObject *object);
 
     void purgeRemovedWatches();
 
@@ -96,7 +95,12 @@ public:
     DBusError error;
     QDBusError lastError;
 
-    enum ConnectionMode { InvalidMode, ServerMode, ClientMode };
+    enum ConnectionMode
+    {
+        InvalidMode,
+        ServerMode,
+        ClientMode
+    };
 
     // FIXME QAtomic ref;
     Atomic ref;
@@ -104,43 +108,44 @@ public:
     DBusConnection *connection;
     DBusServer *server;
 
-    QTimer* dispatcher;
+    QTimer *dispatcher;
 
     static int messageMetaType;
     static int registerMessageMetaType();
-    int sendWithReplyAsync(const QDBusMessage &message, QObject *receiver,
-                           const char *method);
+    int sendWithReplyAsync(const QDBusMessage &message, QObject *receiver, const char *method);
     void flush();
 
     struct Watcher
     {
-        Watcher(): watch(0), read(0), write(0) {}
+        Watcher() : watch(0), read(0), write(0)
+        {
+        }
         DBusWatch *watch;
         QSocketNotifier *read;
         QSocketNotifier *write;
     };
     // FIXME typedef QMultiHash<int, Watcher> WatcherHash;
-    typedef QValueList<Watcher> WatcherList;
+    typedef QValueList< Watcher > WatcherList;
     WatcherList removedWatches;
-    typedef QMap<int, WatcherList> WatcherHash;
+    typedef QMap< int, WatcherList > WatcherHash;
     WatcherHash watchers;
 
     // FIXME typedef QHash<int, DBusTimeout *> TimeoutHash;
-    typedef QMap<int, DBusTimeout*> TimeoutHash;
+    typedef QMap< int, DBusTimeout * > TimeoutHash;
     TimeoutHash timeouts;
 
-    typedef QMap<QString, QDBusObjectBase*> ObjectMap;
+    typedef QMap< QString, QDBusObjectBase * > ObjectMap;
     ObjectMap registeredObjects;
 
-    QValueList<DBusTimeout *> pendingTimeouts;
+    QValueList< DBusTimeout * > pendingTimeouts;
 
     struct QDBusPendingCall
     {
-        QGuardedPtr<QObject> receiver;
+        QGuardedPtr< QObject > receiver;
         QCString method;
         DBusPendingCall *pending;
     };
-    typedef QMap<DBusPendingCall*, QDBusPendingCall*> PendingCallMap;
+    typedef QMap< DBusPendingCall *, QDBusPendingCall * > PendingCallMap;
     PendingCallMap pendingCalls;
 };
 

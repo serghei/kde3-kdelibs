@@ -35,88 +35,94 @@
 
 using namespace KRES;
 
-SelectDialog::SelectDialog( QPtrList<Resource> list, QWidget *parent,
-                            const char *name )
-  : KDialog( parent, name, true )
+SelectDialog::SelectDialog(QPtrList< Resource > list, QWidget *parent, const char *name) : KDialog(parent, name, true)
 {
-  setCaption( i18n( "Resource Selection" ) );
-  resize( 300, 200 );
+    setCaption(i18n("Resource Selection"));
+    resize(300, 200);
 
-  QVBoxLayout *mainLayout = new QVBoxLayout( this );
-  mainLayout->setMargin( marginHint() );
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->setMargin(marginHint());
 
-  QGroupBox *groupBox = new QGroupBox( 2, Qt::Horizontal,  this );
-  groupBox->setTitle( i18n( "Resources" ) );
+    QGroupBox *groupBox = new QGroupBox(2, Qt::Horizontal, this);
+    groupBox->setTitle(i18n("Resources"));
 
-  mResourceId = new KListBox( groupBox );
+    mResourceId = new KListBox(groupBox);
 
-  mainLayout->addWidget( groupBox );
+    mainLayout->addWidget(groupBox);
 
-  mainLayout->addSpacing( 10 );
+    mainLayout->addSpacing(10);
 
-  KButtonBox *buttonBox = new KButtonBox( this );
+    KButtonBox *buttonBox = new KButtonBox(this);
 
-  buttonBox->addStretch();
-  buttonBox->addButton( KStdGuiItem::ok(), this, SLOT( accept() ) );
-  buttonBox->addButton( KStdGuiItem::cancel(), this, SLOT( reject() ) );
-  buttonBox->layout();
+    buttonBox->addStretch();
+    buttonBox->addButton(KStdGuiItem::ok(), this, SLOT(accept()));
+    buttonBox->addButton(KStdGuiItem::cancel(), this, SLOT(reject()));
+    buttonBox->layout();
 
-  mainLayout->addWidget( buttonBox );
+    mainLayout->addWidget(buttonBox);
 
-  // setup listbox
-  uint counter = 0;
-  for ( uint i = 0; i < list.count(); ++i ) {
-    Resource *resource = list.at( i );
-    if ( resource && !resource->readOnly() ) {
-      mResourceMap.insert( counter, resource );
-      mResourceId->insertItem( resource->resourceName() );
-      counter++;
+    // setup listbox
+    uint counter = 0;
+    for(uint i = 0; i < list.count(); ++i)
+    {
+        Resource *resource = list.at(i);
+        if(resource && !resource->readOnly())
+        {
+            mResourceMap.insert(counter, resource);
+            mResourceId->insertItem(resource->resourceName());
+            counter++;
+        }
     }
-  }
 
-  mResourceId->setCurrentItem( 0 );
-  connect( mResourceId, SIGNAL(returnPressed(QListBoxItem*)),
-           SLOT(accept()) );
-  connect( mResourceId, SIGNAL( executed( QListBoxItem* ) ),
-           SLOT( accept() ) );
+    mResourceId->setCurrentItem(0);
+    connect(mResourceId, SIGNAL(returnPressed(QListBoxItem *)), SLOT(accept()));
+    connect(mResourceId, SIGNAL(executed(QListBoxItem *)), SLOT(accept()));
 }
 
 Resource *SelectDialog::resource()
 {
-  if ( mResourceId->currentItem() != -1 )
-    return mResourceMap[ mResourceId->currentItem() ];
-  else
-    return 0;
+    if(mResourceId->currentItem() != -1)
+        return mResourceMap[mResourceId->currentItem()];
+    else
+        return 0;
 }
 
-Resource *SelectDialog::getResource( QPtrList<Resource> list, QWidget *parent )
+Resource *SelectDialog::getResource(QPtrList< Resource > list, QWidget *parent)
 {
-  if ( list.count() == 0 ) {
-    KMessageBox::error( parent, i18n( "There is no resource available!" ) );
-    return 0;
-  }
-
-  if ( list.count() == 1 ) return list.first();
-
-  // the following lines will return a writeable resource if only _one_ writeable
-  // resource exists
-  Resource *found = 0;
-  Resource *it = list.first();
-  while ( it ) {
-    if ( !it->readOnly() ) {
-      if ( found ) {
-        found = 0;
-	break;
-      } else
-        found = it;
+    if(list.count() == 0)
+    {
+        KMessageBox::error(parent, i18n("There is no resource available!"));
+        return 0;
     }
-    it = list.next();
-  }
 
-  if ( found )
-    return found;
+    if(list.count() == 1)
+        return list.first();
 
-  SelectDialog dlg( list, parent );
-  if ( dlg.exec() == KDialog::Accepted ) return dlg.resource();
-  else return 0;
+    // the following lines will return a writeable resource if only _one_ writeable
+    // resource exists
+    Resource *found = 0;
+    Resource *it = list.first();
+    while(it)
+    {
+        if(!it->readOnly())
+        {
+            if(found)
+            {
+                found = 0;
+                break;
+            }
+            else
+                found = it;
+        }
+        it = list.next();
+    }
+
+    if(found)
+        return found;
+
+    SelectDialog dlg(list, parent);
+    if(dlg.exec() == KDialog::Accepted)
+        return dlg.resource();
+    else
+        return 0;
 }

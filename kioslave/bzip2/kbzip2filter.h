@@ -21,28 +21,37 @@
 
 #include <config.h>
 
-#if defined( HAVE_BZIP2_SUPPORT )
+#if defined(HAVE_BZIP2_SUPPORT)
 
 #include "kfilterbase.h"
 
-class KBzip2Filter : public KFilterBase
-{
+class KBzip2Filter : public KFilterBase {
 public:
     KBzip2Filter();
     virtual ~KBzip2Filter();
 
-    virtual void init( int );
-    virtual int mode() const { return m_mode; }
+    virtual void init(int);
+    virtual int mode() const
+    {
+        return m_mode;
+    }
     virtual void terminate();
     virtual void reset();
-    virtual bool readHeader() { return true; } // bzip2 handles it by itself ! Cool !
-    virtual bool writeHeader( const QCString & ) { return true; }
-    virtual void setOutBuffer( char * data, uint maxlen );
-    virtual void setInBuffer( const char * data, uint size );
-    virtual int  inBufferAvailable() const;
-    virtual int  outBufferAvailable() const;
+    virtual bool readHeader()
+    {
+        return true;
+    } // bzip2 handles it by itself ! Cool !
+    virtual bool writeHeader(const QCString &)
+    {
+        return true;
+    }
+    virtual void setOutBuffer(char *data, uint maxlen);
+    virtual void setInBuffer(const char *data, uint size);
+    virtual int inBufferAvailable() const;
+    virtual int outBufferAvailable() const;
     virtual Result uncompress();
-    virtual Result compress( bool finish );
+    virtual Result compress(bool finish);
+
 private:
     class KBzip2FilterPrivate;
     KBzip2FilterPrivate *d;

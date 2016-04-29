@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,56 +27,48 @@
 
 using namespace VCARD;
 
-TextParam::TextParam()
-	:	Param()
+TextParam::TextParam() : Param()
 {
 }
 
-TextParam::TextParam(const TextParam & x)
-	:	Param(x)
+TextParam::TextParam(const TextParam &x) : Param(x)
 {
 }
 
-TextParam::TextParam(const QCString & s)
-	:	Param(s)
+TextParam::TextParam(const QCString &s) : Param(s)
 {
 }
 
-	TextParam &
-TextParam::operator = (TextParam & x)
+TextParam &TextParam::operator=(TextParam &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Param::operator = (x);
-	return *this;
+    Param::operator=(x);
+    return *this;
 }
 
-	TextParam &
-TextParam::operator = (const QCString & s)
+TextParam &TextParam::operator=(const QCString &s)
 {
-	Param::operator = (s);
-	return *this;
+    Param::operator=(s);
+    return *this;
 }
 
-	bool
-TextParam::operator == (TextParam & x)
+bool TextParam::operator==(TextParam &x)
 {
-	x.parse();
-	
-	return false;
+    x.parse();
+
+    return false;
 }
 
 TextParam::~TextParam()
 {
 }
 
-	void
-TextParam::_parse()
+void TextParam::_parse()
 {
 }
 
-	void
-TextParam::_assemble()
+void TextParam::_assemble()
 {
 }
-

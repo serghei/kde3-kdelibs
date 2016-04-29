@@ -38,32 +38,31 @@ class Lock;
 /**
   @internal
 */
-class KABC_EXPORT ResourceDir : public Resource
-{
-  Q_OBJECT
+class KABC_EXPORT ResourceDir : public Resource {
+    Q_OBJECT
 
-  public:
-    ResourceDir( const KConfig* );
-    ResourceDir( const QString &path, const QString &type = "vcard" );
+public:
+    ResourceDir(const KConfig *);
+    ResourceDir(const QString &path, const QString &type = "vcard");
     ~ResourceDir();
 
-    virtual void writeConfig( KConfig* );
+    virtual void writeConfig(KConfig *);
 
     virtual bool doOpen();
     virtual void doClose();
-  
+
     virtual Ticket *requestSaveTicket();
-    virtual void releaseSaveTicket( Ticket* );
+    virtual void releaseSaveTicket(Ticket *);
 
     virtual bool load();
     virtual bool asyncLoad();
-    virtual bool save( Ticket* ticket );
-    virtual bool asyncSave( Ticket* ticket );
+    virtual bool save(Ticket *ticket);
+    virtual bool asyncSave(Ticket *ticket);
 
     /**
       Set path to be used for saving.
      */
-    void setPath( const QString & );
+    void setPath(const QString &);
 
     /**
       Return path used for loading and saving the address book.
@@ -73,26 +72,26 @@ class KABC_EXPORT ResourceDir : public Resource
     /**
       Set the format by name.
      */
-    void setFormat( const QString &format );
+    void setFormat(const QString &format);
 
     /**
       Returns the format name.
      */
     QString format() const;
-  
+
     /**
       Remove a addressee from its source.
       This method is mainly called by KABC::AddressBook.
      */
-    virtual void removeAddressee( const Addressee& addr );
+    virtual void removeAddressee(const Addressee &addr);
 
-  protected slots:
+protected slots:
     void pathChanged();
 
-  protected:
-    void init( const QString &path, const QString &format );
+protected:
+    void init(const QString &path, const QString &format);
 
-  private:
+private:
     FormatPlugin *mFormat;
 
     KDirWatch mDirWatch;
@@ -107,7 +106,6 @@ class KABC_EXPORT ResourceDir : public Resource
     class ResourceDirPrivate;
     ResourceDirPrivate *d;
 };
-
 }
 
 #endif

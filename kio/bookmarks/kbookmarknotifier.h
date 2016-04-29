@@ -28,18 +28,17 @@
  * DCOP interface for a bookmark notifier (an object which emits signals
  * upon changes to the bookmarks)
  */
-class KIO_EXPORT KBookmarkNotifier : virtual public DCOPObject
-{
-  K_DCOP
+class KIO_EXPORT KBookmarkNotifier : virtual public DCOPObject {
+    K_DCOP
 
 public:
-  KBookmarkNotifier(QCString objId = "KBookmarkNotifier") : DCOPObject(objId) {}
+    KBookmarkNotifier(QCString objId = "KBookmarkNotifier") : DCOPObject(objId)
+    {
+    }
 
-k_dcop_signals:
-  void addedBookmark( QString filename, QString url, QString text, QString address, QString icon );
-  void createdNewFolder( QString filename, QString text, QString address );
-  void updatedAccessMetadata( QString filename, QString url );
+    k_dcop_signals : void addedBookmark(QString filename, QString url, QString text, QString address, QString icon);
+    void createdNewFolder(QString filename, QString text, QString address);
+    void updatedAccessMetadata(QString filename, QString url);
 };
 
 #endif
-

@@ -36,11 +36,12 @@ public:
     int m_minLength;
     unsigned int m_CurrentMaxLength;
 
-    //holds the full names of the tab, otherwise all we
-    //know about is the shortened name
+    // holds the full names of the tab, otherwise all we
+    // know about is the shortened name
     QStringList m_tabNames;
 
-    KTabWidgetPrivate() {
+    KTabWidgetPrivate()
+    {
         m_automaticResizeTabs = false;
         KConfigGroupSaver groupsaver(KGlobal::config(), "General");
         m_maxLength = KGlobal::config()->readNumEntry("MaximumTabLength", 30);
@@ -49,23 +50,22 @@ public:
     }
 };
 
-KTabWidget::KTabWidget( QWidget *parent, const char *name, WFlags f )
-    : QTabWidget( parent, name, f )
+KTabWidget::KTabWidget(QWidget *parent, const char *name, WFlags f) : QTabWidget(parent, name, f)
 {
     d = new KTabWidgetPrivate;
-    setTabBar( new KTabBar(this, "tabbar") );
-    setAcceptDrops( true );
+    setTabBar(new KTabBar(this, "tabbar"));
+    setAcceptDrops(true);
 
-    connect(tabBar(), SIGNAL(contextMenu( int, const QPoint & )), SLOT(contextMenu( int, const QPoint & )));
-    connect(tabBar(), SIGNAL(mouseDoubleClick( int )), SLOT(mouseDoubleClick( int )));
-    connect(tabBar(), SIGNAL(mouseMiddleClick( int )), SLOT(mouseMiddleClick( int )));
-    connect(tabBar(), SIGNAL(initiateDrag( int )), SLOT(initiateDrag( int )));
-    connect(tabBar(), SIGNAL(testCanDecode(const QDragMoveEvent *, bool & )), SIGNAL(testCanDecode(const QDragMoveEvent *, bool & )));
-    connect(tabBar(), SIGNAL(receivedDropEvent( int, QDropEvent * )), SLOT(receivedDropEvent( int, QDropEvent * )));
-    connect(tabBar(), SIGNAL(moveTab( int, int )), SLOT(moveTab( int, int )));
-    connect(tabBar(), SIGNAL(closeRequest( int )), SLOT(closeRequest( int )));
+    connect(tabBar(), SIGNAL(contextMenu(int, const QPoint &)), SLOT(contextMenu(int, const QPoint &)));
+    connect(tabBar(), SIGNAL(mouseDoubleClick(int)), SLOT(mouseDoubleClick(int)));
+    connect(tabBar(), SIGNAL(mouseMiddleClick(int)), SLOT(mouseMiddleClick(int)));
+    connect(tabBar(), SIGNAL(initiateDrag(int)), SLOT(initiateDrag(int)));
+    connect(tabBar(), SIGNAL(testCanDecode(const QDragMoveEvent *, bool &)), SIGNAL(testCanDecode(const QDragMoveEvent *, bool &)));
+    connect(tabBar(), SIGNAL(receivedDropEvent(int, QDropEvent *)), SLOT(receivedDropEvent(int, QDropEvent *)));
+    connect(tabBar(), SIGNAL(moveTab(int, int)), SLOT(moveTab(int, int)));
+    connect(tabBar(), SIGNAL(closeRequest(int)), SLOT(closeRequest(int)));
 #ifndef QT_NO_WHEELEVENT
-    connect(tabBar(), SIGNAL(wheelDelta( int )), SLOT(wheelDelta( int )));
+    connect(tabBar(), SIGNAL(wheelDelta(int)), SLOT(wheelDelta(int)));
 #endif
 }
 
@@ -74,193 +74,218 @@ KTabWidget::~KTabWidget()
     delete d;
 }
 
-void KTabWidget::insertTab( QWidget *child, const QString &label, int index )
+void KTabWidget::insertTab(QWidget *child, const QString &label, int index)
 {
-    QTabWidget::insertTab( child, label, index );
+    QTabWidget::insertTab(child, label, index);
 }
 
-void KTabWidget::insertTab( QWidget *child, const QIconSet& iconset, const QString &label, int index )
+void KTabWidget::insertTab(QWidget *child, const QIconSet &iconset, const QString &label, int index)
 {
-    QTabWidget::insertTab( child, iconset, label, index );
+    QTabWidget::insertTab(child, iconset, label, index);
 }
 
-void KTabWidget::insertTab( QWidget *child, QTab *tab, int index )
+void KTabWidget::insertTab(QWidget *child, QTab *tab, int index)
 {
-    QTabWidget::insertTab( child, tab, index);
-    if ( d->m_automaticResizeTabs ) {
-        if ( index < 0 || index >= count() ) {
-            d->m_tabNames.append( tab->text() );
-            resizeTabs( d->m_tabNames.count()-1 );
+    QTabWidget::insertTab(child, tab, index);
+    if(d->m_automaticResizeTabs)
+    {
+        if(index < 0 || index >= count())
+        {
+            d->m_tabNames.append(tab->text());
+            resizeTabs(d->m_tabNames.count() - 1);
         }
-        else {
-            d->m_tabNames.insert( d->m_tabNames.at( index ), tab->text() );
-            resizeTabs( index );
+        else
+        {
+            d->m_tabNames.insert(d->m_tabNames.at(index), tab->text());
+            resizeTabs(index);
         }
     }
 }
 
-void KTabWidget::setTabBarHidden( bool hide )
+void KTabWidget::setTabBarHidden(bool hide)
 {
-    QWidget *rightcorner = this->cornerWidget( TopRight );
-    QWidget *leftcorner = this->cornerWidget( TopLeft );
+    QWidget *rightcorner = this->cornerWidget(TopRight);
+    QWidget *leftcorner = this->cornerWidget(TopLeft);
 
-    if ( hide ) {
-        if ( leftcorner ) leftcorner->hide();
-        if ( rightcorner ) rightcorner->hide();
+    if(hide)
+    {
+        if(leftcorner)
+            leftcorner->hide();
+        if(rightcorner)
+            rightcorner->hide();
         tabBar()->hide();
-    } else {
+    }
+    else
+    {
         tabBar()->show();
-        if ( leftcorner ) leftcorner->show();
-        if ( rightcorner ) rightcorner->show();
+        if(leftcorner)
+            leftcorner->show();
+        if(rightcorner)
+            rightcorner->show();
     }
 }
 
 bool KTabWidget::isTabBarHidden() const
 {
-    return !( tabBar()->isVisible() );
+    return !(tabBar()->isVisible());
 }
 
-void KTabWidget::setTabColor( QWidget *w, const QColor& color )
+void KTabWidget::setTabColor(QWidget *w, const QColor &color)
 {
-    QTab *t = tabBar()->tabAt( indexOf( w ) );
-    if (t) {
-        static_cast<KTabBar*>(tabBar())->setTabColor( t->identifier(), color );
+    QTab *t = tabBar()->tabAt(indexOf(w));
+    if(t)
+    {
+        static_cast< KTabBar * >(tabBar())->setTabColor(t->identifier(), color);
     }
 }
 
-QColor KTabWidget::tabColor( QWidget *w ) const
+QColor KTabWidget::tabColor(QWidget *w) const
 {
-    QTab *t = tabBar()->tabAt( indexOf( w ) );
-    if (t) {
-        return static_cast<KTabBar*>(tabBar())->tabColor( t->identifier() );
-    } else {
+    QTab *t = tabBar()->tabAt(indexOf(w));
+    if(t)
+    {
+        return static_cast< KTabBar * >(tabBar())->tabColor(t->identifier());
+    }
+    else
+    {
         return QColor();
     }
 }
 
-void KTabWidget::setTabReorderingEnabled( bool on)
+void KTabWidget::setTabReorderingEnabled(bool on)
 {
-    static_cast<KTabBar*>(tabBar())->setTabReorderingEnabled( on );
+    static_cast< KTabBar * >(tabBar())->setTabReorderingEnabled(on);
 }
 
 bool KTabWidget::isTabReorderingEnabled() const
 {
-    return static_cast<KTabBar*>(tabBar())->isTabReorderingEnabled();
+    return static_cast< KTabBar * >(tabBar())->isTabReorderingEnabled();
 }
 
-void KTabWidget::setTabCloseActivatePrevious( bool previous)
+void KTabWidget::setTabCloseActivatePrevious(bool previous)
 {
-    static_cast<KTabBar*>(tabBar())->setTabCloseActivatePrevious( previous );
+    static_cast< KTabBar * >(tabBar())->setTabCloseActivatePrevious(previous);
 }
 
 bool KTabWidget::tabCloseActivatePrevious() const
 {
-    return static_cast<KTabBar*>(tabBar())->tabCloseActivatePrevious();
+    return static_cast< KTabBar * >(tabBar())->tabCloseActivatePrevious();
 }
 
-unsigned int KTabWidget::tabBarWidthForMaxChars( uint maxLength )
+unsigned int KTabWidget::tabBarWidthForMaxChars(uint maxLength)
 {
     int hframe, overlap;
-    hframe  = tabBar()->style().pixelMetric( QStyle::PM_TabBarTabHSpace, tabBar() );
-    overlap = tabBar()->style().pixelMetric( QStyle::PM_TabBarTabOverlap, tabBar() );
+    hframe = tabBar()->style().pixelMetric(QStyle::PM_TabBarTabHSpace, tabBar());
+    overlap = tabBar()->style().pixelMetric(QStyle::PM_TabBarTabOverlap, tabBar());
 
     QFontMetrics fm = tabBar()->fontMetrics();
     int x = 0;
-    for( int i=0; i < count(); ++i ) {
-        QString newTitle = d->m_tabNames[ i ];
-        newTitle = KStringHandler::rsqueeze( newTitle, maxLength ).leftJustify( d->m_minLength, ' ' );
+    for(int i = 0; i < count(); ++i)
+    {
+        QString newTitle = d->m_tabNames[i];
+        newTitle = KStringHandler::rsqueeze(newTitle, maxLength).leftJustify(d->m_minLength, ' ');
 
-        QTab* tab = tabBar()->tabAt( i );
-        int lw = fm.width( newTitle );
+        QTab *tab = tabBar()->tabAt(i);
+        int lw = fm.width(newTitle);
         int iw = 0;
-        if ( tab->iconSet() )
-          iw = tab->iconSet()->pixmap( QIconSet::Small, QIconSet::Normal ).width() + 4;
-        x += ( tabBar()->style().sizeFromContents( QStyle::CT_TabBarTab, this,
-                   QSize( QMAX( lw + hframe + iw, QApplication::globalStrut().width() ), 0 ),
-                   QStyleOption( tab ) ) ).width();
+        if(tab->iconSet())
+            iw = tab->iconSet()->pixmap(QIconSet::Small, QIconSet::Normal).width() + 4;
+        x += (tabBar()->style().sizeFromContents(QStyle::CT_TabBarTab, this, QSize(QMAX(lw + hframe + iw, QApplication::globalStrut().width()), 0),
+                                                 QStyleOption(tab)))
+                 .width();
     }
     return x;
 }
 
-void KTabWidget::changeTab( QWidget *w, const QString &label )
+void KTabWidget::changeTab(QWidget *w, const QString &label)
 {
-    QTabWidget::changeTab( w, label );
-    if ( d->m_automaticResizeTabs ) {
-        int index = indexOf( w );
-        if ( index != -1 ) {
-            d->m_tabNames[ index ] = label;
-            resizeTabs( index );
+    QTabWidget::changeTab(w, label);
+    if(d->m_automaticResizeTabs)
+    {
+        int index = indexOf(w);
+        if(index != -1)
+        {
+            d->m_tabNames[index] = label;
+            resizeTabs(index);
         }
     }
 }
 
-void KTabWidget::changeTab( QWidget *w, const QIconSet &iconset, const QString &label )
+void KTabWidget::changeTab(QWidget *w, const QIconSet &iconset, const QString &label)
 {
-    QTabWidget::changeTab( w, iconset, label );
-    if ( d->m_automaticResizeTabs ) {
-        int index = indexOf( w );
-        if ( index != -1 ) {
-            d->m_tabNames[ index ] = label;
-            resizeTabs( index );
+    QTabWidget::changeTab(w, iconset, label);
+    if(d->m_automaticResizeTabs)
+    {
+        int index = indexOf(w);
+        if(index != -1)
+        {
+            d->m_tabNames[index] = label;
+            resizeTabs(index);
         }
     }
 }
 
-QString KTabWidget::label( int index ) const
+QString KTabWidget::label(int index) const
 {
-    if ( d->m_automaticResizeTabs ) {
-        if ( index >= 0 && index < count() )
-            return d->m_tabNames[ index ];
+    if(d->m_automaticResizeTabs)
+    {
+        if(index >= 0 && index < count())
+            return d->m_tabNames[index];
         else
             return QString::null;
     }
     else
-        return QTabWidget::label( index );
+        return QTabWidget::label(index);
 }
 
-QString KTabWidget::tabLabel( QWidget * w ) const
+QString KTabWidget::tabLabel(QWidget *w) const
 {
-    if ( d->m_automaticResizeTabs ) {
-        int index = indexOf( w );
-        if ( index == -1 )
+    if(d->m_automaticResizeTabs)
+    {
+        int index = indexOf(w);
+        if(index == -1)
             return QString::null;
         else
-            return d->m_tabNames[ index ];
+            return d->m_tabNames[index];
     }
     else
-        return QTabWidget::tabLabel( w );
+        return QTabWidget::tabLabel(w);
 }
 
-void KTabWidget::setTabLabel( QWidget *w, const QString &l )
+void KTabWidget::setTabLabel(QWidget *w, const QString &l)
 {
-    QTabWidget::setTabLabel( w, l );
-    if ( d->m_automaticResizeTabs ) {
-        int index = indexOf( w );
-        if ( index != -1 ) {
-            d->m_tabNames[ index ] = l;
-            resizeTabs( index );
+    QTabWidget::setTabLabel(w, l);
+    if(d->m_automaticResizeTabs)
+    {
+        int index = indexOf(w);
+        if(index != -1)
+        {
+            d->m_tabNames[index] = l;
+            resizeTabs(index);
         }
-  }
+    }
 }
 
-void KTabWidget::resizeTabs( int changeTabIndex )
+void KTabWidget::resizeTabs(int changeTabIndex)
 {
     uint newMaxLength;
-    if ( d->m_automaticResizeTabs ) {
+    if(d->m_automaticResizeTabs)
+    {
         // Calculate new max length
-        newMaxLength=d->m_maxLength;
-        uint lcw=0, rcw=0;
+        newMaxLength = d->m_maxLength;
+        uint lcw = 0, rcw = 0;
 
         int tabBarHeight = tabBar()->sizeHint().height();
-        if ( cornerWidget( TopLeft ) && cornerWidget( TopLeft )->isVisible() )
-            lcw = QMAX( cornerWidget( TopLeft )->width(), tabBarHeight );
-        if ( cornerWidget( TopRight ) && cornerWidget( TopRight )->isVisible() )
-            rcw = QMAX( cornerWidget( TopRight )->width(), tabBarHeight );
+        if(cornerWidget(TopLeft) && cornerWidget(TopLeft)->isVisible())
+            lcw = QMAX(cornerWidget(TopLeft)->width(), tabBarHeight);
+        if(cornerWidget(TopRight) && cornerWidget(TopRight)->isVisible())
+            rcw = QMAX(cornerWidget(TopRight)->width(), tabBarHeight);
 
         uint maxTabBarWidth = width() - lcw - rcw;
 
-        for ( ; newMaxLength > (uint)d->m_minLength; newMaxLength-- ) {
-            if ( tabBarWidthForMaxChars( newMaxLength ) < maxTabBarWidth )
+        for(; newMaxLength > (uint)d->m_minLength; newMaxLength--)
+        {
+            if(tabBarWidthForMaxChars(newMaxLength) < maxTabBarWidth)
                 break;
         }
     }
@@ -268,240 +293,258 @@ void KTabWidget::resizeTabs( int changeTabIndex )
         newMaxLength = 4711;
 
     // Update hinted or all tabs
-    if ( d->m_CurrentMaxLength != newMaxLength ) {
+    if(d->m_CurrentMaxLength != newMaxLength)
+    {
         d->m_CurrentMaxLength = newMaxLength;
-        for( int i = 0; i < count(); ++i )
-            updateTab( i );
+        for(int i = 0; i < count(); ++i)
+            updateTab(i);
     }
-    else if ( changeTabIndex != -1 )
-        updateTab( changeTabIndex );
+    else if(changeTabIndex != -1)
+        updateTab(changeTabIndex);
 }
 
-void KTabWidget::updateTab( int index )
+void KTabWidget::updateTab(int index)
 {
-    QString title = d->m_automaticResizeTabs ? d->m_tabNames[ index ] : QTabWidget::label( index );
-    removeTabToolTip( page( index ) );
-    if ( title.length() > d->m_CurrentMaxLength ) {
-        if ( QStyleSheet::mightBeRichText( title ) )
-            setTabToolTip( page( index ), QStyleSheet::escape(title) );
+    QString title = d->m_automaticResizeTabs ? d->m_tabNames[index] : QTabWidget::label(index);
+    removeTabToolTip(page(index));
+    if(title.length() > d->m_CurrentMaxLength)
+    {
+        if(QStyleSheet::mightBeRichText(title))
+            setTabToolTip(page(index), QStyleSheet::escape(title));
         else
-            setTabToolTip( page( index ), title );
+            setTabToolTip(page(index), title);
     }
 
-    title = KStringHandler::rsqueeze( title, d->m_CurrentMaxLength ).leftJustify( d->m_minLength, ' ' );
-    title.replace( '&', "&&" );
+    title = KStringHandler::rsqueeze(title, d->m_CurrentMaxLength).leftJustify(d->m_minLength, ' ');
+    title.replace('&', "&&");
 
-    if ( QTabWidget::label( index ) != title )
-        QTabWidget::setTabLabel( page( index ), title );
+    if(QTabWidget::label(index) != title)
+        QTabWidget::setTabLabel(page(index), title);
 }
 
-void KTabWidget::dragMoveEvent( QDragMoveEvent *e )
+void KTabWidget::dragMoveEvent(QDragMoveEvent *e)
 {
-    if ( isEmptyTabbarSpace( e->pos() ) ) {
+    if(isEmptyTabbarSpace(e->pos()))
+    {
         bool accept = false;
         // The receivers of the testCanDecode() signal has to adjust
         // 'accept' accordingly.
-        emit testCanDecode( e, accept);
-        e->accept( accept );
+        emit testCanDecode(e, accept);
+        e->accept(accept);
         return;
     }
-    e->accept( false );
-    QTabWidget::dragMoveEvent( e );
+    e->accept(false);
+    QTabWidget::dragMoveEvent(e);
 }
 
-void KTabWidget::dropEvent( QDropEvent *e )
+void KTabWidget::dropEvent(QDropEvent *e)
 {
-    if ( isEmptyTabbarSpace( e->pos() ) ) {
-        emit ( receivedDropEvent( e ) );
+    if(isEmptyTabbarSpace(e->pos()))
+    {
+        emit(receivedDropEvent(e));
         return;
     }
-    QTabWidget::dropEvent( e );
+    QTabWidget::dropEvent(e);
 }
 
 #ifndef QT_NO_WHEELEVENT
-void KTabWidget::wheelEvent( QWheelEvent *e )
+void KTabWidget::wheelEvent(QWheelEvent *e)
 {
-    if ( e->orientation() == Horizontal )
+    if(e->orientation() == Horizontal)
         return;
 
-    if ( isEmptyTabbarSpace( e->pos() ) )
-        wheelDelta( e->delta() );
+    if(isEmptyTabbarSpace(e->pos()))
+        wheelDelta(e->delta());
     else
         e->ignore();
 }
 
-void KTabWidget::wheelDelta( int delta )
+void KTabWidget::wheelDelta(int delta)
 {
-    if ( count() < 2 )
+    if(count() < 2)
         return;
 
     int page = currentPageIndex();
-    if ( delta < 0 )
-         page = (page + 1) % count();
-    else {
+    if(delta < 0)
+        page = (page + 1) % count();
+    else
+    {
         page--;
-        if ( page < 0 )
+        if(page < 0)
             page = count() - 1;
     }
-    setCurrentPage( page );
+    setCurrentPage(page);
 }
 #endif
 
-void KTabWidget::mouseDoubleClickEvent( QMouseEvent *e )
+void KTabWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if( e->button() != LeftButton )
+    if(e->button() != LeftButton)
         return;
 
-    if ( isEmptyTabbarSpace( e->pos() ) ) {
-        emit( mouseDoubleClick() );
+    if(isEmptyTabbarSpace(e->pos()))
+    {
+        emit(mouseDoubleClick());
         return;
     }
-    QTabWidget::mouseDoubleClickEvent( e );
+    QTabWidget::mouseDoubleClickEvent(e);
 }
 
-void KTabWidget::mousePressEvent( QMouseEvent *e )
+void KTabWidget::mousePressEvent(QMouseEvent *e)
 {
-    if ( e->button() == RightButton ) {
-        if ( isEmptyTabbarSpace( e->pos() ) ) {
-            emit( contextMenu( mapToGlobal( e->pos() ) ) );
-            return;
-        }
-    } else if ( e->button() == MidButton ) {
-        if ( isEmptyTabbarSpace( e->pos() ) ) {
-            emit( mouseMiddleClick() );
+    if(e->button() == RightButton)
+    {
+        if(isEmptyTabbarSpace(e->pos()))
+        {
+            emit(contextMenu(mapToGlobal(e->pos())));
             return;
         }
     }
-    QTabWidget::mousePressEvent( e );
+    else if(e->button() == MidButton)
+    {
+        if(isEmptyTabbarSpace(e->pos()))
+        {
+            emit(mouseMiddleClick());
+            return;
+        }
+    }
+    QTabWidget::mousePressEvent(e);
 }
 
-void KTabWidget::receivedDropEvent( int index, QDropEvent *e )
+void KTabWidget::receivedDropEvent(int index, QDropEvent *e)
 {
-    emit( receivedDropEvent( page( index ), e ) );
+    emit(receivedDropEvent(page(index), e));
 }
 
-void KTabWidget::initiateDrag( int index )
+void KTabWidget::initiateDrag(int index)
 {
-    emit( initiateDrag( page( index ) ) );
+    emit(initiateDrag(page(index)));
 }
 
-void KTabWidget::contextMenu( int index, const QPoint &p )
+void KTabWidget::contextMenu(int index, const QPoint &p)
 {
-    emit( contextMenu( page( index ), p ) );
+    emit(contextMenu(page(index), p));
 }
 
-void KTabWidget::mouseDoubleClick( int index )
+void KTabWidget::mouseDoubleClick(int index)
 {
-    emit( mouseDoubleClick( page( index ) ) );
+    emit(mouseDoubleClick(page(index)));
 }
 
-void KTabWidget::mouseMiddleClick( int index )
+void KTabWidget::mouseMiddleClick(int index)
 {
-    emit( mouseMiddleClick( page( index ) ) );
+    emit(mouseMiddleClick(page(index)));
 }
 
-void KTabWidget::moveTab( int from, int to )
+void KTabWidget::moveTab(int from, int to)
 {
-    QString tablabel = label( from );
-    QWidget *w = page( from );
-    QColor color = tabColor( w );
-    QIconSet tabiconset = tabIconSet( w );
-    QString tabtooltip = tabToolTip( w );
-    bool current = ( w == currentPage() );
-    bool enabled = isTabEnabled( w );
+    QString tablabel = label(from);
+    QWidget *w = page(from);
+    QColor color = tabColor(w);
+    QIconSet tabiconset = tabIconSet(w);
+    QString tabtooltip = tabToolTip(w);
+    bool current = (w == currentPage());
+    bool enabled = isTabEnabled(w);
     blockSignals(true);
-    removePage( w );
+    removePage(w);
 
     // Work-around kmdi brain damage which calls showPage() in insertTab()
-    QTab * t = new QTab();
+    QTab *t = new QTab();
     t->setText(tablabel);
-    QTabWidget::insertTab( w, t, to );
-    if ( d->m_automaticResizeTabs ) {
-        if ( to < 0 || to >= count() )
-            d->m_tabNames.append( QString::null );
+    QTabWidget::insertTab(w, t, to);
+    if(d->m_automaticResizeTabs)
+    {
+        if(to < 0 || to >= count())
+            d->m_tabNames.append(QString::null);
         else
-            d->m_tabNames.insert( d->m_tabNames.at( to ), QString::null );
+            d->m_tabNames.insert(d->m_tabNames.at(to), QString::null);
     }
 
-    w = page( to );
-    changeTab( w, tabiconset, tablabel );
-    setTabToolTip( w, tabtooltip );
-    setTabColor( w, color );
-    if ( current )
-        showPage( w );
-    setTabEnabled( w, enabled );
+    w = page(to);
+    changeTab(w, tabiconset, tablabel);
+    setTabToolTip(w, tabtooltip);
+    setTabColor(w, color);
+    if(current)
+        showPage(w);
+    setTabEnabled(w, enabled);
     blockSignals(false);
 
-    emit ( movedTab( from, to ) );
+    emit(movedTab(from, to));
 }
 
-void KTabWidget::removePage( QWidget * w ) {
-    if ( d->m_automaticResizeTabs ) {
-        int index = indexOf( w );
-        if ( index != -1 )
-            d->m_tabNames.remove( d->m_tabNames.at( index ) );
+void KTabWidget::removePage(QWidget *w)
+{
+    if(d->m_automaticResizeTabs)
+    {
+        int index = indexOf(w);
+        if(index != -1)
+            d->m_tabNames.remove(d->m_tabNames.at(index));
     }
-    QTabWidget::removePage( w );
-    if ( d->m_automaticResizeTabs )
+    QTabWidget::removePage(w);
+    if(d->m_automaticResizeTabs)
         resizeTabs();
 }
 
 
-bool KTabWidget::isEmptyTabbarSpace( const QPoint &point ) const
+bool KTabWidget::isEmptyTabbarSpace(const QPoint &point) const
 {
-    QSize size( tabBar()->sizeHint() );
-    if ( ( tabPosition()==Top && point.y()< size.height() ) || ( tabPosition()==Bottom && point.y()>(height()-size.height() ) ) ) {
-        QWidget *rightcorner = cornerWidget( TopRight );
-        if ( rightcorner ) {
-            if ( point.x()>=width()-rightcorner->width() )
+    QSize size(tabBar()->sizeHint());
+    if((tabPosition() == Top && point.y() < size.height()) || (tabPosition() == Bottom && point.y() > (height() - size.height())))
+    {
+        QWidget *rightcorner = cornerWidget(TopRight);
+        if(rightcorner)
+        {
+            if(point.x() >= width() - rightcorner->width())
                 return false;
         }
-        QWidget *leftcorner = cornerWidget( TopLeft );
-        if ( leftcorner ) {
-            if ( point.x()<=leftcorner->width() )
+        QWidget *leftcorner = cornerWidget(TopLeft);
+        if(leftcorner)
+        {
+            if(point.x() <= leftcorner->width())
                 return false;
         }
-        QTab *tab = tabBar()->selectTab( tabBar()->mapFromParent( point ) );
-        if( !tab )
+        QTab *tab = tabBar()->selectTab(tabBar()->mapFromParent(point));
+        if(!tab)
             return true;
     }
     return false;
 }
 
-void KTabWidget::setHoverCloseButton( bool button )
+void KTabWidget::setHoverCloseButton(bool button)
 {
-    static_cast<KTabBar*>(tabBar())->setHoverCloseButton( button );
+    static_cast< KTabBar * >(tabBar())->setHoverCloseButton(button);
 }
 
 bool KTabWidget::hoverCloseButton() const
 {
-    return static_cast<KTabBar*>(tabBar())->hoverCloseButton();
+    return static_cast< KTabBar * >(tabBar())->hoverCloseButton();
 }
 
-void KTabWidget::setHoverCloseButtonDelayed( bool delayed )
+void KTabWidget::setHoverCloseButtonDelayed(bool delayed)
 {
-    static_cast<KTabBar*>(tabBar())->setHoverCloseButtonDelayed( delayed );
+    static_cast< KTabBar * >(tabBar())->setHoverCloseButtonDelayed(delayed);
 }
 
 bool KTabWidget::hoverCloseButtonDelayed() const
 {
-    return static_cast<KTabBar*>(tabBar())->hoverCloseButtonDelayed();
+    return static_cast< KTabBar * >(tabBar())->hoverCloseButtonDelayed();
 }
 
-void KTabWidget::setAutomaticResizeTabs( bool enabled )
+void KTabWidget::setAutomaticResizeTabs(bool enabled)
 {
-    if ( d->m_automaticResizeTabs==enabled )
+    if(d->m_automaticResizeTabs == enabled)
         return;
 
     d->m_automaticResizeTabs = enabled;
-    if ( enabled ) {
+    if(enabled)
+    {
         d->m_tabNames.clear();
-        for( int i = 0; i < count(); ++i )
-            d->m_tabNames.append( tabBar()->tabAt( i )->text() );
+        for(int i = 0; i < count(); ++i)
+            d->m_tabNames.append(tabBar()->tabAt(i)->text());
     }
     else
-        for( int i = 0; i < count(); ++i )
-            tabBar()->tabAt( i )->setText( d->m_tabNames[ i ] );
+        for(int i = 0; i < count(); ++i)
+            tabBar()->tabAt(i)->setText(d->m_tabNames[i]);
     resizeTabs();
 }
 
@@ -510,14 +553,14 @@ bool KTabWidget::automaticResizeTabs() const
     return d->m_automaticResizeTabs;
 }
 
-void KTabWidget::closeRequest( int index )
+void KTabWidget::closeRequest(int index)
 {
-    emit( closeRequest( page( index ) ) );
+    emit(closeRequest(page(index)));
 }
 
-void KTabWidget::resizeEvent( QResizeEvent *e )
+void KTabWidget::resizeEvent(QResizeEvent *e)
 {
-    QTabWidget::resizeEvent( e );
+    QTabWidget::resizeEvent(e);
     resizeTabs();
 }
 

@@ -38,25 +38,21 @@ class QPixmap;
  *  @author Chris Howells (howells@kde.org)
  *  @since 3.2
  */
-class KDEUI_EXPORT KSplashScreen : public QSplashScreen
-{
-  Q_OBJECT
+class KDEUI_EXPORT KSplashScreen : public QSplashScreen {
+    Q_OBJECT
 
 public:
+    /**
+     *  Constructs a splash screen.
+     */
+    KSplashScreen(const QPixmap &pixmap, WFlags f = 0);
 
-  /**
-   *  Constructs a splash screen.
-   */
-  KSplashScreen(const QPixmap &pixmap, WFlags f = 0);
-
-  /**
-   *  Destructor.
-   *
-   *  Deletes all internal objects.
-   */
-  ~KSplashScreen();
-
+    /**
+     *  Destructor.
+     *
+     *  Deletes all internal objects.
+     */
+    ~KSplashScreen();
 };
 
-#endif //KSPLASHSCREEN_H
-
+#endif // KSPLASHSCREEN_H

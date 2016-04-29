@@ -33,22 +33,22 @@ namespace DOM {
 
 // -------------------------------------------------------------------------
 
-class HTMLDivElementImpl : public HTMLGenericElementImpl
-{
+class HTMLDivElementImpl : public HTMLGenericElementImpl {
 public:
-    HTMLDivElementImpl(DocumentImpl *doc, ushort _tagid)
-        : HTMLGenericElementImpl(doc, _tagid) {}
+    HTMLDivElementImpl(DocumentImpl *doc, ushort _tagid) : HTMLGenericElementImpl(doc, _tagid)
+    {
+    }
 
     virtual void parseAttribute(AttributeImpl *token);
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLHRElementImpl : public HTMLElementImpl
-{
+class HTMLHRElementImpl : public HTMLElementImpl {
 public:
-    HTMLHRElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc) {}
+    HTMLHRElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
     virtual NodeImpl::Id id() const;
     virtual void parseAttribute(AttributeImpl *);
@@ -57,27 +57,29 @@ public:
 
 // -------------------------------------------------------------------------
 
-class HTMLPreElementImpl : public HTMLGenericElementImpl
-{
+class HTMLPreElementImpl : public HTMLGenericElementImpl {
 public:
-    HTMLPreElementImpl(DocumentImpl *doc, ushort _tagid)
-        : HTMLGenericElementImpl(doc, _tagid) {}
+    HTMLPreElementImpl(DocumentImpl *doc, ushort _tagid) : HTMLGenericElementImpl(doc, _tagid)
+    {
+    }
 
     long width() const;
-    void setWidth( long w );
+    void setWidth(long w);
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLMarqueeElementImpl : public HTMLElementImpl
-{
+class HTMLMarqueeElementImpl : public HTMLElementImpl {
 public:
     HTMLMarqueeElementImpl(DocumentImpl *doc);
 
     virtual NodeImpl::Id id() const;
     virtual void parseAttribute(AttributeImpl *token);
 
-    int minimumDelay() const { return m_minimumDelay; }
+    int minimumDelay() const
+    {
+        return m_minimumDelay;
+    }
 
 private:
     int m_minimumDelay;
@@ -85,24 +87,23 @@ private:
 
 // -------------------------------------------------------------------------
 
-class HTMLLayerElementImpl : public HTMLDivElementImpl
-{
+class HTMLLayerElementImpl : public HTMLDivElementImpl {
 public:
-    HTMLLayerElementImpl( DocumentImpl *doc, ushort _tagid );
+    HTMLLayerElementImpl(DocumentImpl *doc, ushort _tagid);
 
     virtual void parseAttribute(AttributeImpl *);
     virtual NodeImpl *addChild(NodeImpl *child);
 
     virtual void removedFromDocument();
     virtual void insertedIntoDocument();
-    virtual void addId(const QString& id);
-    virtual void removeId(const QString& id);
+    virtual void addId(const QString &id);
+    virtual void removeId(const QString &id);
+
 private:
     DOMString m_name;
     bool fixed;
     bool transparent;
 };
 
-} //namespace
+} // namespace
 #endif
-

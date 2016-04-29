@@ -646,34 +646,34 @@
 class KSpeech : virtual public DCOPObject {
     K_DCOP
 
-    public:
-        /**
-        * @enum kttsdJobState
-        * Job states returned by method getTextJobState.
-        */
-        enum kttsdJobState
-        {
-            jsQueued = 0,                /**< Job has been queued but is not yet speakable. */
-            jsSpeakable = 1,             /**< Job is speakable, but is not speaking. */
-            jsSpeaking = 2,              /**< Job is currently speaking. */
-            jsPaused = 3,                /**< Job has been paused. */
-            jsFinished = 4               /**< Job is finished and is deleteable. */
-        };
+public:
+    /**
+    * @enum kttsdJobState
+    * Job states returned by method getTextJobState.
+    */
+    enum kttsdJobState
+    {
+        jsQueued = 0,    /**< Job has been queued but is not yet speakable. */
+        jsSpeakable = 1, /**< Job is speakable, but is not speaking. */
+        jsSpeaking = 2,  /**< Job is currently speaking. */
+        jsPaused = 3,    /**< Job has been paused. */
+        jsFinished = 4   /**< Job is finished and is deleteable. */
+    };
 
-        /**
-        * @enum kttsdMarkupType
-        * %Speech markup language types.
-        */
-        enum kttsdMarkupType
-        {
-            mtPlain = 0,                 /**< Plain text */
-            mtJsml = 1,                  /**< Java %Speech Markup Language */
-            mtSsml = 2,                  /**< %Speech Synthesis Markup Language */
-            mtSable = 3,                 /**< Sable 2.0 */
-            mtHtml = 4                   /**< HTML @since 3.5 */
-        };
+    /**
+    * @enum kttsdMarkupType
+    * %Speech markup language types.
+    */
+    enum kttsdMarkupType
+    {
+        mtPlain = 0, /**< Plain text */
+        mtJsml = 1,  /**< Java %Speech Markup Language */
+        mtSsml = 2,  /**< %Speech Synthesis Markup Language */
+        mtSable = 3, /**< Sable 2.0 */
+        mtHtml = 4   /**< HTML @since 3.5 */
+    };
 
-    k_dcop:
+    k_dcop :
         /** @name DCOP Methods */
         //@{
 
@@ -686,601 +686,600 @@ class KSpeech : virtual public DCOPObject {
         *                       talker supports the indicated speech markup language.
         * @see kttsdMarkupType
         */
-        virtual bool supportsMarkup(const QString &talker, uint markupType = 0) const = 0;
+        virtual bool
+        supportsMarkup(const QString &talker, uint markupType = 0) const = 0;
 
-        /**
-        * Determine whether the currently-configured speech plugin supports markers in speech markup.
-        * @param talker         Code for the talker to do the speaking.  Example "en".
-        *                       If NULL, defaults to the user's default talker.
-        * @return               True if the plugin currently configured for the indicated
-        *                       talker supports markers.
-        */
-        virtual bool supportsMarkers(const QString &talker) const = 0;
+    /**
+    * Determine whether the currently-configured speech plugin supports markers in speech markup.
+    * @param talker         Code for the talker to do the speaking.  Example "en".
+    *                       If NULL, defaults to the user's default talker.
+    * @return               True if the plugin currently configured for the indicated
+    *                       talker supports markers.
+    */
+    virtual bool supportsMarkers(const QString &talker) const = 0;
 
-        /**
-        * Say a message as soon as possible, interrupting any other speech in progress.
-        * IMPORTANT: This method is reserved for use by Screen Readers and should not be used
-        * by any other applications.
-        * @param msg            The message to be spoken.
-        * @param talker         Code for the talker to do the speaking.  Example "en".
-        *                       If NULL, defaults to the user's default talker.
-        *                       If no plugin has been configured for the specified Talker code,
-        *                       defaults to the closest matching talker.
-        *
-        * If an existing Screen Reader output is in progress, it is stopped and discarded and
-        * replaced with this new message.
-        */
-        virtual ASYNC sayScreenReaderOutput(const QString &msg, const QString &talker) = 0;
+    /**
+    * Say a message as soon as possible, interrupting any other speech in progress.
+    * IMPORTANT: This method is reserved for use by Screen Readers and should not be used
+    * by any other applications.
+    * @param msg            The message to be spoken.
+    * @param talker         Code for the talker to do the speaking.  Example "en".
+    *                       If NULL, defaults to the user's default talker.
+    *                       If no plugin has been configured for the specified Talker code,
+    *                       defaults to the closest matching talker.
+    *
+    * If an existing Screen Reader output is in progress, it is stopped and discarded and
+    * replaced with this new message.
+    */
+    virtual ASYNC sayScreenReaderOutput(const QString &msg, const QString &talker) = 0;
 
-        /**
-        * Say a warning.  The warning will be spoken when the current sentence
-        * stops speaking and takes precedence over Messages and regular text.  Warnings should only
-        * be used for high-priority messages requiring immediate user attention, such as
-        * "WARNING. CPU is overheating."
-        * @param warning        The warning to be spoken.
-        * @param talker         Code for the talker to do the speaking.  Example "en".
-        *                       If NULL, defaults to the user's default talker.
-        *                       If no plugin has been configured for the specified Talker code,
-        *                       defaults to the closest matching talker.
-        */
-        virtual ASYNC sayWarning(const QString &warning, const QString &talker) = 0;
+    /**
+    * Say a warning.  The warning will be spoken when the current sentence
+    * stops speaking and takes precedence over Messages and regular text.  Warnings should only
+    * be used for high-priority messages requiring immediate user attention, such as
+    * "WARNING. CPU is overheating."
+    * @param warning        The warning to be spoken.
+    * @param talker         Code for the talker to do the speaking.  Example "en".
+    *                       If NULL, defaults to the user's default talker.
+    *                       If no plugin has been configured for the specified Talker code,
+    *                       defaults to the closest matching talker.
+    */
+    virtual ASYNC sayWarning(const QString &warning, const QString &talker) = 0;
 
-        /**
-        * Say a message.  The message will be spoken when the current sentence stops speaking
-        * but after any warnings have been spoken.
-        * Messages should be used for one-shot messages that can't wait for
-        * normal text messages to stop speaking, such as "You have mail.".
-        * @param message        The message to be spoken.
-        * @param talker         Code for the talker to do the speaking.  Example "en".
-        *                       If NULL, defaults to the user's default talker.
-        *                       If no talker has been configured for the specified talker code,
-        *                       defaults to the closest matching talker.
-        */
-        virtual ASYNC sayMessage(const QString &message, const QString &talker) = 0;
+    /**
+    * Say a message.  The message will be spoken when the current sentence stops speaking
+    * but after any warnings have been spoken.
+    * Messages should be used for one-shot messages that can't wait for
+    * normal text messages to stop speaking, such as "You have mail.".
+    * @param message        The message to be spoken.
+    * @param talker         Code for the talker to do the speaking.  Example "en".
+    *                       If NULL, defaults to the user's default talker.
+    *                       If no talker has been configured for the specified talker code,
+    *                       defaults to the closest matching talker.
+    */
+    virtual ASYNC sayMessage(const QString &message, const QString &talker) = 0;
 
-        /**
-        * Sets the GREP pattern that will be used as the sentence delimiter.
-        * @param delimiter      A valid GREP pattern.
-        *
-        * The default sentence delimiter is
-          @verbatim
-              ([\\.\\?\\!\\:\\;])(\\s|$|(\\n *\\n))
-          @endverbatim
-        *
-        * Note that backward slashes must be escaped.
-        * When %KTTSD parses the text, it replaces all tabs, spaces, and formfeeds
-        * with a single space, and then replaces the sentence delimiters using
-        * the following statement:
-          @verbatim
-              QString::replace(sentenceDelimiter, "\\1\t");
-          @endverbatim
-        *
-        * which replaces all sentence delimiters with a tab, but
-        * preserving the first capture text (first parenthesis).  In other
-        * words, the sentence punctuation is preserved.
-        * The tab is later used to separate the text into sentences.
-        *
-        * Changing the sentence delimiter does not affect other applications.
-        *
-        * @see sentenceparsing
-        */
-        virtual ASYNC setSentenceDelimiter(const QString &delimiter) = 0;
+    /**
+    * Sets the GREP pattern that will be used as the sentence delimiter.
+    * @param delimiter      A valid GREP pattern.
+    *
+    * The default sentence delimiter is
+      @verbatim
+          ([\\.\\?\\!\\:\\;])(\\s|$|(\\n *\\n))
+      @endverbatim
+    *
+    * Note that backward slashes must be escaped.
+    * When %KTTSD parses the text, it replaces all tabs, spaces, and formfeeds
+    * with a single space, and then replaces the sentence delimiters using
+    * the following statement:
+      @verbatim
+          QString::replace(sentenceDelimiter, "\\1\t");
+      @endverbatim
+    *
+    * which replaces all sentence delimiters with a tab, but
+    * preserving the first capture text (first parenthesis).  In other
+    * words, the sentence punctuation is preserved.
+    * The tab is later used to separate the text into sentences.
+    *
+    * Changing the sentence delimiter does not affect other applications.
+    *
+    * @see sentenceparsing
+    */
+    virtual ASYNC setSentenceDelimiter(const QString &delimiter) = 0;
 
-        /**
-        * Queue a text job.  Does not start speaking the text.
-        * @param text           The message to be spoken.
-        * @param talker         Code for the talker to do the speaking.  Example "en".
-        *                       If NULL, defaults to the user's default plugin.
-        *                       If no plugin has been configured for the specified Talker code,
-        *                       defaults to the closest matching talker.
-        * @return               Job number.
-        *
-        * Plain text is parsed into individual sentences using the current sentence delimiter.
-        * Call setSentenceDelimiter to change the sentence delimiter prior to
-        * calling setText.
-        * Call getTextCount to retrieve the sentence count after calling setText.
-        *
-        * The text may contain speech mark language, such as Sable, JSML, or SSML,
-        * provided that the speech plugin/engine support it.  In this case,
-        * sentence parsing follows the semantics of the markup language.
-        *
-        * Call startText to mark the job as speakable and if the
-        * job is the first speakable job in the queue, speaking will begin.
-        *
-        * @see getTextCount
-        * @see startText
-        */
-        virtual uint setText(const QString &text, const QString &talker) = 0;
+    /**
+    * Queue a text job.  Does not start speaking the text.
+    * @param text           The message to be spoken.
+    * @param talker         Code for the talker to do the speaking.  Example "en".
+    *                       If NULL, defaults to the user's default plugin.
+    *                       If no plugin has been configured for the specified Talker code,
+    *                       defaults to the closest matching talker.
+    * @return               Job number.
+    *
+    * Plain text is parsed into individual sentences using the current sentence delimiter.
+    * Call setSentenceDelimiter to change the sentence delimiter prior to
+    * calling setText.
+    * Call getTextCount to retrieve the sentence count after calling setText.
+    *
+    * The text may contain speech mark language, such as Sable, JSML, or SSML,
+    * provided that the speech plugin/engine support it.  In this case,
+    * sentence parsing follows the semantics of the markup language.
+    *
+    * Call startText to mark the job as speakable and if the
+    * job is the first speakable job in the queue, speaking will begin.
+    *
+    * @see getTextCount
+    * @see startText
+    */
+    virtual uint setText(const QString &text, const QString &talker) = 0;
 
-        /**
-        * Say a plain text job.  This is a convenience method that
-        * combines setText and startText into a single call.
-        * @param text           The message to be spoken.
-        * @param talker         Code for the talker to do the speaking.  Example "en".
-        *                       If NULL, defaults to the user's default plugin.
-        *                       If no plugin has been configured for the specified Talker code,
-        *                       defaults to the closest matching talker.
-        * @return               Job number.
-        *
-        * Plain text is parsed into individual sentences using the current sentence delimiter.
-        * Call setSentenceDelimiter to change the sentence delimiter prior to
-        * calling setText.
-        * Call getTextCount to retrieve the sentence count after calling setText.
-        *
-        * The text may contain speech mark language, such as Sable, JSML, or SSML,
-        * provided that the speech plugin/engine support it.  In this case,
-        * sentence parsing follows the semantics of the markup language.
-        *
-        * The job is marked speakable.
-        * If there are other speakable jobs preceeding this one in the queue,
-        * those jobs continue speaking and when finished, this job will begin speaking.
-        * If there are no other speakable jobs preceeding this one, it begins speaking.
-        *
-        * @see getTextCount
-        *
-        * @since KDE 3.5
-        */
-        virtual uint sayText(const QString &text, const QString &talker) = 0;
+    /**
+    * Say a plain text job.  This is a convenience method that
+    * combines setText and startText into a single call.
+    * @param text           The message to be spoken.
+    * @param talker         Code for the talker to do the speaking.  Example "en".
+    *                       If NULL, defaults to the user's default plugin.
+    *                       If no plugin has been configured for the specified Talker code,
+    *                       defaults to the closest matching talker.
+    * @return               Job number.
+    *
+    * Plain text is parsed into individual sentences using the current sentence delimiter.
+    * Call setSentenceDelimiter to change the sentence delimiter prior to
+    * calling setText.
+    * Call getTextCount to retrieve the sentence count after calling setText.
+    *
+    * The text may contain speech mark language, such as Sable, JSML, or SSML,
+    * provided that the speech plugin/engine support it.  In this case,
+    * sentence parsing follows the semantics of the markup language.
+    *
+    * The job is marked speakable.
+    * If there are other speakable jobs preceeding this one in the queue,
+    * those jobs continue speaking and when finished, this job will begin speaking.
+    * If there are no other speakable jobs preceeding this one, it begins speaking.
+    *
+    * @see getTextCount
+    *
+    * @since KDE 3.5
+    */
+    virtual uint sayText(const QString &text, const QString &talker) = 0;
 
-        /**
-        * Adds another part to a text job.  Does not start speaking the text.
-        * @param text           The message to be spoken.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        * @return               Part number for the added part.  Parts are numbered starting at 1.
-        *
-        * The text is parsed into individual sentences.  Call getTextCount to retrieve
-        * the sentence count.  Call startText to mark the job as speakable and if the
-        * job is the first speakable job in the queue, speaking will begin.
-        *
-        * @see setText.
-        * @see startText.
-        */
-        virtual int appendText(const QString &text, uint jobNum=0) = 0;
+    /**
+    * Adds another part to a text job.  Does not start speaking the text.
+    * @param text           The message to be spoken.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    * @return               Part number for the added part.  Parts are numbered starting at 1.
+    *
+    * The text is parsed into individual sentences.  Call getTextCount to retrieve
+    * the sentence count.  Call startText to mark the job as speakable and if the
+    * job is the first speakable job in the queue, speaking will begin.
+    *
+    * @see setText.
+    * @see startText.
+    */
+    virtual int appendText(const QString &text, uint jobNum = 0) = 0;
 
-        /**
-        * Queue a text job from the contents of a file.  Does not start speaking the text.
-        * @param filename       Full path to the file to be spoken.  May be a URL.
-        * @param talker         Code for the talker to do the speaking.  Example "en".
-        *                       If NULL, defaults to the user's default talker.
-        *                       If no plugin has been configured for the specified Talker code,
-        *                       defaults to the closest matching talker.
-        * @param encoding       Name of the encoding to use when reading the file.  If
-        *                       NULL or Empty, uses default stream encoding.
-        * @return               Job number.  0 if an error occurs.
-        *
-        * Plain text is parsed into individual sentences using the current sentence delimiter.
-        * Call setSentenceDelimiter to change the sentence delimiter prior to calling setText.
-        * Call getTextCount to retrieve the sentence count after calling setText.
-        *
-        * The text may contain speech mark language, such as Sable, JSML, or SSML,
-        * provided that the speech plugin/engine support it.  In this case,
-        * sentence parsing follows the semantics of the markup language.
-        *
-        * Call startText to mark the job as speakable and if the
-        * job is the first speakable job in the queue, speaking will begin.
-        *
-        * @see getTextCount
-        * @see startText
-        */
-        virtual uint setFile(const QString &filename, const QString &talker,
-            const QString& encoding) = 0;
+    /**
+    * Queue a text job from the contents of a file.  Does not start speaking the text.
+    * @param filename       Full path to the file to be spoken.  May be a URL.
+    * @param talker         Code for the talker to do the speaking.  Example "en".
+    *                       If NULL, defaults to the user's default talker.
+    *                       If no plugin has been configured for the specified Talker code,
+    *                       defaults to the closest matching talker.
+    * @param encoding       Name of the encoding to use when reading the file.  If
+    *                       NULL or Empty, uses default stream encoding.
+    * @return               Job number.  0 if an error occurs.
+    *
+    * Plain text is parsed into individual sentences using the current sentence delimiter.
+    * Call setSentenceDelimiter to change the sentence delimiter prior to calling setText.
+    * Call getTextCount to retrieve the sentence count after calling setText.
+    *
+    * The text may contain speech mark language, such as Sable, JSML, or SSML,
+    * provided that the speech plugin/engine support it.  In this case,
+    * sentence parsing follows the semantics of the markup language.
+    *
+    * Call startText to mark the job as speakable and if the
+    * job is the first speakable job in the queue, speaking will begin.
+    *
+    * @see getTextCount
+    * @see startText
+    */
+    virtual uint setFile(const QString &filename, const QString &talker, const QString &encoding) = 0;
 
-        /**
-        * Get the number of sentences in a text job.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        * @return               The number of sentences in the job.  -1 if no such job.
-        *
-        * The sentences of a job are given sequence numbers from 1 to the number returned by this
-        * method.  The sequence numbers are emitted in the sentenceStarted and
-        * sentenceFinished signals.
-        */
-        virtual int getTextCount(uint jobNum=0) = 0;
+    /**
+    * Get the number of sentences in a text job.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    * @return               The number of sentences in the job.  -1 if no such job.
+    *
+    * The sentences of a job are given sequence numbers from 1 to the number returned by this
+    * method.  The sequence numbers are emitted in the sentenceStarted and
+    * sentenceFinished signals.
+    */
+    virtual int getTextCount(uint jobNum = 0) = 0;
 
-        /**
-        * Get the job number of the current text job.
-        * @return               Job number of the current text job. 0 if no jobs.
-        *
-        * Note that the current job may not be speaking. See isSpeakingText.
-        *
-        * @see getTextJobState.
-        * @see isSpeakingText
-        */
-        virtual uint getCurrentTextJob() = 0;
+    /**
+    * Get the job number of the current text job.
+    * @return               Job number of the current text job. 0 if no jobs.
+    *
+    * Note that the current job may not be speaking. See isSpeakingText.
+    *
+    * @see getTextJobState.
+    * @see isSpeakingText
+    */
+    virtual uint getCurrentTextJob() = 0;
 
-        /**
-        * Get the number of jobs in the text job queue.
-        * @return               Number of text jobs in the queue.  0 if none.
-        */
-        virtual uint getTextJobCount() = 0;
+    /**
+    * Get the number of jobs in the text job queue.
+    * @return               Number of text jobs in the queue.  0 if none.
+    */
+    virtual uint getTextJobCount() = 0;
 
-        /**
-        * Get a comma-separated list of text job numbers in the queue.
-        * @return               Comma-separated list of text job numbers in the queue.
-        */
-        virtual QString getTextJobNumbers() = 0;
+    /**
+    * Get a comma-separated list of text job numbers in the queue.
+    * @return               Comma-separated list of text job numbers in the queue.
+    */
+    virtual QString getTextJobNumbers() = 0;
 
-        /**
-        * Get the state of a text job.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        * @return               State of the job. -1 if invalid job number.
-        *
-        * @see kttsdJobState
-        */
-        virtual int getTextJobState(uint jobNum=0) = 0;
+    /**
+    * Get the state of a text job.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    * @return               State of the job. -1 if invalid job number.
+    *
+    * @see kttsdJobState
+    */
+    virtual int getTextJobState(uint jobNum = 0) = 0;
 
-        /**
-        * Get information about a text job.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        * @return               A QDataStream containing information about the job.
-        *                       Blank if no such job.
-        *
-        * The stream contains the following elements:
-        *   - int state        - Job state.
-        *   - QCString appId   - DCOP senderId of the application that requested the speech job.
-        *   - QString talker   - Talker Code requested by application.
-        *   - int seq          - Current sentence being spoken.  Sentences are numbered starting at 1.
-        *   - int sentenceCount - Total number of sentences in the job.
-        *   - int partNum      - Current part of the job begin spoken.  Parts are numbered starting at 1.
-        *   - int partCount    - Total number of parts in the job.
-        *
-        * Note that sequence numbers apply to the entire job.  They do not start from 1 at the beginning of
-        * each part.
-        *
-        * The following sample code will decode the stream:
-                @code
-                    QByteArray jobInfo = getTextJobInfo(jobNum);
-                    QDataStream stream(jobInfo, IO_ReadOnly);
-                    int state;
-                    QCString appId;
-                    QString talker;
-                    int seq;
-                    int sentenceCount;
-                    int partNum;
-                    int partCount;
-                    stream >> state;
-                    stream >> appId;
-                    stream >> talker;
-                    stream >> seq;
-                    stream >> sentenceCount;
-                    stream >> partNum;
-                    stream >> partCount;
-                @endcode
-         */
-        virtual QByteArray getTextJobInfo(uint jobNum=0) = 0;
+    /**
+    * Get information about a text job.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    * @return               A QDataStream containing information about the job.
+    *                       Blank if no such job.
+    *
+    * The stream contains the following elements:
+    *   - int state        - Job state.
+    *   - QCString appId   - DCOP senderId of the application that requested the speech job.
+    *   - QString talker   - Talker Code requested by application.
+    *   - int seq          - Current sentence being spoken.  Sentences are numbered starting at 1.
+    *   - int sentenceCount - Total number of sentences in the job.
+    *   - int partNum      - Current part of the job begin spoken.  Parts are numbered starting at 1.
+    *   - int partCount    - Total number of parts in the job.
+    *
+    * Note that sequence numbers apply to the entire job.  They do not start from 1 at the beginning of
+    * each part.
+    *
+    * The following sample code will decode the stream:
+            @code
+                QByteArray jobInfo = getTextJobInfo(jobNum);
+                QDataStream stream(jobInfo, IO_ReadOnly);
+                int state;
+                QCString appId;
+                QString talker;
+                int seq;
+                int sentenceCount;
+                int partNum;
+                int partCount;
+                stream >> state;
+                stream >> appId;
+                stream >> talker;
+                stream >> seq;
+                stream >> sentenceCount;
+                stream >> partNum;
+                stream >> partCount;
+            @endcode
+     */
+    virtual QByteArray getTextJobInfo(uint jobNum = 0) = 0;
 
-        /**
-        * Given a Talker Code, returns the Talker ID of the talker that would speak
-        * a text job with that Talker Code.
-        * @param talkerCode     Talker Code.
-        * @return               Talker ID of the talker that would speak the text job.
-        */
-        virtual QString talkerCodeToTalkerId(const QString& talkerCode) = 0;
+    /**
+    * Given a Talker Code, returns the Talker ID of the talker that would speak
+    * a text job with that Talker Code.
+    * @param talkerCode     Talker Code.
+    * @return               Talker ID of the talker that would speak the text job.
+    */
+    virtual QString talkerCodeToTalkerId(const QString &talkerCode) = 0;
 
-        /**
-        * Return a sentence of a job.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        * @param seq            Sequence number of the sentence.
-        * @return               The specified sentence in the specified job.  If no such
-        *                       job or sentence, returns "".
-        */
-        virtual QString getTextJobSentence(uint jobNum=0, uint seq=0) = 0;
+    /**
+    * Return a sentence of a job.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    * @param seq            Sequence number of the sentence.
+    * @return               The specified sentence in the specified job.  If no such
+    *                       job or sentence, returns "".
+    */
+    virtual QString getTextJobSentence(uint jobNum = 0, uint seq = 0) = 0;
 
-        /**
-        * Determine if kttsd is currently speaking any text jobs.
-        * @return               True if currently speaking any text jobs.
-        */
-        virtual bool isSpeakingText() const = 0;
+    /**
+    * Determine if kttsd is currently speaking any text jobs.
+    * @return               True if currently speaking any text jobs.
+    */
+    virtual bool isSpeakingText() const = 0;
 
-        /**
-        * Remove a text job from the queue.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        *
-        * The job is deleted from the queue and the textRemoved signal is emitted.
-        *
-        * If there is another job in the text queue, and it is marked speakable,
-        * that job begins speaking.
-        */
-        virtual ASYNC removeText(uint jobNum=0) = 0;
+    /**
+    * Remove a text job from the queue.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    *
+    * The job is deleted from the queue and the textRemoved signal is emitted.
+    *
+    * If there is another job in the text queue, and it is marked speakable,
+    * that job begins speaking.
+    */
+    virtual ASYNC removeText(uint jobNum = 0) = 0;
 
-        /**
-        * Start a text job at the beginning.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        *
-        * Rewinds the job to the beginning.
-        *
-        * The job is marked speakable.
-        * If there are other speakable jobs preceeding this one in the queue,
-        * those jobs continue speaking and when finished, this job will begin speaking.
-        * If there are no other speakable jobs preceeding this one, it begins speaking.
-        *
-        * The textStarted signal is emitted when the text job begins speaking.
-        * When all the sentences of the job have been spoken, the job is marked for deletion from
-        * the text queue and the textFinished signal is emitted.
-        */
-        virtual ASYNC startText(uint jobNum=0) = 0;
+    /**
+    * Start a text job at the beginning.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    *
+    * Rewinds the job to the beginning.
+    *
+    * The job is marked speakable.
+    * If there are other speakable jobs preceeding this one in the queue,
+    * those jobs continue speaking and when finished, this job will begin speaking.
+    * If there are no other speakable jobs preceeding this one, it begins speaking.
+    *
+    * The textStarted signal is emitted when the text job begins speaking.
+    * When all the sentences of the job have been spoken, the job is marked for deletion from
+    * the text queue and the textFinished signal is emitted.
+    */
+    virtual ASYNC startText(uint jobNum = 0) = 0;
 
-        /**
-        * Stop a text job and rewind to the beginning.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        *
-        * The job is marked not speakable and will not be speakable until startText
-        * or resumeText is called.
-        *
-        * If there are speaking jobs preceeding this one in the queue, they continue speaking.
-        *
-        * If the job is currently speaking, the textStopped signal is emitted,
-        * the job stops speaking, and if the next job in the queue is speakable, it
-        * begins speaking.
-        *
-        * Depending upon the speech engine and plugin used, speech may not stop immediately
-        * (it might finish the current sentence).
-        */
-        virtual ASYNC stopText(uint jobNum=0) = 0;
+    /**
+    * Stop a text job and rewind to the beginning.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    *
+    * The job is marked not speakable and will not be speakable until startText
+    * or resumeText is called.
+    *
+    * If there are speaking jobs preceeding this one in the queue, they continue speaking.
+    *
+    * If the job is currently speaking, the textStopped signal is emitted,
+    * the job stops speaking, and if the next job in the queue is speakable, it
+    * begins speaking.
+    *
+    * Depending upon the speech engine and plugin used, speech may not stop immediately
+    * (it might finish the current sentence).
+    */
+    virtual ASYNC stopText(uint jobNum = 0) = 0;
 
-        /**
-        * Pause a text job.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        *
-        * The job is marked as paused and will not be speakable until resumeText or
-        * startText is called.
-        *
-        * If there are speaking jobs preceeding this one in the queue, they continue speaking.
-        *
-        * If the job is currently speaking, the textPaused signal is emitted and the job
-        * stops speaking.  Note that if the next job in the queue is speakable, it does
-        * not start speaking as long as this job is paused.
-        *
-        * Depending upon the speech engine and plugin used, speech may not stop immediately
-        * (it might finish the current sentence).
-        *
-        * @see resumeText
-        */
-        virtual ASYNC pauseText(uint jobNum=0) = 0;
+    /**
+    * Pause a text job.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    *
+    * The job is marked as paused and will not be speakable until resumeText or
+    * startText is called.
+    *
+    * If there are speaking jobs preceeding this one in the queue, they continue speaking.
+    *
+    * If the job is currently speaking, the textPaused signal is emitted and the job
+    * stops speaking.  Note that if the next job in the queue is speakable, it does
+    * not start speaking as long as this job is paused.
+    *
+    * Depending upon the speech engine and plugin used, speech may not stop immediately
+    * (it might finish the current sentence).
+    *
+    * @see resumeText
+    */
+    virtual ASYNC pauseText(uint jobNum = 0) = 0;
 
-        /**
-        * Start or resume a text job where it was paused.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        *
-        * The job is marked speakable.
-        *
-        * If the job is currently speaking, or is waiting to be spoken (speakable
-        * state), the resumeText() call is ignored.
-        *
-        * If the job is currently queued, or is finished, it is the same as calling
-        * @see startText .
-        *
-        * If there are speaking jobs preceeding this one in the queue,
-        * those jobs continue speaking and when finished this job will begin
-        * speaking where it left off.
-        *
-        * The textResumed signal is emitted when the job resumes.
-        *
-        * @see pauseText
-        */
-        virtual ASYNC resumeText(uint jobNum=0) = 0;
+    /**
+    * Start or resume a text job where it was paused.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    *
+    * The job is marked speakable.
+    *
+    * If the job is currently speaking, or is waiting to be spoken (speakable
+    * state), the resumeText() call is ignored.
+    *
+    * If the job is currently queued, or is finished, it is the same as calling
+    * @see startText .
+    *
+    * If there are speaking jobs preceeding this one in the queue,
+    * those jobs continue speaking and when finished this job will begin
+    * speaking where it left off.
+    *
+    * The textResumed signal is emitted when the job resumes.
+    *
+    * @see pauseText
+    */
+    virtual ASYNC resumeText(uint jobNum = 0) = 0;
 
-        /**
-        * Get a list of the talkers configured in KTTS.
-        * @return               A QStringList of fully-specified talker codes, one
-        *                       for each talker user has configured.
-        *
-        * @see talkers
-        */
-        virtual QStringList getTalkers() = 0;
+    /**
+    * Get a list of the talkers configured in KTTS.
+    * @return               A QStringList of fully-specified talker codes, one
+    *                       for each talker user has configured.
+    *
+    * @see talkers
+    */
+    virtual QStringList getTalkers() = 0;
 
-        /**
-        * Change the talker for a text job.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        * @param talker         New code for the talker to do the speaking.  Example "en".
-        *                       If NULL, defaults to the user's default talker.
-        *                       If no plugin has been configured for the specified Talker code,
-        *                       defaults to the closest matching talker.
-        */
-        virtual ASYNC changeTextTalker(const QString &talker, uint jobNum=0 ) = 0;
+    /**
+    * Change the talker for a text job.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    * @param talker         New code for the talker to do the speaking.  Example "en".
+    *                       If NULL, defaults to the user's default talker.
+    *                       If no plugin has been configured for the specified Talker code,
+    *                       defaults to the closest matching talker.
+    */
+    virtual ASYNC changeTextTalker(const QString &talker, uint jobNum = 0) = 0;
 
-        /**
-        * Get the user's default talker.
-        * @return               A fully-specified talker code.
-        *
-        * @see talkers
-        * @see getTalkers
-        */
-        virtual QString userDefaultTalker() = 0;
+    /**
+    * Get the user's default talker.
+    * @return               A fully-specified talker code.
+    *
+    * @see talkers
+    * @see getTalkers
+    */
+    virtual QString userDefaultTalker() = 0;
 
-        /**
-        * Move a text job down in the queue so that it is spoken later.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        *
-        * If the job is currently speaking, it is paused.
-        * If the next job in the queue is speakable, it begins speaking.
-        */
-        virtual ASYNC moveTextLater(uint jobNum=0) = 0;
+    /**
+    * Move a text job down in the queue so that it is spoken later.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    *
+    * If the job is currently speaking, it is paused.
+    * If the next job in the queue is speakable, it begins speaking.
+    */
+    virtual ASYNC moveTextLater(uint jobNum = 0) = 0;
 
-        /**
-        * Jump to the first sentence of a specified part of a text job.
-        * @param partNum        Part number of the part to jump to.  Parts are numbered starting at 1.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        * @return               Part number of the part actually jumped to.
-        *
-        * If partNum is greater than the number of parts in the job, jumps to last part.
-        * If partNum is 0, does nothing and returns the current part number.
-        * If no such job, does nothing and returns 0.
-        * Does not affect the current speaking/not-speaking state of the job.
-        */
-        virtual int jumpToTextPart(int partNum, uint jobNum=0) = 0;
+    /**
+    * Jump to the first sentence of a specified part of a text job.
+    * @param partNum        Part number of the part to jump to.  Parts are numbered starting at 1.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    * @return               Part number of the part actually jumped to.
+    *
+    * If partNum is greater than the number of parts in the job, jumps to last part.
+    * If partNum is 0, does nothing and returns the current part number.
+    * If no such job, does nothing and returns 0.
+    * Does not affect the current speaking/not-speaking state of the job.
+    */
+    virtual int jumpToTextPart(int partNum, uint jobNum = 0) = 0;
 
-        /**
-        * Advance or rewind N sentences in a text job.
-        * @param n              Number of sentences to advance (positive) or rewind (negative) in the job.
-        * @param jobNum         Job number of the text job.
-        *                       If zero, applies to the last job queued by the application,
-        *                       but if no such job, applies to the current job (if any).
-        * @return               Sequence number of the sentence actually moved to.  Sequence numbers
-        *                       are numbered starting at 1.
-        *
-        * If no such job, does nothing and returns 0.
-        * If n is zero, returns the current sequence number of the job.
-        * Does not affect the current speaking/not-speaking state of the job.
-        */
-        virtual uint moveRelTextSentence(int n, uint jobNum=0) = 0;
+    /**
+    * Advance or rewind N sentences in a text job.
+    * @param n              Number of sentences to advance (positive) or rewind (negative) in the job.
+    * @param jobNum         Job number of the text job.
+    *                       If zero, applies to the last job queued by the application,
+    *                       but if no such job, applies to the current job (if any).
+    * @return               Sequence number of the sentence actually moved to.  Sequence numbers
+    *                       are numbered starting at 1.
+    *
+    * If no such job, does nothing and returns 0.
+    * If n is zero, returns the current sequence number of the job.
+    * Does not affect the current speaking/not-speaking state of the job.
+    */
+    virtual uint moveRelTextSentence(int n, uint jobNum = 0) = 0;
 
-        /**
-        * Add the clipboard contents to the text queue and begin speaking it.
-        */
-        virtual ASYNC speakClipboard() = 0;
+    /**
+    * Add the clipboard contents to the text queue and begin speaking it.
+    */
+    virtual ASYNC speakClipboard() = 0;
 
-        /**
-        * Displays the %KTTS Manager dialog.  In this dialog, the user may backup or skip forward in
-        * any text job by sentence or part, rewind jobs, pause or resume jobs, or
-        * delete jobs.
-        */
-        virtual void showDialog() = 0;
+    /**
+    * Displays the %KTTS Manager dialog.  In this dialog, the user may backup or skip forward in
+    * any text job by sentence or part, rewind jobs, pause or resume jobs, or
+    * delete jobs.
+    */
+    virtual void showDialog() = 0;
 
-        /**
-        * Stop the service.
-        */
-        virtual void kttsdExit() = 0;
+    /**
+    * Stop the service.
+    */
+    virtual void kttsdExit() = 0;
 
-        /**
-        * Re-start %KTTSD.
-        */
-        virtual void reinit() = 0;
+    /**
+    * Re-start %KTTSD.
+    */
+    virtual void reinit() = 0;
 
-        /**
-        * Return the KTTSD deamon version number.
-        * @since KDE 3.5
-        */
-        virtual QString version() = 0;
-        //@}
+    /**
+    * Return the KTTSD deamon version number.
+    * @since KDE 3.5
+    */
+    virtual QString version() = 0;
+    //@}
 
-    k_dcop_signals:
-        void ignoreThis();
+    k_dcop_signals : void ignoreThis();
 
-        /** @name DCOP Signals */
-        //@{
+    /** @name DCOP Signals */
+    //@{
 
-        /**
-        * This signal is emitted when KTTSD starts or restarts after a call to reinit.
-        */
-        void kttsdStarted();
-        /**
-        * This signal is emitted just before KTTSD exits.
-        */
-        void kttsdExiting();
-        /**
-        * This signal is emitted when the speech engine/plugin encounters a marker in the text.
-        * @param appId          DCOP application ID of the application that queued the text.
-        * @param markerName     The name of the marker seen.
-        *
-        * @see markers
-        */
-        void markerSeen(const QCString& appId, const QString& markerName);
-        /**
-        * This signal is emitted whenever a sentence begins speaking.
-        * @param appId          DCOP application ID of the application that queued the text.
-        * @param jobNum         Job number of the text job.
-        * @param seq            Sequence number of the text.
-        *
-        * @see getTextCount
-        */
-        void sentenceStarted(const QCString& appId, uint jobNum, uint seq);
-        /**
-        * This signal is emitted when a sentence has finished speaking.
-        * @param appId          DCOP application ID of the application that queued the text.
-        * @param jobNum         Job number of the text job.
-        * @param seq            Sequence number of the text.
-        *
-        * @see getTextCount
-        */
-        void sentenceFinished(const QCString& appId, uint jobNum, uint seq);
+    /**
+    * This signal is emitted when KTTSD starts or restarts after a call to reinit.
+    */
+    void kttsdStarted();
+    /**
+    * This signal is emitted just before KTTSD exits.
+    */
+    void kttsdExiting();
+    /**
+    * This signal is emitted when the speech engine/plugin encounters a marker in the text.
+    * @param appId          DCOP application ID of the application that queued the text.
+    * @param markerName     The name of the marker seen.
+    *
+    * @see markers
+    */
+    void markerSeen(const QCString &appId, const QString &markerName);
+    /**
+    * This signal is emitted whenever a sentence begins speaking.
+    * @param appId          DCOP application ID of the application that queued the text.
+    * @param jobNum         Job number of the text job.
+    * @param seq            Sequence number of the text.
+    *
+    * @see getTextCount
+    */
+    void sentenceStarted(const QCString &appId, uint jobNum, uint seq);
+    /**
+    * This signal is emitted when a sentence has finished speaking.
+    * @param appId          DCOP application ID of the application that queued the text.
+    * @param jobNum         Job number of the text job.
+    * @param seq            Sequence number of the text.
+    *
+    * @see getTextCount
+    */
+    void sentenceFinished(const QCString &appId, uint jobNum, uint seq);
 
-        /**
-        * This signal is emitted whenever a new text job is added to the queue.
-        * @param appId          The DCOP senderId of the application that created the job.
-        * @param jobNum         Job number of the text job.
-        */
-        void textSet(const QCString& appId, uint jobNum);
+    /**
+    * This signal is emitted whenever a new text job is added to the queue.
+    * @param appId          The DCOP senderId of the application that created the job.
+    * @param jobNum         Job number of the text job.
+    */
+    void textSet(const QCString &appId, uint jobNum);
 
-        /**
-        * This signal is emitted whenever a new part is appended to a text job.
-        * @param appId          The DCOP senderId of the application that created the job.
-        * @param jobNum         Job number of the text job.
-        * @param partNum        Part number of the new part.  Parts are numbered starting
-        *                       at 1.
-        */
-        void textAppended(const QCString& appId, uint jobNum, int partNum);
+    /**
+    * This signal is emitted whenever a new part is appended to a text job.
+    * @param appId          The DCOP senderId of the application that created the job.
+    * @param jobNum         Job number of the text job.
+    * @param partNum        Part number of the new part.  Parts are numbered starting
+    *                       at 1.
+    */
+    void textAppended(const QCString &appId, uint jobNum, int partNum);
 
-        /**
-        * This signal is emitted whenever speaking of a text job begins.
-        * @param appId          The DCOP senderId of the application that created the job.
-        * @param jobNum         Job number of the text job.
-        */
-        void textStarted(const QCString& appId, uint jobNum);
-        /**
-        * This signal is emitted whenever a text job is finished.  The job has
-        * been marked for deletion from the queue and will be deleted when another
-        * job reaches the Finished state. (Only one job in the text queue may be
-        * in state Finished at one time.)  If startText or resumeText is
-        * called before the job is deleted, it will remain in the queue for speaking.
-        * @param appId          The DCOP senderId of the application that created the job.
-        * @param jobNum         Job number of the text job.
-        */
-        void textFinished(const QCString& appId, uint jobNum);
-        /**
-        * This signal is emitted whenever a speaking text job stops speaking.
-        * @param appId          The DCOP senderId of the application that created the job.
-        * @param jobNum         Job number of the text job.
-        *
-        * The signal is only emitted if stopText() is called and the job is currently
-        * speaking.
-        */
-        void textStopped(const QCString& appId, uint jobNum);
-        /**
-        * This signal is emitted whenever a speaking text job is paused.
-        * @param appId          The DCOP senderId of the application that created the job.
-        * @param jobNum         Job number of the text job.
-        */
-        void textPaused(const QCString& appId, uint jobNum);
-        /**
-        * This signal is emitted when a text job, that was previously paused, resumes speaking.
-        * @param appId          The DCOP senderId of the application that created the job.
-        * @param jobNum         Job number of the text job.
-        */
-        void textResumed(const QCString& appId, uint jobNum);
-        /**
-        * This signal is emitted whenever a text job is deleted from the queue.
-        * The job is no longer in the queue when this signal is emitted.
-        * @param appId          The DCOP senderId of the application that created the job.
-        * @param jobNum         Job number of the text job.
-        */
-        void textRemoved(const QCString& appId, uint jobNum);
-        //@}
+    /**
+    * This signal is emitted whenever speaking of a text job begins.
+    * @param appId          The DCOP senderId of the application that created the job.
+    * @param jobNum         Job number of the text job.
+    */
+    void textStarted(const QCString &appId, uint jobNum);
+    /**
+    * This signal is emitted whenever a text job is finished.  The job has
+    * been marked for deletion from the queue and will be deleted when another
+    * job reaches the Finished state. (Only one job in the text queue may be
+    * in state Finished at one time.)  If startText or resumeText is
+    * called before the job is deleted, it will remain in the queue for speaking.
+    * @param appId          The DCOP senderId of the application that created the job.
+    * @param jobNum         Job number of the text job.
+    */
+    void textFinished(const QCString &appId, uint jobNum);
+    /**
+    * This signal is emitted whenever a speaking text job stops speaking.
+    * @param appId          The DCOP senderId of the application that created the job.
+    * @param jobNum         Job number of the text job.
+    *
+    * The signal is only emitted if stopText() is called and the job is currently
+    * speaking.
+    */
+    void textStopped(const QCString &appId, uint jobNum);
+    /**
+    * This signal is emitted whenever a speaking text job is paused.
+    * @param appId          The DCOP senderId of the application that created the job.
+    * @param jobNum         Job number of the text job.
+    */
+    void textPaused(const QCString &appId, uint jobNum);
+    /**
+    * This signal is emitted when a text job, that was previously paused, resumes speaking.
+    * @param appId          The DCOP senderId of the application that created the job.
+    * @param jobNum         Job number of the text job.
+    */
+    void textResumed(const QCString &appId, uint jobNum);
+    /**
+    * This signal is emitted whenever a text job is deleted from the queue.
+    * The job is no longer in the queue when this signal is emitted.
+    * @param appId          The DCOP senderId of the application that created the job.
+    * @param jobNum         Job number of the text job.
+    */
+    void textRemoved(const QCString &appId, uint jobNum);
+    //@}
 };
 
 #endif // _KSPEECH_H_

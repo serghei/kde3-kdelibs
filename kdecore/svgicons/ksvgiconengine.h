@@ -27,23 +27,22 @@
 
 class KSVGIconPainter;
 
-class KDECORE_EXPORT KSVGIconEngine
-{
+class KDECORE_EXPORT KSVGIconEngine {
 public:
-	KSVGIconEngine();
-	~KSVGIconEngine();
-	
-	bool load(int width, int height, const QString &path);
+    KSVGIconEngine();
+    ~KSVGIconEngine();
 
-	KSVGIconPainter *painter();
-	QImage *image();
+    bool load(int width, int height, const QString &path);
 
-	double width();
-	double height();
+    KSVGIconPainter *painter();
+    QImage *image();
+
+    double width();
+    double height();
 
 private:
-	struct Private;
-	Private *d;
+    struct Private;
+    Private *d;
 };
 
 #endif

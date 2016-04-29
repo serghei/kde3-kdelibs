@@ -21,12 +21,11 @@
 #include <kdebug.h>
 #include <qstring.h>
 
-//BEGIN KateIndentScriptImplAbstractImpl
+// BEGIN KateIndentScriptImplAbstractImpl
 
-KateIndentScriptImplAbstract::KateIndentScriptImplAbstract(const QString& internalName,
-        const QString  &filePath, const QString &niceName,
-        const QString &copyright, double version):m_refcount(0),m_filePath(filePath),m_niceName(niceName),
-            m_copyright(copyright),m_version(version)
+KateIndentScriptImplAbstract::KateIndentScriptImplAbstract(const QString &internalName, const QString &filePath, const QString &niceName,
+                                                           const QString &copyright, double version)
+    : m_refcount(0), m_filePath(filePath), m_niceName(niceName), m_copyright(copyright), m_version(version)
 {
 }
 
@@ -36,14 +35,14 @@ KateIndentScriptImplAbstract::~KateIndentScriptImplAbstract()
 
 void KateIndentScriptImplAbstract::incRef()
 {
-  kdDebug(13050)<<"KateIndentScriptImplAbstract::incRef()"<<endl;
-  m_refcount++;
+    kdDebug(13050) << "KateIndentScriptImplAbstract::incRef()" << endl;
+    m_refcount++;
 }
 
 void KateIndentScriptImplAbstract::decRef()
 {
-  kdDebug(13050)<<"KateIndentScriptImplAbstract::decRef()"<<endl;
-  m_refcount--;
+    kdDebug(13050) << "KateIndentScriptImplAbstract::decRef()" << endl;
+    m_refcount--;
 }
 
-//END
+// END

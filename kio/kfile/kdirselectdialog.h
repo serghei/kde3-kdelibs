@@ -36,8 +36,7 @@ class KToggleAction;
  * @author Michael Jarrett <michaelj@corel.com>
  * @see KFileDialog
  */
-class KIO_EXPORT KDirSelectDialog : public KDialogBase
-{
+class KIO_EXPORT KDirSelectDialog : public KDialogBase {
     Q_OBJECT
 
 public:
@@ -50,10 +49,7 @@ public:
      * @param name the QObject::name
      * @param modal if the dialog is modal or not
      */
-    KDirSelectDialog(const QString& startDir = QString::null,
-                     bool localOnly = false,
-                     QWidget *parent = 0L,
-                     const char *name = 0, bool modal = false);
+    KDirSelectDialog(const QString &startDir = QString::null, bool localOnly = false, QWidget *parent = 0L, const char *name = 0, bool modal = false);
 
     /**
      */
@@ -65,9 +61,15 @@ public:
      */
     KURL url() const;
 
-    KFileTreeView * view() const { return m_treeView; }
+    KFileTreeView *view() const
+    {
+        return m_treeView;
+    }
 
-    bool localOnly() const { return m_localOnly; }
+    bool localOnly() const
+    {
+        return m_localOnly;
+    }
 
     /**
      * Creates a KDirSelectDialog, and returns the result.
@@ -79,17 +81,19 @@ public:
      * @return The URL selected, or an empty URL if the user canceled
      * or no URL was selected.
      */
-    static KURL selectDirectory( const QString& startDir = QString::null,
-                                 bool localOnly = false, QWidget *parent = 0L,
-                                 const QString& caption = QString::null);
+    static KURL selectDirectory(const QString &startDir = QString::null, bool localOnly = false, QWidget *parent = 0L,
+                                const QString &caption = QString::null);
 
     /**
      * @return The path for the root node
      */
-    QString startDir() const { return m_startDir; }
+    QString startDir() const
+    {
+        return m_startDir;
+    }
 
 public slots:
-    void setCurrentURL( const KURL& url );
+    void setCurrentURL(const KURL &url);
 
 protected slots:
     virtual void slotUser1();
@@ -103,18 +107,18 @@ protected:
 
 private slots:
     void slotCurrentChanged();
-    void slotURLActivated( const QString& );
-    void slotNextDirToList( KFileTreeViewItem *dirItem );
-    void slotComboTextChanged( const QString& text );
-    void slotContextMenu( KListView *, QListViewItem *, const QPoint & );
+    void slotURLActivated(const QString &);
+    void slotNextDirToList(KFileTreeViewItem *dirItem);
+    void slotComboTextChanged(const QString &text);
+    void slotContextMenu(KListView *, QListViewItem *, const QPoint &);
     void slotShowHiddenFoldersToggled();
     void slotMkdir();
 
 private:
-    void readConfig( KConfig *config, const QString& group );
-    void saveConfig( KConfig *config, const QString& group );
-    void openNextDir( KFileTreeViewItem *parent );
-    KFileTreeBranch * createBranch( const KURL& url );
+    void readConfig(KConfig *config, const QString &group);
+    void saveConfig(KConfig *config, const QString &group);
+    void openNextDir(KFileTreeViewItem *parent);
+    KFileTreeBranch *createBranch(const KURL &url);
 
     KFileTreeView *m_treeView;
     QPopupMenu *m_contextMenu;
@@ -122,7 +126,8 @@ private:
     bool m_localOnly;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KDirSelectDialogPrivate;
     KDirSelectDialogPrivate *d;

@@ -28,40 +28,39 @@
 #include <qlayout.h>
 #include <kcursor.h>
 
-KMConfigCupsDir::KMConfigCupsDir(QWidget *parent)
-: KMConfigPage(parent,"ConfigCupsDir")
+KMConfigCupsDir::KMConfigCupsDir(QWidget *parent) : KMConfigPage(parent, "ConfigCupsDir")
 {
-	setPageName(i18n("Folder"));
-	setPageHeader(i18n("CUPS Folder Settings"));
-	setPagePixmap("folder");
+    setPageName(i18n("Folder"));
+    setPageHeader(i18n("CUPS Folder Settings"));
+    setPagePixmap("folder");
 
-	QGroupBox *m_dirbox = new QGroupBox(0, Qt::Vertical, i18n("Installation Folder"), this);
-	m_installdir = new KURLRequester(m_dirbox);
-	m_installdir->setMode((KFile::Mode)(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly));
-	m_stddir = new QCheckBox(i18n("Standard installation (/)"), m_dirbox);
-	m_stddir->setCursor(KCursor::handCursor());
+    QGroupBox *m_dirbox = new QGroupBox(0, Qt::Vertical, i18n("Installation Folder"), this);
+    m_installdir = new KURLRequester(m_dirbox);
+    m_installdir->setMode((KFile::Mode)(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly));
+    m_stddir = new QCheckBox(i18n("Standard installation (/)"), m_dirbox);
+    m_stddir->setCursor(KCursor::handCursor());
 
-	QVBoxLayout *lay0 = new QVBoxLayout(this, 0, KDialog::spacingHint());
-	lay0->addWidget(m_dirbox);
-	lay0->addStretch(1);
-	QVBoxLayout *lay1 = new QVBoxLayout(m_dirbox->layout(), 10);
-	lay1->addWidget(m_stddir);
-	lay1->addWidget(m_installdir);
+    QVBoxLayout *lay0 = new QVBoxLayout(this, 0, KDialog::spacingHint());
+    lay0->addWidget(m_dirbox);
+    lay0->addStretch(1);
+    QVBoxLayout *lay1 = new QVBoxLayout(m_dirbox->layout(), 10);
+    lay1->addWidget(m_stddir);
+    lay1->addWidget(m_installdir);
 
-	connect(m_stddir,SIGNAL(toggled(bool)),m_installdir,SLOT(setDisabled(bool)));
-	m_stddir->setChecked(true);
+    connect(m_stddir, SIGNAL(toggled(bool)), m_installdir, SLOT(setDisabled(bool)));
+    m_stddir->setChecked(true);
 }
 
 void KMConfigCupsDir::loadConfig(KConfig *conf)
 {
-	conf->setGroup("CUPS");
-	QString	dir = conf->readPathEntry("InstallDir");
-	m_stddir->setChecked(dir.isEmpty());
-	m_installdir->setURL(dir);
+    conf->setGroup("CUPS");
+    QString dir = conf->readPathEntry("InstallDir");
+    m_stddir->setChecked(dir.isEmpty());
+    m_installdir->setURL(dir);
 }
 
 void KMConfigCupsDir::saveConfig(KConfig *conf)
 {
-	conf->setGroup("CUPS");
-	conf->writePathEntry("InstallDir",(m_stddir->isChecked() ? QString::null : m_installdir->url()));
+    conf->setGroup("CUPS");
+    conf->writePathEntry("InstallDir", (m_stddir->isChecked() ? QString::null : m_installdir->url()));
 }

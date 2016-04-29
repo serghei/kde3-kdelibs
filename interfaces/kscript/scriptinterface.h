@@ -37,52 +37,52 @@ class QObject;
 class KScriptClientInterface;
 
 
-//namespace KScriptInterface
+// namespace KScriptInterface
 //{
-	/**
-	*	This class is the base for all script engines.
-	*	@author Ian Reinhart Geiser <geiseri@kde.org>
-	*
-	**/
-	class KDE_EXPORT KScriptInterface : public QObject
-	{
-	Q_OBJECT
-	public:
-		/**
-		*	Return the current script code data
-		*	@returns QString containing the currenly runable code
-		**/
-		virtual QString script() const = 0;
-		/**
-		*	Sets the path to the script library that we are going to embed.
-		**/
-		virtual void setScript( const QString &scriptFile ) = 0;
-		/**
-		*	Sets the path to the script library that we are going to embed.
-		*	The second argument is the function from the script library that
-		*	we wish to call.
-		**/
-		virtual void setScript( const QString &scriptLibFile, const QString &method ) = 0;
-		/**
-		*	Run the actual script code
-		*	This can both take a context object that will be shared between the
-		*	main application and a variant that will contain the arguments.
-		**/
-		virtual void run(QObject *context = 0, const QVariant &arg = 0) = 0;
-		/**
-		*	Abort the scripts run
-		**/
-		virtual void kill() =0;
-	public:
-		/**
-		*	This is the method for sending feedback to applications.
-		*	example of how this works:
-		*	\code
-		*		ScriptClientInterface->error( message_to_send_back_to_the_main_application );
-		*	\endcode
-		*	Will send the error message back to the main application.
-		**/
-		KScriptClientInterface	*ScriptClientInterface;
-	};
+/**
+*	This class is the base for all script engines.
+*	@author Ian Reinhart Geiser <geiseri@kde.org>
+*
+**/
+class KDE_EXPORT KScriptInterface : public QObject {
+    Q_OBJECT
+public:
+    /**
+    *	Return the current script code data
+    *	@returns QString containing the currenly runable code
+    **/
+    virtual QString script() const = 0;
+    /**
+    *	Sets the path to the script library that we are going to embed.
+    **/
+    virtual void setScript(const QString &scriptFile) = 0;
+    /**
+    *	Sets the path to the script library that we are going to embed.
+    *	The second argument is the function from the script library that
+    *	we wish to call.
+    **/
+    virtual void setScript(const QString &scriptLibFile, const QString &method) = 0;
+    /**
+    *	Run the actual script code
+    *	This can both take a context object that will be shared between the
+    *	main application and a variant that will contain the arguments.
+    **/
+    virtual void run(QObject *context = 0, const QVariant &arg = 0) = 0;
+    /**
+    *	Abort the scripts run
+    **/
+    virtual void kill() = 0;
+
+public:
+    /**
+    *	This is the method for sending feedback to applications.
+    *	example of how this works:
+    *	\code
+    *		ScriptClientInterface->error( message_to_send_back_to_the_main_application );
+    *	\endcode
+    *	Will send the error message back to the main application.
+    **/
+    KScriptClientInterface *ScriptClientInterface;
+};
 //};
 #endif

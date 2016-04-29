@@ -51,21 +51,22 @@ class QIconViewItem;
  * @see KFileDetailView
  * @see KDirOperator
  */
-class KIO_EXPORT KCombiView : public QSplitter,
-		   public KFileView
-{
+class KIO_EXPORT KCombiView : public QSplitter, public KFileView {
     Q_OBJECT
 
 public:
-    KCombiView( QWidget *parent, const char *name);
+    KCombiView(QWidget *parent, const char *name);
     virtual ~KCombiView();
 
-    virtual QWidget *widget() { return this; }
+    virtual QWidget *widget()
+    {
+        return this;
+    }
     virtual void clearView();
 
-    virtual void updateView( bool );
-    virtual void updateView(const KFileItem*);
-    virtual void removeItem( const KFileItem * );
+    virtual void updateView(bool);
+    virtual void updateView(const KFileItem *);
+    virtual void removeItem(const KFileItem *);
     virtual void listingCompleted();
 
     /**
@@ -74,31 +75,31 @@ public:
      */
     void setRight(KFileView *view);
 
-    virtual void setSelectionMode( KFile::SelectionMode sm );
+    virtual void setSelectionMode(KFile::SelectionMode sm);
 
     virtual void setSelected(const KFileItem *, bool);
-    virtual bool isSelected( const KFileItem * ) const;
+    virtual bool isSelected(const KFileItem *) const;
     virtual void clearSelection();
     virtual void selectAll();
     virtual void invertSelection();
 
-    virtual void setCurrentItem( const KFileItem * );
-    virtual KFileItem * currentFileItem() const;
-    virtual KFileItem * firstFileItem() const;
-    virtual KFileItem * nextItem( const KFileItem * ) const;
-    virtual KFileItem * prevItem( const KFileItem * ) const;
+    virtual void setCurrentItem(const KFileItem *);
+    virtual KFileItem *currentFileItem() const;
+    virtual KFileItem *firstFileItem() const;
+    virtual KFileItem *nextItem(const KFileItem *) const;
+    virtual KFileItem *prevItem(const KFileItem *) const;
 
-    virtual void insertItem( KFileItem *i );
+    virtual void insertItem(KFileItem *i);
     virtual void clear();
 
-    virtual void setSorting( QDir::SortSpec sort );
+    virtual void setSorting(QDir::SortSpec sort);
 
-    virtual void readConfig( KConfig *, const QString& group = QString::null );
-    virtual void writeConfig( KConfig *, const QString& group = QString::null);
+    virtual void readConfig(KConfig *, const QString &group = QString::null);
+    virtual void writeConfig(KConfig *, const QString &group = QString::null);
 
-    void ensureItemVisible( const KFileItem * );
+    void ensureItemVisible(const KFileItem *);
 
-    virtual KActionCollection * actionCollection() const;
+    virtual KActionCollection *actionCollection() const;
 
     virtual void setAcceptDrops(bool b);
 
@@ -107,10 +108,10 @@ protected:
     KFileView *right;
 
 protected slots:
-    void slotSortingChanged( QDir::SortSpec );
+    void slotSortingChanged(QDir::SortSpec);
 
 private:
-    KFileView *focusView( KFileView *preferred ) const;
+    KFileView *focusView(KFileView *preferred) const;
 
     // in nextItem() and prevItem(), we have to switch views, when the first
     // view returns 0L. So we need to remember which view was used in the
@@ -120,14 +121,14 @@ private:
     mutable KFileView *m_lastViewForPrevItem;
 
 protected:
-    virtual bool eventFilter( QObject *o, QEvent *e );
+    virtual bool eventFilter(QObject *o, QEvent *e);
     void setDropOptions_impl(int options);
 
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KCombiViewPrivate;
     KCombiViewPrivate *d;
-
 };
 
 #endif

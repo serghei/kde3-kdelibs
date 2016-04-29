@@ -30,46 +30,45 @@ class MarginPreview;
 class QCheckBox;
 class QComboBox;
 
-class KDEPRINT_EXPORT MarginWidget : public QWidget
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT MarginWidget : public QWidget {
+    Q_OBJECT
 public:
-	MarginWidget(QWidget *parent = 0, const char *name = 0, bool allowMetricUnit = true);
-	~MarginWidget();
+    MarginWidget(QWidget *parent = 0, const char *name = 0, bool allowMetricUnit = true);
+    ~MarginWidget();
 
-	void setSymetricMargins(bool on);
-	void setPageSize(float w, float h);
-	void setOrientation(int orient);
-	float top() const;
-	void setTop(float val);
-	float bottom() const;
-	void setBottom(float val);
-	float left() const;
-	void setLeft(float val);
-	float right() const;
-	void setRight(float val);
-	void setResolution(int dpi);
-	void setDefaultMargins(float t, float b, float l, float r);
-	void setCustomEnabled(bool on);
-	bool isCustomEnabled() const;
+    void setSymetricMargins(bool on);
+    void setPageSize(float w, float h);
+    void setOrientation(int orient);
+    float top() const;
+    void setTop(float val);
+    float bottom() const;
+    void setBottom(float val);
+    float left() const;
+    void setLeft(float val);
+    float right() const;
+    void setRight(float val);
+    void setResolution(int dpi);
+    void setDefaultMargins(float t, float b, float l, float r);
+    void setCustomEnabled(bool on);
+    bool isCustomEnabled() const;
 
 protected slots:
-	void slotMarginValueChanged();
-	void slotMarginPreviewChanged(int, float);
-	void slotCustomMarginsToggled(bool);
+    void slotMarginValueChanged();
+    void slotMarginPreviewChanged(int, float);
+    void slotCustomMarginsToggled(bool);
 
 protected:
-	void resetDefault();
+    void resetDefault();
 
 private:
-	MarginValueWidget	*m_top, *m_bottom, *m_left, *m_right;
-	MarginPreview		*m_preview;
-	QComboBox		*m_units;
-	QCheckBox		*m_custom;
-	bool			m_symetric, m_block;
-	QValueVector<float>	m_default;
-	QValueVector<float>	m_pagesize;
-	bool			m_landscape;
+    MarginValueWidget *m_top, *m_bottom, *m_left, *m_right;
+    MarginPreview *m_preview;
+    QComboBox *m_units;
+    QCheckBox *m_custom;
+    bool m_symetric, m_block;
+    QValueVector< float > m_default;
+    QValueVector< float > m_pagesize;
+    bool m_landscape;
 };
 
 #endif

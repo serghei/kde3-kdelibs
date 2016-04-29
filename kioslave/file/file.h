@@ -40,59 +40,54 @@
 // Note that this header file is installed, so think twice
 // before breaking binary compatibility (read: it is forbidden :)
 
-class FileProtocol : public QObject, public KIO::SlaveBase
-{
-  Q_OBJECT
+class FileProtocol : public QObject, public KIO::SlaveBase {
+    Q_OBJECT
 public:
-  FileProtocol( const QCString &pool, const QCString &app);
-  virtual ~FileProtocol() { }
+    FileProtocol(const QCString &pool, const QCString &app);
+    virtual ~FileProtocol()
+    {
+    }
 
-  virtual void get( const KURL& url );
-  virtual void put( const KURL& url, int permissions,
-		    bool overwrite, bool resume );
-  virtual void copy( const KURL &src, const KURL &dest,
-                     int permissions, bool overwrite );
-  virtual void rename( const KURL &src, const KURL &dest,
-                       bool overwrite );
-  virtual void symlink( const QString &target, const KURL &dest,
-                        bool overwrite );
+    virtual void get(const KURL &url);
+    virtual void put(const KURL &url, int permissions, bool overwrite, bool resume);
+    virtual void copy(const KURL &src, const KURL &dest, int permissions, bool overwrite);
+    virtual void rename(const KURL &src, const KURL &dest, bool overwrite);
+    virtual void symlink(const QString &target, const KURL &dest, bool overwrite);
 
-  virtual void stat( const KURL& url );
-  virtual void listDir( const KURL& url );
-  virtual void mkdir( const KURL& url, int permissions );
-  virtual void chmod( const KURL& url, int permissions );
-  virtual void del( const KURL& url, bool isfile);
+    virtual void stat(const KURL &url);
+    virtual void listDir(const KURL &url);
+    virtual void mkdir(const KURL &url, int permissions);
+    virtual void chmod(const KURL &url, int permissions);
+    virtual void del(const KURL &url, bool isfile);
 
-  /**
-   * Special commands supported by this slave:
-   * 1 - mount
-   * 2 - unmount
-   * 3 - shred
-   */
-  virtual void special( const QByteArray &data);
-  void unmount( const QString& point );
-  void mount( bool _ro, const char *_fstype, const QString& dev, const QString& point );
-  bool pumount( const QString &point );
-  bool pmount( const QString &dev );
+    /**
+     * Special commands supported by this slave:
+     * 1 - mount
+     * 2 - unmount
+     * 3 - shred
+     */
+    virtual void special(const QByteArray &data);
+    void unmount(const QString &point);
+    void mount(bool _ro, const char *_fstype, const QString &dev, const QString &point);
+    bool pumount(const QString &point);
+    bool pmount(const QString &dev);
 
 protected slots:
-  void slotProcessedSize( KIO::filesize_t _bytes );
-  void slotInfoMessage( const QString & msg );
+    void slotProcessedSize(KIO::filesize_t _bytes);
+    void slotInfoMessage(const QString &msg);
 
 protected:
+    bool createUDSEntry(const QString &filename, const QCString &path, KIO::UDSEntry &entry, short int details, bool withACL);
+    int setACL(const char *path, mode_t perm, bool _directoryDefault);
 
-  bool createUDSEntry( const QString & filename, const QCString & path, KIO::UDSEntry & entry, 
-                       short int details, bool withACL );
-  int setACL( const char *path, mode_t perm, bool _directoryDefault );
-  
-  QString getUserName( uid_t uid );
-  QString getGroupName( gid_t gid );
+    QString getUserName(uid_t uid);
+    QString getGroupName(gid_t gid);
 
-  QIntDict<QString> usercache;      // maps long ==> QString *
-  QIntDict<QString> groupcache;
+    QIntDict< QString > usercache; // maps long ==> QString *
+    QIntDict< QString > groupcache;
 
-  class FileProtocolPrivate;
-  FileProtocolPrivate *d;
+    class FileProtocolPrivate;
+    FileProtocolPrivate *d;
 };
 
 #endif

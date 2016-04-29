@@ -28,48 +28,47 @@
 
 namespace KJS {
 
-  class ReferenceListNode;
-  class ReferenceListHeadNode;
+class ReferenceListNode;
+class ReferenceListHeadNode;
 
 /**
 * An iterator for a  @ref ReferenceList.
 */
-  class KJS_EXPORT ReferenceListIterator {
+class KJS_EXPORT ReferenceListIterator {
     friend class ReferenceList;
-  
-  public:
+
+public:
     bool operator!=(const ReferenceListIterator &it) const;
     const Reference *operator->() const;
     const Reference &operator++(int i);
-    
-  private:
+
+private:
     ReferenceListIterator(ReferenceListNode *n);
     ReferenceListIterator();
     ReferenceListNode *node;
-  };
-  
+};
+
 /**
 * A list of @ref Reference objects.
 */
-  class KJS_EXPORT ReferenceList {
-  public:
+class KJS_EXPORT ReferenceList {
+public:
     ReferenceList();
     ReferenceList(const ReferenceList &list);
     ReferenceList &operator=(const ReferenceList &list);
     ~ReferenceList();
 
-    void append(const Reference& val);
+    void append(const Reference &val);
     int length();
 
     ReferenceListIterator begin() const;
     ReferenceListIterator end() const;
-    
-  private:
+
+private:
     void swap(ReferenceList &list);
     ReferenceListHeadNode *head;
     ReferenceListNode *tail;
-  }; 
-  
+};
 }
 
 #endif

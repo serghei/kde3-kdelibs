@@ -34,14 +34,20 @@
  * and KActionMenu uses it to create actions directly.
  * @since 3.2
  */
-class KIO_EXPORT KBookmarkImporterBase : public QObject
-{
+class KIO_EXPORT KBookmarkImporterBase : public QObject {
     Q_OBJECT
 public:
-    KBookmarkImporterBase() {}
-    virtual ~KBookmarkImporterBase() {}
+    KBookmarkImporterBase()
+    {
+    }
+    virtual ~KBookmarkImporterBase()
+    {
+    }
 
-    void setFilename(const QString &filename) { m_fileName = filename; }
+    void setFilename(const QString &filename)
+    {
+        m_fileName = filename;
+    }
 
     virtual void parse() = 0;
     virtual QString findDefaultLocation(bool forSaving = false) const = 0;
@@ -55,13 +61,13 @@ signals:
      * Notify about a new bookmark
      * Use "html" for the icon
      */
-    void newBookmark(const QString & text, const QCString & url, const QString & additionalInfo);
+    void newBookmark(const QString &text, const QCString &url, const QString &additionalInfo);
 
     /**
      * Notify about a new folder
      * Use "bookmark_folder" for the icon
      */
-    void newFolder(const QString & text, bool open, const QString & additionalInfo);
+    void newFolder(const QString &text, bool open, const QString &additionalInfo);
 
     /**
      * Notify about a new separator
@@ -84,17 +90,23 @@ private:
 /**
  * A class for importing XBEL files
  */
-class KIO_EXPORT KXBELBookmarkImporterImpl : public KBookmarkImporterBase, protected KBookmarkGroupTraverser
-{
+class KIO_EXPORT KXBELBookmarkImporterImpl : public KBookmarkImporterBase, protected KBookmarkGroupTraverser {
     Q_OBJECT
 public:
-    KXBELBookmarkImporterImpl() {}
+    KXBELBookmarkImporterImpl()
+    {
+    }
     virtual void parse();
-    virtual QString findDefaultLocation(bool = false) const { return QString::null; }
+    virtual QString findDefaultLocation(bool = false) const
+    {
+        return QString::null;
+    }
+
 protected:
     virtual void visit(const KBookmark &);
     virtual void visitEnter(const KBookmarkGroup &);
     virtual void visitLeave(const KBookmarkGroup &);
+
 private:
     class KXBELBookmarkImporterImplPrivate *d;
 };

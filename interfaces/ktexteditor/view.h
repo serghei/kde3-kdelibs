@@ -22,47 +22,44 @@
 #include <qwidget.h>
 #include <kxmlguiclient.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
  * The View class represents a single view of a Document .
  */
 
-class KTEXTEDITOR_EXPORT View : public QWidget, public KXMLGUIClient
-{
-  friend class PrivateView;
+class KTEXTEDITOR_EXPORT View : public QWidget, public KXMLGUIClient {
+    friend class PrivateView;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
     * Create a new view to the given document. The document must be non-null.
     */
-    View ( class Document *, QWidget *parent, const char *name = 0 );
-    virtual ~View ();
+    View(class Document *, QWidget *parent, const char *name = 0);
+    virtual ~View();
 
     /**
      * Returns the number of this view
      */
-    unsigned int viewNumber () const;
+    unsigned int viewNumber() const;
 
     /**
      * Returns the DCOP suffix to allow identification of this view's DCOP interface.
      */
-    QCString viewDCOPSuffix () const;
+    QCString viewDCOPSuffix() const;
 
     /**
     * Acess the parent Document.
     */
-    virtual class Document *document () const = 0;
-    
-  private:
+    virtual class Document *document() const = 0;
+
+private:
     class PrivateView *d;
     static unsigned int globalViewNumber;
     unsigned int myViewNumber;
 };
-
 }
 
 #endif

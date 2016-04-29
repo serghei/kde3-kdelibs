@@ -25,19 +25,18 @@
 class KEditListBox;
 class QComboBox;
 
-class KMWUsers : public KMWizardPage
-{
-	Q_OBJECT
+class KMWUsers : public KMWizardPage {
+    Q_OBJECT
 public:
-	KMWUsers(QWidget *parent = 0, const char *name = 0);
-	virtual ~KMWUsers();
+    KMWUsers(QWidget *parent = 0, const char *name = 0);
+    virtual ~KMWUsers();
 
-	void initPrinter(KMPrinter*);
-	void updatePrinter(KMPrinter*);
+    void initPrinter(KMPrinter *);
+    void updatePrinter(KMPrinter *);
 
 private:
-	KEditListBox	*m_users;
-	QComboBox	*m_type;
+    KEditListBox *m_users;
+    QComboBox *m_type;
 };
 
 #endif

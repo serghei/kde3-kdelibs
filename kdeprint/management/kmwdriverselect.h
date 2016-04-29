@@ -26,23 +26,22 @@
 class KListBox;
 class QPushButton;
 
-class KMWDriverSelect : public KMWizardPage
-{
-	Q_OBJECT
+class KMWDriverSelect : public KMWizardPage {
+    Q_OBJECT
 public:
-	KMWDriverSelect(QWidget *parent = 0, const char *name = 0);
+    KMWDriverSelect(QWidget *parent = 0, const char *name = 0);
 
-	bool isValid(QString&);
-	void initPrinter(KMPrinter*);
-	void updatePrinter(KMPrinter*);
+    bool isValid(QString &);
+    void initPrinter(KMPrinter *);
+    void updatePrinter(KMPrinter *);
 
 protected slots:
-	void slotDriverComment();
+    void slotDriverComment();
 
 private:
-	KListBox	*m_list;
-	KMDBEntryList	*m_entries;
-	QPushButton	*m_drivercomment;
+    KListBox *m_list;
+    KMDBEntryList *m_entries;
+    QPushButton *m_drivercomment;
 };
 
 #endif

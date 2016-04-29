@@ -27,8 +27,8 @@
 
 namespace KJS {
 
-  class ArrayInstanceImp : public ObjectImp {
-  public:
+class ArrayInstanceImp : public ObjectImp {
+public:
     ArrayInstanceImp(ObjectImp *proto, unsigned initialLength);
     ArrayInstanceImp(ObjectImp *proto, const List &initialValues);
     ~ArrayInstanceImp();
@@ -45,15 +45,21 @@ namespace KJS {
 
     virtual void mark();
 
-    virtual const ClassInfo *classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
 
-    unsigned getLength() const { return length; }
+    unsigned getLength() const
+    {
+        return length;
+    }
 
     void sort(ExecState *exec);
     void sort(ExecState *exec, Object &compareFunction);
 
-  private:
+private:
     void setLength(unsigned newLength, ExecState *exec);
 
     unsigned pushUndefinedObjectsToEnd(ExecState *exec);
@@ -64,7 +70,7 @@ namespace KJS {
     unsigned storageLength;
     unsigned capacity;
     ValueImp **storage;
-  };
+};
 
 } // namespace KJS
 

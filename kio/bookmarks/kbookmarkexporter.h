@@ -29,17 +29,21 @@
 /**
  * @since 3.2
  */
-class KIO_EXPORT KBookmarkExporterBase
-{
+class KIO_EXPORT KBookmarkExporterBase {
 public:
-    KBookmarkExporterBase(KBookmarkManager* mgr, const QString & fileName)
-        : m_fileName(fileName), m_pManager(mgr) 
-    { ; }
-    virtual ~KBookmarkExporterBase() {}
+    KBookmarkExporterBase(KBookmarkManager *mgr, const QString &fileName) : m_fileName(fileName), m_pManager(mgr)
+    {
+        ;
+    }
+    virtual ~KBookmarkExporterBase()
+    {
+    }
     virtual void write(KBookmarkGroup) = 0;
+
 protected:
     QString m_fileName;
-    KBookmarkManager* m_pManager;
+    KBookmarkManager *m_pManager;
+
 private:
     class KBookmarkExporterBasePrivate *d;
 };

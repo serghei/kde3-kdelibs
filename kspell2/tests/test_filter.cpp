@@ -26,24 +26,23 @@
 
 using namespace KSpell2;
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
     KApplication app(argc, argv, "Filter");
 
-    QString buffer = QString( "This is     a sample buffer.      Please test me." );
+    QString buffer = QString("This is     a sample buffer.      Please test me.");
 
     Filter filter;
-    filter.setBuffer( buffer );
+    filter.setBuffer(buffer);
 
     Word w;
 
-    while ( ! (w=filter.nextWord()).end ) {
-        kdDebug()<< "Found word \""<< w.word << "\" which starts at position "
-                 << w.start <<endl;
+    while(!(w = filter.nextWord()).end)
+    {
+        kdDebug() << "Found word \"" << w.word << "\" which starts at position " << w.start << endl;
     }
 
-    filter.setBuffer( buffer );
-
+    filter.setBuffer(buffer);
 
 
     return 0;

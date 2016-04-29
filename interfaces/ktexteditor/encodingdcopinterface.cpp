@@ -4,25 +4,23 @@
 #include <dcopclient.h>
 using namespace KTextEditor;
 
-EncodingDCOPInterface::EncodingDCOPInterface( EncodingInterface *Parent, const char *name)
-	: DCOPObject(name)
+EncodingDCOPInterface::EncodingDCOPInterface(EncodingInterface *Parent, const char *name) : DCOPObject(name)
 {
-	m_parent = Parent;
+    m_parent = Parent;
 }
 
 EncodingDCOPInterface::~EncodingDCOPInterface()
 {
-
- }
-uint EncodingDCOPInterface::encodingInterfaceNumber ()
-{
-	return m_parent->encodingInterfaceNumber ();
 }
-void EncodingDCOPInterface::setEncoding (QString e) 
+uint EncodingDCOPInterface::encodingInterfaceNumber()
 {
-	m_parent->setEncoding (e); 
+    return m_parent->encodingInterfaceNumber();
+}
+void EncodingDCOPInterface::setEncoding(QString e)
+{
+    m_parent->setEncoding(e);
 }
 QString EncodingDCOPInterface::encoding()
 {
-	return m_parent->encoding();
+    return m_parent->encoding();
 }

@@ -28,98 +28,96 @@ class QMimeSource;
 // KDE4 TODO pass a parent widget to all methods that will display a message box
 
 namespace KIO {
-  class Job;
-  class CopyJob;
+class Job;
+class CopyJob;
 
-  /**
-   * Pastes the content of the clipboard to the given destination URL.
-   * URLs are treated separately (performing a file copy)
-   * from other data (which is saved into a file after asking the user
-   * to choose a filename and the preferred data format)
-   *
-   * @param destURL the URL to receive the data
-   * @param move true to move the data, false to copy
-   * @return the job that handles the operation
-   * @see pasteData()
-   */
-  KIO_EXPORT Job *pasteClipboard( const KURL& destURL, bool move = false );
+/**
+ * Pastes the content of the clipboard to the given destination URL.
+ * URLs are treated separately (performing a file copy)
+ * from other data (which is saved into a file after asking the user
+ * to choose a filename and the preferred data format)
+ *
+ * @param destURL the URL to receive the data
+ * @param move true to move the data, false to copy
+ * @return the job that handles the operation
+ * @see pasteData()
+ */
+KIO_EXPORT Job *pasteClipboard(const KURL &destURL, bool move = false);
 
-  /**
-   * Pastes the given @p data to the given destination URL.
-   * NOTE: This method is blocking (uses NetAccess for saving the data).
-   * Please consider using pasteDataAsync instead.
-   *
-   * @param destURL the URL of the directory where the data will be pasted.
-   * The filename to use in that directory is prompted by this method.
-   * @param data the data to copy
-   * @see pasteClipboard()
-   */
-  KIO_EXPORT void pasteData( const KURL& destURL, const QByteArray& data );
+/**
+ * Pastes the given @p data to the given destination URL.
+ * NOTE: This method is blocking (uses NetAccess for saving the data).
+ * Please consider using pasteDataAsync instead.
+ *
+ * @param destURL the URL of the directory where the data will be pasted.
+ * The filename to use in that directory is prompted by this method.
+ * @param data the data to copy
+ * @see pasteClipboard()
+ */
+KIO_EXPORT void pasteData(const KURL &destURL, const QByteArray &data);
 
-  /**
-   * Pastes the given @p data to the given destination URL.
-   * Note that this method requires the caller to have chosen the QByteArray
-   * to paste before hand, unlike pasteClipboard and pasteMimeSource.
-   *
-   * @param destURL the URL of the directory where the data will be pasted.
-   * The filename to use in that directory is prompted by this method.
-   * @param data the data to copy
-   * @see pasteClipboard()
-   */
-  KIO_EXPORT CopyJob *pasteDataAsync( const KURL& destURL, const QByteArray& data );
+/**
+ * Pastes the given @p data to the given destination URL.
+ * Note that this method requires the caller to have chosen the QByteArray
+ * to paste before hand, unlike pasteClipboard and pasteMimeSource.
+ *
+ * @param destURL the URL of the directory where the data will be pasted.
+ * The filename to use in that directory is prompted by this method.
+ * @param data the data to copy
+ * @see pasteClipboard()
+ */
+KIO_EXPORT CopyJob *pasteDataAsync(const KURL &destURL, const QByteArray &data);
 
-  /**
-   * Pastes the given @p data to the given destination URL.
-   * Note that this method requires the caller to have chosen the QByteArray
-   * to paste before hand, unlike pasteClipboard and pasteMimeSource.
-   *
-   * @param destURL the URL of the directory where the data will be pasted.
-   * The filename to use in that directory is prompted by this method.
-   * @param data the data to copy
-   * @param dialogText the text to show in the dialog
-   * @see pasteClipboard()
-   */
-  KIO_EXPORT CopyJob *pasteDataAsync( const KURL& destURL, const QByteArray& data, const QString& dialogText ); // KDE4: merge with above
+/**
+ * Pastes the given @p data to the given destination URL.
+ * Note that this method requires the caller to have chosen the QByteArray
+ * to paste before hand, unlike pasteClipboard and pasteMimeSource.
+ *
+ * @param destURL the URL of the directory where the data will be pasted.
+ * The filename to use in that directory is prompted by this method.
+ * @param data the data to copy
+ * @param dialogText the text to show in the dialog
+ * @see pasteClipboard()
+ */
+KIO_EXPORT CopyJob *pasteDataAsync(const KURL &destURL, const QByteArray &data, const QString &dialogText); // KDE4: merge with above
 
 
-  /**
-   * Save the given mimesource @p data to the given destination URL
-   * after offering the user to choose a data format.
-   * This is the method used when handling drops (of anything else than URLs)
-   * onto kdesktop and konqueror.
-   *
-   * @param data the QMimeSource (e.g. a QDropEvent)
-   * @param destURL the URL of the directory where the data will be pasted.
-   * The filename to use in that directory is prompted by this method.
-   * @param dialogText the text to show in the dialog
-   * @param widget parent widget to use for dialogs
-   * @param clipboard whether the QMimeSource comes from QClipboard. If you
-   * use pasteClipboard for that case, you never have to worry about this parameter.
-   *
-   * @see pasteClipboard()
-   *
-   * @since 3.5
-   */
-  KIO_EXPORT CopyJob* pasteMimeSource( QMimeSource* data, const KURL& destURL,
-                                       const QString& dialogText, QWidget* widget,
-                                       bool clipboard = false );
+/**
+ * Save the given mimesource @p data to the given destination URL
+ * after offering the user to choose a data format.
+ * This is the method used when handling drops (of anything else than URLs)
+ * onto kdesktop and konqueror.
+ *
+ * @param data the QMimeSource (e.g. a QDropEvent)
+ * @param destURL the URL of the directory where the data will be pasted.
+ * The filename to use in that directory is prompted by this method.
+ * @param dialogText the text to show in the dialog
+ * @param widget parent widget to use for dialogs
+ * @param clipboard whether the QMimeSource comes from QClipboard. If you
+ * use pasteClipboard for that case, you never have to worry about this parameter.
+ *
+ * @see pasteClipboard()
+ *
+ * @since 3.5
+ */
+KIO_EXPORT CopyJob *pasteMimeSource(QMimeSource *data, const KURL &destURL, const QString &dialogText, QWidget *widget, bool clipboard = false);
 
-  /**
-   * Checks whether the clipboard contains any URLs.
-   * @return true if not
-   * Not used anymore, wrong method name, so it will disappear in KDE4.
-   */
-  KIO_EXPORT_DEPRECATED bool isClipboardEmpty();
+/**
+ * Checks whether the clipboard contains any URLs.
+ * @return true if not
+ * Not used anymore, wrong method name, so it will disappear in KDE4.
+ */
+KIO_EXPORT_DEPRECATED bool isClipboardEmpty();
 
-  /**
-   * Returns the text to use for the Paste action, when the application supports
-   * pasting files, urls, and clipboard data, using pasteClipboard().
-   * @return a string suitable for KAction::setText, or an empty string if pasting
-   * isn't possible right now.
-   *
-   * @since 3.5
-   */
-  KIO_EXPORT QString pasteActionText();
+/**
+ * Returns the text to use for the Paste action, when the application supports
+ * pasting files, urls, and clipboard data, using pasteClipboard().
+ * @return a string suitable for KAction::setText, or an empty string if pasting
+ * isn't possible right now.
+ *
+ * @since 3.5
+ */
+KIO_EXPORT QString pasteActionText();
 }
 
 #endif

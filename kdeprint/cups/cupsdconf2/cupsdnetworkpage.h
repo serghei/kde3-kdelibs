@@ -28,28 +28,27 @@ class QComboBox;
 class EditList;
 class SizeWidget;
 
-class CupsdNetworkPage : public CupsdPage
-{
-	Q_OBJECT
+class CupsdNetworkPage : public CupsdPage {
+    Q_OBJECT
 
 public:
-	CupsdNetworkPage(QWidget *parent = 0, const char *name = 0);
+    CupsdNetworkPage(QWidget *parent = 0, const char *name = 0);
 
-	bool loadConfig(CupsdConf*, QString&);
-	bool saveConfig(CupsdConf*, QString&);
-	void setInfos(CupsdConf*);
+    bool loadConfig(CupsdConf *, QString &);
+    bool saveConfig(CupsdConf *, QString &);
+    void setInfos(CupsdConf *);
 
 protected slots:
-	void slotAdd();
-	void slotEdit(int);
-	void slotDefaultList();
+    void slotAdd();
+    void slotEdit(int);
+    void slotDefaultList();
 
 private:
-	KIntNumInput	*keepalivetimeout_, *maxclients_, *clienttimeout_;
-	QComboBox	*hostnamelookup_;
-	QCheckBox	*keepalive_;
-	EditList	*listen_;
-	SizeWidget *maxrequestsize_;
+    KIntNumInput *keepalivetimeout_, *maxclients_, *clienttimeout_;
+    QComboBox *hostnamelookup_;
+    QCheckBox *keepalive_;
+    EditList *listen_;
+    SizeWidget *maxrequestsize_;
 };
 
 #endif

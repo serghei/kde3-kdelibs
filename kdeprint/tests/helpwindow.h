@@ -20,16 +20,15 @@
 class QComboBox;
 class QPopupMenu;
 
-class HelpWindow : public KMainWindow
-{
+class HelpWindow : public KMainWindow {
     Q_OBJECT
 public:
-    HelpWindow( const QString& home_,  const QString& path, QWidget* parent = 0, const char *name=0 );
+    HelpWindow(const QString &home_, const QString &path, QWidget *parent = 0, const char *name = 0);
     ~HelpWindow();
 
 private slots:
-    void setBackwardAvailable( bool );
-    void setForwardAvailable( bool );
+    void setBackwardAvailable(bool);
+    void setForwardAvailable(bool);
 
     void textChanged();
     void about();
@@ -38,28 +37,23 @@ private slots:
     void newWindow();
     void print();
 
-    void pathSelected( const QString & );
-    void histChosen( int );
-    void bookmChosen( int );
+    void pathSelected(const QString &);
+    void histChosen(int);
+    void bookmChosen(int);
     void addBookmark();
-    
+
 private:
     void readHistory();
     void readBookmarks();
-    
-    QTextBrowser* browser;
+
+    QTextBrowser *browser;
     QComboBox *pathCombo;
     int backwardId, forwardId;
     QString selectedURL;
     QStringList history, bookmarks;
-    QMap<int, QString> mHistory, mBookmarks;
+    QMap< int, QString > mHistory, mBookmarks;
     QPopupMenu *hist, *bookm;
-
 };
 
 
-
-
-
 #endif
-

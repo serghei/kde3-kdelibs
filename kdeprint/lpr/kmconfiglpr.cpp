@@ -27,40 +27,43 @@
 #include <klocale.h>
 #include <kconfig.h>
 
-KMConfigLpr::KMConfigLpr(QWidget *parent, const char *name)
-: KMConfigPage(parent, name)
+KMConfigLpr::KMConfigLpr(QWidget *parent, const char *name) : KMConfigPage(parent, name)
 {
-	setPageName(i18n("Spooler"));
-	setPageHeader(i18n("Spooler Settings"));
-	setPagePixmap("gear");
+    setPageName(i18n("Spooler"));
+    setPageHeader(i18n("Spooler Settings"));
+    setPagePixmap("gear");
 
-	QGroupBox	*m_modebox = new QGroupBox(1, Qt::Vertical, i18n("Spooler"), this);
+    QGroupBox *m_modebox = new QGroupBox(1, Qt::Vertical, i18n("Spooler"), this);
 
-	m_mode = new QComboBox(m_modebox);
-	m_mode->insertItem("LPR (BSD compatible)");
-	m_mode->insertItem("LPRng");
+    m_mode = new QComboBox(m_modebox);
+    m_mode->insertItem("LPR (BSD compatible)");
+    m_mode->insertItem("LPRng");
 
-	QVBoxLayout	*l0 = new QVBoxLayout(this, 5, 10);
-	l0->addWidget(m_modebox);
-	l0->addStretch(1);
+    QVBoxLayout *l0 = new QVBoxLayout(this, 5, 10);
+    l0->addWidget(m_modebox);
+    l0->addStretch(1);
 }
 
-void KMConfigLpr::loadConfig(KConfig*)
+void KMConfigLpr::loadConfig(KConfig *)
 {
-	m_mode->setCurrentItem(LprSettings::self()->mode());
+    m_mode->setCurrentItem(LprSettings::self()->mode());
 }
 
 void KMConfigLpr::saveConfig(KConfig *conf)
 {
-	LprSettings::self()->setMode((LprSettings::Mode)(m_mode->currentItem()));
+    LprSettings::self()->setMode((LprSettings::Mode)(m_mode->currentItem()));
 
-	QString	modestr;
-	switch (m_mode->currentItem())
-	{
-		default:
-		case 0: modestr = "LPR"; break;
-		case 1: modestr = "LPRng"; break;
-	}
-	conf->setGroup("LPR");
-	conf->writeEntry("Mode", modestr);
+    QString modestr;
+    switch(m_mode->currentItem())
+    {
+        default:
+        case 0:
+            modestr = "LPR";
+            break;
+        case 1:
+            modestr = "LPRng";
+            break;
+    }
+    conf->setGroup("LPR");
+    conf->writeEntry("Mode", modestr);
 }

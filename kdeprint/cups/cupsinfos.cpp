@@ -34,35 +34,34 @@
 #include <cups/cups.h>
 #include <cups/ipp.h>
 
-const char* cupsGetPasswordCB(const char*)
+const char *cupsGetPasswordCB(const char *)
 {
-	return CupsInfos::self()->getPasswordCB();
+    return CupsInfos::self()->getPasswordCB();
 }
 
-CupsInfos* CupsInfos::unique_ = 0;
+CupsInfos *CupsInfos::unique_ = 0;
 
-CupsInfos* CupsInfos::self()
+CupsInfos *CupsInfos::self()
 {
-	if (!unique_)
-	{
-		unique_ = new CupsInfos();
-	}
-	return unique_;
+    if(!unique_)
+    {
+        unique_ = new CupsInfos();
+    }
+    return unique_;
 }
 
-CupsInfos::CupsInfos()
-: KPReloadObject(true)
+CupsInfos::CupsInfos() : KPReloadObject(true)
 {
-	count_ = 0;
+    count_ = 0;
 
-	load();
-/*	host_ = cupsServer();
-	login_ = cupsUser();
-	if (login_.isEmpty()) login_ = QString::null;
-	port_ = ippPort();
-	password_ = QString::null;*/
+    load();
+    /*	host_ = cupsServer();
+        login_ = cupsUser();
+        if (login_.isEmpty()) login_ = QString::null;
+        port_ = ippPort();
+        password_ = QString::null;*/
 
-	cupsSetPasswordCB(cupsGetPasswordCB);
+    cupsSetPasswordCB(cupsGetPasswordCB);
 }
 
 CupsInfos::~CupsInfos()
@@ -71,96 +70,97 @@ CupsInfos::~CupsInfos()
 
 QString CupsInfos::hostaddr() const
 {
-    if (host_[0] != '/')
+    if(host_[0] != '/')
         return host_ + ":" + QString::number(port_);
     return "localhost";
 }
 
-void CupsInfos::setHost(const QString& s)
+void CupsInfos::setHost(const QString &s)
 {
-	host_ = s;
-	cupsSetServer(s.latin1());
+    host_ = s;
+    cupsSetServer(s.latin1());
 }
 
 void CupsInfos::setPort(int p)
 {
-	port_ = p;
-	ippSetPort(p);
+    port_ = p;
+    ippSetPort(p);
 }
 
-void CupsInfos::setLogin(const QString& s)
+void CupsInfos::setLogin(const QString &s)
 {
-	login_ = s;
-	cupsSetUser(s.latin1());
+    login_ = s;
+    cupsSetUser(s.latin1());
 }
 
-void CupsInfos::setPassword(const QString& s)
+void CupsInfos::setPassword(const QString &s)
 {
-	password_ = s;
+    password_ = s;
 }
 
-void CupsInfos::setSavePassword( bool on )
+void CupsInfos::setSavePassword(bool on)
 {
-	savepwd_ = on;
+    savepwd_ = on;
 }
 
-const char* CupsInfos::getPasswordCB()
+const char *CupsInfos::getPasswordCB()
 {
-	QPair<QString,QString> pwd = KMFactory::self()->requestPassword( count_, login_, host_, port_ );
+    QPair< QString, QString > pwd = KMFactory::self()->requestPassword(count_, login_, host_, port_);
 
-	if ( pwd.first.isEmpty() && pwd.second.isEmpty() )
-		return NULL;
-	setLogin( pwd.first );
-	setPassword( pwd.second );
-	return pwd.second.latin1();
+    if(pwd.first.isEmpty() && pwd.second.isEmpty())
+        return NULL;
+    setLogin(pwd.first);
+    setPassword(pwd.second);
+    return pwd.second.latin1();
 }
 
 void CupsInfos::load()
 {
-	KConfig	*conf_ = KMFactory::self()->printConfig();
-	conf_->setGroup("CUPS");
-	host_ = conf_->readEntry("Host",QString::fromLatin1(cupsServer()));
-	port_ = conf_->readNumEntry("Port",ippPort());
-	login_ = conf_->readEntry("Login",QString::fromLatin1(cupsUser()));
-	savepwd_ = conf_->readBoolEntry( "SavePassword", false );
-	if ( savepwd_ )
-	{
-		password_ = KStringHandler::obscure( conf_->readEntry( "Password" ) );
-		KMFactory::self()->initPassword( login_, password_, host_, port_ );
-	}
-	else
-		password_ = QString::null;
-	if (login_.isEmpty()) login_ = QString::null;
-	reallogin_ = cupsUser();
+    KConfig *conf_ = KMFactory::self()->printConfig();
+    conf_->setGroup("CUPS");
+    host_ = conf_->readEntry("Host", QString::fromLatin1(cupsServer()));
+    port_ = conf_->readNumEntry("Port", ippPort());
+    login_ = conf_->readEntry("Login", QString::fromLatin1(cupsUser()));
+    savepwd_ = conf_->readBoolEntry("SavePassword", false);
+    if(savepwd_)
+    {
+        password_ = KStringHandler::obscure(conf_->readEntry("Password"));
+        KMFactory::self()->initPassword(login_, password_, host_, port_);
+    }
+    else
+        password_ = QString::null;
+    if(login_.isEmpty())
+        login_ = QString::null;
+    reallogin_ = cupsUser();
 
-	// synchronize with CUPS
-	cupsSetServer(host_.latin1());
-	cupsSetUser(login_.latin1());
-	ippSetPort(port_);
+    // synchronize with CUPS
+    cupsSetServer(host_.latin1());
+    cupsSetUser(login_.latin1());
+    ippSetPort(port_);
 }
 
 void CupsInfos::save()
 {
-	KConfig	*conf_ = KMFactory::self()->printConfig();
-	conf_->setGroup("CUPS");
-	conf_->writeEntry("Host",host_);
-	conf_->writeEntry("Port",port_);
-	conf_->writeEntry("Login",login_);
-	conf_->writeEntry( "SavePassword", savepwd_ );
-	if ( savepwd_ )
-		conf_->writeEntry( "Password", KStringHandler::obscure( password_ ) );
-	else
-		conf_->deleteEntry( "Password" );
-	conf_->sync();
+    KConfig *conf_ = KMFactory::self()->printConfig();
+    conf_->setGroup("CUPS");
+    conf_->writeEntry("Host", host_);
+    conf_->writeEntry("Port", port_);
+    conf_->writeEntry("Login", login_);
+    conf_->writeEntry("SavePassword", savepwd_);
+    if(savepwd_)
+        conf_->writeEntry("Password", KStringHandler::obscure(password_));
+    else
+        conf_->deleteEntry("Password");
+    conf_->sync();
 }
 
 void CupsInfos::reload()
 {
-	// do nothing, but needs to be implemented
+    // do nothing, but needs to be implemented
 }
 
 void CupsInfos::configChanged()
 {
-	// we need to reload settings
-	load();
+    // we need to reload settings
+    load();
 }

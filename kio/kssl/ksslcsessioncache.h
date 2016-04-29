@@ -27,8 +27,7 @@ class KURL;
 class QString;
 
 class KIO_EXPORT KSSLCSessionCache {
- public:
-
+public:
     /**
      * Store a SSL session (client side only)
      * @param kurl URL the key belongs to. Method, host and port are used

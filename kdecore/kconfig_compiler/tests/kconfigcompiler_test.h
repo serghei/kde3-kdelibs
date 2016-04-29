@@ -21,15 +21,14 @@
 class QString;
 
 // change to SlotTester when it works
-class KConfigCompiler_Test : public KUnitTest::Tester
-{
+class KConfigCompiler_Test : public KUnitTest::Tester {
 public:
-	void allTests();
+    void allTests();
 public slots:
-	void testExpectedOutput();
+    void testExpectedOutput();
+
 private:
-	void performCompare(const QString &fileName, bool fail=false);
+    void performCompare(const QString &fileName, bool fail = false);
 };
 
 #endif
-

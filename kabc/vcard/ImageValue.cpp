@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,55 +27,47 @@
 
 using namespace VCARD;
 
-ImageValue::ImageValue()
-	:	Value()
+ImageValue::ImageValue() : Value()
 {
 }
 
-ImageValue::ImageValue(const ImageValue & x)
-	:	Value(x)
+ImageValue::ImageValue(const ImageValue &x) : Value(x)
 {
 }
 
-ImageValue::ImageValue(const QCString & s)
-	:	Value(s)
+ImageValue::ImageValue(const QCString &s) : Value(s)
 {
 }
 
-	ImageValue &
-ImageValue::operator = (ImageValue & x)
+ImageValue &ImageValue::operator=(ImageValue &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Value::operator = (x);
-	return *this;
+    Value::operator=(x);
+    return *this;
 }
 
-	ImageValue &
-ImageValue::operator = (const QCString & s)
+ImageValue &ImageValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-ImageValue::operator == (ImageValue & x)
+bool ImageValue::operator==(ImageValue &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 ImageValue::~ImageValue()
 {
 }
 
-	void
-ImageValue::_parse()
+void ImageValue::_parse()
 {
 }
 
-	void
-ImageValue::_assemble()
+void ImageValue::_assemble()
 {
 }
-

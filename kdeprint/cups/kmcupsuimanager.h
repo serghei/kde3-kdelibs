@@ -22,19 +22,18 @@
 
 #include "kmuimanager.h"
 
-class KMCupsUiManager : public KMUiManager
-{
+class KMCupsUiManager : public KMUiManager {
 public:
-	KMCupsUiManager(QObject *parent, const char *name, const QStringList & /*args*/);
-	~KMCupsUiManager();
+    KMCupsUiManager(QObject *parent, const char *name, const QStringList & /*args*/);
+    ~KMCupsUiManager();
 
-	void setupPropertyPages(KMPropertyPage*);
-	void setupWizard(KMWizard*);
-	void setupPrinterPropertyDialog(KPrinterPropertyDialog*);
-	void setupConfigDialog(KMConfigDialog*);
-	int pluginPageCap();
-	void setupPrintDialogPages(QPtrList<KPrintDialogPage>*);
-	void setupJobViewer(QListView*);
+    void setupPropertyPages(KMPropertyPage *);
+    void setupWizard(KMWizard *);
+    void setupPrinterPropertyDialog(KPrinterPropertyDialog *);
+    void setupConfigDialog(KMConfigDialog *);
+    int pluginPageCap();
+    void setupPrintDialogPages(QPtrList< KPrintDialogPage > *);
+    void setupJobViewer(QListView *);
 };
 
 #endif

@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -29,92 +29,84 @@
 
 using namespace VCARD;
 
-ClassValue::ClassValue()
-	:	Value()
+ClassValue::ClassValue() : Value()
 {
 }
 
-ClassValue::ClassValue(const ClassValue & x)
-	:	Value(x),
-		classType_(x.classType_)
+ClassValue::ClassValue(const ClassValue &x) : Value(x), classType_(x.classType_)
 {
 }
 
-ClassValue::ClassValue(const QCString & s)
-	:	Value(s)
+ClassValue::ClassValue(const QCString &s) : Value(s)
 {
 }
 
-	ClassValue &
-ClassValue::operator = (ClassValue & x)
+ClassValue &ClassValue::operator=(ClassValue &x)
 {
-	if (*this == x) return *this;
-	x.parse();
-	
-	classType_ = x.classType_;
+    if(*this == x)
+        return *this;
+    x.parse();
 
-	Value::operator = (x);
-	return *this;
+    classType_ = x.classType_;
+
+    Value::operator=(x);
+    return *this;
 }
 
-	ClassValue &
-ClassValue::operator = (const QCString & s)
+ClassValue &ClassValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-ClassValue::operator == (ClassValue & x)
+bool ClassValue::operator==(ClassValue &x)
 {
-	x.parse();
-	return ( classType_ == x.classType_ );
+    x.parse();
+    return (classType_ == x.classType_);
 }
 
 ClassValue::~ClassValue()
 {
 }
 
-  ClassValue *
-ClassValue::clone()
+ClassValue *ClassValue::clone()
 {
-  return new ClassValue( *this );
+    return new ClassValue(*this);
 }
 
-	void
-ClassValue::_parse()
+void ClassValue::_parse()
 {
-	if (qstricmp(strRep_, "PUBLIC") == 0)
-		classType_ = Public;
-		
-	else if (qstricmp(strRep_, "PRIVATE") == 0)
-		classType_ = Private;
-	
-	else if (qstricmp(strRep_, "CONFIDENTIAL") == 0)
-		classType_ = Confidential;
-	
-	else classType_ = Other;
+    if(qstricmp(strRep_, "PUBLIC") == 0)
+        classType_ = Public;
+
+    else if(qstricmp(strRep_, "PRIVATE") == 0)
+        classType_ = Private;
+
+    else if(qstricmp(strRep_, "CONFIDENTIAL") == 0)
+        classType_ = Confidential;
+
+    else
+        classType_ = Other;
 }
 
-	void
-ClassValue::_assemble()
+void ClassValue::_assemble()
 {
-	switch (classType_) {
-		
-		case Public:
-			strRep_ = "PUBLIC";
-			break;
-		
-		case Private:
-			strRep_ = "PRIVATE";
-			break;
-			
-		case Confidential:
-			strRep_ = "CONFIDENTIAL";
-			break;
-			
-		default:
-			break;
-	}
-}
+    switch(classType_)
+    {
 
+        case Public:
+            strRep_ = "PUBLIC";
+            break;
+
+        case Private:
+            strRep_ = "PRIVATE";
+            break;
+
+        case Confidential:
+            strRep_ = "CONFIDENTIAL";
+            break;
+
+        default:
+            break;
+    }
+}

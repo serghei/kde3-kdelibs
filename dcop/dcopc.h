@@ -18,13 +18,8 @@ extern "C" {
 #define False 0
 #endif
 
-typedef void (*dcop_callback_t)(
-  const char * object_id,
-  const char * function,
-  const char * data,
-  unsigned int data_length
-);
-  
+typedef void (*dcop_callback_t)(const char *object_id, const char *function, const char *data, unsigned int data_length);
+
 /**
  * \addtogroup dcopc C interface to DCOP
  *  @{
@@ -54,7 +49,7 @@ Bool dcop_attach(void);
  * @param add_pid the process id of the application
  * @return the registered name, or 0 when the registration failed
  */
-char * dcop_register(const char * app_name, Bool add_pid);
+char *dcop_register(const char *app_name, Bool add_pid);
 
 /**
  * \relates DCOPClient
@@ -72,7 +67,7 @@ Bool dcop_detach(void);
  * @param callback the callback for the object id
  * @return true if successful, false otherwise
  */
-Bool dcop_register_callback(const char * object_id, dcop_callback_t callback);
+Bool dcop_register_callback(const char *object_id, dcop_callback_t callback);
 
 /**
  * \relates DCOPClient
@@ -90,13 +85,7 @@ Bool dcop_register_callback(const char * object_id, dcop_callback_t callback);
  * @param data_length       Number of octets in data.
  * @return true if successful, false otherwise
  */
-Bool dcop_send_signal(
-  const char * receiving_app,
-  const char * object,
-  const char * function,
-  char * data,
-  int data_length
-);
+Bool dcop_send_signal(const char *receiving_app, const char *object, const char *function, char *data, int data_length);
 
 /**
  * \relates DCOPClient
@@ -113,17 +102,8 @@ Bool dcop_send_signal(
  * @param reply_data_length Will be set to number of octets in retval.
  * @return true if successful, false otherwise
  */
-Bool dcop_call(
-  const char * app_name,
-  const char * remote_app_name,
-  const char * remote_object_id,
-  const char * remote_function,
-  const char * data,
-  int data_length,
-  char ** reply_type,
-  char ** reply_data,
-  int * reply_data_length
-);
+Bool dcop_call(const char *app_name, const char *remote_app_name, const char *remote_object_id, const char *remote_function, const char *data,
+               int data_length, char **reply_type, char **reply_data, int *reply_data_length);
 
 /** @} */
 

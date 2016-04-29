@@ -22,15 +22,14 @@
 
 #include "kmuimanager.h"
 
-class KMRlprUiManager : public KMUiManager
-{
+class KMRlprUiManager : public KMUiManager {
 public:
-	KMRlprUiManager(QObject *parent, const char *name, const QStringList & /*args*/);
-	~KMRlprUiManager();
+    KMRlprUiManager(QObject *parent, const char *name, const QStringList & /*args*/);
+    ~KMRlprUiManager();
 
-	void setupPropertyPages(KMPropertyPage*);
-	void setupWizard(KMWizard*);
-	void setupConfigDialog(KMConfigDialog*);
+    void setupPropertyPages(KMPropertyPage *);
+    void setupWizard(KMWizard *);
+    void setupConfigDialog(KMConfigDialog *);
 };
 
 #endif

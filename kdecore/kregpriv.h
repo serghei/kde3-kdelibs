@@ -30,28 +30,27 @@ class KRegExpDataPtr;
  *
  * @author Torben Weis <weis@kde.org>
  */
-class KRegExpPrivate
-{
+class KRegExpPrivate {
 public:
-  KRegExpPrivate();
-  KRegExpPrivate( const char *_pattern, const char *_mode = "" );
-  ~KRegExpPrivate();
+    KRegExpPrivate();
+    KRegExpPrivate(const char *_pattern, const char *_mode = "");
+    ~KRegExpPrivate();
 
-  bool compile( const char *_pattern, const char *_mode = "" );
+    bool compile(const char *_pattern, const char *_mode = "");
 
-  bool match( const char *_string );
-  const char *group( int _grp );
-  int groupStart( int _grp );
-  int groupEnd( int _grp );
-    
+    bool match(const char *_string);
+    const char *group(int _grp);
+    int groupStart(int _grp);
+    int groupEnd(int _grp);
+
 protected:
-  regex_t m_pattern;
-  regmatch_t m_matches[ 10 ];
-  char* m_strMatches[10];
-  bool m_bInit;
+    regex_t m_pattern;
+    regmatch_t m_matches[10];
+    char *m_strMatches[10];
+    bool m_bInit;
 
 private:
-  KRegExpDataPtr *d;
+    KRegExpDataPtr *d;
 };
 
 #endif

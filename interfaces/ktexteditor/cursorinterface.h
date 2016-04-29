@@ -24,61 +24,57 @@
 
 #include <kdelibs_export.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
  * This class represents a text cursor.
  */
-class KTEXTEDITOR_EXPORT Cursor
-{
-  public:
-    virtual void position ( unsigned int *line, unsigned int *col ) const = 0;
+class KTEXTEDITOR_EXPORT Cursor {
+public:
+    virtual void position(unsigned int *line, unsigned int *col) const = 0;
 
-    virtual bool setPosition ( unsigned int line, unsigned int col ) = 0;
+    virtual bool setPosition(unsigned int line, unsigned int col) = 0;
 
-    virtual bool insertText ( const QString& text ) = 0;
+    virtual bool insertText(const QString &text) = 0;
 
-    virtual bool removeText ( unsigned int numberOfCharacters ) = 0;
+    virtual bool removeText(unsigned int numberOfCharacters) = 0;
 
-    virtual QChar currentChar () const = 0;
+    virtual QChar currentChar() const = 0;
 };
 
 /**
 *  This is an interface for accessing the cursor of the Document class.
 */
-class KTEXTEDITOR_EXPORT CursorInterface
-{
-  friend class PrivateCursorInterface;
+class KTEXTEDITOR_EXPORT CursorInterface {
+    friend class PrivateCursorInterface;
 
-  public:
-    CursorInterface ();
-    virtual ~CursorInterface ();
+public:
+    CursorInterface();
+    virtual ~CursorInterface();
 
-    unsigned int cursorInterfaceNumber () const;
-    
-  protected:  
-    void setCursorInterfaceDCOPSuffix (const QCString &suffix);  
+    unsigned int cursorInterfaceNumber() const;
 
-  public:
+protected:
+    void setCursorInterfaceDCOPSuffix(const QCString &suffix);
+
+public:
     /**
     * Create a new cursor object
     */
-    virtual Cursor *createCursor ( ) = 0;
+    virtual Cursor *createCursor() = 0;
 
     /*
     * Accessor to the list of cursors.
     */
-    virtual QPtrList<Cursor> cursors () const = 0;
+    virtual QPtrList< Cursor > cursors() const = 0;
 
-    private:
-      class PrivateCursorInterface *d;
-      static unsigned int globalCursorInterfaceNumber;
-      unsigned int myCursorInterfaceNumber;
+private:
+    class PrivateCursorInterface *d;
+    static unsigned int globalCursorInterfaceNumber;
+    unsigned int myCursorInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT CursorInterface *cursorInterface (class Document *doc);
-
+KTEXTEDITOR_EXPORT CursorInterface *cursorInterface(class Document *doc);
 }
 
 #endif

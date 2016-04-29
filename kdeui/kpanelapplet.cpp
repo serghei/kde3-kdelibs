@@ -28,131 +28,139 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <kapplication.h>
 #include <kconfig.h>
 
-class KPanelApplet::KPanelAppletPrivate
-{
+class KPanelApplet::KPanelAppletPrivate {
 public:
-  KPanelAppletPrivate()
-    : customMenu(0),
-      hasFocus(false)
-      {}
+    KPanelAppletPrivate() : customMenu(0), hasFocus(false)
+    {
+    }
 
-  const QPopupMenu* customMenu;
-  KSharedConfig::Ptr sharedConfig;
-  QPtrList<QObject> watchedForFocus;
-  bool hasFocus;
+    const QPopupMenu *customMenu;
+    KSharedConfig::Ptr sharedConfig;
+    QPtrList< QObject > watchedForFocus;
+    bool hasFocus;
 };
 
-KPanelApplet::KPanelApplet(const QString& configFile, Type type,
-                           int actions, QWidget *parent, const char *name, WFlags f)
-  : QFrame(parent, name, f)
-  , _type(type)
-  , _position( pBottom )
-  , _alignment( LeftTop )
-  , _config(0)
-  , _actions(actions)
-  , d(new KPanelApplet::KPanelAppletPrivate())
+KPanelApplet::KPanelApplet(const QString &configFile, Type type, int actions, QWidget *parent, const char *name, WFlags f)
+    : QFrame(parent, name, f)
+    , _type(type)
+    , _position(pBottom)
+    , _alignment(LeftTop)
+    , _config(0)
+    , _actions(actions)
+    , d(new KPanelApplet::KPanelAppletPrivate())
 {
-  setFrameStyle(NoFrame);
-  QPalette pal(palette());
-  if(pal.active().mid() != pal.inactive().mid()){
-    pal.setInactive(pal.active());
-    setPalette(pal);
-  }
-  setBackgroundOrigin( AncestorOrigin );
+    setFrameStyle(NoFrame);
+    QPalette pal(palette());
+    if(pal.active().mid() != pal.inactive().mid())
+    {
+        pal.setInactive(pal.active());
+        setPalette(pal);
+    }
+    setBackgroundOrigin(AncestorOrigin);
 
-  d->sharedConfig = KSharedConfig::openConfig(configFile, kapp && kapp->config()->isImmutable());
-  _config = d->sharedConfig;
+    d->sharedConfig = KSharedConfig::openConfig(configFile, kapp && kapp->config()->isImmutable());
+    _config = d->sharedConfig;
 }
 
 KPanelApplet::~KPanelApplet()
 {
-  d->watchedForFocus.clear();
-  needsFocus(false);
-  delete d;
+    d->watchedForFocus.clear();
+    needsFocus(false);
+    delete d;
 }
 
-void KPanelApplet::setPosition( Position p )
+void KPanelApplet::setPosition(Position p)
 {
-  if( _position == p ) return;
-  _position = p;
-  positionChange( p );
+    if(_position == p)
+        return;
+    _position = p;
+    positionChange(p);
 }
 
-void KPanelApplet::setAlignment( Alignment a )
+void KPanelApplet::setAlignment(Alignment a)
 {
-  if( _alignment == a ) return;
-  _alignment = a;
-  alignmentChange( a );
+    if(_alignment == a)
+        return;
+    _alignment = a;
+    alignmentChange(a);
 }
 
 // FIXME: Remove implementation for KDE 4
-void KPanelApplet::positionChange( Position )
+void KPanelApplet::positionChange(Position)
 {
-  orientationChange( orientation() );
-  QResizeEvent e( size(), size() );
-  resizeEvent( &e );
-  popupDirectionChange( popupDirection() );
+    orientationChange(orientation());
+    QResizeEvent e(size(), size());
+    resizeEvent(&e);
+    popupDirectionChange(popupDirection());
 }
 
 Qt::Orientation KPanelApplet::orientation() const
 {
-  if( _position == pTop || _position == pBottom ) {
-    return Horizontal;
-  } else {
-    return Vertical;
-  }
+    if(_position == pTop || _position == pBottom)
+    {
+        return Horizontal;
+    }
+    else
+    {
+        return Vertical;
+    }
 }
 
 // FIXME: Remove for KDE 4
 KPanelApplet::Direction KPanelApplet::popupDirection()
 {
-    switch( _position ) {
-    case pTop:     return Down;
-    case pRight:   return Left;
-    case pLeft:    return Right;
-    default:
-    case pBottom:  return Up;
+    switch(_position)
+    {
+        case pTop:
+            return Down;
+        case pRight:
+            return Left;
+        case pLeft:
+            return Right;
+        default:
+        case pBottom:
+            return Up;
     }
 }
 
-void KPanelApplet::action( Action a )
+void KPanelApplet::action(Action a)
 {
-    if ( (a & About) )
-	about();
-    if ( (a & Help) )
-	help();
-    if ( (a & Preferences) )
-	preferences();
-    if ( (a & ReportBug) )
-    reportBug();
+    if((a & About))
+        about();
+    if((a & Help))
+        help();
+    if((a & Preferences))
+        preferences();
+    if((a & ReportBug))
+        reportBug();
 }
 
-const QPopupMenu* KPanelApplet::customMenu() const
+const QPopupMenu *KPanelApplet::customMenu() const
 {
     return d->customMenu;
 }
 
-void KPanelApplet::setCustomMenu(const QPopupMenu* menu)
+void KPanelApplet::setCustomMenu(const QPopupMenu *menu)
 {
     d->customMenu = menu;
 }
 
-void KPanelApplet::watchForFocus(QWidget* widget, bool watch)
+void KPanelApplet::watchForFocus(QWidget *widget, bool watch)
 {
-    if (!widget)
+    if(!widget)
     {
         return;
     }
 
-    if (watch)
+    if(watch)
     {
-        if (d->watchedForFocus.find(widget) == -1)
+        if(d->watchedForFocus.find(widget) == -1)
         {
             d->watchedForFocus.append(widget);
             widget->installEventFilter(this);
         }
     }
-    else if (d->watchedForFocus.find(widget) != -1)
+    else if(d->watchedForFocus.find(widget) != -1)
     {
         d->watchedForFocus.remove(widget);
         widget->removeEventFilter(this);
@@ -161,7 +169,7 @@ void KPanelApplet::watchForFocus(QWidget* widget, bool watch)
 
 void KPanelApplet::needsFocus(bool focus)
 {
-    if (focus == d->hasFocus)
+    if(focus == d->hasFocus)
     {
         return;
     }
@@ -170,16 +178,15 @@ void KPanelApplet::needsFocus(bool focus)
     emit requestFocus(focus);
 }
 
-bool KPanelApplet::eventFilter(QObject *o, QEvent * e)
+bool KPanelApplet::eventFilter(QObject *o, QEvent *e)
 {
-    if (d->watchedForFocus.find(o) != -1)
+    if(d->watchedForFocus.find(o) != -1)
     {
-        if (e->type() == QEvent::MouseButtonRelease ||
-            e->type() == QEvent::FocusIn)
+        if(e->type() == QEvent::MouseButtonRelease || e->type() == QEvent::FocusIn)
         {
             needsFocus(true);
         }
-        else if (e->type() == QEvent::FocusOut)
+        else if(e->type() == QEvent::FocusOut)
         {
             needsFocus(false);
         }
@@ -193,6 +200,6 @@ KSharedConfig::Ptr KPanelApplet::sharedConfig() const
     return d->sharedConfig;
 }
 
-void KPanelApplet::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
-
+void KPanelApplet::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}

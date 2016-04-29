@@ -28,12 +28,12 @@
 
 namespace KJS {
 
-  class Identifier;
+class Identifier;
 
-  class RegExp;
+class RegExp;
 
-  class Lexer {
-  public:
+class Lexer {
+public:
     Lexer();
     ~Lexer();
     static Lexer *curr();
@@ -41,41 +41,53 @@ namespace KJS {
     void setCode(const UChar *c, unsigned int len);
     int lex();
 
-    int lineNo() const { return yylineno + 1; }
+    int lineNo() const
+    {
+        return yylineno + 1;
+    }
 
-    bool prevTerminator() const { return terminator; }
+    bool prevTerminator() const
+    {
+        return terminator;
+    }
 
-    enum State { Start,
-                 IdentifierOrKeyword,
-                 Identifier,
-                 InIdentifierOrKeyword,
-                 InIdentifier,
-                 InIdentifierUnicodeEscapeStart,
-                 InIdentifierUnicodeEscape,
-                 InSingleLineComment,
-                 InMultiLineComment,
-                 InNum,
-                 InNum0,
-                 InHex,
-                 InOctal,
-                 InDecimal,
-                 InExponentIndicator,
-                 InExponent,
-                 Hex,
-                 Octal,
-                 Number,
-                 String,
-                 Eof,
-                 InString,
-                 InEscapeSequence,
-                 InHexEscape,
-                 InUnicodeEscape,
-                 Other,
-                 Bad };
+    enum State
+    {
+        Start,
+        IdentifierOrKeyword,
+        Identifier,
+        InIdentifierOrKeyword,
+        InIdentifier,
+        InIdentifierUnicodeEscapeStart,
+        InIdentifierUnicodeEscape,
+        InSingleLineComment,
+        InMultiLineComment,
+        InNum,
+        InNum0,
+        InHex,
+        InOctal,
+        InDecimal,
+        InExponentIndicator,
+        InExponent,
+        Hex,
+        Octal,
+        Number,
+        String,
+        Eof,
+        InString,
+        InEscapeSequence,
+        InHexEscape,
+        InUnicodeEscape,
+        Other,
+        Bad
+    };
 
     bool scanRegExp();
     UString pattern, flags;
-    bool hadError() const { return foundBad; }
+    bool hadError() const
+    {
+        return foundBad;
+    }
 
     static bool isWhiteSpace(unsigned short c);
     static bool isIdentLetter(unsigned short c);
@@ -83,7 +95,7 @@ namespace KJS {
     static bool isHexDigit(unsigned short c);
     static bool isOctalDigit(unsigned short c);
 
-  private:
+private:
     int yylineno;
     bool done;
     char *buffer8;
@@ -108,16 +120,14 @@ namespace KJS {
     void nextLine();
     int lookupKeyword(const char *);
 
-    int matchPunctuator(unsigned short c1, unsigned short c2,
-                        unsigned short c3, unsigned short c4);
+    int matchPunctuator(unsigned short c1, unsigned short c2, unsigned short c3, unsigned short c4);
     unsigned short singleEscape(unsigned short c) const;
-    unsigned short convertOctal(unsigned short c1, unsigned short c2,
-                                unsigned short c3) const;
-  public:
+    unsigned short convertOctal(unsigned short c1, unsigned short c2, unsigned short c3) const;
+
+public:
     static unsigned char convertHex(unsigned short c1);
     static unsigned char convertHex(unsigned short c1, unsigned short c2);
-    static UChar convertUnicode(unsigned short c1, unsigned short c2,
-                                unsigned short c3, unsigned short c4);
+    static UChar convertUnicode(unsigned short c1, unsigned short c2, unsigned short c3, unsigned short c4);
 
 #ifdef KJS_DEBUG_MEM
     /**
@@ -128,8 +138,7 @@ namespace KJS {
 
     void doneParsing();
 
-  private:
-
+private:
     void record8(unsigned short c);
     void record16(int c);
     void record16(UChar c);
@@ -141,7 +150,7 @@ namespace KJS {
     unsigned int length;
     int yycolumn;
 #ifndef KJS_PURE_ECMA
-    int bol;     // begin of line
+    int bol; // begin of line
 #endif
 
     // current and following unicode characters (int to allow for -1 for end-of-file marker)
@@ -158,7 +167,7 @@ namespace KJS {
     // for future extensions
     class LexerPrivate;
     LexerPrivate *priv;
-  };
+};
 
 } // namespace
 

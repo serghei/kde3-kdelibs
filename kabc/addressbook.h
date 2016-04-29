@@ -40,37 +40,35 @@ class Ticket;
 
   This class provides access to a collection of address book entries.
  */
-class KABC_EXPORT AddressBook : public QObject
-{
-  Q_OBJECT
+class KABC_EXPORT AddressBook : public QObject {
+    Q_OBJECT
 
-  friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const AddressBook & );
-  friend KABC_EXPORT QDataStream &operator>>( QDataStream &, AddressBook & );
-  friend class StdAddressBook;
+    friend KABC_EXPORT QDataStream &operator<<(QDataStream &, const AddressBook &);
+    friend KABC_EXPORT QDataStream &operator>>(QDataStream &, AddressBook &);
+    friend class StdAddressBook;
 
-  public:
+public:
     /**
       @short Address Book Iterator
 
       This class provides an iterator for address book entries.
      */
-    class KABC_EXPORT Iterator
-    {
-      public:
+    class KABC_EXPORT Iterator {
+    public:
         Iterator();
-        Iterator( const Iterator & );
+        Iterator(const Iterator &);
         ~Iterator();
 
-        Iterator &operator=( const Iterator & );
+        Iterator &operator=(const Iterator &);
         const Addressee &operator*() const;
         Addressee &operator*();
-        Addressee* operator->();
+        Addressee *operator->();
         Iterator &operator++();
         Iterator &operator++(int);
         Iterator &operator--();
         Iterator &operator--(int);
-        bool operator==( const Iterator &it );
-        bool operator!=( const Iterator &it );
+        bool operator==(const Iterator &it);
+        bool operator!=(const Iterator &it);
 
         struct IteratorData;
         IteratorData *d;
@@ -81,23 +79,22 @@ class KABC_EXPORT AddressBook : public QObject
 
       This class provides a const iterator for address book entries.
      */
-    class KABC_EXPORT ConstIterator
-    {
-      public:
+    class KABC_EXPORT ConstIterator {
+    public:
         ConstIterator();
-        ConstIterator( const ConstIterator & );
-        ConstIterator( const Iterator & );
+        ConstIterator(const ConstIterator &);
+        ConstIterator(const Iterator &);
         ~ConstIterator();
 
-        ConstIterator &operator=( const ConstIterator & );
+        ConstIterator &operator=(const ConstIterator &);
         const Addressee &operator*() const;
-        const Addressee* operator->() const;
+        const Addressee *operator->() const;
         ConstIterator &operator++();
         ConstIterator &operator++(int);
         ConstIterator &operator--();
         ConstIterator &operator--(int);
-        bool operator==( const ConstIterator &it );
-        bool operator!=( const ConstIterator &it );
+        bool operator==(const ConstIterator &it);
+        bool operator!=(const ConstIterator &it);
 
         struct ConstIteratorData;
         ConstIteratorData *d;
@@ -115,7 +112,7 @@ class KABC_EXPORT AddressBook : public QObject
 
       @param config The config file which contains the resource settings.
      */
-    AddressBook( const QString &config );
+    AddressBook(const QString &config);
 
     /**
       Destructor.
@@ -133,13 +130,13 @@ class KABC_EXPORT AddressBook : public QObject
               otherwise.
       @see save()
      */
-    Ticket *requestSaveTicket( Resource *resource = 0 );
+    Ticket *requestSaveTicket(Resource *resource = 0);
 
     /**
       Releases the ticket requested previously with requestSaveTicket().
       Call this function, if you want to release a ticket without saving.
      */
-    void releaseSaveTicket( Ticket *ticket );
+    void releaseSaveTicket(Ticket *ticket);
 
     /**
       Loads all addressees synchronously.
@@ -164,7 +161,7 @@ class KABC_EXPORT AddressBook : public QObject
       @param ticket The ticket returned by requestSaveTicket().
       @return Whether the saving was successfully.
      */
-    bool save( Ticket *ticket );
+    bool save(Ticket *ticket);
 
     /**
       Saves all addressees of one resource asynchronously. If the save is
@@ -173,7 +170,7 @@ class KABC_EXPORT AddressBook : public QObject
       @param ticket The ticket returned by requestSaveTicket().
       @return Whether the synchronous part of saving was successfully.
      */
-    bool asyncSave( Ticket *ticket );
+    bool asyncSave(Ticket *ticket);
 
     /**
       Returns an iterator pointing to the first addressee of address book.
@@ -212,14 +209,14 @@ class KABC_EXPORT AddressBook : public QObject
 
       @param addr The addressee which shall be insert.
      */
-    void insertAddressee( const Addressee &addr );
+    void insertAddressee(const Addressee &addr);
 
     /**
       Removes an addressee from the address book.
 
       @param addr The addressee which shall be removed.
      */
-    void removeAddressee( const Addressee &addr );
+    void removeAddressee(const Addressee &addr);
 
     /**
       This is an overloaded member function, provided for convenience. It
@@ -227,7 +224,7 @@ class KABC_EXPORT AddressBook : public QObject
 
       @param it An iterator pointing to the addressee which shall be removed.
      */
-    void removeAddressee( const Iterator &it );
+    void removeAddressee(const Iterator &it);
 
     /**
       Returns an iterator pointing to the specified addressee. It will return
@@ -235,7 +232,7 @@ class KABC_EXPORT AddressBook : public QObject
 
       @param addr The addresee you are looking for.
      */
-    Iterator find( const Addressee &addr ); // KDE4: const
+    Iterator find(const Addressee &addr); // KDE4: const
 
     /**
       Searches an addressee with the specified unique identifier.
@@ -244,7 +241,7 @@ class KABC_EXPORT AddressBook : public QObject
       @return The addressee with the specified unique identifier or an
               empty addressee.
      */
-    Addressee findByUid( const QString &uid ); // KDE4: const
+    Addressee findByUid(const QString &uid); // KDE4: const
 
     /**
       Returns a list of all addressees in the address book.
@@ -257,7 +254,7 @@ class KABC_EXPORT AddressBook : public QObject
       @param name The name you are looking for.
       @return A list of all matching addressees.
      */
-    Addressee::List findByName( const QString &name ); // KDE4: const
+    Addressee::List findByName(const QString &name); // KDE4: const
 
     /**
       Searches all addressees which match the specified email address.
@@ -265,7 +262,7 @@ class KABC_EXPORT AddressBook : public QObject
       @param email The email address you are looking for.
       @return A list of all matching addressees.
      */
-    Addressee::List findByEmail( const QString &email ); // KDE4: const
+    Addressee::List findByEmail(const QString &email); // KDE4: const
 
     /**
       Searches all addressees which belongs to the specified category.
@@ -273,7 +270,7 @@ class KABC_EXPORT AddressBook : public QObject
       @param category The category you are looking for.
       @return A list of all matching addressees.
      */
-    Addressee::List findByCategory( const QString &category ); // KDE4: const
+    Addressee::List findByCategory(const QString &category); // KDE4: const
 
     /**
       Returns a string identifying this addressbook. The identifier is
@@ -285,7 +282,7 @@ class KABC_EXPORT AddressBook : public QObject
       Returns a list of all Fields known to the address book which are associated
       with the given field category.
      */
-    Field::List fields( int category = Field::All ); // KDE4: const
+    Field::List fields(int category = Field::All); // KDE4: const
 
     /**
       Add custom field to address book.
@@ -296,9 +293,7 @@ class KABC_EXPORT AddressBook : public QObject
       @param app      String used as application key for reading and writing
                       the field.
      */
-    bool addCustomField( const QString &label, int category = Field::All,
-                         const QString &key = QString::null,
-                         const QString &app = QString::null );
+    bool addCustomField(const QString &label, int category = Field::All, const QString &key = QString::null, const QString &app = QString::null);
 
     /**
       Adds a resource to the address book.
@@ -306,7 +301,7 @@ class KABC_EXPORT AddressBook : public QObject
       @param resource The resource you want to add.
       @return Whether opening the resource was successfully.
      */
-    bool addResource( Resource *resource );
+    bool addResource(Resource *resource);
 
     /**
       Removes a resource from the address book.
@@ -314,12 +309,12 @@ class KABC_EXPORT AddressBook : public QObject
       @param resource The resource you want to remove.
       @return Whether closing the resource was successfully.
      */
-    bool removeResource( Resource *resource );
+    bool removeResource(Resource *resource);
 
     /**
       Returns a list of all resources.
      */
-    QPtrList<Resource> resources(); // KDE4: const
+    QPtrList< Resource > resources(); // KDE4: const
 
     /**
       Sets the @p ErrorHandler, that is used by error() to
@@ -327,14 +322,14 @@ class KABC_EXPORT AddressBook : public QObject
 
       @param errorHandler The error handler you want to use.
      */
-    void setErrorHandler( ErrorHandler *errorHandler );
+    void setErrorHandler(ErrorHandler *errorHandler);
 
     /**
       Shows GUI independent error messages.
 
       @param msg The error message that shall be displayed.
      */
-    void error( const QString &msg );
+    void error(const QString &msg);
 
     /**
       @deprecated There is no need to call this function anymore.
@@ -349,9 +344,18 @@ class KABC_EXPORT AddressBook : public QObject
 
     /**
       */
-    void emitAddressBookLocked() { emit addressBookLocked( this ); }
-    void emitAddressBookUnlocked() { emit addressBookUnlocked( this ); }
-    void emitAddressBookChanged() { emit addressBookChanged( this ); }
+    void emitAddressBookLocked()
+    {
+        emit addressBookLocked(this);
+    }
+    void emitAddressBookUnlocked()
+    {
+        emit addressBookUnlocked(this);
+    }
+    void emitAddressBookChanged()
+    {
+        emit addressBookChanged(this);
+    }
 
     /**
       Returns true when the loading of the addressbook has finished,
@@ -361,7 +365,7 @@ class KABC_EXPORT AddressBook : public QObject
      */
     bool loadingHasFinished() const;
 
-  signals:
+signals:
     /**
       Emitted when one of the resources discovered a change in its backend
       or the asynchronous loading of all resources has finished.
@@ -370,14 +374,14 @@ class KABC_EXPORT AddressBook : public QObject
 
       @param addressBook The address book which emitted this signal.
      */
-    void addressBookChanged( AddressBook *addressBook );
+    void addressBookChanged(AddressBook *addressBook);
 
     /**
       Emitted when one of the resources has been locked for writing.
 
       @param addressBook The address book which emitted this signal.
      */
-    void addressBookLocked( AddressBook *addressBook );
+    void addressBookLocked(AddressBook *addressBook);
 
     /**
       Emitted when one of the resources has been unlocked.
@@ -387,7 +391,7 @@ class KABC_EXPORT AddressBook : public QObject
 
       @param addressBook The address book which emitted this signal.
      */
-    void addressBookUnlocked( AddressBook *addressBook );
+    void addressBookUnlocked(AddressBook *addressBook);
 
     /**
       Emitted when the asynchronous loading of one resource has finished
@@ -395,7 +399,7 @@ class KABC_EXPORT AddressBook : public QObject
 
       @param resource The resource which emitted this signal.
      */
-    void loadingFinished( Resource *resource );
+    void loadingFinished(Resource *resource);
 
     /**
       Emitted when the asynchronous saving of one resource has finished
@@ -403,29 +407,28 @@ class KABC_EXPORT AddressBook : public QObject
 
       @param resource The resource which emitted this signal.
      */
-    void savingFinished( Resource *resource );
+    void savingFinished(Resource *resource);
 
-  protected slots:
-    void resourceLoadingFinished( Resource* );
-    void resourceSavingFinished( Resource* );
-    void resourceLoadingError( Resource*, const QString& );
-    void resourceSavingError( Resource*, const QString& );
+protected slots:
+    void resourceLoadingFinished(Resource *);
+    void resourceSavingFinished(Resource *);
+    void resourceLoadingError(Resource *, const QString &);
+    void resourceSavingError(Resource *, const QString &);
 
-  protected:
+protected:
     void deleteRemovedAddressees();
-    void setStandardResource( Resource* );
+    void setStandardResource(Resource *);
     Resource *standardResource();
-    KRES::Manager<Resource> *resourceManager();
+    KRES::Manager< Resource > *resourceManager();
 
-  private:
-    QPtrList<Resource> mDummy; // Remove in KDE 4
+private:
+    QPtrList< Resource > mDummy; // Remove in KDE 4
     struct AddressBookData;
     AddressBookData *d;
 };
 
-KABC_EXPORT QDataStream &operator<<( QDataStream &, const AddressBook & );
-KABC_EXPORT QDataStream &operator>>( QDataStream &, AddressBook & );
-
+KABC_EXPORT QDataStream &operator<<(QDataStream &, const AddressBook &);
+KABC_EXPORT QDataStream &operator>>(QDataStream &, AddressBook &);
 }
 
 #endif

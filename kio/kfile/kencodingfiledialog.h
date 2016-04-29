@@ -1,7 +1,7 @@
 // -*- c++ -*-
 /* This file is part of the KDE libraries
     Copyright (C) 2003 Joseph Wenninger <jowenn@kde.org>
-		  2003 Andras Mantia <amantia@freemail.hu>
+          2003 Andras Mantia <amantia@freemail.hu>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -36,16 +36,15 @@ struct KEncodingFileDialogPrivate;
  * can easily add children that will be incorporated into the layout.
  */
 
-class KIO_EXPORT KEncodingFileDialog : public KFileDialog
-{
+class KIO_EXPORT KEncodingFileDialog : public KFileDialog {
     Q_OBJECT
 
 public:
     class Result {
-	public:
-		QStringList fileNames;
-		KURL::List  URLs;
-		QString encoding;
+    public:
+        QStringList fileNames;
+        KURL::List URLs;
+        QString encoding;
     };
 
     /**
@@ -82,11 +81,9 @@ public:
       *
       * @since 3.2
       */
-    KEncodingFileDialog (const QString& startDir = QString::null,
-                    const QString& encoding = QString::null,
-		    const QString& filter = QString::null,
-		    const QString& caption = QString::null, KFileDialog::OperationMode type = KFileDialog::Opening,
-                    QWidget *parent= 0, const char *name="", bool modal = true);
+    KEncodingFileDialog(const QString &startDir = QString::null, const QString &encoding = QString::null, const QString &filter = QString::null,
+                        const QString &caption = QString::null, KFileDialog::OperationMode type = KFileDialog::Opening, QWidget *parent = 0,
+                        const char *name = "", bool modal = true);
     /**
      * Destructs the file dialog.
      */
@@ -126,11 +123,8 @@ public:
      * @param parent The widget the dialog will be centered on initially.
      * @param caption The name of the dialog widget.
      */
-    static Result getOpenFileNameAndEncoding(const QString& encoding=QString::null,
-   				   const QString& startDir= QString::null,
-				   const QString& filter= QString::null,
-				   QWidget *parent= 0,
-				   const QString& caption = QString::null);
+    static Result getOpenFileNameAndEncoding(const QString &encoding = QString::null, const QString &startDir = QString::null,
+                                             const QString &filter = QString::null, QWidget *parent = 0, const QString &caption = QString::null);
 
     /**
      * Creates a modal file dialog and returns the selected encoding and the selected
@@ -158,11 +152,8 @@ public:
      * @param parent The widget the dialog will be centered on initially.
      * @param caption The name of the dialog widget.
      */
-    static Result getOpenFileNamesAndEncoding(const QString& encoding=QString::null,
-					const QString& startDir= QString::null,
-					const QString& filter= QString::null,
-					QWidget *parent = 0,
-					const QString& caption= QString::null);
+    static Result getOpenFileNamesAndEncoding(const QString &encoding = QString::null, const QString &startDir = QString::null,
+                                              const QString &filter = QString::null, QWidget *parent = 0, const QString &caption = QString::null);
 
     /**
      * Creates a modal file dialog and returns the selected encoding and
@@ -190,13 +181,8 @@ public:
      * @param parent The widget the dialog will be centered on initially.
      * @param caption The name of the dialog widget.
      */
-    static Result getOpenURLAndEncoding(const QString& encoding=QString::null,
-			   const QString& startDir = QString::null,
-			   const QString& filter= QString::null,
-			   QWidget *parent= 0,
-			   const QString& caption = QString::null);
-
-
+    static Result getOpenURLAndEncoding(const QString &encoding = QString::null, const QString &startDir = QString::null,
+                                        const QString &filter = QString::null, QWidget *parent = 0, const QString &caption = QString::null);
 
 
     /**
@@ -225,12 +211,8 @@ public:
      * @param parent The widget the dialog will be centered on initially.
      * @param caption The name of the dialog widget.
      */
-    static Result getOpenURLsAndEncoding(const QString& encoding=QString::null,
-				  const QString& startDir= QString::null,
-				  const QString& filter= QString::null,
-				  QWidget *parent = 0,
-				  const QString& caption= QString::null);
-
+    static Result getOpenURLsAndEncoding(const QString &encoding = QString::null, const QString &startDir = QString::null,
+                                         const QString &filter = QString::null, QWidget *parent = 0, const QString &caption = QString::null);
 
 
     /**
@@ -261,11 +243,8 @@ public:
      * @param parent The widget the dialog will be centered on initially.
      * @param caption The name of the dialog widget.
      */
-    static Result getSaveFileNameAndEncoding(const QString& encoding=QString::null,
-				   const QString& startDir=QString::null,
-				   const QString& filter= QString::null,
-				   QWidget *parent= 0,
-				   const QString& caption = QString::null);
+    static Result getSaveFileNameAndEncoding(const QString &encoding = QString::null, const QString &startDir = QString::null,
+                                             const QString &filter = QString::null, QWidget *parent = 0, const QString &caption = QString::null);
 
 
     /**
@@ -296,16 +275,13 @@ public:
      * @param parent The widget the dialog will be centered on initially.
      * @param caption The name of the dialog widget.
      */
-    static Result getSaveURLAndEncoding(const QString& encoding=QString::null,
-			   const QString& startDir= QString::null,
-			   const QString& filter= QString::null,
-			   QWidget *parent= 0,
-			   const QString& caption = QString::null);
-
+    static Result getSaveURLAndEncoding(const QString &encoding = QString::null, const QString &startDir = QString::null,
+                                        const QString &filter = QString::null, QWidget *parent = 0, const QString &caption = QString::null);
 
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     KEncodingFileDialogPrivate *d;
 };

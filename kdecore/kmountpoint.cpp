@@ -62,30 +62,29 @@
 /* AIX does not prototype mntctl anywhere that I can find */
 #ifndef mntctl
 extern "C" {
-int mntctl(int command, int size, void* buffer);
+int mntctl(int command, int size, void *buffer);
 }
 #endif
 extern "C" struct vfs_ent *getvfsbytype(int vfsType);
-extern "C" void endvfsent( );
+extern "C" void endvfsent();
 #endif
 
 
 #ifndef HAVE_GETMNTINFO
-# ifdef _PATH_MOUNTED
+#ifdef _PATH_MOUNTED
 // On some Linux, MNTTAB points to /etc/fstab !
-#  undef MNTTAB
-#  define MNTTAB _PATH_MOUNTED
-# else
-#  ifndef MNTTAB
-#   ifdef MTAB_FILE
-#    define MNTTAB MTAB_FILE
-#   else
-#    define MNTTAB "/etc/mnttab"
-#   endif
-#  endif
-# endif
+#undef MNTTAB
+#define MNTTAB _PATH_MOUNTED
+#else
+#ifndef MNTTAB
+#ifdef MTAB_FILE
+#define MNTTAB MTAB_FILE
+#else
+#define MNTTAB "/etc/mnttab"
 #endif
-
+#endif
+#endif
+#endif
 
 
 #ifdef _OS_SOLARIS_
@@ -93,7 +92,6 @@ extern "C" void endvfsent( );
 #else
 #define FSTAB "/etc/fstab"
 #endif
-
 
 
 KMountPoint::KMountPoint()
@@ -128,101 +126,101 @@ KMountPoint::~KMountPoint()
 
 KMountPoint::List KMountPoint::possibleMountPoints(int infoNeeded)
 {
-  KMountPoint::List result;
-  
+    KMountPoint::List result;
+
 #ifdef HAVE_SETMNTENT
-   STRUCT_SETMNTENT fstab;
-   if ((fstab = SETMNTENT(FSTAB, "r")) == 0)
-      return result;
+    STRUCT_SETMNTENT fstab;
+    if((fstab = SETMNTENT(FSTAB, "r")) == 0)
+        return result;
 
-   STRUCT_MNTENT fe;
-   while (GETMNTENT(fstab, fe))
-   {
-      KMountPoint *mp = new KMountPoint();
-      mp->m_mountedFrom = QFile::decodeName(FSNAME(fe));
-         
-      mp->m_mountPoint = QFile::decodeName(MOUNTPOINT(fe));
-      mp->m_mountType = QFile::decodeName(MOUNTTYPE(fe));
+    STRUCT_MNTENT fe;
+    while(GETMNTENT(fstab, fe))
+    {
+        KMountPoint *mp = new KMountPoint();
+        mp->m_mountedFrom = QFile::decodeName(FSNAME(fe));
 
-      //Devices using supermount have their device names in the mount options
-      //instead of the device field. That's why we need to read the mount options
-      if (infoNeeded & NeedMountOptions || (mp->m_mountType == "supermount"))
-      {
-         QString options = QFile::decodeName(MOUNTOPTIONS(fe));
-         mp->m_mountOptions = QStringList::split(',', options);
-      }
+        mp->m_mountPoint = QFile::decodeName(MOUNTPOINT(fe));
+        mp->m_mountType = QFile::decodeName(MOUNTTYPE(fe));
 
-      if(mp->m_mountType == "supermount")
-         mp->m_mountedFrom = devNameFromOptions(mp->m_mountOptions);
- 
-      if (infoNeeded & NeedRealDeviceName)
-      {
-         if (mp->m_mountedFrom.startsWith("/"))
-            mp->m_device = KStandardDirs::realPath(mp->m_mountedFrom);
-      }
-      // TODO: Strip trailing '/' ?
-      result.append(mp);
-   }
-   ENDMNTENT(fstab);
+        // Devices using supermount have their device names in the mount options
+        // instead of the device field. That's why we need to read the mount options
+        if(infoNeeded & NeedMountOptions || (mp->m_mountType == "supermount"))
+        {
+            QString options = QFile::decodeName(MOUNTOPTIONS(fe));
+            mp->m_mountOptions = QStringList::split(',', options);
+        }
+
+        if(mp->m_mountType == "supermount")
+            mp->m_mountedFrom = devNameFromOptions(mp->m_mountOptions);
+
+        if(infoNeeded & NeedRealDeviceName)
+        {
+            if(mp->m_mountedFrom.startsWith("/"))
+                mp->m_device = KStandardDirs::realPath(mp->m_mountedFrom);
+        }
+        // TODO: Strip trailing '/' ?
+        result.append(mp);
+    }
+    ENDMNTENT(fstab);
 #else
-   QFile f(FSTAB);
-   if ( !f.open(IO_ReadOnly) )
-      return result;
-     
-   QTextStream t (&f);
-   QString s;
+    QFile f(FSTAB);
+    if(!f.open(IO_ReadOnly))
+        return result;
 
-   while (! t.eof()) 
-   {
-      s=t.readLine().simplifyWhiteSpace();
-      if ( s.isEmpty() || (s[0] == '#'))
-          continue;
+    QTextStream t(&f);
+    QString s;
 
-      // not empty or commented out by '#'
-      QStringList item = QStringList::split(' ', s);
-        
+    while(!t.eof())
+    {
+        s = t.readLine().simplifyWhiteSpace();
+        if(s.isEmpty() || (s[0] == '#'))
+            continue;
+
+        // not empty or commented out by '#'
+        QStringList item = QStringList::split(' ', s);
+
 #ifdef _OS_SOLARIS_
-      if (item.count() < 5)
-         continue;
+        if(item.count() < 5)
+            continue;
 #else
-      if (item.count() < 4)
-         continue;
+        if(item.count() < 4)
+            continue;
 #endif
 
-      KMountPoint *mp = new KMountPoint();
+        KMountPoint *mp = new KMountPoint();
 
-      int i = 0;
-      mp->m_mountedFrom = item[i++];
+        int i = 0;
+        mp->m_mountedFrom = item[i++];
 #ifdef _OS_SOLARIS_
-      //device to fsck
-      i++;
+        // device to fsck
+        i++;
 #endif
-      mp->m_mountPoint = item[i++];
-      mp->m_mountType = item[i++];
-      QString options = item[i++];
+        mp->m_mountPoint = item[i++];
+        mp->m_mountType = item[i++];
+        QString options = item[i++];
 
-      if (infoNeeded & NeedMountOptions)
-      {
-         mp->m_mountOptions = QStringList::split(',', options);
-      }
+        if(infoNeeded & NeedMountOptions)
+        {
+            mp->m_mountOptions = QStringList::split(',', options);
+        }
 
-      if (infoNeeded & NeedRealDeviceName)
-      {
-         if (mp->m_mountedFrom.startsWith("/"))
-            mp->m_device = KStandardDirs::realPath(mp->m_mountedFrom);
-      }
-      // TODO: Strip trailing '/' ?
-      result.append(mp);
-   } //while
+        if(infoNeeded & NeedRealDeviceName)
+        {
+            if(mp->m_mountedFrom.startsWith("/"))
+                mp->m_device = KStandardDirs::realPath(mp->m_mountedFrom);
+        }
+        // TODO: Strip trailing '/' ?
+        result.append(mp);
+    } // while
 
-   f.close();
+    f.close();
 #endif
-   return result;
+    return result;
 }
 
 KMountPoint::List KMountPoint::currentMountPoints(int infoNeeded)
 {
-  KMountPoint::List result;
+    KMountPoint::List result;
 
 #ifdef HAVE_GETMNTINFO
 
@@ -234,33 +232,33 @@ KMountPoint::List KMountPoint::currentMountPoints(int infoNeeded)
 
     int num_fs = getmntinfo(&mounted, MNT_NOWAIT);
 
-    for (int i=0;i<num_fs;i++) 
+    for(int i = 0; i < num_fs; i++)
     {
-      KMountPoint *mp = new KMountPoint();
-      mp->m_mountedFrom = QFile::decodeName(mounted[i].f_mntfromname);
-      mp->m_mountPoint = QFile::decodeName(mounted[i].f_mntonname);
+        KMountPoint *mp = new KMountPoint();
+        mp->m_mountedFrom = QFile::decodeName(mounted[i].f_mntfromname);
+        mp->m_mountPoint = QFile::decodeName(mounted[i].f_mntonname);
 
 #ifdef __osf__
-      mp->m_mountType = QFile::decodeName(mnt_names[mounted[i].f_type]);
+        mp->m_mountType = QFile::decodeName(mnt_names[mounted[i].f_type]);
 #else
-      mp->m_mountType = QFile::decodeName(mounted[i].f_fstypename);
-#endif      
+        mp->m_mountType = QFile::decodeName(mounted[i].f_fstypename);
+#endif
 
-      if (infoNeeded & NeedMountOptions)
-      {
-         struct fstab *ft = getfsfile(mounted[i].f_mntonname);
-         QString options = QFile::decodeName(ft->fs_mntops);
-         mp->m_mountOptions = QStringList::split(',', options);
-      }
+        if(infoNeeded & NeedMountOptions)
+        {
+            struct fstab *ft = getfsfile(mounted[i].f_mntonname);
+            QString options = QFile::decodeName(ft->fs_mntops);
+            mp->m_mountOptions = QStringList::split(',', options);
+        }
 
-      if (infoNeeded & NeedRealDeviceName)
-      {
-         if (mp->m_mountedFrom.startsWith("/"))
-            mp->m_device = KStandardDirs::realPath(mp->m_mountedFrom);
-      }
-      // TODO: Strip trailing '/' ?
-      result.append(mp);
-   }
+        if(infoNeeded & NeedRealDeviceName)
+        {
+            if(mp->m_mountedFrom.startsWith("/"))
+                mp->m_device = KStandardDirs::realPath(mp->m_mountedFrom);
+        }
+        // TODO: Strip trailing '/' ?
+        result.append(mp);
+    }
 
 #elif defined(_AIX)
 
@@ -271,38 +269,38 @@ KMountPoint::List KMountPoint::currentMountPoints(int infoNeeded)
     int fsname_len, num;
     int buf_sz = 4096;
 
-    mntctl_buffer = (struct vmount*)malloc(buf_sz);
+    mntctl_buffer = (struct vmount *)malloc(buf_sz);
     num = mntctl(MCTL_QUERY, buf_sz, mntctl_buffer);
-    if (num == 0)
+    if(num == 0)
     {
-	buf_sz = *(int*)mntctl_buffer;
-	free(mntctl_buffer);
-	mntctl_buffer = (struct vmount*)malloc(buf_sz);
-	num = mntctl(MCTL_QUERY, buf_sz, mntctl_buffer);
+        buf_sz = *(int *)mntctl_buffer;
+        free(mntctl_buffer);
+        mntctl_buffer = (struct vmount *)malloc(buf_sz);
+        num = mntctl(MCTL_QUERY, buf_sz, mntctl_buffer);
     }
 
-    if (num > 0)
+    if(num > 0)
     {
         /* iterate through items in the vmount structure: */
         vm = (struct vmount *)mntctl_buffer;
-        for ( ; num > 0; num-- )
+        for(; num > 0; num--)
         {
             /* get the name of the mounted file systems: */
             fsname_len = vmt2datasize(vm, VMT_STUB);
-            mountedto     = (char*)malloc(fsname_len + 1);
-	    mountedto[fsname_len] = '\0';
+            mountedto = (char *)malloc(fsname_len + 1);
+            mountedto[fsname_len] = '\0';
             strncpy(mountedto, (char *)vmt2dataptr(vm, VMT_STUB), fsname_len);
 
             fsname_len = vmt2datasize(vm, VMT_OBJECT);
-            mountedfrom     = (char*)malloc(fsname_len + 1);
-	    mountedfrom[fsname_len] = '\0';
+            mountedfrom = (char *)malloc(fsname_len + 1);
+            mountedfrom[fsname_len] = '\0';
             strncpy(mountedfrom, (char *)vmt2dataptr(vm, VMT_OBJECT), fsname_len);
 
-	    /* Look up the string for the file system type,
-             * as listed in /etc/vfs.
-             * ex.: nfs,jfs,afs,cdrfs,sfs,cachefs,nfs3,autofs
-             */
-            struct vfs_ent* ent = getvfsbytype(vm->vmt_gfstype);
+            /* Look up the string for the file system type,
+                 * as listed in /etc/vfs.
+                 * ex.: nfs,jfs,afs,cdrfs,sfs,cachefs,nfs3,autofs
+                 */
+            struct vfs_ent *ent = getvfsbytype(vm->vmt_gfstype);
 
             KMountPoint *mp = new KMountPoint();
             mp->m_mountedFrom = QFile::decodeName(mountedfrom);
@@ -312,74 +310,74 @@ KMountPoint::List KMountPoint::currentMountPoints(int infoNeeded)
             free(mountedfrom);
             free(mountedto);
 
-            if (infoNeeded & NeedMountOptions)
+            if(infoNeeded & NeedMountOptions)
             {
-              // TODO
+                // TODO
             }
 
-            if (infoNeeded & NeedRealDeviceName)
+            if(infoNeeded & NeedRealDeviceName)
             {
-               if (mp->m_mountedFrom.startsWith("/"))
-                  mp->m_device = KStandardDirs::realPath(mp->m_mountedFrom);
+                if(mp->m_mountedFrom.startsWith("/"))
+                    mp->m_device = KStandardDirs::realPath(mp->m_mountedFrom);
             }
-            
+
             result.append(mp);
 
             /* goto the next vmount structure: */
             vm = (struct vmount *)((char *)vm + vm->vmt_length);
         }
 
-	endvfsent( );
+        endvfsent();
     }
 
-    free( mntctl_buffer );
+    free(mntctl_buffer);
 #elif defined(Q_WS_WIN)
-    //TODO?
+// TODO?
 #else
-   STRUCT_SETMNTENT mnttab;
-   if ((mnttab = SETMNTENT(MNTTAB, "r")) == 0)
-      return result;
+    STRUCT_SETMNTENT mnttab;
+    if((mnttab = SETMNTENT(MNTTAB, "r")) == 0)
+        return result;
 
-   STRUCT_MNTENT fe;
-   while (GETMNTENT(mnttab, fe))
-   {
-      KMountPoint *mp = new KMountPoint();
-      mp->m_mountedFrom = QFile::decodeName(FSNAME(fe));
-         
-      mp->m_mountPoint = QFile::decodeName(MOUNTPOINT(fe));
-      mp->m_mountType = QFile::decodeName(MOUNTTYPE(fe));
-      
-      //Devices using supermount have their device names in the mount options
-      //instead of the device field. That's why we need to read the mount options 
-      if (infoNeeded & NeedMountOptions || (mp->m_mountType == "supermount"))
-      {
-         QString options = QFile::decodeName(MOUNTOPTIONS(fe));
-         mp->m_mountOptions = QStringList::split(',', options);
-      }
+    STRUCT_MNTENT fe;
+    while(GETMNTENT(mnttab, fe))
+    {
+        KMountPoint *mp = new KMountPoint();
+        mp->m_mountedFrom = QFile::decodeName(FSNAME(fe));
 
-      if (mp->m_mountType == "supermount")
-         mp->m_mountedFrom = devNameFromOptions(mp->m_mountOptions);
+        mp->m_mountPoint = QFile::decodeName(MOUNTPOINT(fe));
+        mp->m_mountType = QFile::decodeName(MOUNTTYPE(fe));
 
-      if (infoNeeded & NeedRealDeviceName)
-      {
-         if (mp->m_mountedFrom.startsWith("/"))
-            mp->m_device = KStandardDirs::realPath(mp->m_mountedFrom);
-      }
-      // TODO: Strip trailing '/' ?
-      result.append(mp);
-   }
-   ENDMNTENT(mnttab);
+        // Devices using supermount have their device names in the mount options
+        // instead of the device field. That's why we need to read the mount options
+        if(infoNeeded & NeedMountOptions || (mp->m_mountType == "supermount"))
+        {
+            QString options = QFile::decodeName(MOUNTOPTIONS(fe));
+            mp->m_mountOptions = QStringList::split(',', options);
+        }
+
+        if(mp->m_mountType == "supermount")
+            mp->m_mountedFrom = devNameFromOptions(mp->m_mountOptions);
+
+        if(infoNeeded & NeedRealDeviceName)
+        {
+            if(mp->m_mountedFrom.startsWith("/"))
+                mp->m_device = KStandardDirs::realPath(mp->m_mountedFrom);
+        }
+        // TODO: Strip trailing '/' ?
+        result.append(mp);
+    }
+    ENDMNTENT(mnttab);
 #endif
-   return result;
+    return result;
 }
 
 QString KMountPoint::devNameFromOptions(const QStringList &options)
 {
-   // Search options to find the device name
-   for ( QStringList::ConstIterator it = options.begin(); it != options.end(); ++it)
-   {
-      if( (*it).startsWith("dev="))
-         return QString(*it).remove("dev=");
-   } 
-   return QString("none");
+    // Search options to find the device name
+    for(QStringList::ConstIterator it = options.begin(); it != options.end(); ++it)
+    {
+        if((*it).startsWith("dev="))
+            return QString(*it).remove("dev=");
+    }
+    return QString("none");
 }

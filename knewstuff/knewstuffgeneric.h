@@ -39,16 +39,15 @@ class KConfig;
  * \par Maintainer:
  * Josef Spillner (spillner@kde.org)
  */
-class KDE_EXPORT KNewStuffGeneric : public KNewStuff
-{
-  public:
+class KDE_EXPORT KNewStuffGeneric : public KNewStuff {
+public:
     /**
       Constructor.
 
       @param type a Hotstuff data type such as "korganizer/calendar"
       @param parent the parent window.
     */
-    KNewStuffGeneric( const QString &type, QWidget *parent = 0 );
+    KNewStuffGeneric(const QString &type, QWidget *parent = 0);
     ~KNewStuffGeneric();
 
     /**
@@ -57,7 +56,7 @@ class KDE_EXPORT KNewStuffGeneric : public KNewStuff
       @param fileName filename of the donwloaded file
       @return @c true in case of installation success, @c false otherwise
     */
-    bool install( const QString &fileName );
+    bool install(const QString &fileName);
 
     /**
       Creates a file suitable for upload.
@@ -67,7 +66,7 @@ class KDE_EXPORT KNewStuffGeneric : public KNewStuff
       @param fileName the name of the file to upload after its creation
       @return @c true in case of creation success, @c false otherwise
     */
-    bool createUploadFile( const QString &fileName );
+    bool createUploadFile(const QString &fileName);
 
     /**
       Queries the preferred destination file for a download.
@@ -75,10 +74,10 @@ class KDE_EXPORT KNewStuffGeneric : public KNewStuff
       @param entry a Hotstuff data entry
       @return destination filename, or 0 to return directory only
     */
-    QString downloadDestination( KNS::Entry *entry );
+    QString downloadDestination(KNS::Entry *entry);
 
-  private:
-    QString destinationPath( KNS::Entry *entry );
+private:
+    QString destinationPath(KNS::Entry *entry);
 
     KConfig *mConfig;
 };

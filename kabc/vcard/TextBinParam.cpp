@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,55 +27,47 @@
 
 using namespace VCARD;
 
-TextBinParam::TextBinParam()
-	:	Param()
+TextBinParam::TextBinParam() : Param()
 {
 }
 
-TextBinParam::TextBinParam(const TextBinParam & x)
-	:	Param(x)
+TextBinParam::TextBinParam(const TextBinParam &x) : Param(x)
 {
 }
 
-TextBinParam::TextBinParam(const QCString & s)
-	:	Param(s)
+TextBinParam::TextBinParam(const QCString &s) : Param(s)
 {
 }
 
-	TextBinParam &
-TextBinParam::operator = (TextBinParam & x)
+TextBinParam &TextBinParam::operator=(TextBinParam &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Param::operator = (x);
-	return *this;
+    Param::operator=(x);
+    return *this;
 }
 
-	TextBinParam &
-TextBinParam::operator = (const QCString & s)
+TextBinParam &TextBinParam::operator=(const QCString &s)
 {
-	Param::operator = (s);
-	return *this;
+    Param::operator=(s);
+    return *this;
 }
 
-	bool
-TextBinParam::operator == (TextBinParam & x)
+bool TextBinParam::operator==(TextBinParam &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 TextBinParam::~TextBinParam()
 {
 }
 
-	void
-TextBinParam::_parse()
+void TextBinParam::_parse()
 {
 }
 
-	void
-TextBinParam::_assemble()
+void TextBinParam::_assemble()
 {
 }
-

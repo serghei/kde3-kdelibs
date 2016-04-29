@@ -36,35 +36,36 @@
  *
  * @since 3.2
  */
-class KDEFX_EXPORT KCPUInfo
-{
-    public:
-       /**
-         * This enum contains the list of architecture extensions you
-         * can query.
-         */
-        enum Extensions {
-            IntelMMX        = 1 << 0,  //!< Intel's MMX instructions.
-            IntelSSE        = 1 << 1,  //!< Intel's SSE instructions.
-            IntelSSE2       = 1 << 2,  //!< Intel's SSE2 instructions.
-            AMD3DNOW        = 1 << 3,  //!< AMD 3DNOW instructions
-            AltiVec         = 1 << 4   //!< Motorola AltiVec instructions
-        };
+class KDEFX_EXPORT KCPUInfo {
+public:
+    /**
+      * This enum contains the list of architecture extensions you
+      * can query.
+      */
+    enum Extensions
+    {
+        IntelMMX = 1 << 0,  //!< Intel's MMX instructions.
+        IntelSSE = 1 << 1,  //!< Intel's SSE instructions.
+        IntelSSE2 = 1 << 2, //!< Intel's SSE2 instructions.
+        AMD3DNOW = 1 << 3,  //!< AMD 3DNOW instructions
+        AltiVec = 1 << 4    //!< Motorola AltiVec instructions
+    };
 
-        /**
-         * Returns true if the processor supports @p extension,
-         * and false otherwise.
-         *
-         * @param   extension the feature to query.
-         * @return  If true, the processor supports @p extension.
-         * @see     Extensions
-         */
-        static bool haveExtension( unsigned int extension )
-        { return (s_features & extension) != 0; }
+    /**
+     * Returns true if the processor supports @p extension,
+     * and false otherwise.
+     *
+     * @param   extension the feature to query.
+     * @return  If true, the processor supports @p extension.
+     * @see     Extensions
+     */
+    static bool haveExtension(unsigned int extension)
+    {
+        return (s_features & extension) != 0;
+    }
 
-    private:
-        static unsigned int s_features;
+private:
+    static unsigned int s_features;
 };
 
 #endif
-

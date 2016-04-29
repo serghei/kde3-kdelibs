@@ -24,17 +24,37 @@ class QColor;
  * just call the static methods. They are encapsulated here merely to provide
  * a common namespace.
  */
-class KDEFX_EXPORT KPixmapEffect
-{
+class KDEFX_EXPORT KPixmapEffect {
 public:
-    enum GradientType { VerticalGradient, HorizontalGradient,
-			DiagonalGradient, CrossDiagonalGradient,
-			PyramidGradient, RectangleGradient,
-			PipeCrossGradient, EllipticGradient };
-    enum RGBComponent { Red, Green, Blue };
+    enum GradientType
+    {
+        VerticalGradient,
+        HorizontalGradient,
+        DiagonalGradient,
+        CrossDiagonalGradient,
+        PyramidGradient,
+        RectangleGradient,
+        PipeCrossGradient,
+        EllipticGradient
+    };
+    enum RGBComponent
+    {
+        Red,
+        Green,
+        Blue
+    };
 
-    enum Lighting {NorthLite, NWLite, WestLite, SWLite,
-		   SouthLite, SELite, EastLite, NELite};
+    enum Lighting
+    {
+        NorthLite,
+        NWLite,
+        WestLite,
+        SWLite,
+        SouthLite,
+        SELite,
+        EastLite,
+        NELite
+    };
 
     /**
      * Creates a gradient from color a to color b of the specified type.
@@ -48,8 +68,7 @@ public:
      * colors. Pass 0 to prevent dithering.
      * @return Returns the generated pixmap, for convenience.
      */
-    static KPixmap& gradient(KPixmap& pixmap, const QColor &ca, const QColor &cb,
-                            GradientType type, int ncols=3);
+    static KPixmap &gradient(KPixmap &pixmap, const QColor &ca, const QColor &cb, GradientType type, int ncols = 3);
 
     /**
      * Creates an unbalanced gradient.
@@ -66,9 +85,8 @@ public:
      * @param ncols The number of colors. See #gradient.
      * @return The generated pixmap, for convencience.
      */
-    static KPixmap& unbalancedGradient(KPixmap& pixmap, const QColor &ca,
-                   const QColor &cb, GradientType type, int xfactor = 100,
-                   int yfactor = 100, int ncols=3);
+    static KPixmap &unbalancedGradient(KPixmap &pixmap, const QColor &ca, const QColor &cb, GradientType type, int xfactor = 100, int yfactor = 100,
+                                       int ncols = 3);
 
     /**
      * Creates a pixmap of a given size with the given pixmap.
@@ -81,7 +99,7 @@ public:
      * @param size   The size the new pixmap should have.
      * @return The generated, tiled pixmap.
      */
-    static KPixmap createTiled(const KPixmap& pixmap, QSize size);
+    static KPixmap createTiled(const KPixmap &pixmap, QSize size);
 
     /**
      * Either brightens or dims a pixmap by a specified ratio.
@@ -90,7 +108,7 @@ public:
      * @param ratio The ratio to use. Use negative value to dim.
      * @return Returns The pixmap(), provided for convenience.
      */
-    static KPixmap& intensity(KPixmap& pixmap, float ratio);
+    static KPixmap &intensity(KPixmap &pixmap, float ratio);
 
     /**
      * Modifies the intensity of a pixmap's RGB channel component.
@@ -100,8 +118,7 @@ public:
      * @param channel Which channel(s) should be modified
      * @return Returns the pixmap(), provided for convenience.
      */
-    static KPixmap& channelIntensity(KPixmap& pixmap, float ratio,
-                                    RGBComponent channel);
+    static KPixmap &channelIntensity(KPixmap &pixmap, float ratio, RGBComponent channel);
 
     /**
      * Blends the provided pixmap into a background of the indicated color.
@@ -120,9 +137,7 @@ public:
      *                  used for 8 bpp pixmaps.
      * @return Returns the pixmap(), provided for convenience.
      */
-    static KPixmap& blend(KPixmap& pixmap, float initial_intensity,
-                         const QColor &bgnd, GradientType eff,
-                         bool anti_dir=false, int ncols=3);
+    static KPixmap &blend(KPixmap &pixmap, float initial_intensity, const QColor &bgnd, GradientType eff, bool anti_dir = false, int ncols = 3);
 
     /**
      * Builds a hash on any given pixmap.
@@ -134,8 +149,7 @@ public:
      * Only used for 8 bpp pixmaps.
      * @return Returns The pixmap(), provided for convenience.
      */
-    static KPixmap& hash(KPixmap& pixmap, Lighting lite=NorthLite,
-                        unsigned int spacing=0, int ncols=3);
+    static KPixmap &hash(KPixmap &pixmap, Lighting lite = NorthLite, unsigned int spacing = 0, int ncols = 3);
 
     /**
      * Creates a pattern from a pixmap.
@@ -153,8 +167,7 @@ public:
      * dithered to this depth. Pass zero to prevent dithering.
      * @return The resulting pixmap.
      */
-    static KPixmap pattern(const KPixmap& pixmap, QSize size,
-                   const QColor &ca, const QColor &cb, int ncols=8);
+    static KPixmap pattern(const KPixmap &pixmap, QSize size, const QColor &ca, const QColor &cb, int ncols = 8);
 
     /**
      * Fades a pixmap to a certain color.
@@ -164,7 +177,7 @@ public:
      * @param color The color to blend to.
      * @return Returns the pixmap(), provided for convenience.
      */
-    static KPixmap& fade(KPixmap& pixmap, double val, const QColor &color);
+    static KPixmap &fade(KPixmap &pixmap, double val, const QColor &color);
 
     /**
      * Converts a pixmap to grayscale.
@@ -174,7 +187,7 @@ public:
      * quality algorithm. Appropriate for things such as toolbar icons.
      * @return Returns the pixmap(), provided for convenience.
      */
-    static KPixmap& toGray(KPixmap& pixmap, bool fast=false);
+    static KPixmap &toGray(KPixmap &pixmap, bool fast = false);
 
     /**
      * Desaturates a pixmap.
@@ -183,7 +196,7 @@ public:
      * @param desat A value between 0 and 1 setting the degree of desaturation
      * @return Returns The pixmap(), provided for convenience.
      */
-    static KPixmap& desaturate(KPixmap& pixmap, float desat = 0.3);
+    static KPixmap &desaturate(KPixmap &pixmap, float desat = 0.3);
 
     /**
      * Modifies the contrast of a pixmap.
@@ -192,7 +205,7 @@ public:
      * @param c A contrast value between -255 and 255.
      * @return Returns the pixmap(), provided for convenience.
      */
-    static KPixmap& contrast(KPixmap& pixmap, int c);
+    static KPixmap &contrast(KPixmap &pixmap, int c);
 
     /**
      * Dithers a pixmap using Floyd-Steinberg dithering for low-color
@@ -203,7 +216,7 @@ public:
      * @param size The size of the palette.
      * @return Returns the pixmap(), provided for convenience.
      */
-    static KPixmap& dither(KPixmap &pixmap, const QColor *palette, int size);
+    static KPixmap &dither(KPixmap &pixmap, const QColor *palette, int size);
 
     /**
      * Calculate a 'selected' pixmap, for instance a selected icon
@@ -211,7 +224,7 @@ public:
      * @param pixmap the pixmap to select
      * @param col the selected color, usually from QColorGroup::highlight().
      */
-    static KPixmap selectedPixmap( const KPixmap &pixmap, const QColor &col );
+    static KPixmap selectedPixmap(const KPixmap &pixmap, const QColor &col);
 };
 
 

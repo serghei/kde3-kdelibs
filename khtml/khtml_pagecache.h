@@ -33,101 +33,100 @@ class KHTMLPageCachePrivate;
  *
  * A limited number of HTML pages are stored in this cache. This
  * cache is used for the history and operations like "view source".
- * These operations always want to use the original document and 
+ * These operations always want to use the original document and
  * don't want to fetch the data from the network again.
  *
  * It operates completely independent from the kio_http cache.
  */
-class KHTMLPageCache : public QObject
-{
-  Q_OBJECT
+class KHTMLPageCache : public QObject {
+    Q_OBJECT
 public:
-  /**
-   * static "constructor".
-   * @return returns a pointer to the cache, if it exists.
-   * creates a new cache otherwise.
-   */
-  static KHTMLPageCache *self();
-  ~KHTMLPageCache();
-  
-  /**
-   * Create a new cache entry. 
-   *
-   * @return a cache entry ID is returned.
-   */
-  long createCacheEntry();
+    /**
+     * static "constructor".
+     * @return returns a pointer to the cache, if it exists.
+     * creates a new cache otherwise.
+     */
+    static KHTMLPageCache *self();
+    ~KHTMLPageCache();
 
-  /**
-   * Add @p data to the cache entry with id @p id.
-   */
-  void addData(long id, const QByteArray &data);
+    /**
+     * Create a new cache entry.
+     *
+     * @return a cache entry ID is returned.
+     */
+    long createCacheEntry();
 
-  /**
-   * Signal end of data for the cache entry with id @p id.
-   * After calling this the entry is marked complete 
-   */
-  void endData(long id);
+    /**
+     * Add @p data to the cache entry with id @p id.
+     */
+    void addData(long id, const QByteArray &data);
 
-  /**
-   * Cancel the entry.
-   */
-  void cancelEntry(long id);
+    /**
+     * Signal end of data for the cache entry with id @p id.
+     * After calling this the entry is marked complete
+     */
+    void endData(long id);
 
-  /**
-   * @return true when the cache entry with id @p is still valid,
-   * and at least some of the data is available for reading (the
-   * complete data may not yet be loaded)
-   */
-  bool isValid(long id);
+    /**
+     * Cancel the entry.
+     */
+    void cancelEntry(long id);
 
-  /**
-   * @return true when the cache entry with id @p is still valid,
-   * and the complete data is available for reading
-   */
-  bool isComplete(long id);
-  
-  /**
-   * Fetch data for cache entry @p id and send it to slot @p recvSlot
-   * in the object @p recvObj
-   */
-  void fetchData(long id, QObject *recvObj, const char *recvSlot);
+    /**
+     * @return true when the cache entry with id @p is still valid,
+     * and at least some of the data is available for reading (the
+     * complete data may not yet be loaded)
+     */
+    bool isValid(long id);
 
-  /**
-   * Cancel sending data to @p recvObj
-   */
-  void cancelFetch(QObject *recvObj);
+    /**
+     * @return true when the cache entry with id @p is still valid,
+     * and the complete data is available for reading
+     */
+    bool isComplete(long id);
 
-  /**
-   * Save the data of cache entry @p id to the datastream @p str
-   */
-  void saveData(long id, QDataStream *str);
+    /**
+     * Fetch data for cache entry @p id and send it to slot @p recvSlot
+     * in the object @p recvObj
+     */
+    void fetchData(long id, QObject *recvObj, const char *recvSlot);
+
+    /**
+     * Cancel sending data to @p recvObj
+     */
+    void cancelFetch(QObject *recvObj);
+
+    /**
+     * Save the data of cache entry @p id to the datastream @p str
+     */
+    void saveData(long id, QDataStream *str);
 
 private slots:
-  void sendData();
+    void sendData();
 
-private:  
-  KHTMLPageCache();
+private:
+    KHTMLPageCache();
 
-  static KHTMLPageCache *_self;
+    static KHTMLPageCache *_self;
 
-  KHTMLPageCachePrivate *d;  
+    KHTMLPageCachePrivate *d;
 };
 
-class KHTMLPageCacheDelivery : public QObject
-{
-   friend class KHTMLPageCache;
-Q_OBJECT
+class KHTMLPageCacheDelivery : public QObject {
+    friend class KHTMLPageCache;
+    Q_OBJECT
 public:
-   KHTMLPageCacheDelivery(int _fd)
-    : fd(_fd) { }
-   ~KHTMLPageCacheDelivery();
+    KHTMLPageCacheDelivery(int _fd) : fd(_fd)
+    {
+    }
+    ~KHTMLPageCacheDelivery();
 
 signals:
-   void emitData(const QByteArray &data);
+    void emitData(const QByteArray &data);
 
-public: 
-   QObject *recvObj;
-   int fd;      
+public:
+    QObject *recvObj;
+    int fd;
 };
 
 

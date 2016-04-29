@@ -31,7 +31,7 @@ using namespace KJS;
 
 namespace KJS {
 
-const ClassInfo MozillaSidebarExtension::info = { "sidebar", 0, &MozillaSidebarExtensionTable, 0 };
+const ClassInfo MozillaSidebarExtension::info = {"sidebar", 0, &MozillaSidebarExtensionTable, 0};
 /*
 @begin MozillaSidebarExtensionTable 1
   addPanel	MozillaSidebarExtension::addPanel	DontDelete|Function 0
@@ -40,55 +40,61 @@ const ClassInfo MozillaSidebarExtension::info = { "sidebar", 0, &MozillaSidebarE
 }
 IMPLEMENT_PROTOFUNC_DOM(MozillaSidebarExtensionFunc)
 
-MozillaSidebarExtension::MozillaSidebarExtension(ExecState *exec, KHTMLPart *p)
-  : ObjectImp(exec->interpreter()->builtinObjectPrototype()), m_part(p) { }
+MozillaSidebarExtension::MozillaSidebarExtension(ExecState *exec, KHTMLPart *p) : ObjectImp(exec->interpreter()->builtinObjectPrototype()), m_part(p)
+{
+}
 
 Value MozillaSidebarExtension::get(ExecState *exec, const Identifier &propertyName) const
 {
 #ifdef KJS_VERBOSE
-  kdDebug(6070) << "MozillaSidebarExtension::get " << propertyName.ascii() << endl;
+    kdDebug(6070) << "MozillaSidebarExtension::get " << propertyName.ascii() << endl;
 #endif
-  return lookupGet<MozillaSidebarExtensionFunc,MozillaSidebarExtension,ObjectImp>(exec,propertyName,&MozillaSidebarExtensionTable,this);
+    return lookupGet< MozillaSidebarExtensionFunc, MozillaSidebarExtension, ObjectImp >(exec, propertyName, &MozillaSidebarExtensionTable, this);
 }
 
 Value MozillaSidebarExtension::getValueProperty(ExecState *exec, int token) const
 {
-  Q_UNUSED(exec);
-  switch (token) {
-  default:
-    kdDebug(6070) << "WARNING: Unhandled token in MozillaSidebarExtension::getValueProperty : " << token << endl;
-    return Value();
-  }
+    Q_UNUSED(exec);
+    switch(token)
+    {
+        default:
+            kdDebug(6070) << "WARNING: Unhandled token in MozillaSidebarExtension::getValueProperty : " << token << endl;
+            return Value();
+    }
 }
 
 Value MozillaSidebarExtensionFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  KJS_CHECK_THIS( KJS::MozillaSidebarExtension, thisObj );
-  MozillaSidebarExtension *mse = static_cast<MozillaSidebarExtension*>(thisObj.imp());
+    KJS_CHECK_THIS(KJS::MozillaSidebarExtension, thisObj);
+    MozillaSidebarExtension *mse = static_cast< MozillaSidebarExtension * >(thisObj.imp());
 
-  KHTMLPart *part = mse->part();
-  if (!part)
-    return Undefined();
+    KHTMLPart *part = mse->part();
+    if(!part)
+        return Undefined();
 
-  // addPanel()  id == 0
-  KParts::BrowserExtension *ext = part->browserExtension();
-  if (ext) {
-    QString url, name;
-    if (args.size() == 1) {  // I've seen this, don't know if it's legal.
-      name = QString::null;
-      url = args[0].toString(exec).qstring();
-    } else if (args.size() == 2 || args.size() == 3) {
-      name = args[0].toString(exec).qstring();
-      url = args[1].toString(exec).qstring();
-      // 2 is the "CURL" which I don't understand and don't think we need.
-    } else {
-      return Boolean(false);
+    // addPanel()  id == 0
+    KParts::BrowserExtension *ext = part->browserExtension();
+    if(ext)
+    {
+        QString url, name;
+        if(args.size() == 1)
+        { // I've seen this, don't know if it's legal.
+            name = QString::null;
+            url = args[0].toString(exec).qstring();
+        }
+        else if(args.size() == 2 || args.size() == 3)
+        {
+            name = args[0].toString(exec).qstring();
+            url = args[1].toString(exec).qstring();
+            // 2 is the "CURL" which I don't understand and don't think we need.
+        }
+        else
+        {
+            return Boolean(false);
+        }
+        emit ext->addWebSideBar(KURL(url), name);
+        return Boolean(true);
     }
-    emit ext->addWebSideBar(KURL( url ), name);
-    return Boolean(true);
-  }
 
-  return Undefined();
+    return Undefined();
 }
-
-

@@ -32,18 +32,17 @@ class KIconLoader;
 /**
  * Icon canvas for KIconDialog.
  */
-class KIO_EXPORT KIconCanvas: public KIconView
-{
+class KIO_EXPORT KIconCanvas : public KIconView {
     Q_OBJECT
 
 public:
-    KIconCanvas(QWidget *parent=0L, const char *name=0L);
+    KIconCanvas(QWidget *parent = 0L, const char *name = 0L);
     ~KIconCanvas();
 
     /**
      * Load icons into the canvas.
      */
-    void loadFiles(const QStringList& files);
+    void loadFiles(const QStringList &files);
 
     /**
      * Returns the current icon.
@@ -74,7 +73,7 @@ private:
     KIconLoader *mpLoader; // unused
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 
 private:
     class KIconCanvasPrivate;
@@ -88,20 +87,18 @@ private:
  *
  * @short An icon selection dialog.
  */
-class KIO_EXPORT KIconDialog: public KDialogBase
-{
+class KIO_EXPORT KIconDialog : public KDialogBase {
     Q_OBJECT
 
 public:
     /**
      * Constructs an icon selection dialog using the global iconloader.
      */
-    KIconDialog(QWidget *parent=0L, const char *name=0L);
+    KIconDialog(QWidget *parent = 0L, const char *name = 0L);
     /**
      * Constructs an icon selection dialog using a specific iconloader.
      */
-    KIconDialog(KIconLoader *loader, QWidget *parent=0,
-	    const char *name=0);
+    KIconDialog(KIconLoader *loader, QWidget *parent = 0, const char *name = 0);
     /**
      * Destructs the dialog.
      */
@@ -122,7 +119,7 @@ public:
      * sets a custom icon directory
      * @since 3.1
      */
-    void setCustomLocation( const QString& location );
+    void setCustomLocation(const QString &location);
 
     /**
      * Sets the size of the icons to be shown / selected.
@@ -141,18 +138,14 @@ public:
     /**
      * @deprecated in KDE 3.0, use the static method getIcon instead.
      */
-    QString selectIcon(KIcon::Group group=KIcon::Desktop, KIcon::Context
-	    context=KIcon::Application, bool user=false);
+    QString selectIcon(KIcon::Group group = KIcon::Desktop, KIcon::Context context = KIcon::Application, bool user = false);
 #endif
 
     /**
      * Allows you to set the same parameters as in the class method
      * getIcon().
      */
-    void setup( KIcon::Group group,
-                KIcon::Context context = KIcon::Application,
-                bool strictIconSize = false, int iconSize = 0,
-                bool user = false );
+    void setup(KIcon::Group group, KIcon::Context context = KIcon::Application, bool strictIconSize = false, int iconSize = 0, bool user = false);
 
     /**
      * Allows you to set the same parameters as in the class method
@@ -163,9 +156,7 @@ public:
      * @since 3.3
      */
 
-    void setup( KIcon::Group group, KIcon::Context context,
-                bool strictIconSize, int iconSize, bool user, bool lockUser,
-                bool lockCustomDir );
+    void setup(KIcon::Group group, KIcon::Context context, bool strictIconSize, int iconSize, bool user, bool lockUser, bool lockCustomDir);
 
     /**
      * exec()utes this modal dialog and returns the name of the selected icon,
@@ -200,14 +191,11 @@ public:
      * @return The name of the icon, suitable for loading with KIconLoader.
      * @version New in 3.0
      */
-    static QString getIcon(KIcon::Group group=KIcon::Desktop,
-                           KIcon::Context context=KIcon::Application,
-                           bool strictIconSize=false, int iconSize = 0,
-                           bool user=false, QWidget *parent=0,
-                           const QString &caption=QString::null);
+    static QString getIcon(KIcon::Group group = KIcon::Desktop, KIcon::Context context = KIcon::Application, bool strictIconSize = false,
+                           int iconSize = 0, bool user = false, QWidget *parent = 0, const QString &caption = QString::null);
 
 signals:
-    void newIconName(const QString&);
+    void newIconName(const QString &);
 
 protected slots:
     void slotOk();
@@ -219,10 +207,11 @@ private slots:
     void slotProgress(int);
     void slotFinished();
     void slotAcceptIcons();
+
 private:
     void init();
     void showIcons();
-    void setContext( KIcon::Context context );
+    void setContext(KIcon::Context context);
 
     int mGroupOrSize;
     KIcon::Context mContext;
@@ -236,10 +225,11 @@ private:
     KIconLoader *mpLoader;
     KIconCanvas *mpCanvas;
     int mNumContext;
-    KIcon::Context mContextMap[ 12 ]; // must match KIcon::Context size, code has assert
+    KIcon::Context mContextMap[12]; // must match KIcon::Context size, code has assert
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KIconDialogPrivate;
     KIconDialogPrivate *d;
@@ -254,23 +244,22 @@ private:
  * @see KIconDialog
  * @short A push button that allows selection of an icon.
  */
-class KIO_EXPORT KIconButton: public QPushButton
-{
+class KIO_EXPORT KIconButton : public QPushButton {
     Q_OBJECT
-    Q_PROPERTY( QString icon READ icon WRITE setIcon RESET resetIcon )
-    Q_PROPERTY( int iconSize READ iconSize WRITE setIconSize)
-    Q_PROPERTY( bool strictIconSize READ strictIconSize WRITE setStrictIconSize )
+    Q_PROPERTY(QString icon READ icon WRITE setIcon RESET resetIcon)
+    Q_PROPERTY(int iconSize READ iconSize WRITE setIconSize)
+    Q_PROPERTY(bool strictIconSize READ strictIconSize WRITE setStrictIconSize)
 
 public:
     /**
      * Constructs a KIconButton using the global iconloader.
      */
-    KIconButton(QWidget *parent=0L, const char *name=0L);
+    KIconButton(QWidget *parent = 0L, const char *name = 0L);
 
     /**
      * Constructs a KIconButton using a specific KIconLoader.
      */
-    KIconButton(KIconLoader *loader, QWidget *parent, const char *name=0L);
+    KIconButton(KIconLoader *loader, QWidget *parent, const char *name = 0L);
     /**
      * Destructs the button.
      */
@@ -291,12 +280,12 @@ public:
      * Sets the icon group and context. Use KIcon::NoGroup if you want to
      * allow icons for any group in the given context.
      */
-    void setIconType(KIcon::Group group, KIcon::Context context, bool user=false);
+    void setIconType(KIcon::Group group, KIcon::Context context, bool user = false);
 
     /**
      * Sets the button's initial icon.
      */
-    void setIcon(const QString& icon);
+    void setIcon(const QString &icon);
 
     /**
      * Resets the icon (reverts to an empty button).
@@ -306,14 +295,17 @@ public:
     /**
      * Returns the name of the selected icon.
      */
-    QString icon() const { return mIcon; }
+    QString icon() const
+    {
+        return mIcon;
+    }
 
     /**
      * Sets the size of the icon to be shown / selected.
      * @see KIcon::StdSizes
      * @see iconSize
      */
-    void setIconSize( int size );
+    void setIconSize(int size);
 
     /**
      * Returns the iconsize set via setIconSize() or 0, if the default
@@ -330,10 +322,10 @@ signals:
 
 private slots:
     void slotChangeIcon();
-    void newIconName(const QString& name);
+    void newIconName(const QString &name);
 
 private:
-    void init( KIconLoader *loader );
+    void init(KIconLoader *loader);
 
     bool mbUser;
     KIcon::Group mGroup;

@@ -25,30 +25,25 @@
 
 int main(int argc, char **argv)
 {
-  KApplication a(argc,argv,"kwizardtest");
-  KWizard *wiz = new KWizard(0, "kwizardtest", false);
-  QObject::connect((QObject*) wiz->cancelButton(), SIGNAL(clicked()),
-		   &a, SLOT(quit()));
-  QObject::connect((QObject*) wiz->finishButton(), SIGNAL(clicked()),
-		   &a, SLOT(quit()));
-  for(int i = 1; i < 11; i++)
-  {
-    QWidget *p = new QWidget;
-    QString msg = QString("This is page %1 out of 10").arg(i);
-    QLabel *label = new QLabel(msg, p);
-    QHBoxLayout *layout = new QHBoxLayout(p, 5);
-    label->setAlignment(Qt::AlignCenter);
-    label->setFixedSize(300, 200);
-    layout->addWidget(label);
-    QString title = QString("%1. page").arg(i);
-    wiz->addPage(p, title);
-    wiz->setFinishEnabled(p, (i==10));
-  }
+    KApplication a(argc, argv, "kwizardtest");
+    KWizard *wiz = new KWizard(0, "kwizardtest", false);
+    QObject::connect((QObject *)wiz->cancelButton(), SIGNAL(clicked()), &a, SLOT(quit()));
+    QObject::connect((QObject *)wiz->finishButton(), SIGNAL(clicked()), &a, SLOT(quit()));
+    for(int i = 1; i < 11; i++)
+    {
+        QWidget *p = new QWidget;
+        QString msg = QString("This is page %1 out of 10").arg(i);
+        QLabel *label = new QLabel(msg, p);
+        QHBoxLayout *layout = new QHBoxLayout(p, 5);
+        label->setAlignment(Qt::AlignCenter);
+        label->setFixedSize(300, 200);
+        layout->addWidget(label);
+        QString title = QString("%1. page").arg(i);
+        wiz->addPage(p, title);
+        wiz->setFinishEnabled(p, (i == 10));
+    }
 
-  a.setMainWidget(wiz);
-  wiz->show();
-  return a.exec();
+    a.setMainWidget(wiz);
+    wiz->show();
+    return a.exec();
 }
-
-
-

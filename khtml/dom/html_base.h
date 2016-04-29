@@ -47,19 +47,21 @@ class DOMString;
  * BODY element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLBodyElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLBodyElement : public HTMLElement {
 public:
     HTMLBodyElement();
     HTMLBodyElement(const HTMLBodyElement &other);
     HTMLBodyElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLBodyElement(HTMLBodyElementImpl *impl);
-public:
 
-    HTMLBodyElement & operator = (const HTMLBodyElement &other);
-    HTMLBodyElement & operator = (const Node &other);
+public:
+    HTMLBodyElement &operator=(const HTMLBodyElement &other);
+    HTMLBodyElement &operator=(const Node &other);
 
     ~HTMLBodyElement();
 
@@ -76,7 +78,7 @@ public:
     /**
      * see aLink
      */
-    void setALink( const DOMString & );
+    void setALink(const DOMString &);
 
     /**
      * URI of the background texture tile image. See the <a
@@ -90,7 +92,7 @@ public:
     /**
      * see background
      */
-    void setBackground( const DOMString & );
+    void setBackground(const DOMString &);
 
     /**
      * Document background color. See the <a
@@ -104,7 +106,7 @@ public:
     /**
      * see bgColor
      */
-    void setBgColor( const DOMString & );
+    void setBgColor(const DOMString &);
 
     /**
      * Color of links that are not active and unvisited. See the <a
@@ -118,7 +120,7 @@ public:
     /**
      * see link
      */
-    void setLink( const DOMString & );
+    void setLink(const DOMString &);
 
     /**
      * Document text color. See the <a
@@ -132,7 +134,7 @@ public:
     /**
      * see text
      */
-    void setText( const DOMString & );
+    void setText(const DOMString &);
 
     /**
      * Color of links that have been visited by the user. See the <a
@@ -146,7 +148,7 @@ public:
     /**
      * see vLink
      */
-    void setVLink( const DOMString & );
+    void setVLink(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -160,19 +162,21 @@ class DOMString;
  * FRAME element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLFrameElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLFrameElement : public HTMLElement {
 public:
     HTMLFrameElement();
     HTMLFrameElement(const HTMLFrameElement &other);
     HTMLFrameElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLFrameElement(HTMLFrameElementImpl *impl);
-public:
 
-    HTMLFrameElement & operator = (const HTMLFrameElement &other);
-    HTMLFrameElement & operator = (const Node &other);
+public:
+    HTMLFrameElement &operator=(const HTMLFrameElement &other);
+    HTMLFrameElement &operator=(const Node &other);
 
     ~HTMLFrameElement();
 
@@ -187,7 +191,7 @@ public:
     /**
      * see frameBorder
      */
-    void setFrameBorder( const DOMString & );
+    void setFrameBorder(const DOMString &);
 
     /**
      * URI designating a long description of this image or frame. See
@@ -201,7 +205,7 @@ public:
     /**
      * see longDesc
      */
-    void setLongDesc( const DOMString & );
+    void setLongDesc(const DOMString &);
 
     /**
      * Frame margin height, in pixels. See the <a
@@ -214,7 +218,7 @@ public:
     /**
      * see marginHeight
      */
-    void setMarginHeight( const DOMString & );
+    void setMarginHeight(const DOMString &);
 
     /**
      * Frame margin width, in pixels. See the <a
@@ -227,7 +231,7 @@ public:
     /**
      * see marginWidth
      */
-    void setMarginWidth( const DOMString & );
+    void setMarginWidth(const DOMString &);
 
     /**
      * The frame name (object of the \c target attribute).
@@ -241,7 +245,7 @@ public:
     /**
      * see name
      */
-    void setName( const DOMString & );
+    void setName(const DOMString &);
 
     /**
      * When true, forbid user from resizing frame. See the <a
@@ -254,7 +258,7 @@ public:
     /**
      * see noResize
      */
-    void setNoResize( bool );
+    void setNoResize(bool);
 
     /**
      * Specify whether or not the frame should have scrollbars. See
@@ -268,7 +272,7 @@ public:
     /**
      * see scrolling
      */
-    void setScrolling( const DOMString & );
+    void setScrolling(const DOMString &);
 
     /**
      * A URI designating the initial frame contents. See the <a
@@ -281,7 +285,7 @@ public:
     /**
      * see src
      */
-    void setSrc( const DOMString & );
+    void setSrc(const DOMString &);
 
     /**
      * Introduced in DOM Level 2
@@ -306,19 +310,21 @@ class DOMString;
  * FRAMESET element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLFrameSetElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLFrameSetElement : public HTMLElement {
 public:
     HTMLFrameSetElement();
     HTMLFrameSetElement(const HTMLFrameSetElement &other);
     HTMLFrameSetElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLFrameSetElement(HTMLFrameSetElementImpl *impl);
-public:
 
-    HTMLFrameSetElement & operator = (const HTMLFrameSetElement &other);
-    HTMLFrameSetElement & operator = (const Node &other);
+public:
+    HTMLFrameSetElement &operator=(const HTMLFrameSetElement &other);
+    HTMLFrameSetElement &operator=(const Node &other);
 
     ~HTMLFrameSetElement();
 
@@ -333,7 +339,7 @@ public:
     /**
      * see cols
      */
-    void setCols( const DOMString & );
+    void setCols(const DOMString &);
 
     /**
      * The number of rows of frames in the frameset. See the <a
@@ -346,7 +352,7 @@ public:
     /**
      * see rows
      */
-    void setRows( const DOMString & );
+    void setRows(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -359,19 +365,21 @@ class HTMLIFrameElementImpl;
  * IFRAME element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLIFrameElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLIFrameElement : public HTMLElement {
 public:
     HTMLIFrameElement();
     HTMLIFrameElement(const HTMLIFrameElement &other);
     HTMLIFrameElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLIFrameElement(HTMLIFrameElementImpl *impl);
-public:
 
-    HTMLIFrameElement & operator = (const HTMLIFrameElement &other);
-    HTMLIFrameElement & operator = (const Node &other);
+public:
+    HTMLIFrameElement &operator=(const HTMLIFrameElement &other);
+    HTMLIFrameElement &operator=(const Node &other);
 
     ~HTMLIFrameElement();
 
@@ -388,7 +396,7 @@ public:
     /**
      * see align
      */
-    void setAlign( const DOMString & );
+    void setAlign(const DOMString &);
 
     /**
      * Request frame borders. See the <a
@@ -401,7 +409,7 @@ public:
     /**
      * see frameBorder
      */
-    void setFrameBorder( const DOMString & );
+    void setFrameBorder(const DOMString &);
 
     /**
      * Frame height. See the <a
@@ -414,7 +422,7 @@ public:
     /**
      * see height
      */
-    void setHeight( const DOMString & );
+    void setHeight(const DOMString &);
 
     /**
      * URI designating a long description of this image or frame. See
@@ -428,7 +436,7 @@ public:
     /**
      * see longDesc
      */
-    void setLongDesc( const DOMString & );
+    void setLongDesc(const DOMString &);
 
     /**
      * Frame margin height, in pixels. See the <a
@@ -441,7 +449,7 @@ public:
     /**
      * see marginHeight
      */
-    void setMarginHeight( const DOMString & );
+    void setMarginHeight(const DOMString &);
 
     /**
      * Frame margin width, in pixels. See the <a
@@ -454,7 +462,7 @@ public:
     /**
      * see marginWidth
      */
-    void setMarginWidth( const DOMString & );
+    void setMarginWidth(const DOMString &);
 
     /**
      * The frame name (object of the \c target attribute).
@@ -468,7 +476,7 @@ public:
     /**
      * see name
      */
-    void setName( const DOMString & );
+    void setName(const DOMString &);
 
     /**
      * Specify whether or not the frame should have scrollbars. See
@@ -482,7 +490,7 @@ public:
     /**
      * see scrolling
      */
-    void setScrolling( const DOMString & );
+    void setScrolling(const DOMString &);
 
     /**
      * A URI designating the initial frame contents. See the <a
@@ -495,7 +503,7 @@ public:
     /**
      * see src
      */
-    void setSrc( const DOMString & );
+    void setSrc(const DOMString &);
 
     /**
      * Frame width. See the <a
@@ -508,7 +516,7 @@ public:
     /**
      * see width
      */
-    void setWidth( const DOMString & );
+    void setWidth(const DOMString &);
 
     /**
      * Introduced in DOM Level 2
@@ -533,19 +541,21 @@ class DOMString;
  * HEAD element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLHeadElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLHeadElement : public HTMLElement {
 public:
     HTMLHeadElement();
     HTMLHeadElement(const HTMLHeadElement &other);
     HTMLHeadElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLHeadElement(HTMLHeadElementImpl *impl);
-public:
 
-    HTMLHeadElement & operator = (const HTMLHeadElement &other);
-    HTMLHeadElement & operator = (const Node &other);
+public:
+    HTMLHeadElement &operator=(const HTMLHeadElement &other);
+    HTMLHeadElement &operator=(const Node &other);
 
     ~HTMLHeadElement();
 
@@ -560,7 +570,7 @@ public:
     /**
      * see profile
      */
-    void setProfile( const DOMString & );
+    void setProfile(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -574,19 +584,21 @@ class DOMString;
  * HTML element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLHtmlElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLHtmlElement : public HTMLElement {
 public:
     HTMLHtmlElement();
     HTMLHtmlElement(const HTMLHtmlElement &other);
     HTMLHtmlElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLHtmlElement(HTMLHtmlElementImpl *impl);
-public:
 
-    HTMLHtmlElement & operator = (const HTMLHtmlElement &other);
-    HTMLHtmlElement & operator = (const Node &other);
+public:
+    HTMLHtmlElement &operator=(const HTMLHtmlElement &other);
+    HTMLHtmlElement &operator=(const Node &other);
 
     ~HTMLHtmlElement();
 
@@ -602,9 +614,9 @@ public:
     /**
      * see version
      */
-    void setVersion( const DOMString & );
+    void setVersion(const DOMString &);
 };
 
-} //namespace
+} // namespace
 
 #endif

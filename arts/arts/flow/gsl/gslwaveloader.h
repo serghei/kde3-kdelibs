@@ -3,4 +3,3 @@
 #define GSLWAVELOADER_H
 
 #endif // GSLWAVELOADER_H
-

@@ -33,25 +33,29 @@
 #include "kbookmarkimporter_ie.h"
 
 /* antlarr: KDE 4: Make them const QString & */
-void KIEBookmarkImporter::parseIEBookmarks_url_file( QString filename, QString name ) {
-    static const int g_lineLimit = 16*1024;
+void KIEBookmarkImporter::parseIEBookmarks_url_file(QString filename, QString name)
+{
+    static const int g_lineLimit = 16 * 1024;
 
     QFile f(filename);
 
-    if(f.open(IO_ReadOnly)) {
+    if(f.open(IO_ReadOnly))
+    {
 
         QCString s(g_lineLimit);
 
-        while(f.readLine(s.data(), g_lineLimit)>=0) {
-            if ( s[s.length()-1] != '\n' ) // Gosh, this line is longer than g_lineLimit. Skipping.
+        while(f.readLine(s.data(), g_lineLimit) >= 0)
+        {
+            if(s[s.length() - 1] != '\n') // Gosh, this line is longer than g_lineLimit. Skipping.
             {
-               kdWarning() << "IE bookmarks contain a line longer than " << g_lineLimit << ". Skipping." << endl;
-               continue;
+                kdWarning() << "IE bookmarks contain a line longer than " << g_lineLimit << ". Skipping." << endl;
+                continue;
             }
             QCString t = s.stripWhiteSpace();
-            QRegExp rx( "URL=(.*)" );
-            if (rx.exactMatch(t)) {
-               emit newBookmark( name, rx.cap(1).latin1(), QString("") );
+            QRegExp rx("URL=(.*)");
+            if(rx.exactMatch(t))
+            {
+                emit newBookmark(name, rx.cap(1).latin1(), QString(""));
             }
         }
 
@@ -60,69 +64,76 @@ void KIEBookmarkImporter::parseIEBookmarks_url_file( QString filename, QString n
 }
 
 /* antlarr: KDE 4: Make them const QString & */
-void KIEBookmarkImporter::parseIEBookmarks_dir( QString dirname, QString foldername )
+void KIEBookmarkImporter::parseIEBookmarks_dir(QString dirname, QString foldername)
 {
 
-   QDir dir(dirname);
-   dir.setFilter( QDir::Files | QDir::Dirs );
-   dir.setSorting( QDir::Name | QDir::DirsFirst );
-   dir.setNameFilter("*.url"); // AK - possibly add ";index.ini" ?
-   dir.setMatchAllDirs(true);
+    QDir dir(dirname);
+    dir.setFilter(QDir::Files | QDir::Dirs);
+    dir.setSorting(QDir::Name | QDir::DirsFirst);
+    dir.setNameFilter("*.url"); // AK - possibly add ";index.ini" ?
+    dir.setMatchAllDirs(true);
 
-   const QFileInfoList *list = dir.entryInfoList();
-   if (!list) return;
+    const QFileInfoList *list = dir.entryInfoList();
+    if(!list)
+        return;
 
-   if (dirname != m_fileName) 
-      emit newFolder( foldername, false, "" );
+    if(dirname != m_fileName)
+        emit newFolder(foldername, false, "");
 
-   QFileInfoListIterator it( *list );
-   QFileInfo *fi;
+    QFileInfoListIterator it(*list);
+    QFileInfo *fi;
 
-   while ( (fi = it.current()) != 0 ) {
-      ++it;
+    while((fi = it.current()) != 0)
+    {
+        ++it;
 
-      if (fi->fileName() == "." || fi->fileName() == "..") continue;
+        if(fi->fileName() == "." || fi->fileName() == "..")
+            continue;
 
-      if (fi->isDir()) {
-         parseIEBookmarks_dir(fi->absFilePath(), fi->fileName());
+        if(fi->isDir())
+        {
+            parseIEBookmarks_dir(fi->absFilePath(), fi->fileName());
+        }
+        else if(fi->isFile())
+        {
+            if(fi->fileName().endsWith(".url"))
+            {
+                QString name = fi->fileName();
+                name.truncate(name.length() - 4); // .url
+                parseIEBookmarks_url_file(fi->absFilePath(), name);
+            }
+            // AK - add index.ini
+        }
+    }
 
-      } else if (fi->isFile()) {
-         if (fi->fileName().endsWith(".url")) {
-            QString name = fi->fileName();
-            name.truncate(name.length() - 4); // .url
-            parseIEBookmarks_url_file(fi->absFilePath(), name);
-         }
-         // AK - add index.ini
-      }
-   }
-
-   if (dirname != m_fileName) 
-      emit endFolder();
+    if(dirname != m_fileName)
+        emit endFolder();
 }
 
 
-void KIEBookmarkImporter::parseIEBookmarks( )
+void KIEBookmarkImporter::parseIEBookmarks()
 {
-    parseIEBookmarks_dir( m_fileName );
+    parseIEBookmarks_dir(m_fileName);
 }
 
 QString KIEBookmarkImporter::IEBookmarksDir()
 {
-   static KIEBookmarkImporterImpl* p = 0;
-   if (!p) 
-       p = new KIEBookmarkImporterImpl;
-   return p->findDefaultLocation();
+    static KIEBookmarkImporterImpl *p = 0;
+    if(!p)
+        p = new KIEBookmarkImporterImpl;
+    return p->findDefaultLocation();
 }
 
-void KIEBookmarkImporterImpl::parse() {
-   KIEBookmarkImporter importer(m_fileName);
-   setupSignalForwards(&importer, this);
-   importer.parseIEBookmarks();
+void KIEBookmarkImporterImpl::parse()
+{
+    KIEBookmarkImporter importer(m_fileName);
+    setupSignalForwards(&importer, this);
+    importer.parseIEBookmarks();
 }
 
 QString KIEBookmarkImporterImpl::findDefaultLocation(bool) const
 {
-    // notify user that they must give a new dir such 
+    // notify user that they must give a new dir such
     // as "Favourites" as otherwise it'll just place
     // lots of .url files in the given dir and gui
     // stuff in the exporter is ugly so that exclues
@@ -135,51 +146,62 @@ QString KIEBookmarkImporterImpl::findDefaultLocation(bool) const
 
 class IEExporter : private KBookmarkGroupTraverser {
 public:
-    IEExporter( const QString & );
-    void write( const KBookmarkGroup &grp ) { traverse(grp); };
+    IEExporter(const QString &);
+    void write(const KBookmarkGroup &grp)
+    {
+        traverse(grp);
+    };
+
 private:
-    virtual void visit( const KBookmark & );
-    virtual void visitEnter( const KBookmarkGroup & );
-    virtual void visitLeave( const KBookmarkGroup & );
+    virtual void visit(const KBookmark &);
+    virtual void visitEnter(const KBookmarkGroup &);
+    virtual void visitLeave(const KBookmarkGroup &);
+
 private:
     QDir m_currentDir;
 };
 
-static QString ieStyleQuote( const QString &str ) {
+static QString ieStyleQuote(const QString &str)
+{
     QString s(str);
     s.replace(QRegExp("[/\\:*?\"<>|]"), "_");
     return s;
 }
 
-IEExporter::IEExporter( const QString & dname ) {
-    m_currentDir.setPath( dname );
+IEExporter::IEExporter(const QString &dname)
+{
+    m_currentDir.setPath(dname);
 }
 
-void IEExporter::visit( const KBookmark &bk ) {
-    QString fname = m_currentDir.path() + "/" + ieStyleQuote( bk.fullText() ) + ".url";
+void IEExporter::visit(const KBookmark &bk)
+{
+    QString fname = m_currentDir.path() + "/" + ieStyleQuote(bk.fullText()) + ".url";
     // kdDebug() << "visit(" << bk.text() << "), fname == " << fname << endl;
-    QFile file( fname );
-    file.open( IO_WriteOnly );
-    QTextStream ts( &file );
+    QFile file(fname);
+    file.open(IO_WriteOnly);
+    QTextStream ts(&file);
     ts << "[InternetShortcut]\r\n";
     ts << "URL=" << bk.url().url().utf8() << "\r\n";
 }
 
-void IEExporter::visitEnter( const KBookmarkGroup &grp ) {
-    QString dname = m_currentDir.path() + "/" + ieStyleQuote( grp.fullText() );
+void IEExporter::visitEnter(const KBookmarkGroup &grp)
+{
+    QString dname = m_currentDir.path() + "/" + ieStyleQuote(grp.fullText());
     // kdDebug() << "visitEnter(" << grp.text() << "), dname == " << dname << endl;
-    m_currentDir.mkdir( dname );
-    m_currentDir.cd( dname );
+    m_currentDir.mkdir(dname);
+    m_currentDir.cd(dname);
 }
 
-void IEExporter::visitLeave( const KBookmarkGroup & ) {
+void IEExporter::visitLeave(const KBookmarkGroup &)
+{
     // kdDebug() << "visitLeave()" << endl;
     m_currentDir.cdUp();
 }
 
-void KIEBookmarkExporterImpl::write(KBookmarkGroup parent) {
-    IEExporter exporter( m_fileName );
-    exporter.write( parent );
+void KIEBookmarkExporterImpl::write(KBookmarkGroup parent)
+{
+    IEExporter exporter(m_fileName);
+    exporter.write(parent);
 }
 
 #include "kbookmarkimporter_ie.moc"

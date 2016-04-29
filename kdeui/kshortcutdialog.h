@@ -38,59 +38,61 @@ class KShortcutDialogAdvanced;
  * @see KKeyDialog
  * @since 3.4
  */
-class KDEUI_EXPORT KShortcutDialog : public KDialogBase
-{
-	Q_OBJECT
+class KDEUI_EXPORT KShortcutDialog : public KDialogBase {
+    Q_OBJECT
 public:
-	KShortcutDialog( const KShortcut& shortcut, bool bQtShortcut, QWidget* parent = 0, const char* name = 0 );
-	~KShortcutDialog();
+    KShortcutDialog(const KShortcut &shortcut, bool bQtShortcut, QWidget *parent = 0, const char *name = 0);
+    ~KShortcutDialog();
 
-	void setShortcut( const KShortcut & shortcut );
-	const KShortcut& shortcut() const { return m_shortcut; }
+    void setShortcut(const KShortcut &shortcut);
+    const KShortcut &shortcut() const
+    {
+        return m_shortcut;
+    }
 
 private:
-	// true if qt shortcut, false if native shortcut
-	bool m_bQtShortcut;
+    // true if qt shortcut, false if native shortcut
+    bool m_bQtShortcut;
 
-	KShortcut m_shortcut;
-	bool m_bGrab;
-	KPushButton* m_ptxtCurrent;
-	uint m_iSeq;
-	uint m_iKey;
-	bool m_bRecording;
-	uint m_mod;
-	KShortcutDialogSimple *m_simple;
-	KShortcutDialogAdvanced *m_adv;
-	QVBox *m_stack;
-	
-	void updateShortcutDisplay();
-	//void displayMods();
-	void keyPressed( KKey key );
-	void updateDetails();
+    KShortcut m_shortcut;
+    bool m_bGrab;
+    KPushButton *m_ptxtCurrent;
+    uint m_iSeq;
+    uint m_iKey;
+    bool m_bRecording;
+    uint m_mod;
+    KShortcutDialogSimple *m_simple;
+    KShortcutDialogAdvanced *m_adv;
+    QVBox *m_stack;
 
-	#ifdef Q_WS_X11
-	virtual bool x11Event( XEvent *pEvent );
-	//void x11EventKeyPress( XEvent *pEvent );
-	void x11KeyPressEvent( XEvent* pEvent );
-	void x11KeyReleaseEvent( XEvent* pEvent );
-	#endif
-	#ifdef Q_WS_WIN
-	virtual void keyPressEvent( QKeyEvent * e );
-	virtual bool event(QEvent * e);
-	#endif
+    void updateShortcutDisplay();
+    // void displayMods();
+    void keyPressed(KKey key);
+    void updateDetails();
+
+#ifdef Q_WS_X11
+    virtual bool x11Event(XEvent *pEvent);
+    // void x11EventKeyPress( XEvent *pEvent );
+    void x11KeyPressEvent(XEvent *pEvent);
+    void x11KeyReleaseEvent(XEvent *pEvent);
+#endif
+#ifdef Q_WS_WIN
+    virtual void keyPressEvent(QKeyEvent *e);
+    virtual bool event(QEvent *e);
+#endif
 
 protected slots:
-	void slotDetails();
-	void slotSelectPrimary();
-	void slotSelectAlternate();
-	void slotClearShortcut();
-	void slotClearPrimary();
-	void slotClearAlternate();
-	void slotMultiKeyMode( bool bOn );
+    void slotDetails();
+    void slotSelectPrimary();
+    void slotSelectAlternate();
+    void slotClearShortcut();
+    void slotClearPrimary();
+    void slotClearAlternate();
+    void slotMultiKeyMode(bool bOn);
 
 private:
-        class KShortcutDialogPrivate* d;
-        static bool s_showMore;
+    class KShortcutDialogPrivate *d;
+    static bool s_showMore;
 };
 
 #endif // _KSHORTCUTDIALOG_H_

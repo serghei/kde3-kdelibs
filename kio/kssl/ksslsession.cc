@@ -27,56 +27,61 @@
 #include <kopenssl.h>
 #include <kmdcodec.h>
 
-KSSLSession::KSSLSession() : _session(0L) {
+KSSLSession::KSSLSession() : _session(0L)
+{
 }
 
 
-KSSLSession::~KSSLSession() {
+KSSLSession::~KSSLSession()
+{
 #ifdef KSSL_HAVE_SSL
-	if (_session) {
-		KOpenSSLProxy::self()->SSL_SESSION_free(static_cast<SSL_SESSION*>(_session));
-		_session = 0L;
-	}
+    if(_session)
+    {
+        KOpenSSLProxy::self()->SSL_SESSION_free(static_cast< SSL_SESSION * >(_session));
+        _session = 0L;
+    }
 #endif
 }
 
 
-QString KSSLSession::toString() const {
-QString rc;
+QString KSSLSession::toString() const
+{
+    QString rc;
 #ifdef KSSL_HAVE_SSL
-QByteArray qba;
-SSL_SESSION *session = static_cast<SSL_SESSION*>(_session);
-unsigned int slen = KOpenSSLProxy::self()->i2d_SSL_SESSION(session, 0L);
-unsigned char *csess = new unsigned char[slen];
-unsigned char *p = csess;
+    QByteArray qba;
+    SSL_SESSION *session = static_cast< SSL_SESSION * >(_session);
+    unsigned int slen = KOpenSSLProxy::self()->i2d_SSL_SESSION(session, 0L);
+    unsigned char *csess = new unsigned char[slen];
+    unsigned char *p = csess;
 
-	if (!KOpenSSLProxy::self()->i2d_SSL_SESSION(session, &p)) {
-		delete[] csess;
-		return QString::null;
-	}
+    if(!KOpenSSLProxy::self()->i2d_SSL_SESSION(session, &p))
+    {
+        delete[] csess;
+        return QString::null;
+    }
 
-	// encode it into a QString
-	qba.duplicate((const char*)csess, slen);
-	delete[] csess;
-	rc = KCodecs::base64Encode(qba);
+    // encode it into a QString
+    qba.duplicate((const char *)csess, slen);
+    delete[] csess;
+    rc = KCodecs::base64Encode(qba);
 #endif
-return rc;
+    return rc;
 }
 
 
-KSSLSession *KSSLSession::fromString(const QString& s) {
-KSSLSession *session = 0L;
+KSSLSession *KSSLSession::fromString(const QString &s)
+{
+    KSSLSession *session = 0L;
 #ifdef KSSL_HAVE_SSL
-QByteArray qba, qbb = s.local8Bit().copy();
-	KCodecs::base64Decode(qbb, qba);
-	unsigned char *qbap = reinterpret_cast<unsigned char *>(qba.data());
-	SSL_SESSION *ss = KOSSL::self()->d2i_SSL_SESSION(0L, &qbap, qba.size());
-        if (ss) {
-		session = new KSSLSession;
-		session->_session = ss;
-        }
+    QByteArray qba, qbb = s.local8Bit().copy();
+    KCodecs::base64Decode(qbb, qba);
+    unsigned char *qbap = reinterpret_cast< unsigned char * >(qba.data());
+    SSL_SESSION *ss = KOSSL::self()->d2i_SSL_SESSION(0L, &qbap, qba.size());
+    if(ss)
+    {
+        session = new KSSLSession;
+        session->_session = ss;
+    }
 #endif
-return session;
+    return session;
 }
-
-

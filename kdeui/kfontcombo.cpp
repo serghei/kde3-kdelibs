@@ -31,14 +31,7 @@
 
 struct KFontComboPrivate
 {
-    KFontComboPrivate()
-        : bold(false),
-          italic(false),
-          underline(false),
-          strikeOut(false),
-	  modified(false),
-          size(0),
-          lineSpacing(0)
+    KFontComboPrivate() : bold(false), italic(false), underline(false), strikeOut(false), modified(false), size(0), lineSpacing(0)
     {
     }
 
@@ -53,8 +46,7 @@ struct KFontComboPrivate
     QString defaultFamily;
 };
 
-class KFontListItem : public QListBoxItem
-{
+class KFontListItem : public QListBoxItem {
 public:
     KFontListItem(const QString &fontName, KFontCombo *combo);
     virtual ~KFontListItem();
@@ -78,11 +70,7 @@ private:
 };
 
 KFontListItem::KFontListItem(const QString &fontName, KFontCombo *combo)
-    : QListBoxItem(combo->listBox()),
-      m_combo(combo),
-      m_fontName(fontName),
-      m_font(0),
-      m_canPaintName(true)
+    : QListBoxItem(combo->listBox()), m_combo(combo), m_fontName(fontName), m_font(0), m_canPaintName(true)
 {
     setText(fontName);
 }
@@ -94,14 +82,14 @@ KFontListItem::~KFontListItem()
 
 int KFontListItem::width(const QListBox *lb) const
 {
-    if (m_font)
-       return QFontMetrics(*m_font).width(text()) + 6;
+    if(m_font)
+        return QFontMetrics(*m_font).width(text()) + 6;
     return lb->fontMetrics().width(text()) + 6;
 }
 
 int KFontListItem::height(const QListBox *lb) const
 {
-    if (m_combo->d->displayFonts)
+    if(m_combo->d->displayFonts)
         return m_combo->d->lineSpacing + 2;
     QFontMetrics fm(lb->fontMetrics());
     return fm.lineSpacing() + 2;
@@ -109,15 +97,15 @@ int KFontListItem::height(const QListBox *lb) const
 
 void KFontListItem::paint(QPainter *p)
 {
-    if (m_combo->d->displayFonts)
+    if(m_combo->d->displayFonts)
     {
-        if (!m_font)
+        if(!m_font)
             createFont();
 
         QString t = m_fontName;
-        if (p->device() != m_combo)
+        if(p->device() != m_combo)
         {
-            if (m_canPaintName)
+            if(m_canPaintName)
                 p->setFont(*m_font);
             else
                 t = QString::fromLatin1("(%1)").arg(m_fontName);
@@ -134,7 +122,7 @@ void KFontListItem::paint(QPainter *p)
 
 void KFontListItem::updateFont()
 {
-    if (!m_font)
+    if(!m_font)
         return;
 
     m_font->setBold(m_combo->d->bold);
@@ -146,13 +134,13 @@ void KFontListItem::updateFont()
 
 void KFontListItem::createFont()
 {
-    if (m_font)
+    if(m_font)
         return;
 
     m_font = new QFont(m_fontName);
     QFontMetrics fm(*m_font);
-    for (unsigned int i = 0; i < m_fontName.length(); ++i)
-        if (!fm.inFont(m_fontName[i]))
+    for(unsigned int i = 0; i < m_fontName.length(); ++i)
+        if(!fm.inFont(m_fontName[i]))
         {
             m_canPaintName = false;
             break;
@@ -160,8 +148,7 @@ void KFontListItem::createFont()
     updateFont();
 }
 
-KFontCombo::KFontCombo(QWidget *parent, const char *name)
-    : KComboBox(true, parent, name)
+KFontCombo::KFontCombo(QWidget *parent, const char *name) : KComboBox(true, parent, name)
 {
     init();
     QStringList families;
@@ -169,8 +156,7 @@ KFontCombo::KFontCombo(QWidget *parent, const char *name)
     setFonts(families);
 }
 
-KFontCombo::KFontCombo(const QStringList &fonts, QWidget *parent, const char *name)
-    : KComboBox(true, parent, name)
+KFontCombo::KFontCombo(const QStringList &fonts, QWidget *parent, const char *name) : KComboBox(true, parent, name)
 {
     init();
     setFonts(fonts);
@@ -179,7 +165,7 @@ KFontCombo::KFontCombo(const QStringList &fonts, QWidget *parent, const char *na
 void KFontCombo::setFonts(const QStringList &fonts)
 {
     clear();
-    for (QStringList::ConstIterator it = fonts.begin(); it != fonts.end(); ++it)
+    for(QStringList::ConstIterator it = fonts.begin(); it != fonts.end(); ++it)
         new KFontListItem(*it, this);
 }
 
@@ -192,53 +178,53 @@ void KFontCombo::setCurrentFont(const QString &family)
     int c = count();
     for(int i = 0; i < c; i++)
     {
-       if (text(i).lower() == lowerName)
-       {
-          setCurrentItem(i);
-          d->defaultFamily = text(i);
-	  d->modified = false;
-          return;
-       }
+        if(text(i).lower() == lowerName)
+        {
+            setCurrentItem(i);
+            d->defaultFamily = text(i);
+            d->modified = false;
+            return;
+        }
     }
     int x = lowerName.find(" [");
-    if (x>-1)
+    if(x > -1)
     {
-       lowerName = lowerName.left(x);
-       for(int i = 0; i < c; i++)
-       {
-          if (text(i).lower() == lowerName)
-          {
-             setCurrentItem(i);
-             d->defaultFamily = text(i);
-	     d->modified = false;
-             return;
-          }
-       }
+        lowerName = lowerName.left(x);
+        for(int i = 0; i < c; i++)
+        {
+            if(text(i).lower() == lowerName)
+            {
+                setCurrentItem(i);
+                d->defaultFamily = text(i);
+                d->modified = false;
+                return;
+            }
+        }
     }
 
     lowerName += " [";
     for(int i = 0; i < c; i++)
     {
-       if (text(i).lower().startsWith(lowerName))
-       {
-          setCurrentItem(i);
-          d->defaultFamily = text(i);
-	  d->modified = false;
-          return;
-       }
+        if(text(i).lower().startsWith(lowerName))
+        {
+            setCurrentItem(i);
+            d->defaultFamily = text(i);
+            d->modified = false;
+            return;
+        }
     }
 }
 
-void KFontCombo::slotModified( int )
+void KFontCombo::slotModified(int)
 {
-   d->modified = 1;
+    d->modified = 1;
 }
 
 QString KFontCombo::currentFont() const
 {
-   if (d->modified)
-      return currentText();
-   return d->defaultFamily;
+    if(d->modified)
+        return currentText();
+    return d->defaultFamily;
 }
 
 void KFontCombo::setCurrentItem(int i)
@@ -254,7 +240,7 @@ void KFontCombo::init()
     setInsertionPolicy(NoInsertion);
     setAutoCompletion(true);
     setSize(12);
-    connect( this, SIGNAL(highlighted(int)), SLOT(slotModified(int)));
+    connect(this, SIGNAL(highlighted(int)), SLOT(slotModified(int)));
 }
 
 KFontCombo::~KFontCombo()
@@ -264,7 +250,7 @@ KFontCombo::~KFontCombo()
 
 void KFontCombo::setBold(bool bold)
 {
-    if (d->bold == bold)
+    if(d->bold == bold)
         return;
     d->bold = bold;
     updateFonts();
@@ -277,7 +263,7 @@ bool KFontCombo::bold() const
 
 void KFontCombo::setItalic(bool italic)
 {
-    if (d->italic == italic)
+    if(d->italic == italic)
         return;
     d->italic = italic;
     updateFonts();
@@ -290,7 +276,7 @@ bool KFontCombo::italic() const
 
 void KFontCombo::setUnderline(bool underline)
 {
-    if (d->underline == underline)
+    if(d->underline == underline)
         return;
     d->underline = underline;
     updateFonts();
@@ -303,7 +289,7 @@ bool KFontCombo::underline() const
 
 void KFontCombo::setStrikeOut(bool strikeOut)
 {
-    if (d->strikeOut == strikeOut)
+    if(d->strikeOut == strikeOut)
         return;
     d->strikeOut = strikeOut;
     updateFonts();
@@ -316,7 +302,7 @@ bool KFontCombo::strikeOut() const
 
 void KFontCombo::setSize(int size)
 {
-    if (d->size == size)
+    if(d->size == size)
         return;
     d->size = size;
     QFont f;
@@ -333,12 +319,12 @@ int KFontCombo::size() const
 
 void KFontCombo::updateFonts()
 {
-    if (!d->displayFonts)
+    if(!d->displayFonts)
         return;
 
-    for (unsigned int i = 0; i < listBox()->count(); ++i)
+    for(unsigned int i = 0; i < listBox()->count(); ++i)
     {
-        KFontListItem *item = static_cast<KFontListItem *>(listBox()->item(i));
+        KFontListItem *item = static_cast< KFontListItem * >(listBox()->item(i));
         item->updateFont();
     }
 }
@@ -349,6 +335,7 @@ bool KFontCombo::displayFonts()
     return KGlobal::config()->readBoolEntry("DisplayFontItems", true);
 }
 
-void KFontCombo::virtual_hook( int id, void* data )
-{ KComboBox::virtual_hook( id, data ); }
-
+void KFontCombo::virtual_hook(int id, void *data)
+{
+    KComboBox::virtual_hook(id, data);
+}

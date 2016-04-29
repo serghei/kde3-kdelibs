@@ -1,24 +1,24 @@
-    /*
+/*
 
-    Copyright (C) 2000,2001 Stefan Westerfeld
-                            stefan@space.twc.de
+Copyright (C) 2000,2001 Stefan Westerfeld
+                        stefan@space.twc.de
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-  
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-   
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-    */
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
+
+*/
 
 #include <iostream>
 #include "asyncschedule.h"
@@ -84,9 +84,9 @@ this, then:
    4-S. the NotificationManager delivers the DataPackets to the ASyncNetSend
    5-S. the ASyncNetSend::notify method gets called, which in turn converts
         the packet to a network message
-    
-	... network transfer ...
-   
+
+    ... network transfer ...
+
    6-R. the ASyncNetReceive::receive method gets called - the method creates
         a new data packet, and sends it using the NotificationManager again
    7-R. the NotificationManager delivers the DataPacket to the receiver
@@ -94,8 +94,8 @@ this, then:
    9-R. the packet informs the ASyncNetReceive::processedPacket() which
         frees the packet and tells the (remote) sender that it went all right
 
-	... network transfer ...
- 
+    ... network transfer ...
+
    10-S. eventually, ASyncNetSend::processed() gets called, and confirms
          the packet using "packet->processed()"
    11-S. the packet informs the ASyncPort::processedPacket()
@@ -122,370 +122,369 @@ variant(pulling):
 
 #undef DEBUG_ASYNC_TRANSFER
 
-ASyncPort::ASyncPort(const std::string& name, void *ptr, long flags,
-		StdScheduleNode* parent) : Port(name, ptr, flags, parent), pull(false)
+ASyncPort::ASyncPort(const std::string &name, void *ptr, long flags, StdScheduleNode *parent) : Port(name, ptr, flags, parent), pull(false)
 {
-	stream = (GenericAsyncStream *)ptr;
-	stream->channel = this;
-	stream->_notifyID = notifyID = parent->object()->_mkNotifyID();
+    stream = (GenericAsyncStream *)ptr;
+    stream->channel = this;
+    stream->_notifyID = notifyID = parent->object()->_mkNotifyID();
 }
 
 ASyncPort::~ASyncPort()
 {
-	/* 
-	 * tell all outstanding packets that we don't exist any longer, so that
-	 * if they feel like they need to confirm they have been processed now,
-	 * they don't talk to an no longer existing object about it
-	 */
-	while(!sent.empty())
-	{
-		sent.front()->channel = 0;
-		sent.pop_front();
-	}
+    /*
+     * tell all outstanding packets that we don't exist any longer, so that
+     * if they feel like they need to confirm they have been processed now,
+     * they don't talk to an no longer existing object about it
+     */
+    while(!sent.empty())
+    {
+        sent.front()->channel = 0;
+        sent.pop_front();
+    }
 
-	/* disconnect remote connections (if present): the following things will
-	 * need to be ensured here, since we are being deleted:
+    /* disconnect remote connections (if present): the following things will
+     * need to be ensured here, since we are being deleted:
      *
-	 *  - the senders should not talk to us after our destructor
-	 *  - all of our connections need to be disconnected
-	 *  - every connection needs to be closed exactly once
+     *  - the senders should not talk to us after our destructor
+     *  - all of our connections need to be disconnected
+     *  - every connection needs to be closed exactly once
      *
-	 * (closing a connection can cause reentrancy due to mcop communication)
-	 */
-	while(!netSenders.empty())
-		netSenders.front()->disconnect();
+     * (closing a connection can cause reentrancy due to mcop communication)
+     */
+    while(!netSenders.empty())
+        netSenders.front()->disconnect();
 
-	FlowSystemReceiver receiver = netReceiver;
-	if(!receiver.isNull())
-		receiver.disconnect();
+    FlowSystemReceiver receiver = netReceiver;
+    if(!receiver.isNull())
+        receiver.disconnect();
 }
 
 //-------------------- GenericDataChannel interface -------------------------
 
 void ASyncPort::setPull(int packets, int capacity)
 {
-	pullNotification.receiver = parent->object();
-	pullNotification.ID = notifyID;
-	pullNotification.internal = 0;
-	pull = true;
+    pullNotification.receiver = parent->object();
+    pullNotification.ID = notifyID;
+    pullNotification.internal = 0;
+    pull = true;
 
-	for(int i=0;i<packets;i++)
-	{
-		GenericDataPacket *packet = stream->createPacket(capacity);
-		packet->useCount = 0;
-		pullNotification.data = packet;
-		NotificationManager::the()->send(pullNotification);
-	}
+    for(int i = 0; i < packets; i++)
+    {
+        GenericDataPacket *packet = stream->createPacket(capacity);
+        packet->useCount = 0;
+        pullNotification.data = packet;
+        NotificationManager::the()->send(pullNotification);
+    }
 }
 
 void ASyncPort::endPull()
 {
-	pull = false;
-	// TODO: maybe remove all pending pull packets here
+    pull = false;
+    // TODO: maybe remove all pending pull packets here
 }
 
 void ASyncPort::processedPacket(GenericDataPacket *packet)
 {
-	int count = 0;
-	list<GenericDataPacket *>::iterator i = sent.begin();
-	while(i != sent.end())
-	{
-		if(*i == packet)
-		{
-			count++;
-			i = sent.erase(i);
-		}
-		else i++;
-	}
-	assert(count == 1);
+    int count = 0;
+    list< GenericDataPacket * >::iterator i = sent.begin();
+    while(i != sent.end())
+    {
+        if(*i == packet)
+        {
+            count++;
+            i = sent.erase(i);
+        }
+        else
+            i++;
+    }
+    assert(count == 1);
 
 #ifdef DEBUG_ASYNC_TRANSFER
-	cout << "port::processedPacket" << endl;
+    cout << "port::processedPacket" << endl;
 #endif
-	assert(packet->useCount == 0);
-	if(pull)
-	{
-		pullNotification.data = packet;
-		NotificationManager::the()->send(pullNotification);
-	}
-	else
-	{
-		stream->freePacket(packet);
-	}
+    assert(packet->useCount == 0);
+    if(pull)
+    {
+        pullNotification.data = packet;
+        NotificationManager::the()->send(pullNotification);
+    }
+    else
+    {
+        stream->freePacket(packet);
+    }
 }
 
 void ASyncPort::sendPacket(GenericDataPacket *packet)
 {
-	bool sendOk = false;
+    bool sendOk = false;
 
 #ifdef DEBUG_ASYNC_TRANSFER
-	cout << "port::sendPacket" << endl;
+    cout << "port::sendPacket" << endl;
 #endif
 
-	if(packet->size > 0)
-	{
-		vector<Notification>::iterator i;
-		for(i=subscribers.begin(); i != subscribers.end(); i++)
-		{
-			Notification n = *i;
-			n.data = packet;
-			packet->useCount++;
+    if(packet->size > 0)
+    {
+        vector< Notification >::iterator i;
+        for(i = subscribers.begin(); i != subscribers.end(); i++)
+        {
+            Notification n = *i;
+            n.data = packet;
+            packet->useCount++;
 #ifdef DEBUG_ASYNC_TRANSFER
-			cout << "sending notification " << n.ID << endl;
+            cout << "sending notification " << n.ID << endl;
 #endif
-			NotificationManager::the()->send(n);
-			sendOk = true;
-		}
-	}
+            NotificationManager::the()->send(n);
+            sendOk = true;
+        }
+    }
 
-	if(sendOk)
-		sent.push_back(packet);
-	else
-		stream->freePacket(packet);
+    if(sendOk)
+        sent.push_back(packet);
+    else
+        stream->freePacket(packet);
 }
 
 //----------------------- Port interface ------------------------------------
 
 void ASyncPort::connect(Port *xsource)
 {
-	arts_debug("port(%s)::connect",_name.c_str());
+    arts_debug("port(%s)::connect", _name.c_str());
 
-	ASyncPort *source = xsource->asyncPort();
-	assert(source);
-	addAutoDisconnect(xsource);
+    ASyncPort *source = xsource->asyncPort();
+    assert(source);
+    addAutoDisconnect(xsource);
 
-	Notification n;
-	n.receiver = parent->object();
-	n.ID = notifyID;
-	n.internal = 0;
-	source->subscribers.push_back(n);
+    Notification n;
+    n.receiver = parent->object();
+    n.ID = notifyID;
+    n.internal = 0;
+    source->subscribers.push_back(n);
 }
 
 void ASyncPort::disconnect(Port *xsource)
 {
-	arts_debug("port::disconnect");
+    arts_debug("port::disconnect");
 
-	ASyncPort *source = xsource->asyncPort();
-	assert(source);
-	removeAutoDisconnect(xsource);
+    ASyncPort *source = xsource->asyncPort();
+    assert(source);
+    removeAutoDisconnect(xsource);
 
-	// remove our subscription from the source object
-	vector<Notification>::iterator si;
-	for(si = source->subscribers.begin(); si != source->subscribers.end(); si++)
-	{
-		if(si->receiver == parent->object())
-		{
-			source->subscribers.erase(si);
-			return;
-		}
-	}
+    // remove our subscription from the source object
+    vector< Notification >::iterator si;
+    for(si = source->subscribers.begin(); si != source->subscribers.end(); si++)
+    {
+        if(si->receiver == parent->object())
+        {
+            source->subscribers.erase(si);
+            return;
+        }
+    }
 
-	// there should have been exactly one, so this shouldn't be reached
-	assert(false);
+    // there should have been exactly one, so this shouldn't be reached
+    assert(false);
 }
 
 ASyncPort *ASyncPort::asyncPort()
 {
-	return this;
+    return this;
 }
 
 GenericAsyncStream *ASyncPort::receiveNetCreateStream()
 {
-	return stream->createNewStream();
+    return stream->createNewStream();
 }
 
 NotificationClient *ASyncPort::receiveNetObject()
 {
-	return parent->object();
+    return parent->object();
 }
 
 long ASyncPort::receiveNetNotifyID()
 {
-	return notifyID;
+    return notifyID;
 }
 
 // Network transparency
 void ASyncPort::addSendNet(ASyncNetSend *netsend)
 {
-	Notification n;
-	n.receiver = netsend;
-	n.ID = netsend->notifyID();
-	n.internal = 0;
-	subscribers.push_back(n);
-	netSenders.push_back(netsend);
+    Notification n;
+    n.receiver = netsend;
+    n.ID = netsend->notifyID();
+    n.internal = 0;
+    subscribers.push_back(n);
+    netSenders.push_back(netsend);
 }
 
 void ASyncPort::removeSendNet(ASyncNetSend *netsend)
 {
-	arts_return_if_fail(netsend != 0);
-	netSenders.remove(netsend);
+    arts_return_if_fail(netsend != 0);
+    netSenders.remove(netsend);
 
-	vector<Notification>::iterator si;
-	for(si = subscribers.begin(); si != subscribers.end(); si++)
-	{
-		if(si->receiver == netsend)
-		{
-			subscribers.erase(si);
-			return;
-		}
-	}
-	arts_warning("Failed to remove ASyncNetSend (%p) from ASyncPort", netsend);
+    vector< Notification >::iterator si;
+    for(si = subscribers.begin(); si != subscribers.end(); si++)
+    {
+        if(si->receiver == netsend)
+        {
+            subscribers.erase(si);
+            return;
+        }
+    }
+    arts_warning("Failed to remove ASyncNetSend (%p) from ASyncPort", netsend);
 }
 
 void ASyncPort::setNetReceiver(ASyncNetReceive *receiver)
 {
-	arts_return_if_fail(receiver != 0);
+    arts_return_if_fail(receiver != 0);
 
-	FlowSystemReceiver r = FlowSystemReceiver::_from_base(receiver->_copy());
-	netReceiver = r;
+    FlowSystemReceiver r = FlowSystemReceiver::_from_base(receiver->_copy());
+    netReceiver = r;
 }
 
-void ASyncPort::disconnectRemote(const string& dest)
+void ASyncPort::disconnectRemote(const string &dest)
 {
-	list<ASyncNetSend *>::iterator i;
+    list< ASyncNetSend * >::iterator i;
 
-	for(i = netSenders.begin(); i != netSenders.end(); i++)
-	{
-		if((*i)->dest() == dest)
-		{
-			(*i)->disconnect();
-			return;
-		}
-	}
-	arts_warning("failed to disconnect %s in ASyncPort", dest.c_str());
+    for(i = netSenders.begin(); i != netSenders.end(); i++)
+    {
+        if((*i)->dest() == dest)
+        {
+            (*i)->disconnect();
+            return;
+        }
+    }
+    arts_warning("failed to disconnect %s in ASyncPort", dest.c_str());
 }
 
-ASyncNetSend::ASyncNetSend(ASyncPort *ap, const std::string& dest) : ap(ap)
+ASyncNetSend::ASyncNetSend(ASyncPort *ap, const std::string &dest) : ap(ap)
 {
-	_dest = dest;
-	ap->addSendNet(this);
+    _dest = dest;
+    ap->addSendNet(this);
 }
 
 ASyncNetSend::~ASyncNetSend()
 {
-	while(!pqueue.empty())
-	{
-		pqueue.front()->processed();
-		pqueue.pop();
-	}
-	if(ap)
-	{
-		ap->removeSendNet(this);
-		ap = 0;
-	}
+    while(!pqueue.empty())
+    {
+        pqueue.front()->processed();
+        pqueue.pop();
+    }
+    if(ap)
+    {
+        ap->removeSendNet(this);
+        ap = 0;
+    }
 }
 
 long ASyncNetSend::notifyID()
 {
-	return 1;
+    return 1;
 }
 
-void ASyncNetSend::notify(const Notification& notification)
+void ASyncNetSend::notify(const Notification &notification)
 {
-	// got a packet?
-	assert(notification.ID == notifyID());
-	GenericDataPacket *dp = (GenericDataPacket *)notification.data;
-	pqueue.push(dp);
+    // got a packet?
+    assert(notification.ID == notifyID());
+    GenericDataPacket *dp = (GenericDataPacket *)notification.data;
+    pqueue.push(dp);
 
-	/*
-	 * since packets are delivered asynchronously, and since disconnection
-	 * involves communication, it might happen that we get a packet without
-	 * actually being connected any longer - in that case, silently forget it
-	 */
-	if(!receiver.isNull())
-	{
-		// put it into a custom data message and send it to the receiver
-		Buffer *buffer = receiver._allocCustomMessage(receiveHandlerID);
-		dp->write(*buffer);
-		receiver._sendCustomMessage(buffer);
-	}
+    /*
+     * since packets are delivered asynchronously, and since disconnection
+     * involves communication, it might happen that we get a packet without
+     * actually being connected any longer - in that case, silently forget it
+     */
+    if(!receiver.isNull())
+    {
+        // put it into a custom data message and send it to the receiver
+        Buffer *buffer = receiver._allocCustomMessage(receiveHandlerID);
+        dp->write(*buffer);
+        receiver._sendCustomMessage(buffer);
+    }
 }
 
 void ASyncNetSend::processed()
 {
-	assert(!pqueue.empty());
-	pqueue.front()->processed();
-	pqueue.pop();
+    assert(!pqueue.empty());
+    pqueue.front()->processed();
+    pqueue.pop();
 }
 
 void ASyncNetSend::setReceiver(FlowSystemReceiver newReceiver)
 {
-	receiver = newReceiver;
-	receiveHandlerID = newReceiver.receiveHandlerID();
+    receiver = newReceiver;
+    receiveHandlerID = newReceiver.receiveHandlerID();
 }
 
 void ASyncNetSend::disconnect()
 {
-	/* since disconnection will cause destruction (most likely immediate),
-	 * we'll reference ourselves ...  */
-	_copy();
+    /* since disconnection will cause destruction (most likely immediate),
+     * we'll reference ourselves ...  */
+    _copy();
 
-	if(!receiver.isNull())
-	{
-		FlowSystemReceiver r = receiver;
-		receiver = FlowSystemReceiver::null();
-		r.disconnect();
-	}
-	if(ap)
-	{
-		ap->removeSendNet(this);
-		ap = 0;
-	}
-	
-	_release();
+    if(!receiver.isNull())
+    {
+        FlowSystemReceiver r = receiver;
+        receiver = FlowSystemReceiver::null();
+        r.disconnect();
+    }
+    if(ap)
+    {
+        ap->removeSendNet(this);
+        ap = 0;
+    }
+
+    _release();
 }
 
 string ASyncNetSend::dest()
 {
-	return _dest;
+    return _dest;
 }
 
 /* dispatching function for custom message */
 
 static void _dispatch_ASyncNetReceive_receive(void *object, Buffer *buffer)
 {
-	((ASyncNetReceive *)object)->receive(buffer);
+    ((ASyncNetReceive *)object)->receive(buffer);
 }
 
 ASyncNetReceive::ASyncNetReceive(ASyncPort *port, FlowSystemSender sender)
 {
-	port->setNetReceiver(this);
-	stream = port->receiveNetCreateStream();
-	stream->channel = this;
-	this->sender = sender;
-	/* stream->_notifyID = _mkNotifyID(); */
+    port->setNetReceiver(this);
+    stream = port->receiveNetCreateStream();
+    stream->channel = this;
+    this->sender = sender;
+    /* stream->_notifyID = _mkNotifyID(); */
 
-	gotPacketNotification.ID = port->receiveNetNotifyID();
-	gotPacketNotification.receiver = port->receiveNetObject();
-	gotPacketNotification.internal = 0;
-	_receiveHandlerID =
-		_addCustomMessageHandler(_dispatch_ASyncNetReceive_receive,this);
+    gotPacketNotification.ID = port->receiveNetNotifyID();
+    gotPacketNotification.receiver = port->receiveNetObject();
+    gotPacketNotification.internal = 0;
+    _receiveHandlerID = _addCustomMessageHandler(_dispatch_ASyncNetReceive_receive, this);
 }
 
 ASyncNetReceive::~ASyncNetReceive()
 {
-	/* tell outstanding packets that we don't exist any longer */
-	while(!sent.empty())
-	{
-		sent.front()->channel = 0;
-		sent.pop_front();
-	}
-	delete stream;
+    /* tell outstanding packets that we don't exist any longer */
+    while(!sent.empty())
+    {
+        sent.front()->channel = 0;
+        sent.pop_front();
+    }
+    delete stream;
 }
 
 long ASyncNetReceive::receiveHandlerID()
 {
-	return _receiveHandlerID;
+    return _receiveHandlerID;
 }
 
 void ASyncNetReceive::receive(Buffer *buffer)
 {
-	GenericDataPacket *dp = stream->createPacket(512);
-	dp->read(*buffer);
-	dp->useCount = 1;
-	gotPacketNotification.data = dp;
-	NotificationManager::the()->send(gotPacketNotification);
-	sent.push_back(dp);
+    GenericDataPacket *dp = stream->createPacket(512);
+    dp->read(*buffer);
+    dp->useCount = 1;
+    gotPacketNotification.data = dp;
+    NotificationManager::the()->send(gotPacketNotification);
+    sent.push_back(dp);
 }
 
 /*
@@ -503,51 +502,51 @@ void ASyncNetReceive::receive(Buffer *buffer)
  */
 void ASyncNetReceive::processedPacket(GenericDataPacket *packet)
 {
-	/*
-	 * HACK! Upon disconnect, strange things will happen. One of them is
-	 * that we might, for the reason of not being referenced any longer,
-	 * cease to exist without warning. Another is that our nice "sender"
-	 * reference will get a null reference without warning, see disconnect
-	 * code (which will cause the attached stub to also disappear). As
-	 * those objects (especially the stub) are not prepared for not
-	 * being there any more in the middle of whatever they do, we here
-	 * explicitly reference us, and them, *again*, so that no evil things
-	 * will happen. A general solution for this would be garbage collection
-	 * in a timer, but until this is implemented (if it ever will become
-	 * implemented), we'll live with this hack.
-	 */
-	_copy();
-	sent.remove(packet);
-	stream->freePacket(packet);
-	if(!sender.isNull())
-	{
-		FlowSystemSender xsender = sender;
-		xsender.processed();
-	}
-	_release();
+    /*
+     * HACK! Upon disconnect, strange things will happen. One of them is
+     * that we might, for the reason of not being referenced any longer,
+     * cease to exist without warning. Another is that our nice "sender"
+     * reference will get a null reference without warning, see disconnect
+     * code (which will cause the attached stub to also disappear). As
+     * those objects (especially the stub) are not prepared for not
+     * being there any more in the middle of whatever they do, we here
+     * explicitly reference us, and them, *again*, so that no evil things
+     * will happen. A general solution for this would be garbage collection
+     * in a timer, but until this is implemented (if it ever will become
+     * implemented), we'll live with this hack.
+     */
+    _copy();
+    sent.remove(packet);
+    stream->freePacket(packet);
+    if(!sender.isNull())
+    {
+        FlowSystemSender xsender = sender;
+        xsender.processed();
+    }
+    _release();
 }
 
 void ASyncNetReceive::disconnect()
 {
-	if(!sender.isNull())
-	{
-		FlowSystemSender s = sender;
-		sender = FlowSystemSender::null();
-		s.disconnect();
-	}
+    if(!sender.isNull())
+    {
+        FlowSystemSender s = sender;
+        sender = FlowSystemSender::null();
+        s.disconnect();
+    }
 }
 
 void ASyncNetReceive::sendPacket(GenericDataPacket *)
 {
-	assert(false);
+    assert(false);
 }
 
 void ASyncNetReceive::setPull(int, int)
 {
-	assert(false);
+    assert(false);
 }
 
 void ASyncNetReceive::endPull()
 {
-	assert(false);
+    assert(false);
 }

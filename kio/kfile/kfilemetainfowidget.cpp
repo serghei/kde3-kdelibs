@@ -14,7 +14,7 @@
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
-  
+
     $Id: kfilemetainfowidget.cpp 465272 2005-09-29 09:47:40Z mueller $
  */
 
@@ -47,46 +47,34 @@
 
 */
 
-KFileMetaInfoWidget::KFileMetaInfoWidget(KFileMetaInfoItem item,
-                                         QValidator* val,
-                                         QWidget* parent, const char* name)
-    : QWidget(parent, name),
-      m_value(item.value()),
-      m_item(item),
-      m_validator(val)
+KFileMetaInfoWidget::KFileMetaInfoWidget(KFileMetaInfoItem item, QValidator *val, QWidget *parent, const char *name)
+    : QWidget(parent, name), m_value(item.value()), m_item(item), m_validator(val)
 {
     init(item, ReadWrite);
 }
 
-KFileMetaInfoWidget::KFileMetaInfoWidget(KFileMetaInfoItem item,
-                                         Mode mode,
-                                         QValidator* val,
-                                         QWidget* parent, const char* name)
-    : QWidget(parent, name),
-      m_value(item.value()),
-      m_item(item),
-      m_validator(val)
+KFileMetaInfoWidget::KFileMetaInfoWidget(KFileMetaInfoItem item, Mode mode, QValidator *val, QWidget *parent, const char *name)
+    : QWidget(parent, name), m_value(item.value()), m_item(item), m_validator(val)
 {
     init(item, mode);
 }
 
 void KFileMetaInfoWidget::init(KFileMetaInfoItem item, Mode mode)
 {
-    kdDebug(7033) << "*** item "  << m_item.key()
-                  << " is a " << value().typeName() << endl;
+    kdDebug(7033) << "*** item " << m_item.key() << " is a " << value().typeName() << endl;
 
-    if (m_item.isEditable() && !(mode & ReadOnly))
+    if(m_item.isEditable() && !(mode & ReadOnly))
         m_widget = makeWidget();
     else
-        switch (m_value.type())
+        switch(m_value.type())
         {
-            case QVariant::Image :
+            case QVariant::Image:
                 m_widget = new QLabel(this, "info image");
-                static_cast<QLabel*>(m_widget)->setPixmap(QPixmap(m_value.toImage()));
+                static_cast< QLabel * >(m_widget)->setPixmap(QPixmap(m_value.toImage()));
                 break;
-            case QVariant::Pixmap :
+            case QVariant::Pixmap:
                 m_widget = new QLabel(this, "info pixmap");
-                static_cast<QLabel*>(m_widget)->setPixmap(m_value.toPixmap());
+                static_cast< QLabel * >(m_widget)->setPixmap(m_value.toPixmap());
                 break;
             default:
                 m_widget = new QLabel(item.string(true), this, "info label");
@@ -99,41 +87,41 @@ KFileMetaInfoWidget::~KFileMetaInfoWidget()
 {
 }
 
-QWidget* KFileMetaInfoWidget::makeWidget()
+QWidget *KFileMetaInfoWidget::makeWidget()
 {
     QString valClass;
-    QWidget* w;
+    QWidget *w;
 
-    switch (m_value.type())
+    switch(m_value.type())
     {
-        case QVariant::Invalid:     // no type
+        case QVariant::Invalid: // no type
             // just make a label
             w = new QLabel(i18n("<Error>"), this, "label");
             break;
 
-        case QVariant::Int:         // an int
-        case QVariant::UInt:        // an unsigned int
+        case QVariant::Int:  // an int
+        case QVariant::UInt: // an unsigned int
             w = makeIntWidget();
             break;
 
-        case QVariant::Bool:        // a bool
+        case QVariant::Bool: // a bool
             w = makeBoolWidget();
             break;
 
-        case QVariant::Double:      // a double
+        case QVariant::Double: // a double
             w = makeDoubleWidget();
             break;
 
 
-        case QVariant::Date:        // a QDate
+        case QVariant::Date: // a QDate
             w = makeDateWidget();
             break;
 
-        case QVariant::Time:        // a QTime
+        case QVariant::Time: // a QTime
             w = makeTimeWidget();
             break;
 
-        case QVariant::DateTime:    // a QDateTime
+        case QVariant::DateTime: // a QDateTime
             w = makeDateTimeWidget();
             break;
 
@@ -167,9 +155,8 @@ QWidget* KFileMetaInfoWidget::makeWidget()
             w = makeStringWidget();
     }
 
-    kdDebug(7033) << "*** item " << m_item.key()
-                  << "is a " << m_item.value().typeName() << endl;
-    if (m_validator)
+    kdDebug(7033) << "*** item " << m_item.key() << "is a " << m_item.value().typeName() << endl;
+    if(m_validator)
         kdDebug(7033) << " and validator is a " << m_validator->className() << endl;
 
     kdDebug(7033) << "*** created a " << w->className() << " for it\n";
@@ -181,50 +168,49 @@ QWidget* KFileMetaInfoWidget::makeWidget()
 // now the different methods to make the widgets for specific types
 // ****************************************************************
 
-QWidget* KFileMetaInfoWidget::makeBoolWidget()
+QWidget *KFileMetaInfoWidget::makeBoolWidget()
 {
-    QCheckBox* cb = new QCheckBox(this, "metainfo bool widget");
+    QCheckBox *cb = new QCheckBox(this, "metainfo bool widget");
     cb->setChecked(m_item.value().toBool());
     connect(cb, SIGNAL(toggled(bool)), this, SLOT(slotChanged(bool)));
     return cb;
 }
 
-QWidget* KFileMetaInfoWidget::makeIntWidget()
+QWidget *KFileMetaInfoWidget::makeIntWidget()
 {
-    QSpinBox* sb = new QSpinBox(this, "metainfo integer widget");
+    QSpinBox *sb = new QSpinBox(this, "metainfo integer widget");
     sb->setValue(m_item.value().toInt());
 
-    if (m_validator)
+    if(m_validator)
     {
-        if (m_validator->inherits("QIntValidator"))
+        if(m_validator->inherits("QIntValidator"))
         {
-            sb->setMinValue(static_cast<QIntValidator*>(m_validator)->bottom());
-            sb->setMaxValue(static_cast<QIntValidator*>(m_validator)->top());
+            sb->setMinValue(static_cast< QIntValidator * >(m_validator)->bottom());
+            sb->setMaxValue(static_cast< QIntValidator * >(m_validator)->top());
         }
         reparentValidator(sb, m_validator);
         sb->setValidator(m_validator);
     }
 
     // make sure that an uint cannot be set to a value < 0
-    if (m_item.type() == QVariant::UInt)
+    if(m_item.type() == QVariant::UInt)
         sb->setMinValue(QMAX(sb->minValue(), 0));
 
     connect(sb, SIGNAL(valueChanged(int)), this, SLOT(slotChanged(int)));
     return sb;
 }
 
-QWidget* KFileMetaInfoWidget::makeDoubleWidget()
+QWidget *KFileMetaInfoWidget::makeDoubleWidget()
 {
-    KDoubleNumInput* dni = new KDoubleNumInput(m_item.value().toDouble(),
-                                               this, "metainfo double widget");
+    KDoubleNumInput *dni = new KDoubleNumInput(m_item.value().toDouble(), this, "metainfo double widget");
 
 
-    if (m_validator)
+    if(m_validator)
     {
-        if (m_validator->inherits("QDoubleValidator"))
+        if(m_validator->inherits("QDoubleValidator"))
         {
-            dni->setMinValue(static_cast<QDoubleValidator*>(m_validator)->bottom());
-            dni->setMaxValue(static_cast<QDoubleValidator*>(m_validator)->top());
+            dni->setMinValue(static_cast< QDoubleValidator * >(m_validator)->bottom());
+            dni->setMaxValue(static_cast< QDoubleValidator * >(m_validator)->top());
         }
         reparentValidator(dni, m_validator);
     }
@@ -233,13 +219,12 @@ QWidget* KFileMetaInfoWidget::makeDoubleWidget()
     return dni;
 }
 
-QWidget* KFileMetaInfoWidget::makeStringWidget()
+QWidget *KFileMetaInfoWidget::makeStringWidget()
 {
-    if (m_validator && m_validator->inherits("KStringListValidator"))
+    if(m_validator && m_validator->inherits("KStringListValidator"))
     {
-        KComboBox* b = new KComboBox(true, this, "metainfo combobox");
-        KStringListValidator* val = static_cast<KStringListValidator*>
-                                                    (m_validator);
+        KComboBox *b = new KComboBox(true, this, "metainfo combobox");
+        KStringListValidator *val = static_cast< KStringListValidator * >(m_validator);
         b->insertStringList(val->stringList());
         b->setCurrentText(m_item.value().toString());
         connect(b, SIGNAL(activated(const QString &)), this, SLOT(slotComboChanged(const QString &)));
@@ -248,51 +233,48 @@ QWidget* KFileMetaInfoWidget::makeStringWidget()
         return b;
     }
 
-    if ( m_item.attributes() & KFileMimeTypeInfo::MultiLine ) {
-        KEdit *edit = new KEdit( this );
-        edit->setText( m_item.value().toString() );
-        connect( edit, SIGNAL( textChanged() ),
-                 this, SLOT( slotMultiLineEditChanged() ));
+    if(m_item.attributes() & KFileMimeTypeInfo::MultiLine)
+    {
+        KEdit *edit = new KEdit(this);
+        edit->setText(m_item.value().toString());
+        connect(edit, SIGNAL(textChanged()), this, SLOT(slotMultiLineEditChanged()));
         // can't use a validator with a QTextEdit, but we may need to delete it
-        if ( m_validator )
-            reparentValidator( edit, m_validator );
+        if(m_validator)
+            reparentValidator(edit, m_validator);
         return edit;
     }
 
-    KLineEdit* e = new KLineEdit(m_item.value().toString(), this);
-    if (m_validator)
+    KLineEdit *e = new KLineEdit(m_item.value().toString(), this);
+    if(m_validator)
     {
         e->setValidator(m_validator);
         reparentValidator(e, m_validator);
     }
-    connect(e,    SIGNAL(textChanged(const QString&)),
-            this, SLOT(slotLineEditChanged(const QString&)));
+    connect(e, SIGNAL(textChanged(const QString &)), this, SLOT(slotLineEditChanged(const QString &)));
     return e;
 }
 
-QWidget* KFileMetaInfoWidget::makeDateWidget()
+QWidget *KFileMetaInfoWidget::makeDateWidget()
 {
-  QWidget *e = new QDateEdit(m_item.value().toDate(), this);
-  connect(e,    SIGNAL(valueChanged(const QDate&)),
-          this, SLOT(slotDateChanged(const QDate&)));
-  return e;
+    QWidget *e = new QDateEdit(m_item.value().toDate(), this);
+    connect(e, SIGNAL(valueChanged(const QDate &)), this, SLOT(slotDateChanged(const QDate &)));
+    return e;
 }
 
-QWidget* KFileMetaInfoWidget::makeTimeWidget()
+QWidget *KFileMetaInfoWidget::makeTimeWidget()
 {
-  return new QTimeEdit(m_item.value().toTime(), this);
+    return new QTimeEdit(m_item.value().toTime(), this);
 }
 
-QWidget* KFileMetaInfoWidget::makeDateTimeWidget()
+QWidget *KFileMetaInfoWidget::makeDateTimeWidget()
 {
-  return new QDateTimeEdit(m_item.value().toDateTime(), this);
+    return new QDateTimeEdit(m_item.value().toDateTime(), this);
 }
 
-void KFileMetaInfoWidget::reparentValidator( QWidget *widget,
-                                             QValidator *validator )
+void KFileMetaInfoWidget::reparentValidator(QWidget *widget, QValidator *validator)
 {
-    if ( !validator->parent() )
-        widget->insertChild( validator );
+    if(!validator->parent())
+        widget->insertChild(validator);
 }
 
 // ****************************************************************
@@ -331,7 +313,7 @@ void KFileMetaInfoWidget::slotComboChanged(const QString &value)
     m_dirty = true;
 }
 
-void KFileMetaInfoWidget::slotLineEditChanged(const QString& value)
+void KFileMetaInfoWidget::slotLineEditChanged(const QString &value)
 {
     Q_ASSERT(m_widget->inherits("KLineEdit"));
     m_value = QVariant(value);
@@ -343,12 +325,12 @@ void KFileMetaInfoWidget::slotLineEditChanged(const QString& value)
 void KFileMetaInfoWidget::slotMultiLineEditChanged()
 {
     Q_ASSERT(m_widget->inherits("QTextEdit"));
-    m_value = QVariant( static_cast<const QTextEdit*>( sender() )->text() );
+    m_value = QVariant(static_cast< const QTextEdit * >(sender())->text());
     emit valueChanged(m_value);
     m_dirty = true;
 }
 
-void KFileMetaInfoWidget::slotDateChanged(const QDate& value)
+void KFileMetaInfoWidget::slotDateChanged(const QDate &value)
 {
     Q_ASSERT(m_widget->inherits("QDateEdit"));
     m_value = QVariant(value);
@@ -356,7 +338,7 @@ void KFileMetaInfoWidget::slotDateChanged(const QDate& value)
     m_dirty = true;
 }
 
-void KFileMetaInfoWidget::slotTimeChanged(const QTime& value)
+void KFileMetaInfoWidget::slotTimeChanged(const QTime &value)
 {
     Q_ASSERT(m_widget->inherits("QTimeEdit"));
     m_value = QVariant(value);
@@ -364,7 +346,7 @@ void KFileMetaInfoWidget::slotTimeChanged(const QTime& value)
     m_dirty = true;
 }
 
-void KFileMetaInfoWidget::slotDateTimeChanged(const QDateTime& value)
+void KFileMetaInfoWidget::slotDateTimeChanged(const QDateTime &value)
 {
     Q_ASSERT(m_widget->inherits("QDateTimeEdit"));
     m_value = QVariant(value);

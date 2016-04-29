@@ -26,21 +26,17 @@
 
 namespace KRES {
 
-class KRESOURCES_EXPORT ManagerIface : virtual public DCOPObject
-{
-  K_DCOP
+class KRESOURCES_EXPORT ManagerIface : virtual public DCOPObject {
+    K_DCOP
 
-  k_dcop_signals:
-    void signalKResourceAdded( QString managerId, QString resourceId );
-    void signalKResourceModified( QString managerId, QString resourceId );
-    void signalKResourceDeleted( QString managerId, QString resourceId );
+    k_dcop_signals : void signalKResourceAdded(QString managerId, QString resourceId);
+    void signalKResourceModified(QString managerId, QString resourceId);
+    void signalKResourceDeleted(QString managerId, QString resourceId);
 
-  k_dcop:
-    virtual ASYNC dcopKResourceAdded( QString managerId, QString resourceId ) = 0;
-    virtual ASYNC dcopKResourceModified( QString managerId, QString resourceId ) = 0;
-    virtual ASYNC dcopKResourceDeleted( QString managerId, QString resourceId ) = 0;
+    k_dcop : virtual ASYNC dcopKResourceAdded(QString managerId, QString resourceId) = 0;
+    virtual ASYNC dcopKResourceModified(QString managerId, QString resourceId) = 0;
+    virtual ASYNC dcopKResourceDeleted(QString managerId, QString resourceId) = 0;
 };
-
 }
 
 #endif

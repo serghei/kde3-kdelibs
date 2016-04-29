@@ -32,14 +32,16 @@ class CSSStyleDeclarationImpl;
 class HTMLFormElementImpl;
 class DocumentFragment;
 
-class HTMLElementImpl : public ElementImpl
-{
+class HTMLElementImpl : public ElementImpl {
 public:
     HTMLElementImpl(DocumentImpl *doc);
 
     virtual ~HTMLElementImpl();
 
-    virtual bool isHTMLElement() const { return true; }
+    virtual bool isHTMLElement() const
+    {
+        return true;
+    }
 
     virtual bool isInline() const;
 
@@ -53,37 +55,39 @@ public:
     void addCSSLength(int id, const DOMString &value, bool numOnly = false, bool multiLength = false);
     void addCSSProperty(int id, const DOMString &value);
     void addCSSProperty(int id, int value);
-    void addHTMLColor( int id, const DOMString &c );
+    void addHTMLColor(int id, const DOMString &c);
     void removeCSSProperty(int id);
 
-    virtual void recalcStyle( StyleChange );
+    virtual void recalcStyle(StyleChange);
 
     DOMString innerHTML() const;
     DOMString innerText() const;
-    DocumentFragment createContextualFragment( const DOMString &html );
-    void setInnerHTML( const DOMString &html, int& exceptioncode );
-    void setInnerText( const DOMString &text, int& exceptioncode );
+    DocumentFragment createContextualFragment(const DOMString &html);
+    void setInnerHTML(const DOMString &html, int &exceptioncode);
+    void setInnerText(const DOMString &text, int &exceptioncode);
 
     virtual DOMString toString() const;
 
 protected:
     // for IMG, OBJECT and APPLET
-    void addHTMLAlignment( DOMString alignment );
+    void addHTMLAlignment(DOMString alignment);
 };
 
-class HTMLGenericElementImpl : public HTMLElementImpl
-{
+class HTMLGenericElementImpl : public HTMLElementImpl {
 public:
     HTMLGenericElementImpl(DocumentImpl *doc, ushort i);
 
     virtual ~HTMLGenericElementImpl();
 
-    virtual Id id() const { return _id; };
+    virtual Id id() const
+    {
+        return _id;
+    };
 
 protected:
     ushort _id;
 };
 
-} //namespace
+} // namespace
 
 #endif

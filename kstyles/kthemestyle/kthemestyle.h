@@ -65,8 +65,7 @@ Copyright (C) 2000 Daniel M. Duley   <mosfet@kde.org>
  *
  */
 
-class KThemeStyle: public KThemeBase
-{
+class KThemeStyle : public KThemeBase {
     Q_OBJECT
 public:
     /**
@@ -76,74 +75,50 @@ public:
      * @param configFile A KConfig file to use as the theme configuration.
      * Defaults to ~/.kderc.
      */
-    KThemeStyle( const QString& configDir, const QString &configFile = QString::null );
+    KThemeStyle(const QString &configDir, const QString &configFile = QString::null);
     ~KThemeStyle();
 
-    virtual int pixelMetric ( PixelMetric metric, const QWidget * widget = 0 ) const;
+    virtual int pixelMetric(PixelMetric metric, const QWidget *widget = 0) const;
 
-    virtual void drawPrimitive ( PrimitiveElement pe, QPainter * p, const QRect & r, const QColorGroup & cg,
-                                 SFlags flags = Style_Default,
-                                 const QStyleOption& = QStyleOption::Default ) const;
+    virtual void drawPrimitive(PrimitiveElement pe, QPainter *p, const QRect &r, const QColorGroup &cg, SFlags flags = Style_Default,
+                               const QStyleOption & = QStyleOption::Default) const;
 
-    virtual void drawControl( ControlElement element,
-                              QPainter *p,
-                              const QWidget *widget,
-                              const QRect &r,
-                              const QColorGroup &cg,
-                              SFlags how = Style_Default,
-                              const QStyleOption& = QStyleOption::Default ) const;
+    virtual void drawControl(ControlElement element, QPainter *p, const QWidget *widget, const QRect &r, const QColorGroup &cg,
+                             SFlags how = Style_Default, const QStyleOption & = QStyleOption::Default) const;
 
-    virtual void drawControlMask( ControlElement element,
-                                  QPainter *p,
-                                  const QWidget *widget,
-                                  const QRect &r,
-                                  const QStyleOption& = QStyleOption::Default ) const;
+    virtual void drawControlMask(ControlElement element, QPainter *p, const QWidget *widget, const QRect &r,
+                                 const QStyleOption & = QStyleOption::Default) const;
 
 
-    virtual void drawComplexControl( ComplexControl control,
-                                     QPainter *p,
-                                     const QWidget* widget,
-                                     const QRect &r,
-                                     const QColorGroup &cg,
-                                     SFlags flags = Style_Default,
-                                     SCFlags controls = SC_All,
-                                     SCFlags active = SC_None,
-                                     const QStyleOption& = QStyleOption::Default ) const;
+    virtual void drawComplexControl(ComplexControl control, QPainter *p, const QWidget *widget, const QRect &r, const QColorGroup &cg,
+                                    SFlags flags = Style_Default, SCFlags controls = SC_All, SCFlags active = SC_None,
+                                    const QStyleOption & = QStyleOption::Default) const;
 
-    virtual void drawKStylePrimitive( KStylePrimitive kpe,
-                                      QPainter* p,
-                                      const QWidget* widget,
-                                      const QRect &r,
-                                      const QColorGroup &cg,
-                                      SFlags flags = Style_Default,
-                                      const QStyleOption& = QStyleOption::Default ) const;
+    virtual void drawKStylePrimitive(KStylePrimitive kpe, QPainter *p, const QWidget *widget, const QRect &r, const QColorGroup &cg,
+                                     SFlags flags = Style_Default, const QStyleOption & = QStyleOption::Default) const;
 
 
-    virtual int styleHint( StyleHint sh,
-                           const QWidget *widget = 0,
-                           const QStyleOption& = QStyleOption::Default,
-                           QStyleHintReturn* returnData = 0 ) const;
+    virtual int styleHint(StyleHint sh, const QWidget *widget = 0, const QStyleOption & = QStyleOption::Default,
+                          QStyleHintReturn *returnData = 0) const;
 
-    virtual QSize sizeFromContents( ContentsType contents,
-                                    const QWidget *widget,
-                                    const QSize &contentsSize,
-                                    const QStyleOption& = QStyleOption::Default ) const;
+    virtual QSize sizeFromContents(ContentsType contents, const QWidget *widget, const QSize &contentsSize,
+                                   const QStyleOption & = QStyleOption::Default) const;
 
     virtual QRect subRect(SubRect, const QWidget *) const;
 
-    virtual void polish( QWidget* );
-    virtual void unPolish( QWidget* );
-    virtual bool eventFilter( QObject* object, QEvent* event );
+    virtual void polish(QWidget *);
+    virtual void unPolish(QWidget *);
+    virtual bool eventFilter(QObject *object, QEvent *event);
     /**
      * By default this just sets the background brushes to the pixmapped
      * background.
      */
-    virtual void polish( QApplication *app );
-    virtual void unPolish( QApplication* );
+    virtual void polish(QApplication *app);
+    virtual void unPolish(QApplication *);
 
     /** \internal */
     // to make it possible for derived classes to overload this function
-    virtual void polish( QPalette& pal );
+    virtual void polish(QPalette &pal);
 
     /**
      * This is a convenience method for drawing widgets with
@@ -161,9 +136,8 @@ public:
      * @param rounded @p true if the widget is rounded, @p false if rectangular.
      * @param type The widget type to paint.
      */
-    virtual void drawBaseButton( QPainter *p, int x, int y, int w, int h,
-                                 const QColorGroup &g, bool sunken = false,
-                                 bool rounded = false, WidgetType type = Bevel ) const;
+    virtual void drawBaseButton(QPainter *p, int x, int y, int w, int h, const QColorGroup &g, bool sunken = false, bool rounded = false,
+                                WidgetType type = Bevel) const;
     /**
      * Draw a mask with for widgets that may be rounded.
      *
@@ -177,9 +151,7 @@ public:
      * @param h The widget height.
      * @param rounded @p true if the widget is rounded, @p false if rectangular.
      */
-    virtual void drawBaseMask( QPainter *p, int x, int y, int w, int h,
-                               bool rounded ) const;
-
+    virtual void drawBaseMask(QPainter *p, int x, int y, int w, int h, bool rounded) const;
 
 
     /**
@@ -198,11 +170,9 @@ public:
      * @param bWidth The border width.
      * @param style The shading style to use.
      */
-    virtual void drawShade( QPainter *p, int x, int y, int w, int h,
-                            const QColorGroup &g, bool sunken, bool rounded,
-                            int hWidth, int bWidth, ShadeStyle style ) const;
-    int popupMenuItemHeight( bool checkable, QMenuItem *mi,
-                             const QFontMetrics &fm );
+    virtual void drawShade(QPainter *p, int x, int y, int w, int h, const QColorGroup &g, bool sunken, bool rounded, int hWidth, int bWidth,
+                           ShadeStyle style) const;
+    int popupMenuItemHeight(bool checkable, QMenuItem *mi, const QFontMetrics &fm);
 
 protected:
     QPalette oldPalette, popupPalette, indiPalette, exIndiPalette;
@@ -210,10 +180,10 @@ protected:
     bool polishLock;
     QStyle *mtfstyle;
 
-    QPixmap* makeMenuBarCache(int w, int h) const;
+    QPixmap *makeMenuBarCache(int w, int h) const;
 
-    mutable QPixmap* menuCache;
-    mutable QPixmap* vsliderCache;
+    mutable QPixmap *menuCache;
+    mutable QPixmap *vsliderCache;
 
     Qt::HANDLE brushHandle;
     bool brushHandleSet;
@@ -221,9 +191,6 @@ protected:
 
 protected slots:
     void paletteChanged();
-
-
-
 };
 
 

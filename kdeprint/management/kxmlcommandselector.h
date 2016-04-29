@@ -32,37 +32,36 @@ class QLabel;
 class QPushButton;
 class KDialogBase;
 
-class KDEPRINT_EXPORT KXmlCommandSelector : public QWidget
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT KXmlCommandSelector : public QWidget {
+    Q_OBJECT
 public:
-	KXmlCommandSelector(bool canBeNull = true, QWidget *parent = 0, const char *name = 0, KDialogBase *dlg = 0);
+    KXmlCommandSelector(bool canBeNull = true, QWidget *parent = 0, const char *name = 0, KDialogBase *dlg = 0);
 
-	void setCommand(const QString&);
-	QString command() const;
+    void setCommand(const QString &);
+    QString command() const;
 
 protected:
-	void loadCommands();
+    void loadCommands();
 
 protected slots:
-	void slotAddCommand();
-	void slotEditCommand();
-	void slotBrowse();
-	void slotCommandSelected(int);
-	void slotHelpCommand();
-	void slotXmlCommandToggled( bool );
+    void slotAddCommand();
+    void slotEditCommand();
+    void slotBrowse();
+    void slotCommandSelected(int);
+    void slotHelpCommand();
+    void slotXmlCommandToggled(bool);
 
 signals:
-	void commandValid( bool );
+    void commandValid(bool);
 
 private:
-	QComboBox	*m_cmd;
-	QLineEdit	*m_line;
-	QCheckBox	*m_usefilter;
-	QStringList	m_cmdlist;
-	QLabel		*m_shortinfo;
-	QPushButton *m_helpbtn;
-	QString m_help;
+    QComboBox *m_cmd;
+    QLineEdit *m_line;
+    QCheckBox *m_usefilter;
+    QStringList m_cmdlist;
+    QLabel *m_shortinfo;
+    QPushButton *m_helpbtn;
+    QString m_help;
 };
 
 #endif

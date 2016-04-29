@@ -27,63 +27,68 @@
 
 namespace KJS {
 
-  class BooleanInstanceImp : public ObjectImp {
-  public:
+class BooleanInstanceImp : public ObjectImp {
+public:
     BooleanInstanceImp(ObjectImp *proto);
 
-    virtual const ClassInfo *classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-  };
+};
 
-  /**
-   * @internal
-   *
-   * The initial value of Boolean.prototype (and thus all objects created
-   * with the Boolean constructor
-   */
-  class BooleanPrototypeImp : public BooleanInstanceImp {
-  public:
-    BooleanPrototypeImp(ExecState *exec,
-                        ObjectPrototypeImp *objectProto,
-                        FunctionPrototypeImp *funcProto);
-  };
+/**
+ * @internal
+ *
+ * The initial value of Boolean.prototype (and thus all objects created
+ * with the Boolean constructor
+ */
+class BooleanPrototypeImp : public BooleanInstanceImp {
+public:
+    BooleanPrototypeImp(ExecState *exec, ObjectPrototypeImp *objectProto, FunctionPrototypeImp *funcProto);
+};
 
-  /**
-   * @internal
-   *
-   * Class to implement all methods that are properties of the
-   * Boolean.prototype object
-   */
-  class BooleanProtoFuncImp : public InternalFunctionImp {
-  public:
-    BooleanProtoFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto,
-                        int i, int len, const Identifier &_ident);
+/**
+ * @internal
+ *
+ * Class to implement all methods that are properties of the
+ * Boolean.prototype object
+ */
+class BooleanProtoFuncImp : public InternalFunctionImp {
+public:
+    BooleanProtoFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto, int i, int len, const Identifier &_ident);
 
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
 
-    enum { ToString, ValueOf };
-  private:
-    int id;
-  };
+    enum
+    {
+        ToString,
+        ValueOf
+    };
 
-  /**
-   * @internal
-   *
-   * The initial value of the the global variable's "Boolean" property
-   */
-  class BooleanObjectImp : public InternalFunctionImp {
+private:
+    int id;
+};
+
+/**
+ * @internal
+ *
+ * The initial value of the the global variable's "Boolean" property
+ */
+class BooleanObjectImp : public InternalFunctionImp {
     friend class BooleanProtoFuncImp;
-  public:
-    BooleanObjectImp(ExecState *exec, FunctionPrototypeImp *funcProto,
-                     BooleanPrototypeImp *booleanProto);
+
+public:
+    BooleanObjectImp(ExecState *exec, FunctionPrototypeImp *funcProto, BooleanPrototypeImp *booleanProto);
 
     virtual bool implementsConstruct() const;
     virtual Object construct(ExecState *exec, const List &args);
 
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
-  };
+};
 
 } // namespace
 

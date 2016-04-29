@@ -27,26 +27,74 @@ class KHTMLPart;
 
 namespace KJS {
 
-  class Navigator : public ObjectImp {
-  public:
+class Navigator : public ObjectImp {
+public:
     Navigator(ExecState *exec, KHTMLPart *p);
     virtual Value get(ExecState *exec, const Identifier &propertyName) const;
     Value getValueProperty(ExecState *exec, int token) const;
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    enum { AppCodeName, AppName, AppVersion, Language, UserAgent, UserLanguage, Platform,
-           _Plugins, _MimeTypes, Product,  ProductSub, Vendor, CookieEnabled, JavaEnabled, 
-           BrowserLanguage, CpuClass };
-    KHTMLPart *part() const { return m_part; }
-  private:
-    KHTMLPart *m_part;
-  };
+    enum
+    {
+        AppCodeName,
+        AppName,
+        AppVersion,
+        Language,
+        UserAgent,
+        UserLanguage,
+        Platform,
+        _Plugins,
+        _MimeTypes,
+        Product,
+        ProductSub,
+        Vendor,
+        CookieEnabled,
+        JavaEnabled,
+        BrowserLanguage,
+        CpuClass
+    };
+    KHTMLPart *part() const
+    {
+        return m_part;
+    }
 
-  // Hashtable enums
-  enum { Plugins_Refresh, Plugins_Length, Plugins_Item, Plugins_NamedItem };
-  enum { MimeTypes_Length, MimeTypes_Item, MimeTypes_NamedItem };
-  enum { Plugin_Name, Plugin_FileName, Plugin_Description, Plugin_Length, Plugin_Item, Plugin_NamedItem };
-  enum { MimeType_Type, MimeType_Description, MimeType_EnabledPlugin, MimeType_Suffixes };
+private:
+    KHTMLPart *m_part;
+};
+
+// Hashtable enums
+enum
+{
+    Plugins_Refresh,
+    Plugins_Length,
+    Plugins_Item,
+    Plugins_NamedItem
+};
+enum
+{
+    MimeTypes_Length,
+    MimeTypes_Item,
+    MimeTypes_NamedItem
+};
+enum
+{
+    Plugin_Name,
+    Plugin_FileName,
+    Plugin_Description,
+    Plugin_Length,
+    Plugin_Item,
+    Plugin_NamedItem
+};
+enum
+{
+    MimeType_Type,
+    MimeType_Description,
+    MimeType_EnabledPlugin,
+    MimeType_Suffixes
+};
 
 } // namespace
 

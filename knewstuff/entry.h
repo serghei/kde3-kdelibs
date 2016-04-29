@@ -41,14 +41,13 @@ namespace KNS {
  * \par Maintainer:
  * Josef Spillner (spillner@kde.org)
  */
-class KDE_EXPORT Entry
-{
-  public:
+class KDE_EXPORT Entry {
+public:
     Entry();
     /**
      * Constructor.
      */
-    Entry( const QDomElement & );
+    Entry(const QDomElement &);
 
     /**
      * Destructor.
@@ -58,12 +57,12 @@ class KDE_EXPORT Entry
     /**
      * Sets the (unique) name for this data object.
      */
-    void setName( const QString & );
+    void setName(const QString &);
 
     /**
      * Sets the (internationalised) name for this data object.
      */
-    void setName( const QString &, const QString & );
+    void setName(const QString &, const QString &);
 
     /**
      * Retrieve the name of the data object.
@@ -77,12 +76,12 @@ class KDE_EXPORT Entry
      *
      * @return object name (potentially translated)
      */
-    QString name( const QString &lang ) const;
+    QString name(const QString &lang) const;
 
     /**
      * Sets the application type, e.g. 'kdesktop/wallpaper'.
      */
-    void setType( const QString & );
+    void setType(const QString &);
 
     /**
      * Retrieve the type of the data object.
@@ -94,7 +93,7 @@ class KDE_EXPORT Entry
     /**
      * Sets the full name of the object's author.
      */
-    void setAuthor( const QString & );
+    void setAuthor(const QString &);
 
     /**
      * Retrieve the author's name of the object.
@@ -106,7 +105,7 @@ class KDE_EXPORT Entry
     /**
      * Sets the email address of the object's author.
      */
-    void setAuthorEmail( const QString & );
+    void setAuthorEmail(const QString &);
 
     /**
      * Retrieve the author's email address of the object.
@@ -118,7 +117,7 @@ class KDE_EXPORT Entry
     /**
      * Sets the license (abbreviation) applicable to the object.
      */
-    void setLicence( const QString & );
+    void setLicence(const QString &);
 
     /**
      * Retrieve the license name of the object.
@@ -130,7 +129,7 @@ class KDE_EXPORT Entry
     /**
      * Sets a short description on what the object is all about.
      */
-    void setSummary( const QString &, const QString &lang = QString::null );
+    void setSummary(const QString &, const QString &lang = QString::null);
 
     /**
      * Retrieve a short description about the object.
@@ -138,12 +137,12 @@ class KDE_EXPORT Entry
      * @param lang preferred language, or QString::null for KDE default
      * @return object description
      */
-    QString summary( const QString &lang = QString::null ) const;
+    QString summary(const QString &lang = QString::null) const;
 
     /**
      * Sets the version number.
      */
-    void setVersion( const QString & );
+    void setVersion(const QString &);
 
     /**
      * Retrieve the version string of the object.
@@ -156,7 +155,7 @@ class KDE_EXPORT Entry
      * Sets the release number, which is increased for feature-equal objects
      * with the same version number, but slightly updated contents.
      */
-    void setRelease( int );
+    void setRelease(int);
 
     /**
      * Retrieve the release number of the object
@@ -168,7 +167,7 @@ class KDE_EXPORT Entry
     /**
      * Sets the release date.
      */
-    void setReleaseDate( const QDate & );
+    void setReleaseDate(const QDate &);
 
     /**
      * Retrieve the date of the object's publication.
@@ -180,7 +179,7 @@ class KDE_EXPORT Entry
     /**
      * Sets the object's file.
      */
-    void setPayload( const KURL &, const QString &lang = QString::null );
+    void setPayload(const KURL &, const QString &lang = QString::null);
 
     /**
      * Retrieve the file name of the object.
@@ -188,13 +187,13 @@ class KDE_EXPORT Entry
      * @param lang preferred language, or QString::null for KDE default
      * @return object filename
      */
-    KURL payload( const QString &lang = QString::null ) const;
+    KURL payload(const QString &lang = QString::null) const;
 
     /**
      * Sets the object's preview file, if available. This should be a
      * picture file.
      */
-    void setPreview( const KURL &, const QString &lang = QString::null );
+    void setPreview(const KURL &, const QString &lang = QString::null);
 
     /**
      * Retrieve the file name of an image containing a preview of the object.
@@ -202,14 +201,14 @@ class KDE_EXPORT Entry
      * @param lang preferred language, or QString::null for KDE default
      * @return object preview filename
      */
-    KURL preview( const QString &lang = QString::null ) const;
+    KURL preview(const QString &lang = QString::null) const;
 
     /**
      * Sets the rating between 0 (worst) and 10 (best).
      *
      * @internal
      */
-    void setRating( int );
+    void setRating(int);
 
     /**
      * Retrieve the rating for the object, which has been determined by its
@@ -221,10 +220,10 @@ class KDE_EXPORT Entry
 
     /**
      * Sets the number of downloads.
-     * 
+     *
      * @internal
      */
-    void setDownloads( int );
+    void setDownloads(int);
 
     /**
      * Retrieve the download count for the object, which has been determined
@@ -248,34 +247,32 @@ class KDE_EXPORT Entry
     /**
      * @internal
      */
-    void parseDomElement( const QDomElement & );
+    void parseDomElement(const QDomElement &);
 
     /**
      * @internal
      */
-    QDomElement createDomElement( QDomDocument &, QDomElement &parent );
+    QDomElement createDomElement(QDomDocument &, QDomElement &parent);
 
-  protected:
-    QDomElement addElement( QDomDocument &doc, QDomElement &parent,
-                            const QString &tag, const QString &value );
+protected:
+    QDomElement addElement(QDomDocument &doc, QDomElement &parent, const QString &tag, const QString &value);
 
-  private:
+private:
     QString mName;
     QString mType;
     QString mAuthor;
     QString mLicence;
-    QMap<QString,QString> mSummaryMap;
+    QMap< QString, QString > mSummaryMap;
     QString mVersion;
     int mRelease;
     QDate mReleaseDate;
-    QMap<QString,KURL> mPayloadMap;
-    QMap<QString,KURL> mPreviewMap;
+    QMap< QString, KURL > mPayloadMap;
+    QMap< QString, KURL > mPreviewMap;
     int mRating;
     int mDownloads;
 
     QStringList mLangs;
 };
-
 }
 
 #endif

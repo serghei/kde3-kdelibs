@@ -28,23 +28,22 @@
 class QComboBox;
 class QLabel;
 
-class KDEPRINT_EXPORT PluginComboBox : public QWidget, public KPReloadObject
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT PluginComboBox : public QWidget, public KPReloadObject {
+    Q_OBJECT
 public:
-	PluginComboBox(QWidget *parent = 0, const char *name = 0);
+    PluginComboBox(QWidget *parent = 0, const char *name = 0);
 
 protected slots:
-	void slotActivated(int);
+    void slotActivated(int);
 
 protected:
-	void reload();
-	void configChanged();
+    void reload();
+    void configChanged();
 
 private:
-	QComboBox	*m_combo;
-	QLabel		*m_plugininfo;
-	QStringList	m_pluginlist;
+    QComboBox *m_combo;
+    QLabel *m_plugininfo;
+    QStringList m_pluginlist;
 };
 
 #endif

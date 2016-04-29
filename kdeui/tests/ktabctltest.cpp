@@ -32,8 +32,7 @@ QFont default_font("Helvetica", 12);
 
 KApplication *a;
 
-TopLevel::TopLevel(QWidget *parent, const char *name)
-    : QWidget(parent, name)
+TopLevel::TopLevel(QWidget *parent, const char *name) : QWidget(parent, name)
 {
     setCaption("KTabCtl test application");
     setMinimumSize(300, 200);
@@ -41,7 +40,7 @@ TopLevel::TopLevel(QWidget *parent, const char *name)
     /*
      * add a tabctrl widget
      */
-    
+
     test = new KTabCtl(this, "test");
     connect(test, SIGNAL(tabSelected(int)), this, SLOT(tabChanged(int)));
     QWidget *w = new QWidget(test, "_page1");
@@ -70,7 +69,7 @@ TopLevel::TopLevel(QWidget *parent, const char *name)
     adjustSize();
 }
 
-void TopLevel::resizeEvent( QResizeEvent * )
+void TopLevel::resizeEvent(QResizeEvent *)
 {
     test->resize(width(), height());
     e->setGeometry(10, 10, pages[1]->width() - 20, pages[1]->height() - 20);
@@ -88,9 +87,9 @@ void TopLevel::okPressed()
     a->quit();
 }
 
-int main( int argc, char ** argv )
+int main(int argc, char **argv)
 {
-    a = new KApplication ( argc, argv, "KTabCtlTest" );
+    a = new KApplication(argc, argv, "KTabCtlTest");
 
     a->setFont(default_font);
 
@@ -102,4 +101,3 @@ int main( int argc, char ** argv )
 }
 
 #include "ktabctltest.moc"
-

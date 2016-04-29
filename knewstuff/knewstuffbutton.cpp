@@ -24,27 +24,16 @@
 #include "knewstuffbutton.h"
 #include "knewstuffbutton.moc"
 
-namespace KNS
-{
+namespace KNS {
 
-Button::Button(const QString& what,
-               const QString& providerList,
-               const QString& resourceType,
-               QWidget* parent, const char* name)
-    : KPushButton(parent, name),
-      d(0),
-      m_providerList(providerList),
-      m_type(resourceType),
-      m_downloadDialog(0)
+Button::Button(const QString &what, const QString &providerList, const QString &resourceType, QWidget *parent, const char *name)
+    : KPushButton(parent, name), d(0), m_providerList(providerList), m_type(resourceType), m_downloadDialog(0)
 {
     setButtonText(what);
     init();
 }
 
-Button::Button(QWidget* parent, const char* name)
-    : KPushButton(parent, name),
-      d(0),
-      m_downloadDialog(0)
+Button::Button(QWidget *parent, const char *name) : KPushButton(parent, name), d(0), m_downloadDialog(0)
 {
     setButtonText(i18n("Download New Stuff"));
     init();
@@ -56,17 +45,17 @@ void Button::init()
     connect(this, SIGNAL(clicked()), SLOT(showDialog()));
 }
 
-void Button::setButtonText(const QString& what)
+void Button::setButtonText(const QString &what)
 {
     setText(i18n("Download New %1").arg(what));
 }
 
-void Button::setProviderList(const QString& providerList)
+void Button::setProviderList(const QString &providerList)
 {
     m_providerList = providerList;
 }
 
-void Button::setResourceType(const QString& resourceType)
+void Button::setResourceType(const QString &resourceType)
 {
     m_type = resourceType;
 }
@@ -75,7 +64,7 @@ void Button::showDialog()
 {
     emit aboutToShowDialog();
 
-    if (!m_downloadDialog)
+    if(!m_downloadDialog)
     {
         m_downloadDialog = new DownloadDialog(0, this);
     }
@@ -86,5 +75,4 @@ void Button::showDialog()
     m_downloadDialog->exec(); // TODO: make non-modal?
     emit dialogFinished();
 }
-
 }

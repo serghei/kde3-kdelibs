@@ -24,21 +24,20 @@
 
 class QLabel;
 
-class KMPropQuota : public KMPropWidget
-{
+class KMPropQuota : public KMPropWidget {
 public:
-	KMPropQuota(QWidget *parent = 0, const char *name = 0);
-	~KMPropQuota();
+    KMPropQuota(QWidget *parent = 0, const char *name = 0);
+    ~KMPropQuota();
 
-	void setPrinter(KMPrinter*);
+    void setPrinter(KMPrinter *);
 
 protected:
-	void configureWizard(KMWizard*);
+    void configureWizard(KMWizard *);
 
 private:
-	QLabel	*m_period;
-	QLabel	*m_sizelimit;
-	QLabel	*m_pagelimit;
+    QLabel *m_period;
+    QLabel *m_sizelimit;
+    QLabel *m_pagelimit;
 };
 
 #endif

@@ -53,10 +53,8 @@ namespace KABC {
   }
   \endcode
 */
-class KABC_EXPORT StdAddressBook : public AddressBook
-{
-  public:
-
+class KABC_EXPORT StdAddressBook : public AddressBook {
+public:
     /**
       Destructor.
      */
@@ -76,7 +74,7 @@ class KABC_EXPORT StdAddressBook : public AddressBook
                           signal has been emitted. So connect to this signal when
                           using this method!
      */
-    static StdAddressBook *self( bool asynchronous );
+    static StdAddressBook *self(bool asynchronous);
 
     /**
       Saves the standard address book to disk.
@@ -107,7 +105,7 @@ class KABC_EXPORT StdAddressBook : public AddressBook
                    at destruction time, otherwise you have to call
                    AddressBook::save( Ticket* ).
      */
-    static void setAutomaticSave( bool state );
+    static void setAutomaticSave(bool state);
 
     /**
       Closes the address book. Depending on automaticSave() it will
@@ -133,21 +131,19 @@ class KABC_EXPORT StdAddressBook : public AddressBook
 
       @param addr The users contact.
      */
-    void setWhoAmI( const Addressee &addr );
+    void setWhoAmI(const Addressee &addr);
 
-  protected:
+protected:
     StdAddressBook();
-    StdAddressBook( bool asynchronous );
+    StdAddressBook(bool asynchronous);
 
-    void init( bool asynchronous );
+    void init(bool asynchronous);
     bool saveAll();
 
-  private:
+private:
     static StdAddressBook *mSelf;
     static bool mAutomaticSave;
 };
-
 }
 
 #endif
-

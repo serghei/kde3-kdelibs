@@ -19,7 +19,7 @@
 #ifndef __GSL_MAGIC_H__
 #define __GSL_MAGIC_H__
 
-#include	<gsl/gsldefs.h>
+#include <gsl/gsldefs.h>
 
 
 #ifdef __cplusplus
@@ -27,16 +27,15 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-
 /* --- structures --- */
 struct _GslMagic
 {
-  gpointer data;
-  gchar   *extension;
+    gpointer data;
+    gchar *extension;
 
-  /*< private >*/
-  gint     priority;
-  gpointer match_list;
+    /*< private >*/
+    gint priority;
+    gpointer match_list;
 };
 
 
@@ -56,13 +55,8 @@ struct _GslMagic
 
 
 /* --- prototypes --- */
-GslMagic*	gsl_magic_create		(gpointer	 data,
-						 gint		 priority,
-						 const gchar	*extension,
-						 const gchar	*magic_spec);
-GslMagic*	gsl_magic_list_match_file	(GslRing	*magic_list,
-						 const gchar    *file_name);
-
+GslMagic *gsl_magic_create(gpointer data, gint priority, const gchar *extension, const gchar *magic_spec);
+GslMagic *gsl_magic_list_match_file(GslRing *magic_list, const gchar *file_name);
 
 
 #ifdef __cplusplus

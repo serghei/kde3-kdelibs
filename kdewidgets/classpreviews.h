@@ -1,5 +1,5 @@
 /* This file is part of the KDE libraries
-    Copyright (C) 2001 Daniel Molkentin <molkentin@kde.org> 
+    Copyright (C) 2001 Daniel Molkentin <molkentin@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -32,10 +32,9 @@
 
 #include <kdialog.h>
 
-class KDialogPreview : public KDialog
-{
+class KDialogPreview : public KDialog {
 public:
-	KDialogPreview(QWidget * parent = 0 , const char * name = 0/*, bool modal = false, WFlags f = 0*/);
+    KDialogPreview(QWidget *parent = 0, const char *name = 0 /*, bool modal = false, WFlags f = 0*/);
 };
 
 #endif

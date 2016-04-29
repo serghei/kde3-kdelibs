@@ -26,25 +26,24 @@ class SmbView;
 class QLineEdit;
 class QLabel;
 
-class KMWSmb : public KMWizardPage
-{
-	Q_OBJECT
+class KMWSmb : public KMWizardPage {
+    Q_OBJECT
 public:
-	KMWSmb(QWidget *parent = 0, const char *name = 0);
+    KMWSmb(QWidget *parent = 0, const char *name = 0);
 
-	bool isValid(QString&);
-	void updatePrinter(KMPrinter*);
-	void initPrinter(KMPrinter*);
+    bool isValid(QString &);
+    void updatePrinter(KMPrinter *);
+    void initPrinter(KMPrinter *);
 
 protected slots:
-	void slotScan();
-	void slotAbort();
-	void slotPrinterSelected(const QString& work, const QString& server, const QString& printer);
+    void slotScan();
+    void slotAbort();
+    void slotPrinterSelected(const QString &work, const QString &server, const QString &printer);
 
 protected:
-	SmbView	*m_view;
-	QLineEdit	*m_work, *m_server, *m_printer;
-	QLabel *m_loginlabel;
+    SmbView *m_view;
+    QLineEdit *m_work, *m_server, *m_printer;
+    QLabel *m_loginlabel;
 };
 
 #endif

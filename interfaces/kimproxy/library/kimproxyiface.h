@@ -1,11 +1,11 @@
-/*    
-	kimproxyiface.cpp
-	
-	IM service library for KDE
-	
-	DCOP interface to allow us to receive DCOP signals
+/*
+    kimproxyiface.cpp
 
-	Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
+    IM service library for KDE
+
+    DCOP interface to allow us to receive DCOP signals
+
+    Copyright (c) 2004 Will Stephenson   <lists@stevello.free-online.co.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -28,11 +28,9 @@
 
 #include <dcopobject.h>
 
-class KIMProxyIface : virtual public DCOPObject
-{
-	K_DCOP
-	k_dcop:
-		virtual void contactPresenceChanged( QString uid, QCString appId, int presence ) = 0;
+class KIMProxyIface : virtual public DCOPObject {
+    K_DCOP
+    k_dcop : virtual void contactPresenceChanged(QString uid, QCString appId, int presence) = 0;
 };
 
 #endif

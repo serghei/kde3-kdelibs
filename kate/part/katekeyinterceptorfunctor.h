@@ -19,7 +19,7 @@
 #define _KATE_KEY_INTERCEPTOR_FUNCTOR_H
 #include <kshortcut.h>
 class KateKeyInterceptorFunctor {
-  public:
-  virtual bool operator()(KKey key)=0;
+public:
+    virtual bool operator()(KKey key) = 0;
 };
 #endif

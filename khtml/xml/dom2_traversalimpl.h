@@ -35,8 +35,7 @@ namespace DOM {
 class NodeImpl;
 class DocumentImpl;
 
-class NodeIteratorImpl : public khtml::Shared<NodeIteratorImpl>
-{
+class NodeIteratorImpl : public khtml::Shared< NodeIteratorImpl > {
 public:
     NodeIteratorImpl(NodeImpl *_root, unsigned long _whatToShow, NodeFilter _filter, bool _entityReferenceExpansion);
     ~NodeIteratorImpl();
@@ -62,6 +61,7 @@ public:
     short isAccepted(NodeImpl *n);
     NodeImpl *getNextNode(NodeImpl *n);
     NodeImpl *getPreviousNode(NodeImpl *n);
+
 protected:
     NodeImpl *m_root;
     long m_whatToShow;
@@ -74,8 +74,7 @@ protected:
     DocumentImpl *m_doc;
 };
 
-class NodeFilterImpl : public khtml::Shared<NodeFilterImpl>
-{
+class NodeFilterImpl : public khtml::Shared< NodeFilterImpl > {
 public:
     NodeFilterImpl();
     ~NodeFilterImpl();
@@ -84,20 +83,18 @@ public:
 
     void setCustomNodeFilter(CustomNodeFilter *custom);
     CustomNodeFilter *customNodeFilter();
+
 protected:
     CustomNodeFilter *m_customNodeFilter;
-
 };
 
-class TreeWalkerImpl : public khtml::Shared<TreeWalkerImpl>
-{
+class TreeWalkerImpl : public khtml::Shared< TreeWalkerImpl > {
 public:
     TreeWalkerImpl();
     TreeWalkerImpl(const TreeWalkerImpl &other);
     TreeWalkerImpl(NodeImpl *n, NodeFilter f);
-    TreeWalkerImpl(NodeImpl *n, long _whatToShow, NodeFilterImpl *f,
-                   bool entityReferenceExpansion);
-    TreeWalkerImpl & operator = (const TreeWalkerImpl &other);
+    TreeWalkerImpl(NodeImpl *n, long _whatToShow, NodeFilterImpl *f, bool entityReferenceExpansion);
+    TreeWalkerImpl &operator=(const TreeWalkerImpl &other);
 
 
     ~TreeWalkerImpl();
@@ -112,15 +109,15 @@ public:
 
     NodeImpl *getCurrentNode() const;
 
-    void setCurrentNode( NodeImpl *_currentNode);
+    void setCurrentNode(NodeImpl *_currentNode);
 
     NodeImpl *parentNode();
 
     NodeImpl *firstChild();
 
-    NodeImpl *lastChild ();
+    NodeImpl *lastChild();
 
-    NodeImpl *previousSibling ();
+    NodeImpl *previousSibling();
 
     NodeImpl *nextSibling();
 
@@ -193,4 +190,3 @@ protected:
 } // namespace
 
 #endif
-

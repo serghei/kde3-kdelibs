@@ -21,7 +21,8 @@
 
 #include "kasyncio.h"
 
-void KAsyncIO::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KAsyncIO::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kasyncio.moc"

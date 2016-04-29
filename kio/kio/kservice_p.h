@@ -23,19 +23,17 @@
 
 #include <kprogress.h>
 
-class KServiceProgressDialog : public KProgressDialog
-{
-   Q_OBJECT
+class KServiceProgressDialog : public KProgressDialog {
+    Q_OBJECT
 public:
-   KServiceProgressDialog(QWidget *parent, const char *name, 
-                          const QString &caption, const QString &text);
-public slots:   
-   void slotProgress();
-   void slotFinished();
+    KServiceProgressDialog(QWidget *parent, const char *name, const QString &caption, const QString &text);
+public slots:
+    void slotProgress();
+    void slotFinished();
 
 private:
-   QTimer m_timer;
-   int m_timeStep;
+    QTimer m_timer;
+    int m_timeStep;
 };
 
 #endif

@@ -34,236 +34,285 @@
 
 class KEMailSettingsPrivate {
 public:
-    KEMailSettingsPrivate() : m_pConfig( 0 ) {}
-    ~KEMailSettingsPrivate() { delete m_pConfig; }
-	KConfig *m_pConfig;
-	QStringList profiles;
-	QString m_sDefaultProfile, m_sCurrentProfile;
+    KEMailSettingsPrivate() : m_pConfig(0)
+    {
+    }
+    ~KEMailSettingsPrivate()
+    {
+        delete m_pConfig;
+    }
+    KConfig *m_pConfig;
+    QStringList profiles;
+    QString m_sDefaultProfile, m_sCurrentProfile;
 };
 
 QString KEMailSettings::defaultProfileName() const
 {
-	return p->m_sDefaultProfile;
+    return p->m_sDefaultProfile;
 }
 
 QString KEMailSettings::getSetting(KEMailSettings::Setting s)
 {
-	p->m_pConfig->setGroup(QString("PROFILE_")+p->m_sCurrentProfile);
-	switch (s) {
-		case ClientProgram: {
-			return p->m_pConfig->readEntry("EmailClient");
-			break;
-		}
-		case ClientTerminal: {
-			return ((p->m_pConfig->readBoolEntry("TerminalClient")) ? QString("true") : QString("false") );
-			break;
-		}
-		case RealName: {
-			return p->m_pConfig->readEntry("FullName");
-			break;
-		}
-		case EmailAddress: {
-			return p->m_pConfig->readEntry("EmailAddress");
-			break;
-		}
-		case ReplyToAddress: {
-			return p->m_pConfig->readEntry("ReplyAddr");
-			break;
-		}
-		case Organization: {
-			return p->m_pConfig->readEntry("Organization");
-			break;
-		}
-		case OutServer: {
-			return p->m_pConfig->readEntry("OutgoingServer");
-			break;
-		}
-		case OutServerLogin: {
-			return p->m_pConfig->readEntry("OutgoingUserName");
-			break;
-		}
-		case OutServerPass: {
-			return p->m_pConfig->readEntry("OutgoingPassword");
-			break;
-		}
-		case OutServerType: {
-			return p->m_pConfig->readEntry("OutgoingServerType");
-			break;
-		}
-		case OutServerCommand: {
-			return p->m_pConfig->readEntry("OutgoingCommand");
-			break;
-		}
-		case OutServerTLS: {
-			return ((p->m_pConfig->readBoolEntry("OutgoingServerTLS")) ? QString("true") : QString("false") );
-			break;
-		}
-		case InServer: {
-			return p->m_pConfig->readEntry("IncomingServer");
-			break;
-		}
-		case InServerLogin: {
-			return p->m_pConfig->readEntry("IncomingUserName");
-			break;
-		}
-		case InServerPass: {
-			return p->m_pConfig->readEntry("IncomingPassword");
-			break;
-		}
-		case InServerType: {
-			return p->m_pConfig->readEntry("IncomingServerType");
-			break;
-		}
-		case InServerMBXType: {
-			return p->m_pConfig->readEntry("IncomingServerMBXType");
-			break;
-		}
-		case InServerTLS: {
-			return ((p->m_pConfig->readBoolEntry("IncomingServerTLS")) ? QString("true") : QString("false") );
-			break;
-		}
-	};
-	return QString::null;
+    p->m_pConfig->setGroup(QString("PROFILE_") + p->m_sCurrentProfile);
+    switch(s)
+    {
+        case ClientProgram:
+        {
+            return p->m_pConfig->readEntry("EmailClient");
+            break;
+        }
+        case ClientTerminal:
+        {
+            return ((p->m_pConfig->readBoolEntry("TerminalClient")) ? QString("true") : QString("false"));
+            break;
+        }
+        case RealName:
+        {
+            return p->m_pConfig->readEntry("FullName");
+            break;
+        }
+        case EmailAddress:
+        {
+            return p->m_pConfig->readEntry("EmailAddress");
+            break;
+        }
+        case ReplyToAddress:
+        {
+            return p->m_pConfig->readEntry("ReplyAddr");
+            break;
+        }
+        case Organization:
+        {
+            return p->m_pConfig->readEntry("Organization");
+            break;
+        }
+        case OutServer:
+        {
+            return p->m_pConfig->readEntry("OutgoingServer");
+            break;
+        }
+        case OutServerLogin:
+        {
+            return p->m_pConfig->readEntry("OutgoingUserName");
+            break;
+        }
+        case OutServerPass:
+        {
+            return p->m_pConfig->readEntry("OutgoingPassword");
+            break;
+        }
+        case OutServerType:
+        {
+            return p->m_pConfig->readEntry("OutgoingServerType");
+            break;
+        }
+        case OutServerCommand:
+        {
+            return p->m_pConfig->readEntry("OutgoingCommand");
+            break;
+        }
+        case OutServerTLS:
+        {
+            return ((p->m_pConfig->readBoolEntry("OutgoingServerTLS")) ? QString("true") : QString("false"));
+            break;
+        }
+        case InServer:
+        {
+            return p->m_pConfig->readEntry("IncomingServer");
+            break;
+        }
+        case InServerLogin:
+        {
+            return p->m_pConfig->readEntry("IncomingUserName");
+            break;
+        }
+        case InServerPass:
+        {
+            return p->m_pConfig->readEntry("IncomingPassword");
+            break;
+        }
+        case InServerType:
+        {
+            return p->m_pConfig->readEntry("IncomingServerType");
+            break;
+        }
+        case InServerMBXType:
+        {
+            return p->m_pConfig->readEntry("IncomingServerMBXType");
+            break;
+        }
+        case InServerTLS:
+        {
+            return ((p->m_pConfig->readBoolEntry("IncomingServerTLS")) ? QString("true") : QString("false"));
+            break;
+        }
+    };
+    return QString::null;
 }
-void KEMailSettings::setSetting(KEMailSettings::Setting s, const QString  &v)
+void KEMailSettings::setSetting(KEMailSettings::Setting s, const QString &v)
 {
-	p->m_pConfig->setGroup(QString("PROFILE_")+p->m_sCurrentProfile);
-	switch (s) {
-		case ClientProgram: {
-			p->m_pConfig->writePathEntry("EmailClient", v);
-			break;
-		}
-		case ClientTerminal: {
-			p->m_pConfig->writeEntry("TerminalClient", (v == "true") ? true : false );
-			break;
-		}
-		case RealName: {
-			p->m_pConfig->writeEntry("FullName", v);
-			break;
-		}
-		case EmailAddress: {
-			p->m_pConfig->writeEntry("EmailAddress", v);
-			break;
-		}
-		case ReplyToAddress: {
-			p->m_pConfig->writeEntry("ReplyAddr", v);
-			break;
-		}
-		case Organization: {
-			p->m_pConfig->writeEntry("Organization", v);
-			break;
-		}
-		case OutServer: {
-			p->m_pConfig->writeEntry("OutgoingServer", v);
-			break;
-		}
-		case OutServerLogin: {
-			p->m_pConfig->writeEntry("OutgoingUserName", v);
-			break;
-		}
-		case OutServerPass: {
-			p->m_pConfig->writeEntry("OutgoingPassword", v);
-			break;
-		}
-		case OutServerType: {
-			p->m_pConfig->writeEntry("OutgoingServerType", v);
-			break;
-		}
-		case OutServerCommand: {
-			p->m_pConfig->writeEntry("OutgoingCommand", v);
-			break;
-		}
-		case OutServerTLS: {
-			p->m_pConfig->writeEntry("OutgoingServerTLS", (v == "true") ? true : false );
-			break;
-		}
-		case InServer: {
-			p->m_pConfig->writeEntry("IncomingServer", v);
-			break;
-		}
-		case InServerLogin: {
-			p->m_pConfig->writeEntry("IncomingUserName", v);
-			break;
-		}
-		case InServerPass: {
-			p->m_pConfig->writeEntry("IncomingPassword", v);
-			break;
-		}
-		case InServerType: {
-			p->m_pConfig->writeEntry("IncomingServerType", v);
-			break;
-		}
-		case InServerMBXType: {
-			p->m_pConfig->writeEntry("IncomingServerMBXType", v);
-			break;
-		}
-		case InServerTLS: {
-			p->m_pConfig->writeEntry("IncomingServerTLS", (v == "true") ? true : false );
-			break;
-		}
-	};
-	p->m_pConfig->sync();
+    p->m_pConfig->setGroup(QString("PROFILE_") + p->m_sCurrentProfile);
+    switch(s)
+    {
+        case ClientProgram:
+        {
+            p->m_pConfig->writePathEntry("EmailClient", v);
+            break;
+        }
+        case ClientTerminal:
+        {
+            p->m_pConfig->writeEntry("TerminalClient", (v == "true") ? true : false);
+            break;
+        }
+        case RealName:
+        {
+            p->m_pConfig->writeEntry("FullName", v);
+            break;
+        }
+        case EmailAddress:
+        {
+            p->m_pConfig->writeEntry("EmailAddress", v);
+            break;
+        }
+        case ReplyToAddress:
+        {
+            p->m_pConfig->writeEntry("ReplyAddr", v);
+            break;
+        }
+        case Organization:
+        {
+            p->m_pConfig->writeEntry("Organization", v);
+            break;
+        }
+        case OutServer:
+        {
+            p->m_pConfig->writeEntry("OutgoingServer", v);
+            break;
+        }
+        case OutServerLogin:
+        {
+            p->m_pConfig->writeEntry("OutgoingUserName", v);
+            break;
+        }
+        case OutServerPass:
+        {
+            p->m_pConfig->writeEntry("OutgoingPassword", v);
+            break;
+        }
+        case OutServerType:
+        {
+            p->m_pConfig->writeEntry("OutgoingServerType", v);
+            break;
+        }
+        case OutServerCommand:
+        {
+            p->m_pConfig->writeEntry("OutgoingCommand", v);
+            break;
+        }
+        case OutServerTLS:
+        {
+            p->m_pConfig->writeEntry("OutgoingServerTLS", (v == "true") ? true : false);
+            break;
+        }
+        case InServer:
+        {
+            p->m_pConfig->writeEntry("IncomingServer", v);
+            break;
+        }
+        case InServerLogin:
+        {
+            p->m_pConfig->writeEntry("IncomingUserName", v);
+            break;
+        }
+        case InServerPass:
+        {
+            p->m_pConfig->writeEntry("IncomingPassword", v);
+            break;
+        }
+        case InServerType:
+        {
+            p->m_pConfig->writeEntry("IncomingServerType", v);
+            break;
+        }
+        case InServerMBXType:
+        {
+            p->m_pConfig->writeEntry("IncomingServerMBXType", v);
+            break;
+        }
+        case InServerTLS:
+        {
+            p->m_pConfig->writeEntry("IncomingServerTLS", (v == "true") ? true : false);
+            break;
+        }
+    };
+    p->m_pConfig->sync();
 }
 
 void KEMailSettings::setDefault(const QString &s)
 {
-	p->m_pConfig->setGroup("Defaults");
-	p->m_pConfig->writeEntry("Profile", s);
-	p->m_pConfig->sync();
-	p->m_sDefaultProfile=s;
-
+    p->m_pConfig->setGroup("Defaults");
+    p->m_pConfig->writeEntry("Profile", s);
+    p->m_pConfig->sync();
+    p->m_sDefaultProfile = s;
 }
 
-void KEMailSettings::setProfile (const QString &s)
+void KEMailSettings::setProfile(const QString &s)
 {
-	QString groupname="PROFILE_";
-	groupname.append(s);
-	p->m_sCurrentProfile=s;
-	if (!p->m_pConfig->hasGroup(groupname)) { // Create a group if it doesn't exist
-		p->m_pConfig->setGroup(groupname);
-		p->m_pConfig->writeEntry("ServerType", QString::null);
-		p->m_pConfig->sync();
-		p->profiles+=s;
-	}
+    QString groupname = "PROFILE_";
+    groupname.append(s);
+    p->m_sCurrentProfile = s;
+    if(!p->m_pConfig->hasGroup(groupname))
+    { // Create a group if it doesn't exist
+        p->m_pConfig->setGroup(groupname);
+        p->m_pConfig->writeEntry("ServerType", QString::null);
+        p->m_pConfig->sync();
+        p->profiles += s;
+    }
 }
 
 QString KEMailSettings::currentProfileName() const
 {
-	return p->m_sCurrentProfile;
+    return p->m_sCurrentProfile;
 }
 
 QStringList KEMailSettings::profiles() const
 {
-	return p->profiles;
+    return p->profiles;
 }
 
 KEMailSettings::KEMailSettings()
 {
-	p = new KEMailSettingsPrivate();
-	p->m_sCurrentProfile=QString::null;
+    p = new KEMailSettingsPrivate();
+    p->m_sCurrentProfile = QString::null;
 
-	p->m_pConfig = new KConfig("emaildefaults");
+    p->m_pConfig = new KConfig("emaildefaults");
 
-	QStringList groups = p->m_pConfig->groupList();
-	for (QStringList::Iterator it = groups.begin(); it != groups.end(); ++it) {
-		if ( (*it).left(8) == "PROFILE_" )
-			p->profiles+= (*it).mid(8, (*it).length());
-	}
+    QStringList groups = p->m_pConfig->groupList();
+    for(QStringList::Iterator it = groups.begin(); it != groups.end(); ++it)
+    {
+        if((*it).left(8) == "PROFILE_")
+            p->profiles += (*it).mid(8, (*it).length());
+    }
 
-	p->m_pConfig->setGroup("Defaults");
-	p->m_sDefaultProfile=p->m_pConfig->readEntry("Profile", i18n("Default"));
-	if (!p->m_sDefaultProfile.isNull()) {
-		if (!p->m_pConfig->hasGroup(QString("PROFILE_")+p->m_sDefaultProfile))
-			setDefault(i18n("Default"));
-		else
-			setDefault(p->m_sDefaultProfile);
-	} else {
-			if (p->profiles.count()) {
-				setDefault(p->profiles[0]);
-			} else
-				setDefault(i18n("Default"));
-	}
-	setProfile(defaultProfileName());
+    p->m_pConfig->setGroup("Defaults");
+    p->m_sDefaultProfile = p->m_pConfig->readEntry("Profile", i18n("Default"));
+    if(!p->m_sDefaultProfile.isNull())
+    {
+        if(!p->m_pConfig->hasGroup(QString("PROFILE_") + p->m_sDefaultProfile))
+            setDefault(i18n("Default"));
+        else
+            setDefault(p->m_sDefaultProfile);
+    }
+    else
+    {
+        if(p->profiles.count())
+        {
+            setDefault(p->profiles[0]);
+        }
+        else
+            setDefault(i18n("Default"));
+    }
+    setProfile(defaultProfileName());
 }
 
 KEMailSettings::~KEMailSettings()

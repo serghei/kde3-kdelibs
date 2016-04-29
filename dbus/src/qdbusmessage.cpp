@@ -31,24 +31,22 @@
 #include "qdbusmarshall.h"
 #include "qdbusmessage_p.h"
 
-QDBusMessagePrivate::QDBusMessagePrivate(QDBusMessage *qq)
-    : msg(0), reply(0), q(qq), type(DBUS_MESSAGE_TYPE_INVALID), timeout(-1), ref(1)
+QDBusMessagePrivate::QDBusMessagePrivate(QDBusMessage *qq) : msg(0), reply(0), q(qq), type(DBUS_MESSAGE_TYPE_INVALID), timeout(-1), ref(1)
 {
 }
 
 QDBusMessagePrivate::~QDBusMessagePrivate()
 {
-    if (msg)
+    if(msg)
         dbus_message_unref(msg);
-    if (reply)
+    if(reply)
         dbus_message_unref(reply);
 }
 
 ///////////////
 
 
-QDBusMessage QDBusMessage::signal(const QString &path, const QString &interface,
-                                  const QString &member)
+QDBusMessage QDBusMessage::signal(const QString &path, const QString &interface, const QString &member)
 {
     QDBusMessage message;
     message.d->type = DBUS_MESSAGE_TYPE_SIGNAL;
@@ -59,8 +57,7 @@ QDBusMessage QDBusMessage::signal(const QString &path, const QString &interface,
     return message;
 }
 
-QDBusMessage QDBusMessage::methodCall(const QString &service, const QString &path,
-                                      const QString &interface, const QString &method)
+QDBusMessage QDBusMessage::methodCall(const QString &service, const QString &path, const QString &interface, const QString &method)
 {
     QDBusMessage message;
     message.d->type = DBUS_MESSAGE_TYPE_METHOD_CALL;
@@ -83,12 +80,12 @@ QDBusMessage QDBusMessage::methodReply(const QDBusMessage &other)
     return message;
 }
 
-QDBusMessage QDBusMessage::methodError(const QDBusMessage &other, const QDBusError& error)
+QDBusMessage QDBusMessage::methodError(const QDBusMessage &other, const QDBusError &error)
 {
     Q_ASSERT(other.d->msg);
 
     QDBusMessage message;
-    if (!error.isValid())
+    if(!error.isValid())
     {
         qWarning("QDBusMessage: error passed to methodError() is not valid!");
         return message;
@@ -106,8 +103,7 @@ QDBusMessage::QDBusMessage()
     d = new QDBusMessagePrivate(this);
 }
 
-QDBusMessage::QDBusMessage(const QDBusMessage &other)
-    : QValueList<QDBusData>(other)
+QDBusMessage::QDBusMessage(const QDBusMessage &other) : QValueList< QDBusData >(other)
 {
     d = other.d;
     d->ref.ref();
@@ -115,18 +111,19 @@ QDBusMessage::QDBusMessage(const QDBusMessage &other)
 
 QDBusMessage::~QDBusMessage()
 {
-    if (!d->ref.deref())
+    if(!d->ref.deref())
         delete d;
 }
 
 QDBusMessage &QDBusMessage::operator=(const QDBusMessage &other)
 {
-    QValueList<QDBusData>::operator=(other);
+    QValueList< QDBusData >::operator=(other);
     // FIXME-QT4 qAtomicAssign(d, other.d);
-    if (other.d) other.d->ref.ref();
-    QDBusMessagePrivate* old = d;
+    if(other.d)
+        other.d->ref.ref();
+    QDBusMessagePrivate *old = d;
     d = other.d;
-    if (old && !old->ref.deref())
+    if(old && !old->ref.deref())
         delete old;
     return *this;
 }
@@ -134,25 +131,22 @@ QDBusMessage &QDBusMessage::operator=(const QDBusMessage &other)
 DBusMessage *QDBusMessage::toDBusMessage() const
 {
     DBusMessage *msg = 0;
-    switch (d->type) {
-    case DBUS_MESSAGE_TYPE_METHOD_CALL:
-        msg = dbus_message_new_method_call(d->service.utf8().data(),
-                d->path.utf8().data(), d->interface.utf8().data(),
-                d->member.utf8().data());
-        break;
-    case DBUS_MESSAGE_TYPE_SIGNAL:
-        msg = dbus_message_new_signal(d->path.utf8().data(),
-                d->interface.utf8().data(), d->member.utf8().data());
-        break;
-    case DBUS_MESSAGE_TYPE_METHOD_RETURN:
-        msg = dbus_message_new_method_return(d->reply);
-        break;
-    case DBUS_MESSAGE_TYPE_ERROR:
-        msg = dbus_message_new_error(d->reply, d->error.name().utf8().data(),
-                d->error.message().utf8().data());
-        break;
+    switch(d->type)
+    {
+        case DBUS_MESSAGE_TYPE_METHOD_CALL:
+            msg = dbus_message_new_method_call(d->service.utf8().data(), d->path.utf8().data(), d->interface.utf8().data(), d->member.utf8().data());
+            break;
+        case DBUS_MESSAGE_TYPE_SIGNAL:
+            msg = dbus_message_new_signal(d->path.utf8().data(), d->interface.utf8().data(), d->member.utf8().data());
+            break;
+        case DBUS_MESSAGE_TYPE_METHOD_RETURN:
+            msg = dbus_message_new_method_return(d->reply);
+            break;
+        case DBUS_MESSAGE_TYPE_ERROR:
+            msg = dbus_message_new_error(d->reply, d->error.name().utf8().data(), d->error.message().utf8().data());
+            break;
     }
-    if (!msg)
+    if(!msg)
         return 0;
 
     QDBusMarshall::listToMessage(*this, msg);
@@ -162,7 +156,7 @@ DBusMessage *QDBusMessage::toDBusMessage() const
 QDBusMessage QDBusMessage::fromDBusMessage(DBusMessage *dmsg)
 {
     QDBusMessage message;
-    if (!dmsg)
+    if(!dmsg)
         return message;
 
     message.d->type = dbus_message_get_type(dmsg);
@@ -174,7 +168,7 @@ QDBusMessage QDBusMessage::fromDBusMessage(DBusMessage *dmsg)
 
     DBusError dbusError;
     dbus_error_init(&dbusError);
-    if (dbus_set_error_from_message(&dbusError, dmsg))
+    if(dbus_set_error_from_message(&dbusError, dmsg))
     {
         message.d->error = QDBusError(&dbusError);
     }
@@ -225,7 +219,7 @@ void QDBusMessage::setTimeout(int ms)
  */
 int QDBusMessage::serialNumber() const
 {
-    if (!d->msg)
+    if(!d->msg)
         return 0;
     return dbus_message_get_serial(d->msg);
 }
@@ -240,24 +234,24 @@ int QDBusMessage::serialNumber() const
  */
 int QDBusMessage::replySerialNumber() const
 {
-    if (!d->msg)
+    if(!d->msg)
         return 0;
     return dbus_message_get_reply_serial(d->msg);
 }
 
 QDBusMessage::MessageType QDBusMessage::type() const
 {
-    switch (d->type) {
-    case DBUS_MESSAGE_TYPE_METHOD_CALL:
-        return MethodCallMessage;
-    case DBUS_MESSAGE_TYPE_METHOD_RETURN:
-        return ReplyMessage;
-    case DBUS_MESSAGE_TYPE_ERROR:
-        return ErrorMessage;
-    case DBUS_MESSAGE_TYPE_SIGNAL:
-        return SignalMessage;
-    default:
-        return InvalidMessage;
+    switch(d->type)
+    {
+        case DBUS_MESSAGE_TYPE_METHOD_CALL:
+            return MethodCallMessage;
+        case DBUS_MESSAGE_TYPE_METHOD_RETURN:
+            return ReplyMessage;
+        case DBUS_MESSAGE_TYPE_ERROR:
+            return ErrorMessage;
+        case DBUS_MESSAGE_TYPE_SIGNAL:
+            return SignalMessage;
+        default:
+            return InvalidMessage;
     }
 }
-

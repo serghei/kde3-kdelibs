@@ -26,86 +26,83 @@
 
 using namespace KABC;
 
-AddresseeHelper * AddresseeHelper::s_self;
+AddresseeHelper *AddresseeHelper::s_self;
 
 // static
 AddresseeHelper *AddresseeHelper::self()
 {
-  if ( !s_self )
-    s_self = new AddresseeHelper();
+    if(!s_self)
+        s_self = new AddresseeHelper();
 
-  return s_self;
+    return s_self;
 }
 
-AddresseeHelper::AddresseeHelper()
-  : QObject( qApp ),
-    DCOPObject( "KABC::AddresseeHelper" )
+AddresseeHelper::AddresseeHelper() : QObject(qApp), DCOPObject("KABC::AddresseeHelper")
 {
-  initSettings();
+    initSettings();
 
-  connectDCOPSignal( "kaddressbook", "KABC::AddressBookConfig",
-                     "changed()", "initSettings()", false );
+    connectDCOPSignal("kaddressbook", "KABC::AddressBookConfig", "changed()", "initSettings()", false);
 }
 
 // static
-void AddresseeHelper::addToSet( const QStringList& list,
-                                std::set<QString>& container )
+void AddresseeHelper::addToSet(const QStringList &list, std::set< QString > &container)
 {
-  QStringList::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    if ( !(*it).isEmpty() )
-      container.insert( *it );
-  }
+    QStringList::ConstIterator it;
+    for(it = list.begin(); it != list.end(); ++it)
+    {
+        if(!(*it).isEmpty())
+            container.insert(*it);
+    }
 }
 
 void AddresseeHelper::initSettings()
 {
-  mTitles.clear();
-  mSuffixes.clear();
-  mPrefixes.clear();
+    mTitles.clear();
+    mSuffixes.clear();
+    mPrefixes.clear();
 
-  mTitles.insert( i18n( "Dr." ) );
-  mTitles.insert( i18n( "Miss" ) );
-  mTitles.insert( i18n( "Mr." ) );
-  mTitles.insert( i18n( "Mrs." ) );
-  mTitles.insert( i18n( "Ms." ) );
-  mTitles.insert( i18n( "Prof." ) );
+    mTitles.insert(i18n("Dr."));
+    mTitles.insert(i18n("Miss"));
+    mTitles.insert(i18n("Mr."));
+    mTitles.insert(i18n("Mrs."));
+    mTitles.insert(i18n("Ms."));
+    mTitles.insert(i18n("Prof."));
 
-  mSuffixes.insert( i18n( "I" ) );
-  mSuffixes.insert( i18n( "II" ) );
-  mSuffixes.insert( i18n( "III" ) );
-  mSuffixes.insert( i18n( "Jr." ) );
-  mSuffixes.insert( i18n( "Sr." ) );
+    mSuffixes.insert(i18n("I"));
+    mSuffixes.insert(i18n("II"));
+    mSuffixes.insert(i18n("III"));
+    mSuffixes.insert(i18n("Jr."));
+    mSuffixes.insert(i18n("Sr."));
 
-  mPrefixes.insert( "van" );
-  mPrefixes.insert( "von" );
-  mPrefixes.insert( "de" );
+    mPrefixes.insert("van");
+    mPrefixes.insert("von");
+    mPrefixes.insert("de");
 
-  KConfig config( "kabcrc", true, false ); // readonly, no kdeglobals
-  config.setGroup( "General" );
+    KConfig config("kabcrc", true, false); // readonly, no kdeglobals
+    config.setGroup("General");
 
-  addToSet( config.readListEntry( "Prefixes" ),   mTitles );
-  addToSet( config.readListEntry( "Inclusions" ), mPrefixes );
-  addToSet( config.readListEntry( "Suffixes" ),   mSuffixes );
-  mTradeAsFamilyName = config.readBoolEntry( "TradeAsFamilyName", true );
+    addToSet(config.readListEntry("Prefixes"), mTitles);
+    addToSet(config.readListEntry("Inclusions"), mPrefixes);
+    addToSet(config.readListEntry("Suffixes"), mSuffixes);
+    mTradeAsFamilyName = config.readBoolEntry("TradeAsFamilyName", true);
 }
 
-bool AddresseeHelper::containsTitle( const QString& title ) const
+bool AddresseeHelper::containsTitle(const QString &title) const
 {
-  return mTitles.find( title ) != mTitles.end();
+    return mTitles.find(title) != mTitles.end();
 }
 
-bool AddresseeHelper::containsPrefix( const QString& prefix ) const
+bool AddresseeHelper::containsPrefix(const QString &prefix) const
 {
-  return mPrefixes.find( prefix ) != mPrefixes.end();
+    return mPrefixes.find(prefix) != mPrefixes.end();
 }
 
-bool AddresseeHelper::containsSuffix( const QString& suffix ) const
+bool AddresseeHelper::containsSuffix(const QString &suffix) const
 {
-  return mSuffixes.find( suffix ) != mSuffixes.end();
+    return mSuffixes.find(suffix) != mSuffixes.end();
 }
 
 bool AddresseeHelper::tradeAsFamilyName() const
 {
-  return mTradeAsFamilyName;
+    return mTradeAsFamilyName;
 }

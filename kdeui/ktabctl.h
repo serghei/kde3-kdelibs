@@ -32,7 +32,7 @@
 /**
  * Tabbed dialog with extended features.
  * KTabCtl is very similar to QTabDialog, with the following differences:
- * 
+ *
  * @li To avoid confusion, the API is almost identical with QTabDialog.
  * @li Does not create any buttons, therefore KTabCtl is not limited
  * to dialog boxes. You can use it whereever you want.
@@ -45,23 +45,22 @@
  * @author Alexander Sanda (alex@darkstar.ping.at)
  * @version $Id: ktabctl.h 465272 2005-09-29 09:47:40Z mueller $
 */
-class KDEUI_EXPORT KTabCtl : public QWidget
-{
+class KDEUI_EXPORT KTabCtl : public QWidget {
     Q_OBJECT
 
 public:
     KTabCtl(QWidget *parent = 0, const char *name = 0);
-   ~KTabCtl();
+    ~KTabCtl();
 
     void show();
-    void setFont(const QFont & font);
-    void setTabFont( const QFont &font );
+    void setFont(const QFont &font);
+    void setTabFont(const QFont &font);
 
-    void addTab(QWidget *, const QString&);
-    bool isTabEnabled(const QString& );
-    void setTabEnabled(const QString&, bool);
+    void addTab(QWidget *, const QString &);
+    bool isTabEnabled(const QString &);
+    void setTabEnabled(const QString &, bool);
     void setBorder(bool);
-    void setShape( QTabBar::Shape shape );
+    void setShape(QTabBar::Shape shape);
     virtual QSize sizeHint() const;
 
 protected:
@@ -70,7 +69,7 @@ protected:
 
 signals:
     void tabSelected(int);
-    
+
 protected slots:
     void showTab(int i);
 
@@ -78,13 +77,15 @@ protected:
     void setSizes();
     QRect getChildRect() const;
 
-    QTabBar * tabs;
-    QMemArray<QWidget *> pages;
+    QTabBar *tabs;
+    QMemArray< QWidget * > pages;
     int bh;
     bool blBorder;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-    class KTabCtrlPrivate* d;
+    class KTabCtrlPrivate *d;
 };
 #endif

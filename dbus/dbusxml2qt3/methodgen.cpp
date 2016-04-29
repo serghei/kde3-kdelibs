@@ -27,67 +27,67 @@
 // local includes
 #include "methodgen.h"
 
-static bool parseDBusSignature(const QString& signature, Argument& argument)
+static bool parseDBusSignature(const QString &signature, Argument &argument)
 {
     argument.dbusSignature = signature;
 
-    if (signature.length() == 1)
+    if(signature.length() == 1)
     {
-        if (signature == "b")
+        if(signature == "b")
         {
             argument.signature = "bool";
             argument.accessor = "Bool";
             argument.isPrimitive = true;
         }
-        else if (signature == "y")
+        else if(signature == "y")
         {
             argument.signature = "Q_UINT8";
             argument.accessor = "Byte";
             argument.isPrimitive = true;
         }
-        else if (signature == "n")
+        else if(signature == "n")
         {
             argument.signature = "Q_INT16";
             argument.accessor = "Int16";
             argument.isPrimitive = true;
         }
-        else if (signature == "q")
+        else if(signature == "q")
         {
             argument.signature = "Q_UINT16";
             argument.accessor = "UInt16";
             argument.isPrimitive = true;
         }
-        else if (signature == "i")
+        else if(signature == "i")
         {
             argument.signature = "Q_INT32";
             argument.accessor = "Int32";
             argument.isPrimitive = true;
         }
-        else if (signature == "u")
+        else if(signature == "u")
         {
             argument.signature = "Q_UINT32";
             argument.accessor = "UInt32";
             argument.isPrimitive = true;
         }
-        else if (signature == "x")
+        else if(signature == "x")
         {
             argument.signature = "Q_INT64";
             argument.accessor = "Int64";
             argument.isPrimitive = true;
         }
-        else if (signature == "t")
+        else if(signature == "t")
         {
             argument.signature = "Q_UINT64";
             argument.accessor = "UInt64";
             argument.isPrimitive = true;
         }
-        else if (signature == "d")
+        else if(signature == "d")
         {
             argument.signature = "double";
             argument.accessor = "Double";
             argument.isPrimitive = true;
         }
-        else if (signature == "s")
+        else if(signature == "s")
         {
             argument.signature = "QString";
             argument.accessor = "String";
@@ -96,7 +96,7 @@ static bool parseDBusSignature(const QString& signature, Argument& argument)
             argument.forwardDeclarations.append("class QString");
             argument.sourceIncludes["Qt"].append("<qstring.h>");
         }
-        else if (signature == "o")
+        else if(signature == "o")
         {
             argument.signature = "QDBusObjectPath";
             argument.accessor = "ObjectPath";
@@ -105,7 +105,7 @@ static bool parseDBusSignature(const QString& signature, Argument& argument)
             argument.forwardDeclarations.append("class QDBusObjectPath");
             argument.sourceIncludes["qdbus"].append("<dbus/qdbusobjectpath.h>");
         }
-        else if (signature == "v")
+        else if(signature == "v")
         {
             argument.signature = "QDBusVariant";
             argument.accessor = "Variant";
@@ -117,9 +117,9 @@ static bool parseDBusSignature(const QString& signature, Argument& argument)
         else
             return false;
     }
-    else if (signature.startsWith("a"))
+    else if(signature.startsWith("a"))
     {
-        if (signature == "as")
+        if(signature == "as")
         {
             argument.signature = "QStringList";
             argument.accessor = "List";
@@ -131,21 +131,23 @@ static bool parseDBusSignature(const QString& signature, Argument& argument)
             argument.sourceIncludes["qdbus"].append("<dbus/qdbusdatalist.h>");
             argument.sourceIncludes["Qt"].append("<qstringlist.h>");
         }
-        else if (signature.startsWith("a{"))
+        else if(signature.startsWith("a{"))
         {
             int from = signature.find("{");
             int to = signature.findRev("}");
-            if (from == -1 || to == -1 || (to - from - 1) < 2) return false;
+            if(from == -1 || to == -1 || (to - from - 1) < 2)
+                return false;
 
             QString dictSignature = signature.mid(from + 1, (to - from - 1));
 
             Argument key;
-            if (!parseDBusSignature(dictSignature.left(1), key)) return false;
+            if(!parseDBusSignature(dictSignature.left(1), key))
+                return false;
 
             Argument value;
-            if (parseDBusSignature(dictSignature.mid(1), value))
+            if(parseDBusSignature(dictSignature.mid(1), value))
             {
-                if (!value.subAccessor.isEmpty())
+                if(!value.subAccessor.isEmpty())
                 {
                     argument.isPrimitive = false;
                     argument.containerClass = "QDBusDataMap<" + key.signature + ">";
@@ -163,8 +165,7 @@ static bool parseDBusSignature(const QString& signature, Argument& argument)
                 {
                     argument.isPrimitive = false;
                     argument.containerClass = "QDBusDataMap<" + key.signature + ">";
-                    argument.signature = "QMap<" + key.signature +
-                                        ", " + value.signature + ">";
+                    argument.signature = "QMap<" + key.signature + ", " + value.signature + ">";
                     argument.accessor = key.accessor + "KeyMap";
                     argument.subAccessor = value.accessor + "Map";
 
@@ -177,11 +178,9 @@ static bool parseDBusSignature(const QString& signature, Argument& argument)
                     argument.sourceIncludes["qdbus"].append("<dbus/qdbusdata.h>");
                     argument.sourceIncludes["qdbus"].append("<dbus/qdbusdatamap.h>");
 
-                    QMap<QString, QStringList>::const_iterator it =
-                        value.sourceIncludes.begin();
-                    QMap<QString, QStringList>::const_iterator endIt =
-                        value.sourceIncludes.end();
-                    for (; it != endIt; ++it)
+                    QMap< QString, QStringList >::const_iterator it = value.sourceIncludes.begin();
+                    QMap< QString, QStringList >::const_iterator endIt = value.sourceIncludes.end();
+                    for(; it != endIt; ++it)
                     {
                         argument.sourceIncludes[it.key()] += it.data();
                     }
@@ -207,7 +206,7 @@ static bool parseDBusSignature(const QString& signature, Argument& argument)
             QString itemSignature = signature.mid(1);
 
             Argument item;
-            if (parseDBusSignature(itemSignature, item))
+            if(parseDBusSignature(itemSignature, item))
             {
                 argument.isPrimitive = false;
                 argument.signature = "QValueList<" + item.signature + ">";
@@ -222,11 +221,9 @@ static bool parseDBusSignature(const QString& signature, Argument& argument)
                 argument.sourceIncludes["Qt"].append("<qvaluelist.h>");
                 argument.sourceIncludes["qdbus"].append("<dbus/qdbusdatalist.h>");
 
-                QMap<QString, QStringList>::const_iterator it =
-                    item.sourceIncludes.begin();
-                QMap<QString, QStringList>::const_iterator endIt =
-                    item.sourceIncludes.end();
-                for (; it != endIt; ++it)
+                QMap< QString, QStringList >::const_iterator it = item.sourceIncludes.begin();
+                QMap< QString, QStringList >::const_iterator endIt = item.sourceIncludes.end();
+                for(; it != endIt; ++it)
                 {
                     argument.sourceIncludes[it.key()] += it.data();
                 }
@@ -249,27 +246,32 @@ static bool parseDBusSignature(const QString& signature, Argument& argument)
     return true;
 }
 
-static QMap<QString, QString> extractTypeAnnotations(const QDomElement& element)
+static QMap< QString, QString > extractTypeAnnotations(const QDomElement &element)
 {
     const QString annotationPrefix = "org.freedesktop.DBus.Qt3.Type.";
 
-    QMap<QString, QString> annotations;
+    QMap< QString, QString > annotations;
 
     QDomNode node = element.firstChild();
-    for (uint count = 1; !node.isNull(); node = node.nextSibling(), ++count)
+    for(uint count = 1; !node.isNull(); node = node.nextSibling(), ++count)
     {
-        if (!node.isElement()) continue;
+        if(!node.isElement())
+            continue;
 
         QDomElement element = node.toElement();
-        if (element.tagName() != "annotation") continue;
+        if(element.tagName() != "annotation")
+            continue;
 
         QString name = element.attribute("name");
-        if (name.isEmpty()) continue;
+        if(name.isEmpty())
+            continue;
 
         QString value = element.attribute("value").stripWhiteSpace();
-        if (value.isEmpty()) continue;
+        if(value.isEmpty())
+            continue;
 
-        if (!name.startsWith(annotationPrefix)) continue;
+        if(!name.startsWith(annotationPrefix))
+            continue;
 
         QString arg = name.mid(annotationPrefix.length());
 
@@ -279,55 +281,59 @@ static QMap<QString, QString> extractTypeAnnotations(const QDomElement& element)
     return annotations;
 }
 
-static bool hasAnnotation(const QDomElement& element, const QString& annotation, QString* value = 0)
+static bool hasAnnotation(const QDomElement &element, const QString &annotation, QString *value = 0)
 {
-    for (QDomNode node = element.firstChild(); !node.isNull();
-         node = node.nextSibling())
+    for(QDomNode node = element.firstChild(); !node.isNull(); node = node.nextSibling())
     {
-        if (!node.isElement()) continue;
+        if(!node.isElement())
+            continue;
 
         QDomElement childElement = node.toElement();
-        if (childElement.tagName() != "annotation") continue;
-        if (childElement.attribute("name") != annotation) continue;
+        if(childElement.tagName() != "annotation")
+            continue;
+        if(childElement.attribute("name") != annotation)
+            continue;
 
-        if (value != 0) *value = childElement.attribute("value");
+        if(value != 0)
+            *value = childElement.attribute("value");
         return true;
     }
 
     return false;
 }
 
-static QValueList<Argument> extractArguments(const QDomElement& methodElement,
-        Class& classData)
+static QValueList< Argument > extractArguments(const QDomElement &methodElement, Class &classData)
 {
-    QMap<QString, QString> argAnnotations = extractTypeAnnotations(methodElement);
+    QMap< QString, QString > argAnnotations = extractTypeAnnotations(methodElement);
 
-    QValueList<Argument> arguments;
+    QValueList< Argument > arguments;
 
     bool isSignal = methodElement.tagName() == "signal";
 
-    uint inCount  = 0;
+    uint inCount = 0;
     uint outCount = 0;
-    for (QDomNode node = methodElement.firstChild(); !node.isNull();
-         node = node.nextSibling())
+    for(QDomNode node = methodElement.firstChild(); !node.isNull(); node = node.nextSibling())
     {
-        if (!node.isElement()) continue;
+        if(!node.isElement())
+            continue;
 
         QDomElement element = node.toElement();
-        if (element.tagName() != "arg") continue;
-        if (element.attribute("type").isEmpty()) continue;
+        if(element.tagName() != "arg")
+            continue;
+        if(element.attribute("type").isEmpty())
+            continue;
 
         Argument argument;
         argument.name = element.attribute("name");
-        if (argument.name.isEmpty())
+        if(argument.name.isEmpty())
             argument.name = QString("arg%1").arg(inCount + outCount);
 
         argument.direction = Argument::In;
-        if (!isSignal && element.attribute("direction", "in") == "out")
+        if(!isSignal && element.attribute("direction", "in") == "out")
             argument.direction = Argument::Out;
 
         QString annotation;
-        if (!isSignal && argument.direction == Argument::In)
+        if(!isSignal && argument.direction == Argument::In)
         {
             annotation = argAnnotations[QString("In%1").arg(inCount)];
             ++inCount;
@@ -338,22 +344,21 @@ static QValueList<Argument> extractArguments(const QDomElement& methodElement,
             ++outCount;
         }
 
-        if (!annotation.isEmpty())
+        if(!annotation.isEmpty())
         {
             // just assume nobody uses annotations for primitives
             argument.annotatedType = annotation;
-            argument.signature     = annotation;
-            argument.isPrimitive   = false;
+            argument.signature = annotation;
+            argument.isPrimitive = false;
             argument.dbusSignature = element.attribute("type");
 
-            QString includeBase =
-                QString("\"%1type%2.h\"").arg(classData.name.lower());
+            QString includeBase = QString("\"%1type%2.h\"").arg(classData.name.lower());
 
             argument.headerIncludes["local"].append(includeBase.arg("declarations"));
             argument.sourceIncludes["local"].append(includeBase.arg("includes"));
             argument.sourceIncludes["qdbus"].append("<dbus/qdbusdataconverter.h>");
         }
-        else if (!parseDBusSignature(element.attribute("type"), argument))
+        else if(!parseDBusSignature(element.attribute("type"), argument))
         {
             argument.signature = "QDBusData";
             argument.isPrimitive = false;
@@ -368,28 +373,25 @@ static QValueList<Argument> extractArguments(const QDomElement& methodElement,
     return arguments;
 }
 
-static void writeVariable(const Argument& argument, uint index,
-        const QString& prefix, QTextStream& stream)
+static void writeVariable(const Argument &argument, uint index, const QString &prefix, QTextStream &stream)
 {
     stream << prefix << argument.signature << " _" << argument.name;
-    if (argument.direction == Argument::In)
+    if(argument.direction == Argument::In)
     {
-        if (!argument.annotatedType.isEmpty())
+        if(!argument.annotatedType.isEmpty())
         {
             stream << ";" << endl;
 
             // TODO: error handling?
-            stream << prefix << "QDBusDataConverter::convertFromQDBusData<"
-                   << argument.annotatedType
-                   << QString(">(message[%1], _").arg(index)
+            stream << prefix << "QDBusDataConverter::convertFromQDBusData<" << argument.annotatedType << QString(">(message[%1], _").arg(index)
                    << argument.name << ")";
         }
-        else if (!argument.accessor.isEmpty())
+        else if(!argument.accessor.isEmpty())
         {
             stream << QString::fromUtf8(" = message[%1].to").arg(index);
             stream << argument.accessor;
 
-            if (!argument.subAccessor.isEmpty())
+            if(!argument.subAccessor.isEmpty())
             {
                 stream << QString("().to%1").arg(argument.subAccessor);
             }
@@ -403,49 +405,48 @@ static void writeVariable(const Argument& argument, uint index,
     stream << ";" << endl;
 }
 
-static void writeVariables(const QString& prefix, const Method& method,
-        QTextStream& stream)
+static void writeVariables(const QString &prefix, const Method &method, QTextStream &stream)
 {
     uint count = 0;
-    QValueList<Argument>::const_iterator it    = method.arguments.begin();
-    QValueList<Argument>::const_iterator endIt = method.arguments.end();
-    for (; it != endIt; ++it)
+    QValueList< Argument >::const_iterator it = method.arguments.begin();
+    QValueList< Argument >::const_iterator endIt = method.arguments.end();
+    for(; it != endIt; ++it)
     {
         writeVariable(*it, count, prefix, stream);
 
-        if ((*it).direction == Argument::In) ++count;
+        if((*it).direction == Argument::In)
+            ++count;
     }
 }
 
-static void writeSignalEmit(const Method& signal, QTextStream& stream)
+static void writeSignalEmit(const Method &signal, QTextStream &stream)
 {
     stream << "        emit " << signal.name << "(";
 
-    QValueList<Argument>::const_iterator it    = signal.arguments.begin();
-    QValueList<Argument>::const_iterator endIt = signal.arguments.end();
-    for (; it != endIt;)
+    QValueList< Argument >::const_iterator it = signal.arguments.begin();
+    QValueList< Argument >::const_iterator endIt = signal.arguments.end();
+    for(; it != endIt;)
     {
         stream << "_" << (*it).name;
 
         ++it;
-        if (it != endIt) stream << ", ";
+        if(it != endIt)
+            stream << ", ";
     }
 
     stream << ");" << endl;
 }
 
-static void writeMethodIntrospection(const Method& method, bool& firstArgument,
-    QTextStream& stream)
+static void writeMethodIntrospection(const Method &method, bool &firstArgument, QTextStream &stream)
 {
-    stream << "    methodElement.setAttribute(\"name\", \""
-           << method.name << "\");" << endl;
+    stream << "    methodElement.setAttribute(\"name\", \"" << method.name << "\");" << endl;
 
-    QValueList<Argument>::const_iterator it    = method.arguments.begin();
-    QValueList<Argument>::const_iterator endIt = method.arguments.end();
-    for (; it != endIt; ++it)
+    QValueList< Argument >::const_iterator it = method.arguments.begin();
+    QValueList< Argument >::const_iterator endIt = method.arguments.end();
+    for(; it != endIt; ++it)
     {
         stream << endl;
-        if (firstArgument)
+        if(firstArgument)
         {
             firstArgument = false;
 
@@ -458,33 +459,26 @@ static void writeMethodIntrospection(const Method& method, bool& firstArgument,
                    << "\"arg\");" << endl;
         }
 
-        stream << "    argumentElement.setAttribute(\"name\",      \""
-               << (*it).name << "\");" << endl;
+        stream << "    argumentElement.setAttribute(\"name\",      \"" << (*it).name << "\");" << endl;
 
-        stream << "    argumentElement.setAttribute(\"type\",      \""
-               << (*it).dbusSignature << "\");" << endl;
+        stream << "    argumentElement.setAttribute(\"type\",      \"" << (*it).dbusSignature << "\");" << endl;
 
-        stream << "    argumentElement.setAttribute(\"direction\", \""
-               << ((*it).direction == Argument::In ? "in" : "out") << "\");"
-               << endl;
+        stream << "    argumentElement.setAttribute(\"direction\", \"" << ((*it).direction == Argument::In ? "in" : "out") << "\");" << endl;
 
         stream << "    methodElement.appendChild(argumentElement);" << endl;
     }
     stream << endl;
 }
 
-static void writeNodeInitialization(const Class& classData,
-        const QValueList<Class>& interfaces, QTextStream& stream)
+static void writeNodeInitialization(const Class &classData, const QValueList< Class > &interfaces, QTextStream &stream)
 {
-    stream << "bool " << classData.name
-           << "::registerObject(const QDBusConnection& connection, "
+    stream << "bool " << classData.name << "::registerObject(const QDBusConnection& connection, "
            << "const QString& path)" << endl;
     stream << "{" << endl;
     stream << "    if (path.isEmpty()) return false;" << endl;
     stream << endl;
 
-    stream << "    if (!m_private->objectPath.isEmpty()) unregisterObject();"
-           << endl;
+    stream << "    if (!m_private->objectPath.isEmpty()) unregisterObject();" << endl;
     stream << endl;
 
     stream << "    m_private->connection = connection;" << endl;
@@ -501,14 +495,13 @@ static void writeNodeInitialization(const Class& classData,
 
     stream << "    if (m_private->interfaces.isEmpty())" << endl;
     stream << "    {" << endl;
-    stream << "        QString name = \"org.freedesktop.DBus.Introspectable\";"
-           << endl;
+    stream << "        QString name = \"org.freedesktop.DBus.Introspectable\";" << endl;
     stream << "        QDBusObjectBase* interface = m_private;" << endl;
     stream << "        m_private->interfaces.insert(name, interface);" << endl;
 
-    QValueList<Class>::const_iterator it    = interfaces.begin();
-    QValueList<Class>::const_iterator endIt = interfaces.end();
-    for (; it != endIt; ++it)
+    QValueList< Class >::const_iterator it = interfaces.begin();
+    QValueList< Class >::const_iterator endIt = interfaces.end();
+    for(; it != endIt; ++it)
     {
         stream << endl;
         stream << "        name = \"" << (*it).dbusName << "\";" << endl;
@@ -523,8 +516,7 @@ static void writeNodeInitialization(const Class& classData,
     stream << "}" << endl;
     stream << endl;
 }
-static void writeNodeIntrospection(const Class& classData,
-        const QValueList<Class>& interfaces, QTextStream& stream)
+static void writeNodeIntrospection(const Class &classData, const QValueList< Class > &interfaces, QTextStream &stream)
 {
     stream << "void " << classData.name << "::Private"
            << "::cacheIntrospectionData()" << endl;
@@ -532,23 +524,21 @@ static void writeNodeIntrospection(const Class& classData,
 
     stream << "    QDomDocument doc;" << endl;
     stream << "    QDomElement nodeElement = doc.createElement(\"node\");" << endl;
-    stream << "    QDomElement interfaceElement = doc.createElement(\"interface\");"
-           << endl;
+    stream << "    QDomElement interfaceElement = doc.createElement(\"interface\");" << endl;
     stream << "    org::freedesktop::DBus::Introspectable"
            << "::buildIntrospectionData(interfaceElement);" << endl;
     stream << "    nodeElement.appendChild(interfaceElement);" << endl;
 
-    QValueList<Class>::const_iterator it    = interfaces.begin();
-    QValueList<Class>::const_iterator endIt = interfaces.end();
-    for (; it != endIt; ++it)
+    QValueList< Class >::const_iterator it = interfaces.begin();
+    QValueList< Class >::const_iterator endIt = interfaces.end();
+    for(; it != endIt; ++it)
     {
-        if ((*it).dbusName == "org.freedesktop.DBus.Introspectable") continue;
+        if((*it).dbusName == "org.freedesktop.DBus.Introspectable")
+            continue;
 
         stream << endl;
-        stream << "    interfaceElement = doc.createElement(\"interface\");"
-               << endl;
-        stream << "    " << (*it).namespaces.join("::") + "::" + (*it).name
-               << "::buildIntrospectionData(interfaceElement);" << endl;
+        stream << "    interfaceElement = doc.createElement(\"interface\");" << endl;
+        stream << "    " << (*it).namespaces.join("::") + "::" + (*it).name << "::buildIntrospectionData(interfaceElement);" << endl;
         stream << "    nodeElement.appendChild(interfaceElement);" << endl;
     }
 
@@ -565,22 +555,21 @@ static void writeNodeIntrospection(const Class& classData,
     stream << endl;
 }
 
-bool MethodGenerator::extractMethods(const QDomElement& interfaceElement,
-        Class& classData)
+bool MethodGenerator::extractMethods(const QDomElement &interfaceElement, Class &classData)
 {
-    QMap<QString, QString> propertyAnnotations =
-        extractTypeAnnotations(interfaceElement);
+    QMap< QString, QString > propertyAnnotations = extractTypeAnnotations(interfaceElement);
 
     uint propertyCount = 0;
-    for (QDomNode node = interfaceElement.firstChild(); !node.isNull();
-         node = node.nextSibling())
+    for(QDomNode node = interfaceElement.firstChild(); !node.isNull(); node = node.nextSibling())
     {
-        if (!node.isElement()) continue;
+        if(!node.isElement())
+            continue;
 
         QDomElement element = node.toElement();
-        if (element.attribute("name").isEmpty()) continue;
+        if(element.attribute("name").isEmpty())
+            continue;
 
-        if (element.tagName() == "method" || element.tagName() == "signal")
+        if(element.tagName() == "method" || element.tagName() == "signal")
         {
             Method method;
             method.name = element.attribute("name");
@@ -588,7 +577,7 @@ bool MethodGenerator::extractMethods(const QDomElement& interfaceElement,
             method.noReply = false;
             method.async = false;
 
-            if (element.tagName() == "method")
+            if(element.tagName() == "method")
             {
                 method.async = hasAnnotation(element, "org.freedesktop.DBus.GLib.Async");
                 classData.methods.append(method);
@@ -596,31 +585,29 @@ bool MethodGenerator::extractMethods(const QDomElement& interfaceElement,
             else
                 classData.signals.append(method);
         }
-        else if (element.tagName() == "property")
+        else if(element.tagName() == "property")
         {
             Property property;
-            property.name  = element.attribute("name");
-            property.read  = element.attribute("access").find("read")  != -1;
+            property.name = element.attribute("name");
+            property.read = element.attribute("access").find("read") != -1;
             property.write = element.attribute("access").find("write") != -1;
 
-            QString annotation =
-                propertyAnnotations[QString("Property%1").arg(propertyCount)];
+            QString annotation = propertyAnnotations[QString("Property%1").arg(propertyCount)];
 
-            if (!annotation.isEmpty())
+            if(!annotation.isEmpty())
             {
                 property.annotatedType = annotation;
-                property.signature     = annotation;
+                property.signature = annotation;
                 property.dbusSignature = element.attribute("type");
-                property.isPrimitive   = false;
+                property.isPrimitive = false;
 
-                QString includeBase =
-                    QString("\"%1type%2.h\"").arg(classData.name.lower());
+                QString includeBase = QString("\"%1type%2.h\"").arg(classData.name.lower());
 
                 property.headerIncludes["local"].append(includeBase.arg("declarations"));
                 property.sourceIncludes["local"].append(includeBase.arg("includes"));
                 property.sourceIncludes["qdbus"].append("<dbus/qdbusdataconverter.h>");
             }
-            else if (!parseDBusSignature(element.attribute("type"), property))
+            else if(!parseDBusSignature(element.attribute("type"), property))
             {
                 property.signature = "QDBusData";
                 property.isPrimitive = false;
@@ -634,38 +621,38 @@ bool MethodGenerator::extractMethods(const QDomElement& interfaceElement,
         }
     }
 
-    return !classData.methods.isEmpty() || !classData.signals.isEmpty() ||
-           !classData.properties.isEmpty();
+    return !classData.methods.isEmpty() || !classData.signals.isEmpty() || !classData.properties.isEmpty();
 }
 
-void MethodGenerator::writeMethodDeclaration(const Method& method, bool pureVirtual,
-        bool withError, QTextStream& stream)
+void MethodGenerator::writeMethodDeclaration(const Method &method, bool pureVirtual, bool withError, QTextStream &stream)
 {
     stream << method.name << "(";
 
-    QValueList<Argument>::const_iterator it    = method.arguments.begin();
-    QValueList<Argument>::const_iterator endIt = method.arguments.end();
-    for (; it != endIt;)
+    QValueList< Argument >::const_iterator it = method.arguments.begin();
+    QValueList< Argument >::const_iterator endIt = method.arguments.end();
+    for(; it != endIt;)
     {
-        if (!(*it).isPrimitive && (*it).direction == Argument::In)
+        if(!(*it).isPrimitive && (*it).direction == Argument::In)
             stream << "const ";
 
         stream << (*it).signature;
 
-        if (!(*it).isPrimitive || (*it).direction == Argument::Out) stream << "&";
+        if(!(*it).isPrimitive || (*it).direction == Argument::Out)
+            stream << "&";
 
         stream << " " << (*it).name;
 
         ++it;
-        if (it != endIt || withError) stream << ", ";
+        if(it != endIt || withError)
+            stream << ", ";
     }
 
-    if (withError)
+    if(withError)
         stream << "QDBusError& error)";
     else
         stream << ")";
 
-    if (pureVirtual)
+    if(pureVirtual)
         stream << " = 0;" << endl;
     else
         stream << ";" << endl;
@@ -673,45 +660,45 @@ void MethodGenerator::writeMethodDeclaration(const Method& method, bool pureVirt
     stream << endl;
 }
 
-void MethodGenerator::writePropertyDeclaration(const Property& property,
-        bool pureVirtual, QTextStream& stream)
+void MethodGenerator::writePropertyDeclaration(const Property &property, bool pureVirtual, QTextStream &stream)
 {
-    if (property.write)
+    if(property.write)
     {
         stream << "    virtual void set" << property.name << "(";
 
-        if (!property.isPrimitive) stream << "const ";
+        if(!property.isPrimitive)
+            stream << "const ";
 
         stream << property.signature;
 
-        if (!property.isPrimitive) stream << "&";
+        if(!property.isPrimitive)
+            stream << "&";
 
         stream << " value, QDBusError& error)";
 
-        if (pureVirtual)
+        if(pureVirtual)
             stream << " = 0;" << endl;
         else
             stream << ";" << endl;
     }
 
-    if (property.read)
+    if(property.read)
     {
-        stream << "    virtual " << property.signature << " get"
-               << property.name << "(QDBusError& error) const";
+        stream << "    virtual " << property.signature << " get" << property.name << "(QDBusError& error) const";
 
-        if (pureVirtual)
+        if(pureVirtual)
             stream << " = 0;" << endl;
         else
             stream << ";" << endl;
     }
 
-    if (property.read || property.write) stream << endl;
+    if(property.read || property.write)
+        stream << endl;
 }
 
-void MethodGenerator::writeMethodCallDeclaration(const Method& method,
-        QTextStream& stream)
+void MethodGenerator::writeMethodCallDeclaration(const Method &method, QTextStream &stream)
 {
-    if (method.async)
+    if(method.async)
         stream << "void call" << method.name << "Async";
     else
         stream << "QDBusMessage call" << method.name;
@@ -720,10 +707,9 @@ void MethodGenerator::writeMethodCallDeclaration(const Method& method,
     stream << endl;
 }
 
-void MethodGenerator::writeMethodCall(const Class& classData,
-        const Method& method, QTextStream& stream)
+void MethodGenerator::writeMethodCall(const Class &classData, const Method &method, QTextStream &stream)
 {
-    if (method.async)
+    if(method.async)
         stream << "void " << classData.name << "::call" << method.name << "Async";
     else
         stream << "QDBusMessage " << classData.name << "::call" << method.name;
@@ -732,7 +718,7 @@ void MethodGenerator::writeMethodCall(const Class& classData,
 
     stream << "{" << endl;
 
-    if (method.async)
+    if(method.async)
     {
         // FIXME: using writeVariables by removing asyncCallId argument
         Method reducedMethod = method;
@@ -751,11 +737,10 @@ void MethodGenerator::writeMethodCall(const Class& classData,
 
     stream << endl;
 
-    if (method.async)
+    if(method.async)
     {
         stream << "    int _asyncCallId = 0;" << endl;
-        stream << "    while (m_asyncCalls.find(_asyncCallId) != m_asyncCalls.end())"
-               << endl;
+        stream << "    while (m_asyncCalls.find(_asyncCallId) != m_asyncCalls.end())" << endl;
         stream << "    {" << endl;
         stream << "        ++_asyncCallId;" << endl;
         stream << "    }" << endl;
@@ -767,17 +752,18 @@ void MethodGenerator::writeMethodCall(const Class& classData,
     else
         stream << "    if (" << method.name << "(";
 
-    QValueList<Argument>::const_iterator it    = method.arguments.begin();
-    QValueList<Argument>::const_iterator endIt = method.arguments.end();
-    while (it != endIt)
+    QValueList< Argument >::const_iterator it = method.arguments.begin();
+    QValueList< Argument >::const_iterator endIt = method.arguments.end();
+    while(it != endIt)
     {
         stream << "_" << (*it).name;
 
         ++it;
-        if (it != endIt) stream << ", ";
+        if(it != endIt)
+            stream << ", ";
     }
 
-    if (method.async)
+    if(method.async)
     {
         stream << ");" << endl;
         stream << endl;
@@ -788,37 +774,36 @@ void MethodGenerator::writeMethodCall(const Class& classData,
         return;
     }
 
-	if (method.arguments.count() > 0) stream << ", ";
+    if(method.arguments.count() > 0)
+        stream << ", ";
     stream << "error))" << endl;
 
     stream << "    {" << endl;
     stream << "        reply = QDBusMessage::methodReply(message);" << endl;
 
     it = method.arguments.begin();
-    for (; it != endIt; ++it)
+    for(; it != endIt; ++it)
     {
-        if ((*it).direction == Argument::Out)
+        if((*it).direction == Argument::Out)
         {
-            if (!(*it).annotatedType.isEmpty())
+            if(!(*it).annotatedType.isEmpty())
             {
                 stream << "        QDBusData " << (*it).name << "Data;" << endl;
-                stream << "        QDBusDataConverter::convertToQDBusData<"
-                       << (*it).annotatedType << ">(_"
-                       << (*it).name << ", " << (*it).name << "Data);"
-                       << endl;
+                stream << "        QDBusDataConverter::convertToQDBusData<" << (*it).annotatedType << ">(_" << (*it).name << ", " << (*it).name
+                       << "Data);" << endl;
                 stream << "        reply << " << (*it).name << "Data";
             }
-            else if (!(*it).accessor.isEmpty())
+            else if(!(*it).accessor.isEmpty())
             {
                 stream << "        reply << QDBusData::from" << (*it).accessor;
-                if (!(*it).subAccessor.isEmpty())
+                if(!(*it).subAccessor.isEmpty())
                 {
                     stream << "(" << (*it).containerClass;
                 }
 
                 stream << "(_" << (*it).name << ")";
 
-                if (!(*it).subAccessor.isEmpty())
+                if(!(*it).subAccessor.isEmpty())
                 {
                     stream << ")";
                 }
@@ -837,26 +822,25 @@ void MethodGenerator::writeMethodCall(const Class& classData,
     stream << "        {" << endl;
     stream << "            qWarning(\"Call to implementation of ";
 
-    QStringList::const_iterator nsIt    = classData.namespaces.begin();
+    QStringList::const_iterator nsIt = classData.namespaces.begin();
     QStringList::const_iterator nsEndIt = classData.namespaces.end();
-    for (; nsIt != nsEndIt; ++nsIt)
+    for(; nsIt != nsEndIt; ++nsIt)
     {
         stream << *nsIt << "::";
     }
 
-    stream  << classData.name << "::" << method.name;
+    stream << classData.name << "::" << method.name;
     stream << " returned 'false' but error object is not valid!\");" << endl;
     stream << endl;
     stream << "            error = QDBusError::stdFailed(\"";
 
-    nsIt    = classData.namespaces.begin();
-    for (; nsIt != nsEndIt; ++nsIt)
+    nsIt = classData.namespaces.begin();
+    for(; nsIt != nsEndIt; ++nsIt)
     {
         stream << *nsIt << ".";
     }
 
-    stream << classData.name << "." << method.name << " execution failed\");"
-           << endl;
+    stream << classData.name << "." << method.name << " execution failed\");" << endl;
     stream << "        }" << endl;
     stream << endl;
 
@@ -869,26 +853,27 @@ void MethodGenerator::writeMethodCall(const Class& classData,
     stream << endl;
 }
 
-void MethodGenerator::writeSignalEmitter(const Class& classData,
-        const Method& method, QTextStream& stream)
+void MethodGenerator::writeSignalEmitter(const Class &classData, const Method &method, QTextStream &stream)
 {
     stream << "bool " << classData.name << "::emit" << method.name << "(";
 
-    QValueList<Argument>::const_iterator it    = method.arguments.begin();
-    QValueList<Argument>::const_iterator endIt = method.arguments.end();
-    for (; it != endIt;)
+    QValueList< Argument >::const_iterator it = method.arguments.begin();
+    QValueList< Argument >::const_iterator endIt = method.arguments.end();
+    for(; it != endIt;)
     {
-        if (!(*it).isPrimitive && (*it).direction == Argument::In)
+        if(!(*it).isPrimitive && (*it).direction == Argument::In)
             stream << "const ";
 
         stream << (*it).signature;
 
-        if (!(*it).isPrimitive || (*it).direction == Argument::Out) stream << "&";
+        if(!(*it).isPrimitive || (*it).direction == Argument::Out)
+            stream << "&";
 
         stream << " " << (*it).name;
 
         ++it;
-        if (it != endIt) stream << ", ";
+        if(it != endIt)
+            stream << ", ";
     }
 
     stream << ")" << endl;
@@ -905,32 +890,30 @@ void MethodGenerator::writeSignalEmitter(const Class& classData,
     stream << endl;
 
     it = method.arguments.begin();
-    for (; it != endIt; ++it)
+    for(; it != endIt; ++it)
     {
-        if ((*it).direction == Argument::In)
+        if((*it).direction == Argument::In)
         {
-            if (!(*it).annotatedType.isEmpty())
+            if(!(*it).annotatedType.isEmpty())
             {
                 // TODO: error handling
                 stream << "    QDBusData " << (*it).name << "Data;" << endl;
-                stream << "    if (QDBusDataConverter:convertToQDBusData<"
-                       << (*it).annotatedType << ">("
-                       << (*it).name << ", " << (*it).name << "Data"
-                       << ") != QDBusDataConverter::Success) return false;"
-                       << endl;
+                stream << "    if (QDBusDataConverter:convertToQDBusData<" << (*it).annotatedType << ">(" << (*it).name << ", " << (*it).name
+                       << "Data"
+                       << ") != QDBusDataConverter::Success) return false;" << endl;
                 stream << "    message << " << (*it).name << "Data";
             }
-            else if (!(*it).accessor.isEmpty())
+            else if(!(*it).accessor.isEmpty())
             {
                 stream << "    message << QDBusData::from" << (*it).accessor;
-                if (!(*it).subAccessor.isEmpty())
+                if(!(*it).subAccessor.isEmpty())
                 {
                     stream << "(" << (*it).containerClass;
                 }
 
                 stream << "(" << (*it).name << ")";
 
-                if (!(*it).subAccessor.isEmpty())
+                if(!(*it).subAccessor.isEmpty())
                 {
                     stream << ")";
                 }
@@ -950,27 +933,27 @@ void MethodGenerator::writeSignalEmitter(const Class& classData,
 }
 
 
-void MethodGenerator::writeInterfaceAsyncReplyHandler(const Class& classData,
-    const Method& method, QTextStream& stream)
+void MethodGenerator::writeInterfaceAsyncReplyHandler(const Class &classData, const Method &method, QTextStream &stream)
 {
-    stream << "void " << classData.name << "::" << method.name
-           << "AsyncReply(";
+    stream << "void " << classData.name << "::" << method.name << "AsyncReply(";
 
-    QValueList<Argument>::const_iterator it    = method.arguments.begin();
-    QValueList<Argument>::const_iterator endIt = method.arguments.end();
-    while (it != endIt)
+    QValueList< Argument >::const_iterator it = method.arguments.begin();
+    QValueList< Argument >::const_iterator endIt = method.arguments.end();
+    while(it != endIt)
     {
-        if (!(*it).isPrimitive && (*it).direction == Argument::In)
+        if(!(*it).isPrimitive && (*it).direction == Argument::In)
             stream << "const ";
 
         stream << (*it).signature;
 
-        if (!(*it).isPrimitive || (*it).direction == Argument::Out) stream << "&";
+        if(!(*it).isPrimitive || (*it).direction == Argument::Out)
+            stream << "&";
 
         stream << " " << (*it).name;
 
         ++it;
-        if (it != endIt) stream << ", ";
+        if(it != endIt)
+            stream << ", ";
     }
     stream << ")" << endl;
     stream << endl;
@@ -984,29 +967,25 @@ void MethodGenerator::writeInterfaceAsyncReplyHandler(const Class& classData,
     stream << "    m_asyncCalls.erase(findIt);" << endl;
     stream << endl;
 
-    stream << "    QDBusMessage reply = QDBusMessage::methodReply(call);"
-           << endl;
+    stream << "    QDBusMessage reply = QDBusMessage::methodReply(call);" << endl;
 
     it = method.arguments.begin();
-    for (++it; it != endIt; ++it) // skip asyncCallId at beginning
+    for(++it; it != endIt; ++it) // skip asyncCallId at beginning
     {
-        if (!(*it).annotatedType.isEmpty())
+        if(!(*it).annotatedType.isEmpty())
         {
             stream << "    QDBusData " << (*it).name << "Data;" << endl;
 
             // TODO error handling
-            stream << "    if (QDBusDataConverter::convertToQDBusData<"
-                   << (*it).annotatedType << ">(" << (*it).name << ", "
-                   << (*it).name << "Data"
-                   << ") != QDBusDataConverter::Success) return false;"
-                   << endl;
+            stream << "    if (QDBusDataConverter::convertToQDBusData<" << (*it).annotatedType << ">(" << (*it).name << ", " << (*it).name << "Data"
+                   << ") != QDBusDataConverter::Success) return false;" << endl;
             stream << "    reply << " << (*it).name << "Data;" << endl;
         }
-        else if (!(*it).accessor.isEmpty())
+        else if(!(*it).accessor.isEmpty())
         {
             stream << "    reply << QDBusData::from" << (*it).accessor << "(";
 
-            if ((*it).subAccessor.isEmpty())
+            if((*it).subAccessor.isEmpty())
                 stream << (*it).name;
             else
                 stream << (*it).containerClass << "(" << (*it).name << ")";
@@ -1023,8 +1002,7 @@ void MethodGenerator::writeInterfaceAsyncReplyHandler(const Class& classData,
     stream << "}" << endl;
     stream << endl;
 
-    stream << "void " << classData.name << "::" << method.name
-           << "AsyncError(int asyncCallId, const QDBusError& error)";
+    stream << "void " << classData.name << "::" << method.name << "AsyncError(int asyncCallId, const QDBusError& error)";
     stream << endl;
 
     stream << "{" << endl;
@@ -1037,43 +1015,39 @@ void MethodGenerator::writeInterfaceAsyncReplyHandler(const Class& classData,
     stream << "    m_asyncCalls.erase(findIt);" << endl;
     stream << endl;
 
-    stream << "    QDBusMessage reply = QDBusMessage::methodError(call, error);"
-           << endl;
+    stream << "    QDBusMessage reply = QDBusMessage::methodError(call, error);" << endl;
     stream << "    handleMethodReply(reply);" << endl;
 
     stream << "}" << endl;
     stream << endl;
 }
 
-void MethodGenerator::writeInterfaceMainMethod(const Class& classData,
-        QTextStream& stream)
+void MethodGenerator::writeInterfaceMainMethod(const Class &classData, QTextStream &stream)
 {
-    if (classData.methods.isEmpty()) return;
+    if(classData.methods.isEmpty())
+        return;
 
-    stream << "bool " << classData.name
-           << "::handleMethodCall(const QDBusMessage& message)" << endl;
+    stream << "bool " << classData.name << "::handleMethodCall(const QDBusMessage& message)" << endl;
     stream << "{" << endl;
 
-    stream << "    if (message.interface() != \"" << classData.dbusName
-           << "\") return false;" << endl;
+    stream << "    if (message.interface() != \"" << classData.dbusName << "\") return false;" << endl;
     stream << endl;
 
-    QValueList<Method>::const_iterator it    = classData.methods.begin();
-    QValueList<Method>::const_iterator endIt = classData.methods.end();
-    for (; it != endIt; ++it)
+    QValueList< Method >::const_iterator it = classData.methods.begin();
+    QValueList< Method >::const_iterator endIt = classData.methods.end();
+    for(; it != endIt; ++it)
     {
         stream << "    if (message.member() == \"" << (*it).name << "\")" << endl;
         stream << "    {" << endl;
 
-        if ((*it).async)
+        if((*it).async)
         {
             stream << "        call" << (*it).name << "Async(message);" << endl;
             stream << endl;
         }
         else
         {
-            stream << "        QDBusMessage reply = call" << (*it).name
-                   << "(message);" << endl;
+            stream << "        QDBusMessage reply = call" << (*it).name << "(message);" << endl;
             stream << "        handleMethodReply(reply);" << endl;
             stream << endl;
         }
@@ -1087,21 +1061,19 @@ void MethodGenerator::writeInterfaceMainMethod(const Class& classData,
     stream << endl;
 }
 
-void MethodGenerator::writeSignalHandler(const Class& classData,
-        QTextStream& stream)
+void MethodGenerator::writeSignalHandler(const Class &classData, QTextStream &stream)
 {
-    stream << "void " << classData.name
-           << "::slotHandleDBusSignal(const QDBusMessage& message)" << endl;
+    stream << "void " << classData.name << "::slotHandleDBusSignal(const QDBusMessage& message)" << endl;
     stream << "{" << endl;
 
-    QValueList<Method>::const_iterator it    = classData.signals.begin();
-    QValueList<Method>::const_iterator endIt = classData.signals.end();
+    QValueList< Method >::const_iterator it = classData.signals.begin();
+    QValueList< Method >::const_iterator endIt = classData.signals.end();
     bool first = true;
-    for (; it != endIt; ++it)
+    for(; it != endIt; ++it)
     {
         stream << "    ";
 
-        if (!first)
+        if(!first)
             stream << "else ";
         else
             first = false;
@@ -1121,35 +1093,31 @@ void MethodGenerator::writeSignalHandler(const Class& classData,
     stream << endl;
 }
 
-void MethodGenerator::writeProxyBegin(const Class& classData, QTextStream& stream)
+void MethodGenerator::writeProxyBegin(const Class &classData, QTextStream &stream)
 {
-    stream << classData.name << "::" << classData.name
-           << "(const QString& service, const QString& path, QObject* parent, const char* name)" << endl;
+    stream << classData.name << "::" << classData.name << "(const QString& service, const QString& path, QObject* parent, const char* name)" << endl;
     stream << "    : QObject(parent, name)," << endl;
     stream << "      m_baseProxy(new QDBusProxy())" << endl;
     stream << "{" << endl;
-    stream << "    m_baseProxy->setInterface(\""
-           << classData.dbusName << "\");" << endl;
+    stream << "    m_baseProxy->setInterface(\"" << classData.dbusName << "\");" << endl;
     stream << "    m_baseProxy->setPath(path);" << endl;
     stream << "    m_baseProxy->setService(service);" << endl;
     stream << endl;
 
-    if (!classData.signals.isEmpty())
+    if(!classData.signals.isEmpty())
     {
         stream << "    QObject::connect(m_baseProxy, "
                << "SIGNAL(dbusSignal(const QDBusMessage&))," << endl;
         stream << "                     this, "
-               << "       SLOT(slotHandleDBusSignal(const QDBusMessage&)));"
-               << endl;
+               << "       SLOT(slotHandleDBusSignal(const QDBusMessage&)));" << endl;
     }
 
-    if (!classData.asyncReplySignals.isEmpty())
+    if(!classData.asyncReplySignals.isEmpty())
     {
         stream << "    QObject::connect(m_baseProxy, "
                << "SIGNAL(asyncReply(int, const QDBusMessage&))," << endl;
         stream << "                     this, "
-               << "       SLOT(slotHandleAsyncReply(int, const QDBusMessage&)));"
-               << endl;
+               << "       SLOT(slotHandleAsyncReply(int, const QDBusMessage&)));" << endl;
     }
 
     stream << "}" << endl;
@@ -1162,30 +1130,28 @@ void MethodGenerator::writeProxyBegin(const Class& classData, QTextStream& strea
     stream << "}" << endl;
     stream << endl;
 
-    stream << "void " << classData.name
-           << "::setConnection(const QDBusConnection& connection)" << endl;
+    stream << "void " << classData.name << "::setConnection(const QDBusConnection& connection)" << endl;
     stream << "{" << endl;
     stream << "    m_baseProxy->setConnection(connection);" << endl;
     stream << "}" << endl;
     stream << endl;
 }
 
-void MethodGenerator::writeProxyMethod(const QString& className,
-        const Method& method, QTextStream& stream)
+void MethodGenerator::writeProxyMethod(const QString &className, const Method &method, QTextStream &stream)
 {
-    stream << "bool " << className << "::" << method.name
-           << (method.async ? "Async(" : "(");
+    stream << "bool " << className << "::" << method.name << (method.async ? "Async(" : "(");
 
-    QValueList<Argument>::const_iterator it    = method.arguments.begin();
-    QValueList<Argument>::const_iterator endIt = method.arguments.end();
-    for (; it != endIt; ++it)
+    QValueList< Argument >::const_iterator it = method.arguments.begin();
+    QValueList< Argument >::const_iterator endIt = method.arguments.end();
+    for(; it != endIt; ++it)
     {
-        if (!(*it).isPrimitive && (*it).direction == Argument::In)
+        if(!(*it).isPrimitive && (*it).direction == Argument::In)
             stream << "const ";
 
         stream << (*it).signature;
 
-        if (!(*it).isPrimitive || (*it).direction == Argument::Out) stream << "&";
+        if(!(*it).isPrimitive || (*it).direction == Argument::Out)
+            stream << "&";
 
         stream << " " << (*it).name << ", ";
     }
@@ -1199,31 +1165,28 @@ void MethodGenerator::writeProxyMethod(const QString& className,
     uint outCount = 0;
 
     it = method.arguments.begin();
-    for (; it != endIt; ++it)
+    for(; it != endIt; ++it)
     {
-        if ((*it).direction == Argument::Out)
+        if((*it).direction == Argument::Out)
         {
             ++outCount;
             continue;
         }
 
-        if (!(*it).annotatedType.isEmpty())
+        if(!(*it).annotatedType.isEmpty())
         {
             stream << "    QDBusData " << (*it).name << "Data;" << endl;
 
             // TODO error handling
-            stream << "    if (QDBusDataConverter::convertToQDBusData<"
-                   << (*it).annotatedType << ">(" << (*it).name << ", "
-                   << (*it).name << "Data"
-                   << ") != QDBusDataConverter::Success) return false;"
-                   << endl;
+            stream << "    if (QDBusDataConverter::convertToQDBusData<" << (*it).annotatedType << ">(" << (*it).name << ", " << (*it).name << "Data"
+                   << ") != QDBusDataConverter::Success) return false;" << endl;
             stream << "    parameters << " << (*it).name << "Data;" << endl;
         }
-        else if (!(*it).accessor.isEmpty())
+        else if(!(*it).accessor.isEmpty())
         {
             stream << "    parameters << QDBusData::from" << (*it).accessor << "(";
 
-            if ((*it).subAccessor.isEmpty())
+            if((*it).subAccessor.isEmpty())
                 stream << (*it).name;
             else
                 stream << (*it).containerClass << "(" << (*it).name << ")";
@@ -1236,10 +1199,9 @@ void MethodGenerator::writeProxyMethod(const QString& className,
 
     stream << endl;
 
-    if (outCount == 0 && method.noReply)
+    if(outCount == 0 && method.noReply)
     {
-        stream << "    if (!m_baseProxy->send(\"" << method.name
-               << "\", parameters))" << endl;
+        stream << "    if (!m_baseProxy->send(\"" << method.name << "\", parameters))" << endl;
         stream << "    {" << endl;
         stream << "        error = m_baseProxy->lastError();" << endl;
         stream << "        return false;" << endl;
@@ -1250,14 +1212,13 @@ void MethodGenerator::writeProxyMethod(const QString& className,
         return;
     }
 
-    if (method.async)
+    if(method.async)
     {
         stream << "    asyncCallId = m_baseProxy->sendWithAsyncReply(\"";
         stream << method.name << "\", parameters);" << endl;
         stream << endl;
 
-        stream << "    if (asyncCallId != 0) m_asyncCalls[asyncCallId] = \""
-               << method.name << "\";" << endl;
+        stream << "    if (asyncCallId != 0) m_asyncCalls[asyncCallId] = \"" << method.name << "\";" << endl;
         stream << endl;
 
         stream << "    return (asyncCallId != 0);" << endl;
@@ -1270,10 +1231,9 @@ void MethodGenerator::writeProxyMethod(const QString& className,
     stream << method.name << "\", parameters, &error);" << endl;
     stream << endl;
 
-    stream << "    if (reply.type() != QDBusMessage::ReplyMessage) return false;"
-           << endl;
+    stream << "    if (reply.type() != QDBusMessage::ReplyMessage) return false;" << endl;
 
-    if (outCount == 0)
+    if(outCount == 0)
     {
         stream << "    return true;" << endl;
         stream << "}" << endl;
@@ -1287,51 +1247,46 @@ void MethodGenerator::writeProxyMethod(const QString& className,
     stream << "    if (reply.count() != " << outCount << ") return false;" << endl;
     stream << endl;
 
-    bool firstAccessor    = true;
+    bool firstAccessor = true;
     bool firstSubAccessor = true;
 
     it = method.arguments.begin();
-    for (; it != endIt; ++it)
+    for(; it != endIt; ++it)
     {
-        if ((*it).direction == Argument::In) continue;
+        if((*it).direction == Argument::In)
+            continue;
 
         --outCount;
 
-        if (!(*it).annotatedType.isEmpty())
+        if(!(*it).annotatedType.isEmpty())
         {
             // TODO error handling
-            stream << "    if (QDBusDataConverter::convertFromQDBusData<"
-                   << (*it).annotatedType << ">(reply.front(), "
-                   << (*it).name
-                   << ") != QDBusDataConverter::Success) return false;"
-                   << endl;
+            stream << "    if (QDBusDataConverter::convertFromQDBusData<" << (*it).annotatedType << ">(reply.front(), " << (*it).name
+                   << ") != QDBusDataConverter::Success) return false;" << endl;
         }
-        else if (!(*it).accessor.isEmpty())
+        else if(!(*it).accessor.isEmpty())
         {
-            if (firstAccessor)
+            if(firstAccessor)
             {
                 stream << "    bool ok = false;" << endl;
                 stream << endl;
                 firstAccessor = false;
             }
 
-            if ((*it).subAccessor.isEmpty())
+            if((*it).subAccessor.isEmpty())
             {
-                stream << "    " << (*it).name << " = reply.front().to"
-                    << (*it).accessor << "(&ok);" << endl;
+                stream << "    " << (*it).name << " = reply.front().to" << (*it).accessor << "(&ok);" << endl;
             }
             else
             {
-                if (firstSubAccessor)
+                if(firstSubAccessor)
                 {
                     stream << "    bool subOK = false;" << endl;
                     stream << endl;
                     firstSubAccessor = false;
                 }
 
-                stream << "    " << (*it).name << " = reply.front().to"
-                    << (*it).accessor << "(&ok).to" << (*it).subAccessor
-                    << "(&subOK);" << endl;
+                stream << "    " << (*it).name << " = reply.front().to" << (*it).accessor << "(&ok).to" << (*it).subAccessor << "(&subOK);" << endl;
 
                 // TODO: create error or use enum for return
                 stream << "    if (!subOK) return false;" << endl;
@@ -1344,7 +1299,7 @@ void MethodGenerator::writeProxyMethod(const QString& className,
             stream << "    " << (*it).name << " = reply.front();" << endl;
         stream << endl;
 
-        if (outCount > 0)
+        if(outCount > 0)
         {
             stream << "    reply.pop_front();" << endl;
             stream << endl;
@@ -1357,13 +1312,10 @@ void MethodGenerator::writeProxyMethod(const QString& className,
     stream << endl;
 }
 
-void MethodGenerator::writeProxyGenericProperty(const Class& classData,
-        QTextStream& stream)
+void MethodGenerator::writeProxyGenericProperty(const Class &classData, QTextStream &stream)
 {
-    stream << "void " << classData.name
-           << "::setDBusProperty(const QString& name, "
-           << "const QDBusVariant& value, QDBusError& error)"
-           << endl;
+    stream << "void " << classData.name << "::setDBusProperty(const QString& name, "
+           << "const QDBusVariant& value, QDBusError& error)" << endl;
     stream << "{" << endl;
 
     stream << "    QDBusConnection connection = m_baseProxy->connection();" << endl;
@@ -1373,8 +1325,7 @@ void MethodGenerator::writeProxyGenericProperty(const Class& classData,
            << "\"org.freedesktop.DBus.Properties\", \"Set\");" << endl;
     stream << endl;
 
-    stream << "    message << QDBusData::fromString(m_baseProxy->interface());"
-           << endl;
+    stream << "    message << QDBusData::fromString(m_baseProxy->interface());" << endl;
     stream << "    message << QDBusData::fromString(name);" << endl;
     stream << "    message << QDBusData::fromVariant(value);" << endl;
     stream << endl;
@@ -1385,9 +1336,7 @@ void MethodGenerator::writeProxyGenericProperty(const Class& classData,
 
     stream << endl;
 
-    stream << "QDBusVariant " << classData.name
-           << "::getDBusProperty(const QString& name, QDBusError& error) const"
-           << endl;
+    stream << "QDBusVariant " << classData.name << "::getDBusProperty(const QString& name, QDBusError& error) const" << endl;
     stream << "{" << endl;
 
     stream << "    QDBusConnection connection = m_baseProxy->connection();" << endl;
@@ -1398,13 +1347,11 @@ void MethodGenerator::writeProxyGenericProperty(const Class& classData,
            << "\"org.freedesktop.DBus.Properties\", \"Get\");" << endl;
     stream << endl;
 
-    stream << "    message << QDBusData::fromString(m_baseProxy->interface());"
-           << endl;
+    stream << "    message << QDBusData::fromString(m_baseProxy->interface());" << endl;
     stream << "    message << QDBusData::fromString(name);" << endl;
     stream << endl;
 
-    stream << "    QDBusMessage reply = connection.sendWithReply(message, &error);"
-           << endl;
+    stream << "    QDBusMessage reply = connection.sendWithReply(message, &error);" << endl;
     stream << endl;
 
     stream << "    if (reply.type() != QDBusMessage::ReplyMessage)"
@@ -1427,36 +1374,34 @@ void MethodGenerator::writeProxyGenericProperty(const Class& classData,
     stream << endl;
 }
 
-void MethodGenerator::writeProxyProperty(const Class& classData,
-        const Property& property, QTextStream& stream)
+void MethodGenerator::writeProxyProperty(const Class &classData, const Property &property, QTextStream &stream)
 {
-    if (property.write)
+    if(property.write)
     {
         stream << "void " << classData.name << "::set" << property.name << "(";
 
-        if (!property.isPrimitive) stream << "const ";
+        if(!property.isPrimitive)
+            stream << "const ";
 
         stream << property.signature;
 
-        if (!property.isPrimitive) stream << "&";
+        if(!property.isPrimitive)
+            stream << "&";
 
         stream << " value, QDBusError& error)" << endl;
         stream << "{" << endl;
         stream << "    QDBusVariant variant;" << endl;
 
-        if (!property.annotatedType.isEmpty())
+        if(!property.annotatedType.isEmpty())
         {
             // TODO: error handling
-            stream << "    QDBusDataConverter::convertToQDBusData<"
-                   << property.annotatedType << ">(value, variant.value);"
-                   << endl;
+            stream << "    QDBusDataConverter::convertToQDBusData<" << property.annotatedType << ">(value, variant.value);" << endl;
         }
-        else if (!property.accessor.isEmpty())
+        else if(!property.accessor.isEmpty())
         {
-            stream << "    variant.value = QDBusData::from"
-                   << property.accessor << "(";
+            stream << "    variant.value = QDBusData::from" << property.accessor << "(";
 
-            if (property.subAccessor.isEmpty())
+            if(property.subAccessor.isEmpty())
                 stream << "value";
             else
                 stream << property.containerClass << "(value)";
@@ -1466,49 +1411,41 @@ void MethodGenerator::writeProxyProperty(const Class& classData,
         else
             stream << "    variant.value = QDBusData(value);" << endl;
 
-        stream << "    variant.signature = \"" << property.dbusSignature << "\";"
-               << endl;
+        stream << "    variant.signature = \"" << property.dbusSignature << "\";" << endl;
 
         stream << endl;
-        stream << "    setDBusProperty(\"" << property.name
-               << "\", variant, error);" << endl;
+        stream << "    setDBusProperty(\"" << property.name << "\", variant, error);" << endl;
 
         stream << "}" << endl;
         stream << endl;
     }
 
-    if (property.read)
+    if(property.read)
     {
-        stream << property.signature << " " << classData.name
-               << "::get" << property.name << "(QDBusError& error) const" << endl;
+        stream << property.signature << " " << classData.name << "::get" << property.name << "(QDBusError& error) const" << endl;
         stream << "{" << endl;
 
-        stream << "    QDBusVariant variant = getDBusProperty(\""
-               << property.name << "\", error);" << endl;
+        stream << "    QDBusVariant variant = getDBusProperty(\"" << property.name << "\", error);" << endl;
         stream << endl;
-        stream << "    if (error.isValid()) return "
-               << property.signature << "();" << endl;
+        stream << "    if (error.isValid()) return " << property.signature << "();" << endl;
         stream << endl;
 
-        if (!property.annotatedType.isEmpty())
+        if(!property.annotatedType.isEmpty())
         {
             stream << "    " << property.signature << " result;" << endl;
 
             // TODO error handling
-            stream << "    QDBusDataConverter::convertFromQDBusData<"
-                   << property.annotatedType << ">(variant.value, result);"
-                   << endl;
+            stream << "    QDBusDataConverter::convertFromQDBusData<" << property.annotatedType << ">(variant.value, result);" << endl;
         }
-        else if (!property.accessor.isEmpty())
+        else if(!property.accessor.isEmpty())
         {
             stream << "    bool ok = false;" << endl;
             stream << endl;
 
-            if (property.subAccessor.isEmpty())
+            if(property.subAccessor.isEmpty())
             {
                 stream << "    " << property.signature << " result = ";
-                stream << " variant.value.to" << property.accessor
-                       << "(&ok);" << endl;
+                stream << " variant.value.to" << property.accessor << "(&ok);" << endl;
             }
             else
             {
@@ -1516,9 +1453,7 @@ void MethodGenerator::writeProxyProperty(const Class& classData,
                 stream << endl;
 
                 stream << "    " << property.signature << " result = ";
-                stream << " variant.value.to"
-                       << property.accessor << "(&ok).to" << property.subAccessor
-                       << "(&subOK);" << endl;
+                stream << " variant.value.to" << property.accessor << "(&ok).to" << property.subAccessor << "(&subOK);" << endl;
 
                 // TODO: create error
                 stream << "    if (!subOK) {}" << endl;
@@ -1537,11 +1472,9 @@ void MethodGenerator::writeProxyProperty(const Class& classData,
     }
 }
 
-void MethodGenerator::writeProxyAsyncReplyHandler(const Class& classData,
-        QTextStream& stream)
+void MethodGenerator::writeProxyAsyncReplyHandler(const Class &classData, QTextStream &stream)
 {
-    stream << "void " << classData.name
-           << "::slotHandleAsyncReply(int asyncCallId, const QDBusMessage& message)" << endl;
+    stream << "void " << classData.name << "::slotHandleAsyncReply(int asyncCallId, const QDBusMessage& message)" << endl;
     stream << "{" << endl;
 
     stream << "    QMap<int, QString>::iterator findIt = "
@@ -1552,14 +1485,14 @@ void MethodGenerator::writeProxyAsyncReplyHandler(const Class& classData,
     stream << "    m_asyncCalls.erase(findIt);" << endl;
     stream << endl;
 
-    QValueList<Method>::const_iterator it    = classData.asyncReplySignals.begin();
-    QValueList<Method>::const_iterator endIt = classData.asyncReplySignals.end();
+    QValueList< Method >::const_iterator it = classData.asyncReplySignals.begin();
+    QValueList< Method >::const_iterator endIt = classData.asyncReplySignals.end();
     bool first = true;
-    for (; it != endIt; ++it)
+    for(; it != endIt; ++it)
     {
         stream << "    ";
 
-        if (!first)
+        if(!first)
             stream << "else ";
         else
             first = false;
@@ -1589,25 +1522,22 @@ void MethodGenerator::writeProxyAsyncReplyHandler(const Class& classData,
     stream << endl;
 }
 
-void MethodGenerator::writeIntrospectionDataMethod(const Class& classData,
-    QTextStream& stream)
+void MethodGenerator::writeIntrospectionDataMethod(const Class &classData, QTextStream &stream)
 {
-    stream << "void " << classData.name
-           << "::buildIntrospectionData(QDomElement& interfaceElement)" << endl;
+    stream << "void " << classData.name << "::buildIntrospectionData(QDomElement& interfaceElement)" << endl;
     stream << "{" << endl;
 
-    stream << "    interfaceElement.setAttribute(\"name\", \""
-           << classData.dbusName << "\");" << endl;
+    stream << "    interfaceElement.setAttribute(\"name\", \"" << classData.dbusName << "\");" << endl;
     stream << endl;
 
-    bool firstMethod   = true;
+    bool firstMethod = true;
     bool firstArgument = true;
 
-    QValueList<Method>::const_iterator it    = classData.methods.begin();
-    QValueList<Method>::const_iterator endIt = classData.methods.end();
-    for (; it != endIt; ++it)
+    QValueList< Method >::const_iterator it = classData.methods.begin();
+    QValueList< Method >::const_iterator endIt = classData.methods.end();
+    for(; it != endIt; ++it)
     {
-        if (firstMethod)
+        if(firstMethod)
         {
             firstMethod = false;
             stream << "    QDomDocument document = interfaceElement.ownerDocument();" << endl;
@@ -1626,11 +1556,11 @@ void MethodGenerator::writeIntrospectionDataMethod(const Class& classData,
         stream << "    interfaceElement.appendChild(methodElement);" << endl;
     }
 
-    it    = classData.signals.begin();
+    it = classData.signals.begin();
     endIt = classData.signals.end();
-    for (; it != endIt; ++it)
+    for(; it != endIt; ++it)
     {
-        if (firstMethod)
+        if(firstMethod)
         {
             firstMethod = false;
             stream << "    QDomDocument document = interfaceElement.ownerDocument();" << endl;
@@ -1654,10 +1584,9 @@ void MethodGenerator::writeIntrospectionDataMethod(const Class& classData,
     stream << endl;
 }
 
-void MethodGenerator::writeNodePrivate(const Class& classData, QTextStream& stream)
+void MethodGenerator::writeNodePrivate(const Class &classData, QTextStream &stream)
 {
-    stream << "class " << classData.name
-           << "::Private : public org::freedesktop::DBus::Introspectable" << endl;
+    stream << "class " << classData.name << "::Private : public org::freedesktop::DBus::Introspectable" << endl;
     stream << "{" << endl;
     stream << "public:" << endl;
     stream << "    virtual ~Private();" << endl;
@@ -1672,11 +1601,9 @@ void MethodGenerator::writeNodePrivate(const Class& classData, QTextStream& stre
     stream << endl;
 
     stream << "protected:" << endl;
-    stream << "    virtual bool Introspect(QString& data, QDBusError& error);"
-           << endl;
+    stream << "    virtual bool Introspect(QString& data, QDBusError& error);" << endl;
     stream << endl;
-    stream << "    virtual void handleMethodReply(const QDBusMessage& reply);"
-           << endl;
+    stream << "    virtual void handleMethodReply(const QDBusMessage& reply);" << endl;
 
     stream << "private:" << endl;
     stream << "    void cacheIntrospectionData();" << endl;
@@ -1685,10 +1612,9 @@ void MethodGenerator::writeNodePrivate(const Class& classData, QTextStream& stre
     stream << endl;
 }
 
-void MethodGenerator::writeNodeBegin(const Class& classData, QTextStream& stream)
+void MethodGenerator::writeNodeBegin(const Class &classData, QTextStream &stream)
 {
-    stream << classData.name << "::" << classData.name
-           << "()  : QDBusObjectBase()," << endl;
+    stream << classData.name << "::" << classData.name << "()  : QDBusObjectBase()," << endl;
     stream << "    m_private(new Private())" << endl;
     stream << "{" << endl;
     stream << "}" << endl;
@@ -1703,8 +1629,7 @@ void MethodGenerator::writeNodeBegin(const Class& classData, QTextStream& stream
     stream << endl;
 }
 
-void MethodGenerator::writeNodeMethods(const Class& classData,
-            const QValueList<Class>& interfaces, QTextStream& stream)
+void MethodGenerator::writeNodeMethods(const Class &classData, const QValueList< Class > &interfaces, QTextStream &stream)
 {
     writeNodeInitialization(classData, interfaces, stream);
 
@@ -1719,13 +1644,11 @@ void MethodGenerator::writeNodeMethods(const Class& classData,
     stream << "}" << endl;
     stream << endl;
 
-    stream << "bool " << classData.name
-           << "::handleMethodCall(const QDBusMessage& message)" << endl;
+    stream << "bool " << classData.name << "::handleMethodCall(const QDBusMessage& message)" << endl;
     stream << "{" << endl;
     stream << "    QMap<QString, QDBusObjectBase*>::iterator findIt = "
            << "m_private->interfaces.find(message.interface());" << endl;
-    stream << "    if (findIt == m_private->interfaces.end()) return false;"
-           << endl;
+    stream << "    if (findIt == m_private->interfaces.end()) return false;" << endl;
     stream << endl;
     stream << "    return delegateMethodCall(message, findIt.data());" << endl;
     stream << "}" << endl;
@@ -1751,8 +1674,7 @@ void MethodGenerator::writeNodeMethods(const Class& classData,
            << "::Introspect(QString& data, QDBusError& error)" << endl;
     stream << "{" << endl;
     stream << "    Q_UNUSED(error);" << endl;
-    stream << "    if (introspectionData.isEmpty()) cacheIntrospectionData();"
-           << endl;
+    stream << "    if (introspectionData.isEmpty()) cacheIntrospectionData();" << endl;
     stream << endl;
     stream << "    data = introspectionData;" << endl;
     stream << endl;

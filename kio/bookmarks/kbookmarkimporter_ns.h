@@ -34,24 +34,30 @@
  * A class for importing NS bookmarks
  * @deprecated
  */
-class KIO_EXPORT_DEPRECATED KNSBookmarkImporter : public QObject
-{
+class KIO_EXPORT_DEPRECATED KNSBookmarkImporter : public QObject {
     Q_OBJECT
 public:
-    KNSBookmarkImporter( const QString & fileName ) : m_fileName(fileName) {}
-    ~KNSBookmarkImporter() {}
+    KNSBookmarkImporter(const QString &fileName) : m_fileName(fileName)
+    {
+    }
+    ~KNSBookmarkImporter()
+    {
+    }
 
     // for compat reasons only
-    void parseNSBookmarks() { parseNSBookmarks(false); }
+    void parseNSBookmarks()
+    {
+        parseNSBookmarks(false);
+    }
     // go for it. Set utf8 to true for Mozilla, false for Netscape.
-    void parseNSBookmarks( bool utf8 );
+    void parseNSBookmarks(bool utf8);
 
-    static QString netscapeBookmarksFile( bool forSaving=false );
-    static QString mozillaBookmarksFile( bool forSaving=false );
+    static QString netscapeBookmarksFile(bool forSaving = false);
+    static QString mozillaBookmarksFile(bool forSaving = false);
 
 signals:
-    void newBookmark( const QString & text, const QCString & url, const QString & additionalInfo );
-    void newFolder( const QString & text, bool open, const QString & additionalInfo );
+    void newBookmark(const QString &text, const QCString &url, const QString &additionalInfo);
+    void newFolder(const QString &text, bool open, const QString &additionalInfo);
     void newSeparator();
     void endFolder();
 
@@ -64,13 +70,18 @@ protected:
  * utf8 defaults to off
  * @since 3.2
  */
-class KIO_EXPORT KNSBookmarkImporterImpl : public KBookmarkImporterBase
-{
+class KIO_EXPORT KNSBookmarkImporterImpl : public KBookmarkImporterBase {
 public:
-    KNSBookmarkImporterImpl() : m_utf8(false) { }
-    void setUtf8(bool utf8) { m_utf8 = utf8; }
+    KNSBookmarkImporterImpl() : m_utf8(false)
+    {
+    }
+    void setUtf8(bool utf8)
+    {
+        m_utf8 = utf8;
+    }
     virtual void parse();
     virtual QString findDefaultLocation(bool forSaving = false) const;
+
 private:
     bool m_utf8;
     class KNSBookmarkImporterImplPrivate *d;
@@ -81,10 +92,13 @@ private:
  * utf8 defaults to on
  * @since 3.2
  */
-class KIO_EXPORT KMozillaBookmarkImporterImpl : public KNSBookmarkImporterImpl
-{
+class KIO_EXPORT KMozillaBookmarkImporterImpl : public KNSBookmarkImporterImpl {
 public:
-    KMozillaBookmarkImporterImpl() { setUtf8(true); }
+    KMozillaBookmarkImporterImpl()
+    {
+        setUtf8(true);
+    }
+
 private:
     class KMozillaBookmarkImporterImplPrivate *d;
 };
@@ -94,36 +108,45 @@ private:
  * Warning, it overwrites the existing bookmarks.html file !
  * @deprecated
  */
-class KIO_EXPORT_DEPRECATED KNSBookmarkExporter
-{
+class KIO_EXPORT_DEPRECATED KNSBookmarkExporter {
 public:
-    KNSBookmarkExporter(KBookmarkManager* mgr, const QString & fileName)
-      : m_fileName(fileName), m_pManager(mgr) { }
-    ~KNSBookmarkExporter() {}
+    KNSBookmarkExporter(KBookmarkManager *mgr, const QString &fileName) : m_fileName(fileName), m_pManager(mgr)
+    {
+    }
+    ~KNSBookmarkExporter()
+    {
+    }
 
-    void write() { write(false); } // deprecated
-    void write( bool utf8 );
+    void write()
+    {
+        write(false);
+    } // deprecated
+    void write(bool utf8);
 
 protected:
     void writeFolder(QTextStream &stream, KBookmarkGroup parent);
     QString m_fileName;
-    KBookmarkManager* m_pManager;
+    KBookmarkManager *m_pManager;
 };
 
 /**
  * @since 3.2
  */
-class KIO_EXPORT KNSBookmarkExporterImpl : public KBookmarkExporterBase
-{
+class KIO_EXPORT KNSBookmarkExporterImpl : public KBookmarkExporterBase {
 public:
-    KNSBookmarkExporterImpl(KBookmarkManager* mgr, const QString & fileName)
-      : KBookmarkExporterBase(mgr, fileName) 
-    { ; }
-    virtual ~KNSBookmarkExporterImpl() {}
+    KNSBookmarkExporterImpl(KBookmarkManager *mgr, const QString &fileName) : KBookmarkExporterBase(mgr, fileName)
+    {
+        ;
+    }
+    virtual ~KNSBookmarkExporterImpl()
+    {
+    }
     virtual void write(KBookmarkGroup);
     void setUtf8(bool);
+
 protected:
     QString folderAsString(KBookmarkGroup) const;
+
 private:
     bool m_utf8;
     class KNSBookmarkExporterImplPrivate *d;

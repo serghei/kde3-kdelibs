@@ -31,8 +31,7 @@
 
 #include <klocale.h>
 
-KMLprUiManager::KMLprUiManager(QObject *parent, const char *name, const QStringList & /*args*/)
-: KMUiManager(parent,name)
+KMLprUiManager::KMLprUiManager(QObject *parent, const char *name, const QStringList & /*args*/) : KMUiManager(parent, name)
 {
 }
 
@@ -42,26 +41,26 @@ KMLprUiManager::~KMLprUiManager()
 
 void KMLprUiManager::setupPropertyPages(KMPropertyPage *pages)
 {
-	pages->addPropPage(new KMPropBackend(pages, "Backend"));
-	pages->addPropPage(new KMPropDriver(pages, "Driver"));
+    pages->addPropPage(new KMPropBackend(pages, "Backend"));
+    pages->addPropPage(new KMPropDriver(pages, "Driver"));
 }
 
 void KMLprUiManager::setupPrinterPropertyDialog(KPrinterPropertyDialog *dlg)
 {
-	dlg->addPage(new KPQtPage(dlg->driver(), dlg, "QtPage"));
+    dlg->addPage(new KPQtPage(dlg->driver(), dlg, "QtPage"));
 }
 
 void KMLprUiManager::setupWizard(KMWizard *wizard)
 {
-	KMWBackend	*backend = wizard->backendPage();
-	
-	backend->addBackend(KMWizard::Local, true);
-	backend->addBackend(KMWizard::LPD, true);
-	backend->addBackend(KMWizard::TCP, true);
-	backend->addBackend(KMWizard::SMB, true, KMWizard::Password);
+    KMWBackend *backend = wizard->backendPage();
+
+    backend->addBackend(KMWizard::Local, true);
+    backend->addBackend(KMWizard::LPD, true);
+    backend->addBackend(KMWizard::TCP, true);
+    backend->addBackend(KMWizard::SMB, true, KMWizard::Password);
 }
 
 void KMLprUiManager::setupConfigDialog(KMConfigDialog *dlg)
 {
-	dlg->addConfigPage(new KMConfigLpr(dlg));
+    dlg->addConfigPage(new KMConfigLpr(dlg));
 }

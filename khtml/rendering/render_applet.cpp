@@ -41,22 +41,23 @@
 using namespace khtml;
 using namespace DOM;
 
-RenderApplet::RenderApplet(HTMLElementImpl *applet, const QMap<QString, QString> &args )
-    : RenderWidget(applet)
+RenderApplet::RenderApplet(HTMLElementImpl *applet, const QMap< QString, QString > &args) : RenderWidget(applet)
 {
     // init RenderObject attributes
     setInline(true);
 
     KJavaAppletContext *context = 0;
     KHTMLView *_view = applet->getDocument()->view();
-    if ( _view ) {
+    if(_view)
+    {
         KHTMLPart *part = _view->part();
         context = part->createJavaContext();
     }
 
-    if ( context ) {
-        //kdDebug(6100) << "RenderApplet::RenderApplet, setting QWidget" << endl;
-        setQWidget( new KJavaAppletWidget(context, _view->viewport()) );
+    if(context)
+    {
+        // kdDebug(6100) << "RenderApplet::RenderApplet, setting QWidget" << endl;
+        setQWidget(new KJavaAppletWidget(context, _view->viewport()));
         processArguments(args);
     }
 }
@@ -69,8 +70,8 @@ short RenderApplet::intrinsicWidth() const
 {
     int rval = 300;
 
-    if( m_widget )
-        rval = ((KJavaAppletWidget*)(m_widget))->sizeHint().width();
+    if(m_widget)
+        rval = ((KJavaAppletWidget *)(m_widget))->sizeHint().width();
 
     return rval > 10 ? rval : 50;
 }
@@ -79,7 +80,7 @@ int RenderApplet::intrinsicHeight() const
 {
     int rval = 150;
 
-    if( m_widget )
+    if(m_widget)
         rval = m_widget->sizeHint().height();
 
     return rval > 10 ? rval : 50;
@@ -87,58 +88,62 @@ int RenderApplet::intrinsicHeight() const
 
 void RenderApplet::layout()
 {
-    //kdDebug(6100) << "RenderApplet::layout" << endl;
+    // kdDebug(6100) << "RenderApplet::layout" << endl;
 
-    KHTMLAssert( needsLayout() );
-    KHTMLAssert( minMaxKnown() );
+    KHTMLAssert(needsLayout());
+    KHTMLAssert(minMaxKnown());
 
     calcWidth();
     calcHeight();
 
-    KJavaAppletWidget *tmp = static_cast<KJavaAppletWidget*>(m_widget);
-    if ( tmp ) {
+    KJavaAppletWidget *tmp = static_cast< KJavaAppletWidget * >(m_widget);
+    if(tmp)
+    {
         NodeImpl *child = element()->firstChild();
 
-        while(child) {
+        while(child)
+        {
 
-            if(child->id() == ID_PARAM) {
-                HTMLParamElementImpl *p = static_cast<HTMLParamElementImpl *>(child);
+            if(child->id() == ID_PARAM)
+            {
+                HTMLParamElementImpl *p = static_cast< HTMLParamElementImpl * >(child);
                 if(tmp->applet())
-                    tmp->applet()->setParameter( p->name(), p->value());
+                    tmp->applet()->setParameter(p->name(), p->value());
             }
             child = child->nextSibling();
         }
-        //kdDebug(6100) << "setting applet widget to size: " << m_width << ", " << m_height << endl;
-        m_widget->resize(m_width-borderLeft()-borderRight()-paddingLeft()-paddingRight(),
-                         m_height-borderTop()-borderBottom()-paddingTop()-paddingBottom());
+        // kdDebug(6100) << "setting applet widget to size: " << m_width << ", " << m_height << endl;
+        m_widget->resize(m_width - borderLeft() - borderRight() - paddingLeft() - paddingRight(),
+                         m_height - borderTop() - borderBottom() - paddingTop() - paddingBottom());
         tmp->showApplet();
     }
 
     setNeedsLayout(false);
 }
 
-void RenderApplet::processArguments(const QMap<QString, QString> &args)
+void RenderApplet::processArguments(const QMap< QString, QString > &args)
 {
-    KJavaAppletWidget *w = static_cast<KJavaAppletWidget*>(m_widget);
-    KJavaApplet* applet = w ? w->applet() : 0;
+    KJavaAppletWidget *w = static_cast< KJavaAppletWidget * >(m_widget);
+    KJavaApplet *applet = w ? w->applet() : 0;
 
-    if ( applet ) {
-        applet->setBaseURL( args[QString::fromLatin1("baseURL") ] );
-        applet->setAppletClass( args[QString::fromLatin1("code") ] );
+    if(applet)
+    {
+        applet->setBaseURL(args[QString::fromLatin1("baseURL")]);
+        applet->setAppletClass(args[QString::fromLatin1("code")]);
 
-	QString str = args[QString::fromLatin1("codeBase") ];
-        if( !str.isEmpty() )
-            applet->setCodeBase( str );
+        QString str = args[QString::fromLatin1("codeBase")];
+        if(!str.isEmpty())
+            applet->setCodeBase(str);
 
-	str = args[QString::fromLatin1("name") ];
-        if( !str.isNull() )
-            applet->setAppletName( str );
+        str = args[QString::fromLatin1("name")];
+        if(!str.isNull())
+            applet->setAppletName(str);
         else
-            applet->setAppletName( args[QString::fromLatin1("code") ] );
+            applet->setAppletName(args[QString::fromLatin1("code")]);
 
-	str = args[QString::fromLatin1("archive") ];
-        if( !str.isEmpty() )
-            applet->setArchives( args[QString::fromLatin1("archive") ] );
+        str = args[QString::fromLatin1("archive")];
+        if(!str.isEmpty())
+            applet->setArchives(args[QString::fromLatin1("archive")]);
     }
 }
 

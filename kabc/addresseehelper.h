@@ -33,34 +33,30 @@
 
 namespace KABC {
 
-class KABC_EXPORT AddresseeHelper : public QObject, public DCOPObject
-{
-  K_DCOP
-        
-  public:
+class KABC_EXPORT AddresseeHelper : public QObject, public DCOPObject {
+    K_DCOP
+
+public:
     static AddresseeHelper *self();
 
-    bool containsTitle( const QString& title ) const;
-    bool containsPrefix( const QString& prefix ) const;
-    bool containsSuffix( const QString& suffix ) const;
+    bool containsTitle(const QString &title) const;
+    bool containsPrefix(const QString &prefix) const;
+    bool containsSuffix(const QString &suffix) const;
     bool tradeAsFamilyName() const;
 
-  k_dcop:
-    ASYNC initSettings();
+    k_dcop : ASYNC initSettings();
 
-  private:
+private:
     AddresseeHelper();
 
-    static void addToSet( const QStringList& list,
-                          std::set<QString>& container );
-    std::set<QString> mTitles;
-    std::set<QString> mPrefixes;
-    std::set<QString> mSuffixes;
+    static void addToSet(const QStringList &list, std::set< QString > &container);
+    std::set< QString > mTitles;
+    std::set< QString > mPrefixes;
+    std::set< QString > mSuffixes;
     bool mTradeAsFamilyName;
 
     static AddresseeHelper *s_self;
 };
-
 }
 
 #endif

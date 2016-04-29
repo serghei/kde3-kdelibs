@@ -17,8 +17,8 @@
  *  Boston, MA 02110-1301, USA.
  **/
 
-#ifndef	CUPSDDIALOG_H
-#define	CUPSDDIALOG_H
+#ifndef CUPSDDIALOG_H
+#define CUPSDDIALOG_H
 
 #include <kdialogbase.h>
 #include <qptrlist.h>
@@ -26,33 +26,32 @@
 class CupsdPage;
 struct CupsdConf;
 
-class CupsdDialog : public KDialogBase
-{
-	Q_OBJECT
+class CupsdDialog : public KDialogBase {
+    Q_OBJECT
 public:
-	CupsdDialog(QWidget *parent = 0, const char *name = 0);
-	~CupsdDialog();
+    CupsdDialog(QWidget *parent = 0, const char *name = 0);
+    ~CupsdDialog();
 
-	bool setConfigFile(const QString& filename);
+    bool setConfigFile(const QString &filename);
 
-	static bool configure(const QString& filename = QString::null, QWidget *parent = 0, QString *errormsg = 0);
-	static bool restartServer(QString& msg);
-	static int serverPid();
-	static int serverOwner();
+    static bool configure(const QString &filename = QString::null, QWidget *parent = 0, QString *errormsg = 0);
+    static bool restartServer(QString &msg);
+    static int serverPid();
+    static int serverOwner();
 
 protected slots:
-	void slotOk();
-	void slotUser1();
+    void slotOk();
+    void slotUser1();
 
 protected:
-	void addConfPage(CupsdPage*);
-	void constructDialog();
-	void restartServer();
+    void addConfPage(CupsdPage *);
+    void constructDialog();
+    void restartServer();
 
 private:
-	QPtrList<CupsdPage>	pagelist_;
-	CupsdConf		*conf_;
-	QString			filename_;
+    QPtrList< CupsdPage > pagelist_;
+    CupsdConf *conf_;
+    QString filename_;
 };
 
 #endif

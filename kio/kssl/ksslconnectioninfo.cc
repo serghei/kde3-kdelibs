@@ -17,50 +17,54 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
- 
+
 #include "ksslconnectioninfo.h"
 
- 
-KSSLConnectionInfo::KSSLConnectionInfo() {
-  clean(); 
-}
 
- 
-KSSLConnectionInfo::~KSSLConnectionInfo() {
- 
+KSSLConnectionInfo::KSSLConnectionInfo()
+{
+    clean();
 }
 
 
-void KSSLConnectionInfo::clean() {
-  m_iCipherUsedBits = 0;
-  m_iCipherBits = 0;
-  m_cipherName = "";
+KSSLConnectionInfo::~KSSLConnectionInfo()
+{
 }
 
 
-const QString& KSSLConnectionInfo::getCipherVersion() const {
-  return m_cipherVersion;
+void KSSLConnectionInfo::clean()
+{
+    m_iCipherUsedBits = 0;
+    m_iCipherBits = 0;
+    m_cipherName = "";
 }
 
 
-const QString& KSSLConnectionInfo::getCipherDescription() const {
-  return m_cipherDescription;
+const QString &KSSLConnectionInfo::getCipherVersion() const
+{
+    return m_cipherVersion;
 }
 
 
-const QString& KSSLConnectionInfo::getCipher() const {
-  return m_cipherName;
+const QString &KSSLConnectionInfo::getCipherDescription() const
+{
+    return m_cipherDescription;
 }
 
 
-int KSSLConnectionInfo::getCipherUsedBits() const {
-  return m_iCipherUsedBits;
+const QString &KSSLConnectionInfo::getCipher() const
+{
+    return m_cipherName;
 }
 
 
-int KSSLConnectionInfo::getCipherBits() const {
-  return m_iCipherBits;
+int KSSLConnectionInfo::getCipherUsedBits() const
+{
+    return m_iCipherUsedBits;
 }
 
 
-
+int KSSLConnectionInfo::getCipherBits() const
+{
+    return m_iCipherBits;
+}

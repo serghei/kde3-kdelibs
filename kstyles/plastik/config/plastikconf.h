@@ -29,57 +29,56 @@ DEALINGS IN THE SOFTWARE.
 
 class QCheckBox;
 
-class PlastikStyleConfig: public QWidget
-{
-	Q_OBJECT
+class PlastikStyleConfig : public QWidget {
+    Q_OBJECT
 public:
-	PlastikStyleConfig(QWidget* parent);
-	~PlastikStyleConfig();
+    PlastikStyleConfig(QWidget *parent);
+    ~PlastikStyleConfig();
 
-	//This signal and the next two slots are the plugin
-	//page interface
+    // This signal and the next two slots are the plugin
+    // page interface
 signals:
-	void changed(bool);
+    void changed(bool);
 
 public slots:
-	void save();
-	void defaults();
+    void save();
+    void defaults();
 
-	//Everything below this is internal.
+    // Everything below this is internal.
 protected slots:
-	void updateChanged();
+    void updateChanged();
 
 protected:
-	//We store settings directly in widgets to
-	//avoid the hassle of sync'ing things
-// 	QCheckBox*       scrollBarLines;
-	QCheckBox* animateProgressBar;
-	QCheckBox* drawToolBarSeparator;
-	QCheckBox*       drawToolBarItemSeparator;
-// 	QCheckBox*       drawFocusRect;
-	QCheckBox*       drawTriangularExpander;
-	QCheckBox*       inputFocusHighlight;
-	QCheckBox*       customOverHighlightColor;
-	KColorButton*    overHighlightColor;
-	QCheckBox*       customFocusHighlightColor;
-	KColorButton*    focusHighlightColor;
-	QCheckBox*       customCheckMarkColor;
-	KColorButton*    checkMarkColor;
+    // We store settings directly in widgets to
+    // avoid the hassle of sync'ing things
+    // 	QCheckBox*       scrollBarLines;
+    QCheckBox *animateProgressBar;
+    QCheckBox *drawToolBarSeparator;
+    QCheckBox *drawToolBarItemSeparator;
+    // 	QCheckBox*       drawFocusRect;
+    QCheckBox *drawTriangularExpander;
+    QCheckBox *inputFocusHighlight;
+    QCheckBox *customOverHighlightColor;
+    KColorButton *overHighlightColor;
+    QCheckBox *customFocusHighlightColor;
+    KColorButton *focusHighlightColor;
+    QCheckBox *customCheckMarkColor;
+    KColorButton *checkMarkColor;
 
-	//Original settings, for accurate dirtiness tracking
-// 	bool       origScrollBarLines;
-	bool       origAnimProgressBar;
-	bool       origDrawToolBarSeparator;
-	bool       origDrawToolBarItemSeparator;
-// 	bool       origDrawFocusRect;
-	bool       origDrawTriangularExpander;
-	bool       origInputFocusHighlight;
-	bool       origCustomOverHighlightColor;
-	QColor     origOverHighlightColor;
-	bool       origCustomFocusHighlightColor;
-	QColor     origFocusHighlightColor;
-	bool       origCustomCheckMarkColor;
-	QColor     origCheckMarkColor;
+    // Original settings, for accurate dirtiness tracking
+    // 	bool       origScrollBarLines;
+    bool origAnimProgressBar;
+    bool origDrawToolBarSeparator;
+    bool origDrawToolBarItemSeparator;
+    // 	bool       origDrawFocusRect;
+    bool origDrawTriangularExpander;
+    bool origInputFocusHighlight;
+    bool origCustomOverHighlightColor;
+    QColor origOverHighlightColor;
+    bool origCustomFocusHighlightColor;
+    QColor origFocusHighlightColor;
+    bool origCustomCheckMarkColor;
+    QColor origCheckMarkColor;
 };
 
 #endif

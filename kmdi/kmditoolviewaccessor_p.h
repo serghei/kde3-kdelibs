@@ -31,21 +31,22 @@
 
 class KMDI_EXPORT KMdiToolViewAccessorPrivate {
 public:
-	KMdiToolViewAccessorPrivate() {
-		widgetContainer=0;
-		widget=0;
-	}
-	~KMdiToolViewAccessorPrivate() {
-		delete action;
-		if (!widgetContainer.isNull()) widgetContainer->undock();
-		delete (KDockWidget*)widgetContainer;
-	}
-	QGuardedPtr<KDockWidget> widgetContainer;
-	QWidget* widget;
-	QGuardedPtr<KAction> action;
+    KMdiToolViewAccessorPrivate()
+    {
+        widgetContainer = 0;
+        widget = 0;
+    }
+    ~KMdiToolViewAccessorPrivate()
+    {
+        delete action;
+        if(!widgetContainer.isNull())
+            widgetContainer->undock();
+        delete(KDockWidget *)widgetContainer;
+    }
+    QGuardedPtr< KDockWidget > widgetContainer;
+    QWidget *widget;
+    QGuardedPtr< KAction > action;
 };
 
 
 #endif
-
-

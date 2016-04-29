@@ -39,247 +39,225 @@
 #include "kspelldlg.h"
 #include "kspellui.h"
 
-//to initially disable sorting in the suggestions listview
+// to initially disable sorting in the suggestions listview
 #define NONSORTINGCOLUMN 2
 
 class KSpellDlg::KSpellDlgPrivate {
 public:
-  KSpellUI* ui;
-  KSpellConfig* spellConfig;
+    KSpellUI *ui;
+    KSpellConfig *spellConfig;
 };
 
-KSpellDlg::KSpellDlg( QWidget * parent, const char * name, bool _progressbar, bool _modal )
-  : KDialogBase(
-      parent, name, _modal, i18n("Check Spelling"), Help|Cancel|User1,
-      Cancel, true, i18n("&Finished")
-    ),
-    progressbar( false )
+KSpellDlg::KSpellDlg(QWidget *parent, const char *name, bool _progressbar, bool _modal)
+    : KDialogBase(parent, name, _modal, i18n("Check Spelling"), Help | Cancel | User1, Cancel, true, i18n("&Finished")), progressbar(false)
 {
-  Q_UNUSED( _progressbar );
-  d = new KSpellDlgPrivate;
-  d->ui = new KSpellUI( this );
-  setMainWidget( d->ui );
+    Q_UNUSED(_progressbar);
+    d = new KSpellDlgPrivate;
+    d->ui = new KSpellUI(this);
+    setMainWidget(d->ui);
 
-  connect( d->ui->m_replaceBtn, SIGNAL(clicked()),
-           this, SLOT(replace()));
-  connect( this, SIGNAL(ready(bool)),
-           d->ui->m_replaceBtn, SLOT(setEnabled(bool)) );
+    connect(d->ui->m_replaceBtn, SIGNAL(clicked()), this, SLOT(replace()));
+    connect(this, SIGNAL(ready(bool)), d->ui->m_replaceBtn, SLOT(setEnabled(bool)));
 
-  connect( d->ui->m_replaceAllBtn, SIGNAL(clicked()), this, SLOT(replaceAll()));
-  connect(this, SIGNAL(ready(bool)), d->ui->m_replaceAllBtn, SLOT(setEnabled(bool)));
+    connect(d->ui->m_replaceAllBtn, SIGNAL(clicked()), this, SLOT(replaceAll()));
+    connect(this, SIGNAL(ready(bool)), d->ui->m_replaceAllBtn, SLOT(setEnabled(bool)));
 
-  connect( d->ui->m_skipBtn, SIGNAL(clicked()), this, SLOT(ignore()));
-  connect( this, SIGNAL(ready(bool)), d->ui->m_skipBtn, SLOT(setEnabled(bool)));
+    connect(d->ui->m_skipBtn, SIGNAL(clicked()), this, SLOT(ignore()));
+    connect(this, SIGNAL(ready(bool)), d->ui->m_skipBtn, SLOT(setEnabled(bool)));
 
-  connect( d->ui->m_skipAllBtn, SIGNAL(clicked()), this, SLOT(ignoreAll()));
-  connect( this, SIGNAL(ready(bool)), d->ui->m_skipAllBtn, SLOT(setEnabled(bool)));
+    connect(d->ui->m_skipAllBtn, SIGNAL(clicked()), this, SLOT(ignoreAll()));
+    connect(this, SIGNAL(ready(bool)), d->ui->m_skipAllBtn, SLOT(setEnabled(bool)));
 
-  connect( d->ui->m_addBtn, SIGNAL(clicked()), this, SLOT(add()));
-  connect( this, SIGNAL(ready(bool)), d->ui->m_addBtn, SLOT(setEnabled(bool)));
+    connect(d->ui->m_addBtn, SIGNAL(clicked()), this, SLOT(add()));
+    connect(this, SIGNAL(ready(bool)), d->ui->m_addBtn, SLOT(setEnabled(bool)));
 
-  connect( d->ui->m_suggestBtn, SIGNAL(clicked()), this, SLOT(suggest()));
-  connect( this, SIGNAL(ready(bool)), d->ui->m_suggestBtn, SLOT(setEnabled(bool)) );
-  d->ui->m_suggestBtn->hide();
+    connect(d->ui->m_suggestBtn, SIGNAL(clicked()), this, SLOT(suggest()));
+    connect(this, SIGNAL(ready(bool)), d->ui->m_suggestBtn, SLOT(setEnabled(bool)));
+    d->ui->m_suggestBtn->hide();
 
-  connect(this, SIGNAL(user1Clicked()), this, SLOT(stop()));
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(stop()));
 
-  connect( d->ui->m_replacement, SIGNAL(textChanged(const QString &)),
-           SLOT(textChanged(const QString &)) );
+    connect(d->ui->m_replacement, SIGNAL(textChanged(const QString &)), SLOT(textChanged(const QString &)));
 
-  connect( d->ui->m_replacement, SIGNAL(returnPressed()),   SLOT(replace()) );
-  connect( d->ui->m_suggestions, SIGNAL(selectionChanged(QListViewItem*)),
-           SLOT(slotSelectionChanged(QListViewItem*)) );
+    connect(d->ui->m_replacement, SIGNAL(returnPressed()), SLOT(replace()));
+    connect(d->ui->m_suggestions, SIGNAL(selectionChanged(QListViewItem *)), SLOT(slotSelectionChanged(QListViewItem *)));
 
-  connect( d->ui->m_suggestions, SIGNAL( doubleClicked ( QListViewItem *, const QPoint &, int ) ),
-           SLOT( replace() ) );
-  d->spellConfig = new KSpellConfig( 0, 0 ,0, false );
-  d->spellConfig->fillDicts( d->ui->m_language );
-  connect( d->ui->m_language, SIGNAL(activated(int)),
-	   d->spellConfig, SLOT(sSetDictionary(int)) );
-  connect( d->spellConfig, SIGNAL(configChanged()),
-           SLOT(slotConfigChanged()) );
+    connect(d->ui->m_suggestions, SIGNAL(doubleClicked(QListViewItem *, const QPoint &, int)), SLOT(replace()));
+    d->spellConfig = new KSpellConfig(0, 0, 0, false);
+    d->spellConfig->fillDicts(d->ui->m_language);
+    connect(d->ui->m_language, SIGNAL(activated(int)), d->spellConfig, SLOT(sSetDictionary(int)));
+    connect(d->spellConfig, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
 
-  setHelp( "spelldlg", "kspell" );
-  setMinimumSize( sizeHint() );
-  emit ready( false );
+    setHelp("spelldlg", "kspell");
+    setMinimumSize(sizeHint());
+    emit ready(false);
 }
 
 KSpellDlg::~KSpellDlg()
 {
-  delete d->spellConfig;
-  delete d;
+    delete d->spellConfig;
+    delete d;
 }
 
-void
-KSpellDlg::init( const QString & _word, QStringList * _sugg )
+void KSpellDlg::init(const QString &_word, QStringList *_sugg)
 {
-  sugg = _sugg;
-  word = _word;
+    sugg = _sugg;
+    word = _word;
 
-  d->ui->m_suggestions->clear();
-  d->ui->m_suggestions->setSorting( NONSORTINGCOLUMN );
-  for ( QStringList::Iterator it = _sugg->begin(); it != _sugg->end(); ++it ) {
-    QListViewItem *item = new QListViewItem( d->ui->m_suggestions,
-                                             d->ui->m_suggestions->lastItem() );
-    item->setText( 0, *it );
-  }
-  kdDebug(750) << "KSpellDlg::init [" << word << "]" << endl;
+    d->ui->m_suggestions->clear();
+    d->ui->m_suggestions->setSorting(NONSORTINGCOLUMN);
+    for(QStringList::Iterator it = _sugg->begin(); it != _sugg->end(); ++it)
+    {
+        QListViewItem *item = new QListViewItem(d->ui->m_suggestions, d->ui->m_suggestions->lastItem());
+        item->setText(0, *it);
+    }
+    kdDebug(750) << "KSpellDlg::init [" << word << "]" << endl;
 
-  emit ready( true );
+    emit ready(true);
 
-  d->ui->m_unknownWord->setText( _word );
+    d->ui->m_unknownWord->setText(_word);
 
-  if ( sugg->count() == 0 ) {
-    d->ui->m_replacement->setText( _word );
-    d->ui->m_replaceBtn->setEnabled( false );
-    d->ui->m_replaceAllBtn->setEnabled( false );
-    d->ui->m_suggestBtn->setEnabled( false );
-  } else {
-    d->ui->m_replacement->setText( (*sugg)[0] );
-    d->ui->m_replaceBtn->setEnabled( true );
-    d->ui->m_replaceAllBtn->setEnabled( true );
-    d->ui->m_suggestBtn->setEnabled( false );
-    d->ui->m_suggestions->setSelected( d->ui->m_suggestions->firstChild(), true );
-  }
+    if(sugg->count() == 0)
+    {
+        d->ui->m_replacement->setText(_word);
+        d->ui->m_replaceBtn->setEnabled(false);
+        d->ui->m_replaceAllBtn->setEnabled(false);
+        d->ui->m_suggestBtn->setEnabled(false);
+    }
+    else
+    {
+        d->ui->m_replacement->setText((*sugg)[0]);
+        d->ui->m_replaceBtn->setEnabled(true);
+        d->ui->m_replaceAllBtn->setEnabled(true);
+        d->ui->m_suggestBtn->setEnabled(false);
+        d->ui->m_suggestions->setSelected(d->ui->m_suggestions->firstChild(), true);
+    }
 }
 
-void
-KSpellDlg::init( const QString& _word, QStringList* _sugg,
-                 const QString& context )
+void KSpellDlg::init(const QString &_word, QStringList *_sugg, const QString &context)
 {
-  sugg = _sugg;
-  word = _word;
+    sugg = _sugg;
+    word = _word;
 
-  d->ui->m_suggestions->clear();
-  d->ui->m_suggestions->setSorting( NONSORTINGCOLUMN );
-  for ( QStringList::Iterator it = _sugg->begin(); it != _sugg->end(); ++it ) {
-      QListViewItem *item = new QListViewItem( d->ui->m_suggestions,
-                                               d->ui->m_suggestions->lastItem() );
-      item->setText( 0, *it );
-  }
+    d->ui->m_suggestions->clear();
+    d->ui->m_suggestions->setSorting(NONSORTINGCOLUMN);
+    for(QStringList::Iterator it = _sugg->begin(); it != _sugg->end(); ++it)
+    {
+        QListViewItem *item = new QListViewItem(d->ui->m_suggestions, d->ui->m_suggestions->lastItem());
+        item->setText(0, *it);
+    }
 
-  kdDebug(750) << "KSpellDlg::init [" << word << "]" << endl;
+    kdDebug(750) << "KSpellDlg::init [" << word << "]" << endl;
 
-  emit ready( true );
+    emit ready(true);
 
-  d->ui->m_unknownWord->setText( _word );
-  d->ui->m_contextLabel->setText( context );
+    d->ui->m_unknownWord->setText(_word);
+    d->ui->m_contextLabel->setText(context);
 
-  if ( sugg->count() == 0 ) {
-    d->ui->m_replacement->setText( _word );
-    d->ui->m_replaceBtn->setEnabled( false );
-    d->ui->m_replaceAllBtn->setEnabled( false );
-    d->ui->m_suggestBtn->setEnabled( false );
-  } else {
-    d->ui->m_replacement->setText( (*sugg)[0] );
-    d->ui->m_replaceBtn->setEnabled( true );
-    d->ui->m_replaceAllBtn->setEnabled( true );
-    d->ui->m_suggestBtn->setEnabled( false );
-    d->ui->m_suggestions->setSelected( d->ui->m_suggestions->firstChild(), true );
-  }
+    if(sugg->count() == 0)
+    {
+        d->ui->m_replacement->setText(_word);
+        d->ui->m_replaceBtn->setEnabled(false);
+        d->ui->m_replaceAllBtn->setEnabled(false);
+        d->ui->m_suggestBtn->setEnabled(false);
+    }
+    else
+    {
+        d->ui->m_replacement->setText((*sugg)[0]);
+        d->ui->m_replaceBtn->setEnabled(true);
+        d->ui->m_replaceAllBtn->setEnabled(true);
+        d->ui->m_suggestBtn->setEnabled(false);
+        d->ui->m_suggestions->setSelected(d->ui->m_suggestions->firstChild(), true);
+    }
 }
 
-void
-KSpellDlg::slotProgress( unsigned int p )
+void KSpellDlg::slotProgress(unsigned int p)
 {
-  if (!progressbar)
-    return;
+    if(!progressbar)
+        return;
 
-  progbar->setValue( (int) p );
+    progbar->setValue((int)p);
 }
 
-void
-KSpellDlg::textChanged( const QString & )
+void KSpellDlg::textChanged(const QString &)
 {
-  d->ui->m_replaceBtn->setEnabled( true );
-  d->ui->m_replaceAllBtn->setEnabled( true );
-  d->ui->m_suggestBtn->setEnabled( true );
+    d->ui->m_replaceBtn->setEnabled(true);
+    d->ui->m_replaceAllBtn->setEnabled(true);
+    d->ui->m_suggestBtn->setEnabled(true);
 }
 
-void
-KSpellDlg::slotSelectionChanged( QListViewItem* item )
+void KSpellDlg::slotSelectionChanged(QListViewItem *item)
 {
-  if ( item )
-    d->ui->m_replacement->setText( item->text( 0 ) );
+    if(item)
+        d->ui->m_replacement->setText(item->text(0));
 }
 
 /*
   exit functions
   */
 
-void
-KSpellDlg::closeEvent( QCloseEvent * )
+void KSpellDlg::closeEvent(QCloseEvent *)
 {
-  cancel();
+    cancel();
 }
 
-void
-KSpellDlg::done( int result )
+void KSpellDlg::done(int result)
 {
-  emit command( result );
+    emit command(result);
 }
-void
-KSpellDlg::ignore()
+void KSpellDlg::ignore()
 {
-  newword = word;
-  done( KS_IGNORE );
+    newword = word;
+    done(KS_IGNORE);
 }
 
-void
-KSpellDlg::ignoreAll()
+void KSpellDlg::ignoreAll()
 {
-  newword = word;
-  done( KS_IGNOREALL );
+    newword = word;
+    done(KS_IGNOREALL);
 }
 
-void
-KSpellDlg::add()
+void KSpellDlg::add()
 {
-  newword = word;
-  done( KS_ADD );
+    newword = word;
+    done(KS_ADD);
 }
 
 
-void
-KSpellDlg::cancel()
+void KSpellDlg::cancel()
 {
-  newword = word;
-  done( KS_CANCEL );
+    newword = word;
+    done(KS_CANCEL);
 }
 
-void
-KSpellDlg::replace()
+void KSpellDlg::replace()
 {
-  newword = d->ui->m_replacement->text();
-  done( KS_REPLACE );
+    newword = d->ui->m_replacement->text();
+    done(KS_REPLACE);
 }
 
-void
-KSpellDlg::stop()
+void KSpellDlg::stop()
 {
-  newword = word;
-  done( KS_STOP );
+    newword = word;
+    done(KS_STOP);
 }
 
-void
-KSpellDlg::replaceAll()
+void KSpellDlg::replaceAll()
 {
-  newword = d->ui->m_replacement->text();
-  done( KS_REPLACEALL );
+    newword = d->ui->m_replacement->text();
+    done(KS_REPLACEALL);
 }
 
-void
-KSpellDlg::suggest()
+void KSpellDlg::suggest()
 {
-  newword = d->ui->m_replacement->text();
-  done( KS_SUGGEST );
+    newword = d->ui->m_replacement->text();
+    done(KS_SUGGEST);
 }
 
-void
-KSpellDlg::slotConfigChanged()
+void KSpellDlg::slotConfigChanged()
 {
-  d->spellConfig->writeGlobalSettings();
-  done( KS_CONFIG );
+    d->spellConfig->writeGlobalSettings();
+    done(KS_CONFIG);
 }
 
 #include "kspelldlg.moc"

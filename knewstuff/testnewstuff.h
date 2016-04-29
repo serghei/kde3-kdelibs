@@ -30,28 +30,28 @@
 
 #include "knewstuff.h"
 
-class TestNewStuff : public KNewStuff
-{
-  public:
-    TestNewStuff() : KNewStuff( "korganizer/calendar" ) {}
-    
-    bool install( const QString &fileName );
-    
-    bool createUploadFile( const QString &fileName );
+class TestNewStuff : public KNewStuff {
+public:
+    TestNewStuff() : KNewStuff("korganizer/calendar")
+    {
+    }
+
+    bool install(const QString &fileName);
+
+    bool createUploadFile(const QString &fileName);
 };
 
-class MyWidget : public QWidget
-{
+class MyWidget : public QWidget {
     Q_OBJECT
-  public:
+public:
     MyWidget();
     ~MyWidget();
-    
-  public slots:
+
+public slots:
     void upload();
     void download();
 
-  private:
+private:
     KNewStuff *mNewStuff;
 };
 

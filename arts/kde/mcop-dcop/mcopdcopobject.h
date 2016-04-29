@@ -25,65 +25,80 @@
 #include <qvaluelist.h>
 #include <qcstring.h>
 
-typedef QValueList<QCString> QCStringList;
+typedef QValueList< QCString > QCStringList;
 
 class MCOPDCOPObjectPrivate;
 
-class MCOPEntryInfo
-{
+class MCOPEntryInfo {
 public:
-	MCOPEntryInfo()
-	{ }
-	
-	~MCOPEntryInfo()
-	{ }
+    MCOPEntryInfo()
+    {
+    }
 
-	QCString functionType()
-	{ return m_functionType; }
-	
-	QCString functionName()
-	{ return m_functionName; }
+    ~MCOPEntryInfo()
+    {
+    }
 
-	QCString signature()
-	{ return m_signature; }
-	
-	QCStringList signatureList()
-	{ return m_signatureList; }
-	
-	void setFunctionType(QCString s)
-	{ m_functionType = s; }
+    QCString functionType()
+    {
+        return m_functionType;
+    }
 
-	void setFunctionName(QCString s)
-	{ m_functionName = s; }
+    QCString functionName()
+    {
+        return m_functionName;
+    }
 
-	void setSignature(QCString s)
-	{ m_signature = s; }
+    QCString signature()
+    {
+        return m_signature;
+    }
 
-	void setSignatureList(QCStringList s)
-	{ m_signatureList = s; }
+    QCStringList signatureList()
+    {
+        return m_signatureList;
+    }
+
+    void setFunctionType(QCString s)
+    {
+        m_functionType = s;
+    }
+
+    void setFunctionName(QCString s)
+    {
+        m_functionName = s;
+    }
+
+    void setSignature(QCString s)
+    {
+        m_signature = s;
+    }
+
+    void setSignatureList(QCStringList s)
+    {
+        m_signatureList = s;
+    }
 
 private:
-	QCString m_functionType, m_functionName, m_signature;
-	QCStringList m_signatureList;
+    QCString m_functionType, m_functionName, m_signature;
+    QCStringList m_signatureList;
 };
 
-class MCOPDCOPObject : public DCOPObject
-{
+class MCOPDCOPObject : public DCOPObject {
 public:
-	MCOPDCOPObject(QCString name);
-	~MCOPDCOPObject();
+    MCOPDCOPObject(QCString name);
+    ~MCOPDCOPObject();
 
-	virtual bool processDynamic(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
-	virtual QCStringList functionsDynamic();
+    virtual bool processDynamic(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
+    virtual QCStringList functionsDynamic();
 
-	void addDynamicFunction(QCString value, MCOPEntryInfo *entry);
+    void addDynamicFunction(QCString value, MCOPEntryInfo *entry);
 
-	Arts::Buffer *callFunction(MCOPEntryInfo *entry, QCString ifaceName, const QByteArray &data);
-	
+    Arts::Buffer *callFunction(MCOPEntryInfo *entry, QCString ifaceName, const QByteArray &data);
+
 private:
     MCOPDCOPObjectPrivate *d;
 };
 
 
 #endif
-

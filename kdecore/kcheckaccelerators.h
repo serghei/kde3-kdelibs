@@ -63,29 +63,28 @@ class QTextView;
  there are shown all conflicts grouped by accelerator, and a list of all used
  accelerators.
 */
-class KDECORE_EXPORT KCheckAccelerators : public QObject
-{
+class KDECORE_EXPORT KCheckAccelerators : public QObject {
     Q_OBJECT
 public:
     /**
      * Creates a KCheckAccelerators instance for the given object.
      * @param parent the parent to check
      */
-    KCheckAccelerators( QObject* parent );
+    KCheckAccelerators(QObject *parent);
     /**
      * Re-implemented to filter the parent's events.
      */
-    bool eventFilter( QObject * , QEvent * e);
+    bool eventFilter(QObject *, QEvent *e);
 
 private:
-    void checkAccelerators( bool automatic );
+    void checkAccelerators(bool automatic);
     int key;
     bool alwaysShow;
     bool autoCheck;
     bool block;
     QTimer autoCheckTimer;
     void createDialog(QWidget *parent, bool automatic);
-    QGuardedPtr<QDialog> drklash;
+    QGuardedPtr< QDialog > drklash;
     QTextView *drklash_view;
 
 private slots:

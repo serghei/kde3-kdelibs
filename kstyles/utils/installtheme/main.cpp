@@ -38,31 +38,31 @@ static const char ver[] = "0.9.1";
 int main(int argc, char **argv)
 {
     KCmdLineArgs::init(argc, argv, "kinstalltheme", I18N_NOOP("KInstalltheme"), desc, ver);
-    KApplication qapp(false, false); //We don't  allow styles.. Kind of ironic, isn't it?
+    KApplication qapp(false, false); // We don't  allow styles.. Kind of ironic, isn't it?
 
-    KGlobal::dirs()->addResourceType("themercs", KGlobal::dirs()->kde_default("data")+QString("kstyle/themes"));
-    QStringList themercs = KGlobal::dirs()->findAllResources("themercs","*.themerc");
+    KGlobal::dirs()->addResourceType("themercs", KGlobal::dirs()->kde_default("data") + QString("kstyle/themes"));
+    QStringList themercs = KGlobal::dirs()->findAllResources("themercs", "*.themerc");
 
-    QMap <QString, QString> themes; //Name->file mapping..
+    QMap< QString, QString > themes; // Name->file mapping..
 
-    for (QStringList::iterator i = themercs.begin(); i!=themercs.end(); ++i)
+    for(QStringList::iterator i = themercs.begin(); i != themercs.end(); ++i)
     {
-        QString file=*i;
+        QString file = *i;
         KSimpleConfig config(file, true);
-        QString name = QFileInfo(file).baseName(); //This is nice and static...
-        //So we don't have to worry about our key changing when the language does.
+        QString name = QFileInfo(file).baseName(); // This is nice and static...
+        // So we don't have to worry about our key changing when the language does.
 
-        config.setGroup( "KDE" );
+        config.setGroup("KDE");
 
-        if (config.readEntry( "widgetStyle" ) == "basicstyle.so")
+        if(config.readEntry("widgetStyle") == "basicstyle.so")
         {
-            //OK, emit a style entry...
-            if (!themes.contains(name)) //Only add first occurrence, i.e. user local one.
+            // OK, emit a style entry...
+            if(!themes.contains(name)) // Only add first occurrence, i.e. user local one.
                 themes[name] = file;
         }
     }
 
-    KSimpleConfig cache( KGlobal::dirs()->saveLocation("config")+"kthemestylerc");
+    KSimpleConfig cache(KGlobal::dirs()->saveLocation("config") + "kthemestylerc");
 
 #if 0
 //Doesn't seem to work with present Qt..
@@ -74,17 +74,17 @@ int main(int argc, char **argv)
 	}
 #endif
 
-    QStringList themeNames; //A list of names, each occurring once - the keys of the themes map..
+    QStringList themeNames; // A list of names, each occurring once - the keys of the themes map..
 
-    for (QMap<QString, QString>::Iterator  i = themes.begin(); i!=themes.end(); ++i)
+    for(QMap< QString, QString >::Iterator i = themes.begin(); i != themes.end(); ++i)
     {
         cache.setGroup(i.key().lower());
-        cache.writePathEntry("file",QFileInfo(i.data()).fileName());
+        cache.writePathEntry("file", QFileInfo(i.data()).fileName());
         themeNames.push_back(i.key());
     }
 
     cache.setGroup("General");
-    cache.writeEntry("themes", themeNames.join("^e")+"^e");
+    cache.writeEntry("themes", themeNames.join("^e") + "^e");
 
     return 0;
 }

@@ -33,8 +33,8 @@ class QDBusVariant;
 class QDBusObjectPath;
 class QString;
 
-template<typename T> class QValueList;
-template<typename T> class QDBusDataMap;
+template < typename T > class QValueList;
+template < typename T > class QDBusDataMap;
 
 /**
  * @brief Class for accurately representing D-Bus data types
@@ -54,8 +54,7 @@ template<typename T> class QDBusDataMap;
  * @see QDBusDataMap
  * @see QDBusDataConverter
  */
-class QDBUS_EXPORT QDBusData
-{
+class QDBUS_EXPORT QDBusData {
 public:
     /**
      * @brief Enum for the data types used in D-Bus messages
@@ -283,7 +282,7 @@ public:
      *
      * @param other the object to copy
      */
-    QDBusData(const QDBusData& other);
+    QDBusData(const QDBusData &other);
 
     /**
      * @brief Destroys the data object
@@ -303,7 +302,7 @@ public:
      *
      * @return a reference to this instance
      */
-    QDBusData& operator=(const QDBusData& other);
+    QDBusData &operator=(const QDBusData &other);
 
     /**
      * @brief Checks if the given @p other data object is equal to this instance
@@ -316,7 +315,7 @@ public:
      *
      * @return @c true if the two data objects are equal, otherwise @c false
      */
-    bool operator==(const QDBusData& other) const;
+    bool operator==(const QDBusData &other) const;
 
     /**
      * @brief Checks if the given @p other data object is different from this instance
@@ -327,7 +326,7 @@ public:
      *
      * @see operator==()
      */
-    bool operator!=(const QDBusData& other) const;
+    bool operator!=(const QDBusData &other) const;
 
     /**
      * @brief Checks whether the data object contains a valid content
@@ -336,7 +335,10 @@ public:
      *
      * @return @c true if the data object is valid, otherwise @c false
      */
-    inline bool isValid() const { return type() != QDBusData::Invalid; }
+    inline bool isValid() const
+    {
+        return type() != QDBusData::Invalid;
+    }
 
     /**
      * @brief Returns the #Type of the data object
@@ -372,7 +374,10 @@ public:
      * @see type()
      * @see typeName(Type)
      */
-    inline const char* typeName() const { return typeName(type()); }
+    inline const char *typeName() const
+    {
+        return typeName(type());
+    }
 
     /**
      * @brief Returns the string representation for the given @p type
@@ -384,7 +389,7 @@ public:
      * @see type()
      * @see typeName()
      */
-    static const char* typeName(Type type);
+    static const char *typeName(Type type);
 
     /**
      * @brief Creates a data object for the given boolean @p value
@@ -411,7 +416,7 @@ public:
      *
      * @see fromBool()
      */
-    bool toBool(bool* ok = 0) const;
+    bool toBool(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given byte (unsigned char) @p value
@@ -438,7 +443,7 @@ public:
      *
      * @see fromByte()
      */
-    Q_UINT8 toByte(bool* ok = 0) const;
+    Q_UINT8 toByte(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given signed 16-bit integer @p value
@@ -465,7 +470,7 @@ public:
      *
      * @see fromInt16()
      */
-    Q_INT16 toInt16(bool* ok = 0) const;
+    Q_INT16 toInt16(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given unsigned 16-bit integer @p value
@@ -492,7 +497,7 @@ public:
      *
      * @see fromUInt16()
      */
-    Q_UINT16 toUInt16(bool* ok = 0) const;
+    Q_UINT16 toUInt16(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given signed 32-bit integer @p value
@@ -519,7 +524,7 @@ public:
      *
      * @see fromInt32()
      */
-    Q_INT32 toInt32(bool* ok = 0) const;
+    Q_INT32 toInt32(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given unsigned 32-bit integer @p value
@@ -546,7 +551,7 @@ public:
      *
      * @see fromUInt32()
      */
-    Q_UINT32 toUInt32(bool* ok = 0) const;
+    Q_UINT32 toUInt32(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given signed 64-bit integer @p value
@@ -573,7 +578,7 @@ public:
      *
      * @see fromInt64()
      */
-    Q_INT64 toInt64(bool* ok = 0) const;
+    Q_INT64 toInt64(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given unsigned 64-bit integer @p value
@@ -600,7 +605,7 @@ public:
      *
      * @see fromUInt64()
      */
-    Q_UINT64 toUInt64(bool* ok = 0) const;
+    Q_UINT64 toUInt64(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given double @p value
@@ -627,7 +632,7 @@ public:
      *
      * @see fromDouble()
      */
-    double toDouble(bool* ok = 0) const;
+    double toDouble(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given string @p value
@@ -638,7 +643,7 @@ public:
      *
      * @see toString()
      */
-    static QDBusData fromString(const QString& value);
+    static QDBusData fromString(const QString &value);
 
     /**
      * @brief Tries to get the encapsulated string value
@@ -654,7 +659,7 @@ public:
      *
      * @see fromString()
      */
-    QString toString(bool* ok = 0) const;
+    QString toString(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given object path @p value
@@ -665,7 +670,7 @@ public:
      *
      * @see toObjectPath()
      */
-    static QDBusData fromObjectPath(const QDBusObjectPath& value);
+    static QDBusData fromObjectPath(const QDBusObjectPath &value);
 
     /**
      * @brief Tries to get the encapsulated object path value
@@ -682,7 +687,7 @@ public:
      *
      * @see fromObjectPath()
      */
-    QDBusObjectPath toObjectPath(bool* ok = 0) const;
+    QDBusObjectPath toObjectPath(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p list
@@ -702,7 +707,7 @@ public:
      *
      * @see toList()
      */
-    static QDBusData fromList(const QDBusDataList& list);
+    static QDBusData fromList(const QDBusDataList &list);
 
     /**
      * @brief Tries to get the encapsulated list
@@ -718,7 +723,7 @@ public:
      *
      * @see fromList()
      */
-    QDBusDataList toList(bool* ok = 0) const;
+    QDBusDataList toList(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p list
@@ -738,7 +743,7 @@ public:
      *
      * @see toQValueList()
      */
-    static QDBusData fromQValueList(const QValueList<QDBusData>& list);
+    static QDBusData fromQValueList(const QValueList< QDBusData > &list);
 
     /**
      * @brief Tries to get the encapsulated list
@@ -753,7 +758,7 @@ public:
      *
      * @see fromQValueList()
      */
-    QValueList<QDBusData> toQValueList(bool* ok = 0) const;
+    QValueList< QDBusData > toQValueList(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given struct's @p memberList
@@ -766,7 +771,7 @@ public:
      *
      * @see toStruct()
      */
-    static QDBusData fromStruct(const QValueList<QDBusData>& memberList);
+    static QDBusData fromStruct(const QValueList< QDBusData > &memberList);
 
     /**
      * @brief Tries to get the encapsulated struct memberList
@@ -784,7 +789,7 @@ public:
      *
      * @see fromStruct()
      */
-    QValueList<QDBusData> toStruct(bool* ok = 0) const;
+    QValueList< QDBusData > toStruct(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given variant @p value
@@ -795,7 +800,7 @@ public:
      *
      * @see toVariant()
      */
-    static QDBusData fromVariant(const QDBusVariant& value);
+    static QDBusData fromVariant(const QDBusVariant &value);
 
     /**
      * @brief Tries to get the encapsulated variant value
@@ -811,7 +816,7 @@ public:
      *
      * @see fromVariant()
      */
-    QDBusVariant toVariant(bool* ok = 0) const;
+    QDBusVariant toVariant(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p map
@@ -828,7 +833,7 @@ public:
      *
      * @see toByteKeyMap()
      */
-    static QDBusData fromByteKeyMap(const QDBusDataMap<Q_UINT8>& map);
+    static QDBusData fromByteKeyMap(const QDBusDataMap< Q_UINT8 > &map);
 
     /**
      * @brief Tries to get the encapsulated map
@@ -846,7 +851,7 @@ public:
      *
      * @see fromByteKeyMap()
      */
-    QDBusDataMap<Q_UINT8> toByteKeyMap(bool* ok = 0) const;
+    QDBusDataMap< Q_UINT8 > toByteKeyMap(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p map
@@ -863,7 +868,7 @@ public:
      *
      * @see toInt16KeyMap()
      */
-    static QDBusData fromInt16KeyMap(const QDBusDataMap<Q_INT16>& map);
+    static QDBusData fromInt16KeyMap(const QDBusDataMap< Q_INT16 > &map);
 
     /**
      * @brief Tries to get the encapsulated map
@@ -881,7 +886,7 @@ public:
      *
      * @see fromInt16KeyMap()
      */
-    QDBusDataMap<Q_INT16> toInt16KeyMap(bool* ok = 0) const;
+    QDBusDataMap< Q_INT16 > toInt16KeyMap(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p map
@@ -898,7 +903,7 @@ public:
      *
      * @see toUInt16KeyMap()
      */
-    static QDBusData fromUInt16KeyMap(const QDBusDataMap<Q_UINT16>& map);
+    static QDBusData fromUInt16KeyMap(const QDBusDataMap< Q_UINT16 > &map);
 
     /**
      * @brief Tries to get the encapsulated map
@@ -916,7 +921,7 @@ public:
      *
      * @see fromUInt16KeyMap()
      */
-    QDBusDataMap<Q_UINT16> toUInt16KeyMap(bool* ok = 0) const;
+    QDBusDataMap< Q_UINT16 > toUInt16KeyMap(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p map
@@ -933,7 +938,7 @@ public:
      *
      * @see toInt32KeyMap()
      */
-    static QDBusData fromInt32KeyMap(const QDBusDataMap<Q_INT32>& map);
+    static QDBusData fromInt32KeyMap(const QDBusDataMap< Q_INT32 > &map);
 
     /**
      * @brief Tries to get the encapsulated map
@@ -951,7 +956,7 @@ public:
      *
      * @see fromInt32KeyMap()
      */
-    QDBusDataMap<Q_INT32> toInt32KeyMap(bool* ok = 0) const;
+    QDBusDataMap< Q_INT32 > toInt32KeyMap(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p map
@@ -968,7 +973,7 @@ public:
      *
      * @see toUInt32KeyMap()
      */
-    static QDBusData fromUInt32KeyMap(const QDBusDataMap<Q_UINT32>& map);
+    static QDBusData fromUInt32KeyMap(const QDBusDataMap< Q_UINT32 > &map);
 
     /**
      * @brief Tries to get the encapsulated map
@@ -986,7 +991,7 @@ public:
      *
      * @see fromUInt32KeyMap()
      */
-    QDBusDataMap<Q_UINT32> toUInt32KeyMap(bool* ok = 0) const;
+    QDBusDataMap< Q_UINT32 > toUInt32KeyMap(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p map
@@ -1003,7 +1008,7 @@ public:
      *
      * @see toInt64KeyMap()
      */
-    static QDBusData fromInt64KeyMap(const QDBusDataMap<Q_INT64>& map);
+    static QDBusData fromInt64KeyMap(const QDBusDataMap< Q_INT64 > &map);
 
     /**
      * @brief Tries to get the encapsulated map
@@ -1021,7 +1026,7 @@ public:
      *
      * @see fromInt64KeyMap()
      */
-    QDBusDataMap<Q_INT64> toInt64KeyMap(bool* ok = 0) const;
+    QDBusDataMap< Q_INT64 > toInt64KeyMap(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p map
@@ -1038,7 +1043,7 @@ public:
      *
      * @see toUInt64KeyMap()
      */
-    static QDBusData fromUInt64KeyMap(const QDBusDataMap<Q_UINT64>& map);
+    static QDBusData fromUInt64KeyMap(const QDBusDataMap< Q_UINT64 > &map);
 
     /**
      * @brief Tries to get the encapsulated map
@@ -1056,7 +1061,7 @@ public:
      *
      * @see fromUInt64KeyMap()
      */
-    QDBusDataMap<Q_UINT64> toUInt64KeyMap(bool* ok = 0) const;
+    QDBusDataMap< Q_UINT64 > toUInt64KeyMap(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p map
@@ -1073,7 +1078,7 @@ public:
      *
      * @see toStringKeyMap()
      */
-    static QDBusData fromStringKeyMap(const QDBusDataMap<QString>& map);
+    static QDBusData fromStringKeyMap(const QDBusDataMap< QString > &map);
 
     /**
      * @brief Tries to get the encapsulated map
@@ -1091,7 +1096,7 @@ public:
      *
      * @see fromStringKeyMap()
      */
-    QDBusDataMap<QString> toStringKeyMap(bool* ok = 0) const;
+    QDBusDataMap< QString > toStringKeyMap(bool *ok = 0) const;
 
     /**
      * @brief Creates a data object for the given @p map
@@ -1108,7 +1113,7 @@ public:
      *
      * @see toObjectPathKeyMap()
      */
-    static QDBusData fromObjectPathKeyMap(const QDBusDataMap<QDBusObjectPath>& map);
+    static QDBusData fromObjectPathKeyMap(const QDBusDataMap< QDBusObjectPath > &map);
 
     /**
      * @brief Tries to get the encapsulated map
@@ -1126,7 +1131,7 @@ public:
      *
      * @see fromObjectPathKeyMap()
      */
-    QDBusDataMap<QDBusObjectPath> toObjectPathKeyMap(bool* ok = 0) const;
+    QDBusDataMap< QDBusObjectPath > toObjectPathKeyMap(bool *ok = 0) const;
 
     /**
      * @brief Creates the data objects D-Bus signature
@@ -1144,7 +1149,7 @@ public:
 
 private:
     class Private;
-    Private* d;
+    Private *d;
 };
 
 #endif

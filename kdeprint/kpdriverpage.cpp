@@ -24,40 +24,41 @@
 #include <qlayout.h>
 #include <klocale.h>
 
-KPDriverPage::KPDriverPage(KMPrinter *p, DrMain *d, QWidget *parent, const char *name)
-: KPrintDialogPage(p,d,parent,name)
+KPDriverPage::KPDriverPage(KMPrinter *p, DrMain *d, QWidget *parent, const char *name) : KPrintDialogPage(p, d, parent, name)
 {
-	setTitle(i18n("Driver Settings"));
+    setTitle(i18n("Driver Settings"));
 
-	m_view = new DriverView(this);
-	m_view->setAllowFixed(false);
-	if (driver()) m_view->setDriver(driver());
+    m_view = new DriverView(this);
+    m_view->setAllowFixed(false);
+    if(driver())
+        m_view->setDriver(driver());
 
-	QVBoxLayout	*lay1 = new QVBoxLayout(this, 0, 0);
-	lay1->addWidget(m_view);
+    QVBoxLayout *lay1 = new QVBoxLayout(this, 0, 0);
+    lay1->addWidget(m_view);
 }
 
 KPDriverPage::~KPDriverPage()
 {
 }
 
-bool KPDriverPage::isValid(QString& msg)
+bool KPDriverPage::isValid(QString &msg)
 {
-	if (m_view->hasConflict())
-	{
-		msg = i18n("<qt>Some options selected are in conflict. You must resolve these conflicts "
- 			   "before continuing. See <b>Driver Settings</b> tab for detailed information.</qt>");
-		return false;
-	}
-	return true;
+    if(m_view->hasConflict())
+    {
+        msg = i18n(
+            "<qt>Some options selected are in conflict. You must resolve these conflicts "
+            "before continuing. See <b>Driver Settings</b> tab for detailed information.</qt>");
+        return false;
+    }
+    return true;
 }
 
-void KPDriverPage::setOptions(const QMap<QString,QString>& opts)
+void KPDriverPage::setOptions(const QMap< QString, QString > &opts)
 {
-	m_view->setOptions(opts);
+    m_view->setOptions(opts);
 }
 
-void KPDriverPage::getOptions(QMap<QString,QString>& opts, bool incldef)
+void KPDriverPage::getOptions(QMap< QString, QString > &opts, bool incldef)
 {
-	m_view->getOptions(opts,incldef);
+    m_view->getOptions(opts, incldef);
 }

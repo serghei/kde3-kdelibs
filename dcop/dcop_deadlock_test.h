@@ -34,18 +34,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdio.h>
 
-class MyDCOPObject : public QObject, public DCOPObject
-{
-  Q_OBJECT
+class MyDCOPObject : public QObject, public DCOPObject {
+    Q_OBJECT
 public:
-  MyDCOPObject(const QCString &name, const QCString &remoteName);
-  bool process(const QCString &fun, const QByteArray &data,
-	       QCString& replyType, QByteArray &replyData);
+    MyDCOPObject(const QCString &name, const QCString &remoteName);
+    bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
 public slots:
-  void slotTimeout();
+    void slotTimeout();
 
 private:
-  QCString m_remoteName;
-  QTimer m_timer;
+    QCString m_remoteName;
+    QTimer m_timer;
 };
 #endif

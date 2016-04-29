@@ -94,25 +94,50 @@ class QPopupMenu;
  *
  * @author Matthias Elter <elter@kde.org>
  **/
-class KDEUI_EXPORT KPanelApplet : public QFrame
-{
+class KDEUI_EXPORT KPanelApplet : public QFrame {
     Q_OBJECT
 
 public:
-
     /**
      * This enum describes the type of the applet.
      */
-    enum Type { Normal = 0, Stretch };
+    enum Type
+    {
+        Normal = 0,
+        Stretch
+    };
     /**
      * This enum holds flags which can be ORed together to describe
      * which items the context menu over the applet handle contains.
      */
     // KDE4: Merge these with KPanelExtension's enums
-    enum Action { About = 1, Help = 2, Preferences = 4, ReportBug = 8 };
-    enum Position { pLeft = 0, pRight, pTop, pBottom };
-    enum Alignment { LeftTop = 0, Center, RightBottom };
-    enum Direction { Up = 0, Down, Left, Right };
+    enum Action
+    {
+        About = 1,
+        Help = 2,
+        Preferences = 4,
+        ReportBug = 8
+    };
+    enum Position
+    {
+        pLeft = 0,
+        pRight,
+        pTop,
+        pBottom
+    };
+    enum Alignment
+    {
+        LeftTop = 0,
+        Center,
+        RightBottom
+    };
+    enum Direction
+    {
+        Up = 0,
+        Down,
+        Left,
+        Right
+    };
 
     /**
      * Constructs a KPanelApplet just like any other widget.
@@ -124,9 +149,7 @@ public:
      * @param name A Qt object name for your applet.
      * @param f Window control flags
      **/
-    KPanelApplet(const QString& configFile, Type t = Normal,
-                 int actions = 0, QWidget *parent = 0, const char *name = 0,
-                 WFlags f = 0);
+    KPanelApplet(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
     /**
      * Destructor.
@@ -152,7 +175,10 @@ public:
      *
      * The width you return is granted.
      **/
-    virtual int widthForHeight(int height) const { return height; }
+    virtual int widthForHeight(int height) const
+    {
+        return height;
+    }
 
     /**
      * @return A suggested height for a given width.
@@ -173,7 +199,10 @@ public:
      *
      * The height you return is granted.
      **/
-    virtual int heightForWidth(int width) const { return width; }
+    virtual int heightForWidth(int width) const
+    {
+        return width;
+    }
 
     /**
      * Always use this KConfig object to save/load your applet's configuration.
@@ -184,20 +213,29 @@ public:
      * For normal applets this config object will write to a instance specific config file
      * called \<appletname\>\<instanceid\>rc in the user's local %KDE directory.
      **/
-    KConfig* config() const { return _config; }
+    KConfig *config() const
+    {
+        return _config;
+    }
     KSharedConfig::Ptr sharedConfig() const;
 
     /**
      * @return Type indicating the applet's type.
      * Type
      **/
-    Type type() const { return _type; }
+    Type type() const
+    {
+        return _type;
+    }
 
     /**
      * @return int indicating the supported RMB menu actions.
      * Action
      **/
-    int actions() const { return _actions; }
+    int actions() const
+    {
+        return _actions;
+    }
 
     /**
      * Generic action dispatcher. Called  when the user selects an item
@@ -209,22 +247,22 @@ public:
      * ref about(), help(), preferences(), reportBug()
      *
      **/
-    virtual void action( Action a );
+    virtual void action(Action a);
 
     /**
      * @return the applet's custom menu, usually the same as the context menu, or 0 if none
      * see setCustomMenu(QPopupMenu*)
      */
-    const QPopupMenu* customMenu() const;
+    const QPopupMenu *customMenu() const;
 
     /**
      * @internal
      **/
-    void setPosition( Position p );
+    void setPosition(Position p);
     /**
      * @internal
      **/
-    void setAlignment( Alignment a );
+    void setAlignment(Alignment a);
 
 signals:
     /**
@@ -261,7 +299,6 @@ signals:
     void requestFocus(bool focus);
 
 protected:
-
     /**
      * Is called when the user selects "About" from the applet's RMB menu.
      * Reimplement this function to launch a about dialog.
@@ -269,7 +306,9 @@ protected:
      * Note that this is called only when your applet supports the About action.
      * See Action and KPanelApplet().
      **/
-    virtual void about() {}
+    virtual void about()
+    {
+    }
 
     /**
      * Is called when the user selects "Help" from the applet's RMB menu.
@@ -278,7 +317,9 @@ protected:
      * Note that this is called only when your applet supports the Help action.
      * See Action and KPanelApplet().
      **/
-    virtual void help() {}
+    virtual void help()
+    {
+    }
 
     /**
      * Is called when the user selects "Preferences" from the applet's RMB menu.
@@ -287,7 +328,9 @@ protected:
      * Note that this is called only when your applet supports the preferences action.
      * See Action and KPanelApplet().
      **/
-    virtual void preferences() {}
+    virtual void preferences()
+    {
+    }
 
     /**
      * Is called when the user selects "Report bug" from the applet's RMB menu.
@@ -297,7 +340,9 @@ protected:
      * action.
      * See Action and KPanelApplet()
      **/
-   virtual void reportBug() {}
+    virtual void reportBug()
+    {
+    }
 
     /**
      * @return the applet's orientation. (horizontal or vertical)
@@ -306,25 +351,33 @@ protected:
     /**
      * @return the applet's position. (top, left, bottom, or right)
      **/
-    Position position() const { return _position; }
+    Position position() const
+    {
+        return _position;
+    }
     /**
      * @return the applet's alignment. (top/left, center, or bottom/right)
      **/
-    Alignment alignment() const { return _alignment; }
+    Alignment alignment() const
+    {
+        return _alignment;
+    }
 
     /**
      * The panel on which this applet resides has changed its position.
      * Reimplement this change handler in order to adjust the look of your
      * applet.
      **/
-    virtual void positionChange( Position p );
+    virtual void positionChange(Position p);
 
     /**
      * The panel on which this applet resides has changed its alignment.
      * Reimplement this change handler in order to adjust the look of your
      * applet.
      **/
-    virtual void alignmentChange( Alignment /*a*/ ) {}
+    virtual void alignmentChange(Alignment /*a*/)
+    {
+    }
 
     /**
      * Use this method to set the custom menu for this applet so that it can be shown
@@ -335,7 +388,7 @@ protected:
      * If the menu is deleted during the life of the applet, be sure to call this method again
      * with the new menu (or 0) to avoid crashes
      */
-    void setCustomMenu(const QPopupMenu*);
+    void setCustomMenu(const QPopupMenu *);
 
     /**
      * Register widgets that can receive keyboard focus with this this method
@@ -344,7 +397,7 @@ protected:
      * @param watch whether to start watching the widget, or to stop doing so
      * @since 3.4
      */
-    void watchForFocus(QWidget* widget, bool watch = true);
+    void watchForFocus(QWidget *widget, bool watch = true);
 
     /**
      * Call this whenever focus is needed or not needed. You do not have to call this method
@@ -361,7 +414,9 @@ protected:
      * @deprecated Reimplement positionChange instead.
      **/
     // FIXME: Remove for KDE 4
-    virtual KDE_DEPRECATED void orientationChange( Orientation /* orientation*/) {}
+    virtual KDE_DEPRECATED void orientationChange(Orientation /* orientation*/)
+    {
+    }
 
     /**
      * A convenience method that translates the position of the applet into which
@@ -376,18 +431,21 @@ protected:
      * @deprecated Reimplement positionChange instead.
      **/
     // FIXME: Remove for KDE 4
-    virtual KDE_DEPRECATED void popupDirectionChange( Direction /*direction*/ ) {}
+    virtual KDE_DEPRECATED void popupDirectionChange(Direction /*direction*/)
+    {
+    }
 
     bool eventFilter(QObject *, QEvent *);
 
 private:
-    Type         _type;
-    Position     _position;
-    Alignment    _alignment;
-    KConfig*     _config;
-    int          _actions;
+    Type _type;
+    Position _position;
+    Alignment _alignment;
+    KConfig *_config;
+    int _actions;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
     class KPanelAppletPrivate;
     KPanelAppletPrivate *d;
 };

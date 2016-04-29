@@ -34,22 +34,21 @@ namespace Arts {
 class Object;
 
 // Connect function overloaded for components with default port
-void ARTS_EXPORT connect(const Object& src, const std::string& output, const Object& dest, const std::string& input);
-void ARTS_EXPORT connect(const Object& src, const std::string& output, const Object& dest);
-void ARTS_EXPORT connect(const Object& src, const Object& dest, const std::string& input);
-void ARTS_EXPORT connect(const Object& src, const Object& dest);
+void ARTS_EXPORT connect(const Object &src, const std::string &output, const Object &dest, const std::string &input);
+void ARTS_EXPORT connect(const Object &src, const std::string &output, const Object &dest);
+void ARTS_EXPORT connect(const Object &src, const Object &dest, const std::string &input);
+void ARTS_EXPORT connect(const Object &src, const Object &dest);
 // Same for disconnect function
-void ARTS_EXPORT disconnect(const Object& src, const std::string& output, const Object& dest, const std::string& input);
-void ARTS_EXPORT disconnect(const Object& src, const std::string& output, const Object& dest);
-void ARTS_EXPORT disconnect(const Object& src, const Object& dest, const std::string& input);
-void ARTS_EXPORT disconnect(const Object& src, const Object& dest);
+void ARTS_EXPORT disconnect(const Object &src, const std::string &output, const Object &dest, const std::string &input);
+void ARTS_EXPORT disconnect(const Object &src, const std::string &output, const Object &dest);
+void ARTS_EXPORT disconnect(const Object &src, const Object &dest, const std::string &input);
+void ARTS_EXPORT disconnect(const Object &src, const Object &dest);
 
 // setValue function overloaded for components with default port
-void ARTS_EXPORT setValue(const Object& c, const std::string& port, const float fvalue);
-void ARTS_EXPORT setValue(const Object& c, const float fvalue);
-//void setValue(const Object& c, const std::string& port, const std::string& svalue);
-//void setValue(const Object& c, const std::string& svalue);
-
+void ARTS_EXPORT setValue(const Object &c, const std::string &port, const float fvalue);
+void ARTS_EXPORT setValue(const Object &c, const float fvalue);
+// void setValue(const Object& c, const std::string& port, const std::string& svalue);
+// void setValue(const Object& c, const std::string& svalue);
 }
 
 #endif

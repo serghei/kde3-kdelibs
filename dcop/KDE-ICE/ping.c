@@ -26,34 +26,33 @@ Author: Ralph Mor, X Consortium
 #include <KDE-ICE/ICElib.h>
 #include "KDE-ICE/ICElibint.h"
 
-Status
-IcePing (iceConn, pingReplyProc, clientData)
+Status IcePing(iceConn, pingReplyProc, clientData)
 
-IceConn		 iceConn;
+    IceConn iceConn;
 IcePingReplyProc pingReplyProc;
-IcePointer	 clientData;
+IcePointer clientData;
 
 {
-    _IcePingWait *newping = (_IcePingWait *) malloc (sizeof (_IcePingWait));
+    _IcePingWait *newping = (_IcePingWait *)malloc(sizeof(_IcePingWait));
     _IcePingWait *ptr = iceConn->ping_waits;
 
-    if (newping == NULL)
-	return (0);
+    if(newping == NULL)
+        return (0);
 
     newping->ping_reply_proc = pingReplyProc;
     newping->client_data = clientData;
     newping->next = NULL;
 
-    while (ptr && ptr->next)
-	ptr = ptr->next;
+    while(ptr && ptr->next)
+        ptr = ptr->next;
 
-    if (ptr == NULL)
-	iceConn->ping_waits = newping;
+    if(ptr == NULL)
+        iceConn->ping_waits = newping;
     else
-	ptr->next = newping;
+        ptr->next = newping;
 
-    IceSimpleMessage (iceConn, 0, ICE_Ping);
-    IceFlush (iceConn);
+    IceSimpleMessage(iceConn, 0, ICE_Ping);
+    IceFlush(iceConn);
 
     return (1);
 }

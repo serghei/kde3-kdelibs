@@ -28,85 +28,148 @@
  * this namespace contains definitions for various types needed for
  * layouting.
  */
-namespace khtml
+namespace khtml {
+
+const int UNDEFINED = -1;
+
+// alignment
+enum VAlign
 {
+    VNone = 0,
+    Bottom,
+    VCenter,
+    Top,
+    Baseline
+};
+enum HAlign
+{
+    HDefault,
+    Left,
+    HCenter,
+    Right,
+    HNone = 0
+};
 
-    const int UNDEFINED = -1;
-
-    // alignment
-    enum VAlign { VNone=0, Bottom, VCenter, Top, Baseline };
-    enum HAlign { HDefault, Left, HCenter, Right, HNone = 0 };
-
-    /*
-     * %multiLength and %Length
-     */
-    enum LengthType { Variable = 0, Relative, Percent, Fixed, Static };
-    struct Length
+/*
+ * %multiLength and %Length
+ */
+enum LengthType
+{
+    Variable = 0,
+    Relative,
+    Percent,
+    Fixed,
+    Static
+};
+struct Length
+{
+    Length() : _length(0)
     {
-	Length() : _length(0) {}
-        Length(LengthType t) { _length = 0; l.type = t; }
-        Length(int v, LengthType t, bool q=false)
-        {  _length= 0; l.value = v; l.type = t; l.quirk = q; }
-        bool operator==(const Length& o) const
-        { return _length == o._length; }
-        bool operator!=(const Length& o) const
-        { return _length != o._length; }
-        void setValue(LengthType t, int v) {
-            _length = 0; l.value = v; l.type = t; l.quirk = false;
+    }
+    Length(LengthType t)
+    {
+        _length = 0;
+        l.type = t;
+    }
+    Length(int v, LengthType t, bool q = false)
+    {
+        _length = 0;
+        l.value = v;
+        l.type = t;
+        l.quirk = q;
+    }
+    bool operator==(const Length &o) const
+    {
+        return _length == o._length;
+    }
+    bool operator!=(const Length &o) const
+    {
+        return _length != o._length;
+    }
+    void setValue(LengthType t, int v)
+    {
+        _length = 0;
+        l.value = v;
+        l.type = t;
+        l.quirk = false;
+    }
+    /*
+     * works only for Fixed and Percent, returns -1 otherwise
+     */
+    int width(int maxWidth) const
+    {
+        switch(l.type)
+        {
+            case Fixed:
+                return l.value;
+            case Percent:
+                return maxWidth * l.value / 100;
+            case Variable:
+                return maxWidth;
+            default:
+                return -1;
         }
-	/*
-	 * works only for Fixed and Percent, returns -1 otherwise
-	 */
-	int width(int maxWidth) const
-	    {
-		switch(l.type)
-		{
-		case Fixed:
-		    return l.value;
-		case Percent:
-		    return maxWidth*l.value/100;
-		case Variable:
-		    return maxWidth;
-		default:
-		    return -1;
-		}
-	    }
-	/*
-	 * returns the minimum width value which could work...
-	 */
-	int minWidth(int maxWidth) const
-	    {
-		switch(l.type)
-		{
-		case Fixed:
-		    return l.value;
-		case Percent:
-		    return maxWidth*l.value/100;
-		case Variable:
-		default:
-		    return 0;
-		}
-	    }
-        bool isVariable() const { return ((LengthType) l.type == Variable); }
-        bool isRelative() const { return ((LengthType) l.type == Relative); }
-        bool isPercent() const { return ((LengthType ) l.type == Percent); }
-        bool isFixed() const { return ((LengthType) l.type == Fixed); }
-        bool isStatic() const { return ((LengthType) l.type == Static); }
-        bool isQuirk() const { return l.quirk; }
+    }
+    /*
+     * returns the minimum width value which could work...
+     */
+    int minWidth(int maxWidth) const
+    {
+        switch(l.type)
+        {
+            case Fixed:
+                return l.value;
+            case Percent:
+                return maxWidth * l.value / 100;
+            case Variable:
+            default:
+                return 0;
+        }
+    }
+    bool isVariable() const
+    {
+        return ((LengthType)l.type == Variable);
+    }
+    bool isRelative() const
+    {
+        return ((LengthType)l.type == Relative);
+    }
+    bool isPercent() const
+    {
+        return ((LengthType)l.type == Percent);
+    }
+    bool isFixed() const
+    {
+        return ((LengthType)l.type == Fixed);
+    }
+    bool isStatic() const
+    {
+        return ((LengthType)l.type == Static);
+    }
+    bool isQuirk() const
+    {
+        return l.quirk;
+    }
 
-        int value() const { return l.value; }
-        LengthType type() const { return (LengthType) l.type; }
+    int value() const
+    {
+        return l.value;
+    }
+    LengthType type() const
+    {
+        return (LengthType)l.type;
+    }
 
-        union {
-            struct {
-                signed int value : 28;
-                unsigned type : 3;
-                bool quirk : 1;
-            } l;
-            Q_UINT32 _length;
-        };
+    union {
+        struct
+        {
+            signed int value : 28;
+            unsigned type : 3;
+            bool quirk : 1;
+        } l;
+        Q_UINT32 _length;
     };
-
+};
 }
 
 #endif

@@ -34,24 +34,21 @@ class AddressBook;
 class Resource;
 
 /**
-  This class is @deprecated, use KRES::SelectDialog instead. 
+  This class is @deprecated, use KRES::SelectDialog instead.
  */
-class KABC_EXPORT_DEPRECATED ResourceSelectDialog : KDialog
-{
-  Q_OBJECT
+class KABC_EXPORT_DEPRECATED ResourceSelectDialog : KDialog {
+    Q_OBJECT
 
-  public:
-    ResourceSelectDialog( AddressBook *ab, QWidget *parent = 0,
-                          const char *name = 0);
+public:
+    ResourceSelectDialog(AddressBook *ab, QWidget *parent = 0, const char *name = 0);
     Resource *resource();
 
-    static Resource *getResource( AddressBook *ab, QWidget *parent = 0 );
+    static Resource *getResource(AddressBook *ab, QWidget *parent = 0);
 
-  private:
+private:
     KListBox *mResourceId;
-    QMap<int, Resource*> mResourceMap;
+    QMap< int, Resource * > mResourceMap;
 };
-
 }
 
 #endif

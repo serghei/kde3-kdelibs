@@ -24,17 +24,16 @@
 #include <qstringlist.h>
 #include <qobject.h>
 
-class GsChecker : public QObject
-{
+class GsChecker : public QObject {
 public:
-	GsChecker(QObject *parent = 0, const char *name = 0);
-	bool checkGsDriver(const QString& name);
+    GsChecker(QObject *parent = 0, const char *name = 0);
+    bool checkGsDriver(const QString &name);
 
 protected:
-	void loadDriverList();
+    void loadDriverList();
 
 private:
-	QStringList	m_driverlist;
+    QStringList m_driverlist;
 };
 
 #endif

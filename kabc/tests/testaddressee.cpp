@@ -13,45 +13,40 @@
 
 using namespace KABC;
 
-static const KCmdLineOptions options[] =
+static const KCmdLineOptions options[] = {{"save", "", 0}, {"number", "", 0}, KCmdLineLastOption};
+
+int main(int argc, char **argv)
 {
-  { "save", "", 0 },
-  { "number", "", 0 },
-  KCmdLineLastOption
-};
+    KAboutData aboutData("testaddressee", "TestAddressee", "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-int main(int argc,char **argv)
-{
-  KAboutData aboutData("testaddressee","TestAddressee","0.1");
-  KCmdLineArgs::init(argc, argv, &aboutData);
-  KCmdLineArgs::addCmdLineOptions(options);
+    KApplication app;
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  KApplication app;
-  KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+    kdDebug() << "Creating a" << endl;
+    Addressee a;
 
-  kdDebug() << "Creating a" << endl;
-  Addressee a;
-  
-  kdDebug() << "tick1" << endl;
-  a.setGivenName("Hans");
-  kdDebug() << "tick2" << endl;
-  a.setPrefix("Dr.");
+    kdDebug() << "tick1" << endl;
+    a.setGivenName("Hans");
+    kdDebug() << "tick2" << endl;
+    a.setPrefix("Dr.");
 
-  kdDebug() << "Creating b" << endl;
-  Addressee b( a );
-  
-  kdDebug() << "tack1" << endl;
-  a.setFamilyName("Wurst");
-  kdDebug() << "tack2" << endl;
-  a.setNickName("hansi");
+    kdDebug() << "Creating b" << endl;
+    Addressee b(a);
 
-  kdDebug() << "Creating c" << endl;
-  Addressee c = a;
-  
-  kdDebug() << "tock1" << endl;
-  c.setGivenName("Eberhard");
-  
-  a.dump();  
-  b.dump();
-  c.dump();
+    kdDebug() << "tack1" << endl;
+    a.setFamilyName("Wurst");
+    kdDebug() << "tack2" << endl;
+    a.setNickName("hansi");
+
+    kdDebug() << "Creating c" << endl;
+    Addressee c = a;
+
+    kdDebug() << "tock1" << endl;
+    c.setGivenName("Eberhard");
+
+    a.dump();
+    b.dump();
+    c.dump();
 }

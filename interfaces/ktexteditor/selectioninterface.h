@@ -24,66 +24,64 @@
 
 #include <kdelibs_export.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 *  This is an interface to text selection for the Document class.
 */
-class KTEXTEDITOR_EXPORT SelectionInterface
-{
-  friend class PrivateSelectionInterface;
+class KTEXTEDITOR_EXPORT SelectionInterface {
+    friend class PrivateSelectionInterface;
 
-  public:
+public:
     SelectionInterface();
     virtual ~SelectionInterface();
-        
-    unsigned int selectionInterfaceNumber () const;
-    
-  protected:  
-    void setSelectionInterfaceDCOPSuffix (const QCString &suffix);  
-    
-  /*
-  *  slots !!!
-  */
-  public:
+
+    unsigned int selectionInterfaceNumber() const;
+
+protected:
+    void setSelectionInterfaceDCOPSuffix(const QCString &suffix);
+
+    /*
+    *  slots !!!
+    */
+public:
     /**
     *  @return set the selection from line_start,col_start to line_end,col_end
     */
-    virtual bool setSelection ( unsigned int startLine, unsigned int startCol, unsigned int endLine, unsigned int endCol ) = 0;
+    virtual bool setSelection(unsigned int startLine, unsigned int startCol, unsigned int endLine, unsigned int endCol) = 0;
 
     /**
     *  removes the current Selection (not Text)
     */
-    virtual bool clearSelection () = 0;
+    virtual bool clearSelection() = 0;
 
     /**
     *  @return true if there is a selection
     */
-    virtual bool hasSelection () const = 0;
+    virtual bool hasSelection() const = 0;
 
     /**
     *  @return a QString for the selected text
     */
-    virtual QString selection () const = 0;
+    virtual QString selection() const = 0;
 
     /**
     *  removes the selected Text
     */
-    virtual bool removeSelectedText () = 0;
+    virtual bool removeSelectedText() = 0;
 
     /**
     *  select the whole text
     */
-    virtual bool selectAll () = 0;
+    virtual bool selectAll() = 0;
 
-	//
-	// signals !!!
-	//
-	public:
-	  virtual void selectionChanged () = 0;
-  
-  private:
+    //
+    // signals !!!
+    //
+public:
+    virtual void selectionChanged() = 0;
+
+private:
     class PrivateSelectionInterface *d;
     static unsigned int globalSelectionInterfaceNumber;
     unsigned int mySelectionInterfaceNumber;
@@ -92,9 +90,8 @@ class KTEXTEDITOR_EXPORT SelectionInterface
 class Document;
 class View;
 
-KTEXTEDITOR_EXPORT SelectionInterface *selectionInterface (Document *doc);
-KTEXTEDITOR_EXPORT SelectionInterface *selectionInterface (View *view);
-
+KTEXTEDITOR_EXPORT SelectionInterface *selectionInterface(Document *doc);
+KTEXTEDITOR_EXPORT SelectionInterface *selectionInterface(View *view);
 }
 
 #endif

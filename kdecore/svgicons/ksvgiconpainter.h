@@ -30,72 +30,71 @@ class QWMatrix;
 class QDomElement;
 class QPointArray;
 
-class KDECORE_EXPORT KSVGIconPainter
-{
+class KDECORE_EXPORT KSVGIconPainter {
 public:
-	KSVGIconPainter(int width, int height);
-	~KSVGIconPainter();
+    KSVGIconPainter(int width, int height);
+    ~KSVGIconPainter();
 
-	void setDrawWidth(int dwidth);
-	void setDrawHeight(int dheight);
+    void setDrawWidth(int dwidth);
+    void setDrawHeight(int dheight);
 
-	QImage *image();
+    QImage *image();
 
-	QWMatrix *worldMatrix();
+    QWMatrix *worldMatrix();
 
-	void finish();
+    void finish();
 
-	void setUseFill(bool fill);
-	void setUseStroke(bool stroke);
+    void setUseFill(bool fill);
+    void setUseStroke(bool stroke);
 
-	void setStrokeWidth(double width);
-	void setStrokeMiterLimit(const QString &miter);
-	void setCapStyle(const QString &cap);
-	void setJoinStyle(const QString &join);
-	void setStrokeColor(const QString &stroke);
-	void setFillColor(const QString &fill);
-	void setFillRule(const QString &fillRule);
-	void setOpacity(const QString &opacity);
-	void setFillOpacity(const QString &fillOpacity);
-	void setStrokeOpacity(const QString &strokeOpacity);
-	void setStrokeDashOffset(const QString &dashOffset);
-	void setStrokeDashArray(const QString &dashes);
+    void setStrokeWidth(double width);
+    void setStrokeMiterLimit(const QString &miter);
+    void setCapStyle(const QString &cap);
+    void setJoinStyle(const QString &join);
+    void setStrokeColor(const QString &stroke);
+    void setFillColor(const QString &fill);
+    void setFillRule(const QString &fillRule);
+    void setOpacity(const QString &opacity);
+    void setFillOpacity(const QString &fillOpacity);
+    void setStrokeOpacity(const QString &strokeOpacity);
+    void setStrokeDashOffset(const QString &dashOffset);
+    void setStrokeDashArray(const QString &dashes);
 
-	void setWorldMatrix(QWMatrix *worldMatrix);
-	void setClippingRect(int x, int y, int w, int h);
+    void setWorldMatrix(QWMatrix *worldMatrix);
+    void setClippingRect(int x, int y, int w, int h);
 
-	void drawRectangle(double x, double y, double w, double h, double rx, double ry);
-	void drawEllipse(double cx, double cy, double rx, double ry);
-	void drawLine(double x1, double y1, double x2, double y2);
-	void drawPolyline(QPointArray polyArray, int points = -1);
-	void drawPolygon(QPointArray polyArray);
-	void drawPath(const QString &data, bool fill);
-	void drawImage(double x, double y, QImage &image);
+    void drawRectangle(double x, double y, double w, double h, double rx, double ry);
+    void drawEllipse(double cx, double cy, double rx, double ry);
+    void drawLine(double x1, double y1, double x2, double y2);
+    void drawPolyline(QPointArray polyArray, int points = -1);
+    void drawPolygon(QPointArray polyArray);
+    void drawPath(const QString &data, bool fill);
+    void drawImage(double x, double y, QImage &image);
 
-	QColor parseColor(const QString &param);
-	Q_UINT32 toArtColor(const QColor &color);
-	Q_UINT32 parseOpacity(const QString &data);
+    QColor parseColor(const QString &param);
+    Q_UINT32 toArtColor(const QColor &color);
+    Q_UINT32 parseOpacity(const QString &data);
 
-	double toPixel(const QString &s, bool hmode);
-	double dpi();
+    double toPixel(const QString &s, bool hmode);
+    double dpi();
 
-	ArtGradientLinear *linearGradient(const QString &id);
-	void addLinearGradient(const QString &id, ArtGradientLinear *gradient);
+    ArtGradientLinear *linearGradient(const QString &id);
+    void addLinearGradient(const QString &id, ArtGradientLinear *gradient);
 
-	QDomElement linearGradientElement(ArtGradientLinear *linear);
-	void addLinearGradientElement(ArtGradientLinear *gradient, QDomElement element);
+    QDomElement linearGradientElement(ArtGradientLinear *linear);
+    void addLinearGradientElement(ArtGradientLinear *gradient, QDomElement element);
 
-	ArtGradientRadial *radialGradient(const QString &id);
-	void addRadialGradient(const QString &id, ArtGradientRadial *gradient);
+    ArtGradientRadial *radialGradient(const QString &id);
+    void addRadialGradient(const QString &id, ArtGradientRadial *gradient);
 
-	QDomElement radialGradientElement(ArtGradientRadial *radial);
-	void addRadialGradientElement(ArtGradientRadial *gradient, QDomElement element);
+    QDomElement radialGradientElement(ArtGradientRadial *radial);
+    void addRadialGradientElement(ArtGradientRadial *gradient, QDomElement element);
 
-	QWMatrix parseTransform(const QString &transform);
+    QWMatrix parseTransform(const QString &transform);
 
 private:
-	struct Private;
-	Private *d;
+    struct Private;
+    Private *d;
 };
 
 #endif

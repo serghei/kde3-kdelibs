@@ -20,14 +20,17 @@
 
 #include "kurlpixmapprovider.h"
 
-QPixmap KURLPixmapProvider::pixmapFor( const QString& url, int size ) {
-	KURL u;
-	if ( url.at(0) == '/' )
-	    u.setPath( url );
-	else
-	    u = url;
-	return KMimeType::pixmapForURL( u, 0, KIcon::Desktop, size );
-    }
+QPixmap KURLPixmapProvider::pixmapFor(const QString &url, int size)
+{
+    KURL u;
+    if(url.at(0) == '/')
+        u.setPath(url);
+    else
+        u = url;
+    return KMimeType::pixmapForURL(u, 0, KIcon::Desktop, size);
+}
 
-void KURLPixmapProvider::virtual_hook( int id, void* data )
-{ KPixmapProvider::virtual_hook( id, data ); }
+void KURLPixmapProvider::virtual_hook(int id, void *data)
+{
+    KPixmapProvider::virtual_hook(id, data);
+}

@@ -22,8 +22,7 @@
 
 #include <kpushbutton.h>
 
-namespace KNS
-{
+namespace KNS {
 
 class DownloadDialog;
 
@@ -34,82 +33,77 @@ class DownloadDialog;
  *
  * @since 3.4
  */
-class Button : public KPushButton
-{
+class Button : public KPushButton {
     Q_OBJECT
 
-    public:
-        /**
-         * Constructor used when the details of the KHotNewStuff
-         * download is known when the button is created.
-         *
-         * @param what text describing what is being downloaded. will be
-         *        shown on the button as "Download New <what>"
-         * @param providerList the URL to the list of providers; if empty
-         *        we first try the ProvidersUrl from KGlobal::config, then we
-         *        fall back to a hardcoded value
-         * @param resourceType the Hotstuff data type for this downlaod such
-         *        as "korganizer/calendar"
-         * @param parent the parent widget
-         * @param name the name to be used for this widget
-         */
-        Button(const QString& what,
-               const QString& providerList,
-               const QString& resourceType,
-               QWidget* parent, const char* name);
+public:
+    /**
+     * Constructor used when the details of the KHotNewStuff
+     * download is known when the button is created.
+     *
+     * @param what text describing what is being downloaded. will be
+     *        shown on the button as "Download New <what>"
+     * @param providerList the URL to the list of providers; if empty
+     *        we first try the ProvidersUrl from KGlobal::config, then we
+     *        fall back to a hardcoded value
+     * @param resourceType the Hotstuff data type for this downlaod such
+     *        as "korganizer/calendar"
+     * @param parent the parent widget
+     * @param name the name to be used for this widget
+     */
+    Button(const QString &what, const QString &providerList, const QString &resourceType, QWidget *parent, const char *name);
 
-        /**
-         * Constructor used when the details of the KHotNewStuff
-         * download is not known in advance of the button being created.
-         *
-         * @param parent the parent widget
-         * @param name the name to be used for this widget
-         */
-        Button(QWidget* parent, const char* name);
+    /**
+     * Constructor used when the details of the KHotNewStuff
+     * download is not known in advance of the button being created.
+     *
+     * @param parent the parent widget
+     * @param name the name to be used for this widget
+     */
+    Button(QWidget *parent, const char *name);
 
-        /**
-         * set the URL to the list of providers for this button to use
-         */
-        void setProviderList(const QString& providerList);
+    /**
+     * set the URL to the list of providers for this button to use
+     */
+    void setProviderList(const QString &providerList);
 
-        /**
-         * the Hotstuff data type for this downlaod such as
-         * "korganizer/calendar"
-         */
-        void setResourceType(const QString& resourceType);
+    /**
+     * the Hotstuff data type for this downlaod such as
+     * "korganizer/calendar"
+     */
+    void setResourceType(const QString &resourceType);
 
-        /**
-         * set the text that should appear on the button. will be prefaced
-         * with i18n("Download New")
-         */
-        void setButtonText(const QString& what);
+    /**
+     * set the text that should appear on the button. will be prefaced
+     * with i18n("Download New")
+     */
+    void setButtonText(const QString &what);
 
-    signals:
-        /**
-         * emitted when the Hot New Stuff dialog is about to be shown, usually
-         * as a result of the user having click on the button
-         */
-        void aboutToShowDialog();
+signals:
+    /**
+     * emitted when the Hot New Stuff dialog is about to be shown, usually
+     * as a result of the user having click on the button
+     */
+    void aboutToShowDialog();
 
-        /**
-         * emitted when the Hot New Stuff dialog has been closed
-         */
-        void dialogFinished();
+    /**
+     * emitted when the Hot New Stuff dialog has been closed
+     */
+    void dialogFinished();
 
-    protected slots:
-        void showDialog();
+protected slots:
+    void showDialog();
 
-    private:
-        void init();
+private:
+    void init();
 
-        class ButtonPrivate;
-        ButtonPrivate* d;
+    class ButtonPrivate;
+    ButtonPrivate *d;
 
-        QString m_providerList;
-        QString m_type;
-        DownloadDialog* m_downloadDialog;
+    QString m_providerList;
+    QString m_type;
+    DownloadDialog *m_downloadDialog;
 };
-
 }
 
 #endif

@@ -44,24 +44,24 @@
 namespace khtml {
 
 #define KHTML_MAX_RECYCLED_SIZE 400
-#define KHTML_ROUNDUP(x,y) ((((x)+((y)-1))/(y))*(y))
+#define KHTML_ROUNDUP(x, y) ((((x) + ((y)-1)) / (y)) * (y))
 
-class RenderArena: public Shared<RenderArena> {
+class RenderArena : public Shared< RenderArena > {
 public:
-   RenderArena(unsigned int arenaSize = 4096);
+    RenderArena(unsigned int arenaSize = 4096);
     ~RenderArena();
 
-  // Memory management functions
-  void* allocate(size_t size);
-  void  free(size_t size, void* ptr);
+    // Memory management functions
+    void *allocate(size_t size);
+    void free(size_t size, void *ptr);
 
 private:
-  // Underlying arena pool
-  ArenaPool m_pool;
+    // Underlying arena pool
+    ArenaPool m_pool;
 
-  // The recycler array is sparse with the indices being multiples of 4,
-  // i.e., 0, 4, 8, 12, 16, 20, ...
-  void* m_recyclers[KHTML_MAX_RECYCLED_SIZE >> 2];
+    // The recycler array is sparse with the indices being multiples of 4,
+    // i.e., 0, 4, 8, 12, 16, 20, ...
+    void *m_recyclers[KHTML_MAX_RECYCLED_SIZE >> 2];
 };
 
 
@@ -69,4 +69,3 @@ private:
 
 
 #endif
-

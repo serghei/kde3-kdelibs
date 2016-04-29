@@ -24,43 +24,40 @@
 
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 *  This is an interface to control fixed-column word-wrapping of a Document.
 */
-class KTEXTEDITOR_EXPORT WordWrapInterface
-{
-  friend class PrivateWordWrapInterface;
-  
-  public:
-    WordWrapInterface ();
-    virtual ~WordWrapInterface ();
+class KTEXTEDITOR_EXPORT WordWrapInterface {
+    friend class PrivateWordWrapInterface;
 
-    unsigned int wordWrapInterfaceNumber () const;
-    
-  protected:  
-    void setWordWrapInterfaceDCOPSuffix (const QCString &suffix); 
+public:
+    WordWrapInterface();
+    virtual ~WordWrapInterface();
 
-  //
-  // slots !!!
-  //
-  public:
-    virtual void setWordWrap (bool) = 0;
-    virtual bool wordWrap () = 0;
+    unsigned int wordWrapInterfaceNumber() const;
 
-    virtual void setWordWrapAt (unsigned int ) = 0;
-    virtual unsigned int wordWrapAt () = 0;
+protected:
+    void setWordWrapInterfaceDCOPSuffix(const QCString &suffix);
 
-  private:
+    //
+    // slots !!!
+    //
+public:
+    virtual void setWordWrap(bool) = 0;
+    virtual bool wordWrap() = 0;
+
+    virtual void setWordWrapAt(unsigned int) = 0;
+    virtual unsigned int wordWrapAt() = 0;
+
+private:
     class PrivateWordWrapInterface *d;
     static unsigned int globalWordWrapInterfaceNumber;
     unsigned int myWordWrapInterfaceNumber;
 };
-                          
-KTEXTEDITOR_EXPORT WordWrapInterface *wordWrapInterface (class Document *doc);
 
+KTEXTEDITOR_EXPORT WordWrapInterface *wordWrapInterface(class Document *doc);
 }
 
 #endif

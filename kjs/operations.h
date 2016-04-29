@@ -27,53 +27,52 @@
 
 namespace KJS {
 
-  class ExecState;
+class ExecState;
 
-  /**
-   * @return True if d is not a number (platform support required).
-   */
-  bool isNaN(double d);
-  /**
-   * @return True if d is infinite (platform support required).
-   */
-  bool isInf(double d);
-  bool isPosInf(double d);
-  bool isNegInf(double d);
-  bool equal(ExecState *exec, const Value& v1, const Value& v2);
-  bool strictEqual(ExecState *exec, const Value &v1, const Value &v2);
-  /**
-   * This operator performs an abstract relational comparison of the two
-   * arguments that can be of arbitrary type. If possible, conversions to the
-   * string or number type will take place before the comparison.
-   *
-   * @return 1 if v1 is "less-than" v2, 0 if the relation is "greater-than-or-
-   * equal". -1 if the result is undefined.
-   */
-  int relation(ExecState *exec, const Value& v1, const Value& v2);
-  int maxInt(int d1, int d2);
-  int minInt(int d1, int d2);
-  /**
-   * Additive operator. Either performs an addition or substraction of v1
-   * and v2.
-   * @param exec execution state.
-   * @param v1 First operand.
-   * @param v2 Second operand.
-   * @param oper '+' or '-' for an addition or substraction, respectively.
-   * @return The result of the operation.
-   */
-  Value add(ExecState *exec, const Value &v1, const Value &v2, char oper);
-  /**
-   * Multiplicative operator. Either multiplies/divides v1 and v2 or
-   * calculates the remainder from an division.
-   * @param exec execution state.
-   * @param v1 First operand.
-   * @param v2 Second operand.
-   * @param oper '*', '/' or '%' for a multiplication, division or
-   * modulo operation.
-   * @return The result of the operation.
-   */
-  Value mult(ExecState *exec, const Value &v1, const Value &v2, char oper);
-
+/**
+ * @return True if d is not a number (platform support required).
+ */
+bool isNaN(double d);
+/**
+ * @return True if d is infinite (platform support required).
+ */
+bool isInf(double d);
+bool isPosInf(double d);
+bool isNegInf(double d);
+bool equal(ExecState *exec, const Value &v1, const Value &v2);
+bool strictEqual(ExecState *exec, const Value &v1, const Value &v2);
+/**
+ * This operator performs an abstract relational comparison of the two
+ * arguments that can be of arbitrary type. If possible, conversions to the
+ * string or number type will take place before the comparison.
+ *
+ * @return 1 if v1 is "less-than" v2, 0 if the relation is "greater-than-or-
+ * equal". -1 if the result is undefined.
+ */
+int relation(ExecState *exec, const Value &v1, const Value &v2);
+int maxInt(int d1, int d2);
+int minInt(int d1, int d2);
+/**
+ * Additive operator. Either performs an addition or substraction of v1
+ * and v2.
+ * @param exec execution state.
+ * @param v1 First operand.
+ * @param v2 Second operand.
+ * @param oper '+' or '-' for an addition or substraction, respectively.
+ * @return The result of the operation.
+ */
+Value add(ExecState *exec, const Value &v1, const Value &v2, char oper);
+/**
+ * Multiplicative operator. Either multiplies/divides v1 and v2 or
+ * calculates the remainder from an division.
+ * @param exec execution state.
+ * @param v1 First operand.
+ * @param v2 Second operand.
+ * @param oper '*', '/' or '%' for a multiplication, division or
+ * modulo operation.
+ * @return The result of the operation.
+ */
+Value mult(ExecState *exec, const Value &v1, const Value &v2, char oper);
 }
 
 #endif

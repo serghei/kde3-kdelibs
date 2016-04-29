@@ -31,39 +31,43 @@
 
 QT_STATIC_CONST_IMPL char *QDBusConnection::default_connection_name = "qt_dbus_default_connection";
 
-class QDBusConnectionManager
-{
+class QDBusConnectionManager {
 public:
-    QDBusConnectionManager(): default_connection(0) {}
+    QDBusConnectionManager() : default_connection(0)
+    {
+    }
     ~QDBusConnectionManager();
     void bindToApplication();
     QDBusConnectionPrivate *connection(const QString &name) const;
     void removeConnection(const QString &name);
     void setConnection(const QString &name, QDBusConnectionPrivate *c);
 
-    static QDBusConnectionManager* instance() {
-        if (managerInstance == 0) managerInstance = new QDBusConnectionManager();
+    static QDBusConnectionManager *instance()
+    {
+        if(managerInstance == 0)
+            managerInstance = new QDBusConnectionManager();
         return managerInstance;
     }
 
 private:
     QDBusConnectionPrivate *default_connection;
     // FIXME-QT4 QHash<QString, QDBusConnectionPrivate *> connectionHash;
-    typedef QMap<QString, QDBusConnectionPrivate*> ConnectionHash;
+    typedef QMap< QString, QDBusConnectionPrivate * > ConnectionHash;
     ConnectionHash connectionHash;
 
-    static QDBusConnectionManager* managerInstance;
+    static QDBusConnectionManager *managerInstance;
 };
 
 // FIXME-QT4 Q_GLOBAL_STATIC(QDBusConnectionManager, manager);
-QDBusConnectionManager* QDBusConnectionManager::managerInstance = 0;
-QDBusConnectionManager* manager() {
+QDBusConnectionManager *QDBusConnectionManager::managerInstance = 0;
+QDBusConnectionManager *manager()
+{
     return QDBusConnectionManager::instance();
 }
 
 QDBusConnectionPrivate *QDBusConnectionManager::connection(const QString &name) const
 {
-    if (name == QString::fromLatin1(QDBusConnection::default_connection_name))
+    if(name == QString::fromLatin1(QDBusConnection::default_connection_name))
         return default_connection;
 
     ConnectionHash::const_iterator it = connectionHash.find(name);
@@ -74,34 +78,37 @@ QDBusConnectionPrivate *QDBusConnectionManager::connection(const QString &name) 
 void QDBusConnectionManager::removeConnection(const QString &name)
 {
     QDBusConnectionPrivate *d = 0;
-    if (name == QString::fromLatin1(QDBusConnection::default_connection_name)) {
+    if(name == QString::fromLatin1(QDBusConnection::default_connection_name))
+    {
         d = default_connection;
         default_connection = 0;
-    } else {
+    }
+    else
+    {
         ConnectionHash::iterator it = connectionHash.find(name);
-        if (it == connectionHash.end())
+        if(it == connectionHash.end())
             return;
 
         d = it.data();
         connectionHash.erase(it);
     }
-    if (!d->ref.deref())
+    if(!d->ref.deref())
         delete d;
 }
 
 QDBusConnectionManager::~QDBusConnectionManager()
 {
-    if (default_connection) {
+    if(default_connection)
+    {
         delete default_connection;
         default_connection = 0;
     }
-/* FIXME-QT4
-    for (QHash<QString, QDBusConnectionPrivate *>::const_iterator it = connectionHash.constBegin();
-         it != connectionHash.constEnd(); ++it) {
-             delete it.value();
-    }*/
-    for (ConnectionHash::const_iterator it = connectionHash.constBegin();
-         it != connectionHash.constEnd(); ++it)
+    /* FIXME-QT4
+        for (QHash<QString, QDBusConnectionPrivate *>::const_iterator it = connectionHash.constBegin();
+             it != connectionHash.constEnd(); ++it) {
+                 delete it.value();
+        }*/
+    for(ConnectionHash::const_iterator it = connectionHash.constBegin(); it != connectionHash.constEnd(); ++it)
     {
         delete it.data();
     }
@@ -110,16 +117,16 @@ QDBusConnectionManager::~QDBusConnectionManager()
 
 void QDBusConnectionManager::bindToApplication()
 {
-    if (default_connection) {
+    if(default_connection)
+    {
         default_connection->bindToApplication();
     }
-/* FIXME-QT4
-    for (QHash<QString, QDBusConnectionPrivate *>::const_iterator it = connectionHash.constBegin();
-         it != connectionHash.constEnd(); ++it) {
-             (*it)->bindToApplication();
-    }*/
-    for (ConnectionHash::const_iterator it = connectionHash.constBegin();
-         it != connectionHash.constEnd(); ++it)
+    /* FIXME-QT4
+        for (QHash<QString, QDBusConnectionPrivate *>::const_iterator it = connectionHash.constBegin();
+             it != connectionHash.constEnd(); ++it) {
+                 (*it)->bindToApplication();
+        }*/
+    for(ConnectionHash::const_iterator it = connectionHash.constBegin(); it != connectionHash.constEnd(); ++it)
     {
         it.data()->bindToApplication();
     }
@@ -132,7 +139,7 @@ void qDBusBindToApplication()
 
 void QDBusConnectionManager::setConnection(const QString &name, QDBusConnectionPrivate *c)
 {
-    if (name == QString::fromLatin1(QDBusConnection::default_connection_name))
+    if(name == QString::fromLatin1(QDBusConnection::default_connection_name))
         default_connection = c;
     else
         connectionHash[name] = c;
@@ -146,33 +153,33 @@ QDBusConnection::QDBusConnection() : d(0)
 QDBusConnection::QDBusConnection(const QString &name)
 {
     d = manager()->connection(name);
-    if (d)
+    if(d)
         d->ref.ref();
 }
 
 QDBusConnection::QDBusConnection(const QDBusConnection &other)
 {
     d = other.d;
-    if (d)
+    if(d)
         d->ref.ref();
 }
 
 QDBusConnection::~QDBusConnection()
 {
-    if (d && !d->ref.deref())
+    if(d && !d->ref.deref())
         delete d;
 }
 
 QDBusConnection &QDBusConnection::operator=(const QDBusConnection &other)
 {
-    if (other.d)
+    if(other.d)
         other.d->ref.ref();
-/* FIXME-QT4
-    QDBusConnectionPrivate *old = static_cast<QDBusConnectionPrivate *>(
-            q_atomic_set_ptr(&d, other.d));*/
-    QDBusConnectionPrivate* old = d;
+    /* FIXME-QT4
+        QDBusConnectionPrivate *old = static_cast<QDBusConnectionPrivate *>(
+                q_atomic_set_ptr(&d, other.d));*/
+    QDBusConnectionPrivate *old = d;
     d = other.d;
-    if (old && !old->ref.deref())
+    if(old && !old->ref.deref())
         delete old;
 
     return *this;
@@ -190,16 +197,17 @@ QDBusConnection QDBusConnection::systemBus()
 
 QDBusConnection QDBusConnection::addConnection(BusType type, const QString &name)
 {
-//    Q_ASSERT_X(QCoreApplication::instance(), "QDBusConnection::addConnection",
-//               "Cannot create connection without a Q[Core]Application instance");
+    //    Q_ASSERT_X(QCoreApplication::instance(), "QDBusConnection::addConnection",
+    //               "Cannot create connection without a Q[Core]Application instance");
 
     QDBusConnectionPrivate *d = manager()->connection(name);
-    if (d)
+    if(d)
         return QDBusConnection(name);
 
     d = new QDBusConnectionPrivate;
     DBusConnection *c = 0;
-    switch (type) {
+    switch(type)
+    {
         case SystemBus:
             c = dbus_bus_get(DBUS_BUS_SYSTEM, &d->error);
             break;
@@ -210,21 +218,20 @@ QDBusConnection QDBusConnection::addConnection(BusType type, const QString &name
             c = dbus_bus_get(DBUS_BUS_STARTER, &d->error);
             break;
     }
-    d->setConnection(c); //setConnection does the error handling for us
+    d->setConnection(c); // setConnection does the error handling for us
 
     manager()->setConnection(name, d);
 
     return QDBusConnection(name);
 }
 
-QDBusConnection QDBusConnection::addConnection(const QString &address,
-                    const QString &name)
+QDBusConnection QDBusConnection::addConnection(const QString &address, const QString &name)
 {
-//    Q_ASSERT_X(QCoreApplication::instance(), "QDBusConnection::addConnection",
-//               "Cannot create connection without a Q[Core]Application instance");
+    //    Q_ASSERT_X(QCoreApplication::instance(), "QDBusConnection::addConnection",
+    //               "Cannot create connection without a Q[Core]Application instance");
 
     QDBusConnectionPrivate *d = manager()->connection(name);
-    if (d)
+    if(d)
         return QDBusConnection(name);
 
     d = new QDBusConnectionPrivate;
@@ -249,11 +256,11 @@ void QDBusConnectionPrivate::timerEvent(QTimerEvent *e)
 
 bool QDBusConnection::send(const QDBusMessage &message) const
 {
-    if (!d || !d->connection)
+    if(!d || !d->connection)
         return false;
 
     DBusMessage *msg = message.toDBusMessage();
-    if (!msg)
+    if(!msg)
         return false;
 
     bool isOk = dbus_connection_send(d->connection, msg, 0);
@@ -261,10 +268,9 @@ bool QDBusConnection::send(const QDBusMessage &message) const
     return isOk;
 }
 
-int QDBusConnection::sendWithAsyncReply(const QDBusMessage &message, QObject *receiver,
-        const char *method) const
+int QDBusConnection::sendWithAsyncReply(const QDBusMessage &message, QObject *receiver, const char *method) const
 {
-    if (!d || !d->connection)
+    if(!d || !d->connection)
         return 0;
 
     return d->sendWithReplyAsync(message, receiver, method);
@@ -272,15 +278,14 @@ int QDBusConnection::sendWithAsyncReply(const QDBusMessage &message, QObject *re
 
 QDBusMessage QDBusConnection::sendWithReply(const QDBusMessage &message, QDBusError *error) const
 {
-    if (!d || !d->connection)
+    if(!d || !d->connection)
         return QDBusMessage::fromDBusMessage(0);
 
     DBusMessage *msg = message.toDBusMessage();
-    if (!msg)
+    if(!msg)
         return QDBusMessage::fromDBusMessage(0);
-    DBusMessage *reply = dbus_connection_send_with_reply_and_block(d->connection, msg,
-                                                -1, &d->error);
-    if (d->handleError() && error)
+    DBusMessage *reply = dbus_connection_send_with_reply_and_block(d->connection, msg, -1, &d->error);
+    if(d->handleError() && error)
         *error = d->lastError;
 
     dbus_message_unref(msg);
@@ -293,38 +298,41 @@ QDBusMessage QDBusConnection::sendWithReply(const QDBusMessage &message, QDBusEr
 
 void QDBusConnection::flush() const
 {
-    if (!d || !d->connection) return;
+    if(!d || !d->connection)
+        return;
 
     d->flush();
 }
 
 void QDBusConnection::dispatch() const
 {
-    if (!d || !d->connection) return;
+    if(!d || !d->connection)
+        return;
 
     d->dispatch();
 }
 
 void QDBusConnection::scheduleDispatch() const
 {
-    if (!d || !d->connection) return;
+    if(!d || !d->connection)
+        return;
 
     d->scheduleDispatch();
 }
 
-bool QDBusConnection::connect(QObject* object, const char* slot)
+bool QDBusConnection::connect(QObject *object, const char *slot)
 {
-    if (!d || !d->connection || !object || !slot)
+    if(!d || !d->connection || !object || !slot)
         return false;
 
-    bool ok = object->connect(d, SIGNAL(dbusSignal(const QDBusMessage&)), slot);
+    bool ok = object->connect(d, SIGNAL(dbusSignal(const QDBusMessage &)), slot);
 
     return ok;
 }
 
-bool QDBusConnection::disconnect(QObject* object, const char* slot)
+bool QDBusConnection::disconnect(QObject *object, const char *slot)
 {
-    if (!d || !d->connection || !object || !slot)
+    if(!d || !d->connection || !object || !slot)
         return false;
 
     bool ok = d->disconnect(object, slot);
@@ -332,13 +340,13 @@ bool QDBusConnection::disconnect(QObject* object, const char* slot)
     return ok;
 }
 
-bool QDBusConnection::registerObject(const QString& path, QDBusObjectBase* object)
+bool QDBusConnection::registerObject(const QString &path, QDBusObjectBase *object)
 {
-    if (!d || !d->connection || !object || path.isEmpty())
+    if(!d || !d->connection || !object || path.isEmpty())
         return false;
 
     QDBusConnectionPrivate::ObjectMap::const_iterator it = d->registeredObjects.find(path);
-    if (it != d->registeredObjects.end())
+    if(it != d->registeredObjects.end())
         return false;
 
     d->registeredObjects.insert(path, object);
@@ -348,17 +356,17 @@ bool QDBusConnection::registerObject(const QString& path, QDBusObjectBase* objec
 
 void QDBusConnection::unregisterObject(const QString &path)
 {
-    if (!d || !d->connection || path.isEmpty())
+    if(!d || !d->connection || path.isEmpty())
         return;
 
     QDBusConnectionPrivate::ObjectMap::iterator it = d->registeredObjects.find(path);
-    if (it == d->registeredObjects.end())
-        return ;
+    if(it == d->registeredObjects.end())
+        return;
 
     d->registeredObjects.erase(it);
 }
 
-bool QDBusConnection::isConnected( ) const
+bool QDBusConnection::isConnected() const
 {
     return d && d->connection && dbus_connection_get_is_connected(d->connection);
 }
@@ -370,25 +378,23 @@ QDBusError QDBusConnection::lastError() const
 
 QString QDBusConnection::uniqueName() const
 {
-    return d && d->connection ?
-            QString::fromUtf8(dbus_bus_get_unique_name(d->connection))
-            : QString();
+    return d && d->connection ? QString::fromUtf8(dbus_bus_get_unique_name(d->connection)) : QString();
 }
 
 bool QDBusConnection::requestName(const QString &name, int modeFlags)
 {
     Q_ASSERT(modeFlags >= 0);
 
-    if (!d || !d->connection)
+    if(!d || !d->connection)
         return false;
 
-    if (modeFlags < 0)
+    if(modeFlags < 0)
         return false;
 
     int dbusFlags = 0;
-    if (modeFlags & AllowReplace)
+    if(modeFlags & AllowReplace)
         dbusFlags |= DBUS_NAME_FLAG_ALLOW_REPLACEMENT;
-    if (modeFlags & ReplaceExisting)
+    if(modeFlags & ReplaceExisting)
         dbusFlags |= DBUS_NAME_FLAG_REPLACE_EXISTING;
 
     dbus_bus_request_name(d->connection, name.utf8(), dbusFlags, &d->error);

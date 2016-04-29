@@ -31,18 +31,18 @@
  *
  * @author Anders Lund (anders at alweb dk), jan 23, 2002
  */
-class KIO_EXPORT KMimeTypeChooser : public QVBox
-{
-  Q_OBJECT
+class KIO_EXPORT KMimeTypeChooser : public QVBox {
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Buttons and data for display.
      */
-    enum Visuals {
-      Comments=1,   ///< Show the Mimetypes Comment field in a column ("HTML Document").
-      Patterns=2,   ///< Show the Mimetypes Patterns field in a column ("*.html;*.htm").
-      EditButton=4  ///< Show the "Edit" button, allowing to edit the selected type.
+    enum Visuals
+    {
+        Comments = 1,  ///< Show the Mimetypes Comment field in a column ("HTML Document").
+        Patterns = 2,  ///< Show the Mimetypes Patterns field in a column ("*.html;*.htm").
+        EditButton = 4 ///< Show the "Edit" button, allowing to edit the selected type.
     };
     /**
      * Create a new KMimeTypeChooser.
@@ -59,12 +59,9 @@ class KIO_EXPORT KMimeTypeChooser : public QVBox
      * @param parent The parent widget to use
      * @param name The internal name of this object
      */
-    KMimeTypeChooser( const QString& text=QString::null,
-                      const QStringList &selectedMimeTypes=0,
-                      const QString &defaultGroup=QString::null,
-                      const QStringList &groupsToShow=QStringList(),
-                      int visuals=Comments|Patterns|EditButton,
-                      QWidget *parent=0, const char *name=0 );
+    KMimeTypeChooser(const QString &text = QString::null, const QStringList &selectedMimeTypes = 0, const QString &defaultGroup = QString::null,
+                     const QStringList &groupsToShow = QStringList(), int visuals = Comments | Patterns | EditButton, QWidget *parent = 0,
+                     const char *name = 0);
     ~KMimeTypeChooser();
 
     /**
@@ -76,7 +73,7 @@ class KIO_EXPORT KMimeTypeChooser : public QVBox
      */
     QStringList patterns() const;
 
-  public slots:
+public slots:
     /**
      * @short edit the current mimetype
      * Uses KRun to start the KDE mimetype editor for editing the currently
@@ -84,25 +81,25 @@ class KIO_EXPORT KMimeTypeChooser : public QVBox
      */
     void editMimeType();
 
-  private slots:
+private slots:
     /**
      * @internal disables the "edit" button for groups
      */
-    void slotCurrentChanged(QListViewItem* i);
+    void slotCurrentChanged(QListViewItem *i);
 
     /**
      *  @internal called when the sycoca database has changed after
      * the user edited a mimetype
      */
-     void slotSycocaDatabaseChanged();
+    void slotSycocaDatabaseChanged();
 
-  private:
+private:
     /**
      * @internal Load mime types into the list view
      * If @p selected is empty, selectedMimeTypesStringList() is called
      * to fill it in.
      */
-    void loadMimeTypes( const QStringList &selected=QStringList() );
+    void loadMimeTypes(const QStringList &selected = QStringList());
 
     class KMimeTypeChooserPrivate *d;
 };
@@ -128,9 +125,8 @@ class KIO_EXPORT KMimeTypeChooser : public QVBox
   *
   * @author Anders Lund (anders at alweb dk) dec 19, 2001
   */
-class KIO_EXPORT KMimeTypeChooserDialog : public KDialogBase
-{
-  public:
+class KIO_EXPORT KMimeTypeChooserDialog : public KDialogBase {
+public:
     /**
      * Create a KMimeTypeChooser dialog.
      *
@@ -149,31 +145,29 @@ class KIO_EXPORT KMimeTypeChooserDialog : public KDialogBase
      * @param parent The parent widget to use
      * @param name The internal name of this object
      */
-    KMimeTypeChooserDialog( const QString &caption=QString::null,
-                         const QString& text=QString::null,
-                         const QStringList &selectedMimeTypes=QStringList(),
-                         const QString &defaultGroup=QString::null,
-                         const QStringList &groupsToShow=QStringList(),
-                         int visuals=KMimeTypeChooser::Comments|KMimeTypeChooser::Patterns|KMimeTypeChooser::EditButton,
-                         QWidget *parent=0, const char *name=0 );
+    KMimeTypeChooserDialog(const QString &caption = QString::null, const QString &text = QString::null,
+                           const QStringList &selectedMimeTypes = QStringList(), const QString &defaultGroup = QString::null,
+                           const QStringList &groupsToShow = QStringList(),
+                           int visuals = KMimeTypeChooser::Comments | KMimeTypeChooser::Patterns | KMimeTypeChooser::EditButton, QWidget *parent = 0,
+                           const char *name = 0);
 
     /**
      * @overload
      */
-    KMimeTypeChooserDialog( const QString &caption,
-                         const QString& text,
-                         const QStringList &selectedMimeTypes,
-                         const QString &defaultGroup,
-                         QWidget *parent=0, const char *name=0 );
+    KMimeTypeChooserDialog(const QString &caption, const QString &text, const QStringList &selectedMimeTypes, const QString &defaultGroup,
+                           QWidget *parent = 0, const char *name = 0);
 
     ~KMimeTypeChooserDialog();
 
     /**
      * @return a pointer to the KMimeTypeChooser widget
      */
-     KMimeTypeChooser* chooser() { return m_chooser; }
+    KMimeTypeChooser *chooser()
+    {
+        return m_chooser;
+    }
 
-  private:
+private:
     KMimeTypeChooser *m_chooser;
 };
 #endif // _KMIMETYPE_CHOOSER_H_

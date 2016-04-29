@@ -24,56 +24,54 @@
 
 #include <kdelibs_export.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
  * This is an interface for the KTextEditor::View class.
 
  */
-class KTEXTEDITOR_EXPORT TextHintInterface
-{
-	friend class PrivateTextHintInterface;
+class KTEXTEDITOR_EXPORT TextHintInterface {
+    friend class PrivateTextHintInterface;
+
 public:
-	TextHintInterface();
-	virtual ~TextHintInterface();
+    TextHintInterface();
+    virtual ~TextHintInterface();
 
-	/**
-	 * enable Texthints. If they are enabled a signal needTextHint is emitted, if the mouse
-	 * changed the position and a new character is beneath the mouse cursor. The signal is delayed
-	 * for a certain time, specifiedin the timeout parameter.
-	 */
-	virtual void	enableTextHints(int timeout)=0;
+    /**
+     * enable Texthints. If they are enabled a signal needTextHint is emitted, if the mouse
+     * changed the position and a new character is beneath the mouse cursor. The signal is delayed
+     * for a certain time, specifiedin the timeout parameter.
+     */
+    virtual void enableTextHints(int timeout) = 0;
 
-	/**
-	 * Disable texthints. Per default they are disabled.
-	 */
-	virtual void disableTextHints()=0;
-	
-	/**
-	 * This method returns a number, unique during one application run
-	 *
-	 */	
-	unsigned int textHintInterfaceNumber () const; 
+    /**
+     * Disable texthints. Per default they are disabled.
+     */
+    virtual void disableTextHints() = 0;
+
+    /**
+     * This method returns a number, unique during one application run
+     *
+     */
+    unsigned int textHintInterfaceNumber() const;
 
 
-	//signals
+    // signals
 
-	/**
-	 * emit this signal, if a tooltip text is needed for displaying.
-	 * I you don't want a tooltip to be displayd set text to an emtpy string in a connected slot,
-	 * otherwise set text to the string you want the editor to display
-	 */
-	virtual void needTextHint(int line, int col, QString &text)=0;
+    /**
+     * emit this signal, if a tooltip text is needed for displaying.
+     * I you don't want a tooltip to be displayd set text to an emtpy string in a connected slot,
+     * otherwise set text to the string you want the editor to display
+     */
+    virtual void needTextHint(int line, int col, QString &text) = 0;
 
-  private:
+private:
     class PrivateTextHintInterface *d;
     static unsigned int globalTextHintInterfaceNumber;
     unsigned int myTextHintInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT TextHintInterface *textHintInterface (class View *view);
-
+KTEXTEDITOR_EXPORT TextHintInterface *textHintInterface(class View *view);
 }
 
 #endif

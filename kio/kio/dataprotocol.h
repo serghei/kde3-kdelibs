@@ -32,9 +32,9 @@ class QCString;
 class KURL;
 
 #if defined(DATAKIOSLAVE)
-#  include <kio/slavebase.h>
+#include <kio/slavebase.h>
 #elif !defined(TESTKIO)
-#  include "kio/dataslave.h"
+#include "kio/dataslave.h"
 #endif
 
 namespace KIO {
@@ -53,19 +53,23 @@ class DataProtocol : public DataSlave {
 
 public:
 #if defined(DATAKIOSLAVE)
-  DataProtocol(const QCString &pool_socket, const QCString &app_socket);
+    DataProtocol(const QCString &pool_socket, const QCString &app_socket);
 #else
-  DataProtocol();
+    DataProtocol();
 #endif
-  virtual ~DataProtocol();
-  virtual void mimetype(const KURL &url);
-  virtual void get(const KURL &url);
+    virtual ~DataProtocol();
+    virtual void mimetype(const KURL &url);
+    virtual void get(const KURL &url);
 #if defined(TESTKIO)
-  void ref() {}
-  void deref() {}
+    void ref()
+    {
+    }
+    void deref()
+    {
+    }
 #endif
 };
 
-}/*end namespace*/
+} /*end namespace*/
 
 #endif

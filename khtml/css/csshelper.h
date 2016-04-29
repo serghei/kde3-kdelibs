@@ -30,22 +30,18 @@
 class QPaintDeviceMetrics;
 class KHTMLSettings;
 
-namespace DOM
-{
-    class CSSPrimitiveValueImpl;
+namespace DOM {
+class CSSPrimitiveValueImpl;
 }
 
-namespace khtml
-{
-    class RenderStyle;
+namespace khtml {
+class RenderStyle;
 
-    /*
-     * mostly just removes the url("...") brace
-     */
-    DOM::DOMString parseURL(const DOM::DOMString &url);
-
+/*
+ * mostly just removes the url("...") brace
+ */
+DOM::DOMString parseURL(const DOM::DOMString &url);
 }
-
 
 
 #endif

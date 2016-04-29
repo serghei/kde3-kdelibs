@@ -1,24 +1,24 @@
-    /*
+/*
 
-    Copyright (C) 2000 Stefan Westerfeld
-                       stefan@space.twc.de
+Copyright (C) 2000 Stefan Westerfeld
+                   stefan@space.twc.de
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-  
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-   
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-    Boston, MA 02111-1307, USA.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-    */
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
+
+*/
 
 #include "config.h"
 #ifdef HAVE_AUDIOFILE
@@ -43,7 +43,7 @@ extern "C" {
  *
  * #ifdef __cplusplus
  * }
- * #endif 
+ * #endif
  *
  * only once not twice.
  */
@@ -59,317 +59,330 @@ using namespace Arts;
 
 CachedWav *CachedWav::load(Cache *cache, string filename)
 {
-	CachedWav *wav;
+    CachedWav *wav;
 
-	wav = (CachedWav *)cache->get(string("CachedWav:")+filename);
-	if(!wav) {
-		wav = new CachedWav(cache,filename);
+    wav = (CachedWav *)cache->get(string("CachedWav:") + filename);
+    if(!wav)
+    {
+        wav = new CachedWav(cache, filename);
 
-		if(!wav->initOk)		// loading failed
-		{
-			wav->decRef();
-			return 0;
-		}
-	}
+        if(!wav->initOk) // loading failed
+        {
+            wav->decRef();
+            return 0;
+        }
+    }
 
-	return(wav);
+    return (wav);
 }
 
 bool CachedWav::isValid()
 {
-	if(!initOk)
-		return false;
+    if(!initOk)
+        return false;
 
-	struct stat newstat;
+    struct stat newstat;
 
-	lstat(filename.c_str(),&newstat);
-	return(newstat.st_mtime == oldstat.st_mtime);
+    lstat(filename.c_str(), &newstat);
+    return (newstat.st_mtime == oldstat.st_mtime);
 }
 
 int CachedWav::memoryUsage()
 {
-	return(bufferSize);
+    return (bufferSize);
 }
 
-CachedWav::CachedWav(Cache *cache, string filename) : CachedObject(cache),
-								 filename(filename),initOk(false), buffer(0)
+CachedWav::CachedWav(Cache *cache, string filename) : CachedObject(cache), filename(filename), initOk(false), buffer(0)
 {
-	int sampleFormat;
-	AFframecount	frameCount;
-	AFfilehandle	file;
+    int sampleFormat;
+    AFframecount frameCount;
+    AFfilehandle file;
 
-	setKey(string("CachedWav:")+filename);
+    setKey(string("CachedWav:") + filename);
 
-	if(lstat(filename.c_str(),&oldstat) == -1)
-	{
-		arts_info("CachedWav: Can't stat file '%s'", filename.c_str());
-		return;
-	}
+    if(lstat(filename.c_str(), &oldstat) == -1)
+    {
+        arts_info("CachedWav: Can't stat file '%s'", filename.c_str());
+        return;
+    }
 
-	file = afOpenFile(filename.c_str(), "r", NULL);
-	if(!file)
-	{
-		arts_info("CachedWav: Can't read file '%s'", filename.c_str());
-		return;
-	}
+    file = afOpenFile(filename.c_str(), "r", NULL);
+    if(!file)
+    {
+        arts_info("CachedWav: Can't read file '%s'", filename.c_str());
+        return;
+    }
 
-	frameCount = afGetFrameCount(file, AF_DEFAULT_TRACK);
-	if(frameCount <= 0 || frameCount >= INT_MAX)
-	{
-		arts_info("CachedWav: Invalid length for '%s'", filename.c_str());
-		afCloseFile(file);
-		return;
-	}
+    frameCount = afGetFrameCount(file, AF_DEFAULT_TRACK);
+    if(frameCount <= 0 || frameCount >= INT_MAX)
+    {
+        arts_info("CachedWav: Invalid length for '%s'", filename.c_str());
+        afCloseFile(file);
+        return;
+    }
 
-	channelCount = afGetChannels(file, AF_DEFAULT_TRACK);
-	afGetSampleFormat(file, AF_DEFAULT_TRACK, &sampleFormat, &sampleWidth);
+    channelCount = afGetChannels(file, AF_DEFAULT_TRACK);
+    afGetSampleFormat(file, AF_DEFAULT_TRACK, &sampleFormat, &sampleWidth);
 
-	// we want everything converted to little endian unconditionally
-	afSetVirtualByteOrder(file,AF_DEFAULT_TRACK, AF_BYTEORDER_LITTLEENDIAN);
+    // we want everything converted to little endian unconditionally
+    afSetVirtualByteOrder(file, AF_DEFAULT_TRACK, AF_BYTEORDER_LITTLEENDIAN);
 
-	arts_debug("loaded wav %s",filename.c_str());
-	arts_debug("  sample format: %d, sample width: %d",
-		sampleFormat,sampleWidth);
-	arts_debug("   channelCount: %d",channelCount);
-	arts_debug("     frameCount: %d",frameCount);
+    arts_debug("loaded wav %s", filename.c_str());
+    arts_debug("  sample format: %d, sample width: %d", sampleFormat, sampleWidth);
+    arts_debug("   channelCount: %d", channelCount);
+    arts_debug("     frameCount: %d", frameCount);
 
-	// different handling required for other sample widths
-	assert(sampleWidth == 16 || sampleWidth == 8);
+    // different handling required for other sample widths
+    assert(sampleWidth == 16 || sampleWidth == 8);
 
-	long frameSize = (sampleWidth/8)*channelCount;
-	samplingRate = afGetRate(file, AF_DEFAULT_TRACK);
+    long frameSize = (sampleWidth / 8) * channelCount;
+    samplingRate = afGetRate(file, AF_DEFAULT_TRACK);
 
-	/*
-	 * if we don't know the track bytes, we'll have to figure out ourselves
-	 * how many frames are stored here - it would be nicer if libaudiofile
-	 * let us know somehow whether the value returned for getFrameCount
-	 * means "don't know" or is really the correct length
-	 */
-	int trackBytes = afGetTrackBytes(file, AF_DEFAULT_TRACK);
-	if(trackBytes == -1)
-	{
-		arts_debug("unknown length");
-		long fcount = 0, f = 0;
+    /*
+     * if we don't know the track bytes, we'll have to figure out ourselves
+     * how many frames are stored here - it would be nicer if libaudiofile
+     * let us know somehow whether the value returned for getFrameCount
+     * means "don't know" or is really the correct length
+     */
+    int trackBytes = afGetTrackBytes(file, AF_DEFAULT_TRACK);
+    if(trackBytes == -1)
+    {
+        arts_debug("unknown length");
+        long fcount = 0, f = 0;
 
-		list<void *> blocks;
-		do
-		{
-			void *block = malloc(1024 * frameSize);
+        list< void * > blocks;
+        do
+        {
+            void *block = malloc(1024 * frameSize);
 
-			f = afReadFrames(file, AF_DEFAULT_TRACK,block,1024);
-			if(f > 0)
-			{
-				fcount += f;
-				blocks.push_back(block);
-			}
-			else
-			{
-				free(block);
-			}
-		} while(f > 0);
+            f = afReadFrames(file, AF_DEFAULT_TRACK, block, 1024);
+            if(f > 0)
+            {
+                fcount += f;
+                blocks.push_back(block);
+            }
+            else
+            {
+                free(block);
+            }
+        } while(f > 0);
 
-		frameCount = fcount;
-		arts_debug("figured out frameCount = %ld", fcount);
+        frameCount = fcount;
+        arts_debug("figured out frameCount = %ld", fcount);
 
-		bufferSize = frameCount * frameSize;
-		buffer = new uchar[bufferSize];
-		assert(buffer);
+        bufferSize = frameCount * frameSize;
+        buffer = new uchar[bufferSize];
+        assert(buffer);
 
-		// reassemble and free the blocks
-		while(!blocks.empty())
-		{
-			void *block = blocks.front();
-			blocks.pop_front();
+        // reassemble and free the blocks
+        while(!blocks.empty())
+        {
+            void *block = blocks.front();
+            blocks.pop_front();
 
-			f = (fcount>1024)?1024:fcount;
-			memcpy(&buffer[(frameCount-fcount)*frameSize],block,f*frameSize);
-			fcount -= f;
-		}
-		assert(fcount == 0);
-	}
-	else
-	{
-		bufferSize = frameCount * frameSize;
-		buffer = new uchar[bufferSize];
-		assert(buffer);
+            f = (fcount > 1024) ? 1024 : fcount;
+            memcpy(&buffer[(frameCount - fcount) * frameSize], block, f * frameSize);
+            fcount -= f;
+        }
+        assert(fcount == 0);
+    }
+    else
+    {
+        bufferSize = frameCount * frameSize;
+        buffer = new uchar[bufferSize];
+        assert(buffer);
 
-		afReadFrames(file, AF_DEFAULT_TRACK,buffer,frameCount);
-	}
+        afReadFrames(file, AF_DEFAULT_TRACK, buffer, frameCount);
+    }
 
-	afCloseFile(file);
-	initOk = true;
+    afCloseFile(file);
+    initOk = true;
 }
 
 CachedWav::~CachedWav()
 {
-	if(buffer)
-		delete[] buffer;
+    if(buffer)
+        delete[] buffer;
 }
 
 namespace Arts {
 
 class Synth_PLAY_WAV_impl : public Synth_PLAY_WAV_skel, public StdSynthModule {
 protected:
-	double flpos;
+    double flpos;
 
-	float _speed;
-	string _filename;
-	bool _finished;
-	CachedWav *cachedwav;
+    float _speed;
+    string _filename;
+    bool _finished;
+    CachedWav *cachedwav;
 
-	void unload()
-	{
-		if(cachedwav)
-		{
-			cachedwav->decRef();
-			cachedwav = 0;
-		}
-	}
+    void unload()
+    {
+        if(cachedwav)
+        {
+            cachedwav->decRef();
+            cachedwav = 0;
+        }
+    }
 
-	void load()
-	{
-		// unload the old file if necessary
-		unload();
+    void load()
+    {
+        // unload the old file if necessary
+        unload();
 
-		// load the new (which will reset the position)
-		cachedwav = CachedWav::load(Cache::the(), _filename);
-		flpos = 0.0;
-	}
+        // load the new (which will reset the position)
+        cachedwav = CachedWav::load(Cache::the(), _filename);
+        flpos = 0.0;
+    }
 
 public:
-	float speed() { return _speed; }
-	void speed(float newSpeed) { _speed = newSpeed; }
+    float speed()
+    {
+        return _speed;
+    }
+    void speed(float newSpeed)
+    {
+        _speed = newSpeed;
+    }
 
-	string filename() { return _filename; }
-	void filename(const string& filename) { _filename = filename; load(); }
+    string filename()
+    {
+        return _filename;
+    }
+    void filename(const string &filename)
+    {
+        _filename = filename;
+        load();
+    }
 
-	void finished(bool f)
-	{
-		if(_finished != f)
-		{
-			_finished = f;
-			finished_changed(f);
-		}
-	}
-	bool finished() { return _finished; }
+    void finished(bool f)
+    {
+        if(_finished != f)
+        {
+            _finished = f;
+            finished_changed(f);
+        }
+    }
+    bool finished()
+    {
+        return _finished;
+    }
 
-	Synth_PLAY_WAV_impl();
-	~Synth_PLAY_WAV_impl();
+    Synth_PLAY_WAV_impl();
+    ~Synth_PLAY_WAV_impl();
 
-	void streamInit();
-	void calculateBlock(unsigned long samples);
+    void streamInit();
+    void calculateBlock(unsigned long samples);
 };
 
 REGISTER_IMPLEMENTATION(Synth_PLAY_WAV_impl);
-
 }
 
 Synth_PLAY_WAV_impl::Synth_PLAY_WAV_impl()
 {
-	cachedwav = 0;
-	_speed = 1.0;
-	_filename = "";
-	_finished = false;
+    cachedwav = 0;
+    _speed = 1.0;
+    _filename = "";
+    _finished = false;
 }
 
 Synth_PLAY_WAV_impl::~Synth_PLAY_WAV_impl()
 {
-	unload();
+    unload();
 }
 
 void Synth_PLAY_WAV_impl::streamInit()
 {
-	finished(false);
+    finished(false);
 }
 
 void Synth_PLAY_WAV_impl::calculateBlock(unsigned long samples)
 {
-	unsigned long haveSamples = 0;
+    unsigned long haveSamples = 0;
 
-	if(cachedwav)
-	{
-		double speed = cachedwav->samplingRate / samplingRateFloat * _speed;
+    if(cachedwav)
+    {
+        double speed = cachedwav->samplingRate / samplingRateFloat * _speed;
 
-		haveSamples = uni_convert_stereo_2float(samples, cachedwav->buffer,
-		   cachedwav->bufferSize,cachedwav->channelCount,cachedwav->sampleWidth,
-		   left,right,speed,flpos);
+        haveSamples = uni_convert_stereo_2float(samples, cachedwav->buffer, cachedwav->bufferSize, cachedwav->channelCount, cachedwav->sampleWidth,
+                                                left, right, speed, flpos);
 
-		flpos += (double)haveSamples * speed;
-	}
+        flpos += (double)haveSamples * speed;
+    }
 
-	if(haveSamples != samples)
-	{
-		unsigned long i;
+    if(haveSamples != samples)
+    {
+        unsigned long i;
 
-		for(i=haveSamples;i<samples;i++)
-			left[i] = right[i] = 0.0;
+        for(i = haveSamples; i < samples; i++)
+            left[i] = right[i] = 0.0;
 
-		finished(true);
-	}
+        finished(true);
+    }
 
-/*
-	float speed = 0.0;
-	unsigned long haveSamples = 0;
+    /*
+        float speed = 0.0;
+        unsigned long haveSamples = 0;
 
-	if(cachedwav)
-	{
-		float allSamples = cachedwav->bufferSize*8 /
-	    				   cachedwav->sampleWidth/cachedwav->channelCount;
-		float fHaveSamples = allSamples - flpos;
+        if(cachedwav)
+        {
+            float allSamples = cachedwav->bufferSize*8 /
+                               cachedwav->sampleWidth/cachedwav->channelCount;
+            float fHaveSamples = allSamples - flpos;
 
-		speed = cachedwav->samplingRate / (float)samplingRate * _speed;
+            speed = cachedwav->samplingRate / (float)samplingRate * _speed;
 
-		fHaveSamples /= speed;
-		fHaveSamples -= 2.0;	// one due to interpolation and another against
-								// rounding errors
-		if(fHaveSamples > 0)
-		{
-			haveSamples = (int)fHaveSamples;
-			if(haveSamples > samples) haveSamples = samples;
-		}
-	}
+            fHaveSamples /= speed;
+            fHaveSamples -= 2.0;	// one due to interpolation and another against
+                                    // rounding errors
+            if(fHaveSamples > 0)
+            {
+                haveSamples = (int)fHaveSamples;
+                if(haveSamples > samples) haveSamples = samples;
+            }
+        }
 
-	if(haveSamples)				// something left to play?
-	{
-		if(cachedwav->channelCount == 1)
-		{
-			if(cachedwav->sampleWidth == 16) {
-				interpolate_mono_16le_float(haveSamples,
-							flpos,speed,cachedwav->buffer,left);
-			}
-			else {
-				interpolate_mono_8_float(haveSamples,
-							flpos,speed,cachedwav->buffer,left);
-			}
-			memcpy(right,left,sizeof(float)*haveSamples);
-		}
-		else if(cachedwav->channelCount == 2)
-		{
-			if(cachedwav->sampleWidth == 16) {
-				interpolate_stereo_i16le_2float(haveSamples,
-							flpos,speed,cachedwav->buffer,left,right);
-			}
-			else {
-				interpolate_stereo_i8_2float(haveSamples,
-							flpos,speed,cachedwav->buffer,left,right);
-			}
-		} else {
-			assert(false);
-		}
+        if(haveSamples)				// something left to play?
+        {
+            if(cachedwav->channelCount == 1)
+            {
+                if(cachedwav->sampleWidth == 16) {
+                    interpolate_mono_16le_float(haveSamples,
+                                flpos,speed,cachedwav->buffer,left);
+                }
+                else {
+                    interpolate_mono_8_float(haveSamples,
+                                flpos,speed,cachedwav->buffer,left);
+                }
+                memcpy(right,left,sizeof(float)*haveSamples);
+            }
+            else if(cachedwav->channelCount == 2)
+            {
+                if(cachedwav->sampleWidth == 16) {
+                    interpolate_stereo_i16le_2float(haveSamples,
+                                flpos,speed,cachedwav->buffer,left,right);
+                }
+                else {
+                    interpolate_stereo_i8_2float(haveSamples,
+                                flpos,speed,cachedwav->buffer,left,right);
+                }
+            } else {
+                assert(false);
+            }
 
-		flpos += (float)haveSamples * speed;
-	}
+            flpos += (float)haveSamples * speed;
+        }
 
-	if(haveSamples != samples)
-	{
-		unsigned long i;
+        if(haveSamples != samples)
+        {
+            unsigned long i;
 
-		for(i=haveSamples;i<samples;i++)
-			left[i] = right[i] = 0.0;
+            for(i=haveSamples;i<samples;i++)
+                left[i] = right[i] = 0.0;
 
-		_finished = true;
-	}
-*/
+            _finished = true;
+        }
+    */
 }
 
 
@@ -576,4 +589,3 @@ void Synth_PLAY_PITCHED_WAV::Initialize()
 #warning "No libaudiofile available, that means, you won't be able to play wavs"
 #endif
 #endif
-

@@ -1,6 +1,6 @@
 /*
  *  This file is part of the KDE Libraries
- *  Copyright (C) 1999-2001 Mirko Boehm (mirko@kde.org) and 
+ *  Copyright (C) 1999-2001 Mirko Boehm (mirko@kde.org) and
  *  Espen Sand (espen@kde.org)
  *
  *  This library is free software; you can redistribute it and/or
@@ -28,16 +28,14 @@
  * Used internally by KDialogBase.
  * @internal
  */
-class KDEUI_EXPORT KDialogBaseButton : public KPushButton
-{
-  Q_OBJECT
+class KDEUI_EXPORT KDialogBaseButton : public KPushButton {
+    Q_OBJECT
 
-  public:
-    KDialogBaseButton( const KGuiItem &text, int key, QWidget *parent=0,
-                       const char *name=0 );
+public:
+    KDialogBaseButton(const KGuiItem &text, int key, QWidget *parent = 0, const char *name = 0);
     inline int id();
 
-  private:
+private:
     int mKey;
 };
 
@@ -45,24 +43,23 @@ class KDEUI_EXPORT KDialogBaseButton : public KPushButton
  * Used internally by KDialogBase.
  * @internal
  */
-class KDEUI_EXPORT KDialogBaseTile : public QObject
-{
-  Q_OBJECT
+class KDEUI_EXPORT KDialogBaseTile : public QObject {
+    Q_OBJECT
 
-  public:
-    KDialogBaseTile( QObject *parent=0, const char *name=0 );
+public:
+    KDialogBaseTile(QObject *parent = 0, const char *name = 0);
     ~KDialogBaseTile();
 
-    void set( const QPixmap *pix );
+    void set(const QPixmap *pix);
     const QPixmap *get() const;
-  
-  public slots:
+
+public slots:
     void cleanup();
 
-  signals:
+signals:
     void pixmapChanged();
 
-  private:
+private:
     QPixmap *mPixmap;
     class KDialogBaseTilePrivate;
     KDialogBaseTilePrivate *d;

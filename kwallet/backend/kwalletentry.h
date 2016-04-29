@@ -16,7 +16,7 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- */ 
+ */
 
 
 #ifndef _KWALLETENTRY_H
@@ -32,31 +32,32 @@ namespace KWallet {
 /* @internal
  */
 class KDE_EXPORT Entry {
-	public:
-		Entry();
-		~Entry();
-		
-		const QString& key() const;
-		const QByteArray& value() const;
-		QString password() const;
-		const QByteArray& map() const { return value(); }
+public:
+    Entry();
+    ~Entry();
 
-		void setValue(const QByteArray& val);
-		void setValue(const QString& val);
-		void setKey(const QString& key);
+    const QString &key() const;
+    const QByteArray &value() const;
+    QString password() const;
+    const QByteArray &map() const
+    {
+        return value();
+    }
 
-		Wallet::EntryType type() const;
-		void setType(Wallet::EntryType type);
+    void setValue(const QByteArray &val);
+    void setValue(const QString &val);
+    void setKey(const QString &key);
 
-		void copy(const Entry* x);
+    Wallet::EntryType type() const;
+    void setType(Wallet::EntryType type);
 
-	private:
-		QString _key;
-		QByteArray _value;
-		Wallet::EntryType _type;
+    void copy(const Entry *x);
+
+private:
+    QString _key;
+    QByteArray _value;
+    Wallet::EntryType _type;
 };
-
 }
 
 #endif
-

@@ -34,34 +34,30 @@
 
 #include "klineeditdlg.h"
 
-KLineEditDlg::KLineEditDlg( const QString&_text, const QString& _value,
-			    QWidget *parent )
-  : KDialogBase( Plain, QString::null, Ok|Cancel|User1, Ok, parent, 0L, true,
-		 true, KStdGuiItem::clear() )
+KLineEditDlg::KLineEditDlg(const QString &_text, const QString &_value, QWidget *parent)
+    : KDialogBase(Plain, QString::null, Ok | Cancel | User1, Ok, parent, 0L, true, true, KStdGuiItem::clear())
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( plainPage(), 0, spacingHint() );
-  QLabel *label = new QLabel(_text, plainPage() );
-  topLayout->addWidget( label, 1 );
+    QVBoxLayout *topLayout = new QVBoxLayout(plainPage(), 0, spacingHint());
+    QLabel *label = new QLabel(_text, plainPage());
+    topLayout->addWidget(label, 1);
 
-  edit = new KLineEdit( plainPage(), 0L );
-  edit->setMinimumWidth(edit->sizeHint().width() * 3);
-  label->setBuddy(edit);  // please "scheck" style
-  //  connect( edit, SIGNAL(returnPressed()), SLOT(accept()) );
-  connect( edit, SIGNAL(textChanged(const QString&)),
-	   SLOT(slotTextChanged(const QString&)) );
-  topLayout->addWidget( edit, 1 );
+    edit = new KLineEdit(plainPage(), 0L);
+    edit->setMinimumWidth(edit->sizeHint().width() * 3);
+    label->setBuddy(edit); // please "scheck" style
+    //  connect( edit, SIGNAL(returnPressed()), SLOT(accept()) );
+    connect(edit, SIGNAL(textChanged(const QString &)), SLOT(slotTextChanged(const QString &)));
+    topLayout->addWidget(edit, 1);
 
-  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotClear()) );
-  edit->setText( _value );
-  if ( _value.isEmpty() )
-  {
-      enableButtonOK( false );
-      enableButton(KDialogBase::User1, false);
-  }
-  edit->setSelection(0, edit->text().length());
-  edit->setFocus();
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotClear()));
+    edit->setText(_value);
+    if(_value.isEmpty())
+    {
+        enableButtonOK(false);
+        enableButton(KDialogBase::User1, false);
+    }
+    edit->setSelection(0, edit->text().length());
+    edit->setFocus();
 }
-
 
 
 #if 0
@@ -138,17 +134,19 @@ void KLineEditDlg::slotClear()
 
 void KLineEditDlg::slotTextChanged(const QString &text)
 {
-  bool on;
-  if ( edit->validator() ) {
-    QString str = edit->text();
-    int index = edit->cursorPosition();
-    on = ( edit->validator()->validate( str, index )
-	   == QValidator::Acceptable );
-  } else {
-    on = !text.isEmpty();
-  }
-  enableButtonOK( on );
-  enableButton(KDialogBase::User1, text.length());
+    bool on;
+    if(edit->validator())
+    {
+        QString str = edit->text();
+        int index = edit->cursorPosition();
+        on = (edit->validator()->validate(str, index) == QValidator::Acceptable);
+    }
+    else
+    {
+        on = !text.isEmpty();
+    }
+    enableButtonOK(on);
+    enableButton(KDialogBase::User1, text.length());
 }
 
 QString KLineEditDlg::text() const
@@ -156,39 +154,38 @@ QString KLineEditDlg::text() const
     return edit->text();
 }
 
-QString KLineEditDlg::getText(const QString &_text, const QString& _value,
-                              bool *ok, QWidget *parent, QValidator *_validator )
+QString KLineEditDlg::getText(const QString &_text, const QString &_value, bool *ok, QWidget *parent, QValidator *_validator)
 {
-    KLineEditDlg dlg(_text, _value, parent );
-    dlg.lineEdit()->setValidator( _validator );
-    dlg.slotTextChanged( _value ); // trigger validation
+    KLineEditDlg dlg(_text, _value, parent);
+    dlg.lineEdit()->setValidator(_validator);
+    dlg.slotTextChanged(_value); // trigger validation
 
     bool ok_ = dlg.exec() == QDialog::Accepted;
-    if ( ok )
+    if(ok)
         *ok = ok_;
-    if ( ok_ )
+    if(ok_)
         return dlg.text();
     return QString::null;
 }
 
-QString KLineEditDlg::getText(const QString &_caption, const QString &_text,
-                              const QString& _value,
-                              bool *ok, QWidget *parent, QValidator *_validator )
+QString KLineEditDlg::getText(const QString &_caption, const QString &_text, const QString &_value, bool *ok, QWidget *parent, QValidator *_validator)
 {
-    KLineEditDlg dlg( _text, _value, parent );
-    dlg.setCaption( _caption );
-    dlg.lineEdit()->setValidator( _validator );
-    dlg.slotTextChanged( _value ); // trigger validation
+    KLineEditDlg dlg(_text, _value, parent);
+    dlg.setCaption(_caption);
+    dlg.lineEdit()->setValidator(_validator);
+    dlg.slotTextChanged(_value); // trigger validation
 
     bool ok_ = dlg.exec() == QDialog::Accepted;
-    if ( ok )
+    if(ok)
         *ok = ok_;
-    if ( ok_ )
+    if(ok_)
         return dlg.text();
     return QString::null;
 }
 
-void KLineEditDlg::virtual_hook( int id, void* data )
-{ KDialogBase::virtual_hook( id, data ); }
+void KLineEditDlg::virtual_hook(int id, void *data)
+{
+    KDialogBase::virtual_hook(id, data);
+}
 
 #include "klineeditdlg.moc"

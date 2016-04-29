@@ -1,10 +1,10 @@
 /*
-    This file is part of KDE 
+    This file is part of KDE
 
     Copyright (C) 1998 Waldo Bastian (bastian@kde.org)
 
     This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License 
+    modify it under the terms of the GNU General Public License
     version 2 as published by the Free Software Foundation.
 
     This software is distributed in the hope that it will be useful,
@@ -28,11 +28,11 @@
 
 int main(int argc, char *argv[])
 {
-   KApplication::kdeinitExec("konsole");
+    KApplication::kdeinitExec("konsole");
 
-   KApplication k(argc, argv, "klaunchertest");
- 
-   kapp->dcopClient()->registerAs( kapp->name()) ;
+    KApplication k(argc, argv, "klaunchertest");
+
+    kapp->dcopClient()->registerAs(kapp->name());
 
 #if 0
    QString error;
@@ -51,4 +51,3 @@ int main(int argc, char *argv[])
       result, error.ascii(), dcopService.data(), pid);
 #endif
 }
-

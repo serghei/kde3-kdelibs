@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,8 +21,8 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  CLASSVALUE_H
-#define  CLASSVALUE_H
+#ifndef CLASSVALUE_H
+#define CLASSVALUE_H
 
 #include <qcstring.h>
 
@@ -30,27 +30,37 @@
 
 #include <kdebug.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT ClassValue : public Value
-{
+class KVCARD_EXPORT ClassValue : public Value {
 
 #include "ClassValue-generated.h"
 
-	  enum ClassType {
-		  Public, Private, Confidential, Other
-	  };
+    enum ClassType
+    {
+        Public,
+        Private,
+        Confidential,
+        Other
+    };
 
-    ClassValue *clone();	
+    ClassValue *clone();
 
-    void setType( int type ) { classType_ = type; assembled_ = false; parsed_ = true; }
-    int type() { parse(); return classType_; }
-	
-	private:
-		int classType_;
+    void setType(int type)
+    {
+        classType_ = type;
+        assembled_ = false;
+        parsed_ = true;
+    }
+    int type()
+    {
+        parse();
+        return classType_;
+    }
+
+private:
+    int classType_;
 };
-
 }
 
 #endif

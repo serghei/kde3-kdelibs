@@ -13,14 +13,13 @@ class QMultiLineEdit;
 class KToolBarRadioGroup;
 class KHelpMenu;
 
-class testWindow  : public KMainWindow
-{
+class testWindow : public KMainWindow {
     Q_OBJECT
 
 public:
-    testWindow (QWidget *parent=0, const char *name=0);
-    ~testWindow ();
-    
+    testWindow(QWidget *parent = 0, const char *name = 0);
+    ~testWindow();
+
 public slots:
     void beFixed();
     void beYFixed();
@@ -33,11 +32,11 @@ public slots:
     void slotOpen();
     void slotCompletion();
     void slotCompletionsMenu(int id);
-    void slotHide2 ();
+    void slotHide2();
     void slotInsertClock();
-    void slotHide1 ();
-    void slotLined ();
-    void slotImportant ();
+    void slotHide1();
+    void slotLined();
+    void slotImportant();
     void slotExit();
     void slotFrame();
     void slotListCompletion();
@@ -45,9 +44,10 @@ public slots:
     void slotToggle(bool);
     void slotClearCombo();
     void slotGoGoGoo();
-    void slotInsertListInCombo ();
-    void slotMakeItem3Current ();
+    void slotInsertListInCombo();
+    void slotMakeItem3Current();
     void slotToggled(int);
+
 protected:
     KMenuBar *menuBar;
     QPopupMenu *fileMenu;
@@ -68,4 +68,3 @@ protected:
     KToolBarRadioGroup *rg;
 };
 #endif
-

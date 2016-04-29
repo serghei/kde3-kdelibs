@@ -33,58 +33,57 @@
 *
 * @version $Id: kdatewidget.h 465272 2005-09-29 09:47:40Z mueller $
 */
-class KDEUI_EXPORT KDateWidget : public QWidget
-{
-  Q_OBJECT
-  Q_PROPERTY( QDate date READ date WRITE setDate )
+class KDEUI_EXPORT KDateWidget : public QWidget {
+    Q_OBJECT
+    Q_PROPERTY(QDate date READ date WRITE setDate)
 
 public:
-  /**
-   * Constructs a date selection widget.
-   */
-  KDateWidget( QWidget *parent=0, const char *name=0 );
+    /**
+     * Constructs a date selection widget.
+     */
+    KDateWidget(QWidget *parent = 0, const char *name = 0);
 
-  /**
-   * Constructs a date selection widget with the initial date set to @p date.
-   */
-  KDateWidget( QDate date, QWidget *parent=0, const char *name=0 );
+    /**
+     * Constructs a date selection widget with the initial date set to @p date.
+     */
+    KDateWidget(QDate date, QWidget *parent = 0, const char *name = 0);
 
-  /**
-   * Destructs the date selection widget.
-   */
-  virtual ~KDateWidget();
+    /**
+     * Destructs the date selection widget.
+     */
+    virtual ~KDateWidget();
 
-  /**
-   * Returns the currently selected date.
-   */
-  QDate date() const;
+    /**
+     * Returns the currently selected date.
+     */
+    QDate date() const;
 
-  /**
-   * Changes the selected date to @p date.
-   */
-  void setDate(QDate date);
+    /**
+     * Changes the selected date to @p date.
+     */
+    void setDate(QDate date);
 
 
 signals:
-  /**
-   * Emitted whenever the date of the widget
-   * is changed, either with setDate() or via user selection.
-   */
-   void changed(QDate);
+    /**
+     * Emitted whenever the date of the widget
+     * is changed, either with setDate() or via user selection.
+     */
+    void changed(QDate);
 
 protected:
-   void init();
-   void init(const QDate&);
+    void init();
+    void init(const QDate &);
 
 protected slots:
-  void slotDateChanged();
+    void slotDateChanged();
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-   class KDateWidgetPrivate;
-   KDateWidgetPrivate *d;
+    class KDateWidgetPrivate;
+    KDateWidgetPrivate *d;
 };
 
 #endif
-

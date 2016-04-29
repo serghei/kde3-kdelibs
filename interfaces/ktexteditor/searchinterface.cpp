@@ -4,52 +4,51 @@
 
 using namespace KTextEditor;
 
-namespace KTextEditor
-{
-	class PrivateSearchInterface
-	{
-	public:
-		PrivateSearchInterface()
-		{
-		interface = 0;
-		}
-		~PrivateSearchInterface(){}
-	// Data Members
-	SearchDCOPInterface *interface;
-	};
-
+namespace KTextEditor {
+class PrivateSearchInterface {
+public:
+    PrivateSearchInterface()
+    {
+        interface = 0;
+    }
+    ~PrivateSearchInterface()
+    {
+    }
+    // Data Members
+    SearchDCOPInterface *interface;
+};
 }
 
 unsigned int SearchInterface::globalSearchInterfaceNumber = 0;
 
 SearchInterface::SearchInterface()
 {
-	d = new PrivateSearchInterface();
-	globalSearchInterfaceNumber++;
-	mySearchInterfaceNumber=globalSearchInterfaceNumber;
-        QString name = "SearchInterface#" + QString::number(mySearchInterfaceNumber);
-	 d->interface = new SearchDCOPInterface(this, name.latin1());
+    d = new PrivateSearchInterface();
+    globalSearchInterfaceNumber++;
+    mySearchInterfaceNumber = globalSearchInterfaceNumber;
+    QString name = "SearchInterface#" + QString::number(mySearchInterfaceNumber);
+    d->interface = new SearchDCOPInterface(this, name.latin1());
 }
 SearchInterface::~SearchInterface()
 {
-  delete d->interface;
-  delete d;
+    delete d->interface;
+    delete d;
 }
 
-unsigned int SearchInterface::searchInterfaceNumber () const
+unsigned int SearchInterface::searchInterfaceNumber() const
 {
-  return mySearchInterfaceNumber;
+    return mySearchInterfaceNumber;
 }
 
-void SearchInterface::setSearchInterfaceDCOPSuffix (const QCString &suffix)
+void SearchInterface::setSearchInterfaceDCOPSuffix(const QCString &suffix)
 {
-  d->interface->setObjId ("SearchInterface#"+suffix);
+    d->interface->setObjId("SearchInterface#" + suffix);
 }
 
-SearchInterface *KTextEditor::searchInterface (Document *doc)
-{  
-  if (!doc)
-    return 0;
+SearchInterface *KTextEditor::searchInterface(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<SearchInterface*>(doc->qt_cast("KTextEditor::SearchInterface"));
+    return static_cast< SearchInterface * >(doc->qt_cast("KTextEditor::SearchInterface"));
 }

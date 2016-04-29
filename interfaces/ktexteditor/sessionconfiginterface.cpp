@@ -24,16 +24,17 @@
 #include "view.h"
 #include "plugin.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateSessionConfigInterface
-{
-  public:
-    PrivateSessionConfigInterface() {}
-    ~PrivateSessionConfigInterface() {}
+class PrivateSessionConfigInterface {
+public:
+    PrivateSessionConfigInterface()
+    {
+    }
+    ~PrivateSessionConfigInterface()
+    {
+    }
 };
-
 }
 
 using namespace KTextEditor;
@@ -42,47 +43,47 @@ unsigned int SessionConfigInterface::globalSessionConfigInterfaceNumber = 0;
 
 SessionConfigInterface::SessionConfigInterface()
 {
-  globalSessionConfigInterfaceNumber++;
-  mySessionConfigInterfaceNumber = globalSessionConfigInterfaceNumber++;
+    globalSessionConfigInterfaceNumber++;
+    mySessionConfigInterfaceNumber = globalSessionConfigInterfaceNumber++;
 
-  d = new PrivateSessionConfigInterface();
+    d = new PrivateSessionConfigInterface();
 }
 
 SessionConfigInterface::~SessionConfigInterface()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int SessionConfigInterface::configInterfaceNumber () const
+unsigned int SessionConfigInterface::configInterfaceNumber() const
 {
-  return mySessionConfigInterfaceNumber;
+    return mySessionConfigInterfaceNumber;
 }
 
-void SessionConfigInterface::setSessionConfigInterfaceDCOPSuffix (const QCString &/*suffix*/)
+void SessionConfigInterface::setSessionConfigInterfaceDCOPSuffix(const QCString & /*suffix*/)
 {
-  //d->interface->setObjId ("SessionConfigInterface#"+suffix);
+    // d->interface->setObjId ("SessionConfigInterface#"+suffix);
 }
 
-SessionConfigInterface *KTextEditor::sessionConfigInterface (Document *doc)
-{                       
-  if (!doc)
-    return 0;
+SessionConfigInterface *KTextEditor::sessionConfigInterface(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<SessionConfigInterface*>(doc->qt_cast("KTextEditor::SessionConfigInterface"));
-}      
-
-SessionConfigInterface *KTextEditor::sessionConfigInterface (View *view)
-{                       
-  if (!view)
-    return 0;
-
-  return static_cast<SessionConfigInterface*>(view->qt_cast("KTextEditor::SessionConfigInterface"));
+    return static_cast< SessionConfigInterface * >(doc->qt_cast("KTextEditor::SessionConfigInterface"));
 }
 
-SessionConfigInterface *KTextEditor::sessionConfigInterface (Plugin *plugin)
-{                       
-  if (!plugin)
-    return 0;
+SessionConfigInterface *KTextEditor::sessionConfigInterface(View *view)
+{
+    if(!view)
+        return 0;
 
-  return static_cast<SessionConfigInterface*>(plugin->qt_cast("KTextEditor::SessionConfigInterface"));
+    return static_cast< SessionConfigInterface * >(view->qt_cast("KTextEditor::SessionConfigInterface"));
+}
+
+SessionConfigInterface *KTextEditor::sessionConfigInterface(Plugin *plugin)
+{
+    if(!plugin)
+        return 0;
+
+    return static_cast< SessionConfigInterface * >(plugin->qt_cast("KTextEditor::SessionConfigInterface"));
 }

@@ -26,25 +26,21 @@
 
 class KMCOPPrivate;
 
-class KMCOP : public QObject,
-			  public DCOPObject
-{
-Q_OBJECT
-K_DCOP
+class KMCOP : public QObject, public DCOPObject {
+    Q_OBJECT
+    K_DCOP
 
 public:
-	KMCOP();
-	~KMCOP();
-	
-k_dcop:
-	int objectCount();
-	void addInterfacesHackHackHack();
+    KMCOP();
+    ~KMCOP();
+
+    k_dcop : int objectCount();
+    void addInterfacesHackHackHack();
 
 private:
-	QCString correctType(const QCString &str);
+    QCString correctType(const QCString &str);
     KMCOPPrivate *d;
 };
 
 
 #endif
-

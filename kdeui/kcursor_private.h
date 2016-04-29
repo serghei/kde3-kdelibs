@@ -36,16 +36,15 @@ class QWidget;
  * @author John Firebaugh <jfirebaugh@kde.org>
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
 */
-class KCursorPrivateAutoHideEventFilter : public QObject
-{
+class KCursorPrivateAutoHideEventFilter : public QObject {
     Q_OBJECT
 
 public:
-    KCursorPrivateAutoHideEventFilter( QWidget* widget );
+    KCursorPrivateAutoHideEventFilter(QWidget *widget);
     ~KCursorPrivateAutoHideEventFilter();
 
-    virtual bool eventFilter( QObject *o, QEvent *e );
-    
+    virtual bool eventFilter(QObject *o, QEvent *e);
+
     void resetWidget();
 
 private slots:
@@ -53,10 +52,10 @@ private slots:
     void unhideCursor();
 
 private:
-    QWidget* actualWidget() const;
+    QWidget *actualWidget() const;
 
     QTimer m_autoHideTimer;
-    QWidget* m_widget;
+    QWidget *m_widget;
     bool m_wasMouseTracking;
     bool m_isCursorHidden;
     bool m_isOwnCursor;
@@ -68,21 +67,20 @@ private:
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  * @author John Firebaugh <jfirebaugh@kde.org>
 */
-class KCursorPrivate : public QObject
-{
+class KCursorPrivate : public QObject {
     friend class KCursor; // to shut up the compiler
     Q_OBJECT
 
 public:
     static KCursorPrivate *self();
 
-    void setAutoHideCursor( QWidget *w, bool enable, bool customEventFilter );
-    virtual bool eventFilter( QObject *o, QEvent *e );
+    void setAutoHideCursor(QWidget *w, bool enable, bool customEventFilter);
+    virtual bool eventFilter(QObject *o, QEvent *e);
 
     int hideCursorDelay;
 
 private slots:
-    void slotWidgetDestroyed( QObject* );
+    void slotWidgetDestroyed(QObject *);
 
 private:
     KCursorPrivate();
@@ -91,9 +89,8 @@ private:
     bool enabled;
     static KCursorPrivate *s_self;
 
-    QPtrDict<KCursorPrivateAutoHideEventFilter> m_eventFilters;
+    QPtrDict< KCursorPrivateAutoHideEventFilter > m_eventFilters;
 };
-
 
 
 #endif // KCURSOR_PRIVATE_H

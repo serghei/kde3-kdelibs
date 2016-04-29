@@ -8,11 +8,14 @@ class SMTP;
 class BugMailer : public QObject {
     Q_OBJECT
 public:
-    BugMailer(SMTP* s) : QObject(0, "mailer"), sm(s) {}
+    BugMailer(SMTP *s) : QObject(0, "mailer"), sm(s)
+    {
+    }
 
 public slots:
     void slotError(int);
     void slotSend();
+
 private:
     SMTP *sm;
 };

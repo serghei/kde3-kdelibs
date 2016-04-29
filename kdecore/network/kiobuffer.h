@@ -10,7 +10,7 @@
  *  permit persons to whom the Software is furnished to do so, subject to
  *  the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
@@ -42,103 +42,111 @@ class QIODevice;
  *
  * @author Thiago Macieira <thiago.macieira@kdemail.net>
  */
-class KIOBufferBase
-{
+class KIOBufferBase {
 public:
-  /**
-   * Default constructor. Does nothing.
-   */
-  KIOBufferBase()
-  { }
+    /**
+     * Default constructor. Does nothing.
+     */
+    KIOBufferBase()
+    {
+    }
 
-  /**
-   * Copy constructor. Does nothing here.
-   */
-  KIOBufferBase(const KIOBufferBase& )
-  { }
+    /**
+     * Copy constructor. Does nothing here.
+     */
+    KIOBufferBase(const KIOBufferBase &)
+    {
+    }
 
-  /**
-   * Virtual destructor. Does nothing.
-   */
-  virtual ~KIOBufferBase()
-  { }
+    /**
+     * Virtual destructor. Does nothing.
+     */
+    virtual ~KIOBufferBase()
+    {
+    }
 
-  /**
-   * Assignment operator. Does nothing.
-   */
-  KIOBufferBase& operator=(const KIOBufferBase& )
-  { return *this; }
+    /**
+     * Assignment operator. Does nothing.
+     */
+    KIOBufferBase &operator=(const KIOBufferBase &)
+    {
+        return *this;
+    }
 
-  /**
-   * Returns true if a line can be read from the buffer.
-   */
-  virtual bool canReadLine() const = 0;
+    /**
+     * Returns true if a line can be read from the buffer.
+     */
+    virtual bool canReadLine() const = 0;
 
-  /**
-   * Reads a line from the buffer and discards it.
-   */
-  virtual QCString readLine() = 0;
+    /**
+     * Reads a line from the buffer and discards it.
+     */
+    virtual QCString readLine() = 0;
 
-  /**
-   * Returns the number of bytes in the buffer. Note that this is not
-   * the size of the buffer.
-   *
-   * @sa size
-   */
-  virtual Q_LONG length() const = 0;
+    /**
+     * Returns the number of bytes in the buffer. Note that this is not
+     * the size of the buffer.
+     *
+     * @sa size
+     */
+    virtual Q_LONG length() const = 0;
 
-  /**
-   * Returns true if the buffer is empty of data.
-   */
-  inline bool isEmpty() const
-  { return length() == 0; }
+    /**
+     * Returns true if the buffer is empty of data.
+     */
+    inline bool isEmpty() const
+    {
+        return length() == 0;
+    }
 
-  /**
-   * Retrieves the buffer size. The value of -1 indicates that
-   * the buffer has no defined upper limit.
-   *
-   * @sa length for the length of the data stored
-   */
-  virtual Q_LONG size() const = 0;
+    /**
+     * Retrieves the buffer size. The value of -1 indicates that
+     * the buffer has no defined upper limit.
+     *
+     * @sa length for the length of the data stored
+     */
+    virtual Q_LONG size() const = 0;
 
-  /**
-   * Returns true if the buffer is full (i.e., cannot receive more data)
-   */
-  inline bool isFull() const
-  { return size() != -1 && size() == length(); }
+    /**
+     * Returns true if the buffer is full (i.e., cannot receive more data)
+     */
+    inline bool isFull() const
+    {
+        return size() != -1 && size() == length();
+    }
 
-  /**
-   * Sets the size of the buffer, if allowed.
-   *
-   * @param size	the maximum size, use -1 for unlimited.
-   * @returns true on success, false if an error occurred.
-   * @note if the new size is less than length(), the buffer will be truncated
-   */
-  virtual bool setSize(Q_LONG size) = 0;
+    /**
+     * Sets the size of the buffer, if allowed.
+     *
+     * @param size	the maximum size, use -1 for unlimited.
+     * @returns true on success, false if an error occurred.
+     * @note if the new size is less than length(), the buffer will be truncated
+     */
+    virtual bool setSize(Q_LONG size) = 0;
 
-  /**
-   * Adds data to the end of the buffer.
-   *
-   * @param data	the data to be added
-   * @param len		the data length, in bytes
-   * @returns the number of bytes added to the end of the buffer.
-   */
-  virtual Q_LONG feedBuffer(const char *data, Q_LONG len) = 0;
+    /**
+     * Adds data to the end of the buffer.
+     *
+     * @param data	the data to be added
+     * @param len		the data length, in bytes
+     * @returns the number of bytes added to the end of the buffer.
+     */
+    virtual Q_LONG feedBuffer(const char *data, Q_LONG len) = 0;
 
-  /**
-   * Consumes data from the beginning of the buffer.
-   *
-   * @param data	where to copy the data to
-   * @param maxlen	the maximum length to copy, in bytes
-   * @param discard	if true, the bytes copied will be discarded
-   * @returns the number of bytes copied from the buffer
-   */
-  virtual Q_LONG consumeBuffer(char *data, Q_LONG maxlen, bool discard = true) = 0;
+    /**
+     * Consumes data from the beginning of the buffer.
+     *
+     * @param data	where to copy the data to
+     * @param maxlen	the maximum length to copy, in bytes
+     * @param discard	if true, the bytes copied will be discarded
+     * @returns the number of bytes copied from the buffer
+     */
+    virtual Q_LONG consumeBuffer(char *data, Q_LONG maxlen, bool discard = true) = 0;
 
-  /**
-   * Clears the buffer.
-   */
-  virtual void clear() = 0;
+    /**
+     * Clears the buffer.
+     */
+    virtual void clear() = 0;
 };
 
 #endif

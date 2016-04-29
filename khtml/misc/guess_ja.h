@@ -39,11 +39,11 @@
 #define GUESS_JA_H
 
 namespace khtml {
-    class guess_arc {
-    public:
-        unsigned int next;          /* next state */
-        double score;               /* score */
-    };
+class guess_arc {
+public:
+    unsigned int next; /* next state */
+    double score;      /* score */
+};
 }
 
 using namespace khtml;
@@ -60,63 +60,79 @@ extern guess_arc guess_utf8_ar[11];
 
 namespace khtml {
 
-    class guess_dfa {
-    public:
-        const dfa_table *states;
-        const guess_arc *arcs;
-        int state;
-        double score;
+class guess_dfa {
+public:
+    const dfa_table *states;
+    const guess_arc *arcs;
+    int state;
+    double score;
 
-        guess_dfa (const dfa_table stable[], const guess_arc *atable) :
-            states(stable), arcs(atable)
-        {
-            state = 0;
-            score = 1.0;
-        }
-    };
-
-    class JapaneseCode
+    guess_dfa(const dfa_table stable[], const guess_arc *atable) : states(stable), arcs(atable)
     {
-    public:
-        enum Type {ASCII, JIS, EUC, SJIS, UNICODE, UTF8 };
-        enum Type guess_jp(const char* buf, int buflen);
+        state = 0;
+        score = 1.0;
+    }
+};
 
-        JapaneseCode () {
-            eucj = new guess_dfa(guess_eucj_st, guess_eucj_ar);
-            sjis = new guess_dfa(guess_sjis_st, guess_sjis_ar);
-            utf8 = new guess_dfa(guess_utf8_st, guess_utf8_ar);
-            last_JIS_escape = false;
-        }
-
-        ~JapaneseCode () {
-            if (eucj) delete eucj;
-            if (sjis) delete sjis;
-            if (utf8) delete utf8;
-        }
-
-    protected:
-        guess_dfa *eucj;
-        guess_dfa *sjis;
-        guess_dfa *utf8;
-
-        bool last_JIS_escape;
+class JapaneseCode {
+public:
+    enum Type
+    {
+        ASCII,
+        JIS,
+        EUC,
+        SJIS,
+        UNICODE,
+        UTF8
     };
+    enum Type guess_jp(const char *buf, int buflen);
+
+    JapaneseCode()
+    {
+        eucj = new guess_dfa(guess_eucj_st, guess_eucj_ar);
+        sjis = new guess_dfa(guess_sjis_st, guess_sjis_ar);
+        utf8 = new guess_dfa(guess_utf8_st, guess_utf8_ar);
+        last_JIS_escape = false;
+    }
+
+    ~JapaneseCode()
+    {
+        if(eucj)
+            delete eucj;
+        if(sjis)
+            delete sjis;
+        if(utf8)
+            delete utf8;
+    }
+
+protected:
+    guess_dfa *eucj;
+    guess_dfa *sjis;
+    guess_dfa *utf8;
+
+    bool last_JIS_escape;
+};
 }
 
-#define DFA_NEXT(dfa, ch)                               \
-    do {                                                \
-        int arc__;                                      \
-        if (dfa->state >= 0) {                          \
-            arc__ = dfa->states[dfa->state][ch];        \
-            if (arc__ < 0) {                            \
-                dfa->state = -1;                        \
-            } else {                                    \
-                dfa->state = dfa->arcs[arc__].next;     \
-                dfa->score *= dfa->arcs[arc__].score;   \
-            }                                           \
-        }                                               \
-    } while (0)
+#define DFA_NEXT(dfa, ch)                                                                                                                            \
+    do                                                                                                                                               \
+    {                                                                                                                                                \
+        int arc__;                                                                                                                                   \
+        if(dfa->state >= 0)                                                                                                                          \
+        {                                                                                                                                            \
+            arc__ = dfa->states[dfa->state][ch];                                                                                                     \
+            if(arc__ < 0)                                                                                                                            \
+            {                                                                                                                                        \
+                dfa->state = -1;                                                                                                                     \
+            }                                                                                                                                        \
+            else                                                                                                                                     \
+            {                                                                                                                                        \
+                dfa->state = dfa->arcs[arc__].next;                                                                                                  \
+                dfa->score *= dfa->arcs[arc__].score;                                                                                                \
+            }                                                                                                                                        \
+        }                                                                                                                                            \
+    } while(0)
 
-#define DFA_ALIVE(dfa)  (dfa->state >= 0)
+#define DFA_ALIVE(dfa) (dfa->state >= 0)
 
-#endif  /* GUESS_JA_H */
+#endif /* GUESS_JA_H */

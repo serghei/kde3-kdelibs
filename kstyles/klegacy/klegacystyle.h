@@ -22,8 +22,8 @@
 
  */
 
-#ifndef   __KLegacyStyle_hh
-#define   __KLegacyStyle_hh
+#ifndef __KLegacyStyle_hh
+#define __KLegacyStyle_hh
 
 #include <kstyle.h>
 
@@ -46,82 +46,59 @@ public:
     virtual void unPolish(QApplication *);
 
     // combo box
-    virtual void drawComboButton(QPainter *, int, int, int, int, const QColorGroup &,
-				 bool = false, bool = false, bool = true,
-				 const QBrush * = 0);
+    virtual void drawComboButton(QPainter *, int, int, int, int, const QColorGroup &, bool = false, bool = false, bool = true, const QBrush * = 0);
     virtual QRect comboButtonRect(int, int, int, int);
     virtual QRect comboButtonFocusRect(int, int, int, int);
 
     // menubar items
-    virtual void drawMenuBarItem(QPainter *, int, int, int, int, QMenuItem *,
-				 QColorGroup &, bool, bool);
-    virtual void drawKMenuItem(QPainter *, int, int, int, int, const QColorGroup &, bool,
-                               QMenuItem *, QBrush * = 0);
-    
+    virtual void drawMenuBarItem(QPainter *, int, int, int, int, QMenuItem *, QColorGroup &, bool, bool);
+    virtual void drawKMenuItem(QPainter *, int, int, int, int, const QColorGroup &, bool, QMenuItem *, QBrush * = 0);
+
     // toolbar stuffs
-    virtual void drawKBarHandle(QPainter *p, int x, int y, int w, int h,
-                                const QColorGroup &g, KToolBarPos type, QBrush *fill = 0);
-    virtual void drawKickerHandle(QPainter *p, int x, int y, int w, int h,
-                                  const QColorGroup &g, QBrush *fill = 0);
-    virtual void drawKickerAppletHandle(QPainter *p, int x, int y, int w, int h,
-                                        const QColorGroup &g, QBrush *fill = 0);
-    virtual void drawKickerTaskButton(QPainter *p, int x, int y, int w, int h,
-                                      const QColorGroup &g, const QString &title, bool active,
+    virtual void drawKBarHandle(QPainter *p, int x, int y, int w, int h, const QColorGroup &g, KToolBarPos type, QBrush *fill = 0);
+    virtual void drawKickerHandle(QPainter *p, int x, int y, int w, int h, const QColorGroup &g, QBrush *fill = 0);
+    virtual void drawKickerAppletHandle(QPainter *p, int x, int y, int w, int h, const QColorGroup &g, QBrush *fill = 0);
+    virtual void drawKickerTaskButton(QPainter *p, int x, int y, int w, int h, const QColorGroup &g, const QString &title, bool active,
                                       QPixmap *icon = 0, QBrush *fill = 0);
 
     // arrows
-    virtual void drawArrow(QPainter *, ArrowType, bool, int, int, int, int,
-			   const QColorGroup &, bool, const QBrush * = 0);
+    virtual void drawArrow(QPainter *, ArrowType, bool, int, int, int, int, const QColorGroup &, bool, const QBrush * = 0);
 
     // button stuffs
-    virtual void drawButton(QPainter *, int, int, int, int, const QColorGroup &g,
-    			    bool = false, const QBrush * = 0);
+    virtual void drawButton(QPainter *, int, int, int, int, const QColorGroup &g, bool = false, const QBrush * = 0);
     virtual void drawPushButton(QPushButton *, QPainter *);
-    virtual void drawBevelButton(QPainter *, int, int, int, int,
-				 const QColorGroup &, bool = false,
-				 const QBrush * = 0);
+    virtual void drawBevelButton(QPainter *, int, int, int, int, const QColorGroup &, bool = false, const QBrush * = 0);
 
     // indicators (QCheckBox)
-    virtual void drawCheckMark(QPainter *, int, int, int, int, const QColorGroup &,
-			       bool = false, bool = true);
-    virtual void drawIndicator(QPainter *, int, int, int, int, const QColorGroup &,
-			       int, bool = false, bool = true);
+    virtual void drawCheckMark(QPainter *, int, int, int, int, const QColorGroup &, bool = false, bool = true);
+    virtual void drawIndicator(QPainter *, int, int, int, int, const QColorGroup &, int, bool = false, bool = true);
     virtual void drawIndicatorMask(QPainter *, int, int, int, int, int);
     virtual QSize indicatorSize(void) const;
 
     // exclusive indicators (QRadioButton)
-    virtual void drawExclusiveIndicator(QPainter *, int, int, int, int,
-					const QColorGroup &, bool, bool = false,
-					bool = true);
+    virtual void drawExclusiveIndicator(QPainter *, int, int, int, int, const QColorGroup &, bool, bool = false, bool = true);
     virtual void drawExclusiveIndicatorMask(QPainter *, int, int, int, int, bool);
     virtual QSize exclusiveIndicatorSize(void) const;
 
     // popup menus
-    virtual void drawPopupPanel(QPainter *, int, int, int, int, const QColorGroup &,
-				int = 2, const QBrush * = 0);
-    virtual void drawPopupMenuItem(QPainter *, bool, int, int, QMenuItem *,
-				   const QPalette &, bool, bool, int, int, int, int);
+    virtual void drawPopupPanel(QPainter *, int, int, int, int, const QColorGroup &, int = 2, const QBrush * = 0);
+    virtual void drawPopupMenuItem(QPainter *, bool, int, int, QMenuItem *, const QPalette &, bool, bool, int, int, int, int);
 
 
     // scrollbars
     virtual ScrollControl scrollBarPointOver(const QScrollBar *, int, const QPoint &);
     virtual void scrollBarMetrics(const QScrollBar *, int &, int &, int &, int &);
-    virtual void drawScrollBarControls(QPainter *, const QScrollBar *,
-				       int, uint, uint);
+    virtual void drawScrollBarControls(QPainter *, const QScrollBar *, int, uint, uint);
 
     // sliders
-    virtual void drawSlider(QPainter *, int , int , int , int ,
-			    const QColorGroup &, Orientation, bool, bool);
-    virtual void drawSliderGroove(QPainter *, int, int, int, int, const QColorGroup &,
-				  QCOORD, Orientation);
+    virtual void drawSlider(QPainter *, int, int, int, int, const QColorGroup &, Orientation, bool, bool);
+    virtual void drawSliderGroove(QPainter *, int, int, int, int, const QColorGroup &, QCOORD, Orientation);
 
     // panel
-    virtual void drawPanel(QPainter *, int, int, int, int, const QColorGroup &,
-			   bool = false, int = 1, const QBrush * = 0);
+    virtual void drawPanel(QPainter *, int, int, int, int, const QColorGroup &, bool = false, int = 1, const QBrush * = 0);
 
     // splitters
-    virtual void drawSplitter(QPainter *, int, int, int, int,
-			      const QColorGroup &, Orientation);
+    virtual void drawSplitter(QPainter *, int, int, int, int, const QColorGroup &, Orientation);
 
     // tabs
     virtual void drawTab(QPainter *, const QTabBar *, QTab *, bool);
@@ -130,18 +107,16 @@ public:
 protected:
     bool eventFilter(QObject *, QEvent *);
 
-    void drawMenuArrow(QPainter *, ArrowType, bool, int, int, int, int,
-		       const QColorGroup &, bool, const QBrush * = 0);
+    void drawMenuArrow(QPainter *, ArrowType, bool, int, int, int, int, const QColorGroup &, bool, const QBrush * = 0);
 
 
 private:
     KLegacyStylePrivate *priv;
 
 #if defined(Q_DISABLE_COPY)
-    KLegacyStyle( const KLegacyStyle & );
-    KLegacyStyle& operator=( const KLegacyStyle & );
+    KLegacyStyle(const KLegacyStyle &);
+    KLegacyStyle &operator=(const KLegacyStyle &);
 #endif
-
 };
 
 

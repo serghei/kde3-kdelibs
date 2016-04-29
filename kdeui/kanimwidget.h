@@ -52,93 +52,92 @@ class KAnimWidgetPrivate;
  *
  * @author Kurt Granroth <granroth@kde.org>
  */
-class KDEUI_EXPORT KAnimWidget : public QFrame
-{
-  Q_OBJECT
-  Q_PROPERTY( int size READ size WRITE setSize )
-  Q_PROPERTY( QString icons READ icons WRITE setIcons )
+class KDEUI_EXPORT KAnimWidget : public QFrame {
+    Q_OBJECT
+    Q_PROPERTY(int size READ size WRITE setSize)
+    Q_PROPERTY(QString icons READ icons WRITE setIcons)
 
 public:
-  /**
-   * This is the most common constructor.  Pass along the name of the
-   * animated icons to use (e.g., "kde") for the animation and an
-   * optional size to load and you're set.  If you omit the size, the
-   * default size will be used.
-   *
-   * @param icons  The icons name (e.g., "kde") to use for the animation
-   * @param size   The size to load
-   *               You don't have to set it if the parent is a
-   *               KToolBar; in this case it will use the toolbar's
-   *               size.
-   * @param parent The standard parent
-   * @param name   The standard internal name
-   */
-  KAnimWidget( const QString& icons, int size = 0,
-               QWidget *parent = 0L, const char *name = 0L );
+    /**
+     * This is the most common constructor.  Pass along the name of the
+     * animated icons to use (e.g., "kde") for the animation and an
+     * optional size to load and you're set.  If you omit the size, the
+     * default size will be used.
+     *
+     * @param icons  The icons name (e.g., "kde") to use for the animation
+     * @param size   The size to load
+     *               You don't have to set it if the parent is a
+     *               KToolBar; in this case it will use the toolbar's
+     *               size.
+     * @param parent The standard parent
+     * @param name   The standard internal name
+     */
+    KAnimWidget(const QString &icons, int size = 0, QWidget *parent = 0L, const char *name = 0L);
 
-  /**
-   * Destructor
-   */
-  virtual ~KAnimWidget();
+    /**
+     * Destructor
+     */
+    virtual ~KAnimWidget();
 
-  /**
-   * Sets the size of the icons.
-   *
-   * @param size The size of the icons
-   */
-  void setSize( int size );
+    /**
+     * Sets the size of the icons.
+     *
+     * @param size The size of the icons
+     */
+    void setSize(int size);
 
-  /**
-  * Returns the current size.
-  * @since 3.4
-  */
-  int size() const;
+    /**
+    * Returns the current size.
+    * @since 3.4
+    */
+    int size() const;
 
-  /**
-  * Returns the current icons
-  * since 3.4
-  */
-  QString icons() const;
+    /**
+    * Returns the current icons
+    * since 3.4
+    */
+    QString icons() const;
 
-  /**
-   * Sets the name of the animated icons to load.  This will use the
-   * KIconLoader::loadAnimated method for the actual loading.
-   *
-   * @param icons The name of the icons to use for the animation
-   */
-  void setIcons( const QString& icons );
+    /**
+     * Sets the name of the animated icons to load.  This will use the
+     * KIconLoader::loadAnimated method for the actual loading.
+     *
+     * @param icons The name of the icons to use for the animation
+     */
+    void setIcons(const QString &icons);
 
 public slots:
-  /**
-   * Starts the animation from frame 1
-   */
-  void start();
+    /**
+     * Starts the animation from frame 1
+     */
+    void start();
 
-  /**
-   * Stops the animation.  This will also reset the widget to frame 1.
-   */
-  void stop();
+    /**
+     * Stops the animation.  This will also reset the widget to frame 1.
+     */
+    void stop();
 
 signals:
-  void clicked();
+    void clicked();
 
 protected:
-  virtual void drawContents( QPainter *p );
-  virtual void leaveEvent( QEvent *e );
-  virtual void enterEvent( QEvent *e );
-  virtual void hideEvent( QHideEvent *e);
-  virtual void showEvent( QShowEvent *e);
-  virtual void mousePressEvent( QMouseEvent *e );
-  virtual void mouseReleaseEvent( QMouseEvent *e );
+    virtual void drawContents(QPainter *p);
+    virtual void leaveEvent(QEvent *e);
+    virtual void enterEvent(QEvent *e);
+    virtual void hideEvent(QHideEvent *e);
+    virtual void showEvent(QShowEvent *e);
+    virtual void mousePressEvent(QMouseEvent *e);
+    virtual void mouseReleaseEvent(QMouseEvent *e);
 
 protected slots:
-  void slotTimerUpdate();
-  void updateIcons();
+    void slotTimerUpdate();
+    void updateIcons();
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  KAnimWidgetPrivate *d;
+    KAnimWidgetPrivate *d;
 };
 
 #endif // _KANIMWIDGET_H

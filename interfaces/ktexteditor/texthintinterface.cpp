@@ -22,45 +22,43 @@
 
 using namespace KTextEditor;
 
-namespace KTextEditor
-{
-  class PrivateTextHintInterface
-  {
-    public:
-      PrivateTextHintInterface() {}
-      ~PrivateTextHintInterface(){}
-
-  };
+namespace KTextEditor {
+class PrivateTextHintInterface {
+public:
+    PrivateTextHintInterface()
+    {
+    }
+    ~PrivateTextHintInterface()
+    {
+    }
+};
 
 unsigned int TextHintInterface::globalTextHintInterfaceNumber = 0;
 
 TextHintInterface::TextHintInterface()
 {
-  globalTextHintInterfaceNumber++;
-  myTextHintInterfaceNumber = globalTextHintInterfaceNumber++;
+    globalTextHintInterfaceNumber++;
+    myTextHintInterfaceNumber = globalTextHintInterfaceNumber++;
 
-  d = new PrivateTextHintInterface();
+    d = new PrivateTextHintInterface();
 }
 
 TextHintInterface::~TextHintInterface()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int TextHintInterface::textHintInterfaceNumber () const
+unsigned int TextHintInterface::textHintInterfaceNumber() const
 {
-  return myTextHintInterfaceNumber;
+    return myTextHintInterfaceNumber;
 }
 
 
-TextHintInterface *textHintInterface (View *view)
-{                
-  if (!view)
-    return 0;
+TextHintInterface *textHintInterface(View *view)
+{
+    if(!view)
+        return 0;
 
-  return static_cast<TextHintInterface*>(view->qt_cast("KTextEditor::TextHintInterface"));
+    return static_cast< TextHintInterface * >(view->qt_cast("KTextEditor::TextHintInterface"));
 }
-
-
 }
-

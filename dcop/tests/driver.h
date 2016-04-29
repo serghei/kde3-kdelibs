@@ -4,18 +4,16 @@
 #include <qobject.h>
 
 
+class Driver : public QObject, public Test_stub {
+    Q_OBJECT
 
-class Driver : public QObject, public Test_stub
-{
-	Q_OBJECT
+public:
+    Driver(const char *);
+public slots:
+    void test();
 
-	public:
-		Driver(const char*);
-	public slots:
-		void test();
-
-	private:
-	int count;
+private:
+    int count;
 };
 
 #endif // _OPT_KDE-CVS_SRC_KDELIBS_DCOP_TEST_TESTER_H

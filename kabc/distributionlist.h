@@ -31,14 +31,13 @@ class DistributionListManager;
 
 /**
   @short Distribution list of email addresses
- 
+
   This class represents a list of email addresses. Each email address is
   associated with an address book entry. If the address book entry changes, the
   entry in the distribution list is automatically updated.
 */
-class KABC_EXPORT DistributionList
-{
-  public:
+class KABC_EXPORT DistributionList {
+public:
     /**
       @short Distribution List Entry
 
@@ -48,14 +47,17 @@ class KABC_EXPORT DistributionList
     */
     struct Entry
     {
-      typedef QValueList<Entry> List;
+        typedef QValueList< Entry > List;
 
-      Entry() {}
-      Entry( const Addressee &_addressee, const QString &_email ) :
-          addressee( _addressee ), email( _email ) {}
+        Entry()
+        {
+        }
+        Entry(const Addressee &_addressee, const QString &_email) : addressee(_addressee), email(_email)
+        {
+        }
 
-      Addressee addressee;
-      QString email;
+        Addressee addressee;
+        QString email;
     };
 
     /**
@@ -64,7 +66,7 @@ class KABC_EXPORT DistributionList
       @param manager Managing object of this list.
       @param name    Name of this list.
     */
-    DistributionList( DistributionListManager *manager, const QString &name );
+    DistributionList(DistributionListManager *manager, const QString &name);
 
     /**
       Destructor.
@@ -75,7 +77,7 @@ class KABC_EXPORT DistributionList
       Set name of this list. The name is used as key by the
       DistributinListManager.
     */
-    void setName( const QString & );
+    void setName(const QString &);
 
     /**
       Get name of this list.
@@ -86,13 +88,13 @@ class KABC_EXPORT DistributionList
       Insert an entry into this distribution list. If the entry already exists
       nothing happens.
     */
-    void insertEntry( const Addressee &, const QString &email=QString::null );
+    void insertEntry(const Addressee &, const QString &email = QString::null);
 
     /**
       Remove an entry from this distribution list. If the entry doesn't exist
       nothing happens.
     */
-    void removeEntry( const Addressee &, const QString &email=QString::null );
+    void removeEntry(const Addressee &, const QString &email = QString::null);
 
     /**
       Return list of email addresses, which belong to this distributon list.
@@ -106,7 +108,7 @@ class KABC_EXPORT DistributionList
     */
     Entry::List entries() const;
 
-  private:
+private:
     DistributionListManager *mManager;
     QString mName;
 
@@ -115,17 +117,16 @@ class KABC_EXPORT DistributionList
 
 /**
   @short Manager of distribution lists
- 
+
   This class represents a collection of distribution lists, which are associated
   with a given address book.
 */
-class KABC_EXPORT DistributionListManager
-{
-  public:
+class KABC_EXPORT DistributionListManager {
+public:
     /**
       Create manager for given address book.
     */
-    DistributionListManager( AddressBook * );
+    DistributionListManager(AddressBook *);
 
     /**
       Destructor.
@@ -135,19 +136,19 @@ class KABC_EXPORT DistributionListManager
     /**
       Return distribution list with given name.
     */
-    DistributionList *list( const QString &name ); // KDE4: add bool caseSensitive = true
+    DistributionList *list(const QString &name); // KDE4: add bool caseSensitive = true
 
     /**
       Insert distribution list. If a list with this name already exists, nothing
       happens. The passed object is deleted by the manager.
     */
-    void insert( DistributionList * );
+    void insert(DistributionList *);
 
     /**
       Remove distribution list. If a list with this name doesn't exist, nothing
       happens.
     */
-    void remove( DistributionList * );
+    void remove(DistributionList *);
 
     /**
       Return names of all distribution lists managed by this manager.
@@ -164,11 +165,11 @@ class KABC_EXPORT DistributionListManager
     */
     bool save();
 
-  private:
+private:
     class DistributionListManagerPrivate;
     DistributionListManagerPrivate *d;
 
-    QPtrList<DistributionList> mLists;
+    QPtrList< DistributionList > mLists;
 };
 
 /**
@@ -186,17 +187,16 @@ class KABC_EXPORT DistributionListManager
   \endcode
 */
 
-class KABC_EXPORT DistributionListWatcher : public QObject
-{
-  Q_OBJECT
+class KABC_EXPORT DistributionListWatcher : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Returns the watcher object.
      */
     static DistributionListWatcher *self();
 
-  signals:
+signals:
     /**
      * This signal is emmitted whenever the distribution lists has
      * changed (if a list was added or removed, when a list was
@@ -204,14 +204,13 @@ class KABC_EXPORT DistributionListWatcher : public QObject
      */
     void changed();
 
-  protected:
+protected:
     DistributionListWatcher();
     ~DistributionListWatcher();
 
-  private:
-    static DistributionListWatcher* mSelf;
+private:
+    static DistributionListWatcher *mSelf;
     KDirWatch *mDirWatch;
 };
-
 }
 #endif

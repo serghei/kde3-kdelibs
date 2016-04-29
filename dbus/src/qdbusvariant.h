@@ -53,20 +53,21 @@
  * variant.signature = variant.value.buildDBusSignature();
  * @endcode
  */
-class QDBUS_EXPORT QDBusVariant
-{
+class QDBUS_EXPORT QDBusVariant {
 public:
     /**
      * @brief Creates an empty variant object
      */
-    QDBusVariant() {}
+    QDBusVariant()
+    {
+    }
 
     /**
      * @brief Copies the given @p other variant object
      *
      * @param other the variant object to copy from
      */
-    QDBusVariant(const QDBusVariant& other)
+    QDBusVariant(const QDBusVariant &other)
     {
         signature = other.signature;
         value = other.value;
@@ -80,9 +81,10 @@ public:
      * @return @c true if both #signature and #value are equal, otherwise
      *         @c false
      */
-    inline bool operator==(const QDBusVariant& other) const
+    inline bool operator==(const QDBusVariant &other) const
     {
-        if (&other == this) return true;
+        if(&other == this)
+            return true;
 
         return signature == other.signature && value == other.value;
     }
@@ -95,9 +97,10 @@ public:
      * @return @c true if either #signature or #value is different, otherwise
      *         @c false
      */
-    inline bool operator!=(const QDBusVariant& other) const
+    inline bool operator!=(const QDBusVariant &other) const
     {
-        if (&other == this) return false;
+        if(&other == this)
+            return false;
 
         return signature != other.signature || value != other.value;
     }
@@ -117,4 +120,3 @@ public:
 };
 
 #endif
-

@@ -45,20 +45,17 @@ bool CSS2AzimuthImpl::behind() const
 {
 }
 
-void CSS2AzimuthImpl::setAngleValue( const unsigned short &unitType, const float &floatValue )
+void CSS2AzimuthImpl::setAngleValue(const unsigned short &unitType, const float &floatValue)
 {
 }
 
-float CSS2AzimuthImpl::getAngleValue( const unsigned short &unitType )
+float CSS2AzimuthImpl::getAngleValue(const unsigned short &unitType)
 {
 }
 
-void CSS2AzimuthImpl::setIdentifier( const DOMString &identifier, const bool &behind )
+void CSS2AzimuthImpl::setIdentifier(const DOMString &identifier, const bool &behind)
 {
 }
-
-
-
 
 
 #include "CSS2BackgroundPositionImpl.h"
@@ -86,28 +83,25 @@ DOMString CSS2BackgroundPositionImpl::verticalIdentifier() const
 {
 }
 
-float CSS2BackgroundPositionImpl::getHorizontalPosition( const float &horizontalType )
+float CSS2BackgroundPositionImpl::getHorizontalPosition(const float &horizontalType)
 {
 }
 
-float CSS2BackgroundPositionImpl::getVerticalPosition( const float &verticalType )
+float CSS2BackgroundPositionImpl::getVerticalPosition(const float &verticalType)
 {
 }
 
-void CSS2BackgroundPositionImpl::setHorizontalPosition( const unsigned short &horizontalType, const float &value )
+void CSS2BackgroundPositionImpl::setHorizontalPosition(const unsigned short &horizontalType, const float &value)
 {
 }
 
-void CSS2BackgroundPositionImpl::setVerticalPosition( const unsigned short &verticalType, const float &value )
+void CSS2BackgroundPositionImpl::setVerticalPosition(const unsigned short &verticalType, const float &value)
 {
 }
 
-void CSS2BackgroundPositionImpl::setPositionIdentifier( const DOMString &horizontalIdentifier, const DOMString &verticalIdentifier )
+void CSS2BackgroundPositionImpl::setPositionIdentifier(const DOMString &horizontalIdentifier, const DOMString &verticalIdentifier)
 {
 }
-
-
-
 
 
 #include "CSS2BorderSpacingImpl.h"
@@ -127,28 +121,25 @@ unsigned short CSS2BorderSpacingImpl::verticalType() const
 {
 }
 
-float CSS2BorderSpacingImpl::getHorizontalSpacing( const float &horizontalType )
+float CSS2BorderSpacingImpl::getHorizontalSpacing(const float &horizontalType)
 {
 }
 
-float CSS2BorderSpacingImpl::getVerticalSpacing( const float &verticalType )
+float CSS2BorderSpacingImpl::getVerticalSpacing(const float &verticalType)
 {
 }
 
-void CSS2BorderSpacingImpl::setHorizontalSpacing( const unsigned short &horizontalType, const float &value )
+void CSS2BorderSpacingImpl::setHorizontalSpacing(const unsigned short &horizontalType, const float &value)
 {
 }
 
-void CSS2BorderSpacingImpl::setVerticalSpacing( const unsigned short &verticalType, const float &value )
+void CSS2BorderSpacingImpl::setVerticalSpacing(const unsigned short &verticalType, const float &value)
 {
 }
 
 void CSS2BorderSpacingImpl::setInherit()
 {
 }
-
-
-
 
 
 #include "CSS2CounterIncrementImpl.h"
@@ -164,12 +155,9 @@ short CSS2CounterIncrementImpl::increment() const
 {
 }
 
-void CSS2CounterIncrementImpl::setIncrement( const short & )
+void CSS2CounterIncrementImpl::setIncrement(const short &)
 {
 }
-
-
-
 
 
 #include "CSS2CounterResetImpl.h"
@@ -185,11 +173,9 @@ short CSS2CounterResetImpl::reset() const
 {
 }
 
-void CSS2CounterResetImpl::setReset( const short & )
+void CSS2CounterResetImpl::setReset(const short &)
 {
 }
-
-
 
 
 #include "CSSValueList.h"
@@ -206,7 +192,7 @@ unsigned short CSS2CursorImpl::cursorType() const
 {
 }
 
-void CSS2CursorImpl::setCursorType( const unsigned short & )
+void CSS2CursorImpl::setCursorType(const unsigned short &)
 {
 }
 
@@ -228,8 +214,6 @@ CSSValueList CSS2FontFaceSrcImpl::format() const
 }
 
 
-
-
 #include "CSS2FontFaceWidthsImpl.h"
 CSS2FontFaceWidthsImpl::CSS2FontFaceWidthsImpl(DocumentImpl *doc)
 {
@@ -242,8 +226,6 @@ CSS2FontFaceWidthsImpl::~CSS2FontFaceWidthsImpl()
 CSSValueList CSS2FontFaceWidthsImpl::numbers() const
 {
 }
-
-
 
 
 #include "CSS2PageSizeImpl.h"
@@ -267,27 +249,25 @@ DOMString CSS2PageSizeImpl::identifier() const
 {
 }
 
-float CSS2PageSizeImpl::getWidth( const float &widthType )
+float CSS2PageSizeImpl::getWidth(const float &widthType)
 {
 }
 
-float CSS2PageSizeImpl::getHeightSize( const float &heightType )
+float CSS2PageSizeImpl::getHeightSize(const float &heightType)
 {
 }
 
-void CSS2PageSizeImpl::setWidthSize( const unsigned short &widthType, const float &value )
+void CSS2PageSizeImpl::setWidthSize(const unsigned short &widthType, const float &value)
 {
 }
 
-void CSS2PageSizeImpl::setHeightSize( const unsigned short &heightType, const float &value )
+void CSS2PageSizeImpl::setHeightSize(const unsigned short &heightType, const float &value)
 {
 }
 
-void CSS2PageSizeImpl::setIdentifier( const DOMString &identifier )
+void CSS2PageSizeImpl::setIdentifier(const DOMString &identifier)
 {
 }
-
-
 
 
 #include "CSS2PlayDuringImpl.h"
@@ -307,7 +287,7 @@ bool CSS2PlayDuringImpl::mix() const
 {
 }
 
-void CSS2PlayDuringImpl::setMix( const bool & )
+void CSS2PlayDuringImpl::setMix(const bool &)
 {
 }
 
@@ -315,12 +295,9 @@ bool CSS2PlayDuringImpl::repeat() const
 {
 }
 
-void CSS2PlayDuringImpl::setRepeat( const bool & )
+void CSS2PlayDuringImpl::setRepeat(const bool &)
 {
 }
-
-
-
 
 
 #include "CSS2PropertiesImpl.h"
@@ -331,8 +308,6 @@ CSS2PropertiesImpl::CSS2PropertiesImpl(DocumentImpl *doc)
 CSS2PropertiesImpl::~CSS2PropertiesImpl()
 {
 }
-
-
 
 
 #include "CSSValue.h"
@@ -361,6 +336,3 @@ CSSValue CSS2TextShadowImpl::vertical() const
 CSSValue CSS2TextShadowImpl::blur() const
 {
 }
-
-
-

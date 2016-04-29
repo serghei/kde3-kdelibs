@@ -26,83 +26,77 @@
 
 
 /* macros */
-#if (GLIB_SIZEOF_LONG > 4)
-#define HASH_LONG(l)	(l + (l >> 32))
+#if(GLIB_SIZEOF_LONG > 4)
+#define HASH_LONG(l) (l + (l >> 32))
 #else
-#define HASH_LONG(l)	(l)
+#define HASH_LONG(l) (l)
 #endif
 
 
 /* --- variables --- */
-static GslMutex    fdpool_mutex = { 0, };
+static GslMutex fdpool_mutex = {
+    0,
+};
 static GHashTable *hfile_ht = NULL;
 
 
 /* --- functions --- */
-static guint
-hfile_hash (gconstpointer key)
+static guint hfile_hash(gconstpointer key)
 {
-  const GslHFile *hfile = key;
-  guint h;
+    const GslHFile *hfile = key;
+    guint h;
 
-  h = HASH_LONG (hfile->mtime);
-  h ^= g_str_hash (hfile->file_name);
-  h ^= HASH_LONG (hfile->n_bytes);
+    h = HASH_LONG(hfile->mtime);
+    h ^= g_str_hash(hfile->file_name);
+    h ^= HASH_LONG(hfile->n_bytes);
 
-  return h;
+    return h;
 }
 
-static gboolean
-hfile_equals (gconstpointer key1,
-	      gconstpointer key2)
+static gboolean hfile_equals(gconstpointer key1, gconstpointer key2)
 {
-  const GslHFile *hfile1 = key1;
-  const GslHFile *hfile2 = key2;
+    const GslHFile *hfile1 = key1;
+    const GslHFile *hfile2 = key2;
 
-  return (hfile1->mtime == hfile2->mtime &&
-	  hfile1->n_bytes == hfile2->n_bytes &&
-	  strcmp (hfile1->file_name, hfile2->file_name) == 0);
+    return (hfile1->mtime == hfile2->mtime && hfile1->n_bytes == hfile2->n_bytes && strcmp(hfile1->file_name, hfile2->file_name) == 0);
 }
 
-void
-_gsl_init_fd_pool (void)
+void _gsl_init_fd_pool(void)
 {
-  g_assert (hfile_ht == NULL);
+    g_assert(hfile_ht == NULL);
 
-  gsl_mutex_init (&fdpool_mutex);
-  hfile_ht = g_hash_table_new (hfile_hash, hfile_equals);
+    gsl_mutex_init(&fdpool_mutex);
+    hfile_ht = g_hash_table_new(hfile_hash, hfile_equals);
 }
 
-static gboolean
-stat_fd (gint     fd,
-	 GTime   *mtime,
-	 GslLong *n_bytes)
+static gboolean stat_fd(gint fd, GTime *mtime, GslLong *n_bytes)
 {
-  struct stat statbuf = { 0, };
+    struct stat statbuf = {
+        0,
+    };
 
-  if (fstat (fd, &statbuf) < 0)
-    return FALSE;	/* have errno */
-  if (mtime)
-    *mtime = statbuf.st_mtime;
-  if (n_bytes)
-    *n_bytes = statbuf.st_size;
-  return TRUE;
+    if(fstat(fd, &statbuf) < 0)
+        return FALSE; /* have errno */
+    if(mtime)
+        *mtime = statbuf.st_mtime;
+    if(n_bytes)
+        *n_bytes = statbuf.st_size;
+    return TRUE;
 }
 
-static gboolean
-stat_file (const gchar *file_name,
-	   GTime       *mtime,
-	   GslLong     *n_bytes)
+static gboolean stat_file(const gchar *file_name, GTime *mtime, GslLong *n_bytes)
 {
-  struct stat statbuf = { 0, };
+    struct stat statbuf = {
+        0,
+    };
 
-  if (stat (file_name, &statbuf) < 0)
-    return FALSE;	/* have errno */
-  if (mtime)
-    *mtime = statbuf.st_mtime;
-  if (n_bytes)
-    *n_bytes = statbuf.st_size;
-  return TRUE;
+    if(stat(file_name, &statbuf) < 0)
+        return FALSE; /* have errno */
+    if(mtime)
+        *mtime = statbuf.st_mtime;
+    if(n_bytes)
+        *n_bytes = statbuf.st_size;
+    return TRUE;
 }
 
 /**
@@ -118,53 +112,52 @@ stat_file (const gchar *file_name,
  * single unix file descriptor as long as the file wasn't modified meanwhile.
  * This function is MT-safe and may be called from any thread.
  */
-GslHFile*
-gsl_hfile_open (const gchar *file_name)
+GslHFile *gsl_hfile_open(const gchar *file_name)
 {
-  GslHFile key, *hfile;
-  gint ret_errno;
+    GslHFile key, *hfile;
+    gint ret_errno;
 
-  errno = EFAULT;
-  g_return_val_if_fail (file_name != NULL, NULL);
+    errno = EFAULT;
+    g_return_val_if_fail(file_name != NULL, NULL);
 
-  key.file_name = (gchar*) file_name;
-  if (!stat_file (file_name, &key.mtime, &key.n_bytes))
-    return NULL;	/* errno from stat() */
+    key.file_name = (gchar *)file_name;
+    if(!stat_file(file_name, &key.mtime, &key.n_bytes))
+        return NULL; /* errno from stat() */
 
-  GSL_SYNC_LOCK (&fdpool_mutex);
-  hfile = g_hash_table_lookup (hfile_ht, &key);
-  if (hfile)
+    GSL_SYNC_LOCK(&fdpool_mutex);
+    hfile = g_hash_table_lookup(hfile_ht, &key);
+    if(hfile)
     {
-      GSL_SYNC_LOCK (&hfile->mutex);
-      hfile->ocount++;
-      GSL_SYNC_UNLOCK (&hfile->mutex);
-      ret_errno = 0;
+        GSL_SYNC_LOCK(&hfile->mutex);
+        hfile->ocount++;
+        GSL_SYNC_UNLOCK(&hfile->mutex);
+        ret_errno = 0;
     }
-  else
+    else
     {
-      gint fd;
+        gint fd;
 
-      fd = open (file_name, O_RDONLY | O_NOCTTY, 0);
-      if (fd >= 0)
-	{
-	  hfile = gsl_new_struct0 (GslHFile, 1);
-	  hfile->file_name = g_strdup (file_name);
-	  hfile->mtime = key.mtime;
-	  hfile->n_bytes = key.n_bytes;
-	  hfile->cpos = 0;
-	  hfile->fd = fd;
-	  hfile->ocount = 1;
-	  gsl_mutex_init (&hfile->mutex);
-	  g_hash_table_insert (hfile_ht, hfile, hfile);
-	  ret_errno = 0;
-	}
-      else
-	ret_errno = errno;
+        fd = open(file_name, O_RDONLY | O_NOCTTY, 0);
+        if(fd >= 0)
+        {
+            hfile = gsl_new_struct0(GslHFile, 1);
+            hfile->file_name = g_strdup(file_name);
+            hfile->mtime = key.mtime;
+            hfile->n_bytes = key.n_bytes;
+            hfile->cpos = 0;
+            hfile->fd = fd;
+            hfile->ocount = 1;
+            gsl_mutex_init(&hfile->mutex);
+            g_hash_table_insert(hfile_ht, hfile, hfile);
+            ret_errno = 0;
+        }
+        else
+            ret_errno = errno;
     }
-  GSL_SYNC_UNLOCK (&fdpool_mutex);
+    GSL_SYNC_UNLOCK(&fdpool_mutex);
 
-  errno = ret_errno;
-  return hfile;
+    errno = ret_errno;
+    return hfile;
 }
 
 /**
@@ -174,40 +167,38 @@ gsl_hfile_open (const gchar *file_name)
  * Close and destroy a #GslHFile.
  * This function is MT-safe and may be called from any thread.
  */
-void
-gsl_hfile_close (GslHFile *hfile)
+void gsl_hfile_close(GslHFile *hfile)
 {
-  gboolean destroy = FALSE;
+    gboolean destroy = FALSE;
 
-  g_return_if_fail (hfile != NULL);
-  g_return_if_fail (hfile->ocount > 0);
+    g_return_if_fail(hfile != NULL);
+    g_return_if_fail(hfile->ocount > 0);
 
-  GSL_SYNC_LOCK (&fdpool_mutex);
-  GSL_SYNC_LOCK (&hfile->mutex);
-  if (hfile->ocount > 1)
-    hfile->ocount--;
-  else
+    GSL_SYNC_LOCK(&fdpool_mutex);
+    GSL_SYNC_LOCK(&hfile->mutex);
+    if(hfile->ocount > 1)
+        hfile->ocount--;
+    else
     {
-      if (!g_hash_table_remove (hfile_ht, hfile))
-	g_warning ("%s: failed to unlink hashed file (%p)",
-		   G_STRLOC, hfile);
-      else
-	{
-	  hfile->ocount = 0;
-	  destroy = TRUE;
-	}
+        if(!g_hash_table_remove(hfile_ht, hfile))
+            g_warning("%s: failed to unlink hashed file (%p)", G_STRLOC, hfile);
+        else
+        {
+            hfile->ocount = 0;
+            destroy = TRUE;
+        }
     }
-  GSL_SYNC_UNLOCK (&hfile->mutex);
-  GSL_SYNC_UNLOCK (&fdpool_mutex);
+    GSL_SYNC_UNLOCK(&hfile->mutex);
+    GSL_SYNC_UNLOCK(&fdpool_mutex);
 
-  if (destroy)
+    if(destroy)
     {
-      gsl_mutex_destroy (&hfile->mutex);
-      close (hfile->fd);
-      g_free (hfile->file_name);
-      gsl_delete_struct (GslHFile, hfile);
+        gsl_mutex_destroy(&hfile->mutex);
+        close(hfile->fd);
+        g_free(hfile->file_name);
+        gsl_delete_struct(GslHFile, hfile);
     }
-  errno = 0;
+    errno = 0;
 }
 
 /**
@@ -222,72 +213,68 @@ gsl_hfile_close (GslHFile *hfile)
  * Read a block of bytes from a GslHFile.
  * This function is MT-safe and may be called from any thread.
  */
-GslLong
-gsl_hfile_pread (GslHFile *hfile,
-		 GslLong   offset,
-		 GslLong   n_bytes,
-		 gpointer  bytes)
+GslLong gsl_hfile_pread(GslHFile *hfile, GslLong offset, GslLong n_bytes, gpointer bytes)
 {
-  GslLong ret_bytes = -1;
-  gint ret_errno;
+    GslLong ret_bytes = -1;
+    gint ret_errno;
 
-  errno = EFAULT;
-  g_return_val_if_fail (hfile != NULL, -1);
-  g_return_val_if_fail (hfile->ocount > 0, -1);
-  g_return_val_if_fail (offset >= 0, -1);
-  if (offset >= hfile->n_bytes || n_bytes < 1)
+    errno = EFAULT;
+    g_return_val_if_fail(hfile != NULL, -1);
+    g_return_val_if_fail(hfile->ocount > 0, -1);
+    g_return_val_if_fail(offset >= 0, -1);
+    if(offset >= hfile->n_bytes || n_bytes < 1)
     {
-      errno = 0;
-      return 0;
+        errno = 0;
+        return 0;
     }
-  g_return_val_if_fail (bytes != NULL, -1);
+    g_return_val_if_fail(bytes != NULL, -1);
 
-  GSL_SYNC_LOCK (&hfile->mutex);
-  if (hfile->ocount)
+    GSL_SYNC_LOCK(&hfile->mutex);
+    if(hfile->ocount)
     {
-      if (hfile->cpos != offset)
-	{
-	  hfile->cpos = lseek (hfile->fd, offset, SEEK_SET);
-	  if (hfile->cpos < 0 && errno != EINVAL)
-	    {
-	      ret_errno = errno;
-	      GSL_SYNC_UNLOCK (&hfile->mutex);
-	      errno = ret_errno;
-	      return -1;
-	    }
-	}
-      if (hfile->cpos == offset)
-	{
-	  do
-	    ret_bytes = read (hfile->fd, bytes, n_bytes);
-	  while (ret_bytes < 0 && errno == EINTR);
-	  if (ret_bytes < 0)
-	    {
-	      ret_errno = errno;
-	      ret_bytes = -1;
-	    }
-	  else
-	    {
-	      ret_errno = 0;
-	      hfile->cpos += ret_bytes;
-	    }
-	}
-      else	/* this should only happen if the file changed since open() */
-	{
-	  hfile->cpos = -1;
-	  if (offset + n_bytes > hfile->n_bytes)
-	    n_bytes = hfile->n_bytes - offset;
-	  memset (bytes, 0, n_bytes);
-	  ret_bytes = n_bytes;
-	  ret_errno = 0;
-	}
+        if(hfile->cpos != offset)
+        {
+            hfile->cpos = lseek(hfile->fd, offset, SEEK_SET);
+            if(hfile->cpos < 0 && errno != EINVAL)
+            {
+                ret_errno = errno;
+                GSL_SYNC_UNLOCK(&hfile->mutex);
+                errno = ret_errno;
+                return -1;
+            }
+        }
+        if(hfile->cpos == offset)
+        {
+            do
+                ret_bytes = read(hfile->fd, bytes, n_bytes);
+            while(ret_bytes < 0 && errno == EINTR);
+            if(ret_bytes < 0)
+            {
+                ret_errno = errno;
+                ret_bytes = -1;
+            }
+            else
+            {
+                ret_errno = 0;
+                hfile->cpos += ret_bytes;
+            }
+        }
+        else /* this should only happen if the file changed since open() */
+        {
+            hfile->cpos = -1;
+            if(offset + n_bytes > hfile->n_bytes)
+                n_bytes = hfile->n_bytes - offset;
+            memset(bytes, 0, n_bytes);
+            ret_bytes = n_bytes;
+            ret_errno = 0;
+        }
     }
-  else
-    ret_errno = EFAULT;
-  GSL_SYNC_UNLOCK (&hfile->mutex);
+    else
+        ret_errno = EFAULT;
+    GSL_SYNC_UNLOCK(&hfile->mutex);
 
-  errno = ret_errno;
-  return ret_bytes;
+    errno = ret_errno;
+    return ret_bytes;
 }
 
 /**
@@ -300,21 +287,20 @@ gsl_hfile_pread (GslHFile *hfile,
  * is to reduce the amount of opened unix file descriptors by using
  * a #GslHFile for the actual IO.
  */
-GslRFile*
-gsl_rfile_open (const gchar *file_name)
+GslRFile *gsl_rfile_open(const gchar *file_name)
 {
-  GslHFile *hfile = gsl_hfile_open (file_name);
-  GslRFile *rfile;
+    GslHFile *hfile = gsl_hfile_open(file_name);
+    GslRFile *rfile;
 
-  if (!hfile)
-    rfile = NULL;
-  else
+    if(!hfile)
+        rfile = NULL;
+    else
     {
-      rfile = gsl_new_struct0 (GslRFile, 1);
-      rfile->hfile = hfile;
-      rfile->offset = 0;
+        rfile = gsl_new_struct0(GslRFile, 1);
+        rfile->hfile = hfile;
+        rfile->offset = 0;
     }
-  return rfile;
+    return rfile;
 }
 
 /**
@@ -324,14 +310,13 @@ gsl_rfile_open (const gchar *file_name)
  *
  * Retrive the file name used to open @rfile.
  */
-gchar*
-gsl_rfile_name (GslRFile *rfile)
+gchar *gsl_rfile_name(GslRFile *rfile)
 {
-  errno = EFAULT;
-  g_return_val_if_fail (rfile != NULL, NULL);
+    errno = EFAULT;
+    g_return_val_if_fail(rfile != NULL, NULL);
 
-  errno = 0;
-  return rfile->hfile->file_name;
+    errno = 0;
+    return rfile->hfile->file_name;
 }
 
 /**
@@ -342,20 +327,18 @@ gsl_rfile_name (GslRFile *rfile)
  *
  * Set the current #GslRFile seek position.
  */
-GslLong
-gsl_rfile_seek_set (GslRFile *rfile,
-		    GslLong   offset)
+GslLong gsl_rfile_seek_set(GslRFile *rfile, GslLong offset)
 {
-  GslLong l;
+    GslLong l;
 
-  errno = EFAULT;
-  g_return_val_if_fail (rfile != NULL, 0);
+    errno = EFAULT;
+    g_return_val_if_fail(rfile != NULL, 0);
 
-  l = rfile->hfile->n_bytes;
-  rfile->offset = CLAMP (offset, 0, l);
+    l = rfile->hfile->n_bytes;
+    rfile->offset = CLAMP(offset, 0, l);
 
-  errno = 0;
-  return rfile->offset;
+    errno = 0;
+    return rfile->offset;
 }
 
 /**
@@ -365,14 +348,13 @@ gsl_rfile_seek_set (GslRFile *rfile,
  *
  * Retrive the current #GslRFile seek position.
  */
-GslLong
-gsl_rfile_position (GslRFile *rfile)
+GslLong gsl_rfile_position(GslRFile *rfile)
 {
-  errno = EFAULT;
-  g_return_val_if_fail (rfile != NULL, 0);
+    errno = EFAULT;
+    g_return_val_if_fail(rfile != NULL, 0);
 
-  errno = 0;
-  return rfile->offset;
+    errno = 0;
+    return rfile->offset;
 }
 
 /**
@@ -382,18 +364,17 @@ gsl_rfile_position (GslRFile *rfile)
  *
  * Retrive the file length of @rfile in bytes.
  */
-GslLong
-gsl_rfile_length (GslRFile *rfile)
+GslLong gsl_rfile_length(GslRFile *rfile)
 {
-  GslLong l;
+    GslLong l;
 
-  errno = EFAULT;
-  g_return_val_if_fail (rfile != NULL, 0);
+    errno = EFAULT;
+    g_return_val_if_fail(rfile != NULL, 0);
 
-  l = rfile->hfile->n_bytes;
+    l = rfile->hfile->n_bytes;
 
-  errno = 0;
-  return l;
+    errno = 0;
+    return l;
 }
 
 /**
@@ -407,16 +388,12 @@ gsl_rfile_length (GslRFile *rfile)
  *
  * Read a block of bytes from a GslRFile at a specified position.
  */
-GslLong
-gsl_rfile_pread (GslRFile *rfile,
-		 GslLong   offset,
-		 GslLong   n_bytes,
-		 gpointer  bytes)
+GslLong gsl_rfile_pread(GslRFile *rfile, GslLong offset, GslLong n_bytes, gpointer bytes)
 {
-  errno = EFAULT;
-  g_return_val_if_fail (rfile != NULL, -1);
+    errno = EFAULT;
+    g_return_val_if_fail(rfile != NULL, -1);
 
-  return gsl_hfile_pread (rfile->hfile, offset, n_bytes, bytes);
+    return gsl_hfile_pread(rfile->hfile, offset, n_bytes, bytes);
 }
 
 /**
@@ -430,20 +407,17 @@ gsl_rfile_pread (GslRFile *rfile,
  * Read a block of bytes from a GslRFile from the current seek position
  * and advance the seek position.
  */
-GslLong
-gsl_rfile_read (GslRFile *rfile,
-		GslLong   n_bytes,
-		gpointer  bytes)
+GslLong gsl_rfile_read(GslRFile *rfile, GslLong n_bytes, gpointer bytes)
 {
-  GslLong l;
+    GslLong l;
 
-  errno = EFAULT;
-  g_return_val_if_fail (rfile != NULL, -1);
+    errno = EFAULT;
+    g_return_val_if_fail(rfile != NULL, -1);
 
-  l = gsl_hfile_pread (rfile->hfile, rfile->offset, n_bytes, bytes);
-  if (l > 0)
-    rfile->offset += l;
-  return l;
+    l = gsl_hfile_pread(rfile->hfile, rfile->offset, n_bytes, bytes);
+    if(l > 0)
+        rfile->offset += l;
+    return l;
 }
 
 /**
@@ -452,13 +426,12 @@ gsl_rfile_read (GslRFile *rfile,
  *
  * Close and destroy a #GslRFile.
  */
-void
-gsl_rfile_close (GslRFile *rfile)
+void gsl_rfile_close(GslRFile *rfile)
 {
-  errno = EFAULT;
-  g_return_if_fail (rfile != NULL);
+    errno = EFAULT;
+    g_return_if_fail(rfile != NULL);
 
-  gsl_hfile_close (rfile->hfile);
-  gsl_delete_struct (GslRFile, rfile);
-  errno = 0;
+    gsl_hfile_close(rfile->hfile);
+    gsl_delete_struct(GslRFile, rfile);
+    errno = 0;
 }

@@ -13,30 +13,32 @@
 
 // END of region marker
 
-private void create()
+private
+void create()
 {
 // Some Preprocessor stuff:
-#define SOME_STUFF if(foo("bar")) \
-                   { \
-                       bar("foo"); \
-                   } // Preprocessor, Keyword, Preprocessor-String, Multiline
+#define SOME_STUFF                                                                                                                                   \
+    if(foo("bar"))                                                                                                                                   \
+    {                                                                                                                                                \
+        bar("foo");                                                                                                                                  \
+    } // Preprocessor, Keyword, Preprocessor-String, Multiline
 
-    // Some closures:
-    #'create;
-    #'?!;
+// Some closures:
+#'create;
+#'?!;
 
 
     /* Some other Data Types: */
 
-    int i = 1;            // Integer.
-    float b = 2.34;       // Float.
-    int c = 0b001;        // Binary
-    int e = 0x019Beef;    // Hexadecimal
-    int f = 0o2345;       // Octal
-    string a = "Wheee";   // String
-    string x = "Wheee\
-     heee";               // Multi-Line String, again, don't use this.
-
+    int i = 1;          // Integer.
+    float b = 2.34;     // Float.
+    int c = 0b001;      // Binary
+    int e = 0x019Beef;  // Hexadecimal
+    int f = 0o2345;     // Octal
+    string a = "Wheee"; // String
+    string x =
+        "Wheee\
+     heee"; // Multi-Line String, again, don't use this.
 
 
     /* Some keywords: */

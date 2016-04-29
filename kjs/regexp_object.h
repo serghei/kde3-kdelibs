@@ -27,47 +27,59 @@
 #include "regexp.h"
 
 namespace KJS {
-  class ExecState;
-  class RegExpPrototypeImp : public ObjectImp {
-  public:
-    RegExpPrototypeImp(ExecState *exec,
-                       ObjectPrototypeImp *objProto,
-                       FunctionPrototypeImp *funcProto);
-    virtual const ClassInfo *classInfo() const { return &info; }
+class ExecState;
+class RegExpPrototypeImp : public ObjectImp {
+public:
+    RegExpPrototypeImp(ExecState *exec, ObjectPrototypeImp *objProto, FunctionPrototypeImp *funcProto);
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-  };
+};
 
-  class RegExpProtoFuncImp : public InternalFunctionImp {
-  public:
-    RegExpProtoFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto, int i, int len,
-                       const Identifier &_ident);
+class RegExpProtoFuncImp : public InternalFunctionImp {
+public:
+    RegExpProtoFuncImp(ExecState *exec, FunctionPrototypeImp *funcProto, int i, int len, const Identifier &_ident);
 
     virtual bool implementsCall() const;
     virtual Value call(ExecState *exec, Object &thisObj, const List &args);
 
-    enum { Exec, Test, ToString, Compile };
-  private:
-    int id;
-  };
+    enum
+    {
+        Exec,
+        Test,
+        ToString,
+        Compile
+    };
 
-  class RegExpImp : public ObjectImp {
-  public:
+private:
+    int id;
+};
+
+class RegExpImp : public ObjectImp {
+public:
     RegExpImp(RegExpPrototypeImp *regexpProto);
     ~RegExpImp();
     void setRegExp(RegExp *r);
-    RegExp* regExp() { return reg; }
+    RegExp *regExp()
+    {
+        return reg;
+    }
 
-    virtual const ClassInfo *classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-  private:
-    RegExp *reg;
-  };
 
-  class RegExpObjectImp : public InternalFunctionImp {
-  public:
-    RegExpObjectImp(ExecState *exec,
-                    FunctionPrototypeImp *funcProto,
-                    RegExpPrototypeImp *regProto);
+private:
+    RegExp *reg;
+};
+
+class RegExpObjectImp : public InternalFunctionImp {
+public:
+    RegExpObjectImp(ExecState *exec, FunctionPrototypeImp *funcProto, RegExpPrototypeImp *regProto);
     virtual ~RegExpObjectImp();
     virtual bool implementsConstruct() const;
     virtual Object construct(ExecState *exec, const List &args);
@@ -76,21 +88,25 @@ namespace KJS {
 
     Value get(ExecState *exec, const Identifier &p) const;
     bool hasProperty(ExecState *exec, const Identifier &propertyName) const;
-    int ** registerRegexp( const RegExp* re, const UString& s );
-    void setSubPatterns(int num) { lastNrSubPatterns = num; }
+    int **registerRegexp(const RegExp *re, const UString &s);
+    void setSubPatterns(int num)
+    {
+        lastNrSubPatterns = num;
+    }
     Object arrayOfMatches(ExecState *exec, const UString &result) const;
 
     /*
      Attempts to create a new regular expression engine for the string p
-     and the flags stored in flagsInput. If this succeeds, it returns the 
+     and the flags stored in flagsInput. If this succeeds, it returns the
      engine. If not, it returns 0, and raises an exception in exec
     */
-    static RegExp* makeEngine(ExecState *exec, const UString &p, const Value &flagsInput);
-  private:
+    static RegExp *makeEngine(ExecState *exec, const UString &p, const Value &flagsInput);
+
+private:
     UString lastString;
     int *lastOvector;
     unsigned int lastNrSubPatterns;
-  };
+};
 
 } // namespace
 

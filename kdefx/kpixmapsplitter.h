@@ -50,8 +50,7 @@ class KPixmapSplitterPrivate;
  *
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-class KDEFX_EXPORT KPixmapSplitter
-{
+class KDEFX_EXPORT KPixmapSplitter {
 public:
     /**
      * Constructor, does nothing but initialize some default-values.
@@ -62,49 +61,55 @@ public:
     /**
      * Sets the pixmap to be split.
      */
-    void setPixmap( const QPixmap& pixmap );
+    void setPixmap(const QPixmap &pixmap);
 
     /**
      * @returns the pixmap that has been set via setPixmap().
      */
-    const QPixmap& pixmap() const { return m_pixmap; }
+    const QPixmap &pixmap() const
+    {
+        return m_pixmap;
+    }
 
     /**
      * Sets the size of the items you want to get out of the given pixmap.
      * The QRect of #coordinates(int) will have the width and height of exactly
      * this @p size.
      */
-    void setItemSize( const QSize& size );
+    void setItemSize(const QSize &size);
 
     /**
      * @returns the set size of the items (coordinates) you want to get
      * out of the given pixmap.
      */
-    QSize itemSize() const { return m_itemSize; }
+    QSize itemSize() const
+    {
+        return m_itemSize;
+    }
 
     /**
      * If there is space between rows in the given pixmap, you have to specify
      * how many pixels there are.
      */
-    void setVSpacing( int spacing );
+    void setVSpacing(int spacing);
 
     /**
      * If there is space between columns in the given pixmap, you have to
      * specify how many pixels there are.
      */
-    void setHSpacing( int spacing );
+    void setHSpacing(int spacing);
 
     /**
      * @returns the coordinates of the item at position pos in the given
      * pixmap.
      */
-    QRect coordinates( int pos );
+    QRect coordinates(int pos);
 
     /**
      * Overloaded for convenience. Returns the item at the position of the
      * given character (when using a latin1 font-pixmap)
      */
-    QRect coordinates( const QChar& ch );
+    QRect coordinates(const QChar &ch);
 
 private:
     QPixmap m_pixmap;
@@ -117,7 +122,7 @@ private:
     int m_numRows;
 
     bool m_dirty;
-    KPixmapSplitterPrivate* d;
+    KPixmapSplitterPrivate *d;
 };
 
 #endif // KPIXMAPSPLITTER_H

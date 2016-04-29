@@ -38,17 +38,17 @@ class ProgressItem;
 class UIServer;
 
 namespace KIO {
-  class Job;
-  class DefaultProgress;
+class Job;
+class DefaultProgress;
 }
 
 
 struct ListProgressColumnConfig
 {
-   QString title;
-   int index;
-   int width;
-   bool enabled;
+    QString title;
+    int index;
+    int width;
+    bool enabled;
 };
 
 /**
@@ -57,46 +57,46 @@ struct ListProgressColumnConfig
 */
 class KIO_EXPORT ListProgress : public KListView {
 
-  Q_OBJECT
+    Q_OBJECT
 
 public:
+    ListProgress(QWidget *parent = 0, const char *name = 0);
 
-  ListProgress (QWidget *parent = 0, const char *name = 0 );
+    virtual ~ListProgress();
 
-  virtual ~ListProgress();
+    /**
+     * Field constants
+     */
+    enum ListProgressFields
+    {
+        TB_OPERATION = 0,
+        TB_LOCAL_FILENAME = 1,
+        TB_RESUME = 2,
+        TB_COUNT = 3,    // lv_count
+        TB_PROGRESS = 4, // lv_progress
+        TB_TOTAL = 5,
+        TB_SPEED = 6,
+        TB_REMAINING_TIME = 7,
+        TB_ADDRESS = 8,
+        TB_MAX = 9
+    };
 
-  /**
-   * Field constants
-   */
-  enum ListProgressFields {
-    TB_OPERATION = 0,
-    TB_LOCAL_FILENAME = 1,
-    TB_RESUME = 2,
-    TB_COUNT = 3,     //lv_count
-    TB_PROGRESS = 4,  // lv_progress
-    TB_TOTAL = 5,
-    TB_SPEED = 6,
-    TB_REMAINING_TIME = 7,
-    TB_ADDRESS = 8,
-    TB_MAX = 9
-  };
-
-  friend class ProgressItem;
-  friend class UIServer;
+    friend class ProgressItem;
+    friend class UIServer;
 protected slots:
-  void columnWidthChanged(int column);
+    void columnWidthChanged(int column);
+
 protected:
+    void writeSettings();
+    void readSettings();
+    void applySettings();
+    void createColumns();
 
-  void writeSettings();
-  void readSettings();
-  void applySettings();
-  void createColumns();
-
-  bool m_showHeader;
-  bool m_fixedColumnWidths;
-  ListProgressColumnConfig m_lpcc[TB_MAX];
-  //hack, alexxx
-  KSqueezedTextLabel *m_squeezer;
+    bool m_showHeader;
+    bool m_fixedColumnWidths;
+    ListProgressColumnConfig m_lpcc[TB_MAX];
+    // hack, alexxx
+    KSqueezedTextLabel *m_squeezer;
 };
 
 /**
@@ -105,91 +105,120 @@ protected:
 */
 class KIO_EXPORT ProgressItem : public QObject, public QListViewItem {
 
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  ProgressItem( ListProgress* view, QListViewItem *after, QCString app_id, int job_id,
-                bool showDefault = true );
-  ~ProgressItem();
+    ProgressItem(ListProgress *view, QListViewItem *after, QCString app_id, int job_id, bool showDefault = true);
+    ~ProgressItem();
 
-  QCString appId() { return m_sAppId; }
-  int jobId() { return m_iJobId; }
+    QCString appId()
+    {
+        return m_sAppId;
+    }
+    int jobId()
+    {
+        return m_iJobId;
+    }
 
     bool keepOpen() const;
-  void finished();
+    void finished();
 
-  void setVisible( bool visible );
-  void setDefaultProgressVisible( bool visible );
-  bool isVisible() const { return m_visible; }
+    void setVisible(bool visible);
+    void setDefaultProgressVisible(bool visible);
+    bool isVisible() const
+    {
+        return m_visible;
+    }
 
-  void setTotalSize( KIO::filesize_t bytes );
-  void setTotalFiles( unsigned long files );
-  void setTotalDirs( unsigned long dirs );
+    void setTotalSize(KIO::filesize_t bytes);
+    void setTotalFiles(unsigned long files);
+    void setTotalDirs(unsigned long dirs);
 
-  void setProcessedSize( KIO::filesize_t size );
-  void setProcessedFiles( unsigned long files );
-  void setProcessedDirs( unsigned long dirs );
+    void setProcessedSize(KIO::filesize_t size);
+    void setProcessedFiles(unsigned long files);
+    void setProcessedDirs(unsigned long dirs);
 
-  void setPercent( unsigned long percent );
-  void setSpeed( unsigned long bytes_per_second );
-  void setInfoMessage( const QString & msg );
+    void setPercent(unsigned long percent);
+    void setSpeed(unsigned long bytes_per_second);
+    void setInfoMessage(const QString &msg);
 
-  void setCopying( const KURL& from, const KURL& to );
-  void setMoving( const KURL& from, const KURL& to );
-  void setDeleting( const KURL& url );
-  void setTransferring( const KURL& url );
-  void setCreatingDir( const KURL& dir );
-  void setStating( const KURL& url );
-  void setMounting( const QString & dev, const QString & point );
-  void setUnmounting( const QString & point );
+    void setCopying(const KURL &from, const KURL &to);
+    void setMoving(const KURL &from, const KURL &to);
+    void setDeleting(const KURL &url);
+    void setTransferring(const KURL &url);
+    void setCreatingDir(const KURL &dir);
+    void setStating(const KURL &url);
+    void setMounting(const QString &dev, const QString &point);
+    void setUnmounting(const QString &point);
 
-  void setCanResume( KIO::filesize_t offset );
+    void setCanResume(KIO::filesize_t offset);
 
-  KIO::filesize_t totalSize() { return m_iTotalSize; }
-  unsigned long totalFiles() { return m_iTotalFiles; }
-  KIO::filesize_t processedSize() { return m_iProcessedSize; }
-  unsigned long processedFiles() { return m_iProcessedFiles; }
-  unsigned long speed() { return m_iSpeed; }
-  unsigned int remainingSeconds() { return m_remainingSeconds; }
+    KIO::filesize_t totalSize()
+    {
+        return m_iTotalSize;
+    }
+    unsigned long totalFiles()
+    {
+        return m_iTotalFiles;
+    }
+    KIO::filesize_t processedSize()
+    {
+        return m_iProcessedSize;
+    }
+    unsigned long processedFiles()
+    {
+        return m_iProcessedFiles;
+    }
+    unsigned long speed()
+    {
+        return m_iSpeed;
+    }
+    unsigned int remainingSeconds()
+    {
+        return m_remainingSeconds;
+    }
 
-  const QString& fullLengthAddress() const {return m_fullLengthAddress;}
-  void setText(ListProgress::ListProgressFields field, const QString& text);
+    const QString &fullLengthAddress() const
+    {
+        return m_fullLengthAddress;
+    }
+    void setText(ListProgress::ListProgressFields field, const QString &text);
 public slots:
-  void slotShowDefaultProgress();
-  void slotToggleDefaultProgress();
+    void slotShowDefaultProgress();
+    void slotToggleDefaultProgress();
 
 protected slots:
-  void slotCanceled();
+    void slotCanceled();
 
 signals:
-  void jobCanceled( ProgressItem* );
+    void jobCanceled(ProgressItem *);
 
 protected:
-  void updateVisibility();
+    void updateVisibility();
 
-  // ids that uniquely identify this progress item
-  QCString m_sAppId;
-  int m_iJobId;
+    // ids that uniquely identify this progress item
+    QCString m_sAppId;
+    int m_iJobId;
 
-  // whether shown or not (it is hidden if a rename dialog pops up for the same job)
-  bool m_visible;
-  bool m_defaultProgressVisible;
+    // whether shown or not (it is hidden if a rename dialog pops up for the same job)
+    bool m_visible;
+    bool m_defaultProgressVisible;
 
-  // parent listview
-  ListProgress *listProgress;
+    // parent listview
+    ListProgress *listProgress;
 
-  // associated default progress dialog
-  KIO::DefaultProgress *defaultProgress;
+    // associated default progress dialog
+    KIO::DefaultProgress *defaultProgress;
 
-  // we store these values for calculation of totals ( for statusbar )
-  KIO::filesize_t m_iTotalSize;
-  unsigned long m_iTotalFiles;
-  KIO::filesize_t m_iProcessedSize;
-  unsigned long m_iProcessedFiles;
-  unsigned long m_iSpeed;
-  int m_remainingSeconds;
-  QTimer m_showTimer;
-  QString m_fullLengthAddress;
+    // we store these values for calculation of totals ( for statusbar )
+    KIO::filesize_t m_iTotalSize;
+    unsigned long m_iTotalFiles;
+    KIO::filesize_t m_iProcessedSize;
+    unsigned long m_iProcessedFiles;
+    unsigned long m_iSpeed;
+    int m_remainingSeconds;
+    QTimer m_showTimer;
+    QString m_fullLengthAddress;
 };
 
 class QResizeEvent;
@@ -216,214 +245,195 @@ class UIServerSystemTray;
  */
 class KIO_EXPORT UIServer : public KMainWindow, public DCOPObject {
 
-  K_DCOP
-  Q_OBJECT
+    K_DCOP
+    Q_OBJECT
 
-  UIServer();
-  virtual ~UIServer();
+    UIServer();
+    virtual ~UIServer();
 
 public:
-   static UIServer* createInstance();
+    static UIServer *createInstance();
 
-k_dcop:
+    k_dcop :
 
-  /**
-   * Signal a new job
-   * @param appId the DCOP application id of the job's parent application
-   * @see KIO::Observer::newJob
-   * @param showProgress whether to popup the progress for the job.
-   *   Usually true, but may be false when we use kio_uiserver for
-   *   other things, like SSL dialogs.
-   * @return the job id
-   */
-  int newJob( QCString appId, bool showProgress );
+        /**
+         * Signal a new job
+         * @param appId the DCOP application id of the job's parent application
+         * @see KIO::Observer::newJob
+         * @param showProgress whether to popup the progress for the job.
+         *   Usually true, but may be false when we use kio_uiserver for
+         *   other things, like SSL dialogs.
+         * @return the job id
+         */
+        int
+        newJob(QCString appId, bool showProgress);
 
-  ASYNC jobFinished( int id );
+    ASYNC jobFinished(int id);
 
-  ASYNC totalSize( int id, unsigned long size );
-  ASYNC totalSize64( int id, KIO::filesize_t size );
-  ASYNC totalFiles( int id, unsigned long files );
-  ASYNC totalDirs( int id, unsigned long dirs );
+    ASYNC totalSize(int id, unsigned long size);
+    ASYNC totalSize64(int id, KIO::filesize_t size);
+    ASYNC totalFiles(int id, unsigned long files);
+    ASYNC totalDirs(int id, unsigned long dirs);
 
-  ASYNC processedSize( int id, unsigned long bytes );
-  ASYNC processedSize64( int id, KIO::filesize_t bytes );
-  ASYNC processedFiles( int id, unsigned long files );
-  ASYNC processedDirs( int id, unsigned long dirs );
+    ASYNC processedSize(int id, unsigned long bytes);
+    ASYNC processedSize64(int id, KIO::filesize_t bytes);
+    ASYNC processedFiles(int id, unsigned long files);
+    ASYNC processedDirs(int id, unsigned long dirs);
 
-  ASYNC percent( int id, unsigned long ipercent );
-  ASYNC speed( int id, unsigned long bytes_per_second );
-  ASYNC infoMessage( int id, const QString & msg );
+    ASYNC percent(int id, unsigned long ipercent);
+    ASYNC speed(int id, unsigned long bytes_per_second);
+    ASYNC infoMessage(int id, const QString &msg);
 
-  ASYNC copying( int id, KURL from, KURL to );
-  ASYNC moving( int id, KURL from, KURL to );
-  ASYNC deleting( int id, KURL url );
-  ASYNC transferring( int id, KURL url );
-  ASYNC creatingDir( int id, KURL dir );
-  ASYNC stating( int id, KURL url );
+    ASYNC copying(int id, KURL from, KURL to);
+    ASYNC moving(int id, KURL from, KURL to);
+    ASYNC deleting(int id, KURL url);
+    ASYNC transferring(int id, KURL url);
+    ASYNC creatingDir(int id, KURL dir);
+    ASYNC stating(int id, KURL url);
 
-  ASYNC mounting( int id, QString dev, QString point );
-  ASYNC unmounting( int id, QString point );
+    ASYNC mounting(int id, QString dev, QString point);
+    ASYNC unmounting(int id, QString point);
 
-  ASYNC canResume( int id, unsigned long offset );
-  ASYNC canResume64( int id, KIO::filesize_t offset );
+    ASYNC canResume(int id, unsigned long offset);
+    ASYNC canResume64(int id, KIO::filesize_t offset);
 
-  /**
-   * @deprecated (it blocks other apps).
-   * Use KIO::PasswordDialog::getNameAndPassword instead.
-   * To be removed in KDE 4.0.
-   */
-  QByteArray openPassDlg( const KIO::AuthInfo &info );
+    /**
+     * @deprecated (it blocks other apps).
+     * Use KIO::PasswordDialog::getNameAndPassword instead.
+     * To be removed in KDE 4.0.
+     */
+    QByteArray openPassDlg(const KIO::AuthInfo &info);
 
-  /**
-   * Popup a message box.
-   * @param id The message identifier.
-   * @param type type of message box: QuestionYesNo, WarningYesNo, WarningContinueCancel...
-   *   This enum is defined in slavebase.h, it currently is:
-   *   QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3,
-   *   WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6
-   * @param text Message string. May contain newlines.
-   * @param caption Message box title.
-   * @param buttonYes The text for the first button.
-   *                  The default is i18n("&Yes").
-   * @param buttonNo  The text for the second button.
-   *                  The default is i18n("&No").
-   * Note: for ContinueCancel, buttonYes is the continue button and buttonNo is unused.
-   *       and for Information, none is used.
-   * @return a button code, as defined in KMessageBox, or 0 on communication error.
-   */
-  int messageBox( int id, int type, const QString &text, const QString &caption,
-                  const QString &buttonYes, const QString &buttonNo );
+    /**
+     * Popup a message box.
+     * @param id The message identifier.
+     * @param type type of message box: QuestionYesNo, WarningYesNo, WarningContinueCancel...
+     *   This enum is defined in slavebase.h, it currently is:
+     *   QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3,
+     *   WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6
+     * @param text Message string. May contain newlines.
+     * @param caption Message box title.
+     * @param buttonYes The text for the first button.
+     *                  The default is i18n("&Yes").
+     * @param buttonNo  The text for the second button.
+     *                  The default is i18n("&No").
+     * Note: for ContinueCancel, buttonYes is the continue button and buttonNo is unused.
+     *       and for Information, none is used.
+     * @return a button code, as defined in KMessageBox, or 0 on communication error.
+     */
+    int messageBox(int id, int type, const QString &text, const QString &caption, const QString &buttonYes, const QString &buttonNo);
 
-  /**
-   * @deprecated (it blocks other apps).
-   * Use KIO::open_RenameDlg instead.
-   * To be removed in KDE 4.0.
-   */
-  QByteArray open_RenameDlg64( int id,
-                             const QString & caption,
-                             const QString& src, const QString & dest,
-                             int /* KIO::RenameDlg_Mode */ mode,
-                             KIO::filesize_t sizeSrc,
-                             KIO::filesize_t sizeDest,
-                             unsigned long /* time_t */ ctimeSrc,
-                             unsigned long /* time_t */ ctimeDest,
-                             unsigned long /* time_t */ mtimeSrc,
-                             unsigned long /* time_t */ mtimeDest
-                             );
-  /**
-   * @deprecated (it blocks other apps).
-   * Use KIO::open_RenameDlg instead.
-   * To be removed in KDE 4.0.
-   */
-  QByteArray open_RenameDlg( int id,
-                             const QString & caption,
-                             const QString& src, const QString & dest,
-                             int /* KIO::RenameDlg_Mode */ mode,
-                             unsigned long sizeSrc,
-                             unsigned long sizeDest,
-                             unsigned long /* time_t */ ctimeSrc,
-                             unsigned long /* time_t */ ctimeDest,
-                             unsigned long /* time_t */ mtimeSrc,
-                             unsigned long /* time_t */ mtimeDest
-                             );
+    /**
+     * @deprecated (it blocks other apps).
+     * Use KIO::open_RenameDlg instead.
+     * To be removed in KDE 4.0.
+     */
+    QByteArray open_RenameDlg64(int id, const QString &caption, const QString &src, const QString &dest, int /* KIO::RenameDlg_Mode */ mode,
+                                KIO::filesize_t sizeSrc, KIO::filesize_t sizeDest, unsigned long /* time_t */ ctimeSrc,
+                                unsigned long /* time_t */ ctimeDest, unsigned long /* time_t */ mtimeSrc, unsigned long /* time_t */ mtimeDest);
+    /**
+     * @deprecated (it blocks other apps).
+     * Use KIO::open_RenameDlg instead.
+     * To be removed in KDE 4.0.
+     */
+    QByteArray open_RenameDlg(int id, const QString &caption, const QString &src, const QString &dest, int /* KIO::RenameDlg_Mode */ mode,
+                              unsigned long sizeSrc, unsigned long sizeDest, unsigned long /* time_t */ ctimeSrc,
+                              unsigned long /* time_t */ ctimeDest, unsigned long /* time_t */ mtimeSrc, unsigned long /* time_t */ mtimeDest);
 
-  /**
-   * @deprecated (it blocks other apps).
-   * Use KIO::open_SkipDlg instead.
-   * To be removed in KDE 4.0.
-   */
-  int open_SkipDlg( int id,
-                    int /*bool*/ multi,
-                    const QString & error_text );
+    /**
+     * @deprecated (it blocks other apps).
+     * Use KIO::open_SkipDlg instead.
+     * To be removed in KDE 4.0.
+     */
+    int open_SkipDlg(int id, int /*bool*/ multi, const QString &error_text);
 
-  /**
-   * Switch to or from list mode - called by the kcontrol module
-   */
-  void setListMode( bool list );
+    /**
+     * Switch to or from list mode - called by the kcontrol module
+     */
+    void setListMode(bool list);
 
-  /**
-   * Hide or show a job. Typically, we hide a job while a "skip" or "rename" dialog
-   * is being shown for this job. This prevents killing it from the uiserver.
-   */
-  void setJobVisible( int id, bool visible );
+    /**
+     * Hide or show a job. Typically, we hide a job while a "skip" or "rename" dialog
+     * is being shown for this job. This prevents killing it from the uiserver.
+     */
+    void setJobVisible(int id, bool visible);
 
-  /**
-   * Show a SSL Information Dialog
-   */
-  void showSSLInfoDialog(const QString &url, const KIO::MetaData &data, int mainwindow);
+    /**
+     * Show a SSL Information Dialog
+     */
+    void showSSLInfoDialog(const QString &url, const KIO::MetaData &data, int mainwindow);
 
-  /**
-   * @deprecated
-   */
-  void showSSLInfoDialog(const QString &url, const KIO::MetaData &data);
+    /**
+     * @deprecated
+     */
+    void showSSLInfoDialog(const QString &url, const KIO::MetaData &data);
 
-  /*
-   * Show an SSL Certificate Selection Dialog
-   */
-  KSSLCertDlgRet showSSLCertDialog(const QString& host, const QStringList& certList, int mainwindow);
+    /*
+     * Show an SSL Certificate Selection Dialog
+     */
+    KSSLCertDlgRet showSSLCertDialog(const QString &host, const QStringList &certList, int mainwindow);
 
-  /*
-   * @deprecated
-   */
-  KSSLCertDlgRet showSSLCertDialog(const QString& host, const QStringList& certList);
+    /*
+     * @deprecated
+     */
+    KSSLCertDlgRet showSSLCertDialog(const QString &host, const QStringList &certList);
 
 public slots:
-  void slotConfigure();
-  void slotRemoveSystemTrayIcon();
+    void slotConfigure();
+    void slotRemoveSystemTrayIcon();
 protected slots:
 
-  void slotUpdate();
-  void slotQuit();
+    void slotUpdate();
+    void slotQuit();
 
-  void slotCancelCurrent();
+    void slotCancelCurrent();
 
-  void slotToggleDefaultProgress( QListViewItem * );
-  void slotSelection();
+    void slotToggleDefaultProgress(QListViewItem *);
+    void slotSelection();
 
-  void slotJobCanceled( ProgressItem * );
-  void slotApplyConfig();
-  void slotShowContextMenu(KListView*, QListViewItem *item, const QPoint& pos);
+    void slotJobCanceled(ProgressItem *);
+    void slotApplyConfig();
+    void slotShowContextMenu(KListView *, QListViewItem *item, const QPoint &pos);
 
 protected:
+    ProgressItem *findItem(int id);
 
-  ProgressItem* findItem( int id );
+    virtual void resizeEvent(QResizeEvent *e);
+    virtual bool queryClose();
 
-  virtual void resizeEvent(QResizeEvent* e);
-  virtual bool queryClose();
+    void setItemVisible(ProgressItem *item, bool visible);
 
-  void setItemVisible( ProgressItem * item, bool visible );
+    QTimer *updateTimer;
+    ListProgress *listProgress;
 
-  QTimer* updateTimer;
-  ListProgress* listProgress;
+    KToolBar::BarPosition toolbarPos;
+    QString properties;
 
-  KToolBar::BarPosition toolbarPos;
-  QString properties;
+    void applySettings();
+    void readSettings();
+    void writeSettings();
 
-  void applySettings();
-  void readSettings();
-  void writeSettings();
 private:
+    void killJob(QCString observerAppId, int progressId);
 
-  void killJob( QCString observerAppId, int progressId );
+    int m_initWidth;
+    int m_initHeight;
+    int m_idCancelItem;
+    bool m_bShowList;
+    bool m_showStatusBar;
+    bool m_showToolBar;
+    bool m_keepListOpen;
+    bool m_showSystemTray;
+    bool m_shuttingDown;
 
-  int m_initWidth;
-  int m_initHeight;
-  int m_idCancelItem;
-  bool m_bShowList;
-  bool m_showStatusBar;
-  bool m_showToolBar;
-  bool m_keepListOpen;
-  bool m_showSystemTray;
-  bool m_shuttingDown;
+    // true if there's a new job that hasn't been shown yet.
+    bool m_bUpdateNewJob;
+    ProgressConfigDialog *m_configDialog;
+    QPopupMenu *m_contextMenu;
+    UIServerSystemTray *m_systemTray;
 
-  // true if there's a new job that hasn't been shown yet.
-  bool m_bUpdateNewJob;
-  ProgressConfigDialog *m_configDialog;
-  QPopupMenu* m_contextMenu;
-  UIServerSystemTray *m_systemTray;
-
-  static int s_jobId;
-  friend class no_bogus_warning_from_gcc;
+    static int s_jobId;
+    friend class no_bogus_warning_from_gcc;
 };
 
 // -*- mode: c++; c-basic-offset: 2 -*-

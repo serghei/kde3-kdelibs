@@ -21,16 +21,17 @@
 #include "markinterface.h"
 #include "document.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateMarkInterface
-{
-  public:
-    PrivateMarkInterface() {}
-    ~PrivateMarkInterface() {}
+class PrivateMarkInterface {
+public:
+    PrivateMarkInterface()
+    {
+    }
+    ~PrivateMarkInterface()
+    {
+    }
 };
-
 }
 
 using namespace KTextEditor;
@@ -39,33 +40,33 @@ unsigned int MarkInterface::globalMarkInterfaceNumber = 0;
 
 MarkInterface::MarkInterface()
 {
-  globalMarkInterfaceNumber++;
-  myMarkInterfaceNumber = globalMarkInterfaceNumber++;
+    globalMarkInterfaceNumber++;
+    myMarkInterfaceNumber = globalMarkInterfaceNumber++;
 
-  d = new PrivateMarkInterface();
+    d = new PrivateMarkInterface();
 }
 
 MarkInterface::~MarkInterface()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int MarkInterface::markInterfaceNumber () const
+unsigned int MarkInterface::markInterfaceNumber() const
 {
-  return myMarkInterfaceNumber;
+    return myMarkInterfaceNumber;
 }
 
-void MarkInterface::setMarkInterfaceDCOPSuffix (const QCString &/*suffix*/)
+void MarkInterface::setMarkInterfaceDCOPSuffix(const QCString & /*suffix*/)
 {
-  //d->interface->setObjId ("MarkInterface#"+suffix);
+    // d->interface->setObjId ("MarkInterface#"+suffix);
 }
 
-MarkInterface *KTextEditor::markInterface (Document *doc)
-{                                 
-  if (!doc)
-    return 0;
+MarkInterface *KTextEditor::markInterface(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<MarkInterface*>(doc->qt_cast("KTextEditor::MarkInterface"));
+    return static_cast< MarkInterface * >(doc->qt_cast("KTextEditor::MarkInterface"));
 }
 
 int MarkInterface::reservedMarkersCount()

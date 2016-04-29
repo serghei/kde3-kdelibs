@@ -26,61 +26,60 @@
 class KNFSSharePrivate;
 
 /**
- * Similar functionality like KFileShare, 
- * but works only for NFS and do not need 
+ * Similar functionality like KFileShare,
+ * but works only for NFS and do not need
  * any suid script.
  * It parses the /etc/exports file to get its information.
  * Singleton class, call instance() to get an instance.
  */
-class KIO_EXPORT KNFSShare : public QObject 
-{
-Q_OBJECT
+class KIO_EXPORT KNFSShare : public QObject {
+    Q_OBJECT
 public:
-  /**
-   * Returns the one and only instance of KNFSShare
-   */
-  static KNFSShare* instance();
+    /**
+     * Returns the one and only instance of KNFSShare
+     */
+    static KNFSShare *instance();
 
-  /**
-   * Wether or not the given path is shared by NFS.
-   * @param path the path to check if it is shared by NFS.
-   * @return wether the given path is shared by NFS.
-   */
-  bool isDirectoryShared( const QString & path ) const;
-  
-  /**
-   * Returns a list of all directories shared by NFS.
-   * The resulting list is not sorted.
-   * @return a list of all directories shared by NFS.
-   */
-  QStringList sharedDirectories() const;
-  
-  /**
-   * KNFSShare destructor. 
-   * Do not call!
-   * The instance is destroyed automatically!
-   */ 
-  virtual ~KNFSShare();
-  
-  /**
-   * Returns the path to the used exports file,
-   * or null if no exports file was found
-   */
-  QString exportsPath() const;
-  
+    /**
+     * Wether or not the given path is shared by NFS.
+     * @param path the path to check if it is shared by NFS.
+     * @return wether the given path is shared by NFS.
+     */
+    bool isDirectoryShared(const QString &path) const;
+
+    /**
+     * Returns a list of all directories shared by NFS.
+     * The resulting list is not sorted.
+     * @return a list of all directories shared by NFS.
+     */
+    QStringList sharedDirectories() const;
+
+    /**
+     * KNFSShare destructor.
+     * Do not call!
+     * The instance is destroyed automatically!
+     */
+    virtual ~KNFSShare();
+
+    /**
+     * Returns the path to the used exports file,
+     * or null if no exports file was found
+     */
+    QString exportsPath() const;
+
 signals:
-  /**
-   * Emitted when the /etc/exports file has changed
-   */
-  void changed();  
-  
+    /**
+     * Emitted when the /etc/exports file has changed
+     */
+    void changed();
+
 private:
-  KNFSShare();
-  static KNFSShare* _instance;
-  KNFSSharePrivate* d;
-  
+    KNFSShare();
+    static KNFSShare *_instance;
+    KNFSSharePrivate *d;
+
 private slots:
-  void slotFileChange(const QString&);  
+    void slotFileChange(const QString &);
 };
 
 #endif

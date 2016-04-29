@@ -21,37 +21,36 @@
 
 using namespace KParts;
 
-//the answer!
+// the answer!
 #define KPARTS_EVENT_MAGIC 42
 
-Event::Event( const char *eventName )
- : QCustomEvent( (QEvent::Type)(QEvent::User + KPARTS_EVENT_MAGIC), (void *)eventName )
+Event::Event(const char *eventName) : QCustomEvent((QEvent::Type)(QEvent::User + KPARTS_EVENT_MAGIC), (void *)eventName)
 {
 }
 
 const char *Event::eventName() const
 {
-  if ( !test( this ) )
-    return 0L;
-  
-  return (const char *)data();
-} 
+    if(!test(this))
+        return 0L;
 
-bool Event::test( const QEvent *event )
-{
-  if ( !event )
-    return false;
-  
-  return ( event->type() == (QEvent::Type)(QEvent::User + KPARTS_EVENT_MAGIC ) );
-} 
+    return (const char *)data();
+}
 
-bool Event::test( const QEvent *event, const char *name )
+bool Event::test(const QEvent *event)
 {
-  if ( !test( event ) )
-    return false;
-  
-  return ( strcmp( name, (const char *)((QCustomEvent *)event)->data() ) == 0 );
-} 
+    if(!event)
+        return false;
+
+    return (event->type() == (QEvent::Type)(QEvent::User + KPARTS_EVENT_MAGIC));
+}
+
+bool Event::test(const QEvent *event, const char *name)
+{
+    if(!test(event))
+        return false;
+
+    return (strcmp(name, (const char *)((QCustomEvent *)event)->data()) == 0);
+}
 
 const char *GUIActivateEvent::s_strGUIActivateEvent = "KParts/GUIActivate";
 const char *PartActivateEvent::s_strPartActivateEvent = "KParts/PartActivateEvent";

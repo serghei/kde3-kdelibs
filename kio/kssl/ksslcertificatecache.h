@@ -30,78 +30,76 @@ class KSSLCertificate;
 
 class KIO_EXPORT KSSLCertificateCache {
 public:
+    enum KSSLCertificatePolicy
+    {
+        Unknown,
+        Reject,
+        Accept,
+        Prompt,
+        Ambiguous
+    };
+    // Unknown: no policy has been set for this record
+    // Reject: user has requested to not accept data from this site
+    // Accept: user has requested to always accept data from this site
+    // Prompt: user wishes to be prompted before accepting this certificate
+    //         You may need to set a [non-]permanent policy on this record after
+    //         the user is prompted.
+    // Ambiguous: The state cannot be uniquely determined.  Hopefully this
+    //            doesn't happen.
 
-enum KSSLCertificatePolicy { Unknown, Reject, Accept, Prompt, Ambiguous };
-// Unknown: no policy has been set for this record
-// Reject: user has requested to not accept data from this site
-// Accept: user has requested to always accept data from this site
-// Prompt: user wishes to be prompted before accepting this certificate
-//         You may need to set a [non-]permanent policy on this record after
-//         the user is prompted.
-// Ambiguous: The state cannot be uniquely determined.  Hopefully this
-//            doesn't happen.
+    KSSLCertificateCache();
+    ~KSSLCertificateCache();
 
-  KSSLCertificateCache();
-  ~KSSLCertificateCache();
+    void addCertificate(KSSLCertificate &cert, KSSLCertificatePolicy policy, bool permanent = true);
 
-  void addCertificate(KSSLCertificate& cert, KSSLCertificatePolicy policy, 
-                                                     bool permanent = true);
+    // WARNING!  This is not a "secure" method.  You need to actually
+    //           do a getPolicyByCertificate to be cryptographically sure
+    //           that this is an accepted certificate/site pair.
+    //           (note that the site (CN) is encoded in the certificate
+    //            so you should only accept certificates whose CN matches
+    //            the exact FQDN of the site presenting it)
+    //           If you're just doing an OpenSSL connection, I believe it
+    //           tests this for you, but don't take my word for it.
+    KSSLCertificatePolicy getPolicyByCN(QString &cn);
 
-  // WARNING!  This is not a "secure" method.  You need to actually
-  //           do a getPolicyByCertificate to be cryptographically sure
-  //           that this is an accepted certificate/site pair.
-  //           (note that the site (CN) is encoded in the certificate
-  //            so you should only accept certificates whose CN matches
-  //            the exact FQDN of the site presenting it)
-  //           If you're just doing an OpenSSL connection, I believe it
-  //           tests this for you, but don't take my word for it.
-  KSSLCertificatePolicy getPolicyByCN(QString& cn);
+    KSSLCertificatePolicy getPolicyByCertificate(KSSLCertificate &cert);
 
-  KSSLCertificatePolicy getPolicyByCertificate(KSSLCertificate& cert);
+    bool seenCN(QString &cn);
+    bool seenCertificate(KSSLCertificate &cert);
 
-  bool seenCN(QString& cn);
-  bool seenCertificate(KSSLCertificate& cert);
+    bool removeByCN(QString &cn);
+    bool removeByCertificate(KSSLCertificate &cert);
 
-  bool removeByCN(QString& cn);
-  bool removeByCertificate(KSSLCertificate& cert);
+    bool isPermanent(KSSLCertificate &cert);
 
-  bool isPermanent(KSSLCertificate& cert);
+    bool modifyByCN(QString &cn, KSSLCertificateCache::KSSLCertificatePolicy policy, bool permanent, QDateTime &expires);
 
-  bool modifyByCN(QString& cn,
-                  KSSLCertificateCache::KSSLCertificatePolicy policy,
-                  bool permanent,
-                  QDateTime& expires);
+    bool modifyByCertificate(KSSLCertificate &cert, KSSLCertificateCache::KSSLCertificatePolicy policy, bool permanent, QDateTime &expires);
 
-  bool modifyByCertificate(KSSLCertificate& cert,
-                           KSSLCertificateCache::KSSLCertificatePolicy policy,
-                           bool permanent,
-                           QDateTime& expires);
+    QStringList getHostList(KSSLCertificate &cert);
+    bool addHost(KSSLCertificate &cert, QString &host);
+    bool removeHost(KSSLCertificate &cert, QString &host);
 
-  QStringList getHostList(KSSLCertificate& cert);
-  bool addHost(KSSLCertificate& cert, QString& host);
-  bool removeHost(KSSLCertificate& cert, QString& host);
+    // SMIME
+    QStringList getKDEKeyByEmail(const QString &email);
+    KSSLCertificate *getCertByMD5Digest(const QString &key);
 
-  // SMIME
-  QStringList getKDEKeyByEmail(const QString &email);
-  KSSLCertificate *getCertByMD5Digest(const QString &key);
+    void reload();
 
-  void reload();
-
-  // You shouldn't need to call this but in some weird circumstances
-  // it might be necessary.
-  void saveToDisk();
+    // You shouldn't need to call this but in some weird circumstances
+    // it might be necessary.
+    void saveToDisk();
 
 private:
-  class KSSLCertificateCachePrivate;
-  KSSLCertificateCachePrivate *d;
+    class KSSLCertificateCachePrivate;
+    KSSLCertificateCachePrivate *d;
 
-  void loadDefaultPolicies();
-  void clearList();
-
+    void loadDefaultPolicies();
+    void clearList();
 };
 
 
-KIO_EXPORT QDataStream& operator<<(QDataStream& s, const KSSLCertificateCache::KSSLCertificatePolicy& p);
-KIO_EXPORT QDataStream& operator>>(QDataStream& s, KSSLCertificateCache::KSSLCertificatePolicy& p);
+KIO_EXPORT QDataStream &operator<<(QDataStream &s, const KSSLCertificateCache::KSSLCertificatePolicy &p);
+KIO_EXPORT QDataStream &operator>>(QDataStream &s, KSSLCertificateCache::KSSLCertificatePolicy &p);
 
 #endif

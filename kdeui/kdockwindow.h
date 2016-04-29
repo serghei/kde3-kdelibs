@@ -29,13 +29,15 @@
  * This class is obsolete, it is provided for compatibility only.
  * Use KSystemTray instead.
  */
-class KDE_DEPRECATED KDockWindow : public KSystemTray
-{
+class KDE_DEPRECATED KDockWindow : public KSystemTray {
     Q_OBJECT
 public:
-    KDockWindow( QWidget* parent = 0, const char* name  = 0 )
-	: KSystemTray( parent, name ) {}
-    ~KDockWindow() {}
+    KDockWindow(QWidget *parent = 0, const char *name = 0) : KSystemTray(parent, name)
+    {
+    }
+    ~KDockWindow()
+    {
+    }
 };
 #endif
 #endif

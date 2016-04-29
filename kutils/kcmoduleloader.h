@@ -1,9 +1,9 @@
 /*
   Copyright (c) 1999 Matthias Hoelzer-Kluepfel <hoelzer@kde.org>
   Copyright (c) 2002-2003 Daniel Molkentin <molkentin@kde.org>
-  
+
   This file is part of the KDE project
-  
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
   License version 2, as published by the Free Software Foundation.
@@ -31,21 +31,19 @@ class KLibLoader;
  * @ingroup kcmodule
  * @brief Loads a KControl Module.
  *
- * KCModuleLoader tries in several ways 
- * to locate and load a KCModule. If loading fails a 
+ * KCModuleLoader tries in several ways
+ * to locate and load a KCModule. If loading fails a
  * zero pointer is returned. \n
- * It is very unlikely KCModuleLoader is what you want 
+ * It is very unlikely KCModuleLoader is what you want
  * and @ref KCModuleProxy suits your needs.
- * 
+ *
  * @author Matthias Hoelzer-Kluepfel <mhk@kde.org>
  * @author Frans Englich <frans.englich@telia.com>
  * @since 3.2
  * @internal
 **/
-class KUTILS_EXPORT KCModuleLoader
-{
-  public:
-
+class KUTILS_EXPORT KCModuleLoader {
+public:
     /**
      * Loads a @ref KCModule. If loading fails a zero pointer is returned.
      * @param module what module to load
@@ -60,9 +58,8 @@ class KUTILS_EXPORT KCModuleLoader
      * @deprecated use the function which explicitly states the error reporting
      * method
      */
-    static KCModule *loadModule(const KCModuleInfo &module, bool withFallback=true, 
-        QWidget * parent = 0, const char * name = 0,
-        const QStringList & args = QStringList() ) KDE_DEPRECATED;
+    static KCModule *loadModule(const KCModuleInfo &module, bool withFallback = true, QWidget *parent = 0, const char *name = 0,
+                                const QStringList &args = QStringList()) KDE_DEPRECATED;
 
     /**
      * Loads a @ref KCModule. If loading fails a zero pointer is returned.
@@ -75,30 +72,31 @@ class KUTILS_EXPORT KCModuleLoader
      * @deprecated use the function which explicitly states the error reporting
      * method
      */
-    static KCModule *loadModule(const QString &module, QWidget *parent = 0,
-        const char *name = 0, const QStringList & args = QStringList()) KDE_DEPRECATED;
+    static KCModule *loadModule(const QString &module, QWidget *parent = 0, const char *name = 0,
+                                const QStringList &args = QStringList()) KDE_DEPRECATED;
 
     /**
      * Determines the way errors are reported
      */
-    enum ErrorReporting {
-      /** 
-       * no error reporting is done 
-       * */
-      None = 0,
-      /**
-       * the error report is shown instead of the 
-       * KCModule that should have * been loaded 
-       */
-      Inline = 1,
-      /** 
-       * shows a dialog with the error report 
-       */
-      Dialog = 2,
-      /** 
-       * does both Inline and Dialog 
-       */
-      Both = 3
+    enum ErrorReporting
+    {
+        /**
+         * no error reporting is done
+         * */
+        None = 0,
+        /**
+         * the error report is shown instead of the
+         * KCModule that should have * been loaded
+         */
+        Inline = 1,
+        /**
+         * shows a dialog with the error report
+         */
+        Dialog = 2,
+        /**
+         * does both Inline and Dialog
+         */
+        Both = 3
     };
 
     /**
@@ -114,9 +112,8 @@ class KUTILS_EXPORT KCModuleLoader
      * @return a pointer to the loaded @ref KCModule
      * @since 3.4
      */
-    static KCModule *loadModule(const KCModuleInfo &module, ErrorReporting
-        report, bool withFallback=true, QWidget * parent = 0,
-        const char * name = 0, const QStringList & args = QStringList() );
+    static KCModule *loadModule(const KCModuleInfo &module, ErrorReporting report, bool withFallback = true, QWidget *parent = 0,
+                                const char *name = 0, const QStringList &args = QStringList());
 
     /**
      * Loads a @ref KCModule. If loading fails a zero pointer is returned.
@@ -130,9 +127,8 @@ class KUTILS_EXPORT KCModuleLoader
      * @return a pointer to the loaded @ref KCModule
      * @since 3.4
      */
-    static KCModule *loadModule(const QString &module, ErrorReporting
-        report, QWidget *parent = 0, const char *name = 0,
-        const QStringList & args = QStringList());
+    static KCModule *loadModule(const QString &module, ErrorReporting report, QWidget *parent = 0, const char *name = 0,
+                                const QStringList &args = QStringList());
 
     /**
      * Unloads the module's library
@@ -151,13 +147,13 @@ class KUTILS_EXPORT KCModuleLoader
 
 
     /**
-     * Checks whether an KCModule should be shown by running its 
-     * test function. If it is unsure whether a module should be shown, it should 
+     * Checks whether an KCModule should be shown by running its
+     * test function. If it is unsure whether a module should be shown, it should
      * be made available, leaving the decision to the user.
      * If false is returned, the module should not be loaded in any interface.
-     * 
-     * A module declares it needs to be tested by having "X-KDE-Test-Module=true" in 
-     * its desktop file. When that line exists, the following code must be available 
+     *
+     * A module declares it needs to be tested by having "X-KDE-Test-Module=true" in
+     * its desktop file. When that line exists, the following code must be available
      * in the module's library:
      *
      * \code
@@ -178,7 +174,7 @@ class KUTILS_EXPORT KCModuleLoader
      * @returns true if the module should be loaded
      * @since 3.4
      */
-    static bool testModule( const QString& module );
+    static bool testModule(const QString &module);
 
     /**
      * Convenience function, essentially the same as above.
@@ -187,7 +183,7 @@ class KUTILS_EXPORT KCModuleLoader
      * @returns true if the module should be loaded
      * @since 3.4
      */
-    static bool testModule( const KCModuleInfo& module );
+    static bool testModule(const KCModuleInfo &module);
 
     /**
      * Returns a KCModule containing the messages @p report and @p text.
@@ -200,21 +196,16 @@ class KUTILS_EXPORT KCModuleLoader
      * @since 3.4
      * @internal
      */
-    static KCModule* reportError( ErrorReporting report, const QString & text,
-        QString details, QWidget * parent );
+    static KCModule *reportError(ErrorReporting report, const QString &text, QString details, QWidget *parent);
 
-  private:
-
+private:
     /**
      * Internal loader called by the public loaders.
      * @internal
      */
-    static KCModule* load(const KCModuleInfo &mod, const QString &libname, 
-        KLibLoader *loader, ErrorReporting report, QWidget * parent = 0,
-        const char * name = 0, const QStringList & args = QStringList() );
-
+    static KCModule *load(const KCModuleInfo &mod, const QString &libname, KLibLoader *loader, ErrorReporting report, QWidget *parent = 0,
+                          const char *name = 0, const QStringList &args = QStringList());
 };
 
 // vim: ts=2 sw=2 et
 #endif // MODLOADER_H
-

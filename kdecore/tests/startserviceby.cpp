@@ -24,18 +24,17 @@
 #include <kglobalsettings.h>
 #include <kdebug.h>
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-   KAboutData about("kapptest", "kapptest", "version");
-   KCmdLineArgs::init(argc, argv, &about);
+    KAboutData about("kapptest", "kapptest", "version");
+    KCmdLineArgs::init(argc, argv, &about);
 
-   KApplication a;
+    KApplication a;
 
-   QString error;
-   QCString dcopService;
-   int pid;
-   a.startServiceByDesktopName( "kaddressbook", QString::null, &error, &dcopService, &pid );
-   kdDebug() << "Started. error=" << error << " dcopService=" << dcopService << " pid=" << pid << endl;
-   a.exec();
+    QString error;
+    QCString dcopService;
+    int pid;
+    a.startServiceByDesktopName("kaddressbook", QString::null, &error, &dcopService, &pid);
+    kdDebug() << "Started. error=" << error << " dcopService=" << dcopService << " pid=" << pid << endl;
+    a.exec();
 }

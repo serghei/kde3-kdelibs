@@ -30,7 +30,7 @@
  * @internal
  */
 namespace DOM {
-  class DOMString;
+class DOMString;
 }
 class KJScript;
 class QString;
@@ -38,17 +38,18 @@ class QConstString;
 
 namespace KJS {
 
-  class UCharReference;
-  class UString;
+class UCharReference;
+class UString;
 
-  /**
-   * @short Unicode character.
-   *
-   * UChar represents a 16 bit Unicode character. It's internal data
-   * representation is compatible to XChar2b and QChar. It's therefore
-   * possible to exchange data with X and Qt with shallow copies.
-   */
-  struct KJS_EXPORT UChar {
+/**
+ * @short Unicode character.
+ *
+ * UChar represents a 16 bit Unicode character. It's internal data
+ * representation is compatible to XChar2b and QChar. It's therefore
+ * possible to exchange data with X and Qt with shallow copies.
+ */
+struct KJS_EXPORT UChar
+{
     /**
      * Construct a character with uninitialized value.
      */
@@ -60,7 +61,7 @@ namespace KJS {
      * @param h higher byte
      * @param l lower byte
      */
-    UChar(unsigned char h , unsigned char l);
+    UChar(unsigned char h, unsigned char l);
     /**
      * Construct a character with the given value.
      * @param u 16 bit Unicode value
@@ -70,16 +71,26 @@ namespace KJS {
     /**
      * @return The higher byte of the character.
      */
-    unsigned char high() const { return uc >> 8; }
+    unsigned char high() const
+    {
+        return uc >> 8;
+    }
     /**
      * @return The lower byte of the character.
      */
-    unsigned char low() const { return uc; }
+    unsigned char low() const
+    {
+        return uc;
+    }
     /**
      * @return the 16 bit Unicode value of the character
      */
-    unsigned short unicode() const { return uc; }
-  public:
+    unsigned short unicode() const
+    {
+        return uc;
+    }
+
+public:
     /**
      * @return The character converted to lower case.
      */
@@ -94,77 +105,113 @@ namespace KJS {
     static UChar null;
 
     unsigned short uc;
-  } KJS_PACKED;
+} KJS_PACKED;
 
-  inline UChar::UChar() { }
-  inline UChar::UChar(unsigned char h , unsigned char l) : uc(h << 8 | l) { }
-  inline UChar::UChar(char u) : uc((unsigned char)u) { }
-  inline UChar::UChar(unsigned char u) : uc(u) { }
-  inline UChar::UChar(unsigned short u) : uc(u) { }
+inline UChar::UChar()
+{
+}
+inline UChar::UChar(unsigned char h, unsigned char l) : uc(h << 8 | l)
+{
+}
+inline UChar::UChar(char u) : uc((unsigned char)u)
+{
+}
+inline UChar::UChar(unsigned char u) : uc(u)
+{
+}
+inline UChar::UChar(unsigned short u) : uc(u)
+{
+}
 
-  /**
-   * @short Dynamic reference to a string character.
-   *
-   * UCharReference is the dynamic counterpart of UChar. It's used when
-   * characters retrieved via index from a UString are used in an
-   * assignment expression (and therefore can't be treated as being const):
-   * \code
-   * UString s("hello world");
-   * s[0] = 'H';
-   * \endcode
-   *
-   * If that sounds confusing your best bet is to simply forget about the
-   * existence of this class and treat is as being identical to UChar.
-   */
-  class KJS_EXPORT UCharReference {
+/**
+ * @short Dynamic reference to a string character.
+ *
+ * UCharReference is the dynamic counterpart of UChar. It's used when
+ * characters retrieved via index from a UString are used in an
+ * assignment expression (and therefore can't be treated as being const):
+ * \code
+ * UString s("hello world");
+ * s[0] = 'H';
+ * \endcode
+ *
+ * If that sounds confusing your best bet is to simply forget about the
+ * existence of this class and treat is as being identical to UChar.
+ */
+class KJS_EXPORT UCharReference {
     friend class UString;
-    UCharReference(UString *s, unsigned int off) : str(s), offset(off) { }
-  public:
+    UCharReference(UString *s, unsigned int off) : str(s), offset(off)
+    {
+    }
+
+public:
     /**
      * Set the referenced character to c.
      */
-    UCharReference& operator=(UChar c);
+    UCharReference &operator=(UChar c);
     /**
      * Same operator as above except the argument that it takes.
      */
-    UCharReference& operator=(char c) { return operator=(UChar(c)); }
+    UCharReference &operator=(char c)
+    {
+        return operator=(UChar(c));
+    }
     /**
      * @return Unicode value.
      */
-    unsigned short unicode() const { return ref().uc; }
+    unsigned short unicode() const
+    {
+        return ref().uc;
+    }
     /**
      * @return Lower byte.
      */
-    unsigned char low() const { return ref().uc; }
+    unsigned char low() const
+    {
+        return ref().uc;
+    }
     /**
      * @return Higher byte.
      */
-    unsigned char high() const { return ref().uc >> 8; }
+    unsigned char high() const
+    {
+        return ref().uc >> 8;
+    }
     /**
      * @return Character converted to lower case.
      */
-    UChar toLower() const { return ref().toLower(); }
+    UChar toLower() const
+    {
+        return ref().toLower();
+    }
     /**
      * @return Character converted to upper case.
      */
-    UChar toUpper() const  { return ref().toUpper(); }
-  private:
+    UChar toUpper() const
+    {
+        return ref().toUpper();
+    }
+
+private:
     // not implemented, can only be constructed from UString
     UCharReference();
 
-    UChar& ref() const;
+    UChar &ref() const;
     UString *str;
     int offset;
-  };
+};
 
-  inline UChar::UChar(const UCharReference &c) : uc(c.unicode()) { }
+inline UChar::UChar(const UCharReference &c) : uc(c.unicode())
+{
+}
 
-  /**
-   * @short 8 bit char based string class
-   */
-  class KJS_EXPORT CString {
-  public:
-    CString() : data(0L), length(0) { }
+/**
+ * @short 8 bit char based string class
+ */
+class KJS_EXPORT CString {
+public:
+    CString() : data(0L), length(0)
+    {
+    }
     CString(const char *c);
     CString(const char *c, int len);
     CString(const CString &);
@@ -174,20 +221,30 @@ namespace KJS {
     CString &append(const CString &);
     CString &operator=(const char *c);
     CString &operator=(const CString &);
-    CString &operator+=(const CString &c) { return append(c); }
+    CString &operator+=(const CString &c)
+    {
+        return append(c);
+    }
 
-    int size() const { return length; }
-    const char *c_str() const { return data; }
-  private:
+    int size() const
+    {
+        return length;
+    }
+    const char *c_str() const
+    {
+        return data;
+    }
+
+private:
     char *data;
     int length;
-  };
+};
 
-  /**
-   * @short Unicode string class
-   */
-  class KJS_EXPORT UString {
-    friend bool operator==(const UString&, const UString&);
+/**
+ * @short Unicode string class
+ */
+class KJS_EXPORT UString {
+    friend bool operator==(const UString &, const UString &);
     friend class UCharReference;
     friend class Identifier;
     friend class PropertyMap;
@@ -195,37 +252,59 @@ namespace KJS {
     /**
      * @internal
      */
-    struct KJS_EXPORT Rep {
-      friend class UString;
-      friend bool operator==(const UString&, const UString&);
+    struct KJS_EXPORT Rep
+    {
+        friend class UString;
+        friend bool operator==(const UString &, const UString &);
 
-      static Rep *create(UChar *d, int l);
-      void destroy();
+        static Rep *create(UChar *d, int l);
+        void destroy();
 
-      UChar *data() const { return dat; }
-      int size() const { return len; }
+        UChar *data() const
+        {
+            return dat;
+        }
+        int size() const
+        {
+            return len;
+        }
 
-      unsigned hash() const { if (_hash == 0) _hash = computeHash(dat, len); return _hash; }
+        unsigned hash() const
+        {
+            if(_hash == 0)
+                _hash = computeHash(dat, len);
+            return _hash;
+        }
 
-      static unsigned computeHash(const UChar *, int length);
-      static unsigned computeHash(const char *);
+        static unsigned computeHash(const UChar *, int length);
+        static unsigned computeHash(const char *);
 
-      void ref() { ++rc; }
-      void deref() { if (--rc == 0) destroy(); }
+        void ref()
+        {
+            ++rc;
+        }
+        void deref()
+        {
+            if(--rc == 0)
+                destroy();
+        }
 
-      UChar *dat;
-      int len;
-      int capacity;
-      int rc;
-      mutable unsigned _hash;
+        UChar *dat;
+        int len;
+        int capacity;
+        int rc;
+        mutable unsigned _hash;
 
-      enum { capacityForIdentifier = 0x10000000 };
+        enum
+        {
+            capacityForIdentifier = 0x10000000
+        };
 
-      static Rep null;
-      static Rep empty;
+        static Rep null;
+        static Rep empty;
     };
 
-  public:
+public:
     /**
      * Constructs a null string.
      */
@@ -253,7 +332,10 @@ namespace KJS {
     /**
      * Copy constructor. Makes a shallow copy only.
      */
-    UString(const UString &s) { attach(s.rep); }
+    UString(const UString &s)
+    {
+        attach(s.rep);
+    }
     /**
      * Convenience declaration only ! You'll be on your own to write the
      * implementation for a construction from QString.
@@ -274,7 +356,10 @@ namespace KJS {
      * Destructor. If this handle was the only one holding a reference to the
      * string the data will be freed.
      */
-    ~UString() { release(); }
+    ~UString()
+    {
+        release();
+    }
 
     /**
      * Constructs a string from an int.
@@ -331,20 +416,32 @@ namespace KJS {
     /**
      * Appends the specified string.
      */
-    UString &operator+=(const UString &s) { return append(s); }
+    UString &operator+=(const UString &s)
+    {
+        return append(s);
+    }
 
     /**
      * @return A pointer to the internal Unicode data.
      */
-    const UChar* data() const { return rep->data(); }
+    const UChar *data() const
+    {
+        return rep->data();
+    }
     /**
      * @return True if null.
      */
-    bool isNull() const { return (rep == &Rep::null); }
+    bool isNull() const
+    {
+        return (rep == &Rep::null);
+    }
     /**
      * @return True if null or zero length.
      */
-    bool isEmpty() const { return (!rep->len); }
+    bool isEmpty() const
+    {
+        return (!rep->len);
+    }
     /**
      * Use this if you want to make sure that this string is a plain ASCII
      * string. For example, if you don't want to lose any information when
@@ -356,7 +453,10 @@ namespace KJS {
     /**
      * @return The length of the string.
      */
-    int size() const { return rep->size(); }
+    int size() const
+    {
+        return rep->size();
+    }
     /**
      * Const character at specified position.
      */
@@ -432,44 +532,55 @@ namespace KJS {
      */
     static void globalClear();
 #endif
-  private:
-    UString(Rep *r) { attach(r); }
+private:
+    UString(Rep *r)
+    {
+        attach(r);
+    }
     void attach(Rep *r);
     void detach();
     void release();
     Rep *rep;
-  };
+};
 
-  KJS_EXPORT inline bool operator==(const UChar &c1, const UChar &c2) {
+KJS_EXPORT inline bool operator==(const UChar &c1, const UChar &c2)
+{
     return (c1.uc == c2.uc);
-  }
-  KJS_EXPORT inline bool operator!=(const UChar& c1, const UChar& c2) {
+}
+KJS_EXPORT inline bool operator!=(const UChar &c1, const UChar &c2)
+{
     return !KJS::operator==(c1, c2);
-  }
-  KJS_EXPORT bool operator==(const UString& s1, const UString& s2);
-  inline bool operator!=(const UString& s1, const UString& s2) {
+}
+KJS_EXPORT bool operator==(const UString &s1, const UString &s2);
+inline bool operator!=(const UString &s1, const UString &s2)
+{
     return !KJS::operator==(s1, s2);
-  }
-  KJS_EXPORT bool operator<(const UString& s1, const UString& s2);
-  KJS_EXPORT bool operator==(const UString& s1, const char *s2);
-  KJS_EXPORT inline bool operator!=(const UString& s1, const char *s2) {
+}
+KJS_EXPORT bool operator<(const UString &s1, const UString &s2);
+KJS_EXPORT bool operator==(const UString &s1, const char *s2);
+KJS_EXPORT inline bool operator!=(const UString &s1, const char *s2)
+{
     return !KJS::operator==(s1, s2);
-  }
-  KJS_EXPORT inline bool operator==(const char *s1, const UString& s2) {
+}
+KJS_EXPORT inline bool operator==(const char *s1, const UString &s2)
+{
     return operator==(s2, s1);
-  }
-  KJS_EXPORT inline bool operator!=(const char *s1, const UString& s2) {
+}
+KJS_EXPORT inline bool operator!=(const char *s1, const UString &s2)
+{
     return !KJS::operator==(s1, s2);
-  }
-  KJS_EXPORT bool operator==(const CString& s1, const CString& s2);
-  KJS_EXPORT inline bool operator!=(const CString& s1, const CString& s2) {
+}
+KJS_EXPORT bool operator==(const CString &s1, const CString &s2);
+KJS_EXPORT inline bool operator!=(const CString &s1, const CString &s2)
+{
     return !KJS::operator==(s1, s2);
-  }
-  KJS_EXPORT inline UString operator+(const UString& s1, const UString& s2) {
+}
+KJS_EXPORT inline UString operator+(const UString &s1, const UString &s2)
+{
     return UString(s1, s2);
-  }
+}
 
-  KJS_EXPORT int compare(const UString &, const UString &);
+KJS_EXPORT int compare(const UString &, const UString &);
 
 } // namespace
 

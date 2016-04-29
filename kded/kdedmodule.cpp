@@ -26,104 +26,104 @@
 #include "kdedmodule.h"
 #include "kconfigdata.h"
 
-typedef QMap<KEntryKey, KSharedPtr<KShared> > KDEDObjectMap;
+typedef QMap< KEntryKey, KSharedPtr< KShared > > KDEDObjectMap;
 
-class KDEDModulePrivate
-{
+class KDEDModulePrivate {
 public:
-  KDEDObjectMap *objMap;
-  int timeout;
-  QTimer timer;
+    KDEDObjectMap *objMap;
+    int timeout;
+    QTimer timer;
 };
 
 KDEDModule::KDEDModule(const QCString &name) : QObject(), DCOPObject(name)
 {
-   d = new KDEDModulePrivate;
-   d->objMap = 0;
-   d->timeout = 0;
-   connect(&(d->timer), SIGNAL(timeout()), this, SLOT(idle()));
+    d = new KDEDModulePrivate;
+    d->objMap = 0;
+    d->timeout = 0;
+    connect(&(d->timer), SIGNAL(timeout()), this, SLOT(idle()));
 }
-  
+
 KDEDModule::~KDEDModule()
 {
-   emit moduleDeleted(this);
-   delete d; d = 0;
+    emit moduleDeleted(this);
+    delete d;
+    d = 0;
 }
-  
+
 void KDEDModule::setIdleTimeout(int secs)
 {
-   d->timeout = secs*1000;
+    d->timeout = secs * 1000;
 }
 
 void KDEDModule::resetIdle()
 {
-   d->timer.stop();
-   if (!d->objMap || d->objMap->isEmpty())
-      d->timer.start(d->timeout, true);
+    d->timer.stop();
+    if(!d->objMap || d->objMap->isEmpty())
+        d->timer.start(d->timeout, true);
 }
 
 void KDEDModule::insert(const QCString &app, const QCString &key, KShared *obj)
 {
-   if (!d->objMap)
-      d->objMap = new KDEDObjectMap;
+    if(!d->objMap)
+        d->objMap = new KDEDObjectMap;
 
-   // appKey acts as a placeholder
-   KEntryKey appKey(app, 0);
-   d->objMap->replace(appKey, 0);
+    // appKey acts as a placeholder
+    KEntryKey appKey(app, 0);
+    d->objMap->replace(appKey, 0);
 
-   KEntryKey indexKey(app, key);
+    KEntryKey indexKey(app, key);
 
-   // Prevent deletion in case the same object is inserted again.
-   KSharedPtr<KShared> _obj = obj; 
+    // Prevent deletion in case the same object is inserted again.
+    KSharedPtr< KShared > _obj = obj;
 
-   d->objMap->replace(indexKey, _obj);
-   resetIdle();
+    d->objMap->replace(indexKey, _obj);
+    resetIdle();
 }
 
-KShared * KDEDModule::find(const QCString &app, const QCString &key)
+KShared *KDEDModule::find(const QCString &app, const QCString &key)
 {
-   if (!d->objMap)
-      return 0;
-   KEntryKey indexKey(app, key);
+    if(!d->objMap)
+        return 0;
+    KEntryKey indexKey(app, key);
 
-   KDEDObjectMap::Iterator it = d->objMap->find(indexKey);
-   if (it == d->objMap->end())
-      return 0;
+    KDEDObjectMap::Iterator it = d->objMap->find(indexKey);
+    if(it == d->objMap->end())
+        return 0;
 
-   return it.data().data();
+    return it.data().data();
 }
-  
+
 void KDEDModule::remove(const QCString &app, const QCString &key)
 {
-   if (!d->objMap)
-      return;
-   KEntryKey indexKey(app, key);
+    if(!d->objMap)
+        return;
+    KEntryKey indexKey(app, key);
 
-   d->objMap->remove(indexKey);
-   resetIdle();
+    d->objMap->remove(indexKey);
+    resetIdle();
 }
 
 void KDEDModule::removeAll(const QCString &app)
 {
-   if (!d->objMap)
-      return;
+    if(!d->objMap)
+        return;
 
-   KEntryKey indexKey(app, 0);
-   // Search for placeholder.
+    KEntryKey indexKey(app, 0);
+    // Search for placeholder.
 
-   KDEDObjectMap::Iterator it = d->objMap->find(indexKey);
-   while (it != d->objMap->end())
-   {
-      KDEDObjectMap::Iterator it2 = it++;
-      if (it2.key().mGroup != app)
-         break; // All keys for this app have been removed.
-      d->objMap->remove(it2);  
-   }
-   resetIdle();
+    KDEDObjectMap::Iterator it = d->objMap->find(indexKey);
+    while(it != d->objMap->end())
+    {
+        KDEDObjectMap::Iterator it2 = it++;
+        if(it2.key().mGroup != app)
+            break; // All keys for this app have been removed.
+        d->objMap->remove(it2);
+    }
+    resetIdle();
 }
 
 bool KDEDModule::isWindowRegistered(long windowId)
 {
-   return Kded::self()->isWindowRegistered(windowId);
+    return Kded::self()->isWindowRegistered(windowId);
 }
 #include "kdedmodule.moc"

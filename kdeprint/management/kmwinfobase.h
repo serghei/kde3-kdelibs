@@ -26,26 +26,25 @@
 class QLabel;
 class QLineEdit;
 
-class KDEPRINT_EXPORT KMWInfoBase : public KMWizardPage
-{
+class KDEPRINT_EXPORT KMWInfoBase : public KMWizardPage {
 public:
-	KMWInfoBase(int n = 1, QWidget *parent = 0, const char *name = 0);
+    KMWInfoBase(int n = 1, QWidget *parent = 0, const char *name = 0);
 
-	void setInfo(const QString&);
-	void setLabel(int, const QString&);
-	void setText(int, const QString&);
-	void setCurrent(int);
+    void setInfo(const QString &);
+    void setLabel(int, const QString &);
+    void setText(int, const QString &);
+    void setCurrent(int);
 
-	QString text(int);
+    QString text(int);
 
 protected:
-	QLineEdit* lineEdit( int );
+    QLineEdit *lineEdit(int);
 
 private:
-	QPtrList<QLabel>		m_labels;
-	QPtrList<QLineEdit>	m_edits;
-	QLabel			*m_info;
-	int			m_nlines;
+    QPtrList< QLabel > m_labels;
+    QPtrList< QLineEdit > m_edits;
+    QLabel *m_info;
+    int m_nlines;
 };
 
 #endif

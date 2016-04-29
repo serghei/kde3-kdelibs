@@ -27,7 +27,7 @@
 
 
 namespace DOM {
-    class NodeImpl;
+class NodeImpl;
 }
 
 namespace khtml {
@@ -38,38 +38,33 @@ class RenderObject;
 // Used by DOM::Counter::listStyle()
 DOM::DOMString stringForListStyleType(khtml::EListStyleType type);
 
-class RenderStyleDeclarationImpl : public DOM::CSSStyleDeclarationImpl
-{
+class RenderStyleDeclarationImpl : public DOM::CSSStyleDeclarationImpl {
 public:
-    RenderStyleDeclarationImpl( DOM::NodeImpl *node );
+    RenderStyleDeclarationImpl(DOM::NodeImpl *node);
     virtual ~RenderStyleDeclarationImpl();
 
     DOM::DOMString cssText() const;
-    void setCssText( DOM::DOMString str );
+    void setCssText(DOM::DOMString str);
 
-    DOM::CSSValueImpl *getPropertyCSSValue( int propertyID ) const;
-    DOM::DOMString getPropertyValue( int propertyID ) const;
-    bool getPropertyPriority( int propertyID ) const;
+    DOM::CSSValueImpl *getPropertyCSSValue(int propertyID) const;
+    DOM::DOMString getPropertyValue(int propertyID) const;
+    bool getPropertyPriority(int propertyID) const;
     unsigned long length() const;
 
-    DOM::DOMString removeProperty( int propertyID, bool NonCSSHints = false );
-    bool setProperty ( int propertyId, const DOM::DOMString &value, bool important = false,
-                       bool nonCSSHint = false);
-    void setProperty ( int propertyId, int value, bool important = false, bool nonCSSHint = false);
-    void setLengthProperty(int id, const DOM::DOMString &value, bool important,
-                           bool nonCSSHint = true, bool multiLength = false);
+    DOM::DOMString removeProperty(int propertyID, bool NonCSSHints = false);
+    bool setProperty(int propertyId, const DOM::DOMString &value, bool important = false, bool nonCSSHint = false);
+    void setProperty(int propertyId, int value, bool important = false, bool nonCSSHint = false);
+    void setLengthProperty(int id, const DOM::DOMString &value, bool important, bool nonCSSHint = true, bool multiLength = false);
 
-    void setProperty ( const DOM::DOMString &propertyString);
-    DOM::DOMString item ( unsigned long index ) const;
+    void setProperty(const DOM::DOMString &propertyString);
+    DOM::DOMString item(unsigned long index) const;
 
 protected:
-    DOM::CSSProperty property( int id ) const;
+    DOM::CSSProperty property(int id) const;
 
 protected:
-    SharedPtr<DOM::NodeImpl> m_node;
+    SharedPtr< DOM::NodeImpl > m_node;
 };
-
-
 }
 
 #endif

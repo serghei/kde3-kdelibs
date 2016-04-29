@@ -28,27 +28,25 @@
 
 namespace KABC {
 
-class KABC_EXPORT ResourceDirConfig : public KRES::ConfigWidget
-{ 
-  Q_OBJECT
+class KABC_EXPORT ResourceDirConfig : public KRES::ConfigWidget {
+    Q_OBJECT
 
 public:
-  ResourceDirConfig( QWidget* parent = 0, const char* name = 0 );
+    ResourceDirConfig(QWidget *parent = 0, const char *name = 0);
 
-  void setEditMode( bool value );
+    void setEditMode(bool value);
 
 public slots:
-  void loadSettings( KRES::Resource* );
-  void saveSettings( KRES::Resource* );
+    void loadSettings(KRES::Resource *);
+    void saveSettings(KRES::Resource *);
 
 private:
-  KComboBox* mFormatBox;
-  KURLRequester* mFileNameEdit;
+    KComboBox *mFormatBox;
+    KURLRequester *mFileNameEdit;
 
-  QStringList mFormatTypes;
+    QStringList mFormatTypes;
 
-  bool mInEditMode;
+    bool mInEditMode;
 };
-
 }
 #endif

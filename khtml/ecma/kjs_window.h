@@ -36,48 +36,61 @@ class KHTMLView;
 class KHTMLPart;
 
 namespace KParts {
-  class ReadOnlyPart;
+class ReadOnlyPart;
 }
 
 namespace khtml {
-  class ChildFrame;
+class ChildFrame;
 }
 
 namespace KJS {
 
-  class WindowFunc;
-  class WindowQObject;
-  class Location;
-  class History;
-  class External;
-  class FrameArray;
-  class JSEventListener;
-  class JSLazyEventListener;
+class WindowFunc;
+class WindowQObject;
+class Location;
+class History;
+class External;
+class FrameArray;
+class JSEventListener;
+class JSLazyEventListener;
 
-  class Screen : public ObjectImp {
-  public:
+class Screen : public ObjectImp {
+public:
     Screen(ExecState *exec);
-    enum {
-      Height, Width, ColorDepth, PixelDepth, AvailLeft, AvailTop, AvailHeight,
-      AvailWidth
+    enum
+    {
+        Height,
+        Width,
+        ColorDepth,
+        PixelDepth,
+        AvailLeft,
+        AvailTop,
+        AvailHeight,
+        AvailWidth
     };
     virtual Value get(ExecState *exec, const Identifier &propertyName) const;
     Value getValueProperty(ExecState *exec, int token) const;
-  private:
-    KHTMLView *view;
-    virtual const ClassInfo* classInfo() const { return &info; }
-    static const ClassInfo info;
-  };
 
-  class KDE_EXPORT Window : public ObjectImp {
-    friend QGuardedPtr<KHTMLPart> getInstance();
+private:
+    KHTMLView *view;
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
+    static const ClassInfo info;
+};
+
+class KDE_EXPORT Window : public ObjectImp {
+    friend QGuardedPtr< KHTMLPart > getInstance();
     friend class Location;
     friend class WindowFunc;
     friend class WindowQObject;
     friend class ScheduledAction;
-  public:
+
+public:
     Window(khtml::ChildFrame *p);
-  public:
+
+public:
     ~Window();
     /**
      * Returns and registers a window object. In case there's already a Window
@@ -105,80 +118,223 @@ namespace KJS {
     void closeNow();
     void delayedGoHistory(int steps);
     void goHistory(int steps);
-    void goURL(ExecState* exec, const QString& url, bool lockHistory);
+    void goURL(ExecState *exec, const QString &url, bool lockHistory);
     Value openWindow(ExecState *exec, const List &args);
-    Value executeOpenWindow(ExecState *exec, const KURL& url, const QString& frameName, const QString& features);
-    void resizeTo(QWidget* tl, int width, int height);
+    Value executeOpenWindow(ExecState *exec, const KURL &url, const QString &frameName, const QString &features);
+    void resizeTo(QWidget *tl, int width, int height);
     void afterScriptExecution();
-    bool isSafeScript(ExecState *exec) const {
-        KParts::ReadOnlyPart *activePart = static_cast<KJS::ScriptInterpreter *>(  exec->interpreter() )->part();
-      if ( activePart == part() ) return true;
-      return checkIsSafeScript( activePart );
+    bool isSafeScript(ExecState *exec) const
+    {
+        KParts::ReadOnlyPart *activePart = static_cast< KJS::ScriptInterpreter * >(exec->interpreter())->part();
+        if(activePart == part())
+            return true;
+        return checkIsSafeScript(activePart);
     }
     Location *location() const;
-    ObjectImp* frames( ExecState* exec ) const;
+    ObjectImp *frames(ExecState *exec) const;
     JSEventListener *getJSEventListener(const Value &val, bool html = false);
-    JSLazyEventListener *getJSLazyEventListener(const QString &code, const QString &name, DOM::NodeImpl* node);
-    void clear( ExecState *exec );
+    JSLazyEventListener *getJSLazyEventListener(const QString &code, const QString &name, DOM::NodeImpl *node);
+    void clear(ExecState *exec);
     virtual UString toString(ExecState *exec) const;
 
     // Set the current "event" object
-    void setCurrentEvent( DOM::Event *evt );
+    void setCurrentEvent(DOM::Event *evt);
 
-    QPtrDict<JSEventListener> jsEventListeners;
-    virtual const ClassInfo* classInfo() const { return &info; }
+    QPtrDict< JSEventListener > jsEventListeners;
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    enum { Closed, Crypto, DefaultStatus, Status, Document, Node, EventCtor, Range,
-           NodeFilter, DOMException, CSSRule, Frames, _History, _External, Event, InnerHeight,
-           InnerWidth, Length, _Location, Navigate, Name, _Navigator, _Konqueror, ClientInformation,
-           OffscreenBuffering, Opener, OuterHeight, OuterWidth, PageXOffset, PageYOffset,
-           Parent, Personalbar, ScreenX, ScreenY, Scrollbars, Scroll, ScrollBy,
-           ScreenTop, ScreenLeft, AToB, BToA, FrameElement, GetComputedStyle,
-           ScrollTo, ScrollX, ScrollY, MoveBy, MoveTo, ResizeBy, ResizeTo, Self, _Window, Top, _Screen,
-           Image, Option, Alert, Confirm, Prompt, Open, SetTimeout, ClearTimeout,
-           XMLHttpRequest, XMLSerializer, DOMParser,
-           Focus, Blur, Close, SetInterval, ClearInterval, CaptureEvents, ReleaseEvents,
-           Print, AddEventListener, RemoveEventListener, SideBar,
-           ValueOf, ToString,
-           Onabort, Onblur,
-           Onchange, Onclick, Ondblclick, Ondragdrop, Onerror, Onfocus,
-           Onkeydown, Onkeypress, Onkeyup, Onload, Onmousedown, Onmousemove,
-           Onmouseout, Onmouseover, Onmouseup, Onmove, Onreset, Onresize,
-           Onselect, Onsubmit, Onunload,
-           MutationEventCtor, KeyboardEventCtor, EventExceptionCtor,
-           ElementCtor, DocumentCtor, HTMLDocumentCtor,
-           HTMLElementCtor, HTMLHtmlElementCtor, HTMLHeadElementCtor, HTMLLinkElementCtor, 
-           HTMLTitleElementCtor, HTMLMetaElementCtor, HTMLBaseElementCtor, HTMLIsIndexElementCtor, 
-           HTMLStyleElementCtor, HTMLBodyElementCtor, HTMLFormElementCtor, HTMLSelectElementCtor,
-           HTMLOptGroupElementCtor, HTMLOptionElementCtor, HTMLInputElementCtor, HTMLTextAreaElementCtor,
-           HTMLButtonElementCtor, HTMLLabelElementCtor, HTMLFieldSetElementCtor, HTMLLegendElementCtor,
-           HTMLUListElementCtor, HTMLOListElementCtor, HTMLDListElementCtor, HTMLDirectoryElementCtor,
-           HTMLMenuElementCtor, HTMLLIElementCtor, HTMLDivElementCtor, HTMLParagraphElementCtor, 
-           HTMLHeadingElementCtor, HTMLBlockQuoteElementCtor, HTMLQuoteElementCtor, HTMLPreElementCtor,
-           HTMLBRElementCtor, HTMLBaseFontElementCtor, HTMLFontElementCtor, HTMLHRElementCtor, HTMLModElementCtor,
-           HTMLAnchorElementCtor, HTMLImageElementCtor, HTMLObjectElementCtor, HTMLParamElementCtor,
-           HTMLAppletElementCtor, HTMLMapElementCtor, HTMLAreaElementCtor, HTMLScriptElementCtor,
-           HTMLTableElementCtor, HTMLTableCaptionElementCtor, HTMLTableColElementCtor, 
-           HTMLTableSectionElementCtor, HTMLTableRowElementCtor, HTMLTableCellElementCtor, 
-           HTMLFrameSetElementCtor, HTMLLayerElementCtor, HTMLFrameElementCtor, HTMLIFrameElementCtor,
-           CSSStyleDeclarationCtor};
+    enum
+    {
+        Closed,
+        Crypto,
+        DefaultStatus,
+        Status,
+        Document,
+        Node,
+        EventCtor,
+        Range,
+        NodeFilter,
+        DOMException,
+        CSSRule,
+        Frames,
+        _History,
+        _External,
+        Event,
+        InnerHeight,
+        InnerWidth,
+        Length,
+        _Location,
+        Navigate,
+        Name,
+        _Navigator,
+        _Konqueror,
+        ClientInformation,
+        OffscreenBuffering,
+        Opener,
+        OuterHeight,
+        OuterWidth,
+        PageXOffset,
+        PageYOffset,
+        Parent,
+        Personalbar,
+        ScreenX,
+        ScreenY,
+        Scrollbars,
+        Scroll,
+        ScrollBy,
+        ScreenTop,
+        ScreenLeft,
+        AToB,
+        BToA,
+        FrameElement,
+        GetComputedStyle,
+        ScrollTo,
+        ScrollX,
+        ScrollY,
+        MoveBy,
+        MoveTo,
+        ResizeBy,
+        ResizeTo,
+        Self,
+        _Window,
+        Top,
+        _Screen,
+        Image,
+        Option,
+        Alert,
+        Confirm,
+        Prompt,
+        Open,
+        SetTimeout,
+        ClearTimeout,
+        XMLHttpRequest,
+        XMLSerializer,
+        DOMParser,
+        Focus,
+        Blur,
+        Close,
+        SetInterval,
+        ClearInterval,
+        CaptureEvents,
+        ReleaseEvents,
+        Print,
+        AddEventListener,
+        RemoveEventListener,
+        SideBar,
+        ValueOf,
+        ToString,
+        Onabort,
+        Onblur,
+        Onchange,
+        Onclick,
+        Ondblclick,
+        Ondragdrop,
+        Onerror,
+        Onfocus,
+        Onkeydown,
+        Onkeypress,
+        Onkeyup,
+        Onload,
+        Onmousedown,
+        Onmousemove,
+        Onmouseout,
+        Onmouseover,
+        Onmouseup,
+        Onmove,
+        Onreset,
+        Onresize,
+        Onselect,
+        Onsubmit,
+        Onunload,
+        MutationEventCtor,
+        KeyboardEventCtor,
+        EventExceptionCtor,
+        ElementCtor,
+        DocumentCtor,
+        HTMLDocumentCtor,
+        HTMLElementCtor,
+        HTMLHtmlElementCtor,
+        HTMLHeadElementCtor,
+        HTMLLinkElementCtor,
+        HTMLTitleElementCtor,
+        HTMLMetaElementCtor,
+        HTMLBaseElementCtor,
+        HTMLIsIndexElementCtor,
+        HTMLStyleElementCtor,
+        HTMLBodyElementCtor,
+        HTMLFormElementCtor,
+        HTMLSelectElementCtor,
+        HTMLOptGroupElementCtor,
+        HTMLOptionElementCtor,
+        HTMLInputElementCtor,
+        HTMLTextAreaElementCtor,
+        HTMLButtonElementCtor,
+        HTMLLabelElementCtor,
+        HTMLFieldSetElementCtor,
+        HTMLLegendElementCtor,
+        HTMLUListElementCtor,
+        HTMLOListElementCtor,
+        HTMLDListElementCtor,
+        HTMLDirectoryElementCtor,
+        HTMLMenuElementCtor,
+        HTMLLIElementCtor,
+        HTMLDivElementCtor,
+        HTMLParagraphElementCtor,
+        HTMLHeadingElementCtor,
+        HTMLBlockQuoteElementCtor,
+        HTMLQuoteElementCtor,
+        HTMLPreElementCtor,
+        HTMLBRElementCtor,
+        HTMLBaseFontElementCtor,
+        HTMLFontElementCtor,
+        HTMLHRElementCtor,
+        HTMLModElementCtor,
+        HTMLAnchorElementCtor,
+        HTMLImageElementCtor,
+        HTMLObjectElementCtor,
+        HTMLParamElementCtor,
+        HTMLAppletElementCtor,
+        HTMLMapElementCtor,
+        HTMLAreaElementCtor,
+        HTMLScriptElementCtor,
+        HTMLTableElementCtor,
+        HTMLTableCaptionElementCtor,
+        HTMLTableColElementCtor,
+        HTMLTableSectionElementCtor,
+        HTMLTableRowElementCtor,
+        HTMLTableCellElementCtor,
+        HTMLFrameSetElementCtor,
+        HTMLLayerElementCtor,
+        HTMLFrameElementCtor,
+        HTMLIFrameElementCtor,
+        CSSStyleDeclarationCtor
+    };
     WindowQObject *winq;
 
     void forgetSuppressedWindows();
     void showSuppressedWindows();
 
-  protected:
-    enum DelayedActionId { NullAction, DelayedClose, DelayedGoHistory };
+protected:
+    enum DelayedActionId
+    {
+        NullAction,
+        DelayedClose,
+        DelayedGoHistory
+    };
 
     Value getListener(ExecState *exec, int eventId) const;
     void setListener(ExecState *exec, int eventId, Value func);
-  private:
+
+private:
     struct DelayedAction;
     friend struct DelayedAction;
 
-    bool checkIsSafeScript( KParts::ReadOnlyPart* activePart ) const;
+    bool checkIsSafeScript(KParts::ReadOnlyPart *activePart) const;
 
-    QGuardedPtr<khtml::ChildFrame> m_frame;
+    QGuardedPtr< khtml::ChildFrame > m_frame;
     Screen *screen;
     History *history;
     External *external;
@@ -186,48 +342,58 @@ namespace KJS {
     Location *loc;
     DOM::Event *m_evt;
 
-    struct DelayedAction {
-      DelayedAction() : actionId(NullAction) {} // for QValueList
-      DelayedAction( DelayedActionId id, QVariant p = QVariant() ) : actionId(id), param(p) {}
-      DelayedActionId actionId;
-      QVariant param; // just in case
+    struct DelayedAction
+    {
+        DelayedAction() : actionId(NullAction)
+        {
+        } // for QValueList
+        DelayedAction(DelayedActionId id, QVariant p = QVariant()) : actionId(id), param(p)
+        {
+        }
+        DelayedActionId actionId;
+        QVariant param; // just in case
     };
-    QValueList<DelayedAction> m_delayed;
+    QValueList< DelayedAction > m_delayed;
 
-    struct SuppressedWindowInfo {
-      SuppressedWindowInfo() {}  // for QValueList
-      SuppressedWindowInfo( KURL u, QString fr, QString fe ) : url(u), frameName(fr), features(fe) {}
-      KURL url;
-      QString frameName;
-      QString features;
+    struct SuppressedWindowInfo
+    {
+        SuppressedWindowInfo()
+        {
+        } // for QValueList
+        SuppressedWindowInfo(KURL u, QString fr, QString fe) : url(u), frameName(fr), features(fe)
+        {
+        }
+        KURL url;
+        QString frameName;
+        QString features;
     };
-    QValueList<SuppressedWindowInfo> m_suppressedWindowInfo;
-  };
+    QValueList< SuppressedWindowInfo > m_suppressedWindowInfo;
+};
 
-  /**
-   * like QDateTime, but properly handles milliseconds
-   */
-  class DateTimeMS
-  {
-  	QDate mDate;
-  	QTime mTime;
-  public:
+/**
+ * like QDateTime, but properly handles milliseconds
+ */
+class DateTimeMS {
+    QDate mDate;
+    QTime mTime;
+
+public:
     DateTimeMS addMSecs(int s) const;
-    bool operator >(const DateTimeMS &other) const;
-    bool operator >=(const DateTimeMS &other) const;
-    
-    int msecsTo(const DateTimeMS &other) const;
-    
-    static DateTimeMS now();
-  };
+    bool operator>(const DateTimeMS &other) const;
+    bool operator>=(const DateTimeMS &other) const;
 
-  /**
-   * An action (either function or string) to be executed after a specified
-   * time interval, either once or repeatedly. Used for window.setTimeout()
-   * and window.setInterval()
-   */
-  class ScheduledAction {
-  public:
+    int msecsTo(const DateTimeMS &other) const;
+
+    static DateTimeMS now();
+};
+
+/**
+ * An action (either function or string) to be executed after a specified
+ * time interval, either once or repeatedly. Used for window.setTimeout()
+ * and window.setInterval()
+ */
+class ScheduledAction {
+public:
     ScheduledAction(Object _func, List _args, DateTimeMS _nextTime, int _interval, bool _singleShot, int _timerId);
     ScheduledAction(QString _code, DateTimeMS _nextTime, int _interval, bool _singleShot, int _timerId);
     ~ScheduledAction();
@@ -244,11 +410,11 @@ namespace KJS {
     int interval;
     bool executing;
     int timerId;
-  };
+};
 
-  class KDE_EXPORT WindowQObject : public QObject {
+class KDE_EXPORT WindowQObject : public QObject {
     Q_OBJECT
-  public:
+public:
     WindowQObject(Window *w);
     ~WindowQObject();
     int installTimeout(const Identifier &handler, int t, bool singleShot);
@@ -256,52 +422,79 @@ namespace KJS {
     void clearTimeout(int timerId);
     void mark();
     bool hasTimers() const;
-  public slots:
+public slots:
     void timeoutClose();
-  protected slots:
+protected slots:
     void parentDestroyed();
-  protected:
+
+protected:
     void timerEvent(QTimerEvent *e);
     void setNextTimer();
-  private:
+
+private:
     Window *parent;
-    QPtrList<ScheduledAction> scheduledActions;
+    QPtrList< ScheduledAction > scheduledActions;
     int pausedTime;
     int lastTimerId;
     bool currentlyDispatching;
-  };
+};
 
-  class Location : public ObjectImp {
-  public:
+class Location : public ObjectImp {
+public:
     ~Location();
     virtual Value get(ExecState *exec, const Identifier &propertyName) const;
     virtual void put(ExecState *exec, const Identifier &propertyName, const Value &value, int attr = None);
     virtual Value toPrimitive(ExecState *exec, Type preferred) const;
     virtual UString toString(ExecState *exec) const;
-    enum { Hash, Href, Hostname, Host, Pathname, Port, Protocol, Search, EqualEqual,
-           Assign, Replace, Reload, ToString };
+    enum
+    {
+        Hash,
+        Href,
+        Hostname,
+        Host,
+        Pathname,
+        Port,
+        Protocol,
+        Search,
+        EqualEqual,
+        Assign,
+        Replace,
+        Reload,
+        ToString
+    };
     KParts::ReadOnlyPart *part() const;
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-  private:
+
+private:
     friend class Window;
     Location(khtml::ChildFrame *f);
-    QGuardedPtr<khtml::ChildFrame> m_frame;
-  };
+    QGuardedPtr< khtml::ChildFrame > m_frame;
+};
 
 #ifdef Q_WS_QWS
-  class Konqueror : public ObjectImp {
+class Konqueror : public ObjectImp {
     friend class KonquerorFunc;
-  public:
-    Konqueror(KHTMLPart *p) : part(p) { }
+
+public:
+    Konqueror(KHTMLPart *p) : part(p)
+    {
+    }
     virtual Value get(ExecState *exec, const Identifier &propertyName) const;
     virtual bool hasProperty(ExecState *exec, const Identifier &p) const;
     virtual UString toString(ExecState *exec) const;
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-  private:
+
+private:
     KHTMLPart *part;
-  };
+};
 #endif
 
 } // namespace

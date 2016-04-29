@@ -33,24 +33,23 @@ Author: Ralph Mor, X Consortium
 #include "KDE-ICE/ICElibint.h"
 #include "KDE-ICE/globals.h"
 
-IceConn     	_IceConnectionObjs[256];
-char	    	*_IceConnectionStrings[256];
-int     	_IceConnectionCount = 0;
+IceConn _IceConnectionObjs[256];
+char *_IceConnectionStrings[256];
+int _IceConnectionCount = 0;
 
-_IceProtocol 	_IceProtocols[255];
-int         	_IceLastMajorOpcode = 0;
+_IceProtocol _IceProtocols[255];
+int _IceLastMajorOpcode = 0;
 
-int		_IceAuthCount = 1;
-const char	*_IceAuthNames[] = {"MIT-MAGIC-COOKIE-1"};
-IcePoAuthProc	_IcePoAuthProcs[] = {_IcePoMagicCookie1Proc};
-IcePaAuthProc	_IcePaAuthProcs[] = {_IcePaMagicCookie1Proc};
+int _IceAuthCount = 1;
+const char *_IceAuthNames[] = {"MIT-MAGIC-COOKIE-1"};
+IcePoAuthProc _IcePoAuthProcs[] = {_IcePoMagicCookie1Proc};
+IcePaAuthProc _IcePaAuthProcs[] = {_IcePaMagicCookie1Proc};
 
-int		_IceVersionCount = 1;
-_IceVersion	_IceVersions[] = {
-	  	    {IceProtoMajor, IceProtoMinor, _IceProcessCoreMessage}};
+int _IceVersionCount = 1;
+_IceVersion _IceVersions[] = {{IceProtoMajor, IceProtoMinor, _IceProcessCoreMessage}};
 
-_IceWatchProc	*_IceWatchProcs = NULL;
+_IceWatchProc *_IceWatchProcs = NULL;
 
-IceErrorHandler   _IceErrorHandler   = _IceDefaultErrorHandler;
+IceErrorHandler _IceErrorHandler = _IceDefaultErrorHandler;
 IceIOErrorHandler _IceIOErrorHandler = _IceDefaultIOErrorHandler;
-IceWriteHandler   _IceWriteHandler   = _IceWrite;
+IceWriteHandler _IceWriteHandler = _IceWrite;

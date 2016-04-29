@@ -5,12 +5,12 @@
 
  If you get compile errors caused by X11 includes (the line
  where first error appears contains word like None, Unsorted,
- Below, etc.), put #include <fixx11h.h> in the .cpp file 
+ Below, etc.), put #include <fixx11h.h> in the .cpp file
  (not .h file!) between the place where X11 headers are
  included and the place where the file with compile
  error is included (or the place where the compile error
  in the .cpp file occurs).
- 
+
  This file remaps X11 #defines to const variables or
  inline functions. The side effect may be that these
  symbols may now refer to different variables
@@ -28,8 +28,7 @@
 
 */
 
-namespace X
-{
+namespace X {
 
 // template --->
 // Affects: Should be without side effects.
@@ -194,17 +193,15 @@ const int CursorShape = CursorShape;
 #ifdef index
 #ifndef FIXX11H_index
 #define FIXX11H_index
-inline
-char* Xindex( const char* s, int c )
-    {
-    return index( s, c );
-    }
+inline char *Xindex(const char *s, int c)
+{
+    return index(s, c);
+}
 #undef index
-inline
-char* index( const char* s, int c )
-    {
-    return Xindex( s, c );
-    }
+inline char *index(const char *s, int c)
+{
+    return Xindex(s, c);
+}
 #endif
 #undef index
 #endif
@@ -214,17 +211,15 @@ char* index( const char* s, int c )
 // Affects: Should be without side effects.
 #ifndef FIXX11H_rindex
 #define FIXX11H_rindex
-inline
-char* Xrindex( const char* s, int c )
-    {
-    return rindex( s, c );
-    }
+inline char *Xrindex(const char *s, int c)
+{
+    return rindex(s, c);
+}
 #undef rindex
-inline
-char* rindex( const char* s, int c )
-    {
-    return Xrindex( s, c );
-    }
+inline char *rindex(const char *s, int c)
+{
+    return Xrindex(s, c);
+}
 #endif
 #undef rindex
 #endif

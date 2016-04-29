@@ -29,20 +29,23 @@
 class KateDocument;
 class KateView;
 
-class KateArbitraryHighlightRange : public KateSuperRange, public KateAttribute
-{
-  Q_OBJECT
+class KateArbitraryHighlightRange : public KateSuperRange, public KateAttribute {
+    Q_OBJECT
 
 public:
-  KateArbitraryHighlightRange(KateSuperCursor* start, KateSuperCursor* end, QObject* parent = 0L, const char* name = 0L);
-  KateArbitraryHighlightRange(KateDocument* doc, const KateRange& range, QObject* parent = 0L, const char* name = 0L);
-  KateArbitraryHighlightRange(KateDocument* doc, const KateTextCursor& start, const KateTextCursor& end, QObject* parent = 0L, const char* name = 0L);
+    KateArbitraryHighlightRange(KateSuperCursor *start, KateSuperCursor *end, QObject *parent = 0L, const char *name = 0L);
+    KateArbitraryHighlightRange(KateDocument *doc, const KateRange &range, QObject *parent = 0L, const char *name = 0L);
+    KateArbitraryHighlightRange(KateDocument *doc, const KateTextCursor &start, const KateTextCursor &end, QObject *parent = 0L,
+                                const char *name = 0L);
 
-	virtual ~KateArbitraryHighlightRange();
+    virtual ~KateArbitraryHighlightRange();
 
-  virtual void changed() { slotTagRange(); };
+    virtual void changed()
+    {
+        slotTagRange();
+    };
 
-  static KateAttribute merge(QPtrList<KateSuperRange> ranges);
+    static KateAttribute merge(QPtrList< KateSuperRange > ranges);
 };
 
 /**
@@ -57,29 +60,29 @@ public:
  * - identical highlight for whole list
  * - signals for view movement
  */
-class KateArbitraryHighlight : public QObject
-{
-  Q_OBJECT
+class KateArbitraryHighlight : public QObject {
+    Q_OBJECT
 
 public:
-  KateArbitraryHighlight(KateDocument* parent = 0L, const char* name = 0L);
+    KateArbitraryHighlight(KateDocument *parent = 0L, const char *name = 0L);
 
-  void addHighlightToDocument(KateSuperRangeList* list);
-  void addHighlightToView(KateSuperRangeList* list, KateView* view);
+    void addHighlightToDocument(KateSuperRangeList *list);
+    void addHighlightToView(KateSuperRangeList *list, KateView *view);
 
-  KateSuperRangeList& rangesIncluding(uint line, KateView* view = 0L);
+    KateSuperRangeList &rangesIncluding(uint line, KateView *view = 0L);
 
 signals:
-  void tagLines(KateView* view, KateSuperRange* range);
+    void tagLines(KateView *view, KateSuperRange *range);
 
 private slots:
-  void slotTagRange(KateSuperRange* range);
-  void slotRangeListDeleted(QObject* obj);
-private:
-  KateView* viewForRange(KateSuperRange* range);
+    void slotTagRange(KateSuperRange *range);
+    void slotRangeListDeleted(QObject *obj);
 
-  QMap<KateView*, QPtrList<KateSuperRangeList>* > m_viewHLs;
-  QPtrList<KateSuperRangeList> m_docHLs;
+private:
+    KateView *viewForRange(KateSuperRange *range);
+
+    QMap< KateView *, QPtrList< KateSuperRangeList > * > m_viewHLs;
+    QPtrList< KateSuperRangeList > m_docHLs;
 };
 
 #endif

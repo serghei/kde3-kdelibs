@@ -27,31 +27,29 @@
 
 using namespace KSpell2;
 
-class ConfigDialog::Private
-{
+class ConfigDialog::Private {
 public:
     ConfigWidget *ui;
 };
 
-ConfigDialog::ConfigDialog( Broker *broker, QWidget *parent )
-    : KDialogBase( parent, "KSpell2ConfigDialog", true,
-                   i18n( "KSpell2 Configuration" ),
-                   KDialogBase::Ok|KDialogBase::Apply|KDialogBase::Cancel,
-                   KDialogBase::Ok, true )
+ConfigDialog::ConfigDialog(Broker *broker, QWidget *parent)
+    : KDialogBase(parent, "KSpell2ConfigDialog", true, i18n("KSpell2 Configuration"), KDialogBase::Ok | KDialogBase::Apply | KDialogBase::Cancel,
+                  KDialogBase::Ok, true)
 {
-    init( broker );
+    init(broker);
 }
 
 ConfigDialog::~ConfigDialog()
 {
-    delete d; d = 0;
+    delete d;
+    d = 0;
 }
 
-void ConfigDialog::init( Broker *broker )
+void ConfigDialog::init(Broker *broker)
 {
     d = new Private;
     QVBox *page = makeVBoxMainWidget();
-    d->ui = new ConfigWidget( broker, page );
+    d->ui = new ConfigWidget(broker, page);
 }
 
 void ConfigDialog::slotOk()

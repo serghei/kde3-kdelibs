@@ -34,8 +34,7 @@ class KActionCollection;
  * internal class to make easier to use signals possible
  * @internal
  **/
-class KIO_EXPORT KFileViewSignaler : public QObject
-{
+class KIO_EXPORT KFileViewSignaler : public QObject {
     Q_OBJECT
 
 public:
@@ -43,43 +42,50 @@ public:
       * Call this method when an item is selected (depends on single click /
       * double click configuration). Emits the appropriate signal.
       **/
-    void activate( const KFileItem *item ) {
-        if ( item->isDir() )
-            emit dirActivated( item );
+    void activate(const KFileItem *item)
+    {
+        if(item->isDir())
+            emit dirActivated(item);
         else
-            emit fileSelected( item );
+            emit fileSelected(item);
     }
     /**
      * emits the highlighted signal for item. Call this in your view class
      * whenever the selection changes.
      */
-    void highlightFile(const KFileItem *i) { emit fileHighlighted(i); }
-
-    void activateMenu( const KFileItem *i, const QPoint& pos ) {
-        emit activatedMenu( i, pos );
+    void highlightFile(const KFileItem *i)
+    {
+        emit fileHighlighted(i);
     }
 
-    void changeSorting( QDir::SortSpec sorting ) {
-        emit sortingChanged( sorting );
+    void activateMenu(const KFileItem *i, const QPoint &pos)
+    {
+        emit activatedMenu(i, pos);
     }
-    
-    void dropURLs(const KFileItem *i, QDropEvent*e, const KURL::List&urls) {
+
+    void changeSorting(QDir::SortSpec sorting)
+    {
+        emit sortingChanged(sorting);
+    }
+
+    void dropURLs(const KFileItem *i, QDropEvent *e, const KURL::List &urls)
+    {
         emit dropped(i, e, urls);
     }
 
 signals:
-    void dirActivated(const KFileItem*);
+    void dirActivated(const KFileItem *);
 
-    void sortingChanged( QDir::SortSpec );
+    void sortingChanged(QDir::SortSpec);
 
     /**
      * the item maybe be 0L, indicating that we're in multiselection mode and
      * the selection has changed.
      */
-    void fileHighlighted(const KFileItem*);
-    void fileSelected(const KFileItem*);
-    void activatedMenu( const KFileItem *i, const QPoint& );
-    void dropped(const KFileItem *, QDropEvent*, const KURL::List&);
+    void fileHighlighted(const KFileItem *);
+    void fileSelected(const KFileItem *);
+    void activatedMenu(const KFileItem *i, const QPoint &);
+    void dropped(const KFileItem *, QDropEvent *, const KURL::List &);
 };
 
 /**
@@ -120,18 +126,21 @@ public:
     /**
      * ### As const-method, to be fixed in 3.0
      */
-    QWidget *widget() const { return const_cast<KFileView*>(this)->widget(); }
+    QWidget *widget() const
+    {
+        return const_cast< KFileView * >(this)->widget();
+    }
 
     /**
      * Sets @p filename the current item in the view, if available.
      */
-    void setCurrentItem( const QString &filename );
+    void setCurrentItem(const QString &filename);
 
     /**
      * Reimplement this to set @p item the current item in the view, e.g.
      * the item having focus.
      */
-    virtual void setCurrentItem( const KFileItem *item ) = 0;
+    virtual void setCurrentItem(const KFileItem *item) = 0;
 
     /**
      * @returns the "current" KFileItem, e.g. where the cursor is.
@@ -155,7 +164,7 @@ public:
       **/
     virtual void updateView(bool f = true);
 
-    virtual void updateView(const KFileItem*);
+    virtual void updateView(const KFileItem *);
 
     /**
      * Removes an item from the list; has to be implemented by the view.
@@ -174,7 +183,10 @@ public:
       * Returns the sorting order of the internal list. Newly added files
       * are added through this sorting.
       */
-    QDir::SortSpec sorting() const { return m_sorting; }
+    QDir::SortSpec sorting() const
+    {
+        return m_sorting;
+    }
 
     /**
       * Sets the sorting order of the view.
@@ -196,48 +208,70 @@ public:
      * Tells whether the current items are in reversed order (shortcut to
      * sorting() & QDir::Reversed).
      */
-    bool isReversed() const { return (m_sorting & QDir::Reversed); }
+    bool isReversed() const
+    {
+        return (m_sorting & QDir::Reversed);
+    }
 
     void sortReversed();
 
     /**
       * @returns the number of dirs and files
       **/
-    uint count() const { return filesNumber + dirsNumber; }
+    uint count() const
+    {
+        return filesNumber + dirsNumber;
+    }
 
     /**
       * @returns the number of files.
       **/
-    uint numFiles() const { return filesNumber; }
+    uint numFiles() const
+    {
+        return filesNumber;
+    }
 
     /**
       * @returns the number of directories
       **/
-    uint numDirs() const { return dirsNumber; }
+    uint numDirs() const
+    {
+        return dirsNumber;
+    }
 
-    virtual void setSelectionMode( KFile::SelectionMode sm );
+    virtual void setSelectionMode(KFile::SelectionMode sm);
     virtual KFile::SelectionMode selectionMode() const;
 
-    enum ViewMode {
-	Files       = 1,
-	Directories = 2,
-	All = Files | Directories
+    enum ViewMode
+    {
+        Files = 1,
+        Directories = 2,
+        All = Files | Directories
     };
-    virtual void setViewMode( ViewMode vm );
-    virtual ViewMode viewMode() const { return view_mode; }
+    virtual void setViewMode(ViewMode vm);
+    virtual ViewMode viewMode() const
+    {
+        return view_mode;
+    }
 
     /**
      * @returns the localized name of the view, which could be displayed
      * somewhere, e.g. in a menu, where the user can choose between views.
      * @see setViewName
      */
-    QString viewName() const { return m_viewName; }
+    QString viewName() const
+    {
+        return m_viewName;
+    }
 
     /**
      * Sets the name of the view, which could be displayed somewhere.
      * E.g. "Image Preview".
      */
-    void setViewName( const QString& name ) { m_viewName = name; }
+    void setViewName(const QString &name)
+    {
+        m_viewName = name;
+    }
 
     virtual void setParentView(KFileView *parent);
 
@@ -249,7 +283,7 @@ public:
      * KFileView::insertItem( i );
      *
      */
-    virtual void insertItem( KFileItem *i);
+    virtual void insertItem(KFileItem *i);
 
     /**
      * pure virtual function, that should be implemented to clear
@@ -261,7 +295,7 @@ public:
      * pure virtual function, that should be implemented to make item i
      * visible, i.e. by scrolling the view appropriately.
      */
-    virtual void ensureItemVisible( const KFileItem *i ) = 0;
+    virtual void ensureItemVisible(const KFileItem *i) = 0;
 
     /**
      * Clears any selection, unhighlights everything. Must be implemented by
@@ -292,21 +326,21 @@ public:
      * @returns whether the given item is currently selected.
      * Must be implemented by the view.
      */
-    virtual bool isSelected( const KFileItem * ) const = 0;
+    virtual bool isSelected(const KFileItem *) const = 0;
 
     /**
      * @returns all currently highlighted items.
      */
-    const KFileItemList * selectedItems() const;
+    const KFileItemList *selectedItems() const;
 
     /**
      * @returns all items currently available in the current sort-order
      */
-    const KFileItemList * items() const;
+    const KFileItemList *items() const;
 
-    virtual KFileItem * firstFileItem() const = 0;
-    virtual KFileItem * nextItem( const KFileItem * ) const = 0;
-    virtual KFileItem * prevItem( const KFileItem * ) const = 0;
+    virtual KFileItem *firstFileItem() const = 0;
+    virtual KFileItem *nextItem(const KFileItem *) const = 0;
+    virtual KFileItem *prevItem(const KFileItem *) const = 0;
 
     /**
      * This is a KFileDialog specific hack: we want to select directories with
@@ -318,8 +352,9 @@ public:
      * Every view has to decide when to call select( item ) when a file was
      * single-clicked, based on onlyDoubleClickSelectsFiles().
      */
-    void setOnlyDoubleClickSelectsFiles( bool enable ) {
-	myOnlyDoubleClickSelectsFiles = enable;
+    void setOnlyDoubleClickSelectsFiles(bool enable)
+    {
+        myOnlyDoubleClickSelectsFiles = enable;
     }
 
     /**
@@ -327,8 +362,9 @@ public:
      * double-clicks.
      * @see setOnlyDoubleClickSelectsFiles
      */
-    bool onlyDoubleClickSelectsFiles() const {
-	return myOnlyDoubleClickSelectsFiles;
+    bool onlyDoubleClickSelectsFiles() const
+    {
+        return myOnlyDoubleClickSelectsFiles;
     }
 
     /**
@@ -342,22 +378,26 @@ public:
      * add its actions here (if it has any) to make them available to
      * e.g. the KDirOperator's popup-menu.
      */
-    virtual KActionCollection * actionCollection() const;
+    virtual KActionCollection *actionCollection() const;
 
-    KFileViewSignaler * signaler() const { return sig; }
+    KFileViewSignaler *signaler() const
+    {
+        return sig;
+    }
 
-    virtual void readConfig( KConfig *, const QString& group = QString::null );
-    virtual void writeConfig( KConfig *, const QString& group = QString::null);
+    virtual void readConfig(KConfig *, const QString &group = QString::null);
+    virtual void writeConfig(KConfig *, const QString &group = QString::null);
 
     /**
-     * Various options for drag and drop support. 
+     * Various options for drag and drop support.
      * These values can be or'd together.
-     * @li @p AutoOpenDirs Automatically open directory after hovering above it 
+     * @li @p AutoOpenDirs Automatically open directory after hovering above it
      * for a short while while dragging.
      * @since 3.2
      */
-    enum DropOptions {
-	AutoOpenDirs  = 1
+    enum DropOptions
+    {
+        AutoOpenDirs = 1
     };
     /**
      * Specify DND options. See DropOptions for details.
@@ -366,14 +406,14 @@ public:
      */
     // KDE 4: Make virtual
     void setDropOptions(int options);
-    
+
     /**
      * Returns the DND options in effect.
      * See DropOptions for details.
      * @since 3.2
      */
     int dropOptions();
-    
+
     /**
      * This method calculates a QString from the given parameters, that is
      * suitable for sorting with e.g. QIconView or QListView. Their
@@ -387,7 +427,7 @@ public:
      *                 Currently, the values IgnoreCase, Reversed and
      *                 DirsFirst are taken into account.
      */
-    static QString sortingKey( const QString& value, bool isDir, int sortSpec);
+    static QString sortingKey(const QString &value, bool isDir, int sortSpec);
 
     /**
      * An overloaded method that takes not a QString, but a number as sort
@@ -395,7 +435,7 @@ public:
      * If you use a time_t, you need to cast that to KIO::filesize_t because
      * of ambiguity problems.
      */
-    static QString sortingKey( KIO::filesize_t value, bool isDir,int sortSpec);
+    static QString sortingKey(KIO::filesize_t value, bool isDir, int sortSpec);
 
     /**
      * @internal
@@ -432,10 +472,14 @@ private:
     bool myOnlyDoubleClickSelectsFiles;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
     /* @internal for virtual_hook */
-    enum { VIRTUAL_SET_DROP_OPTIONS = 1 };
+    enum
+    {
+        VIRTUAL_SET_DROP_OPTIONS = 1
+    };
     void setDropOptions_impl(int options);
+
 private:
     class KFileViewPrivate;
     KFileViewPrivate *d;

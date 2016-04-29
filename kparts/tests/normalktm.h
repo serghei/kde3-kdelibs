@@ -8,31 +8,29 @@
 class KAction;
 class QWidget;
 
-class Shell : public KMainWindow
-{
-  Q_OBJECT
+class Shell : public KMainWindow {
+    Q_OBJECT
 public:
-  Shell();
-  virtual ~Shell();
+    Shell();
+    virtual ~Shell();
 
 protected slots:
-  void slotFileOpen();
-  void slotFileOpenRemote();
-  void slotFileEdit();
-  void slotFileCloseEditor();
+    void slotFileOpen();
+    void slotFileOpenRemote();
+    void slotFileEdit();
+    void slotFileCloseEditor();
 
 protected:
-  void embedEditor();
+    void embedEditor();
 
 private:
+    KAction *m_paEditFile;
+    KAction *m_paCloseEditor;
 
-  KAction * m_paEditFile;
-  KAction * m_paCloseEditor;
-
-  KParts::ReadOnlyPart *m_part1;
-  KParts::Part *m_part2;
-  KParts::ReadWritePart *m_editorpart;
-  QWidget *m_splitter;
+    KParts::ReadOnlyPart *m_part1;
+    KParts::Part *m_part2;
+    KParts::ReadWritePart *m_editorpart;
+    QWidget *m_splitter;
 };
 
 #endif

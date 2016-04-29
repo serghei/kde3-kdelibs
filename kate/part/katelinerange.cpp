@@ -20,56 +20,56 @@
 #include "katelinerange.h"
 
 KateLineRange::KateLineRange()
-  : line(-1)
-  , virtualLine(-1)
-  , startCol(-1)
-  , endCol(-1)
-  , startX(-1)
-  , endX(-1)
-  , dirty(false)
-  , viewLine(-1)
-  , wrap(false)
-  , startsInvisibleBlock(false)
-  , shiftX(0)
+    : line(-1)
+    , virtualLine(-1)
+    , startCol(-1)
+    , endCol(-1)
+    , startX(-1)
+    , endX(-1)
+    , dirty(false)
+    , viewLine(-1)
+    , wrap(false)
+    , startsInvisibleBlock(false)
+    , shiftX(0)
 {
 }
 
-KateLineRange::~KateLineRange ()
+KateLineRange::~KateLineRange()
 {
 }
 
 void KateLineRange::clear()
 {
-  line = -1;
-  virtualLine = -1;
-  startCol = -1;
-  endCol = -1;
-  startX = -1;
-  shiftX = 0;
-  endX = -1;
-  viewLine = -1;
-  wrap = false;
-  startsInvisibleBlock = false;
+    line = -1;
+    virtualLine = -1;
+    startCol = -1;
+    endCol = -1;
+    startX = -1;
+    shiftX = 0;
+    endX = -1;
+    viewLine = -1;
+    wrap = false;
+    startsInvisibleBlock = false;
 }
 
-bool operator> (const KateLineRange& r, const KateTextCursor& c)
+bool operator>(const KateLineRange &r, const KateTextCursor &c)
 {
-  return r.line > c.line() || r.endCol > c.col();
+    return r.line > c.line() || r.endCol > c.col();
 }
 
-bool operator>= (const KateLineRange& r, const KateTextCursor& c)
+bool operator>=(const KateLineRange &r, const KateTextCursor &c)
 {
-  return r.line > c.line() || r.endCol >= c.col();
+    return r.line > c.line() || r.endCol >= c.col();
 }
 
-bool operator< (const KateLineRange& r, const KateTextCursor& c)
+bool operator<(const KateLineRange &r, const KateTextCursor &c)
 {
-  return r.line < c.line() || r.startCol < c.col();
+    return r.line < c.line() || r.startCol < c.col();
 }
 
-bool operator<= (const KateLineRange& r, const KateTextCursor& c)
+bool operator<=(const KateLineRange &r, const KateTextCursor &c)
 {
-  return r.line < c.line() || r.startCol <= c.col();
+    return r.line < c.line() || r.startCol <= c.col();
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

@@ -24,41 +24,50 @@
 
 #include "render_object.h"
 
-namespace khtml
-{
+namespace khtml {
 
 
 /**
  * Base class for rendering objects that can have children
  */
-class RenderContainer : public RenderObject
-{
+class RenderContainer : public RenderObject {
 public:
-    RenderContainer(DOM::NodeImpl* node);
+    RenderContainer(DOM::NodeImpl *node);
 
     void detach();
 
-    RenderObject *firstChild() const { return m_first; }
-    RenderObject *lastChild() const { return m_last; }
+    RenderObject *firstChild() const
+    {
+        return m_first;
+    }
+    RenderObject *lastChild() const
+    {
+        return m_last;
+    }
 
-    virtual bool childAllowed() const {
+    virtual bool childAllowed() const
+    {
         // Prevent normal children when we are replaced by generated content
-        if (style()) return style()->useNormalContent();
+        if(style())
+            return style()->useNormalContent();
         return true;
     }
 
     virtual void addChild(RenderObject *newChild, RenderObject *beforeChild = 0);
 
-    virtual RenderObject* removeChildNode(RenderObject* child);
-    virtual void appendChildNode(RenderObject* child);
-    virtual void insertChildNode(RenderObject* child, RenderObject* before);
+    virtual RenderObject *removeChildNode(RenderObject *child);
+    virtual void appendChildNode(RenderObject *child);
+    virtual void insertChildNode(RenderObject *child, RenderObject *before);
 
     virtual void layout();
-    virtual void calcMinMaxWidth() { setMinMaxKnown( true ); }
+    virtual void calcMinMaxWidth()
+    {
+        setMinMaxKnown(true);
+    }
 
     virtual void removeLeftoverAnonymousBoxes();
 
-    virtual void setStyle(RenderStyle* _style);
+    virtual void setStyle(RenderStyle *_style);
 
 protected:
     // Generate CSS content
@@ -68,18 +77,22 @@ protected:
     void updatePseudoChildren();
     void updatePseudoChild(RenderStyle::PseudoId type);
 
-    RenderContainer* pseudoContainer( RenderStyle::PseudoId type ) const;
-    void addPseudoContainer(RenderObject* child);
-private:
+    RenderContainer *pseudoContainer(RenderStyle::PseudoId type) const;
+    void addPseudoContainer(RenderObject *child);
 
-    void setFirstChild(RenderObject *first) { m_first = first; }
-    void setLastChild(RenderObject *last) { m_last = last; }
+private:
+    void setFirstChild(RenderObject *first)
+    {
+        m_first = first;
+    }
+    void setLastChild(RenderObject *last)
+    {
+        m_last = last;
+    }
 
 protected:
-
     RenderObject *m_first;
     RenderObject *m_last;
 };
-
 }
 #endif

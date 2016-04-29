@@ -25,18 +25,17 @@
 class QDomElement;
 class KMPrinter;
 
-class KMFoomaticManager : public KMManager
-{
+class KMFoomaticManager : public KMManager {
 public:
-	KMFoomaticManager(QObject *parent, const char *name, const QStringList & /*args*/);
-	virtual ~KMFoomaticManager();
+    KMFoomaticManager(QObject *parent, const char *name, const QStringList & /*args*/);
+    virtual ~KMFoomaticManager();
 
-	DrMain* loadPrinterDriver(KMPrinter *p, bool config = false);
+    DrMain *loadPrinterDriver(KMPrinter *p, bool config = false);
 
 protected:
-	void listPrinters();
-	KMPrinter* createPrinterFromElement(QDomElement*);
-	DrMain* createDriverFromXML(QDomElement*);
+    void listPrinters();
+    KMPrinter *createPrinterFromElement(QDomElement *);
+    DrMain *createDriverFromXML(QDomElement *);
 };
 
 #endif

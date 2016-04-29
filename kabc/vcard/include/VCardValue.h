@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,26 +21,26 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  VALUE_H
-#define  VALUE_H
+#ifndef VALUE_H
+#define VALUE_H
 
 #include <qptrlist.h>
 
 #include <VCardEntity.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT Value : public Entity
-{
+class KVCARD_EXPORT Value : public Entity {
 #include "Value-generated.h"
 
-	virtual Value *clone() { return new Value( *this ); }
+    virtual Value *clone()
+    {
+        return new Value(*this);
+    }
 };
 
-typedef QPtrList<Value> ValueList;
-typedef QPtrListIterator<Value> ValueListIterator;
-
+typedef QPtrList< Value > ValueList;
+typedef QPtrListIterator< Value > ValueListIterator;
 }
 
 #endif

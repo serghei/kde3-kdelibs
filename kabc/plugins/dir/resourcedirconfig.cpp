@@ -34,74 +34,76 @@
 
 using namespace KABC;
 
-ResourceDirConfig::ResourceDirConfig( QWidget* parent,  const char* name )
-    : KRES::ConfigWidget( parent, name )
+ResourceDirConfig::ResourceDirConfig(QWidget *parent, const char *name) : KRES::ConfigWidget(parent, name)
 {
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2, 0, 
-      KDialog::spacingHint() );
+    QGridLayout *mainLayout = new QGridLayout(this, 2, 2, 0, KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "Format:" ), this );
-  mFormatBox = new KComboBox( this );
+    QLabel *label = new QLabel(i18n("Format:"), this);
+    mFormatBox = new KComboBox(this);
 
-  mainLayout->addWidget( label, 0, 0 );
-  mainLayout->addWidget( mFormatBox, 0, 1 );
+    mainLayout->addWidget(label, 0, 0);
+    mainLayout->addWidget(mFormatBox, 0, 1);
 
-  label = new QLabel( i18n( "Location:" ), this );
-  mFileNameEdit = new KURLRequester( this );
-  mFileNameEdit->setMode( KFile::Directory );
+    label = new QLabel(i18n("Location:"), this);
+    mFileNameEdit = new KURLRequester(this);
+    mFileNameEdit->setMode(KFile::Directory);
 
-  mainLayout->addWidget( label, 1, 0 );
-  mainLayout->addWidget( mFileNameEdit, 1, 1 );
+    mainLayout->addWidget(label, 1, 0);
+    mainLayout->addWidget(mFileNameEdit, 1, 1);
 
-  FormatFactory *factory = FormatFactory::self();
-  QStringList formats = factory->formats();
-  QStringList::Iterator it;
-  for ( it = formats.begin(); it != formats.end(); ++it ) {
-    FormatInfo *info = factory->info( *it );
-    if ( info ) {
-      mFormatTypes << (*it);
-      mFormatBox->insertItem( info->nameLabel );
+    FormatFactory *factory = FormatFactory::self();
+    QStringList formats = factory->formats();
+    QStringList::Iterator it;
+    for(it = formats.begin(); it != formats.end(); ++it)
+    {
+        FormatInfo *info = factory->info(*it);
+        if(info)
+        {
+            mFormatTypes << (*it);
+            mFormatBox->insertItem(info->nameLabel);
+        }
     }
-  }
 
-  mInEditMode = false;
+    mInEditMode = false;
 }
 
-void ResourceDirConfig::setEditMode( bool value )
+void ResourceDirConfig::setEditMode(bool value)
 {
-  mFormatBox->setEnabled( !value );
-  mInEditMode = value;
+    mFormatBox->setEnabled(!value);
+    mInEditMode = value;
 }
 
-void ResourceDirConfig::loadSettings( KRES::Resource *res )
+void ResourceDirConfig::loadSettings(KRES::Resource *res)
 {
-  ResourceDir *resource = dynamic_cast<ResourceDir*>( res );
-  
-  if ( !resource ) {
-    kdDebug(5700) << "ResourceDirConfig::loadSettings(): cast failed" << endl;
-    return;
-  }
+    ResourceDir *resource = dynamic_cast< ResourceDir * >(res);
 
-  mFormatBox->setCurrentItem( mFormatTypes.findIndex( resource->format() ) );
+    if(!resource)
+    {
+        kdDebug(5700) << "ResourceDirConfig::loadSettings(): cast failed" << endl;
+        return;
+    }
 
-  mFileNameEdit->setURL( resource->path() );
-  if ( mFileNameEdit->url().isEmpty() )
-    mFileNameEdit->setURL( KABC::StdAddressBook::directoryName() );
+    mFormatBox->setCurrentItem(mFormatTypes.findIndex(resource->format()));
+
+    mFileNameEdit->setURL(resource->path());
+    if(mFileNameEdit->url().isEmpty())
+        mFileNameEdit->setURL(KABC::StdAddressBook::directoryName());
 }
 
-void ResourceDirConfig::saveSettings( KRES::Resource *res )
+void ResourceDirConfig::saveSettings(KRES::Resource *res)
 {
-  ResourceDir *resource = dynamic_cast<ResourceDir*>( res );
-  
-  if ( !resource ) {
-    kdDebug(5700) << "ResourceDirConfig::loadSettings(): cast failed" << endl;
-    return;
-  }
+    ResourceDir *resource = dynamic_cast< ResourceDir * >(res);
 
-  if ( mInEditMode )
-    resource->setFormat( mFormatTypes[ mFormatBox->currentItem() ] );
+    if(!resource)
+    {
+        kdDebug(5700) << "ResourceDirConfig::loadSettings(): cast failed" << endl;
+        return;
+    }
 
-  resource->setPath( mFileNameEdit->url() );
+    if(mInEditMode)
+        resource->setFormat(mFormatTypes[mFormatBox->currentItem()]);
+
+    resource->setPath(mFileNameEdit->url());
 }
 
 #include "resourcedirconfig.moc"

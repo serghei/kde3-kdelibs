@@ -32,11 +32,10 @@ Author: Ralph Mor, X Consortium
 #include "KDE-ICE/ICElibint.h"
 
 
-void
-_IceAddReplyWait (iceConn, replyWait)
+void _IceAddReplyWait(iceConn, replyWait)
 
-IceConn			iceConn;
-IceReplyWaitInfo	*replyWait;
+    IceConn iceConn;
+IceReplyWaitInfo *replyWait;
 
 {
     /*
@@ -44,127 +43,119 @@ IceReplyWaitInfo	*replyWait;
      * replyWait is not already in the list).
      */
 
-    _IceSavedReplyWait	*savedReplyWait;
-    _IceSavedReplyWait	*prev, *last;
+    _IceSavedReplyWait *savedReplyWait;
+    _IceSavedReplyWait *prev, *last;
 
     prev = NULL;
     last = iceConn->saved_reply_waits;
 
-    while (last)
+    while(last)
     {
-	if (last->reply_wait == replyWait)
-	    return;
+        if(last->reply_wait == replyWait)
+            return;
 
-	prev = last;
-	last = last->next;
+        prev = last;
+        last = last->next;
     }
-	
-    savedReplyWait = (_IceSavedReplyWait *) malloc (
-	sizeof (_IceSavedReplyWait));
+
+    savedReplyWait = (_IceSavedReplyWait *)malloc(sizeof(_IceSavedReplyWait));
 
     savedReplyWait->reply_wait = replyWait;
     savedReplyWait->reply_ready = False;
     savedReplyWait->next = NULL;
 
-    if (prev == NULL)
-	iceConn->saved_reply_waits = savedReplyWait;
+    if(prev == NULL)
+        iceConn->saved_reply_waits = savedReplyWait;
     else
-	prev->next = savedReplyWait;
+        prev->next = savedReplyWait;
 }
 
 
-
-IceReplyWaitInfo *
-_IceSearchReplyWaits (iceConn, majorOpcode)
+IceReplyWaitInfo *_IceSearchReplyWaits(iceConn, majorOpcode)
 
-IceConn	iceConn;
-int	majorOpcode;
+    IceConn iceConn;
+int majorOpcode;
 
 {
     /*
      * Return the first replyWait in the list with the given majorOpcode
      */
-    _IceSavedReplyWait	*savedReplyWait = iceConn->saved_reply_waits;
-     
+    _IceSavedReplyWait *savedReplyWait = iceConn->saved_reply_waits;
+
 
     /* first translate the opcode from the other end to our major */
-    if (majorOpcode != 0) /* major 0 (ICE) is always the same*/
+    if(majorOpcode != 0) /* major 0 (ICE) is always the same*/
     {
-	if ((majorOpcode < iceConn->his_min_opcode) || (majorOpcode > iceConn->his_max_opcode))
-	    return NULL;
-	majorOpcode = iceConn->process_msg_info[majorOpcode - iceConn->his_min_opcode].my_opcode;
+        if((majorOpcode < iceConn->his_min_opcode) || (majorOpcode > iceConn->his_max_opcode))
+            return NULL;
+        majorOpcode = iceConn->process_msg_info[majorOpcode - iceConn->his_min_opcode].my_opcode;
     }
-    
 
-    while (savedReplyWait)
+
+    while(savedReplyWait)
     {
-        if (!savedReplyWait->reply_ready &&
-            (savedReplyWait->reply_wait->major_opcode_of_request == majorOpcode))
-           return savedReplyWait->reply_wait;
-        
-	savedReplyWait = savedReplyWait->next;
+        if(!savedReplyWait->reply_ready && (savedReplyWait->reply_wait->major_opcode_of_request == majorOpcode))
+            return savedReplyWait->reply_wait;
+
+        savedReplyWait = savedReplyWait->next;
     }
 
     return NULL;
 }
 
 
-
-void
-_IceSetReplyReady (iceConn, replyWait)
+void _IceSetReplyReady(iceConn, replyWait)
 
-IceConn			iceConn;
-IceReplyWaitInfo	*replyWait;
+    IceConn iceConn;
+IceReplyWaitInfo *replyWait;
 
 {
     /*
      * The replyWait specified has a reply ready.
      */
 
-    _IceSavedReplyWait	*savedReplyWait = iceConn->saved_reply_waits;
+    _IceSavedReplyWait *savedReplyWait = iceConn->saved_reply_waits;
 
-    while (savedReplyWait && savedReplyWait->reply_wait != replyWait)
-	savedReplyWait = savedReplyWait->next;
+    while(savedReplyWait && savedReplyWait->reply_wait != replyWait)
+        savedReplyWait = savedReplyWait->next;
 
-    if (savedReplyWait)
-	savedReplyWait->reply_ready = True;
+    if(savedReplyWait)
+        savedReplyWait->reply_ready = True;
 }
 
 
-
-Bool
-_IceCheckReplyReady (iceConn, replyWait)
+Bool _IceCheckReplyReady(iceConn, replyWait)
 
-IceConn			iceConn;
-IceReplyWaitInfo	*replyWait;
+    IceConn iceConn;
+IceReplyWaitInfo *replyWait;
 
 {
-    _IceSavedReplyWait	*savedReplyWait = iceConn->saved_reply_waits;
-    _IceSavedReplyWait	*prev = NULL;
-    Bool		found = False;
-    Bool		ready;
+    _IceSavedReplyWait *savedReplyWait = iceConn->saved_reply_waits;
+    _IceSavedReplyWait *prev = NULL;
+    Bool found = False;
+    Bool ready;
 
-    while (savedReplyWait && !found)
+    while(savedReplyWait && !found)
     {
-	if (savedReplyWait->reply_wait == replyWait)
-	    found = True;
-	else
-	{
-	    prev = savedReplyWait;
-	    savedReplyWait = savedReplyWait->next;
-	}
+        if(savedReplyWait->reply_wait == replyWait)
+            found = True;
+        else
+        {
+            prev = savedReplyWait;
+            savedReplyWait = savedReplyWait->next;
+        }
     }
 
     ready = found && savedReplyWait->reply_ready;
 
-    if (ready)
+    if(ready)
     {
-	if (prev == NULL)
-	    iceConn->saved_reply_waits = savedReplyWait->next;
-	else
-	    prev->next = savedReplyWait->next;
-	
-	free ((char *) savedReplyWait);
+        if(prev == NULL)
+            iceConn->saved_reply_waits = savedReplyWait->next;
+        else
+            prev->next = savedReplyWait->next;
+
+        free((char *)savedReplyWait);
     }
 
     return (ready);

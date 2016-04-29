@@ -58,118 +58,113 @@
 
 KTempDir::KTempDir(QString directoryPrefix, int mode)
 {
-   bAutoDelete = false;
-   bExisting = false;
-   mError=0;
-   if (directoryPrefix.isEmpty())
-   {
-      directoryPrefix = locateLocal("tmp", KGlobal::instance()->instanceName());
-   }
-   (void) create(directoryPrefix , mode);
+    bAutoDelete = false;
+    bExisting = false;
+    mError = 0;
+    if(directoryPrefix.isEmpty())
+    {
+        directoryPrefix = locateLocal("tmp", KGlobal::instance()->instanceName());
+    }
+    (void)create(directoryPrefix, mode);
 }
 
-bool
-KTempDir::create(const QString &directoryPrefix, int mode)
+bool KTempDir::create(const QString &directoryPrefix, int mode)
 {
-   // make sure the random seed is randomized
-   (void) KApplication::random();
+    // make sure the random seed is randomized
+    (void)KApplication::random();
 
-   QCString nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
-   char *realName;
-   if((realName=mkdtemp(nme.data())) == 0)
-   {
-       // Recreate it for the warning, mkdtemps emptied it
-       QCString nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
-       qWarning("KTempDir: Error trying to create %s: %s", nme.data(), strerror(errno));
-       mError = errno;
-       mTmpName = QString::null;
-       return false;
-   }
+    QCString nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
+    char *realName;
+    if((realName = mkdtemp(nme.data())) == 0)
+    {
+        // Recreate it for the warning, mkdtemps emptied it
+        QCString nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
+        qWarning("KTempDir: Error trying to create %s: %s", nme.data(), strerror(errno));
+        mError = errno;
+        mTmpName = QString::null;
+        return false;
+    }
 
-   // got a return value != 0
-   QCString realNameStr(realName);
-   mTmpName = QFile::decodeName(realNameStr)+"/";
-   kdDebug(180) << "KTempDir: Temporary directory created :" << mTmpName << endl;
-   mode_t tmp = 0;
-   mode_t umsk = umask(tmp);
-   umask(umsk);
-   chmod(nme, mode&(~umsk));
+    // got a return value != 0
+    QCString realNameStr(realName);
+    mTmpName = QFile::decodeName(realNameStr) + "/";
+    kdDebug(180) << "KTempDir: Temporary directory created :" << mTmpName << endl;
+    mode_t tmp = 0;
+    mode_t umsk = umask(tmp);
+    umask(umsk);
+    chmod(nme, mode & (~umsk));
 
-   // Success!
-   bExisting = true;
+    // Success!
+    bExisting = true;
 
-   // Set uid/gid (necessary for SUID programs)
-   chown(nme, getuid(), getgid());
-   return true;
+    // Set uid/gid (necessary for SUID programs)
+    chown(nme, getuid(), getgid());
+    return true;
 }
 
 KTempDir::~KTempDir()
 {
-   if (bAutoDelete)
-      unlink();
+    if(bAutoDelete)
+        unlink();
 
-// KTempDirPrivate doesn't exist, so it can't be deleted
-//   delete d;
+    // KTempDirPrivate doesn't exist, so it can't be deleted
+    //   delete d;
 }
 
-int
-KTempDir::status() const
+int KTempDir::status() const
 {
-   return mError;
+    return mError;
 }
 
-QString
-KTempDir::name() const
+QString KTempDir::name() const
 {
-   return mTmpName;
+    return mTmpName;
 }
 
-bool
-KTempDir::existing() const
+bool KTempDir::existing() const
 {
-   return bExisting;
+    return bExisting;
 }
 
-QDir *
-KTempDir::qDir()
+QDir *KTempDir::qDir()
 {
-   if (bExisting) return new QDir(mTmpName);
-   return 0;
+    if(bExisting)
+        return new QDir(mTmpName);
+    return 0;
 }
 
-void
-KTempDir::unlink()
+void KTempDir::unlink()
 {
-   if (!bExisting) return;
-   if (KTempDir::removeDir(mTmpName))
-      mError=0;
-   else
-      mError=errno;
-   bExisting=false;
+    if(!bExisting)
+        return;
+    if(KTempDir::removeDir(mTmpName))
+        mError = 0;
+    else
+        mError = errno;
+    bExisting = false;
 }
 
 // Auxiliary recursive function for removeDirs
-static bool
-rmtree(const QCString& name)
+static bool rmtree(const QCString &name)
 {
     kdDebug() << "Checking directory for remove " << name << endl;
     KDE_struct_stat st;
-    if ( KDE_lstat( name.data(), &st ) == -1 ) // Do not dereference symlink!
+    if(KDE_lstat(name.data(), &st) == -1) // Do not dereference symlink!
         return false;
-    if ( S_ISDIR( st.st_mode ) )
+    if(S_ISDIR(st.st_mode))
     {
         // This is a directory, so process it
         kdDebug() << "File " << name << " is DIRECTORY!" << endl;
-        KDE_struct_dirent* ep;
-        DIR* dp = ::opendir( name.data() );
-        if ( !dp )
+        KDE_struct_dirent *ep;
+        DIR *dp = ::opendir(name.data());
+        if(!dp)
             return false;
-        while ( ( ep = KDE_readdir( dp ) ) )
+        while((ep = KDE_readdir(dp)))
         {
             kdDebug() << "CHECKING " << name << "/" << ep->d_name << endl;
-            if ( !qstrcmp( ep->d_name, "." ) || !qstrcmp( ep->d_name, ".." ) )
+            if(!qstrcmp(ep->d_name, ".") || !qstrcmp(ep->d_name, ".."))
                 continue;
-            QCString newName( name );
+            QCString newName(name);
             newName += "/"; // Careful: do not add '/' instead or you get problems with Qt3.
             newName += ep->d_name;
             /*
@@ -180,39 +175,36 @@ rmtree(const QCString& name)
              * - unlink and rmdir invalidates a opendir/readdir/closedir
              * - limited number of file descriptors for opendir/readdir/closedir
              */
-            if ( ::closedir( dp ) )
+            if(::closedir(dp))
                 return false;
             // Recurse!
             kdDebug() << "RECURSE: " << newName << endl;
-            if ( ! rmtree( newName ) )
+            if(!rmtree(newName))
                 return false;
             // We have to re-open the directory before continuing
-            dp = ::opendir( name.data() );
-            if ( !dp )
+            dp = ::opendir(name.data());
+            if(!dp)
                 return false;
         }
-        if ( ::closedir( dp ) )
+        if(::closedir(dp))
             return false;
         kdDebug() << "RMDIR dir " << name << endl;
-        return ! ::rmdir( name );
+        return !::rmdir(name);
     }
     else
     {
-         // This is a non-directory file, so remove it
-         kdDebug() << "UNLINKING file " << name << endl;
-         return ! ::unlink( name );
+        // This is a non-directory file, so remove it
+        kdDebug() << "UNLINKING file " << name << endl;
+        return !::unlink(name);
     }
 }
 
-bool
-KTempDir::removeDir(const QString& path)
+bool KTempDir::removeDir(const QString &path)
 {
     kdDebug() << k_funcinfo << " " << path << endl;
-    if ( !QFile::exists( path ) )
+    if(!QFile::exists(path))
         return true; // The goal is that there is no directory
 
-    const QCString cstr( QFile::encodeName( path ) );
-    return rmtree( cstr );
+    const QCString cstr(QFile::encodeName(path));
+    return rmtree(cstr);
 }
-
-

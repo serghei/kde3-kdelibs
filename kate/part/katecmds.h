@@ -27,8 +27,7 @@
 class KateDocument;
 class KCompletion;
 
-namespace KateCommands
-{
+namespace KateCommands {
 
 /**
  * This Kate::Command provides access to a lot of the core functionality
@@ -36,9 +35,8 @@ namespace KateCommands
  * it needs to get a kateview pointer, it will cast the kate::view pointer
  * hard to kateview
  */
-class CoreCommands : public Kate::Command, public Kate::CommandExtension
-{
-  public:
+class CoreCommands : public Kate::Command, public Kate::CommandExtension {
+public:
     /**
      * execute command
      * @param view view to use for execution
@@ -46,9 +44,12 @@ class CoreCommands : public Kate::Command, public Kate::CommandExtension
      * @param errorMsg error to return if no success
      * @return success
      */
-    bool exec( class Kate::View *view, const QString &cmd, QString &errorMsg );
+    bool exec(class Kate::View *view, const QString &cmd, QString &errorMsg);
 
-    bool help( class Kate::View *, const QString &, QString & ) {return false;};
+    bool help(class Kate::View *, const QString &, QString &)
+    {
+        return false;
+    };
 
     /**
      * supported commands as prefixes
@@ -59,7 +60,7 @@ class CoreCommands : public Kate::Command, public Kate::CommandExtension
     /**
     * override completionObject from interfaces/document.h .
     */
-    KCompletion *completionObject( const QString &cmd, Kate::View *view );
+    KCompletion *completionObject(const QString &cmd, Kate::View *view);
 };
 
 /**
@@ -72,9 +73,8 @@ class CoreCommands : public Kate::Command, public Kate::CommandExtension
  *
  * $s/// is currently unsupported
  **/
-class SedReplace : public Kate::Command
-{
-  public:
+class SedReplace : public Kate::Command {
+public:
     /**
      * execute command
      * @param view view to use for execution
@@ -82,17 +82,26 @@ class SedReplace : public Kate::Command
      * @param errorMsg error to return if no success
      * @return success
      */
-    bool exec (class Kate::View *view, const QString &cmd, QString &errorMsg);
+    bool exec(class Kate::View *view, const QString &cmd, QString &errorMsg);
 
-    bool help (class Kate::View *, const QString &, QString &) { return false; };
+    bool help(class Kate::View *, const QString &, QString &)
+    {
+        return false;
+    };
 
     /**
      * supported commands as prefixes
      * @return prefix list
      */
-    QStringList cmds () { QStringList l("s"); l << "%s" << "$s"; return l; };
+    QStringList cmds()
+    {
+        QStringList l("s");
+        l << "%s"
+          << "$s";
+        return l;
+    };
 
-  private:
+private:
     /**
      * Searches one line and does the replacement in the document.
      * If @p replace contains any newline characters, the reamaining part of the
@@ -112,10 +121,8 @@ class SedReplace : public Kate::Command
      * @param endcol The last collumn in the line allowed in a match.
      * If it is -1, the whole line is used.
      */
-    static int sedMagic(KateDocument *doc, int &line,
-                        const QString &find, const QString &replace, const QString &delim,
-                        bool noCase, bool repeat,
-                        uint startcol=0, int endcol=-1);
+    static int sedMagic(KateDocument *doc, int &line, const QString &find, const QString &replace, const QString &delim, bool noCase, bool repeat,
+                        uint startcol = 0, int endcol = -1);
 };
 
 /**
@@ -126,9 +133,8 @@ class SedReplace : public Kate::Command
  *
  * prefixed with "char:"
  **/
-class Character : public Kate::Command
-{
-  public:
+class Character : public Kate::Command {
+public:
     /**
      * execute command
      * @param view view to use for execution
@@ -136,23 +142,28 @@ class Character : public Kate::Command
      * @param errorMsg error to return if no success
      * @return success
      */
-    bool exec (class Kate::View *view, const QString &cmd, QString &errorMsg);
+    bool exec(class Kate::View *view, const QString &cmd, QString &errorMsg);
 
-    bool help (class Kate::View *, const QString &, QString &) { return false; };
+    bool help(class Kate::View *, const QString &, QString &)
+    {
+        return false;
+    };
 
     /**
      * supported commands as prefixes
      * @return prefix list
      */
-    QStringList cmds () { return QStringList("char"); };
+    QStringList cmds()
+    {
+        return QStringList("char");
+    };
 };
 
 /**
  * insert the current date/time in the given format
  */
-class Date : public Kate::Command
-{
-  public:
+class Date : public Kate::Command {
+public:
     /**
      * execute command
      * @param view view to use for execution
@@ -160,15 +171,21 @@ class Date : public Kate::Command
      * @param errorMsg error to return if no success
      * @return success
      */
-    bool exec (class Kate::View *view, const QString &cmd, QString &errorMsg);
+    bool exec(class Kate::View *view, const QString &cmd, QString &errorMsg);
 
-    bool help (class Kate::View *, const QString &, QString &) { return false; };
+    bool help(class Kate::View *, const QString &, QString &)
+    {
+        return false;
+    };
 
     /**
      * supported commands as prefixes
      * @return prefix list
      */
-    QStringList cmds () { return QStringList("date"); };
+    QStringList cmds()
+    {
+        return QStringList("date");
+    };
 };
 
 

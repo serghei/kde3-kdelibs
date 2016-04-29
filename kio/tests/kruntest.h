@@ -23,36 +23,37 @@
 
 #include <qwidget.h>
 
-class testKRun : public KRun
-{
-  Q_OBJECT
+class testKRun : public KRun {
+    Q_OBJECT
 public:
+    testKRun(const KURL &_url, mode_t _mode = 0, bool _is_local_file = false, bool _auto_delete = true)
+        : KRun(_url, _mode, _is_local_file, _auto_delete)
+    {
+    }
 
-  testKRun( const KURL& _url, mode_t _mode = 0,
-            bool _is_local_file = false, bool _auto_delete = true )
-    : KRun( _url, _mode, _is_local_file, _auto_delete ) {}
+    virtual ~testKRun()
+    {
+    }
 
-  virtual ~testKRun() {}
-
-  virtual void foundMimeType( const QString& _type );
-
+    virtual void foundMimeType(const QString &_type);
 };
 
 
 class QPushButton;
-class Receiver : public QWidget
-{
-  Q_OBJECT
+class Receiver : public QWidget {
+    Q_OBJECT
 public:
-  Receiver();
-  ~Receiver() {}
+    Receiver();
+    ~Receiver()
+    {
+    }
 public slots:
- void slotStart();
- void slotStop();
-private:
- QPushButton * start;
- QPushButton * stop;
+    void slotStart();
+    void slotStop();
 
+private:
+    QPushButton *start;
+    QPushButton *stop;
 };
 
 #endif

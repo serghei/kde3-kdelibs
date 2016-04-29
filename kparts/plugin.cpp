@@ -40,20 +40,20 @@
 
 using namespace KParts;
 
-class Plugin::PluginPrivate
-{
+class Plugin::PluginPrivate {
 public:
-    PluginPrivate() : m_parentInstance( 0 ) {}
+    PluginPrivate() : m_parentInstance(0)
+    {
+    }
 
     const KInstance *m_parentInstance;
     QString m_library; // filename of the library
 };
 
-Plugin::Plugin( QObject* parent, const char* name )
-    : QObject( parent, name )
+Plugin::Plugin(QObject *parent, const char *name) : QObject(parent, name)
 {
-  //kdDebug() << className() << endl;
-  d = new PluginPrivate();
+    // kdDebug() << className() << endl;
+    d = new PluginPrivate();
 }
 
 Plugin::~Plugin()
@@ -65,11 +65,11 @@ QString Plugin::xmlFile() const
 {
     QString path = KXMLGUIClient::xmlFile();
 
-    if ( !d->m_parentInstance || ( path.length() > 0 && path[ 0 ] == '/' ) )
+    if(!d->m_parentInstance || (path.length() > 0 && path[0] == '/'))
         return path;
 
-    QString absPath = locate( "data", QString::fromLatin1( d->m_parentInstance->instanceName() ) + '/' + path );
-    assert( !absPath.isEmpty() );
+    QString absPath = locate("data", QString::fromLatin1(d->m_parentInstance->instanceName()) + '/' + path);
+    assert(!absPath.isEmpty());
     return absPath;
 }
 
@@ -77,212 +77,208 @@ QString Plugin::localXMLFile() const
 {
     QString path = KXMLGUIClient::xmlFile();
 
-    if ( !d->m_parentInstance || ( path.length() > 0 && path[ 0 ] == '/' ) )
+    if(!d->m_parentInstance || (path.length() > 0 && path[0] == '/'))
         return path;
 
-    QString absPath = locateLocal( "data", QString::fromLatin1( d->m_parentInstance->instanceName() ) + '/' + path );
-    assert( !absPath.isEmpty() );
+    QString absPath = locateLocal("data", QString::fromLatin1(d->m_parentInstance->instanceName()) + '/' + path);
+    assert(!absPath.isEmpty());
     return absPath;
 }
 
-//static
-QValueList<Plugin::PluginInfo> Plugin::pluginInfos( const KInstance * instance )
+// static
+QValueList< Plugin::PluginInfo > Plugin::pluginInfos(const KInstance *instance)
 {
-  if ( !instance )
-    kdError(1000) << "No instance ???" << endl;
+    if(!instance)
+        kdError(1000) << "No instance ???" << endl;
 
-  QValueList<PluginInfo> plugins;
+    QValueList< PluginInfo > plugins;
 
-  // KDE4: change * into *.rc and remove test for .desktop from the for loop below.
-  const QStringList pluginDocs = instance->dirs()->findAllResources(
-    "data", instance->instanceName()+"/kpartplugins/*", true, false );
+    // KDE4: change * into *.rc and remove test for .desktop from the for loop below.
+    const QStringList pluginDocs = instance->dirs()->findAllResources("data", instance->instanceName() + "/kpartplugins/*", true, false);
 
-  QMap<QString,QStringList> sortedPlugins;
+    QMap< QString, QStringList > sortedPlugins;
 
-  QStringList::ConstIterator pIt = pluginDocs.begin();
-  QStringList::ConstIterator pEnd = pluginDocs.end();
-  for (; pIt != pEnd; ++pIt )
-  {
-      QFileInfo fInfo( *pIt );
-      if ( fInfo.extension() == QString::fromLatin1( "desktop" ) )
-          continue;
+    QStringList::ConstIterator pIt = pluginDocs.begin();
+    QStringList::ConstIterator pEnd = pluginDocs.end();
+    for(; pIt != pEnd; ++pIt)
+    {
+        QFileInfo fInfo(*pIt);
+        if(fInfo.extension() == QString::fromLatin1("desktop"))
+            continue;
 
-      QMap<QString,QStringList>::Iterator mapIt = sortedPlugins.find( fInfo.fileName() );
-      if ( mapIt == sortedPlugins.end() )
-          mapIt = sortedPlugins.insert( fInfo.fileName(), QStringList() );
+        QMap< QString, QStringList >::Iterator mapIt = sortedPlugins.find(fInfo.fileName());
+        if(mapIt == sortedPlugins.end())
+            mapIt = sortedPlugins.insert(fInfo.fileName(), QStringList());
 
-      mapIt.data().append( *pIt );
-  }
+        mapIt.data().append(*pIt);
+    }
 
-  QMap<QString,QStringList>::ConstIterator mapIt = sortedPlugins.begin();
-  QMap<QString,QStringList>::ConstIterator mapEnd = sortedPlugins.end();
-  for (; mapIt != mapEnd; ++mapIt )
-  {
-      PluginInfo info;
-      QString doc;
-      info.m_absXMLFileName = KXMLGUIClient::findMostRecentXMLFile( mapIt.data(), doc );
-      if ( info.m_absXMLFileName.isEmpty() )
-          continue;
+    QMap< QString, QStringList >::ConstIterator mapIt = sortedPlugins.begin();
+    QMap< QString, QStringList >::ConstIterator mapEnd = sortedPlugins.end();
+    for(; mapIt != mapEnd; ++mapIt)
+    {
+        PluginInfo info;
+        QString doc;
+        info.m_absXMLFileName = KXMLGUIClient::findMostRecentXMLFile(mapIt.data(), doc);
+        if(info.m_absXMLFileName.isEmpty())
+            continue;
 
-      kdDebug( 1000 ) << "found KParts Plugin : " << info.m_absXMLFileName << endl;
-      info.m_relXMLFileName = "kpartplugins/";
-      info.m_relXMLFileName += mapIt.key();
+        kdDebug(1000) << "found KParts Plugin : " << info.m_absXMLFileName << endl;
+        info.m_relXMLFileName = "kpartplugins/";
+        info.m_relXMLFileName += mapIt.key();
 
-      info.m_document.setContent( doc );
-      if ( info.m_document.documentElement().isNull() )
-          continue;
+        info.m_document.setContent(doc);
+        if(info.m_document.documentElement().isNull())
+            continue;
 
-      plugins.append( info );
-  }
+        plugins.append(info);
+    }
 
-  return plugins;
+    return plugins;
 }
 
-void Plugin::loadPlugins( QObject *parent, const KInstance *instance )
+void Plugin::loadPlugins(QObject *parent, const KInstance *instance)
 {
-  loadPlugins( parent, pluginInfos( instance ), instance );
+    loadPlugins(parent, pluginInfos(instance), instance);
 }
 
-void Plugin::loadPlugins( QObject *parent, const QValueList<PluginInfo> &pluginInfos, const KInstance *instance )
+void Plugin::loadPlugins(QObject *parent, const QValueList< PluginInfo > &pluginInfos, const KInstance *instance)
 {
-   QValueList<PluginInfo>::ConstIterator pIt = pluginInfos.begin();
-   QValueList<PluginInfo>::ConstIterator pEnd = pluginInfos.end();
-   for (; pIt != pEnd; ++pIt )
-   {
-     QString library = (*pIt).m_document.documentElement().attribute( "library" );
+    QValueList< PluginInfo >::ConstIterator pIt = pluginInfos.begin();
+    QValueList< PluginInfo >::ConstIterator pEnd = pluginInfos.end();
+    for(; pIt != pEnd; ++pIt)
+    {
+        QString library = (*pIt).m_document.documentElement().attribute("library");
 
-     if ( library.isEmpty() || hasPlugin( parent, library ) )
-       continue;
+        if(library.isEmpty() || hasPlugin(parent, library))
+            continue;
 
-     Plugin *plugin = loadPlugin( parent, QFile::encodeName(library) );
+        Plugin *plugin = loadPlugin(parent, QFile::encodeName(library));
 
-     if ( plugin )
-     {
-       plugin->d->m_parentInstance = instance;
-       plugin->setXMLFile( (*pIt).m_relXMLFileName, false, false );
-       plugin->setDOMDocument( (*pIt).m_document );
-
-     }
-   }
-
+        if(plugin)
+        {
+            plugin->d->m_parentInstance = instance;
+            plugin->setXMLFile((*pIt).m_relXMLFileName, false, false);
+            plugin->setDOMDocument((*pIt).m_document);
+        }
+    }
 }
 
-void Plugin::loadPlugins( QObject *parent, const QValueList<PluginInfo> &pluginInfos )
+void Plugin::loadPlugins(QObject *parent, const QValueList< PluginInfo > &pluginInfos)
 {
-   loadPlugins(parent, pluginInfos, 0);
+    loadPlugins(parent, pluginInfos, 0);
 }
 
 // static
-Plugin* Plugin::loadPlugin( QObject * parent, const char* libname )
+Plugin *Plugin::loadPlugin(QObject *parent, const char *libname)
 {
-    Plugin* plugin = ComponentFactory::createInstanceFromLibrary<Plugin>( libname, parent, libname );
-    if ( !plugin )
+    Plugin *plugin = ComponentFactory::createInstanceFromLibrary< Plugin >(libname, parent, libname);
+    if(!plugin)
         return 0L;
     plugin->d->m_library = libname;
     return plugin;
 }
 
-QPtrList<KParts::Plugin> Plugin::pluginObjects( QObject *parent )
+QPtrList< KParts::Plugin > Plugin::pluginObjects(QObject *parent)
 {
-  QPtrList<KParts::Plugin> objects;
+    QPtrList< KParts::Plugin > objects;
 
-  if (!parent )
+    if(!parent)
+        return objects;
+
+    QObjectList *plugins = parent->queryList("KParts::Plugin", 0, false, false);
+
+    QObjectListIt it(*plugins);
+    for(; it.current(); ++it)
+    {
+        objects.append(static_cast< Plugin * >(it.current()));
+    }
+
+    delete plugins;
+
     return objects;
-
-  QObjectList *plugins = parent->queryList( "KParts::Plugin", 0, false, false );
-
-  QObjectListIt it( *plugins );
-  for ( ; it.current() ; ++it )
-  {
-    objects.append( static_cast<Plugin *>( it.current() ) );
-  }
-
-  delete plugins;
-
-  return objects;
 }
 
-bool Plugin::hasPlugin( QObject* parent, const QString& library )
+bool Plugin::hasPlugin(QObject *parent, const QString &library)
 {
-  QObjectList *plugins = parent->queryList( "KParts::Plugin", 0, false, false );
-  QObjectListIt it( *plugins );
-  for ( ; it.current() ; ++it )
-  {
-      if ( static_cast<Plugin *>( it.current() )->d->m_library == library )
-      {
-          delete plugins;
-          return true;
-      }
-  }
-  delete plugins;
-  return false;
+    QObjectList *plugins = parent->queryList("KParts::Plugin", 0, false, false);
+    QObjectListIt it(*plugins);
+    for(; it.current(); ++it)
+    {
+        if(static_cast< Plugin * >(it.current())->d->m_library == library)
+        {
+            delete plugins;
+            return true;
+        }
+    }
+    delete plugins;
+    return false;
 }
 
-void Plugin::setInstance( KInstance *instance )
+void Plugin::setInstance(KInstance *instance)
 {
-    KGlobal::locale()->insertCatalogue( instance->instanceName() );
-    KXMLGUIClient::setInstance( instance );
+    KGlobal::locale()->insertCatalogue(instance->instanceName());
+    KXMLGUIClient::setInstance(instance);
 }
 
-void Plugin::loadPlugins( QObject *parent, KXMLGUIClient* parentGUIClient, KInstance* instance, bool enableNewPluginsByDefault )
+void Plugin::loadPlugins(QObject *parent, KXMLGUIClient *parentGUIClient, KInstance *instance, bool enableNewPluginsByDefault)
 {
-    KConfigGroup cfgGroup( instance->config(), "KParts Plugins" );
-    QValueList<PluginInfo> plugins = pluginInfos( instance );
-    QValueList<PluginInfo>::ConstIterator pIt = plugins.begin();
-    QValueList<PluginInfo>::ConstIterator pEnd = plugins.end();
-    for (; pIt != pEnd; ++pIt )
+    KConfigGroup cfgGroup(instance->config(), "KParts Plugins");
+    QValueList< PluginInfo > plugins = pluginInfos(instance);
+    QValueList< PluginInfo >::ConstIterator pIt = plugins.begin();
+    QValueList< PluginInfo >::ConstIterator pEnd = plugins.end();
+    for(; pIt != pEnd; ++pIt)
     {
         QDomElement docElem = (*pIt).m_document.documentElement();
-        QString library = docElem.attribute( "library" );
+        QString library = docElem.attribute("library");
 
-        if ( library.isEmpty() )
+        if(library.isEmpty())
             continue;
 
         // Check configuration
-        const QString name = docElem.attribute( "name" );
+        const QString name = docElem.attribute("name");
 
         bool pluginEnabled = enableNewPluginsByDefault;
-        if ( cfgGroup.hasKey( name + "Enabled" ) )
+        if(cfgGroup.hasKey(name + "Enabled"))
         {
-            pluginEnabled = cfgGroup.readBoolEntry( name + "Enabled" );
+            pluginEnabled = cfgGroup.readBoolEntry(name + "Enabled");
         }
         else
         { // no user-setting, load plugin default setting
-            QString relPath = QString( instance->instanceName() ) + "/" + (*pIt).m_relXMLFileName;
-            relPath.truncate( relPath.findRev( '.' ) ); // remove extension
+            QString relPath = QString(instance->instanceName()) + "/" + (*pIt).m_relXMLFileName;
+            relPath.truncate(relPath.findRev('.')); // remove extension
             relPath += ".desktop";
-            //kdDebug(1000) << "looking for " << relPath << endl;
-            const QString desktopfile = instance->dirs()->findResource( "data", relPath );
-            if( !desktopfile.isEmpty() )
+            // kdDebug(1000) << "looking for " << relPath << endl;
+            const QString desktopfile = instance->dirs()->findResource("data", relPath);
+            if(!desktopfile.isEmpty())
             {
-                //kdDebug(1000) << "loadPlugins found desktop file for " << name << ": " << desktopfile << endl;
-                KSimpleConfig desktop( desktopfile, true );
+                // kdDebug(1000) << "loadPlugins found desktop file for " << name << ": " << desktopfile << endl;
+                KSimpleConfig desktop(desktopfile, true);
                 desktop.setDesktopGroup();
-                pluginEnabled = desktop.readBoolEntry(
-                    "X-KDE-PluginInfo-EnabledByDefault", enableNewPluginsByDefault );
+                pluginEnabled = desktop.readBoolEntry("X-KDE-PluginInfo-EnabledByDefault", enableNewPluginsByDefault);
             }
             else
             {
-                //kdDebug(1000) << "loadPlugins no desktop file found in " << relPath << endl;
+                // kdDebug(1000) << "loadPlugins no desktop file found in " << relPath << endl;
             }
         }
 
         // search through already present plugins
-        QObjectList *pluginList = parent->queryList( "KParts::Plugin", 0, false, false );
-        QObjectListIt it( *pluginList );
+        QObjectList *pluginList = parent->queryList("KParts::Plugin", 0, false, false);
+        QObjectListIt it(*pluginList);
         bool pluginFound = false;
-        for ( ; it.current() ; ++it )
+        for(; it.current(); ++it)
         {
-            Plugin * plugin = static_cast<Plugin *>( it.current() );
-            if( plugin->d->m_library == library )
+            Plugin *plugin = static_cast< Plugin * >(it.current());
+            if(plugin->d->m_library == library)
             {
                 // delete and unload disabled plugins
-                if( !pluginEnabled )
+                if(!pluginEnabled)
                 {
-                    kdDebug( 1000 ) << "remove plugin " << name << endl;
-                    KXMLGUIFactory * factory = plugin->factory();
-                    if( factory )
-                        factory->removeClient( plugin );
+                    kdDebug(1000) << "remove plugin " << name << endl;
+                    KXMLGUIFactory *factory = plugin->factory();
+                    if(factory)
+                        factory->removeClient(plugin);
                     delete plugin;
                 }
 
@@ -294,18 +290,18 @@ void Plugin::loadPlugins( QObject *parent, KXMLGUIClient* parentGUIClient, KInst
 
         // if the plugin is already loaded or if it's disabled in the
         // configuration do nothing
-        if( pluginFound || !pluginEnabled )
+        if(pluginFound || !pluginEnabled)
             continue;
 
-        kdDebug( 1000 ) << "load plugin " << name << endl;
-        Plugin *plugin = loadPlugin( parent, QFile::encodeName(library) );
+        kdDebug(1000) << "load plugin " << name << endl;
+        Plugin *plugin = loadPlugin(parent, QFile::encodeName(library));
 
-        if ( plugin )
+        if(plugin)
         {
             plugin->d->m_parentInstance = instance;
-            plugin->setXMLFile( (*pIt).m_relXMLFileName, false, false );
-            plugin->setDOMDocument( (*pIt).m_document );
-            parentGUIClient->insertChildClient( plugin );
+            plugin->setXMLFile((*pIt).m_relXMLFileName, false, false);
+            plugin->setDOMDocument((*pIt).m_document);
+            parentGUIClient->insertChildClient(plugin);
         }
     }
 }

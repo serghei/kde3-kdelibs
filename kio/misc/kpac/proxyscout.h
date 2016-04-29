@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (c) 2003 Malte Starostik <malte@kde.org>
 
    This library is free software; you can redistribute it and/or
@@ -31,50 +31,49 @@
 class DCOPClientTransaction;
 class KInstance;
 
-namespace KPAC
-{
-    class Downloader;
-    class Script;
+namespace KPAC {
+class Downloader;
+class Script;
 
-    class ProxyScout : public KDEDModule
+class ProxyScout : public KDEDModule {
+    Q_OBJECT
+    K_DCOP
+public:
+    ProxyScout(const QCString &);
+    virtual ~ProxyScout();
+
+    k_dcop : QString proxyForURL(const KURL &url);
+    ASYNC blackListProxy(const QString &proxy);
+    ASYNC reset();
+
+private slots:
+    void downloadResult(bool);
+
+private:
+    bool startDownload();
+    QString handleRequest(const KURL &url);
+
+    KInstance *m_instance;
+    Downloader *m_downloader;
+    Script *m_script;
+
+    struct QueuedRequest
     {
-        Q_OBJECT
-        K_DCOP
-    public:
-        ProxyScout( const QCString& );
-        virtual ~ProxyScout();
-
-    k_dcop:
-        QString proxyForURL( const KURL& url );
-        ASYNC blackListProxy( const QString& proxy );
-        ASYNC reset();
-
-    private slots:
-        void downloadResult( bool );
-
-    private:
-        bool startDownload();
-        QString handleRequest( const KURL& url );
-
-        KInstance* m_instance;
-        Downloader* m_downloader;
-        Script* m_script;
-
-        struct QueuedRequest
+        QueuedRequest() : transaction(0)
         {
-            QueuedRequest() : transaction( 0 ) {}
-            QueuedRequest( const KURL& );
+        }
+        QueuedRequest(const KURL &);
 
-            DCOPClientTransaction* transaction;
-            KURL url;
-        };
-        typedef QValueList< QueuedRequest > RequestQueue;
-        RequestQueue m_requestQueue;
-
-        typedef QMap< QString, time_t > BlackList;
-        BlackList m_blackList;
-        time_t m_suspendTime;
+        DCOPClientTransaction *transaction;
+        KURL url;
     };
+    typedef QValueList< QueuedRequest > RequestQueue;
+    RequestQueue m_requestQueue;
+
+    typedef QMap< QString, time_t > BlackList;
+    BlackList m_blackList;
+    time_t m_suspendTime;
+};
 }
 
 #endif // KPAC_PROXYSCOUT_H

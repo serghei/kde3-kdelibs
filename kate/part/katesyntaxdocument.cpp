@@ -31,445 +31,447 @@
 
 #include <qfile.h>
 
-KateSyntaxDocument::KateSyntaxDocument(bool force)
-  : QDomDocument()
+KateSyntaxDocument::KateSyntaxDocument(bool force) : QDomDocument()
 {
-  // Let's build the Mode List (katesyntaxhighlightingrc)
-  setupModeList(force);
+    // Let's build the Mode List (katesyntaxhighlightingrc)
+    setupModeList(force);
 }
 
 KateSyntaxDocument::~KateSyntaxDocument()
 {
-  for (uint i=0; i < myModeList.size(); i++)
-    delete myModeList[i];
+    for(uint i = 0; i < myModeList.size(); i++)
+        delete myModeList[i];
 }
 
 /** If the open hl file is different from the one needed, it opens
     the new one and assign some other things.
     identifier = File name and path of the new xml needed
 */
-bool KateSyntaxDocument::setIdentifier(const QString& identifier)
+bool KateSyntaxDocument::setIdentifier(const QString &identifier)
 {
-  // if the current file is the same as the new one don't do anything.
-  if(currentFile != identifier)
-  {
-    // let's open the new file
-    QFile f( identifier );
-
-    if ( f.open(IO_ReadOnly) )
+    // if the current file is the same as the new one don't do anything.
+    if(currentFile != identifier)
     {
-      // Let's parse the contets of the xml file
-      /* The result of this function should be check for robustness,
-         a false returned means a parse error */
-      QString errorMsg;
-      int line, col;
-      bool success=setContent(&f,&errorMsg,&line,&col);
+        // let's open the new file
+        QFile f(identifier);
 
-      // Ok, now the current file is the pretended one (identifier)
-      currentFile = identifier;
+        if(f.open(IO_ReadOnly))
+        {
+            // Let's parse the contets of the xml file
+            /* The result of this function should be check for robustness,
+               a false returned means a parse error */
+            QString errorMsg;
+            int line, col;
+            bool success = setContent(&f, &errorMsg, &line, &col);
 
-      // Close the file, is not longer needed
-      f.close();
+            // Ok, now the current file is the pretended one (identifier)
+            currentFile = identifier;
 
-      if (!success)
-      {
-        KMessageBox::error(0L,i18n("<qt>The error <b>%4</b><br> has been detected in the file %1 at %2/%3</qt>").arg(identifier)
-            .arg(line).arg(col).arg(i18n("QXml",errorMsg.utf8())));
-        return false;
-      }
+            // Close the file, is not longer needed
+            f.close();
+
+            if(!success)
+            {
+                KMessageBox::error(0L, i18n("<qt>The error <b>%4</b><br> has been detected in the file %1 at %2/%3</qt>")
+                                           .arg(identifier)
+                                           .arg(line)
+                                           .arg(col)
+                                           .arg(i18n("QXml", errorMsg.utf8())));
+                return false;
+            }
+        }
+        else
+        {
+            // Oh o, we couldn't open the file.
+            KMessageBox::error(0L, i18n("Unable to open %1").arg(identifier));
+            return false;
+        }
     }
-    else
-    {
-      // Oh o, we couldn't open the file.
-      KMessageBox::error( 0L, i18n("Unable to open %1").arg(identifier) );
-      return false;
-    }
-  }
-  return true;
+    return true;
 }
 
 /**
  * Jump to the next group, KateSyntaxContextData::currentGroup will point to the next group
  */
-bool KateSyntaxDocument::nextGroup( KateSyntaxContextData* data)
+bool KateSyntaxDocument::nextGroup(KateSyntaxContextData *data)
 {
-  if(!data)
-    return false;
+    if(!data)
+        return false;
 
-  // No group yet so go to first child
-  if (data->currentGroup.isNull())
-  {
-    // Skip over non-elements. So far non-elements are just comments
-    QDomNode node = data->parent.firstChild();
-    while (node.isComment())
-      node = node.nextSibling();
+    // No group yet so go to first child
+    if(data->currentGroup.isNull())
+    {
+        // Skip over non-elements. So far non-elements are just comments
+        QDomNode node = data->parent.firstChild();
+        while(node.isComment())
+            node = node.nextSibling();
 
-    data->currentGroup = node.toElement();
-  }
-  else
-  {
-    // common case, iterate over siblings, skipping comments as we go
-    QDomNode node = data->currentGroup.nextSibling();
-    while (node.isComment())
-      node = node.nextSibling();
+        data->currentGroup = node.toElement();
+    }
+    else
+    {
+        // common case, iterate over siblings, skipping comments as we go
+        QDomNode node = data->currentGroup.nextSibling();
+        while(node.isComment())
+            node = node.nextSibling();
 
-    data->currentGroup = node.toElement();
-  }
+        data->currentGroup = node.toElement();
+    }
 
-  return !data->currentGroup.isNull();
+    return !data->currentGroup.isNull();
 }
 
 /**
  * Jump to the next item, KateSyntaxContextData::item will point to the next item
  */
-bool KateSyntaxDocument::nextItem( KateSyntaxContextData* data)
+bool KateSyntaxDocument::nextItem(KateSyntaxContextData *data)
 {
-  if(!data)
-    return false;
+    if(!data)
+        return false;
 
-  if (data->item.isNull())
-  {
-    QDomNode node = data->currentGroup.firstChild();
-    while (node.isComment())
-      node = node.nextSibling();
+    if(data->item.isNull())
+    {
+        QDomNode node = data->currentGroup.firstChild();
+        while(node.isComment())
+            node = node.nextSibling();
 
-    data->item = node.toElement();
-  }
-  else
-  {
-    QDomNode node = data->item.nextSibling();
-    while (node.isComment())
-      node = node.nextSibling();
+        data->item = node.toElement();
+    }
+    else
+    {
+        QDomNode node = data->item.nextSibling();
+        while(node.isComment())
+            node = node.nextSibling();
 
-    data->item = node.toElement();
-  }
+        data->item = node.toElement();
+    }
 
-  return !data->item.isNull();
+    return !data->item.isNull();
 }
 
 /**
  * This function is used to fetch the atributes of the tags of the item in a KateSyntaxContextData.
  */
-QString KateSyntaxDocument::groupItemData( const KateSyntaxContextData* data, const QString& name){
-  if(!data)
-    return QString::null;
-
-  // If there's no name just return the tag name of data->item
-  if ( (!data->item.isNull()) && (name.isEmpty()))
-  {
-    return data->item.tagName();
-  }
-
-  // if name is not empty return the value of the attribute name
-  if (!data->item.isNull())
-  {
-    return data->item.attribute(name);
-  }
-
-  return QString::null;
-
-}
-
-QString KateSyntaxDocument::groupData( const KateSyntaxContextData* data,const QString& name)
+QString KateSyntaxDocument::groupItemData(const KateSyntaxContextData *data, const QString &name)
 {
-  if(!data)
-    return QString::null;
+    if(!data)
+        return QString::null;
 
-  if (!data->currentGroup.isNull())
-  {
-    return data->currentGroup.attribute(name);
-  }
-  else
-  {
-    return QString::null;
-  }
-}
-
-void KateSyntaxDocument::freeGroupInfo( KateSyntaxContextData* data)
-{
-  if (data)
-    delete data;
-}
-
-KateSyntaxContextData* KateSyntaxDocument::getSubItems(KateSyntaxContextData* data)
-{
-  KateSyntaxContextData *retval = new KateSyntaxContextData;
-
-  if (data != 0)
-  {
-    retval->parent = data->currentGroup;
-    retval->currentGroup = data->item;
-  }
-
-  return retval;
-}
-
-bool KateSyntaxDocument::getElement (QDomElement &element, const QString &mainGroupName, const QString &config)
-{
-  kdDebug(13010) << "Looking for \"" << mainGroupName << "\" -> \"" << config << "\"." << endl;
-
-  QDomNodeList nodes = documentElement().childNodes();
-
-  // Loop over all these child nodes looking for mainGroupName
-  for (unsigned int i=0; i<nodes.count(); i++)
-  {
-    QDomElement elem = nodes.item(i).toElement();
-    if (elem.tagName() == mainGroupName)
+    // If there's no name just return the tag name of data->item
+    if((!data->item.isNull()) && (name.isEmpty()))
     {
-      // Found mainGroupName ...
-      QDomNodeList subNodes = elem.childNodes();
-
-      // ... so now loop looking for config
-      for (unsigned int j=0; j<subNodes.count(); j++)
-      {
-        QDomElement subElem = subNodes.item(j).toElement();
-        if (subElem.tagName() == config)
-        {
-          // Found it!
-          element = subElem;
-          return true;
-        }
-      }
-
-      kdDebug(13010) << "WARNING: \""<< config <<"\" wasn't found!" << endl;
-      return false;
+        return data->item.tagName();
     }
-  }
 
-  kdDebug(13010) << "WARNING: \""<< mainGroupName <<"\" wasn't found!" << endl;
-  return false;
+    // if name is not empty return the value of the attribute name
+    if(!data->item.isNull())
+    {
+        return data->item.attribute(name);
+    }
+
+    return QString::null;
+}
+
+QString KateSyntaxDocument::groupData(const KateSyntaxContextData *data, const QString &name)
+{
+    if(!data)
+        return QString::null;
+
+    if(!data->currentGroup.isNull())
+    {
+        return data->currentGroup.attribute(name);
+    }
+    else
+    {
+        return QString::null;
+    }
+}
+
+void KateSyntaxDocument::freeGroupInfo(KateSyntaxContextData *data)
+{
+    if(data)
+        delete data;
+}
+
+KateSyntaxContextData *KateSyntaxDocument::getSubItems(KateSyntaxContextData *data)
+{
+    KateSyntaxContextData *retval = new KateSyntaxContextData;
+
+    if(data != 0)
+    {
+        retval->parent = data->currentGroup;
+        retval->currentGroup = data->item;
+    }
+
+    return retval;
+}
+
+bool KateSyntaxDocument::getElement(QDomElement &element, const QString &mainGroupName, const QString &config)
+{
+    kdDebug(13010) << "Looking for \"" << mainGroupName << "\" -> \"" << config << "\"." << endl;
+
+    QDomNodeList nodes = documentElement().childNodes();
+
+    // Loop over all these child nodes looking for mainGroupName
+    for(unsigned int i = 0; i < nodes.count(); i++)
+    {
+        QDomElement elem = nodes.item(i).toElement();
+        if(elem.tagName() == mainGroupName)
+        {
+            // Found mainGroupName ...
+            QDomNodeList subNodes = elem.childNodes();
+
+            // ... so now loop looking for config
+            for(unsigned int j = 0; j < subNodes.count(); j++)
+            {
+                QDomElement subElem = subNodes.item(j).toElement();
+                if(subElem.tagName() == config)
+                {
+                    // Found it!
+                    element = subElem;
+                    return true;
+                }
+            }
+
+            kdDebug(13010) << "WARNING: \"" << config << "\" wasn't found!" << endl;
+            return false;
+        }
+    }
+
+    kdDebug(13010) << "WARNING: \"" << mainGroupName << "\" wasn't found!" << endl;
+    return false;
 }
 
 /**
  * Get the KateSyntaxContextData of the QDomElement Config inside mainGroupName
  * KateSyntaxContextData::item will contain the QDomElement found
  */
-KateSyntaxContextData* KateSyntaxDocument::getConfig(const QString& mainGroupName, const QString &config)
+KateSyntaxContextData *KateSyntaxDocument::getConfig(const QString &mainGroupName, const QString &config)
 {
-  QDomElement element;
-  if (getElement(element, mainGroupName, config))
-  {
-    KateSyntaxContextData *data = new KateSyntaxContextData;
-    data->item = element;
-    return data;
-  }
-  return 0;
+    QDomElement element;
+    if(getElement(element, mainGroupName, config))
+    {
+        KateSyntaxContextData *data = new KateSyntaxContextData;
+        data->item = element;
+        return data;
+    }
+    return 0;
 }
 
 /**
  * Get the KateSyntaxContextData of the QDomElement Config inside mainGroupName
  * KateSyntaxContextData::parent will contain the QDomElement found
  */
-KateSyntaxContextData* KateSyntaxDocument::getGroupInfo(const QString& mainGroupName, const QString &group)
+KateSyntaxContextData *KateSyntaxDocument::getGroupInfo(const QString &mainGroupName, const QString &group)
 {
-  QDomElement element;
-  if (getElement(element, mainGroupName, group+"s"))
-  {
-    KateSyntaxContextData *data = new KateSyntaxContextData;
-    data->parent = element;
-    return data;
-  }
-  return 0;
+    QDomElement element;
+    if(getElement(element, mainGroupName, group + "s"))
+    {
+        KateSyntaxContextData *data = new KateSyntaxContextData;
+        data->parent = element;
+        return data;
+    }
+    return 0;
 }
 
 /**
  * Returns a list with all the keywords inside the list type
  */
-QStringList& KateSyntaxDocument::finddata(const QString& mainGroup, const QString& type, bool clearList)
+QStringList &KateSyntaxDocument::finddata(const QString &mainGroup, const QString &type, bool clearList)
 {
-  kdDebug(13010)<<"Create a list of keywords \""<<type<<"\" from \""<<mainGroup<<"\"."<<endl;
-  if (clearList)
-    m_data.clear();
+    kdDebug(13010) << "Create a list of keywords \"" << type << "\" from \"" << mainGroup << "\"." << endl;
+    if(clearList)
+        m_data.clear();
 
-  for(QDomNode node = documentElement().firstChild(); !node.isNull(); node = node.nextSibling())
-  {
-    QDomElement elem = node.toElement();
-    if (elem.tagName() == mainGroup)
+    for(QDomNode node = documentElement().firstChild(); !node.isNull(); node = node.nextSibling())
     {
-      kdDebug(13010)<<"\""<<mainGroup<<"\" found."<<endl;
-      QDomNodeList nodelist1 = elem.elementsByTagName("list");
-
-      for (uint l=0; l<nodelist1.count(); l++)
-      {
-        if (nodelist1.item(l).toElement().attribute("name") == type)
+        QDomElement elem = node.toElement();
+        if(elem.tagName() == mainGroup)
         {
-          kdDebug(13010)<<"List with attribute name=\""<<type<<"\" found."<<endl;
-          QDomNodeList childlist = nodelist1.item(l).toElement().childNodes();
+            kdDebug(13010) << "\"" << mainGroup << "\" found." << endl;
+            QDomNodeList nodelist1 = elem.elementsByTagName("list");
 
-          for (uint i=0; i<childlist.count(); i++)
-          {
-            QString element = childlist.item(i).toElement().text().stripWhiteSpace();
-            if (element.isEmpty())
-              continue;
+            for(uint l = 0; l < nodelist1.count(); l++)
+            {
+                if(nodelist1.item(l).toElement().attribute("name") == type)
+                {
+                    kdDebug(13010) << "List with attribute name=\"" << type << "\" found." << endl;
+                    QDomNodeList childlist = nodelist1.item(l).toElement().childNodes();
+
+                    for(uint i = 0; i < childlist.count(); i++)
+                    {
+                        QString element = childlist.item(i).toElement().text().stripWhiteSpace();
+                        if(element.isEmpty())
+                            continue;
 #ifndef NDEBUG
-            if (i<6)
-            {
-              kdDebug(13010)<<"\""<<element<<"\" added to the list \""<<type<<"\""<<endl;
-            }
-            else if(i==6)
-            {
-              kdDebug(13010)<<"... The list continues ..."<<endl;
-            }
+                        if(i < 6)
+                        {
+                            kdDebug(13010) << "\"" << element << "\" added to the list \"" << type << "\"" << endl;
+                        }
+                        else if(i == 6)
+                        {
+                            kdDebug(13010) << "... The list continues ..." << endl;
+                        }
 #endif
-            m_data += element;
-          }
+                        m_data += element;
+                    }
 
-          break;
+                    break;
+                }
+            }
+            break;
         }
-      }
-      break;
     }
-  }
 
-  return m_data;
+    return m_data;
 }
 
 // Private
 /** Generate the list of hl modes, store them in myModeList
     force: if true forces to rebuild the Mode List from the xml files (instead of katesyntax...rc)
 */
-void KateSyntaxDocument::setupModeList (bool force)
+void KateSyntaxDocument::setupModeList(bool force)
 {
-  // If there's something in myModeList the Mode List was already built so, don't do it again
-  if (!myModeList.isEmpty())
-    return;
+    // If there's something in myModeList the Mode List was already built so, don't do it again
+    if(!myModeList.isEmpty())
+        return;
 
-  // We'll store the ModeList in katesyntaxhighlightingrc
-  KConfig config("katesyntaxhighlightingrc", false, false);
+    // We'll store the ModeList in katesyntaxhighlightingrc
+    KConfig config("katesyntaxhighlightingrc", false, false);
 
-  // figure our if the kate install is too new
-  config.setGroup ("General");
-  if (config.readNumEntry ("Version") > config.readNumEntry ("CachedVersion"))
-  {
-    config.writeEntry ("CachedVersion", config.readNumEntry ("Version"));
-    force = true;
-  }
-
-  // Let's get a list of all the xml files for hl
-  QStringList list = KGlobal::dirs()->findAllResources("data","katepart/syntax/*.xml",false,true);
-
-  // Let's iterate through the list and build the Mode List
-  for ( QStringList::Iterator it = list.begin(); it != list.end(); ++it )
-  {
-    // Each file has a group called:
-    QString Group="Cache "+ *it;
-
-    // Let's go to this group
-    config.setGroup(Group);
-
-    // stat the file
-    struct stat sbuf;
-    memset (&sbuf, 0, sizeof(sbuf));
-    stat(QFile::encodeName(*it), &sbuf);
-
-    // If the group exist and we're not forced to read the xml file, let's build myModeList for katesyntax..rc
-    if (!force && config.hasGroup(Group) && (sbuf.st_mtime == config.readNumEntry("lastModified")))
+    // figure our if the kate install is too new
+    config.setGroup("General");
+    if(config.readNumEntry("Version") > config.readNumEntry("CachedVersion"))
     {
-      // Let's make a new KateSyntaxModeListItem to instert in myModeList from the information in katesyntax..rc
-      KateSyntaxModeListItem *mli=new KateSyntaxModeListItem;
-      mli->name       = config.readEntry("name");
-      mli->nameTranslated = i18n("Language",mli->name.utf8());
-      mli->section    = i18n("Language Section",config.readEntry("section").utf8());
-      mli->mimetype   = config.readEntry("mimetype");
-      mli->extension  = config.readEntry("extension");
-      mli->version    = config.readEntry("version");
-      mli->priority   = config.readEntry("priority");
-      mli->author    = config.readEntry("author");
-      mli->license   = config.readEntry("license");
-      mli->hidden   =  config.readBoolEntry("hidden");
-      mli->identifier = *it;
-
-      // Apend the item to the list
-      myModeList.append(mli);
+        config.writeEntry("CachedVersion", config.readNumEntry("Version"));
+        force = true;
     }
-    else
+
+    // Let's get a list of all the xml files for hl
+    QStringList list = KGlobal::dirs()->findAllResources("data", "katepart/syntax/*.xml", false, true);
+
+    // Let's iterate through the list and build the Mode List
+    for(QStringList::Iterator it = list.begin(); it != list.end(); ++it)
     {
-      kdDebug (13010) << "UPDATE hl cache for: " << *it << endl;
+        // Each file has a group called:
+        QString Group = "Cache " + *it;
 
-      // We're forced to read the xml files or the mode doesn't exist in the katesyntax...rc
-      QFile f(*it);
+        // Let's go to this group
+        config.setGroup(Group);
 
-      if (f.open(IO_ReadOnly))
-      {
-        // Ok we opened the file, let's read the contents and close the file
-        /* the return of setContent should be checked because a false return shows a parsing error */
-        QString errMsg;
-        int line, col;
+        // stat the file
+        struct stat sbuf;
+        memset(&sbuf, 0, sizeof(sbuf));
+        stat(QFile::encodeName(*it), &sbuf);
 
-        bool success = setContent(&f,&errMsg,&line,&col);
-
-        f.close();
-
-        if (success)
+        // If the group exist and we're not forced to read the xml file, let's build myModeList for katesyntax..rc
+        if(!force && config.hasGroup(Group) && (sbuf.st_mtime == config.readNumEntry("lastModified")))
         {
-          QDomElement root = documentElement();
+            // Let's make a new KateSyntaxModeListItem to instert in myModeList from the information in katesyntax..rc
+            KateSyntaxModeListItem *mli = new KateSyntaxModeListItem;
+            mli->name = config.readEntry("name");
+            mli->nameTranslated = i18n("Language", mli->name.utf8());
+            mli->section = i18n("Language Section", config.readEntry("section").utf8());
+            mli->mimetype = config.readEntry("mimetype");
+            mli->extension = config.readEntry("extension");
+            mli->version = config.readEntry("version");
+            mli->priority = config.readEntry("priority");
+            mli->author = config.readEntry("author");
+            mli->license = config.readEntry("license");
+            mli->hidden = config.readBoolEntry("hidden");
+            mli->identifier = *it;
 
-          if (!root.isNull())
-          {
-            // If the 'first' tag is language, go on
-            if (root.tagName()=="language")
-            {
-              // let's make the mode list item.
-              KateSyntaxModeListItem *mli = new KateSyntaxModeListItem;
-
-              mli->name      = root.attribute("name");
-              mli->section   = root.attribute("section");
-              mli->mimetype  = root.attribute("mimetype");
-              mli->extension = root.attribute("extensions");
-              mli->version   = root.attribute("version");
-              mli->priority  = root.attribute("priority");
-              mli->author    = root.attribute("author");
-              mli->license   = root.attribute("license");
-
-              QString hidden = root.attribute("hidden");
-              mli->hidden    = (hidden == "true" || hidden == "TRUE");
-
-              mli->identifier = *it;
-
-              // Now let's write or overwrite (if force==true) the entry in katesyntax...rc
-              config.setGroup(Group);
-              config.writeEntry("name",mli->name);
-              config.writeEntry("section",mli->section);
-              config.writeEntry("mimetype",mli->mimetype);
-              config.writeEntry("extension",mli->extension);
-              config.writeEntry("version",mli->version);
-              config.writeEntry("priority",mli->priority);
-              config.writeEntry("author",mli->author);
-              config.writeEntry("license",mli->license);
-              config.writeEntry("hidden",mli->hidden);
-
-              // modified time to keep cache in sync
-              config.writeEntry("lastModified", sbuf.st_mtime);
-
-              // Now that the data is in the config file, translate section
-              mli->section    = i18n("Language Section",mli->section.utf8());
-              mli->nameTranslated = i18n("Language",mli->name.utf8());
-
-              // Append the new item to the list.
-              myModeList.append(mli);
-            }
-          }
+            // Apend the item to the list
+            myModeList.append(mli);
         }
         else
         {
-          KateSyntaxModeListItem *emli=new KateSyntaxModeListItem;
+            kdDebug(13010) << "UPDATE hl cache for: " << *it << endl;
 
-          emli->section=i18n("Errors!");
-          emli->mimetype="invalid_file/invalid_file";
-          emli->extension="invalid_file.invalid_file";
-          emli->version="1.";
-          emli->name=QString ("Error: %1").arg(*it); // internal
-          emli->nameTranslated=i18n("Error: %1").arg(*it); // translated
-          emli->identifier=(*it);
+            // We're forced to read the xml files or the mode doesn't exist in the katesyntax...rc
+            QFile f(*it);
 
-          myModeList.append(emli);
+            if(f.open(IO_ReadOnly))
+            {
+                // Ok we opened the file, let's read the contents and close the file
+                /* the return of setContent should be checked because a false return shows a parsing error */
+                QString errMsg;
+                int line, col;
+
+                bool success = setContent(&f, &errMsg, &line, &col);
+
+                f.close();
+
+                if(success)
+                {
+                    QDomElement root = documentElement();
+
+                    if(!root.isNull())
+                    {
+                        // If the 'first' tag is language, go on
+                        if(root.tagName() == "language")
+                        {
+                            // let's make the mode list item.
+                            KateSyntaxModeListItem *mli = new KateSyntaxModeListItem;
+
+                            mli->name = root.attribute("name");
+                            mli->section = root.attribute("section");
+                            mli->mimetype = root.attribute("mimetype");
+                            mli->extension = root.attribute("extensions");
+                            mli->version = root.attribute("version");
+                            mli->priority = root.attribute("priority");
+                            mli->author = root.attribute("author");
+                            mli->license = root.attribute("license");
+
+                            QString hidden = root.attribute("hidden");
+                            mli->hidden = (hidden == "true" || hidden == "TRUE");
+
+                            mli->identifier = *it;
+
+                            // Now let's write or overwrite (if force==true) the entry in katesyntax...rc
+                            config.setGroup(Group);
+                            config.writeEntry("name", mli->name);
+                            config.writeEntry("section", mli->section);
+                            config.writeEntry("mimetype", mli->mimetype);
+                            config.writeEntry("extension", mli->extension);
+                            config.writeEntry("version", mli->version);
+                            config.writeEntry("priority", mli->priority);
+                            config.writeEntry("author", mli->author);
+                            config.writeEntry("license", mli->license);
+                            config.writeEntry("hidden", mli->hidden);
+
+                            // modified time to keep cache in sync
+                            config.writeEntry("lastModified", sbuf.st_mtime);
+
+                            // Now that the data is in the config file, translate section
+                            mli->section = i18n("Language Section", mli->section.utf8());
+                            mli->nameTranslated = i18n("Language", mli->name.utf8());
+
+                            // Append the new item to the list.
+                            myModeList.append(mli);
+                        }
+                    }
+                }
+                else
+                {
+                    KateSyntaxModeListItem *emli = new KateSyntaxModeListItem;
+
+                    emli->section = i18n("Errors!");
+                    emli->mimetype = "invalid_file/invalid_file";
+                    emli->extension = "invalid_file.invalid_file";
+                    emli->version = "1.";
+                    emli->name = QString("Error: %1").arg(*it);        // internal
+                    emli->nameTranslated = i18n("Error: %1").arg(*it); // translated
+                    emli->identifier = (*it);
+
+                    myModeList.append(emli);
+                }
+            }
         }
-      }
     }
-  }
 
-  // Syncronize with the file katesyntax...rc
-  config.sync();
+    // Syncronize with the file katesyntax...rc
+    config.sync();
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

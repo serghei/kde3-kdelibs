@@ -21,52 +21,65 @@
 #include <qlabel.h>
 class QPushButton;
 
-class DockApplication : public KDockMainWindow
-{Q_OBJECT
+class DockApplication : public KDockMainWindow {
+    Q_OBJECT
 public:
-  DockApplication( const char* name );
-  ~DockApplication();
+    DockApplication(const char *name);
+    ~DockApplication();
 
 public slots:
-  void rConfig();
-  void wConfig();
-  void cap();
-  void greenMain();
-  void blueMain();
-  void nullMain();
-  void gSetPix1();
-  void gSetPix2();
+    void rConfig();
+    void wConfig();
+    void cap();
+    void greenMain();
+    void blueMain();
+    void nullMain();
+    void gSetPix1();
+    void gSetPix2();
 
 protected:
-  void initMenuBar();
-  void initToolBars();
-  void initStatusBar();
+    void initMenuBar();
+    void initToolBars();
+    void initStatusBar();
 
 private:
-  void updateButton();
-  KDockWidget* dock;
-  KDockWidget* dock1;
-	KDockWidget* dock4;
-	KDockWidget* dock5;
-	KDockWidget* dock6;
+    void updateButton();
+    KDockWidget *dock;
+    KDockWidget *dock1;
+    KDockWidget *dock4;
+    KDockWidget *dock5;
+    KDockWidget *dock6;
 
-  QWidget* mainW;
-  QWidget* l;
-  QPushButton* m_bname;
+    QWidget *mainW;
+    QWidget *l;
+    QPushButton *m_bname;
 };
 
-class CTW:public QTabWidget,public KDockContainer
-{
-        Q_OBJECT
+class CTW : public QTabWidget, public KDockContainer {
+    Q_OBJECT
 public:
-        CTW(QWidget *parent):QTabWidget(parent,"MyDockContainer"),KDockContainer(){insertTab(new QLabel("BLAH",this),"BLUP");}
-        virtual ~CTW(){;}
-        KDockWidget *parentDockWidget(){return ((KDockWidget*)parent());}
-        void insertWidget (KDockWidget *w, QPixmap, const QString &, int &){qDebug("widget inserted"); insertTab(w,"NO");}
-        void setToolTip (KDockWidget *, QString &){qDebug("Tooltip set");}
+    CTW(QWidget *parent) : QTabWidget(parent, "MyDockContainer"), KDockContainer()
+    {
+        insertTab(new QLabel("BLAH", this), "BLUP");
+    }
+    virtual ~CTW()
+    {
+        ;
+    }
+    KDockWidget *parentDockWidget()
+    {
+        return ((KDockWidget *)parent());
+    }
+    void insertWidget(KDockWidget *w, QPixmap, const QString &, int &)
+    {
+        qDebug("widget inserted");
+        insertTab(w, "NO");
+    }
+    void setToolTip(KDockWidget *, QString &)
+    {
+        qDebug("Tooltip set");
+    }
 };
 
 
 #endif
-
-

@@ -32,96 +32,106 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "main.h"
 
 
-
 void usage()
 {
-    fprintf( stderr, "Usage: dcopidl2cpp [ --no-skel | --no-stub ] [--c++-suffix <suffix>] file\n" );
+    fprintf(stderr, "Usage: dcopidl2cpp [ --no-skel | --no-stub ] [--c++-suffix <suffix>] file\n");
 }
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
 
-    if ( *qVersion() == '1' ) {
-        fprintf( stderr, "dcopidl2cpp appears to be linked to Qt 1 instead of Qt >= 2 ! Aborting.\n" );
+    if(*qVersion() == '1')
+    {
+        fprintf(stderr, "dcopidl2cpp appears to be linked to Qt 1 instead of Qt >= 2 ! Aborting.\n");
         exit(1);
     }
-    if ( argc < 2 ) {
-	usage();
-	return 1;
+    if(argc < 2)
+    {
+        usage();
+        return 1;
     }
     int argpos = 1;
-    bool generate_skel    = true;
-    bool generate_stub    = true;
+    bool generate_skel = true;
+    bool generate_stub = true;
 
     QString suffix = "cpp";
 
-    while (argc > 2) {
+    while(argc > 2)
+    {
 
-	if ( strcmp( argv[argpos], "--no-skel" ) == 0 )
-	{
-	    generate_skel = false;
-	    for (int i = argpos; i < argc - 1; i++) argv[i] = argv[i+1];
-	    argc--;
-	}
-	else if ( strcmp( argv[argpos], "--no-stub" ) == 0 )
-	{
-	    generate_stub = false;
-	    for (int i = argpos; i < argc - 1; i++) argv[i] = argv[i+1];
-	    argc--;
-	}
-	else if ( strcmp( argv[argpos], "--no-signals" ) == 0 )
-	{
-	    // Obsolete: Signal stubs are now always generated.
-	    // Leave this command line argument intact, so old Makefiles won't break.
-	    for (int i = argpos; i < argc - 1; i++) argv[i] = argv[i+1];
-	    argc--;
-	}
-	else if ( strcmp( argv[argpos], "--c++-suffix" ) == 0)
-	{
-	    if (argc - 1 < argpos) {
-		usage();
-		exit(1);
-	    }
-	    suffix = argv[argpos+1];
-	    for (int i = argpos; i < argc - 2; i++) argv[i] = argv[i+2];
-	    argc -= 2;
-	} else {
-	    usage();
-	    exit(1);
-	}
+        if(strcmp(argv[argpos], "--no-skel") == 0)
+        {
+            generate_skel = false;
+            for(int i = argpos; i < argc - 1; i++)
+                argv[i] = argv[i + 1];
+            argc--;
+        }
+        else if(strcmp(argv[argpos], "--no-stub") == 0)
+        {
+            generate_stub = false;
+            for(int i = argpos; i < argc - 1; i++)
+                argv[i] = argv[i + 1];
+            argc--;
+        }
+        else if(strcmp(argv[argpos], "--no-signals") == 0)
+        {
+            // Obsolete: Signal stubs are now always generated.
+            // Leave this command line argument intact, so old Makefiles won't break.
+            for(int i = argpos; i < argc - 1; i++)
+                argv[i] = argv[i + 1];
+            argc--;
+        }
+        else if(strcmp(argv[argpos], "--c++-suffix") == 0)
+        {
+            if(argc - 1 < argpos)
+            {
+                usage();
+                exit(1);
+            }
+            suffix = argv[argpos + 1];
+            for(int i = argpos; i < argc - 2; i++)
+                argv[i] = argv[i + 2];
+            argc -= 2;
+        }
+        else
+        {
+            usage();
+            exit(1);
+        }
     }
 
-    QFile in( QFile::decodeName(argv[argpos]) );
-    if ( !in.open( IO_ReadOnly ) )
-	qFatal("Could not read %s", argv[argpos] );
+    QFile in(QFile::decodeName(argv[argpos]));
+    if(!in.open(IO_ReadOnly))
+        qFatal("Could not read %s", argv[argpos]);
 
     QDomDocument doc;
-    doc.setContent( &in );
+    doc.setContent(&in);
 
     QDomElement de = doc.documentElement();
-    Q_ASSERT( de.tagName() == "DCOP-IDL" );
+    Q_ASSERT(de.tagName() == "DCOP-IDL");
 
-    QString base( argv[argpos] );
+    QString base(argv[argpos]);
     QString idl = base;
 
-    int pos = base.findRev( '.' );
-    if ( pos != -1 )
-	base = base.left( pos );
+    int pos = base.findRev('.');
+    if(pos != -1)
+        base = base.left(pos);
 
     pos = idl.findRev('/');
-    if ( pos != -1 )
-	idl = idl.mid( pos+1 );
+    if(pos != -1)
+        idl = idl.mid(pos + 1);
 
-    if ( generate_skel )
-	generateSkel( idl, base + "_skel." + suffix, de );
+    if(generate_skel)
+        generateSkel(idl, base + "_skel." + suffix, de);
 
-    if ( generate_stub ) {
-	QString header = base;
-	generateStub( idl, header + "_stub.h", de );
-	pos = header.findRev('/');
-	if ( pos != -1 )
-	    header = header.mid( pos+1 );
-	generateStubImpl( idl, header + "_stub.h", base+".h", base + "_stub." + suffix, de);
+    if(generate_stub)
+    {
+        QString header = base;
+        generateStub(idl, header + "_stub.h", de);
+        pos = header.findRev('/');
+        if(pos != -1)
+            header = header.mid(pos + 1);
+        generateStubImpl(idl, header + "_stub.h", base + ".h", base + "_stub." + suffix, de);
     }
 
     return 0;

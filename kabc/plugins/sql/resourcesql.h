@@ -30,34 +30,30 @@ class QSqlDatabase;
 
 namespace KABC {
 
-class ResourceSql : public Resource
-{
+class ResourceSql : public Resource {
 public:
-  ResourceSql( AddressBook *ab, const QString &user, const QString &password,
-    const QString &db, const QString &host );
-  ResourceSql( AddressBook *ab, const KConfig * );
-  
-  bool open();
-  void close();
-  
-  Ticket *requestSaveTicket();
+    ResourceSql(AddressBook *ab, const QString &user, const QString &password, const QString &db, const QString &host);
+    ResourceSql(AddressBook *ab, const KConfig *);
 
-  bool load();
-  bool save( Ticket * ticket );
+    bool open();
+    void close();
 
-  QString identifier() const;
+    Ticket *requestSaveTicket();
+
+    bool load();
+    bool save(Ticket *ticket);
+
+    QString identifier() const;
 
 private:
-  void init(const QString &user, const QString &password,
-      const QString &db, const QString &host );
+    void init(const QString &user, const QString &password, const QString &db, const QString &host);
 
-  QString mUser;
-  QString mPassword;
-  QString mDbName;
-  QString mHost;
+    QString mUser;
+    QString mPassword;
+    QString mDbName;
+    QString mHost;
 
-  QSqlDatabase *mDb;
+    QSqlDatabase *mDb;
 };
-
 }
 #endif

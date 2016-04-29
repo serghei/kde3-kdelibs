@@ -34,59 +34,59 @@
 
 namespace {
 
-  /*
-   * These function here are just wrappers for the real system calls.
-   *
-   * Unfortunately, a number of systems out there work by redefining
-   * symbols through the preprocessor -- symbols that we need.
-   *
-   * So we write wrappers for all the low-level system calls.
-   *
-   * Qt has a very similar implementation. I got the idea from them, but
-   * I copied no code.
-   */
-  
-  // socket
-  inline int kde_socket(int af, int style, int protocol)
-  {
+/*
+ * These function here are just wrappers for the real system calls.
+ *
+ * Unfortunately, a number of systems out there work by redefining
+ * symbols through the preprocessor -- symbols that we need.
+ *
+ * So we write wrappers for all the low-level system calls.
+ *
+ * Qt has a very similar implementation. I got the idea from them, but
+ * I copied no code.
+ */
+
+// socket
+inline int kde_socket(int af, int style, int protocol)
+{
     return ::socket(af, style, protocol);
-  }
+}
 
-  // bind
-  inline int kde_bind(int fd, const struct sockaddr* sa, socklen_t len)
-  {
+// bind
+inline int kde_bind(int fd, const struct sockaddr *sa, socklen_t len)
+{
     return ::bind(fd, sa, len);
-  }
+}
 
-  // listen
-  inline int kde_listen(int fd, int backlog)
-  {
+// listen
+inline int kde_listen(int fd, int backlog)
+{
     return ::listen(fd, backlog);
-  }
+}
 
-  // connect
-  inline int kde_connect(int fd, const struct sockaddr* sa, socklen_t len)
-  {
-    return ::connect(fd, (struct sockaddr*)sa, len);
-  }
+// connect
+inline int kde_connect(int fd, const struct sockaddr *sa, socklen_t len)
+{
+    return ::connect(fd, (struct sockaddr *)sa, len);
+}
 
-  // accept
-  inline int kde_accept(int fd, struct sockaddr* sa, socklen_t* len)
-  {
+// accept
+inline int kde_accept(int fd, struct sockaddr *sa, socklen_t *len)
+{
     return ::accept(fd, sa, len);
-  }
+}
 
-  // getpeername
-  inline int kde_getpeername(int fd, struct sockaddr* sa, socklen_t* len)
-  {
+// getpeername
+inline int kde_getpeername(int fd, struct sockaddr *sa, socklen_t *len)
+{
     return ::getpeername(fd, sa, len);
-  }
+}
 
-  // getsockname
-  inline int kde_getsockname(int fd, struct sockaddr* sa, socklen_t* len)
-  {
+// getsockname
+inline int kde_getsockname(int fd, struct sockaddr *sa, socklen_t *len)
+{
     return ::getsockname(fd, sa, len);
-  }
+}
 
 } // anonymous namespace
 

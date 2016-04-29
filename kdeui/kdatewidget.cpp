@@ -31,147 +31,140 @@
 
 #include "kdatewidget.h"
 
-class KDateWidgetSpinBox : public QSpinBox
-{
+class KDateWidgetSpinBox : public QSpinBox {
 public:
-  KDateWidgetSpinBox(int min, int max, QWidget *parent)
-    : QSpinBox(min, max, 1, parent)
-  {
-     editor()->setAlignment(AlignRight);
-  }
+    KDateWidgetSpinBox(int min, int max, QWidget *parent) : QSpinBox(min, max, 1, parent)
+    {
+        editor()->setAlignment(AlignRight);
+    }
 };
 
-class KDateWidget::KDateWidgetPrivate
-{
+class KDateWidget::KDateWidgetPrivate {
 public:
-   KDateWidgetSpinBox *m_day;
-   QComboBox *m_month;
-   KDateWidgetSpinBox *m_year;
-   QDate m_dat;
+    KDateWidgetSpinBox *m_day;
+    QComboBox *m_month;
+    KDateWidgetSpinBox *m_year;
+    QDate m_dat;
 };
 
 
-KDateWidget::KDateWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+KDateWidget::KDateWidget(QWidget *parent, const char *name) : QWidget(parent, name)
 {
-  init(QDate());
-  setDate(QDate());
+    init(QDate());
+    setDate(QDate());
 }
 
 // ### HPB change QDate to const QDate & in KDE 4.0
-KDateWidget::KDateWidget( QDate date, QWidget *parent,
-			    const char *name )
-  : QWidget( parent, name )
+KDateWidget::KDateWidget(QDate date, QWidget *parent, const char *name) : QWidget(parent, name)
 {
-  init(date);
-  setDate(date);
+    init(date);
+    setDate(date);
 }
 
 // ### CFM Repaced by init(const QDate&). Can be safely removed
 //     when no risk of BIC
 void KDateWidget::init()
 {
-  d = new KDateWidgetPrivate;
-  KLocale *locale = KGlobal::locale();
-  QHBoxLayout *layout = new QHBoxLayout(this, 0, KDialog::spacingHint());
-  layout->setAutoAdd(true);
-  d->m_day = new KDateWidgetSpinBox(1, 1, this);
-  d->m_month = new QComboBox(false, this);
-  for (int i = 1; ; ++i)
-  {
-    QString str = locale->calendar()->monthName(i,
-       locale->calendar()->year(QDate()));
-    if (str.isNull()) break;
-    d->m_month->insertItem(str);
-  }
+    d = new KDateWidgetPrivate;
+    KLocale *locale = KGlobal::locale();
+    QHBoxLayout *layout = new QHBoxLayout(this, 0, KDialog::spacingHint());
+    layout->setAutoAdd(true);
+    d->m_day = new KDateWidgetSpinBox(1, 1, this);
+    d->m_month = new QComboBox(false, this);
+    for(int i = 1;; ++i)
+    {
+        QString str = locale->calendar()->monthName(i, locale->calendar()->year(QDate()));
+        if(str.isNull())
+            break;
+        d->m_month->insertItem(str);
+    }
 
-  d->m_year = new KDateWidgetSpinBox(locale->calendar()->minValidYear(),
-				     locale->calendar()->maxValidYear(), this);
+    d->m_year = new KDateWidgetSpinBox(locale->calendar()->minValidYear(), locale->calendar()->maxValidYear(), this);
 
-  connect(d->m_day, SIGNAL(valueChanged(int)), this, SLOT(slotDateChanged()));
-  connect(d->m_month, SIGNAL(activated(int)), this, SLOT(slotDateChanged()));
-  connect(d->m_year, SIGNAL(valueChanged(int)), this, SLOT(slotDateChanged()));
+    connect(d->m_day, SIGNAL(valueChanged(int)), this, SLOT(slotDateChanged()));
+    connect(d->m_month, SIGNAL(activated(int)), this, SLOT(slotDateChanged()));
+    connect(d->m_year, SIGNAL(valueChanged(int)), this, SLOT(slotDateChanged()));
 }
 
-void KDateWidget::init(const QDate& date)
+void KDateWidget::init(const QDate &date)
 {
-  d = new KDateWidgetPrivate;
-  KLocale *locale = KGlobal::locale();
-  QHBoxLayout *layout = new QHBoxLayout(this, 0, KDialog::spacingHint());
-  layout->setAutoAdd(true);
-  d->m_day = new KDateWidgetSpinBox(1, 1, this);
-  d->m_month = new QComboBox(false, this);
-  for (int i = 1; ; ++i)
-  {
-    QString str = locale->calendar()->monthName(i,
-       locale->calendar()->year(date));
-    if (str.isNull()) break;
-    d->m_month->insertItem(str);
-  }
+    d = new KDateWidgetPrivate;
+    KLocale *locale = KGlobal::locale();
+    QHBoxLayout *layout = new QHBoxLayout(this, 0, KDialog::spacingHint());
+    layout->setAutoAdd(true);
+    d->m_day = new KDateWidgetSpinBox(1, 1, this);
+    d->m_month = new QComboBox(false, this);
+    for(int i = 1;; ++i)
+    {
+        QString str = locale->calendar()->monthName(i, locale->calendar()->year(date));
+        if(str.isNull())
+            break;
+        d->m_month->insertItem(str);
+    }
 
-  d->m_year = new KDateWidgetSpinBox(locale->calendar()->minValidYear(),
-				     locale->calendar()->maxValidYear(), this);
+    d->m_year = new KDateWidgetSpinBox(locale->calendar()->minValidYear(), locale->calendar()->maxValidYear(), this);
 
-  connect(d->m_day, SIGNAL(valueChanged(int)), this, SLOT(slotDateChanged()));
-  connect(d->m_month, SIGNAL(activated(int)), this, SLOT(slotDateChanged()));
-  connect(d->m_year, SIGNAL(valueChanged(int)), this, SLOT(slotDateChanged()));
+    connect(d->m_day, SIGNAL(valueChanged(int)), this, SLOT(slotDateChanged()));
+    connect(d->m_month, SIGNAL(activated(int)), this, SLOT(slotDateChanged()));
+    connect(d->m_year, SIGNAL(valueChanged(int)), this, SLOT(slotDateChanged()));
 }
 
 KDateWidget::~KDateWidget()
 {
-  delete d;
+    delete d;
 }
 
 // ### HPB change QDate to const QDate & in KDE 4.0
-void KDateWidget::setDate( QDate date )
+void KDateWidget::setDate(QDate date)
 {
-  const KCalendarSystem * calendar = KGlobal::locale()->calendar();
+    const KCalendarSystem *calendar = KGlobal::locale()->calendar();
 
-  d->m_day->blockSignals(true);
-  d->m_month->blockSignals(true);
-  d->m_year->blockSignals(true);
+    d->m_day->blockSignals(true);
+    d->m_month->blockSignals(true);
+    d->m_year->blockSignals(true);
 
-  d->m_day->setMaxValue(calendar->daysInMonth(date));
-  d->m_day->setValue(calendar->day(date));
-  d->m_month->setCurrentItem(calendar->month(date)-1);
-  d->m_year->setValue(calendar->year(date));
+    d->m_day->setMaxValue(calendar->daysInMonth(date));
+    d->m_day->setValue(calendar->day(date));
+    d->m_month->setCurrentItem(calendar->month(date) - 1);
+    d->m_year->setValue(calendar->year(date));
 
-  d->m_day->blockSignals(false);
-  d->m_month->blockSignals(false);
-  d->m_year->blockSignals(false);
+    d->m_day->blockSignals(false);
+    d->m_month->blockSignals(false);
+    d->m_year->blockSignals(false);
 
-  d->m_dat = date;
-  emit changed(d->m_dat);
+    d->m_dat = date;
+    emit changed(d->m_dat);
 }
 
 QDate KDateWidget::date() const
 {
-  return d->m_dat;
+    return d->m_dat;
 }
 
-void KDateWidget::slotDateChanged( )
+void KDateWidget::slotDateChanged()
 {
-  const KCalendarSystem * calendar = KGlobal::locale()->calendar();
+    const KCalendarSystem *calendar = KGlobal::locale()->calendar();
 
-  QDate date;
-  int y,m,day;
+    QDate date;
+    int y, m, day;
 
-  y = d->m_year->value();
-  y = QMIN(QMAX(y, calendar->minValidYear()), calendar->maxValidYear());
+    y = d->m_year->value();
+    y = QMIN(QMAX(y, calendar->minValidYear()), calendar->maxValidYear());
 
-  calendar->setYMD(date, y, 1, 1);
-  m = d->m_month->currentItem()+1;
-  m = QMIN(QMAX(m,1), calendar->monthsInYear(date));
+    calendar->setYMD(date, y, 1, 1);
+    m = d->m_month->currentItem() + 1;
+    m = QMIN(QMAX(m, 1), calendar->monthsInYear(date));
 
-  calendar->setYMD(date, y, m, 1);
-  day = d->m_day->value();
-  day = QMIN(QMAX(day,1), calendar->daysInMonth(date));
+    calendar->setYMD(date, y, m, 1);
+    day = d->m_day->value();
+    day = QMIN(QMAX(day, 1), calendar->daysInMonth(date));
 
-  calendar->setYMD(date, y, m, day);
-  setDate(date);
+    calendar->setYMD(date, y, m, day);
+    setDate(date);
 }
 
-void KDateWidget::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KDateWidget::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kdatewidget.moc"

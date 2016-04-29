@@ -29,58 +29,58 @@
 #include <kdockwidget.h>
 
 namespace KMDIPrivate {
-   class GUIClient;
-   class ToolViewAccessorPrivate;
+class GUIClient;
+class ToolViewAccessorPrivate;
 }
 
 namespace KMDI {
 
 class MainWindow;
 
-class ToolViewAccessor : public QObject
-{
-   Q_OBJECT
+class ToolViewAccessor : public QObject {
+    Q_OBJECT
 
-   friend class KMDI::MainWindow;
-   friend class KMDIPrivate::GUIClient;
-
-private:
-   /**
-   * Internally used by KMDI::MainWindow to store a temporary information that the method
-   * activate() is unnecessary and that it can by escaped.
-   * This saves from unnecessary calls when activate is called directly.
-   */
-   bool m_bInterruptActivation;
-   /**
-   * Internally used to prevent cycles between KMDI::MainWindow::activateView() and KMdiChildView::activate().
-   */
-   bool m_bMainframesActivateViewIsPending;
-   /**
-   *
-   */
-   bool m_bFocusInEventIsPending;
+    friend class KMDI::MainWindow;
+    friend class KMDIPrivate::GUIClient;
 
 private:
-  ToolViewAccessor( KMDI::MainWindow *parent , QWidget *widgetToWrap, const QString& tabToolTip = 0, const QString& tabCaption = 0);
-  ToolViewAccessor( KMDI::MainWindow *parent);
+    /**
+    * Internally used by KMDI::MainWindow to store a temporary information that the method
+    * activate() is unnecessary and that it can by escaped.
+    * This saves from unnecessary calls when activate is called directly.
+    */
+    bool m_bInterruptActivation;
+    /**
+    * Internally used to prevent cycles between KMDI::MainWindow::activateView() and KMdiChildView::activate().
+    */
+    bool m_bMainframesActivateViewIsPending;
+    /**
+    *
+    */
+    bool m_bFocusInEventIsPending;
+
+private:
+    ToolViewAccessor(KMDI::MainWindow *parent, QWidget *widgetToWrap, const QString &tabToolTip = 0, const QString &tabCaption = 0);
+    ToolViewAccessor(KMDI::MainWindow *parent);
+
 public:
-  ~ToolViewAccessor();
-  QWidget *wrapperWidget();
-  QWidget *wrappedWidget();
-  void place(KDockWidget::DockPosition pos = KDockWidget::DockNone, QWidget* pTargetWnd = 0L,int percent = 50);
-  void placeAndShow(KDockWidget::DockPosition pos = KDockWidget::DockNone, QWidget* pTargetWnd = 0L,int percent = 50);
-  void show();
+    ~ToolViewAccessor();
+    QWidget *wrapperWidget();
+    QWidget *wrappedWidget();
+    void place(KDockWidget::DockPosition pos = KDockWidget::DockNone, QWidget *pTargetWnd = 0L, int percent = 50);
+    void placeAndShow(KDockWidget::DockPosition pos = KDockWidget::DockNone, QWidget *pTargetWnd = 0L, int percent = 50);
+    void show();
 public slots:
-  void setWidgetToWrap(QWidget* widgetToWrap, const QString& tabToolTip = 0, const QString& tabCaption = 0);
-  void hide();
+    void setWidgetToWrap(QWidget *widgetToWrap, const QString &tabToolTip = 0, const QString &tabCaption = 0);
+    void hide();
+
 private:
-   KMDIPrivate::ToolViewAccessorPrivate *d;
-   KMDI::MainWindow *mdiMainFrm;
+    KMDIPrivate::ToolViewAccessorPrivate *d;
+    KMDI::MainWindow *mdiMainFrm;
 
 protected:
-  bool eventFilter(QObject *o, QEvent *e);
+    bool eventFilter(QObject *o, QEvent *e);
 };
-
 }
 
 #endif //_KMDITOOLVIEWACCESSOR_H_

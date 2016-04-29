@@ -27,11 +27,11 @@
 #include "address.h"
 #include "addressee.h"
 
-#ifdef __CYGWIN__ 
+#ifdef __CYGWIN__
 #include <vcard/include/VCard.h>
 #else
 #include <VCard.h>
-#endif 
+#endif
 
 namespace KABC {
 
@@ -40,67 +40,65 @@ class AddressBook;
 /**
   @deprecated use VCardFormatPlugin instead.
  */
-class KABC_EXPORT_DEPRECATED VCardFormatImpl
-{
-  public:
-    bool load( Addressee &, QFile *file );
-    bool loadAll( AddressBook *, Resource *, QFile *file );
-    void save( const Addressee &, QFile *file );
-    void saveAll( AddressBook *, Resource *, QFile *file );
+class KABC_EXPORT_DEPRECATED VCardFormatImpl {
+public:
+    bool load(Addressee &, QFile *file);
+    bool loadAll(AddressBook *, Resource *, QFile *file);
+    void save(const Addressee &, QFile *file);
+    void saveAll(AddressBook *, Resource *, QFile *file);
 
-    bool readFromString( const QString &vcard, Addressee &addr );
-    bool writeToString( const Addressee &addressee, QString &vcard );
+    bool readFromString(const QString &vcard, Addressee &addr);
+    bool writeToString(const Addressee &addressee, QString &vcard);
 
-  protected:
-    bool loadAddressee( Addressee &, VCARD::VCard & );
-    void saveAddressee( const Addressee &, VCARD::VCard *, bool intern );
+protected:
+    bool loadAddressee(Addressee &, VCARD::VCard &);
+    void saveAddressee(const Addressee &, VCARD::VCard *, bool intern);
 
-    void addTextValue (VCARD::VCard *, VCARD::EntityType, const QString & );
-    QString readTextValue( VCARD::ContentLine * );
+    void addTextValue(VCARD::VCard *, VCARD::EntityType, const QString &);
+    QString readTextValue(VCARD::ContentLine *);
 
-    void addDateValue( VCARD::VCard *, VCARD::EntityType, const QDate & );
-    QDate readDateValue( VCARD::ContentLine * );
+    void addDateValue(VCARD::VCard *, VCARD::EntityType, const QDate &);
+    QDate readDateValue(VCARD::ContentLine *);
 
-    void addDateTimeValue( VCARD::VCard *, VCARD::EntityType, const QDateTime & );
-    QDateTime readDateTimeValue( VCARD::ContentLine * );
+    void addDateTimeValue(VCARD::VCard *, VCARD::EntityType, const QDateTime &);
+    QDateTime readDateTimeValue(VCARD::ContentLine *);
 
-    void addAddressValue( VCARD::VCard *, const Address & );
-    Address readAddressValue( VCARD::ContentLine * );
+    void addAddressValue(VCARD::VCard *, const Address &);
+    Address readAddressValue(VCARD::ContentLine *);
 
-    void addLabelValue( VCARD::VCard *, const Address & );
+    void addLabelValue(VCARD::VCard *, const Address &);
 
-    void addTelephoneValue( VCARD::VCard *, const PhoneNumber & );
-    PhoneNumber readTelephoneValue( VCARD::ContentLine * );
+    void addTelephoneValue(VCARD::VCard *, const PhoneNumber &);
+    PhoneNumber readTelephoneValue(VCARD::ContentLine *);
 
-    void addNValue( VCARD::VCard *, const Addressee & );
-    void readNValue( VCARD::ContentLine *, Addressee & );
+    void addNValue(VCARD::VCard *, const Addressee &);
+    void readNValue(VCARD::ContentLine *, Addressee &);
 
-    void addCustomValue( VCARD::VCard *, const QString & );
+    void addCustomValue(VCARD::VCard *, const QString &);
 
-    void addAddressParam( VCARD::ContentLine *, int );
-    int readAddressParam( VCARD::ContentLine * );
+    void addAddressParam(VCARD::ContentLine *, int);
+    int readAddressParam(VCARD::ContentLine *);
 
-    void addGeoValue( VCARD::VCard *, const Geo & );
-    Geo readGeoValue( VCARD::ContentLine * );
+    void addGeoValue(VCARD::VCard *, const Geo &);
+    Geo readGeoValue(VCARD::ContentLine *);
 
-    void addUTCValue( VCARD::VCard *, const TimeZone & );
-    TimeZone readUTCValue( VCARD::ContentLine * );
+    void addUTCValue(VCARD::VCard *, const TimeZone &);
+    TimeZone readUTCValue(VCARD::ContentLine *);
 
-    void addClassValue( VCARD::VCard *, const Secrecy & );
-    Secrecy readClassValue( VCARD::ContentLine * );
+    void addClassValue(VCARD::VCard *, const Secrecy &);
+    Secrecy readClassValue(VCARD::ContentLine *);
 
-    void addKeyValue( VCARD::VCard *, const Key & );
-    Key readKeyValue( VCARD::ContentLine * );
+    void addKeyValue(VCARD::VCard *, const Key &);
+    Key readKeyValue(VCARD::ContentLine *);
 
-    void addPictureValue( VCARD::VCard *, VCARD::EntityType, const Picture &, const Addressee &, bool );
-    Picture readPictureValue( VCARD::ContentLine *, VCARD::EntityType, const Addressee &addr );
+    void addPictureValue(VCARD::VCard *, VCARD::EntityType, const Picture &, const Addressee &, bool);
+    Picture readPictureValue(VCARD::ContentLine *, VCARD::EntityType, const Addressee &addr);
 
-    void addSoundValue( VCARD::VCard *, const Sound &, const Addressee &, bool );
-    Sound readSoundValue( VCARD::ContentLine *, const Addressee &addr );
+    void addSoundValue(VCARD::VCard *, const Sound &, const Addressee &, bool);
+    Sound readSoundValue(VCARD::ContentLine *, const Addressee &addr);
 
-    void addAgentValue( VCARD::VCard *, const Agent & );
-    Agent readAgentValue( VCARD::ContentLine * );
+    void addAgentValue(VCARD::VCard *, const Agent &);
+    Agent readAgentValue(VCARD::ContentLine *);
 };
-
 }
 #endif

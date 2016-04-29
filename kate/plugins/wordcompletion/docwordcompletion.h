@@ -39,90 +39,94 @@
 #include <qobject.h>
 #include <qvaluelist.h>
 
-class DocWordCompletionPlugin
-  : public KTextEditor::Plugin
-  , public KTextEditor::PluginViewInterface
-  , public KTextEditor::ConfigInterfaceExtension
-{
-  Q_OBJECT
+class DocWordCompletionPlugin : public KTextEditor::Plugin, public KTextEditor::PluginViewInterface, public KTextEditor::ConfigInterfaceExtension {
+    Q_OBJECT
 
-  public:
-    DocWordCompletionPlugin( QObject *parent = 0,
-                            const char* name = 0,
-                            const QStringList &args = QStringList() );
-    virtual ~DocWordCompletionPlugin() {};
+public:
+    DocWordCompletionPlugin(QObject *parent = 0, const char *name = 0, const QStringList &args = QStringList());
+    virtual ~DocWordCompletionPlugin(){};
 
-    void addView (KTextEditor::View *view);
-    void removeView (KTextEditor::View *view);
+    void addView(KTextEditor::View *view);
+    void removeView(KTextEditor::View *view);
 
     void readConfig();
     void writeConfig();
 
     // ConfigInterfaceExtention
-    uint configPages() const { return 1; };
-    KTextEditor::ConfigPage * configPage( uint number, QWidget *parent, const char *name );
-    QString configPageName( uint ) const;
-    QString configPageFullName( uint ) const;
-    QPixmap configPagePixmap( uint, int ) const;
+    uint configPages() const
+    {
+        return 1;
+    };
+    KTextEditor::ConfigPage *configPage(uint number, QWidget *parent, const char *name);
+    QString configPageName(uint) const;
+    QString configPageFullName(uint) const;
+    QPixmap configPagePixmap(uint, int) const;
 
-    uint treshold() const { return m_treshold; };
-    void setTreshold( uint t ) { m_treshold = t; };
-    bool autoPopupEnabled() const { return m_autopopup; };
-    void setAutoPopupEnabled( bool enable ) { m_autopopup = enable; };
+    uint treshold() const
+    {
+        return m_treshold;
+    };
+    void setTreshold(uint t)
+    {
+        m_treshold = t;
+    };
+    bool autoPopupEnabled() const
+    {
+        return m_autopopup;
+    };
+    void setAutoPopupEnabled(bool enable)
+    {
+        m_autopopup = enable;
+    };
 
 
-  private:
-    QPtrList<class DocWordCompletionPluginView> m_views;
+private:
+    QPtrList< class DocWordCompletionPluginView > m_views;
     uint m_treshold;
     bool m_autopopup;
-
 };
 
-class DocWordCompletionPluginView
-   : public QObject, public KXMLGUIClient
-{
-  Q_OBJECT
+class DocWordCompletionPluginView : public QObject, public KXMLGUIClient {
+    Q_OBJECT
 
-  public:
-    DocWordCompletionPluginView( uint treshold=3, bool autopopup=true, KTextEditor::View *view=0,
-                               const char *name=0 );
-    ~DocWordCompletionPluginView() {};
+public:
+    DocWordCompletionPluginView(uint treshold = 3, bool autopopup = true, KTextEditor::View *view = 0, const char *name = 0);
+    ~DocWordCompletionPluginView(){};
 
-    void settreshold( uint treshold );
+    void settreshold(uint treshold);
 
-  private slots:
+private slots:
     void completeBackwards();
     void completeForwards();
     void shellComplete();
 
-    void popupCompletionList( QString word=QString::null );
+    void popupCompletionList(QString word = QString::null);
     void autoPopupCompletionList();
     void toggleAutoPopup();
 
-    void slotVariableChanged( const QString &, const QString & );
+    void slotVariableChanged(const QString &, const QString &);
 
-  private:
-    void complete( bool fw=true );
+private:
+    void complete(bool fw = true);
 
     QString word();
-    QValueList<KTextEditor::CompletionEntry> allMatches( const QString &word );
-    QString findLongestUnique(const QValueList < KTextEditor::CompletionEntry > &matches);
+    QValueList< KTextEditor::CompletionEntry > allMatches(const QString &word);
+    QString findLongestUnique(const QValueList< KTextEditor::CompletionEntry > &matches);
     KTextEditor::View *m_view;
     struct DocWordCompletionPluginViewPrivate *d;
 };
 
-class DocWordCompletionConfigPage : public KTextEditor::ConfigPage
-{
-  Q_OBJECT
-  public:
-    DocWordCompletionConfigPage( DocWordCompletionPlugin *completion, QWidget *parent, const char *name );
-    virtual ~DocWordCompletionConfigPage() {};
+class DocWordCompletionConfigPage : public KTextEditor::ConfigPage {
+    Q_OBJECT
+public:
+    DocWordCompletionConfigPage(DocWordCompletionPlugin *completion, QWidget *parent, const char *name);
+    virtual ~DocWordCompletionConfigPage(){};
 
     virtual void apply();
     virtual void reset();
     virtual void defaults();
 
-  private:
+private:
     DocWordCompletionPlugin *m_completion;
     class QCheckBox *cbAutoPopup;
     class QSpinBox *sbAutoPopup;

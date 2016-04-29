@@ -26,18 +26,17 @@ class KConfig;
 class QLineEdit;
 class QCheckBox;
 
-class KMProxyWidget : public QGroupBox
-{
+class KMProxyWidget : public QGroupBox {
 public:
-	KMProxyWidget(QWidget *parent = 0, const char *name = 0);
+    KMProxyWidget(QWidget *parent = 0, const char *name = 0);
 
-	void loadConfig(KConfig*);
-	void saveConfig(KConfig*);
+    void loadConfig(KConfig *);
+    void saveConfig(KConfig *);
 
 private:
-	QLineEdit	*m_proxyhost;
-	QLineEdit	*m_proxyport;
-	QCheckBox	*m_useproxy;
+    QLineEdit *m_proxyhost;
+    QLineEdit *m_proxyport;
+    QCheckBox *m_useproxy;
 };
 
 #endif

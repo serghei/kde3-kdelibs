@@ -24,10 +24,9 @@
 #include <kconfig.h>
 
 
-KAppDCOPInterface::KAppDCOPInterface(KApplication * theKApp)
-	: DCOPObject( "MainApplication-Interface")
+KAppDCOPInterface::KAppDCOPInterface(KApplication *theKApp) : DCOPObject("MainApplication-Interface")
 {
-	m_KApplication = theKApp;
+    m_KApplication = theKApp;
 }
 
 KAppDCOPInterface::~KAppDCOPInterface()
@@ -36,31 +35,29 @@ KAppDCOPInterface::~KAppDCOPInterface()
 
 void KAppDCOPInterface::disableSessionManagement()
 {
-
 }
 
 QCString KAppDCOPInterface::startupId()
 {
-	return "";
+    return "";
 }
 
 QCString KAppDCOPInterface::caption()
 {
-	return "";
+    return "";
 }
 
 void KAppDCOPInterface::quit()
 {
-	m_KApplication->quit();
+    m_KApplication->quit();
 }
 
-void KAppDCOPInterface::updateUserTimestamp( ulong time )
+void KAppDCOPInterface::updateUserTimestamp(ulong time)
 {
-	m_KApplication->updateUserTimestamp( time );
+    m_KApplication->updateUserTimestamp(time);
 }
 
 void KAppDCOPInterface::reparseConfiguration()
 {
-	KGlobal::config()->reparseConfiguration();
+    KGlobal::config()->reparseConfiguration();
 }
-

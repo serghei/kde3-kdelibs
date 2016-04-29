@@ -48,90 +48,87 @@ class KSSLCertChain;
  * @short KDE SSL Information Dialog
  */
 class KIO_EXPORT KSSLInfoDlg : public KDialog {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	/**
-	 *  Construct a KSSL Information Dialog
-	 *
-	 *  @param secureConnection true if the connection is secured with SSL
-	 *  @param parent the parent widget
-	 *  @param name the internal name of this instance
-	 *  @param modal true if the dialog should be modal
-	 */
-	KSSLInfoDlg(bool secureConnection, QWidget *parent=0L, const char *name=0L, bool modal=false);
+    /**
+     *  Construct a KSSL Information Dialog
+     *
+     *  @param secureConnection true if the connection is secured with SSL
+     *  @param parent the parent widget
+     *  @param name the internal name of this instance
+     *  @param modal true if the dialog should be modal
+     */
+    KSSLInfoDlg(bool secureConnection, QWidget *parent = 0L, const char *name = 0L, bool modal = false);
 
-	/**
-	 *  Destroy this dialog
-	 */
-	virtual ~KSSLInfoDlg();
+    /**
+     *  Destroy this dialog
+     */
+    virtual ~KSSLInfoDlg();
 
-	/**
-	 *  Tell the dialog if the connection has portions that may not be
-	 *  secure (ie. a mixture of secure and insecure frames)
-	 *
-	 *  @param isIt true if security is in question
-	 */
-	void setSecurityInQuestion(bool isIt);
+    /**
+     *  Tell the dialog if the connection has portions that may not be
+     *  secure (ie. a mixture of secure and insecure frames)
+     *
+     *  @param isIt true if security is in question
+     */
+    void setSecurityInQuestion(bool isIt);
 
-	/**
-	 *  Setup the dialog before showing it.
-	 *
-	 *  @param cert the certificate presented by the site
-	 *  @param ip the ip of the remote host
-	 *  @param url the url being accessed
-	 *  @param cipher the cipher in use
-	 *  @param cipherdesc text description of the cipher in use
-	 *  @param sslversion the version of SSL in use (SSLv2, SSLv3, TLSv1, etc)
-	 *  @param usedbits the number of bits in the cipher key being used
-	 *  @param bits the bit-size of the cipher in use
-	 *  @param certState the certificate state (valid, invalid, etc)
-	 */
-	void setup(KSSLCertificate *cert,
-			const QString& ip, const QString& url,
-			const QString& cipher, const QString& cipherdesc,
-			const QString& sslversion, int usedbits, int bits,
-			KSSLCertificate::KSSLValidation certState);
+    /**
+     *  Setup the dialog before showing it.
+     *
+     *  @param cert the certificate presented by the site
+     *  @param ip the ip of the remote host
+     *  @param url the url being accessed
+     *  @param cipher the cipher in use
+     *  @param cipherdesc text description of the cipher in use
+     *  @param sslversion the version of SSL in use (SSLv2, SSLv3, TLSv1, etc)
+     *  @param usedbits the number of bits in the cipher key being used
+     *  @param bits the bit-size of the cipher in use
+     *  @param certState the certificate state (valid, invalid, etc)
+     */
+    void setup(KSSLCertificate *cert, const QString &ip, const QString &url, const QString &cipher, const QString &cipherdesc,
+               const QString &sslversion, int usedbits, int bits, KSSLCertificate::KSSLValidation certState);
 
-	/**
-	 *  Setup the dialog before showing it.  This is a convenience version
-	 *  of the above method, and obtains the same information using the
-	 *  @param ssl parameter instead.
-	 *
-	 *  @param ssl the ssl connection
-	 *  @param ip the ip of the remote host
-	 *  @param url the url being accessed
-	 */
-	void setup( KSSL & ssl, const QString & ip, const QString & url );
+    /**
+     *  Setup the dialog before showing it.  This is a convenience version
+     *  of the above method, and obtains the same information using the
+     *  @param ssl parameter instead.
+     *
+     *  @param ssl the ssl connection
+     *  @param ip the ip of the remote host
+     *  @param url the url being accessed
+     */
+    void setup(KSSL &ssl, const QString &ip, const QString &url);
 
-        /**
-         *  Set the errors that were encountered while validating the site 
-         *  certificate.
-         */
-        void setCertState(const QString &errorNrs);
+    /**
+     *  Set the errors that were encountered while validating the site
+     *  certificate.
+     */
+    void setCertState(const QString &errorNrs);
 
-	/**
-	 *  Utility function to generate the widget which displays the detailed
-	 *  information about an X.509 certificate.
-	 *
-	 *  @param parent the parent widget
-	 *  @param certName the name (subject) of the certificate
-	 *  @param mailCatcher the class which catches click events on e-mail
-	 *         addresses
-	 */
-	static KSSLCertBox *certInfoWidget(QWidget *parent, const QString &certName, QWidget *mailCatcher=0);
+    /**
+     *  Utility function to generate the widget which displays the detailed
+     *  information about an X.509 certificate.
+     *
+     *  @param parent the parent widget
+     *  @param certName the name (subject) of the certificate
+     *  @param mailCatcher the class which catches click events on e-mail
+     *         addresses
+     */
+    static KSSLCertBox *certInfoWidget(QWidget *parent, const QString &certName, QWidget *mailCatcher = 0);
 
 private:
-	QScrollView *buildCertInfo(const QString &certName);
-	void displayCert(KSSLCertificate *x);
+    QScrollView *buildCertInfo(const QString &certName);
+    void displayCert(KSSLCertificate *x);
 
-	class KSSLInfoDlgPrivate;
-	KSSLInfoDlgPrivate *d;
+    class KSSLInfoDlgPrivate;
+    KSSLInfoDlgPrivate *d;
 
 private slots:
-	void launchConfig();
-	void urlClicked(const QString &url);
-	void mailClicked(const QString &url);
-	void slotChain(int x);
+    void launchConfig();
+    void urlClicked(const QString &url);
+    void mailClicked(const QString &url);
+    void slotChain(int x);
 };
 
 
@@ -148,26 +145,25 @@ private slots:
  */
 class KIO_EXPORT KSSLCertBox : public QScrollView {
 public:
-	/**
-	 *  Construct a certificate box
-	 *
-	 *  @param parent the parent widget
-	 *  @param name the internal name of this instance
-	 *  @param f widget flags for the object
-	 */
-	KSSLCertBox(QWidget *parent=0L, const char *name=0L, WFlags f=0);
+    /**
+     *  Construct a certificate box
+     *
+     *  @param parent the parent widget
+     *  @param name the internal name of this instance
+     *  @param f widget flags for the object
+     */
+    KSSLCertBox(QWidget *parent = 0L, const char *name = 0L, WFlags f = 0);
 
-	/**
-	 *  Change the contents of the widget
-	 *
-	 *  @param certName the name ("subject") of the certificate
-	 *  @param mailCatcher the widget which catches the url open events
-	 */
-	void setValues(QString certName, QWidget *mailCatcher=0L);
+    /**
+     *  Change the contents of the widget
+     *
+     *  @param certName the name ("subject") of the certificate
+     *  @param mailCatcher the widget which catches the url open events
+     */
+    void setValues(QString certName, QWidget *mailCatcher = 0L);
 
 private:
-	QFrame *_frame;
+    QFrame *_frame;
 };
 
 #endif
-

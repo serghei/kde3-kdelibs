@@ -29,25 +29,24 @@
 class KMPropWidget;
 class KMPrinter;
 
-class KDEPRINT_EXPORT KMPropertyPage : public CJanusWidget, public KMPrinterPage, public KPReloadObject
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT KMPropertyPage : public CJanusWidget, public KMPrinterPage, public KPReloadObject {
+    Q_OBJECT
 public:
-	KMPropertyPage(QWidget *parent = 0, const char *name = 0);
-	~KMPropertyPage();
+    KMPropertyPage(QWidget *parent = 0, const char *name = 0);
+    ~KMPropertyPage();
 
-	void addPropPage(KMPropWidget*);
-	void setPrinter(KMPrinter*);
+    void addPropPage(KMPropWidget *);
+    void setPrinter(KMPrinter *);
 
 protected slots:
-	void slotEnable(bool);
-	void initialize();
+    void slotEnable(bool);
+    void initialize();
 
 protected:
-	void reload();
+    void reload();
 
 private:
-	QPtrList<KMPropWidget>	m_widgets;
+    QPtrList< KMPropWidget > m_widgets;
 };
 
 #endif

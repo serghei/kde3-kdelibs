@@ -48,7 +48,9 @@ class QComboBox;
 
 #define KPropsPage KPropsDlgPlugin
 
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
 /**
  * The main properties dialog class.
@@ -63,361 +65,367 @@ namespace KIO { class Job; }
  *
  * This class must be created with (void)new KPropertiesDialog(...)
  * It will take care of deleting itself.
- * 
+ *
  * If you are looking for more flexibility, see KFileMetaInfo and
  * KFileMetaInfoWidget.
  */
-class KIO_EXPORT KPropertiesDialog : public KDialogBase
-{
-  Q_OBJECT
+class KIO_EXPORT KPropertiesDialog : public KDialogBase {
+    Q_OBJECT
 
 public:
+    /**
+     * Determine whether there are any property pages available for the
+     * given file items.
+     * @param _items the list of items to check.
+     * @return true if there are any property pages, otherwise false.
+     */
+    static bool canDisplay(KFileItemList _items);
 
-  /**
-   * Determine whether there are any property pages available for the
-   * given file items.
-   * @param _items the list of items to check.
-   * @return true if there are any property pages, otherwise false.
-   */
-  static bool canDisplay( KFileItemList _items );
+    /**
+     * Brings up a Properties dialog, as shown above.
+     * This is the normal constructor for
+     * file-manager type applications, where you have a KFileItem instance
+     * to work with.  Normally you will use this
+     * method rather than the one below.
+     *
+     * @param item file item whose properties should be displayed.
+     * @param parent is the parent of the dialog widget.
+     * @param name is the internal name.
+     * @param modal tells the dialog whether it should be modal.
+     * @param autoShow tells the dialog whether it should show itself automatically.
+     */
+    KPropertiesDialog(KFileItem *item, QWidget *parent = 0L, const char *name = 0L, bool modal = false, bool autoShow = true);
 
-  /**
-   * Brings up a Properties dialog, as shown above. 
-   * This is the normal constructor for
-   * file-manager type applications, where you have a KFileItem instance 
-   * to work with.  Normally you will use this
-   * method rather than the one below.
-   *
-   * @param item file item whose properties should be displayed.
-   * @param parent is the parent of the dialog widget.
-   * @param name is the internal name.
-   * @param modal tells the dialog whether it should be modal.
-   * @param autoShow tells the dialog whether it should show itself automatically.
-   */
-  KPropertiesDialog( KFileItem * item,
-                     QWidget* parent = 0L, const char* name = 0L,
-                     bool modal = false, bool autoShow = true);
-
-  /**
-   * \overload
-   *
-   * You use this constructor for cases where you have a number of items,
-   * rather than a single item. Be careful which methods you use
-   * when passing a list of files or URLs, since some of them will only
-   * work on the first item in a list.
-   *
-   * @param _items list of file items whose properties should be displayed.
-   * @param parent is the parent of the dialog widget.
-   * @param name is the internal name.
-   * @param modal tells the dialog whether it should be modal.
-   * @param autoShow tells the dialog whether it should show itself automatically.
-   */
-  KPropertiesDialog( KFileItemList _items,
-                     QWidget *parent = 0L, const char* name = 0L,
-                     bool modal = false, bool autoShow = true);
+    /**
+     * \overload
+     *
+     * You use this constructor for cases where you have a number of items,
+     * rather than a single item. Be careful which methods you use
+     * when passing a list of files or URLs, since some of them will only
+     * work on the first item in a list.
+     *
+     * @param _items list of file items whose properties should be displayed.
+     * @param parent is the parent of the dialog widget.
+     * @param name is the internal name.
+     * @param modal tells the dialog whether it should be modal.
+     * @param autoShow tells the dialog whether it should show itself automatically.
+     */
+    KPropertiesDialog(KFileItemList _items, QWidget *parent = 0L, const char *name = 0L, bool modal = false, bool autoShow = true);
 
 #ifndef KDE_NO_COMPAT
-  /**
-   * @deprecated  You should use the following constructor instead of this one.
-   * The only change that is required is to delete the _mode argument.
-   *
-   * @param _url the URL whose properties should be displayed
-   * @param _mode unused.
-   * @param parent is the parent of the dialog widget.
-   * @param name is the internal name.
-   * @param modal tells the dialog whether it should be modal.
-   * @param autoShow tells the dialog whether it should show itself automatically.  */
-  KPropertiesDialog( const KURL& _url, mode_t _mode,
-                     QWidget* parent = 0L, const char* name = 0L,
-                     bool modal = false, bool autoShow = true) KDE_DEPRECATED;
+    /**
+     * @deprecated  You should use the following constructor instead of this one.
+     * The only change that is required is to delete the _mode argument.
+     *
+     * @param _url the URL whose properties should be displayed
+     * @param _mode unused.
+     * @param parent is the parent of the dialog widget.
+     * @param name is the internal name.
+     * @param modal tells the dialog whether it should be modal.
+     * @param autoShow tells the dialog whether it should show itself automatically.  */
+    KPropertiesDialog(const KURL &_url, mode_t _mode, QWidget *parent = 0L, const char *name = 0L, bool modal = false,
+                      bool autoShow = true) KDE_DEPRECATED;
 #endif
 
-  /**
-   * Brings up a Properties dialog. Convenience constructor for
-   * non-file-manager applications, where you have a KURL rather than a
-   * KFileItem or KFileItemList.
-   *
-   * @param _url the URL whose properties should be displayed
-   * @param parent is the parent of the dialog widget.
-   * @param name is the internal name.
-   * @param modal tells the dialog whether it should be modal.
-   * IMPORTANT: This constructor, together with modal=true, leads to a grave
-   * display bug (due to KIO::stat() being run before the dialog has all the
-   * necessary information). Do not use this combination for now.
-   * For local files with a known mimetype, simply create a KFileItem and pass
-   * it to the other constructor.
-   *
-   * @param autoShow tells the dialog whethr it should show itself automatically.
-   */
-  KPropertiesDialog( const KURL& _url,
-                     QWidget* parent = 0L, const char* name = 0L,
-                     bool modal = false, bool autoShow = true);
+    /**
+     * Brings up a Properties dialog. Convenience constructor for
+     * non-file-manager applications, where you have a KURL rather than a
+     * KFileItem or KFileItemList.
+     *
+     * @param _url the URL whose properties should be displayed
+     * @param parent is the parent of the dialog widget.
+     * @param name is the internal name.
+     * @param modal tells the dialog whether it should be modal.
+     * IMPORTANT: This constructor, together with modal=true, leads to a grave
+     * display bug (due to KIO::stat() being run before the dialog has all the
+     * necessary information). Do not use this combination for now.
+     * For local files with a known mimetype, simply create a KFileItem and pass
+     * it to the other constructor.
+     *
+     * @param autoShow tells the dialog whethr it should show itself automatically.
+     */
+    KPropertiesDialog(const KURL &_url, QWidget *parent = 0L, const char *name = 0L, bool modal = false, bool autoShow = true);
 
-  /**
-   * Creates a properties dialog for a new .desktop file (whose name
-   * is not known yet), based on a template. Special constructor for
-   * "File / New" in file-manager type applications.
-   *
-   * @param _tempUrl template used for reading only
-   * @param _currentDir directory where the file will be written to
-   * @param _defaultName something to put in the name field,
-   * like mimetype.desktop
-   * @param parent is the parent of the dialog widget.
-   * @param name is the internal name.
-   * @param modal tells the dialog whether it should be modal.
-   * @param autoShow tells the dialog whethr it should show itself automatically.
-   */
-  KPropertiesDialog( const KURL& _tempUrl, const KURL& _currentDir,
-                     const QString& _defaultName,
-                     QWidget* parent = 0L, const char* name = 0L,
-                     bool modal = false, bool autoShow = true);
+    /**
+     * Creates a properties dialog for a new .desktop file (whose name
+     * is not known yet), based on a template. Special constructor for
+     * "File / New" in file-manager type applications.
+     *
+     * @param _tempUrl template used for reading only
+     * @param _currentDir directory where the file will be written to
+     * @param _defaultName something to put in the name field,
+     * like mimetype.desktop
+     * @param parent is the parent of the dialog widget.
+     * @param name is the internal name.
+     * @param modal tells the dialog whether it should be modal.
+     * @param autoShow tells the dialog whethr it should show itself automatically.
+     */
+    KPropertiesDialog(const KURL &_tempUrl, const KURL &_currentDir, const QString &_defaultName, QWidget *parent = 0L, const char *name = 0L,
+                      bool modal = false, bool autoShow = true);
 
-  /**
-   * Creates an empty properties dialog (for applications that want use
-   * a standard dialog, but for things not doable via the plugin-mechanism).
-   *
-   * @param title is the string display as the "filename" in the caption of the dialog.
-   * @param parent is the parent of the dialog widget.
-   * @param name is the internal name.
-   * @param modal tells the dialog whether it should be modal.
-   */
-  KPropertiesDialog (const QString& title,
-                     QWidget* parent = 0L, const char* name = 0L, bool modal = false);
+    /**
+     * Creates an empty properties dialog (for applications that want use
+     * a standard dialog, but for things not doable via the plugin-mechanism).
+     *
+     * @param title is the string display as the "filename" in the caption of the dialog.
+     * @param parent is the parent of the dialog widget.
+     * @param name is the internal name.
+     * @param modal tells the dialog whether it should be modal.
+     */
+    KPropertiesDialog(const QString &title, QWidget *parent = 0L, const char *name = 0L, bool modal = false);
 
-  /**
-   * Cleans up the properties dialog and frees any associated resources,
-   * including the dialog itself. Note that when a properties dialog is
-   * closed it cleans up and deletes itself.
-   */
-  virtual ~KPropertiesDialog();
+    /**
+     * Cleans up the properties dialog and frees any associated resources,
+     * including the dialog itself. Note that when a properties dialog is
+     * closed it cleans up and deletes itself.
+     */
+    virtual ~KPropertiesDialog();
 
-  /**
-   * Immediately displays a Properties dialog using constructor with 
-   * the same parameters. 
-   * On MS Windows, if @p item points to a local file, native (non modal) property 
-   * dialog is displayed (@p parent and @p modal are ignored in this case).
-   * 
-   * @return true on succesfull dialog displaying (can be false on win32).
-   * @since 3.4
-   */
-  static bool showDialog(KFileItem* item, QWidget* parent = 0, 
-                         const char* name = 0, bool modal = false);
+    /**
+     * Immediately displays a Properties dialog using constructor with
+     * the same parameters.
+     * On MS Windows, if @p item points to a local file, native (non modal) property
+     * dialog is displayed (@p parent and @p modal are ignored in this case).
+     *
+     * @return true on succesfull dialog displaying (can be false on win32).
+     * @since 3.4
+     */
+    static bool showDialog(KFileItem *item, QWidget *parent = 0, const char *name = 0, bool modal = false);
 
-  /**
-   * Immediately displays a Properties dialog using constructor with 
-   * the same parameters. 
-   * On MS Windows, if @p _url points to a local file, native (non modal) property 
-   * dialog is displayed (@p parent and @p modal are ignored in this case).
-   * 
-   * @return true on succesfull dialog displaying (can be false on win32).
-   * @since 3.4
-   */
-  static bool showDialog(const KURL& _url, QWidget* parent = 0, 
-                         const char* name = 0, bool modal = false);
+    /**
+     * Immediately displays a Properties dialog using constructor with
+     * the same parameters.
+     * On MS Windows, if @p _url points to a local file, native (non modal) property
+     * dialog is displayed (@p parent and @p modal are ignored in this case).
+     *
+     * @return true on succesfull dialog displaying (can be false on win32).
+     * @since 3.4
+     */
+    static bool showDialog(const KURL &_url, QWidget *parent = 0, const char *name = 0, bool modal = false);
 
-  /**
-   * Immediately displays a Properties dialog using constructor with 
-   * the same parameters. 
-   * On MS Windows, if @p _items has one element and this element points 
-   * to a local file, native (non modal) property dialog is displayed 
-   * (@p parent and @p modal are ignored in this case).
-   * 
-   * @return true on succesfull dialog displaying (can be false on win32).
-   * @since 3.4
-   */
-  static bool showDialog(const KFileItemList& _items, QWidget* parent = 0, 
-                         const char* name = 0, bool modal = false);
+    /**
+     * Immediately displays a Properties dialog using constructor with
+     * the same parameters.
+     * On MS Windows, if @p _items has one element and this element points
+     * to a local file, native (non modal) property dialog is displayed
+     * (@p parent and @p modal are ignored in this case).
+     *
+     * @return true on succesfull dialog displaying (can be false on win32).
+     * @since 3.4
+     */
+    static bool showDialog(const KFileItemList &_items, QWidget *parent = 0, const char *name = 0, bool modal = false);
 
-  /**
-   * Adds a "3rd party" properties plugin to the dialog.  Useful
-   * for extending the properties mechanism.
-   *
-   * To create a new plugin type, inherit from the base class KPropsDlgPlugin
-   * and implement all the methods. If you define a service .desktop file
-   * for your plugin, you do not need to call insertPlugin().
-   *
-   * @param plugin is a pointer to the KPropsDlgPlugin. The Properties
-   *        dialog will do destruction for you. The KPropsDlgPlugin \b must
-   *        have been created with the KPropertiesDialog as its parent.
-   * @see KPropsDlgPlugin
-   */
-  void insertPlugin (KPropsDlgPlugin *plugin);
+    /**
+     * Adds a "3rd party" properties plugin to the dialog.  Useful
+     * for extending the properties mechanism.
+     *
+     * To create a new plugin type, inherit from the base class KPropsDlgPlugin
+     * and implement all the methods. If you define a service .desktop file
+     * for your plugin, you do not need to call insertPlugin().
+     *
+     * @param plugin is a pointer to the KPropsDlgPlugin. The Properties
+     *        dialog will do destruction for you. The KPropsDlgPlugin \b must
+     *        have been created with the KPropertiesDialog as its parent.
+     * @see KPropsDlgPlugin
+     */
+    void insertPlugin(KPropsDlgPlugin *plugin);
 
-  /**
-   * The URL of the file that has its properties being displayed. 
-   * This is only valid if the KPropertiesDialog was created/shown
-   * for one file or URL.
-   *
-   * @return a parsed URL.
-   */
-  const KURL& kurl() const { return m_singleUrl; }
+    /**
+     * The URL of the file that has its properties being displayed.
+     * This is only valid if the KPropertiesDialog was created/shown
+     * for one file or URL.
+     *
+     * @return a parsed URL.
+     */
+    const KURL &kurl() const
+    {
+        return m_singleUrl;
+    }
 
-  /**
-   * @return the file item for which the dialog is shown
-   *
-   * Warning: this method returns the first item of the list.
-   * This means that you should use this only if you are sure the dialog is used
-   * for a single item. Otherwise, you probably want items() instead.
-   */
-  KFileItem *item() { return m_items.first(); }
+    /**
+     * @return the file item for which the dialog is shown
+     *
+     * Warning: this method returns the first item of the list.
+     * This means that you should use this only if you are sure the dialog is used
+     * for a single item. Otherwise, you probably want items() instead.
+     */
+    KFileItem *item()
+    {
+        return m_items.first();
+    }
 
-  /**
-   * @return the items for which the dialog is shown
-   */
-  KFileItemList items() const { return m_items; }
+    /**
+     * @return the items for which the dialog is shown
+     */
+    KFileItemList items() const
+    {
+        return m_items;
+    }
 
-  /**
-   * @return a pointer to the dialog
-   * @deprecated KPropertiesDialog directly inherits from KDialogBase, so use \a this instead
-   */
-  KDE_DEPRECATED KDialogBase* dialog() { return this; }
-  /**
-   * @return a pointer to the dialog
-   * @deprecated KPropertiesDialog directly inherits from KDialogBase, so use \a this instead
-   */
-  KDE_DEPRECATED const KDialogBase* dialog() const { return this; }
+    /**
+     * @return a pointer to the dialog
+     * @deprecated KPropertiesDialog directly inherits from KDialogBase, so use \a this instead
+     */
+    KDE_DEPRECATED KDialogBase *dialog()
+    {
+        return this;
+    }
+    /**
+     * @return a pointer to the dialog
+     * @deprecated KPropertiesDialog directly inherits from KDialogBase, so use \a this instead
+     */
+    KDE_DEPRECATED const KDialogBase *dialog() const
+    {
+        return this;
+    }
 
-  /**
-   * If the dialog is being built from a template, this method
-   * returns the current directory. If no template, it returns QString::null.
-   * See the template form of the constructor.
-   *
-   * @return the current directory or QString::null
-   */
-  const KURL& currentDir() const { return m_currentDir; }
+    /**
+     * If the dialog is being built from a template, this method
+     * returns the current directory. If no template, it returns QString::null.
+     * See the template form of the constructor.
+     *
+     * @return the current directory or QString::null
+     */
+    const KURL &currentDir() const
+    {
+        return m_currentDir;
+    }
 
-  /**
-   * If the dialog is being built from a template, this method
-   * returns the default name. If no template, it returns QString::null.
-   * See the template form of the constructor.
-   * @return the default name or QString::null
-   */
-  const QString& defaultName() const { return m_defaultName; }
+    /**
+     * If the dialog is being built from a template, this method
+     * returns the default name. If no template, it returns QString::null.
+     * See the template form of the constructor.
+     * @return the default name or QString::null
+     */
+    const QString &defaultName() const
+    {
+        return m_defaultName;
+    }
 
-  /**
-   * Updates the item URL (either called by rename or because
-   * a global apps/mimelnk desktop file is being saved)
-   * Can only be called if the dialog applies to a single file or URL.
-   * @param _newUrl the new URL
-   */
-  void updateUrl( const KURL& _newUrl );
+    /**
+     * Updates the item URL (either called by rename or because
+     * a global apps/mimelnk desktop file is being saved)
+     * Can only be called if the dialog applies to a single file or URL.
+     * @param _newUrl the new URL
+     */
+    void updateUrl(const KURL &_newUrl);
 
-  /**
-   * Renames the item to the specified name. This can only be called if
-   * the dialog applies to a single file or URL.
-   * @param _name new filename, encoded.
-   * \see FilePropsDlgPlugin::applyChanges
-   */
-  void rename( const QString& _name );
+    /**
+     * Renames the item to the specified name. This can only be called if
+     * the dialog applies to a single file or URL.
+     * @param _name new filename, encoded.
+     * \see FilePropsDlgPlugin::applyChanges
+     */
+    void rename(const QString &_name);
 
-  /**
-   * To abort applying changes.
-   */
-  void abortApplying();
+    /**
+     * To abort applying changes.
+     */
+    void abortApplying();
 
-  /**
-   * Shows the page that was previously set by
-   * setFileSharingPage(), or does nothing if no page
-   * was set yet.
-   * \see setFileSharingPage
-   * @since 3.1
-   */
-  void showFileSharingPage();
-  
-  /**
-   * Sets the file sharing page.
-   * This page is shown when calling showFileSharingPage().
-   *
-   * @param page the page to set
-   * \see showFileSharingPage
-   * @since 3.3
-   */
-  void setFileSharingPage(QWidget* page);
+    /**
+     * Shows the page that was previously set by
+     * setFileSharingPage(), or does nothing if no page
+     * was set yet.
+     * \see setFileSharingPage
+     * @since 3.1
+     */
+    void showFileSharingPage();
 
-   /**
-    * Call this to make the filename lineedit readonly, to prevent the user
-    * from renaming the file.
-    * \param ro true if the lineedit should be read only
-    * @since 3.2
-    */
-  void setFileNameReadOnly( bool ro );
+    /**
+     * Sets the file sharing page.
+     * This page is shown when calling showFileSharingPage().
+     *
+     * @param page the page to set
+     * \see showFileSharingPage
+     * @since 3.3
+     */
+    void setFileSharingPage(QWidget *page);
+
+    /**
+     * Call this to make the filename lineedit readonly, to prevent the user
+     * from renaming the file.
+     * \param ro true if the lineedit should be read only
+     * @since 3.2
+     */
+    void setFileNameReadOnly(bool ro);
 
 public slots:
-  /**
-   * Called when the user presses 'Ok'.
-   */
-  virtual void slotOk();      // Deletes the PropertiesDialog instance
-  /**
-   * Called when the user presses 'Cancel'.
-   */
-  virtual void slotCancel();     // Deletes the PropertiesDialog instance
+    /**
+     * Called when the user presses 'Ok'.
+     */
+    virtual void slotOk();     // Deletes the PropertiesDialog instance
+                               /**
+                                * Called when the user presses 'Cancel'.
+                                */
+    virtual void slotCancel(); // Deletes the PropertiesDialog instance
 
 signals:
-  /**
-   * This signal is emitted when the Properties Dialog is closed (for
-   * example, with OK or Cancel buttons)
-   */
-  void propertiesClosed();
+    /**
+     * This signal is emitted when the Properties Dialog is closed (for
+     * example, with OK or Cancel buttons)
+     */
+    void propertiesClosed();
 
-  /**
-   * This signal is emitted when the properties changes are applied (for
-   * example, with the OK button)
-   */
-  void applied();
+    /**
+     * This signal is emitted when the properties changes are applied (for
+     * example, with the OK button)
+     */
+    void applied();
 
-  /**
-   * This signal is emitted when the properties changes are aborted (for
-   * example, with the Cancel button)
-   */
+    /**
+     * This signal is emitted when the properties changes are aborted (for
+     * example, with the Cancel button)
+     */
 
-  void canceled();
-  /**
-   * Emitted before changes to @p oldUrl are saved as @p newUrl.
-   * The receiver may change @p newUrl to point to an alternative
-   * save location.
-   */
-  void saveAs(const KURL &oldUrl, KURL &newUrl);
+    void canceled();
+    /**
+     * Emitted before changes to @p oldUrl are saved as @p newUrl.
+     * The receiver may change @p newUrl to point to an alternative
+     * save location.
+     */
+    void saveAs(const KURL &oldUrl, KURL &newUrl);
 
 private:
+    /**
+     * Common initialization for all constructors
+     */
+    void init(bool modal = false, bool autoShow = true);
 
-  /**
-   * Common initialization for all constructors
-   */
-  void init (bool modal = false, bool autoShow = true);
+    /**
+     * Inserts all pages in the dialog.
+     */
+    void insertPages();
 
-  /**
-   * Inserts all pages in the dialog.
-   */
-  void insertPages();
+    /**
+     * The URL of the props dialog (when shown for only one file)
+     */
+    KURL m_singleUrl;
 
-  /**
-   * The URL of the props dialog (when shown for only one file)
-   */
-  KURL m_singleUrl;
+    /**
+     * List of items this props dialog is shown for
+     */
+    KFileItemList m_items;
 
-  /**
-   * List of items this props dialog is shown for
-   */
-  KFileItemList m_items;
+    /**
+     * For templates
+     */
+    QString m_defaultName;
+    KURL m_currentDir;
 
-  /**
-   * For templates
-   */
-  QString m_defaultName;
-  KURL m_currentDir;
-
-  /**
-   * List of all plugins inserted ( first one first )
-   */
-  QPtrList<KPropsDlgPlugin> m_pageList;
+    /**
+     * List of all plugins inserted ( first one first )
+     */
+    QPtrList< KPropsDlgPlugin > m_pageList;
 
 private slots:
-  void slotStatResult( KIO::Job * ); // No longer used
+    void slotStatResult(KIO::Job *); // No longer used
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KPropertiesDialogPrivate;
-  KPropertiesDialogPrivate *d;
+    class KPropertiesDialogPrivate;
+    KPropertiesDialogPrivate *d;
 };
 
 /**
@@ -434,57 +442,58 @@ private:
  * You can also include X-KDE-Protocol=file if you want that plugin
  * to be loaded only for local files, for instance.
  */
-class KIO_EXPORT KPropsDlgPlugin : public QObject
-{
-  Q_OBJECT
+class KIO_EXPORT KPropsDlgPlugin : public QObject {
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   * To insert tabs into the properties dialog, use the add methods provided by
-   * KDialogBase (the properties dialog is a KDialogBase).
-   */
-  KPropsDlgPlugin( KPropertiesDialog *_props );
-  virtual ~KPropsDlgPlugin();
+    /**
+     * Constructor
+     * To insert tabs into the properties dialog, use the add methods provided by
+     * KDialogBase (the properties dialog is a KDialogBase).
+     */
+    KPropsDlgPlugin(KPropertiesDialog *_props);
+    virtual ~KPropsDlgPlugin();
 
-  /**
-   * Applies all changes to the file.
-   * This function is called when the user presses 'Ok'. The last plugin inserted
-   * is called first.
-   */
-  virtual void applyChanges();
+    /**
+     * Applies all changes to the file.
+     * This function is called when the user presses 'Ok'. The last plugin inserted
+     * is called first.
+     */
+    virtual void applyChanges();
 
-  /**
-   * Convenience method for most ::supports methods
-   * @return true if the file is a local, regular, readable, desktop file
-   */
-  static bool isDesktopFile( KFileItem * _item );
+    /**
+     * Convenience method for most ::supports methods
+     * @return true if the file is a local, regular, readable, desktop file
+     */
+    static bool isDesktopFile(KFileItem *_item);
 
-  void setDirty( bool b );
-  bool isDirty() const;
+    void setDirty(bool b);
+    bool isDirty() const;
 
 public slots:
-  void setDirty(); // same as setDirty( true )
+    void setDirty(); // same as setDirty( true )
 
 signals:
-  /**
-   * Emit this signal when the user changed anything in the plugin's tabs.
-   * The hosting PropertiesDialog will call applyChanges only if the
-   * PropsPlugin has emitted this signal before.
-   */
-  void changed();
+    /**
+     * Emit this signal when the user changed anything in the plugin's tabs.
+     * The hosting PropertiesDialog will call applyChanges only if the
+     * PropsPlugin has emitted this signal before.
+     */
+    void changed();
 
 protected:
-  /**
-   * Pointer to the dialog
-   */
-  KPropertiesDialog *properties;
+    /**
+     * Pointer to the dialog
+     */
+    KPropertiesDialog *properties;
 
-  int fontHeight;
+    int fontHeight;
+
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KPropsDlgPluginPrivate;
-  KPropsDlgPluginPrivate *d;
+    class KPropsDlgPluginPrivate;
+    KPropsDlgPluginPrivate *d;
 };
 
 /**
@@ -492,74 +501,71 @@ private:
  *  This plugin displays the name of the file, its size and access times.
  * @internal
  */
-class KIO_EXPORT KFilePropsPlugin : public KPropsDlgPlugin
-{
-  Q_OBJECT
+class KIO_EXPORT KFilePropsPlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KFilePropsPlugin( KPropertiesDialog *_props );
-  virtual ~KFilePropsPlugin();
+    /**
+     * Constructor
+     */
+    KFilePropsPlugin(KPropertiesDialog *_props);
+    virtual ~KFilePropsPlugin();
 
-  /**
-   * Applies all changes made.  This plugin must be always the first
-   * plugin in the dialog, since this function may rename the file which
-   * may confuse other applyChanges functions.
-   */
-  virtual void applyChanges();
+    /**
+     * Applies all changes made.  This plugin must be always the first
+     * plugin in the dialog, since this function may rename the file which
+     * may confuse other applyChanges functions.
+     */
+    virtual void applyChanges();
 
-  /**
-   * Tests whether the files specified by _items need a 'General' plugin.
-   */
-  static bool supports( KFileItemList _items );
+    /**
+     * Tests whether the files specified by _items need a 'General' plugin.
+     */
+    static bool supports(KFileItemList _items);
 
-  /**
-   * Called after all plugins applied their changes
-   */
-  void postApplyChanges();
+    /**
+     * Called after all plugins applied their changes
+     */
+    void postApplyChanges();
 
-  void setFileNameReadOnly( bool ro );
+    void setFileNameReadOnly(bool ro);
 
 protected slots:
-  void slotEditFileType();
-  void slotCopyFinished( KIO::Job * );
-  void slotFileRenamed( KIO::Job *, const KURL &, const KURL & );
-  void slotDirSizeUpdate();
-  void slotDirSizeFinished( KIO::Job * );
-  void slotFoundMountPoint( const QString& mp, unsigned long kBSize,
-			    unsigned long kBUsed, unsigned long kBAvail );
-  void slotSizeStop();
-  void slotSizeDetermine();
+    void slotEditFileType();
+    void slotCopyFinished(KIO::Job *);
+    void slotFileRenamed(KIO::Job *, const KURL &, const KURL &);
+    void slotDirSizeUpdate();
+    void slotDirSizeFinished(KIO::Job *);
+    void slotFoundMountPoint(const QString &mp, unsigned long kBSize, unsigned long kBUsed, unsigned long kBAvail);
+    void slotSizeStop();
+    void slotSizeDetermine();
 
 private slots:
-  // workaround for compiler bug
-  void slotFoundMountPoint( const unsigned long& kBSize, const unsigned long&
-			  kBUsed, const unsigned long& kBAvail, const QString& mp );
-  void nameFileChanged(const QString &text );
-  void slotIconChanged();
+    // workaround for compiler bug
+    void slotFoundMountPoint(const unsigned long &kBSize, const unsigned long &kBUsed, const unsigned long &kBAvail, const QString &mp);
+    void nameFileChanged(const QString &text);
+    void slotIconChanged();
 
 private:
-  void determineRelativePath( const QString & path );
-  void applyIconChanges();
+    void determineRelativePath(const QString &path);
+    void applyIconChanges();
 
-  QWidget *iconArea;
-  QWidget *nameArea;
+    QWidget *iconArea;
+    QWidget *nameArea;
 
-  QLabel *m_sizeLabel;
-  QPushButton *m_sizeDetermineButton;
-  QPushButton *m_sizeStopButton;
+    QLabel *m_sizeLabel;
+    QPushButton *m_sizeDetermineButton;
+    QPushButton *m_sizeStopButton;
 
-  QString m_sRelativePath;
-  bool m_bFromTemplate;
+    QString m_sRelativePath;
+    bool m_bFromTemplate;
 
-  /**
-   * The initial filename
-   */
-  QString oldName;
+    /**
+     * The initial filename
+     */
+    QString oldName;
 
-  class KFilePropsPluginPrivate;
-  KFilePropsPluginPrivate *d;
+    class KFilePropsPluginPrivate;
+    KFilePropsPluginPrivate *d;
 };
 
 /**
@@ -568,81 +574,78 @@ private:
  * the owner of a file.
  * @internal
  */
-class KIO_EXPORT KFilePermissionsPropsPlugin : public KPropsDlgPlugin
-{
-  Q_OBJECT
+class KIO_EXPORT KFilePermissionsPropsPlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 public:
-  enum PermissionsMode {
-    PermissionsOnlyFiles = 0,
-    PermissionsOnlyDirs = 1,
-    PermissionsOnlyLinks = 2,
-    PermissionsMixed = 3
-  };
+    enum PermissionsMode
+    {
+        PermissionsOnlyFiles = 0,
+        PermissionsOnlyDirs = 1,
+        PermissionsOnlyLinks = 2,
+        PermissionsMixed = 3
+    };
 
-  enum PermissionsTarget {
-    PermissionsOwner  = 0,
-    PermissionsGroup  = 1,
-    PermissionsOthers = 2
-  };
+    enum PermissionsTarget
+    {
+        PermissionsOwner = 0,
+        PermissionsGroup = 1,
+        PermissionsOthers = 2
+    };
 
-  /**
-   * Constructor
-   */
-  KFilePermissionsPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KFilePermissionsPropsPlugin();
+    /**
+     * Constructor
+     */
+    KFilePermissionsPropsPlugin(KPropertiesDialog *_props);
+    virtual ~KFilePermissionsPropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  /**
-   * Tests whether the file specified by _items needs a 'Permissions' plugin.
-   */
-  static bool supports( KFileItemList _items );
+    /**
+     * Tests whether the file specified by _items needs a 'Permissions' plugin.
+     */
+    static bool supports(KFileItemList _items);
 
 private slots:
 
-  void slotChmodResult( KIO::Job * );
-  void slotShowAdvancedPermissions();
+    void slotChmodResult(KIO::Job *);
+    void slotShowAdvancedPermissions();
 
 private:
-  void setComboContent(QComboBox *combo, PermissionsTarget target,
-		       mode_t permissions, mode_t partial);
-  bool isIrregular(mode_t permissions, bool isDir, bool isLink);
-  void enableAccessControls(bool enable);
-  void updateAccessControls();
-  void getPermissionMasks(mode_t &andFilePermissions,
-			  mode_t &andDirPermissions,
-			  mode_t &orFilePermissions,
-			  mode_t &orDirPermissions);
+    void setComboContent(QComboBox *combo, PermissionsTarget target, mode_t permissions, mode_t partial);
+    bool isIrregular(mode_t permissions, bool isDir, bool isLink);
+    void enableAccessControls(bool enable);
+    void updateAccessControls();
+    void getPermissionMasks(mode_t &andFilePermissions, mode_t &andDirPermissions, mode_t &orFilePermissions, mode_t &orDirPermissions);
 
-  static const mode_t permissionsMasks[3];
-  static const mode_t standardPermissions[4];
-  static const char *permissionsTexts[4][4];
+    static const mode_t permissionsMasks[3];
+    static const mode_t standardPermissions[4];
+    static const char *permissionsTexts[4][4];
 
-  // unused, for binary compatibility!
-  QCheckBox *permBox[3][4];
+    // unused, for binary compatibility!
+    QCheckBox *permBox[3][4];
 
-  QComboBox *grpCombo;
+    QComboBox *grpCombo;
 
-  KLineEdit *usrEdit, *grpEdit;
+    KLineEdit *usrEdit, *grpEdit;
 
-  /**
-   * Old permissions
-   */
-  mode_t permissions;
-  /**
-   * Old group
-   */
-  QString strGroup;
-  /**
-   * Old owner
-   */
-  QString strOwner;
+    /**
+     * Old permissions
+     */
+    mode_t permissions;
+    /**
+     * Old group
+     */
+    QString strGroup;
+    /**
+     * Old owner
+     */
+    QString strOwner;
 
-  // unused, for compatibility
-  static mode_t fperm[3][4];
+    // unused, for compatibility
+    static mode_t fperm[3][4];
 
-  class KFilePermissionsPropsPluginPrivate;
-  KFilePermissionsPropsPluginPrivate *d;
+    class KFilePermissionsPropsPluginPrivate;
+    KFilePermissionsPropsPluginPrivate *d;
 };
 
 
@@ -654,32 +657,32 @@ private:
  * Such files are used to represent a program in kicker and konqueror.
  * @internal
  */
-class KIO_EXPORT KURLPropsPlugin : public KPropsDlgPlugin
-{
-  Q_OBJECT
+class KIO_EXPORT KURLPropsPlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KURLPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KURLPropsPlugin();
+    /**
+     * Constructor
+     */
+    KURLPropsPlugin(KPropertiesDialog *_props);
+    virtual ~KURLPropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  static bool supports( KFileItemList _items );
+    static bool supports(KFileItemList _items);
 
 private:
-  KURLRequester *URLEdit;
-  KIconButton *iconBox;
+    KURLRequester *URLEdit;
+    KIconButton *iconBox;
 
-  QString URLStr;
-  QString iconStr;
+    QString URLStr;
+    QString iconStr;
 
-  QPixmap pixmap;
-  QString pixmapFile;
+    QPixmap pixmap;
+    QString pixmapFile;
+
 private:
-  class KURLPropsPluginPrivate;
-  KURLPropsPluginPrivate *d;
+    class KURLPropsPluginPrivate;
+    KURLPropsPluginPrivate *d;
 };
 
 
@@ -689,76 +692,70 @@ private:
  * Type=MimeType
  * @internal
  */
-class KIO_EXPORT KBindingPropsPlugin : public KPropsDlgPlugin
-{
-  Q_OBJECT
+class KIO_EXPORT KBindingPropsPlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KBindingPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KBindingPropsPlugin();
+    /**
+     * Constructor
+     */
+    KBindingPropsPlugin(KPropertiesDialog *_props);
+    virtual ~KBindingPropsPlugin();
 
-  virtual void applyChanges();
-  static bool supports( KFileItemList _items );
+    virtual void applyChanges();
+    static bool supports(KFileItemList _items);
 
 private:
+    QLineEdit *commentEdit;
+    QLineEdit *patternEdit;
+    QLineEdit *mimeEdit;
+    QString m_sMimeStr;
 
-  QLineEdit *commentEdit;
-  QLineEdit *patternEdit;
-  QLineEdit *mimeEdit;
-  QString m_sMimeStr;
+    QCheckBox *cbAutoEmbed;
 
-  QCheckBox * cbAutoEmbed;
-
-  class KBindingPropsPluginPrivate;
-  KBindingPropsPluginPrivate *d;
+    class KBindingPropsPluginPrivate;
+    KBindingPropsPluginPrivate *d;
 };
 
 /**
  * Properties plugin for device .desktop files
  * @internal
  */
-class KIO_EXPORT KDevicePropsPlugin : public KPropsDlgPlugin
-{
-  Q_OBJECT
+class KIO_EXPORT KDevicePropsPlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 public:
-  KDevicePropsPlugin( KPropertiesDialog *_props );
-  virtual ~KDevicePropsPlugin();
+    KDevicePropsPlugin(KPropertiesDialog *_props);
+    virtual ~KDevicePropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  static bool supports( KFileItemList _items );
+    static bool supports(KFileItemList _items);
 
 private slots:
-  void slotActivated( int );
-  void slotDeviceChanged();
-  void slotFoundMountPoint( const unsigned long& kBSize,
-                            const unsigned long& /*kBUsed*/,
-                            const unsigned long& kBAvail,
-                            const QString& );
+    void slotActivated(int);
+    void slotDeviceChanged();
+    void slotFoundMountPoint(const unsigned long &kBSize, const unsigned long & /*kBUsed*/, const unsigned long &kBAvail, const QString &);
 
 private:
-  void updateInfo();
+    void updateInfo();
 
 private:
-  QComboBox* device;
-  QLabel* mountpoint;
-  QCheckBox* readonly;
-  void* unused;
-  //KIconButton* mounted;
-  KIconButton* unmounted;
+    QComboBox *device;
+    QLabel *mountpoint;
+    QCheckBox *readonly;
+    void *unused;
+    // KIconButton* mounted;
+    KIconButton *unmounted;
 
-  QStringList m_devicelist;
-  int indexDevice;
-  int indexMountPoint;
-  int indexFSType;
+    QStringList m_devicelist;
+    int indexDevice;
+    int indexMountPoint;
+    int indexFSType;
 
-  QPixmap pixmap;
-  QString pixmapFile;
+    QPixmap pixmap;
+    QString pixmapFile;
 
-  class KDevicePropsPluginPrivate;
-  KDevicePropsPluginPrivate *d;
+    class KDevicePropsPluginPrivate;
+    KDevicePropsPluginPrivate *d;
 };
 
 class KPropertiesDesktopBase;
@@ -771,45 +768,44 @@ class KPropertiesDesktopBase;
  * Such files are used to represent a program in kicker and konqueror.
  * @internal
  */
-class KIO_EXPORT KDesktopPropsPlugin : public KPropsDlgPlugin
-{
-  Q_OBJECT
+class KIO_EXPORT KDesktopPropsPlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KDesktopPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KDesktopPropsPlugin();
+    /**
+     * Constructor
+     */
+    KDesktopPropsPlugin(KPropertiesDialog *_props);
+    virtual ~KDesktopPropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  static bool supports( KFileItemList _items );
+    static bool supports(KFileItemList _items);
 
 public slots:
-  void slotAddFiletype();
-  void slotDelFiletype();
-  void slotBrowseExec();
-  void slotAdvanced();
-  void slotSelectMimetype();
+    void slotAddFiletype();
+    void slotDelFiletype();
+    void slotBrowseExec();
+    void slotAdvanced();
+    void slotSelectMimetype();
 
 private:
-  void checkCommandChanged();
+    void checkCommandChanged();
 
 private:
-  KPropertiesDesktopBase* w;
+    KPropertiesDesktopBase *w;
 
-  QString m_origCommandStr;
-  QString m_terminalOptionStr;
-  QString m_suidUserStr;
-  QString m_dcopServiceType;
-  bool m_terminalBool;
-  bool m_terminalCloseBool;
-  bool m_suidBool;
-  bool m_startupBool;
-  bool m_systrayBool;
+    QString m_origCommandStr;
+    QString m_terminalOptionStr;
+    QString m_suidUserStr;
+    QString m_dcopServiceType;
+    bool m_terminalBool;
+    bool m_terminalCloseBool;
+    bool m_suidBool;
+    bool m_startupBool;
+    bool m_systrayBool;
 
-  class KDesktopPropsPluginPrivate;
-  KDesktopPropsPluginPrivate *d;
+    class KDesktopPropsPluginPrivate;
+    KDesktopPropsPluginPrivate *d;
 };
 
 /**
@@ -821,30 +817,28 @@ private:
  * @internal
  * @deprecated replaced with KDesktopPropsPlugin
  */
- /// Remove in KDE4
-class KIO_EXPORT_DEPRECATED KExecPropsPlugin : public KPropsDlgPlugin
-{
-  Q_OBJECT
+/// Remove in KDE4
+class KIO_EXPORT_DEPRECATED KExecPropsPlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KExecPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KExecPropsPlugin();
+    /**
+     * Constructor
+     */
+    KExecPropsPlugin(KPropertiesDialog *_props);
+    virtual ~KExecPropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  static bool supports( KFileItemList _items );
+    static bool supports(KFileItemList _items);
 
 public slots:
-  void slotBrowseExec();
+    void slotBrowseExec();
 
 private slots:
-  void enableCheckedEdit();
-  void enableSuidEdit();
+    void enableCheckedEdit();
+    void enableSuidEdit();
 
 private:
-
     QLabel *terminalLabel;
     QLabel *suidLabel;
     KLineEdit *execEdit;
@@ -877,42 +871,40 @@ private:
  * @internal
  * @deprecated replaced with KDesktopPropsPlugin
  */
- /// Remove in KDE4
-class KIO_EXPORT_DEPRECATED KApplicationPropsPlugin : public KPropsDlgPlugin
-{
-  Q_OBJECT
+/// Remove in KDE4
+class KIO_EXPORT_DEPRECATED KApplicationPropsPlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KApplicationPropsPlugin( KPropertiesDialog *_props );
-  virtual ~KApplicationPropsPlugin();
+    /**
+     * Constructor
+     */
+    KApplicationPropsPlugin(KPropertiesDialog *_props);
+    virtual ~KApplicationPropsPlugin();
 
-  virtual void applyChanges();
+    virtual void applyChanges();
 
-  static bool supports( KFileItemList _items );
+    static bool supports(KFileItemList _items);
 
 public slots:
-  void slotDelExtension();
-  void slotAddExtension();
+    void slotDelExtension();
+    void slotAddExtension();
 
 private slots:
-  void updateButton();
+    void updateButton();
 
 private:
-  void addMimeType( const QString & name );
+    void addMimeType(const QString &name);
 
-  QLineEdit *commentEdit;
-  QLineEdit *genNameEdit;
-  QLineEdit *nameEdit;
-  QListBox  *extensionsList;
-  QListBox  *availableExtensionsList;
-  QPushButton *addExtensionButton;
-  QPushButton *delExtensionButton;
+    QLineEdit *commentEdit;
+    QLineEdit *genNameEdit;
+    QLineEdit *nameEdit;
+    QListBox *extensionsList;
+    QListBox *availableExtensionsList;
+    QPushButton *addExtensionButton;
+    QPushButton *delExtensionButton;
 
-  class KApplicationPropsPluginPrivate;
-  KApplicationPropsPluginPrivate *d;
+    class KApplicationPropsPluginPrivate;
+    KApplicationPropsPluginPrivate *d;
 };
 
 #endif
-

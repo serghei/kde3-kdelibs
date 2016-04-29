@@ -168,8 +168,7 @@ class QObject;
  *
  * See sections @ref dbusclient and @ref dbusservice for examples
  */
-class QDBUS_EXPORT QDBusConnection
-{
+class QDBUS_EXPORT QDBusConnection {
 public:
     /**
      * DBus bus types
@@ -417,8 +416,7 @@ public:
      *
      * @see lastError()
      */
-    int sendWithAsyncReply(const QDBusMessage &message, QObject *receiver,
-                           const char *slot) const;
+    int sendWithAsyncReply(const QDBusMessage &message, QObject *receiver, const char *slot) const;
 
     /**
      * @brief Flushes buffered outgoing message
@@ -495,7 +493,7 @@ public:
      *
      * @see disconnect()
      */
-    bool connect(QObject* object, const char* slot);
+    bool connect(QObject *object, const char *slot);
 
     /**
      * @brief Disconnects a given receiver from the D-Bus signal handling
@@ -507,7 +505,7 @@ public:
      *
      * @see connect()
      */
-    bool disconnect(QObject* object, const char* slot);
+    bool disconnect(QObject *object, const char *slot);
 
     /**
      * @brief Registers a service object for a given path
@@ -534,7 +532,7 @@ public:
      *
      * @see unregisterObject()
      */
-    bool registerObject(const QString& path, QDBusObjectBase* object);
+    bool registerObject(const QString &path, QDBusObjectBase *object);
 
     /**
      * @brief Unregister a service object on a given path
@@ -614,8 +612,7 @@ public:
      *
      * @see closeConnection()
      */
-    static QDBusConnection addConnection(BusType type,
-                                         const QString &name = default_connection_name);
+    static QDBusConnection addConnection(BusType type, const QString &name = default_connection_name);
 
     /**
      * @brief Add a connection to a bus at a specific address
@@ -635,8 +632,7 @@ public:
      *
      * @see closeConnection()
      */
-    static QDBusConnection addConnection(const QString &address,
-                                         const QString &name = default_connection_name);
+    static QDBusConnection addConnection(const QString &address, const QString &name = default_connection_name);
 
     // TODO check why this doesn't close the D-Bus connection
     /**

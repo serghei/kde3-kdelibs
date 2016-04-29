@@ -37,130 +37,121 @@
 
 using namespace KParts;
 
-namespace KParts
-{
-class DockMainWindowPrivate
-{
+namespace KParts {
+class DockMainWindowPrivate {
 public:
-  DockMainWindowPrivate()
-  {
-    m_activePart = 0;
-    m_bShellGUIActivated = false;
-    m_helpMenu = 0;
-  }
-  ~DockMainWindowPrivate()
-  {
-  }
+    DockMainWindowPrivate()
+    {
+        m_activePart = 0;
+        m_bShellGUIActivated = false;
+        m_helpMenu = 0;
+    }
+    ~DockMainWindowPrivate()
+    {
+    }
 
-  QGuardedPtr<Part> m_activePart;
-  bool m_bShellGUIActivated;
-  KHelpMenu *m_helpMenu;
+    QGuardedPtr< Part > m_activePart;
+    bool m_bShellGUIActivated;
+    KHelpMenu *m_helpMenu;
 };
 }
 
-DockMainWindow::DockMainWindow( QWidget* parent, const char *name, WFlags f )
-  : KDockMainWindow( parent, name, f )
+DockMainWindow::DockMainWindow(QWidget *parent, const char *name, WFlags f) : KDockMainWindow(parent, name, f)
 {
-  d = new DockMainWindowPrivate();
-  PartBase::setPartObject( this );
+    d = new DockMainWindowPrivate();
+    PartBase::setPartObject(this);
 }
 
 DockMainWindow::~DockMainWindow()
 {
-  delete d;
+    delete d;
 }
 
-void DockMainWindow::createGUI( Part * part )
+void DockMainWindow::createGUI(Part *part)
 {
-  kdDebug(1000) << QString("DockMainWindow::createGUI for %1").arg(part?part->name():"0L") << endl;
+    kdDebug(1000) << QString("DockMainWindow::createGUI for %1").arg(part ? part->name() : "0L") << endl;
 
-  KXMLGUIFactory *factory = guiFactory();
+    KXMLGUIFactory *factory = guiFactory();
 
-  setUpdatesEnabled( false );
+    setUpdatesEnabled(false);
 
-  QPtrList<Plugin> plugins;
+    QPtrList< Plugin > plugins;
 
-  if ( d->m_activePart )
-  {
-    kdDebug(1000) << QString("deactivating GUI for %1").arg(d->m_activePart->name()) << endl;
-
-    GUIActivateEvent ev( false );
-    QApplication::sendEvent( d->m_activePart, &ev );
-
-    factory->removeClient( d->m_activePart );
-
-    disconnect( d->m_activePart, SIGNAL( setWindowCaption( const QString & ) ),
-             this, SLOT( setCaption( const QString & ) ) );
-    disconnect( d->m_activePart, SIGNAL( setStatusBarText( const QString & ) ),
-             this, SLOT( slotSetStatusBarText( const QString & ) ) );
-  }
-
-  if ( !d->m_bShellGUIActivated )
-  {
-    loadPlugins( this, this, KGlobal::instance() );
-    createShellGUI();
-    d->m_bShellGUIActivated = true;
-  }
-
-  if ( part )
-  {
-    // do this before sending the activate event
-    connect( part, SIGNAL( setWindowCaption( const QString & ) ),
-             this, SLOT( setCaption( const QString & ) ) );
-    connect( part, SIGNAL( setStatusBarText( const QString & ) ),
-             this, SLOT( slotSetStatusBarText( const QString & ) ) );
-
-    factory->addClient( part );
-
-    GUIActivateEvent ev( true );
-    QApplication::sendEvent( part, &ev );
-
-  }
-
-  setUpdatesEnabled( true );
-
-  d->m_activePart = part;
-}
-
-void DockMainWindow::slotSetStatusBarText( const QString & text )
-{
-  statusBar()->message( text );
-}
-
-void DockMainWindow::createShellGUI( bool create )
-{
-    bool bAccelAutoUpdate = accel()->setAutoUpdate( false );
-    assert( d->m_bShellGUIActivated != create );
-    d->m_bShellGUIActivated = create;
-    if ( create )
+    if(d->m_activePart)
     {
-        if ( isHelpMenuEnabled() )
-            d->m_helpMenu = new KHelpMenu( this, instance()->aboutData(), true, actionCollection() );
+        kdDebug(1000) << QString("deactivating GUI for %1").arg(d->m_activePart->name()) << endl;
+
+        GUIActivateEvent ev(false);
+        QApplication::sendEvent(d->m_activePart, &ev);
+
+        factory->removeClient(d->m_activePart);
+
+        disconnect(d->m_activePart, SIGNAL(setWindowCaption(const QString &)), this, SLOT(setCaption(const QString &)));
+        disconnect(d->m_activePart, SIGNAL(setStatusBarText(const QString &)), this, SLOT(slotSetStatusBarText(const QString &)));
+    }
+
+    if(!d->m_bShellGUIActivated)
+    {
+        loadPlugins(this, this, KGlobal::instance());
+        createShellGUI();
+        d->m_bShellGUIActivated = true;
+    }
+
+    if(part)
+    {
+        // do this before sending the activate event
+        connect(part, SIGNAL(setWindowCaption(const QString &)), this, SLOT(setCaption(const QString &)));
+        connect(part, SIGNAL(setStatusBarText(const QString &)), this, SLOT(slotSetStatusBarText(const QString &)));
+
+        factory->addClient(part);
+
+        GUIActivateEvent ev(true);
+        QApplication::sendEvent(part, &ev);
+    }
+
+    setUpdatesEnabled(true);
+
+    d->m_activePart = part;
+}
+
+void DockMainWindow::slotSetStatusBarText(const QString &text)
+{
+    statusBar()->message(text);
+}
+
+void DockMainWindow::createShellGUI(bool create)
+{
+    bool bAccelAutoUpdate = accel()->setAutoUpdate(false);
+    assert(d->m_bShellGUIActivated != create);
+    d->m_bShellGUIActivated = create;
+    if(create)
+    {
+        if(isHelpMenuEnabled())
+            d->m_helpMenu = new KHelpMenu(this, instance()->aboutData(), true, actionCollection());
 
         QString f = xmlFile();
-        setXMLFile( locate( "config", "ui/ui_standards.rc", instance() ) );
-        if ( !f.isEmpty() )
-            setXMLFile( f, true );
+        setXMLFile(locate("config", "ui/ui_standards.rc", instance()));
+        if(!f.isEmpty())
+            setXMLFile(f, true);
         else
         {
-            QString auto_file( instance()->instanceName() + "ui.rc" );
-            setXMLFile( auto_file, true );
+            QString auto_file(instance()->instanceName() + "ui.rc");
+            setXMLFile(auto_file, true);
         }
 
-        GUIActivateEvent ev( true );
-        QApplication::sendEvent( this, &ev );
+        GUIActivateEvent ev(true);
+        QApplication::sendEvent(this, &ev);
 
-        guiFactory()->addClient( this );
-
+        guiFactory()->addClient(this);
     }
     else
     {
-        GUIActivateEvent ev( false );
-        QApplication::sendEvent( this, &ev );
+        GUIActivateEvent ev(false);
+        QApplication::sendEvent(this, &ev);
 
-        guiFactory()->removeClient( this );
+        guiFactory()->removeClient(this);
     }
-    accel()->setAutoUpdate( bAccelAutoUpdate );
+    accel()->setAutoUpdate(bAccelAutoUpdate);
 }
 
 #include "dockmainwindow.moc"

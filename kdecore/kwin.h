@@ -58,10 +58,8 @@ class NETWinInfo;
  * @see NetWinInfo
  * @author Matthias Ettrich (ettrich@kde.org)
 */
-class KDECORE_EXPORT KWin
-{
+class KDECORE_EXPORT KWin {
 public:
-
     /**
      * Requests that window @p win is activated.
      *
@@ -89,7 +87,7 @@ public:
      *    caused this request
      * @since 3.2
      */
-    static void activateWindow( WId win, long time = 0 );
+    static void activateWindow(WId win, long time = 0);
 
     /**
      * Sets window @p win to be the active window. Note that this
@@ -105,12 +103,12 @@ public:
      *
      * @since 3.2
     */
-    static void forceActiveWindow( WId win, long time = 0 );
+    static void forceActiveWindow(WId win, long time = 0);
     /**
      * @deprecated Consider using activateWindow(), use forceActiveWindow()
      * only if necessary.
      */
-    static void setActiveWindow( WId win ) KDE_DEPRECATED;
+    static void setActiveWindow(WId win) KDE_DEPRECATED;
 
     /**
      * When application finishes some operation and wants to notify
@@ -123,7 +121,7 @@ public:
      *
      * @since 3.2
      */
-    static void demandAttention( WId win, bool set = true );
+    static void demandAttention(WId win, bool set = true);
 
     /**
      * Sets user timestamp @p time on window @p win. The timestamp
@@ -135,7 +133,7 @@ public:
      *
      * @since 3.2
      */
-    static void setUserTime( WId win, long time );
+    static void setUserTime(WId win, long time);
 
     /**
      * Invokes interactive context help.
@@ -156,7 +154,7 @@ public:
      *
      * @since 3.4
      */
-    static void setMainWindow( QWidget* subwindow, WId mainwindow );
+    static void setMainWindow(QWidget *subwindow, WId mainwindow);
 
     /**
      * Makes @p trayWin a system tray window for @p forWin.
@@ -167,7 +165,7 @@ public:
      * @param forWin the id of the window represented by the system
      *        tray window
      */
-    static void setSystemTrayWindowFor( WId trayWin, WId forWin );
+    static void setSystemTrayWindowFor(WId trayWin, WId forWin);
 
     class WindowInfo;
     class WindowInfoPrivate;
@@ -184,7 +182,7 @@ public:
      * @return the window information
      * @since 3.2
      */
-    static WindowInfo windowInfo( WId win, unsigned long properties = 0, unsigned long properties2 = 0 );
+    static WindowInfo windowInfo(WId win, unsigned long properties = 0, unsigned long properties2 = 0);
 
     /**
      * Returns the WM_TRANSIENT_FOR property for the given window, i.e. the mainwindow
@@ -193,14 +191,14 @@ public:
      * @param window the id of the window
      * @since 3.2
      */
-    static WId transientFor( WId window );
+    static WId transientFor(WId window);
 
     /**
      * Returns the leader window for the group the given window is in, if any.
      * @param window the id of the window
      * @since 3.2
      */
-    static WId groupLeader( WId window );
+    static WId groupLeader(WId window);
 
     /**
      * Returns an icon for window @p win.
@@ -218,7 +216,7 @@ public:
      *        icon will not be modified.
      * @return the icon of the window
      */
-    static QPixmap icon( WId win, int width = -1, int height = -1, bool scale = false );
+    static QPixmap icon(WId win, int width = -1, int height = -1, bool scale = false);
 
     /**
      * Masks specifying from which sources to read an icon. They are tried from the best
@@ -228,10 +226,12 @@ public:
      * @li ClassHint load icon after getting name from the classhint
      * @li XApp load the standard X icon (last fallback)
      */
-    enum IconSource { NETWM = 1, //!< read from property from the window manager specification
-		      WMHints = 2, //!< read from WMHints property
-		      ClassHint = 4, //!< load icon after getting name from the classhint
-		      XApp = 8 //!<load the standard X icon (last fallback)
+    enum IconSource
+    {
+        NETWM = 1,     //!< read from property from the window manager specification
+        WMHints = 2,   //!< read from WMHints property
+        ClassHint = 4, //!< load icon after getting name from the classhint
+        XApp = 8       //!<load the standard X icon (last fallback)
     };
     /**
      * @overload
@@ -248,7 +248,7 @@ public:
      * @param flags OR-ed flags from the IconSource enum
      * @since 3.2
      */
-    static QPixmap icon( WId win, int width, int height, bool scale, int flags );
+    static QPixmap icon(WId win, int width, int height, bool scale, int flags);
 
     /**
      * Sets an @p icon and a  @p miniIcon on window @p win
@@ -256,7 +256,7 @@ public:
      * @param icon the new icon
      * @param miniIcon the new mini icon
      */
-    static void  setIcons( WId win, const QPixmap& icon, const QPixmap& miniIcon );
+    static void setIcons(WId win, const QPixmap &icon, const QPixmap &miniIcon);
 
     /**
      * Sets the type of window @p win to @p windowType.
@@ -264,7 +264,7 @@ public:
      * @param win the id of the window
      * @param windowType the type of the window (see NET::WindowType)
      */
-    static void setType( WId win, NET::WindowType windowType );
+    static void setType(WId win, NET::WindowType windowType);
 
     /**
      * Sets the state of window @p win to @p state.
@@ -277,7 +277,7 @@ public:
      * @param win the id of the window
      * @param state the new flags that will be set
      */
-    static void setState( WId win, unsigned long state );
+    static void setState(WId win, unsigned long state);
 
     /**
      * Clears the state of window @p win from @p state.
@@ -290,8 +290,8 @@ public:
      * @param win the id of the window
      * @param state the flags that will be cleared
      */
-    static void clearState( WId win, unsigned long  state );
-    
+    static void clearState(WId win, unsigned long state);
+
     /**
      * Sets the opacity of window @p win to percetage @p percent.
      *
@@ -302,8 +302,8 @@ public:
      * @param percent the opacity value in percent (will be justified to [ 0: transparent - 100: opaque ])
      * @since 3.4
      */
-    static void setOpacity( WId win, uint percent );
-    
+    static void setOpacity(WId win, uint percent);
+
     /**
      * Sets the shadowsize of window @p win to percetage @p percent.
      *
@@ -314,7 +314,7 @@ public:
      * @param percent the opacity value in percent (0 leads to a completely unshadowed window)
      * @since 3.4
      */
-    static void setShadowSize( WId win, uint percent );
+    static void setShadowSize(WId win, uint percent);
 
     /**
      * Sets window @p win to be present on all virtual desktops if @p
@@ -324,7 +324,7 @@ public:
      * @param b true to show the window on all desktops, false
      *          otherwise
      */
-    static void setOnAllDesktops( WId win, bool b );
+    static void setOnAllDesktops(WId win, bool b);
 
     /**
      * Moves window @p win to desktop @p desktop.
@@ -332,7 +332,7 @@ public:
      * @param win the id of the window
      * @param desktop the number of the new desktop
      */
-    static void setOnDesktop( WId win, int desktop);
+    static void setOnDesktop(WId win, int desktop);
 
     /**
      * Sets the strut of window @p win to @p to @p left width
@@ -355,9 +355,8 @@ public:
      * @param bottom_start starting x coordinate of the strut at the bottom edge
      * @param bottom_end ending x coordinate of the strut at the bottom edge
      */
-    static void setExtendedStrut( WId win, int left_width, int left_start, int left_end,
-        int right_width, int right_start, int right_end, int top_width, int top_start, int top_end,
-        int bottom_width, int bottom_start, int bottom_end );
+    static void setExtendedStrut(WId win, int left_width, int left_start, int left_end, int right_width, int right_start, int right_end,
+                                 int top_width, int top_start, int top_end, int bottom_width, int bottom_start, int bottom_end);
 
     /**
      * @deprecated use setExtendedStrut()
@@ -369,7 +368,7 @@ public:
      * @param top the top strut
      * @param bottom the bottom strut
      */
-    static void setStrut( WId win, int left, int right, int top, int bottom );
+    static void setStrut(WId win, int left, int right, int top, int bottom);
     /**
      * Convenience function to access the current desktop.  See NETRootInfo.
      * @return the number of the current desktop
@@ -388,7 +387,7 @@ public:
      * See NETRootInfo.
      * @param desktop the number of the new desktop
      */
-    static void setCurrentDesktop( int desktop );
+    static void setCurrentDesktop(int desktop);
 
     /**
      * Convenience function to set the current viewport to @p viewport.
@@ -397,7 +396,7 @@ public:
      * @param viewport the position of the new viewport
      * @since 3.5.5
      */
-    static void setCurrentDesktopViewport( int desktop, QPoint viewport );
+    static void setCurrentDesktopViewport(int desktop, QPoint viewport);
 
     /**
      * Iconifies a window. Compatible to XIconifyWindow but has an
@@ -407,7 +406,7 @@ public:
      * @param animation true to show an animation
      * @see deIconifyWindow()
      */
-    static void iconifyWindow( WId win, bool animation = true  );
+    static void iconifyWindow(WId win, bool animation = true);
 
     /**
      * DeIconifies a window. Compatible to XMapWindow but has an
@@ -417,7 +416,7 @@ public:
      * @param animation true to show an animation
      * @see iconifyWindow()
      */
-    static void deIconifyWindow( WId win, bool animation = true );
+    static void deIconifyWindow(WId win, bool animation = true);
 
     /**
      * Raises the given window. This call is only for pagers and similar
@@ -426,7 +425,7 @@ public:
      * if necessary.
      * @since 3.2
      */
-    static void raiseWindow( WId win );
+    static void raiseWindow(WId win);
 
     /**
      * Lowers the given window. This call is only for pagers and similar
@@ -435,7 +434,7 @@ public:
      * if necessary.
      * @since 3.2
      */
-    static void lowerWindow( WId win );
+    static void lowerWindow(WId win);
 
     /**
      * @internal
@@ -455,7 +454,7 @@ public:
      * property (WM_NAME, WM_ICON_NAME,...).
      * @since 3.2
      */
-    static QString readNameProperty( WId window, unsigned long atom );
+    static QString readNameProperty(WId window, unsigned long atom);
 
     /**
      * Returns true if a compositing manager is running (i.e. ARGB windows
@@ -468,41 +467,41 @@ public:
      */
     struct KDECORE_EXPORT Info
     {
-      /// The window's id.
-	WId win;
-      /// The window's state.
- 	long unsigned int state;
-      /// The mapping state.
-	bool isMinimized() const;
-	bool isIconified() const;
-	NET::MappingState mappingState;
-      /// The strut.
-	NETStrut strut;
-      /// The window type.
-	NET::WindowType windowType;
-      /// The visible name of the window.
-	QString visibleName;
-      /// The name of the window.
-	QString name;
-      /// The number of the window's desktop.
-	int desktop;
-      /// true if the window is on all desktops.
-	bool onAllDesktops;
-      /// The process id of the window's owner
-	pid_t pid;
-      /// Position and size of the window contents.
-	QRect geometry;
-      /// Position and size of the window's frame.
-	QRect frameGeometry;
+        /// The window's id.
+        WId win;
+        /// The window's state.
+        long unsigned int state;
+        /// The mapping state.
+        bool isMinimized() const;
+        bool isIconified() const;
+        NET::MappingState mappingState;
+        /// The strut.
+        NETStrut strut;
+        /// The window type.
+        NET::WindowType windowType;
+        /// The visible name of the window.
+        QString visibleName;
+        /// The name of the window.
+        QString name;
+        /// The number of the window's desktop.
+        int desktop;
+        /// true if the window is on all desktops.
+        bool onAllDesktops;
+        /// The process id of the window's owner
+        pid_t pid;
+        /// Position and size of the window contents.
+        QRect geometry;
+        /// Position and size of the window's frame.
+        QRect frameGeometry;
 
-	QString visibleNameWithState() const;
+        QString visibleNameWithState() const;
     };
 
     /**
      * @deprecated
      * Use windowInfo() .
      */
-    static Info info( WId win ) KDE_DEPRECATED;
+    static Info info(WId win) KDE_DEPRECATED;
 
 #ifdef KDE_NO_COMPAT
 private:
@@ -519,13 +518,12 @@ private:
  * Information about a window.
  * @since 3.2
  */
-class KDECORE_EXPORT KWin::WindowInfo
-{
+class KDECORE_EXPORT KWin::WindowInfo {
 public:
     /**
      * Reads all the info about the given window.
      */
-    WindowInfo( WId window, unsigned long properties, unsigned long properties2 );
+    WindowInfo(WId window, unsigned long properties, unsigned long properties2);
     WindowInfo(); // to make QValueList and others happy
     ~WindowInfo();
     /**
@@ -534,7 +532,7 @@ public:
      * @param withdrawn_is_valid if true, windows in the withdrawn state
      *        (i.e. not managed) are also considered. This is usually not the case.
      */
-    bool valid( bool withdrawn_is_valid = false ) const;
+    bool valid(bool withdrawn_is_valid = false) const;
     /**
      * Returns the window identifier.
      */
@@ -549,7 +547,10 @@ public:
      * Requires NET::WMState passed to KWin::windowInfo().
      * @since 3.2.1
      */
-    bool hasState( unsigned long s ) const { return ( state() & s ) == s; }
+    bool hasState(unsigned long s) const
+    {
+        return (state() & s) == s;
+    }
     /**
      * Returns true if the window is minimized. Note that it is true only if
      * the window is truly minimized, not shaded or on another virtual desktops,
@@ -581,7 +582,7 @@ public:
      * should be all window types your application supports (see NET::WindowTypeMask).
      * Requires NET::WMWindowType passed to KWin::windowInfo().
      */
-    NET::WindowType windowType( int supported_types ) const;
+    NET::WindowType windowType(int supported_types) const;
     /**
      * Returns the visible name of the window (i.e. including possible <2> appended
      * when there are two or more windows with the same name).
@@ -638,7 +639,7 @@ public:
      * Returns true if the window is on the given virtual desktop.
      * Requires NET::WMDesktop passed to KWin::windowInfo().
      */
-    bool isOnDesktop( int desktop ) const;
+    bool isOnDesktop(int desktop) const;
     /**
      * Returns true if the window is on all desktops
      * (equal to desktop()==NET::OnAllDesktops).
@@ -708,14 +709,15 @@ public:
      * by the window manager.
      * Requires NET::WM2AllowedActions passed to KWin::windowInfo().
      */
-    bool actionSupported( NET::Action action ) const;
+    bool actionSupported(NET::Action action) const;
 
-    WindowInfo( const WindowInfo& );
-    WindowInfo& operator=( const WindowInfo& );
+    WindowInfo(const WindowInfo &);
+    WindowInfo &operator=(const WindowInfo &);
+
 private:
-    WindowInfoPrivate* d;
+    WindowInfoPrivate *d;
 };
 
-#endif //Q_OS_UNIX
+#endif // Q_OS_UNIX
 
 #endif

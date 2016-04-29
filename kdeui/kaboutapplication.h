@@ -28,7 +28,7 @@
 
 /**
  * @short Standard "About Application" dialog box.
- * 
+ *
  * This class provides the standard "About Application" dialog box
  * that is used by KHelpMenu. It uses the information of the global
  * KAboutData that is specified at the start of your program in
@@ -41,9 +41,8 @@
  * @author Waldo Bastian (bastian@kde.org) and Espen Sand (espen@kde.org)
  */
 
-class KDEUI_EXPORT KAboutApplication : public KAboutDialog
-{
-  public:
+class KDEUI_EXPORT KAboutApplication : public KAboutDialog {
+public:
     /**
      * Constructor. Creates a fully featured "About Application" dialog box.
      * Note that this dialog is made modeless in the KHelpMenu class so
@@ -57,7 +56,7 @@ class KDEUI_EXPORT KAboutApplication : public KAboutDialog
      *        made visible using QWidget::show(). Otherwise it will be
      *        modal and must be made visible using QWidget::exec().
      */
-    KAboutApplication( QWidget *parent=0, const char *name=0, bool modal=true );
+    KAboutApplication(QWidget *parent = 0, const char *name = 0, bool modal = true);
 
     /**
      * Constructor. Mostly does the same stuff as the previous constructor, except
@@ -76,19 +75,18 @@ class KDEUI_EXPORT KAboutApplication : public KAboutDialog
      *        made visible using QWidget::show(). Otherwise it will be
      *        modal and must be made visible using QWidget::exec().
      */
-    KAboutApplication( const KAboutData *aboutData, QWidget *parent=0, const char *name=0, bool modal=true );
+    KAboutApplication(const KAboutData *aboutData, QWidget *parent = 0, const char *name = 0, bool modal = true);
 
-/*
- FIXME: The two constructors should be replaced with the following  after the lib freeze:
+    /*
+     FIXME: The two constructors should be replaced with the following  after the lib freeze:
 
-    KAboutApplication( const KAboutData *aboutData=0, QWidget *parent=0, const char *name=0, bool modal=true );
+        KAboutApplication( const KAboutData *aboutData=0, QWidget *parent=0, const char *name=0, bool modal=true );
 
- This will make buildDialog() obsolete as well (Frerich).
-*/
-  protected:
-    void buildDialog( const KAboutData *aboutData );
+     This will make buildDialog() obsolete as well (Frerich).
+    */
+protected:
+    void buildDialog(const KAboutData *aboutData);
 };
 
 
 #endif
-

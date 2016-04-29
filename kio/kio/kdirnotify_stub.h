@@ -14,18 +14,18 @@
 #include <kurl.h>
 
 
-class KIO_EXPORT KDirNotify_stub : virtual public DCOPStub
-{
+class KIO_EXPORT KDirNotify_stub : virtual public DCOPStub {
 public:
-    KDirNotify_stub( const QCString& app, const QCString& id );
-    KDirNotify_stub( DCOPClient* client, const QCString& app, const QCString& id );
-    explicit KDirNotify_stub( const DCOPRef& ref );
-    virtual ASYNC FilesAdded( const KURL& directory );
-    virtual ASYNC FilesRemoved( const KURL::List& fileList );
-    virtual ASYNC FilesChanged( const KURL::List& fileList );
-    virtual ASYNC FileRenamed( const KURL& src, const KURL& dst );
+    KDirNotify_stub(const QCString &app, const QCString &id);
+    KDirNotify_stub(DCOPClient *client, const QCString &app, const QCString &id);
+    explicit KDirNotify_stub(const DCOPRef &ref);
+    virtual ASYNC FilesAdded(const KURL &directory);
+    virtual ASYNC FilesRemoved(const KURL::List &fileList);
+    virtual ASYNC FilesChanged(const KURL::List &fileList);
+    virtual ASYNC FileRenamed(const KURL &src, const KURL &dst);
+
 protected:
-    KDirNotify_stub() : DCOPStub( never_use ) {};
+    KDirNotify_stub() : DCOPStub(never_use){};
 };
 
 

@@ -74,14 +74,14 @@ class HTMLDocument;
  * DOM Level 2 and newer provide means for creating documents directly,
  * which was not possible with DOM Level 1.
  */
-class KHTML_EXPORT DOMImplementation
-{
-   friend class Document;
+class KHTML_EXPORT DOMImplementation {
+    friend class Document;
+
 public:
     DOMImplementation();
     DOMImplementation(const DOMImplementation &other);
 
-    DOMImplementation & operator = (const DOMImplementation &other);
+    DOMImplementation &operator=(const DOMImplementation &other);
     ~DOMImplementation();
 
     /**
@@ -100,7 +100,7 @@ public:
      * the specified version, \c false otherwise.
      *
      */
-    bool hasFeature ( const DOMString &feature, const DOMString &version );
+    bool hasFeature(const DOMString &feature, const DOMString &version);
 
     /**
      * Introduced in DOM Level 2
@@ -127,9 +127,7 @@ public:
      *
      * NAMESPACE_ERR: Raised if the qualifiedName is malformed.
      */
-    DocumentType createDocumentType ( const DOMString &qualifiedName,
-                                      const DOMString &publicId,
-                                      const DOMString &systemId );
+    DocumentType createDocumentType(const DOMString &qualifiedName, const DOMString &publicId, const DOMString &systemId);
 
     /**
      * Introduced in DOM Level 2
@@ -161,9 +159,7 @@ public:
      * WRONG_DOCUMENT_ERR: Raised if doctype has already been used with a
      * different document or was created from a different implementation.
      */
-    Document createDocument ( const DOMString &namespaceURI,
-                              const DOMString &qualifiedName,
-                              const DocumentType &doctype );
+    Document createDocument(const DOMString &namespaceURI, const DOMString &qualifiedName, const DocumentType &doctype);
 
     /**
      * Introduced in DOM Level 3
@@ -214,7 +210,7 @@ public:
      *
      * @return the HTMLdocument
      */
-    HTMLDocument createHTMLDocument(const DOMString& title);
+    HTMLDocument createHTMLDocument(const DOMString &title);
 
     /**
      * @internal
@@ -242,8 +238,7 @@ protected:
  * context they were created.
  *
  */
-class KHTML_EXPORT Document : public Node
-{
+class KHTML_EXPORT Document : public Node {
     friend class ::KHTMLView;
     friend class ::KHTMLPart;
     friend class AbstractView;
@@ -261,10 +256,12 @@ public:
     Document(bool);
     Document(const Document &other);
     Document(const Node &other) : Node()
-	     {(*this)=other;}
+    {
+        (*this) = other;
+    }
 
-    Document & operator = (const Node &other);
-    Document & operator = (const Document &other);
+    Document &operator=(const Node &other);
+    Document &operator=(const Document &other);
 
     ~Document();
 
@@ -313,7 +310,7 @@ public:
      * invalid character.
      *
      */
-    Element createElement ( const DOMString &tagName );
+    Element createElement(const DOMString &tagName);
 
     /**
      * Introduced in DOM Level 2
@@ -333,8 +330,7 @@ public:
      * qualifiedName has a prefix that is "xml" and the namespaceURI is
      * different from "http://www.w3.org/XML/1998/namespace"
      */
-    Element createElementNS( const DOMString &namespaceURI,
-                             const DOMString &qualifiedName );
+    Element createElementNS(const DOMString &namespaceURI, const DOMString &qualifiedName);
 
     /**
      * Creates an empty \c DocumentFragment object.
@@ -342,7 +338,7 @@ public:
      * @return A new \c DocumentFragment .
      *
      */
-    DocumentFragment createDocumentFragment (  );
+    DocumentFragment createDocumentFragment();
 
     /**
      * Creates a \c Text node given the specified string.
@@ -352,7 +348,7 @@ public:
      * @return The new \c Text object.
      *
      */
-    Text createTextNode ( const DOMString &data );
+    Text createTextNode(const DOMString &data);
 
     /**
      * Creates a \c Comment node given the specified
@@ -363,7 +359,7 @@ public:
      * @return The new \c Comment object.
      *
      */
-    Comment createComment ( const DOMString &data );
+    Comment createComment(const DOMString &data);
 
     /**
      * Creates a \c CDATASection node whose value is the
@@ -378,7 +374,7 @@ public:
      * NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
      *
      */
-    CDATASection createCDATASection ( const DOMString &data );
+    CDATASection createCDATASection(const DOMString &data);
 
     /**
      * Creates a \c ProcessingInstruction node given the
@@ -398,8 +394,7 @@ public:
      * document.
      *
      */
-    ProcessingInstruction createProcessingInstruction ( const DOMString &target,
-                                                        const DOMString &data );
+    ProcessingInstruction createProcessingInstruction(const DOMString &target, const DOMString &data);
 
     /**
      * Creates an \c Attr of the given name. Note that the
@@ -415,7 +410,7 @@ public:
      * invalid character.
      *
      */
-    Attr createAttribute ( const DOMString &name );
+    Attr createAttribute(const DOMString &name);
 
     /**
      * Introduced in DOM Level 2
@@ -445,8 +440,7 @@ public:
      * qualifiedName is "xmlns" and the namespaceURI is different from
      * "http://www.w3.org/2000/xmlns/".
      */
-    Attr createAttributeNS( const DOMString &namespaceURI,
-                            const DOMString &qualifiedName );
+    Attr createAttributeNS(const DOMString &namespaceURI, const DOMString &qualifiedName);
 
     /**
      * Creates an EntityReference object.
@@ -463,7 +457,7 @@ public:
      * document.
      *
      */
-    EntityReference createEntityReference ( const DOMString &name );
+    EntityReference createEntityReference(const DOMString &name);
 
     /**
      * Moved from HTMLDocument in DOM Level 2
@@ -478,7 +472,7 @@ public:
      * @return The matching element.
      *
      */
-    Element getElementById ( const DOMString &elementId ) const;
+    Element getElementById(const DOMString &elementId) const;
 
     /**
      * No Exceptions.
@@ -495,7 +489,7 @@ public:
      * matched \c Element s.
      *
      */
-    NodeList getElementsByTagName ( const DOMString &tagname );
+    NodeList getElementsByTagName(const DOMString &tagname);
 
     /**
      * Introduced in DOM Level 2
@@ -513,8 +507,7 @@ public:
      *
      * @return A new NodeList object containing all the matched Elements.
      */
-    NodeList getElementsByTagNameNS( const DOMString &namespaceURI,
-                                     const DOMString &localName );
+    NodeList getElementsByTagNameNS(const DOMString &namespaceURI, const DOMString &localName);
 
     /**
      * Introduced in DOM Level 2
@@ -609,7 +602,7 @@ public:
      * NOT_SUPPORTED_ERR: Raised if the type of node being imported is not
      * supported.
      */
-    Node importNode( const Node & importedNode, bool deep );
+    Node importNode(const Node &importedNode, bool deep);
 
     /**
      * @internal
@@ -657,9 +650,7 @@ public:
      * @exception DOMException
      * NOT_SUPPORTED_ERR: Raised if the specified root is null.
      */
-    NodeIterator createNodeIterator(Node root, unsigned long whatToShow,
-                                    NodeFilter filter,
-                                    bool entityReferenceExpansion);
+    NodeIterator createNodeIterator(Node root, unsigned long whatToShow, NodeFilter filter, bool entityReferenceExpansion);
 
     /**
      * Introduced in DOM Level 2
@@ -691,9 +682,7 @@ public:
      * @exception DOMException
      * NOT_SUPPORTED_ERR: Raised if the specified root is null.
      */
-    TreeWalker createTreeWalker(Node root, unsigned long whatToShow,
-                                NodeFilter filter,
-                                bool entityReferenceExpansion);
+    TreeWalker createTreeWalker(Node root, unsigned long whatToShow, NodeFilter filter, bool entityReferenceExpansion);
 
     /**
      * Introduced in DOM Level 2
@@ -751,7 +740,7 @@ public:
 
     DOMString preferredStylesheetSet();
     DOMString selectedStylesheetSet();
-    void setSelectedStylesheetSet(const DOMString& aString);
+    void setSelectedStylesheetSet(const DOMString &aString);
 
     /**
      * Adds a new style sheet to the list of style sheets.
@@ -769,12 +758,12 @@ public:
      * @since 3.4
      */
     void addStyleSheet(const StyleSheet &sheet);
-    
+
     /**
      * Removes a style sheet to the list of style sheets.
      *
      * Only sheets added by \c addStyleSheet may be removed.
-     * 
+     *
      * This is not part of the official DOM.
      *
      * @param sheet style sheet to remove
@@ -784,7 +773,7 @@ public:
      * @since 3.4
      */
     void removeStyleSheet(const StyleSheet &sheet);
-    
+
     /**
      * @return The KHTML view widget of this document.
      */
@@ -804,8 +793,7 @@ public:
      *
      * @return The override style declaration.
      */
-    CSSStyleDeclaration getOverrideStyle(const Element &elt,
-                                         const DOMString &pseudoElt);
+    CSSStyleDeclaration getOverrideStyle(const Element &elt, const DOMString &pseudoElt);
 
     /**
      * Introduced in DOM Level 3
@@ -828,7 +816,7 @@ public:
      * NOT_SUPPORTED_ERR: Raised if the implementation doesn't support the mode
      * the attribute is being set to.
      */
-    void setAsync( bool );
+    void setAsync(bool);
 
 
     /**
@@ -878,7 +866,7 @@ public:
      * successfully loaded and parsed. If an error occurred when either loading
      * or parsing the URI, load returns false.
      */
-    void load( const DOMString &uri );
+    void load(const DOMString &uri);
 
     /**
      * Introduced in DOM Level 3
@@ -899,7 +887,7 @@ public:
      *
      * @param source A string containing an XML document.
      */
-    void loadXML( const DOMString &source );
+    void loadXML(const DOMString &source);
 
     /**
      * not part of the official DOM
@@ -926,7 +914,7 @@ public:
      *
      * completes a given URL
      */
-    DOMString completeURL(const DOMString& url);
+    DOMString completeURL(const DOMString &url);
 
     DOMString toString() const;
 
@@ -938,9 +926,9 @@ public:
      */
     void updateRendering();
 
-    Document( DocumentImpl *i);
-protected:
+    Document(DocumentImpl *i);
 
+protected:
     friend class Node;
 };
 
@@ -988,8 +976,7 @@ class DocumentFragmentImpl;
  * \c insertBefore() and \c appendChild() .
  *
  */
-class KHTML_EXPORT DocumentFragment : public Node
-{
+class KHTML_EXPORT DocumentFragment : public Node {
     friend class Document;
     friend class HTMLElementImpl;
     friend class Range;
@@ -998,10 +985,12 @@ public:
     DocumentFragment();
     DocumentFragment(const DocumentFragment &other);
     DocumentFragment(const Node &other) : Node()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
 
-    DocumentFragment & operator = (const Node &other);
-    DocumentFragment & operator = (const DocumentFragment &other);
+    DocumentFragment &operator=(const Node &other);
+    DocumentFragment &operator=(const DocumentFragment &other);
 
     ~DocumentFragment();
 
@@ -1025,18 +1014,20 @@ class DOMString;
  * nodes.
  *
  */
-class KHTML_EXPORT DocumentType : public Node
-{
+class KHTML_EXPORT DocumentType : public Node {
     friend class Document;
     friend class DOMImplementation;
+
 public:
     DocumentType();
     DocumentType(const DocumentType &other);
 
     DocumentType(const Node &other) : Node()
-         {(*this)=other;}
-    DocumentType & operator = (const Node &other);
-    DocumentType & operator = (const DocumentType &other);
+    {
+        (*this) = other;
+    }
+    DocumentType &operator=(const Node &other);
+    DocumentType &operator=(const DocumentType &other);
 
     ~DocumentType();
 
@@ -1103,5 +1094,5 @@ protected:
     DocumentType(DocumentTypeImpl *impl);
 };
 
-} //namespace
+} // namespace
 #endif

@@ -27,13 +27,13 @@ class KPulsePlayerPrivate;
 
 class KPulsePlayer {
 public:
-	KPulsePlayer();
-	~KPulsePlayer();
+    KPulsePlayer();
+    ~KPulsePlayer();
 
-	void play(const QCString &file);
+    void play(const QCString &file);
 
 private:
-	KPulsePlayerPrivate *d;
+    KPulsePlayerPrivate *d;
 };
 
 

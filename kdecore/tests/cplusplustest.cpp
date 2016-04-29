@@ -19,26 +19,36 @@
 #include <qstring.h>
 #include <qdict.h>
 
-class A { int foo; };
-class B { int bar; };
-class C : public A, public B { int foobar; };
+class A {
+    int foo;
+};
+class B {
+    int bar;
+};
+class C : public A, public B {
+    int foobar;
+};
 
-QDict<A> dictA;
-QDict<B> dictB;
+QDict< A > dictA;
+QDict< B > dictB;
 
-int main(int , char *[])
+int main(int, char *[])
 {
-  C obj;
-  A *pA = &obj;
-  B *pB = &obj;
-  C *pC = &obj;
-qWarning("pA = %p, pB = %p, pC = %p", pA, pB, pC);
-  if (pA == pC) qWarning("pA == pC");
-  if (pB == pC) qWarning("pB == pC");
+    C obj;
+    A *pA = &obj;
+    B *pB = &obj;
+    C *pC = &obj;
+    qWarning("pA = %p, pB = %p, pC = %p", pA, pB, pC);
+    if(pA == pC)
+        qWarning("pA == pC");
+    if(pB == pC)
+        qWarning("pB == pC");
 
-  dictA.insert("hello", pC);
-  dictB.insert("hello", pC);
+    dictA.insert("hello", pC);
+    dictB.insert("hello", pC);
 
-  if (dictA["hello"] == pC) qWarning("dictA['hello'] == pC");
-  if (dictB["hello"] == pC) qWarning("dictB['hello'] == pC");
+    if(dictA["hello"] == pC)
+        qWarning("dictA['hello'] == pC");
+    if(dictB["hello"] == pC)
+        qWarning("dictB['hello'] == pC");
 }

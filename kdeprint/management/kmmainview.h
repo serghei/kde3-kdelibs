@@ -20,7 +20,7 @@
 #ifndef KMMAINVIEW_H
 #define KMMAINVIEW_H
 
-#if !defined( _KDEPRINT_COMPILE ) && defined( __GNUC__ )
+#if !defined(_KDEPRINT_COMPILE) && defined(__GNUC__)
 #warning internal header, do not use except if you are a KDEPrint developer
 #endif
 
@@ -50,83 +50,82 @@ class QMenuBar;
  * if you're a KDEPrint developer. The API might change in the
  * future and binary compatibility might be broken.
  */
-class KDEPRINT_EXPORT KMMainView : public QWidget, public KPReloadObject
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT KMMainView : public QWidget, public KPReloadObject {
+    Q_OBJECT
 public:
-	KMMainView(QWidget *parent = 0, const char *name = 0, KActionCollection *coll = 0);
-	~KMMainView();
+    KMMainView(QWidget *parent = 0, const char *name = 0, KActionCollection *coll = 0);
+    ~KMMainView();
 
-	void setOrientation(int);
-	int orientation() const;
-	void setViewType(int);
-	int viewType() const;
-	void enableToolbar(bool on = true);
-	KAction* action(const char *name);
-	void showPrinterInfos(bool on);
-	bool printerInfosShown() const;
+    void setOrientation(int);
+    int orientation() const;
+    void setViewType(int);
+    int viewType() const;
+    void enableToolbar(bool on = true);
+    KAction *action(const char *name);
+    void showPrinterInfos(bool on);
+    bool printerInfosShown() const;
 
 public slots:
-	void slotTimer();
-	void slotShowPrinterInfos(bool);
-	void slotChangePrinterState();
-	void slotRemove();
-	void slotConfigure();
-	void slotAdd();
-	void slotHardDefault();
-	void slotSoftDefault();
-	void slotTest();
-	void slotServerRestart();
-	void slotServerConfigure();
-	void slotManagerConfigure();
-	void slotAddSpecial();
-	void slotRefresh();
-	void slotToolSelected(int);
-	void slotToggleFilter(bool);
-	void slotHelp();
+    void slotTimer();
+    void slotShowPrinterInfos(bool);
+    void slotChangePrinterState();
+    void slotRemove();
+    void slotConfigure();
+    void slotAdd();
+    void slotHardDefault();
+    void slotSoftDefault();
+    void slotTest();
+    void slotServerRestart();
+    void slotServerConfigure();
+    void slotManagerConfigure();
+    void slotAddSpecial();
+    void slotRefresh();
+    void slotToolSelected(int);
+    void slotToggleFilter(bool);
+    void slotHelp();
 
 protected slots:
-	void slotPrinterSelected(const QString&);
-	void slotRightButtonClicked(const QString&, const QPoint&);
-	void slotToggleToolBar(bool);
-	void slotToggleMenuBar(bool);
-	void slotChangeView(int);
-	void slotChangeDirection(int);
-	void slotUpdatePossible( bool );
-	void slotInit();
+    void slotPrinterSelected(const QString &);
+    void slotRightButtonClicked(const QString &, const QPoint &);
+    void slotToggleToolBar(bool);
+    void slotToggleMenuBar(bool);
+    void slotChangeView(int);
+    void slotChangeDirection(int);
+    void slotUpdatePossible(bool);
+    void slotInit();
 
 protected:
-	void initActions();
-	void showErrorMsg(const QString& msg, bool usemgr = true);
-	void restoreSettings();
-	void saveSettings();
-	void loadParameters();
-	void reload();
-	void configChanged();
-	//void aboutToReload();
-	void loadPluginActions();
-	void removePluginActions();
-	void createMessageWindow( const QString&, int delay = 500 );
-	void destroyMessageWindow();
-	void reset( const QString& msg = QString::null, bool useDelay = true, bool holdTimer = true );
+    void initActions();
+    void showErrorMsg(const QString &msg, bool usemgr = true);
+    void restoreSettings();
+    void saveSettings();
+    void loadParameters();
+    void reload();
+    void configChanged();
+    // void aboutToReload();
+    void loadPluginActions();
+    void removePluginActions();
+    void createMessageWindow(const QString &, int delay = 500);
+    void destroyMessageWindow();
+    void reset(const QString &msg = QString::null, bool useDelay = true, bool holdTimer = true);
 
 private:
-	KMPrinterView	*m_printerview;
-	KMPages		*m_printerpages;
-	QPopupMenu	*m_pop;
-	KActionCollection	*m_actions;
-	KMPrinter	*m_current;
-	KToolBar	*m_toolbar;
-	PluginComboBox	*m_plugin;
-	int		m_pactionsindex;
-	QStringList	m_toollist;
-	bool		m_first;
-	QBoxLayout	*m_boxlayout;
-	class KMainWindowPrivate;
-	KMainWindowPrivate *d;
-	KToolBar *m_menubar;
+    KMPrinterView *m_printerview;
+    KMPages *m_printerpages;
+    QPopupMenu *m_pop;
+    KActionCollection *m_actions;
+    KMPrinter *m_current;
+    KToolBar *m_toolbar;
+    PluginComboBox *m_plugin;
+    int m_pactionsindex;
+    QStringList m_toollist;
+    bool m_first;
+    QBoxLayout *m_boxlayout;
+    class KMainWindowPrivate;
+    KMainWindowPrivate *d;
+    KToolBar *m_menubar;
 };
 
-KDEPRINT_EXPORT int kdeprint_management_add_printer_wizard( QWidget* parent );
+KDEPRINT_EXPORT int kdeprint_management_add_printer_wizard(QWidget *parent);
 
 #endif

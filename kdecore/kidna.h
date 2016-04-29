@@ -25,27 +25,27 @@
 #include "kdelibs_export.h"
 
 namespace KIDNA {
-    /**
-     * Converts an International Domain Name @p idna to 
-     * its ASCII representation
-     *
-     * If conversion is not possible, an empty string is returned.
-     */
-    KDECORE_EXPORT QCString toAsciiCString(const QString &idna);
+/**
+ * Converts an International Domain Name @p idna to
+ * its ASCII representation
+ *
+ * If conversion is not possible, an empty string is returned.
+ */
+KDECORE_EXPORT QCString toAsciiCString(const QString &idna);
 
-    /**
-     * Converts an International Domain Name @p idna to 
-     * its ASCII representation
-     *
-     * If conversion is not possible, an empty string is returned.
-     */
-    KDECORE_EXPORT QString toAscii(const QString &idna);
+/**
+ * Converts an International Domain Name @p idna to
+ * its ASCII representation
+ *
+ * If conversion is not possible, an empty string is returned.
+ */
+KDECORE_EXPORT QString toAscii(const QString &idna);
 
-    /**
-     * Converts an International Domain Name @p idna to 
-     * its UNICODE representation
-     */
-    KDECORE_EXPORT QString toUnicode(const QString &idna);
+/**
+ * Converts an International Domain Name @p idna to
+ * its UNICODE representation
+ */
+KDECORE_EXPORT QString toUnicode(const QString &idna);
 }
 
 #endif /* _KIDNA_H */

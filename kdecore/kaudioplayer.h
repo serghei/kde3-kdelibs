@@ -1,24 +1,24 @@
-    /*
+/*
 
-    Copyright (C) 2000 Stefan Westerfeld
-                       stefan@space.twc.de
+Copyright (C) 2000 Stefan Westerfeld
+                   stefan@space.twc.de
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
-  
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
-   
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
 
-    */
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public License
+along with this library; see the file COPYING.LIB.  If not, write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.
+
+*/
 
 #ifndef __KAUDIOPLAYER_H__
 #define __KAUDIOPLAYER_H__
@@ -52,42 +52,42 @@ class KAudioPlayerPrivate;
  * \endcode
  *
  */
-//REVISED: hausmann
+// REVISED: hausmann
 class KDECORE_EXPORT KAudioPlayer : public QObject {
-Q_OBJECT
+    Q_OBJECT
 public:
-	/**
-	 * Constructor.
-	 *
-	 * @param filename Absolute path to the filename of the sound file to play
-	 * @param parent A parent QObject for this KAudioPlayer
-	 * @param name An internal name for this KAudioPlayer
-	 */
-	KAudioPlayer( const QString& filename,
-			QObject* parent = 0, const char* name = 0 );
+    /**
+     * Constructor.
+     *
+     * @param filename Absolute path to the filename of the sound file to play
+     * @param parent A parent QObject for this KAudioPlayer
+     * @param name An internal name for this KAudioPlayer
+     */
+    KAudioPlayer(const QString &filename, QObject *parent = 0, const char *name = 0);
 
-	/**
-	 * Destructor.
-	 */
-	~KAudioPlayer();
+    /**
+     * Destructor.
+     */
+    ~KAudioPlayer();
 
-	/**
-	 * Static play function.
-	 *
-	 * @param filename Absolute path to the filename of the sound file to play.
-	 *                if not absolute, goes off KDEDIR/share/sounds/ (preferred)
-	 */
-	static void play(const QString &filename);
+    /**
+     * Static play function.
+     *
+     * @param filename Absolute path to the filename of the sound file to play.
+     *                if not absolute, goes off KDEDIR/share/sounds/ (preferred)
+     */
+    static void play(const QString &filename);
 
 public slots:
-	/**
-	 * Play function as slot.
-	 *
-	 * Plays the soundfile given to the constructor.
-	 */
-	void play();
+    /**
+     * Play function as slot.
+     *
+     * Plays the soundfile given to the constructor.
+     */
+    void play();
+
 private:
-	KAudioPlayerPrivate *d;
+    KAudioPlayerPrivate *d;
 };
 
 #endif // __KAUDIOPLAYER_H__

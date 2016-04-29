@@ -32,30 +32,27 @@ using namespace DOM;
 
 #include "misc/htmlhashes.h"
 
-HTMLBlockquoteElement::HTMLBlockquoteElement()
-    : HTMLElement()
+HTMLBlockquoteElement::HTMLBlockquoteElement() : HTMLElement()
 {
 }
 
-HTMLBlockquoteElement::HTMLBlockquoteElement(const HTMLBlockquoteElement &other)
-    : HTMLElement(other)
+HTMLBlockquoteElement::HTMLBlockquoteElement(const HTMLBlockquoteElement &other) : HTMLElement(other)
 {
 }
 
-HTMLBlockquoteElement::HTMLBlockquoteElement(HTMLElementImpl *impl)
-    : HTMLElement(impl)
+HTMLBlockquoteElement::HTMLBlockquoteElement(HTMLElementImpl *impl) : HTMLElement(impl)
 {
 }
 
-HTMLBlockquoteElement &HTMLBlockquoteElement::operator = (const Node &other)
+HTMLBlockquoteElement &HTMLBlockquoteElement::operator=(const Node &other)
 {
-    assignOther( other, ID_BLOCKQUOTE );
+    assignOther(other, ID_BLOCKQUOTE);
     return *this;
 }
 
-HTMLBlockquoteElement &HTMLBlockquoteElement::operator = (const HTMLBlockquoteElement &other)
+HTMLBlockquoteElement &HTMLBlockquoteElement::operator=(const HTMLBlockquoteElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -65,41 +62,40 @@ HTMLBlockquoteElement::~HTMLBlockquoteElement()
 
 DOMString HTMLBlockquoteElement::cite() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_CITE);
 }
 
-void HTMLBlockquoteElement::setCite( const DOMString &value )
+void HTMLBlockquoteElement::setCite(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_CITE, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_CITE, value);
 }
 
 // --------------------------------------------------------------------------
 
-HTMLDivElement::HTMLDivElement()
-    : HTMLElement()
+HTMLDivElement::HTMLDivElement() : HTMLElement()
 {
 }
 
-HTMLDivElement::HTMLDivElement(const HTMLDivElement &other)
-    : HTMLElement(other)
+HTMLDivElement::HTMLDivElement(const HTMLDivElement &other) : HTMLElement(other)
 {
 }
 
-HTMLDivElement::HTMLDivElement(HTMLDivElementImpl *impl)
-    : HTMLElement(impl)
+HTMLDivElement::HTMLDivElement(HTMLDivElementImpl *impl) : HTMLElement(impl)
 {
 }
 
-HTMLDivElement &HTMLDivElement::operator = (const Node &other)
+HTMLDivElement &HTMLDivElement::operator=(const Node &other)
 {
-    assignOther( other, ID_DIV );
+    assignOther(other, ID_DIV);
     return *this;
 }
 
-HTMLDivElement &HTMLDivElement::operator = (const HTMLDivElement &other)
+HTMLDivElement &HTMLDivElement::operator=(const HTMLDivElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -109,41 +105,40 @@ HTMLDivElement::~HTMLDivElement()
 
 DOMString HTMLDivElement::align() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_ALIGN);
 }
 
-void HTMLDivElement::setAlign( const DOMString &value )
+void HTMLDivElement::setAlign(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_ALIGN, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_ALIGN, value);
 }
 
 // --------------------------------------------------------------------------
 
-HTMLHRElement::HTMLHRElement()
-    : HTMLElement()
+HTMLHRElement::HTMLHRElement() : HTMLElement()
 {
 }
 
-HTMLHRElement::HTMLHRElement(const HTMLHRElement &other)
-    : HTMLElement(other)
+HTMLHRElement::HTMLHRElement(const HTMLHRElement &other) : HTMLElement(other)
 {
 }
 
-HTMLHRElement::HTMLHRElement(HTMLHRElementImpl *impl)
-    : HTMLElement(impl)
+HTMLHRElement::HTMLHRElement(HTMLHRElementImpl *impl) : HTMLElement(impl)
 {
 }
 
-HTMLHRElement &HTMLHRElement::operator = (const Node &other)
+HTMLHRElement &HTMLHRElement::operator=(const Node &other)
 {
-    assignOther( other, ID_HR );
+    assignOther(other, ID_HR);
     return *this;
 }
 
-HTMLHRElement &HTMLHRElement::operator = (const HTMLHRElement &other)
+HTMLHRElement &HTMLHRElement::operator=(const HTMLHRElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -153,91 +148,94 @@ HTMLHRElement::~HTMLHRElement()
 
 DOMString HTMLHRElement::align() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_ALIGN);
 }
 
-void HTMLHRElement::setAlign( const DOMString &value )
+void HTMLHRElement::setAlign(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_ALIGN, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_ALIGN, value);
 }
 
 bool HTMLHRElement::noShade() const
 {
-    if(!impl) return false;
+    if(!impl)
+        return false;
     return !((ElementImpl *)impl)->getAttribute(ATTR_NOSHADE).isNull();
 }
 
-void HTMLHRElement::setNoShade( bool _noShade )
+void HTMLHRElement::setNoShade(bool _noShade)
 {
     if(impl)
     {
-	DOMString str;
-	if( _noShade )
-	    str = "";
-	((ElementImpl *)impl)->setAttribute(ATTR_NOSHADE, str);
+        DOMString str;
+        if(_noShade)
+            str = "";
+        ((ElementImpl *)impl)->setAttribute(ATTR_NOSHADE, str);
     }
 }
 
 DOMString HTMLHRElement::size() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_SIZE);
 }
 
-void HTMLHRElement::setSize( const DOMString &value )
+void HTMLHRElement::setSize(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_SIZE, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_SIZE, value);
 }
 
 DOMString HTMLHRElement::width() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_WIDTH);
 }
 
-void HTMLHRElement::setWidth( const DOMString &value )
+void HTMLHRElement::setWidth(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_WIDTH, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_WIDTH, value);
 }
 
 // --------------------------------------------------------------------------
 
-HTMLHeadingElement::HTMLHeadingElement()
-    : HTMLElement()
+HTMLHeadingElement::HTMLHeadingElement() : HTMLElement()
 {
 }
 
-HTMLHeadingElement::HTMLHeadingElement(const HTMLHeadingElement &other)
-    : HTMLElement(other)
+HTMLHeadingElement::HTMLHeadingElement(const HTMLHeadingElement &other) : HTMLElement(other)
 {
 }
 
-HTMLHeadingElement::HTMLHeadingElement(HTMLElementImpl *impl)
-    : HTMLElement(impl)
+HTMLHeadingElement::HTMLHeadingElement(HTMLElementImpl *impl) : HTMLElement(impl)
 {
 }
 
-HTMLHeadingElement &HTMLHeadingElement::operator = (const Node &other)
+HTMLHeadingElement &HTMLHeadingElement::operator=(const Node &other)
 {
-    if(other.elementId() != ID_H1 &&
-       other.elementId() != ID_H2 &&
-       other.elementId() != ID_H3 &&
-       other.elementId() != ID_H4 &&
-       other.elementId() != ID_H5 &&
-       other.elementId() != ID_H6 )
+    if(other.elementId() != ID_H1 && other.elementId() != ID_H2 && other.elementId() != ID_H3 && other.elementId() != ID_H4
+       && other.elementId() != ID_H5 && other.elementId() != ID_H6)
     {
-	if ( impl ) impl->deref();
-	impl = 0;
-    } else {
-    Node::operator = (other);
+        if(impl)
+            impl->deref();
+        impl = 0;
+    }
+    else
+    {
+        Node::operator=(other);
     }
     return *this;
 }
 
-HTMLHeadingElement &HTMLHeadingElement::operator = (const HTMLHeadingElement &other)
+HTMLHeadingElement &HTMLHeadingElement::operator=(const HTMLHeadingElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -247,13 +245,15 @@ HTMLHeadingElement::~HTMLHeadingElement()
 
 DOMString HTMLHeadingElement::align() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_ALIGN);
 }
 
-void HTMLHeadingElement::setAlign( const DOMString &value )
+void HTMLHeadingElement::setAlign(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_ALIGN, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_ALIGN, value);
 }
 
 // --------------------------------------------------------------------------
@@ -262,25 +262,23 @@ HTMLParagraphElement::HTMLParagraphElement() : HTMLElement()
 {
 }
 
-HTMLParagraphElement::HTMLParagraphElement(const HTMLParagraphElement &other)
-    : HTMLElement(other)
+HTMLParagraphElement::HTMLParagraphElement(const HTMLParagraphElement &other) : HTMLElement(other)
 {
 }
 
-HTMLParagraphElement::HTMLParagraphElement(HTMLElementImpl *impl)
-    : HTMLElement(impl)
+HTMLParagraphElement::HTMLParagraphElement(HTMLElementImpl *impl) : HTMLElement(impl)
 {
 }
 
-HTMLParagraphElement &HTMLParagraphElement::operator = (const Node &other)
+HTMLParagraphElement &HTMLParagraphElement::operator=(const Node &other)
 {
-    assignOther( other, ID_P );
+    assignOther(other, ID_P);
     return *this;
 }
 
-HTMLParagraphElement &HTMLParagraphElement::operator = (const HTMLParagraphElement &other)
+HTMLParagraphElement &HTMLParagraphElement::operator=(const HTMLParagraphElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -290,13 +288,15 @@ HTMLParagraphElement::~HTMLParagraphElement()
 
 DOMString HTMLParagraphElement::align() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_ALIGN);
 }
 
-void HTMLParagraphElement::setAlign( const DOMString &value )
+void HTMLParagraphElement::setAlign(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_ALIGN, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_ALIGN, value);
 }
 
 // --------------------------------------------------------------------------
@@ -305,25 +305,23 @@ HTMLPreElement::HTMLPreElement() : HTMLElement()
 {
 }
 
-HTMLPreElement::HTMLPreElement(const HTMLPreElement &other)
-    : HTMLElement(other)
+HTMLPreElement::HTMLPreElement(const HTMLPreElement &other) : HTMLElement(other)
 {
 }
 
-HTMLPreElement::HTMLPreElement(HTMLPreElementImpl *impl)
-    : HTMLElement(impl)
+HTMLPreElement::HTMLPreElement(HTMLPreElementImpl *impl) : HTMLElement(impl)
 {
 }
 
-HTMLPreElement &HTMLPreElement::operator = (const Node &other)
+HTMLPreElement &HTMLPreElement::operator=(const Node &other)
 {
-    assignOther( other, ID_PRE );
+    assignOther(other, ID_PRE);
     return *this;
 }
 
-HTMLPreElement &HTMLPreElement::operator = (const HTMLPreElement &other)
+HTMLPreElement &HTMLPreElement::operator=(const HTMLPreElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -333,14 +331,16 @@ HTMLPreElement::~HTMLPreElement()
 
 long HTMLPreElement::width() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     DOMString w = ((ElementImpl *)impl)->getAttribute(ATTR_WIDTH);
     return w.toInt();
 }
 
-void HTMLPreElement::setWidth( long _width )
+void HTMLPreElement::setWidth(long _width)
 {
-    if(!impl) return;
+    if(!impl)
+        return;
 
     QString aStr;
     aStr.sprintf("%ld", _width);
@@ -354,25 +354,23 @@ HTMLLayerElement::HTMLLayerElement() : HTMLElement()
 {
 }
 
-HTMLLayerElement::HTMLLayerElement(const HTMLLayerElement &other)
-    : HTMLElement(other)
+HTMLLayerElement::HTMLLayerElement(const HTMLLayerElement &other) : HTMLElement(other)
 {
 }
 
-HTMLLayerElement::HTMLLayerElement(HTMLLayerElementImpl *impl)
-    : HTMLElement(impl)
+HTMLLayerElement::HTMLLayerElement(HTMLLayerElementImpl *impl) : HTMLElement(impl)
 {
 }
 
-HTMLLayerElement &HTMLLayerElement::operator = (const Node &other)
+HTMLLayerElement &HTMLLayerElement::operator=(const Node &other)
 {
-    assignOther( other, ID_LAYER );
+    assignOther(other, ID_LAYER);
     return *this;
 }
 
-HTMLLayerElement &HTMLLayerElement::operator = (const HTMLLayerElement &other)
+HTMLLayerElement &HTMLLayerElement::operator=(const HTMLLayerElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -382,14 +380,16 @@ HTMLLayerElement::~HTMLLayerElement()
 
 long HTMLLayerElement::top() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     DOMString t = ((ElementImpl *)impl)->getAttribute(ATTR_TOP);
     return t.toInt();
 }
 
-void HTMLLayerElement::setTop( long _top )
+void HTMLLayerElement::setTop(long _top)
 {
-    if(!impl) return;
+    if(!impl)
+        return;
 
     QString aStr;
     aStr.sprintf("%ld", _top);
@@ -399,14 +399,16 @@ void HTMLLayerElement::setTop( long _top )
 
 long HTMLLayerElement::left() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     DOMString l = ((ElementImpl *)impl)->getAttribute(ATTR_LEFT);
     return l.toInt();
 }
 
-void HTMLLayerElement::setLeft( long _left )
+void HTMLLayerElement::setLeft(long _left)
 {
-    if(!impl) return;
+    if(!impl)
+        return;
 
     QString aStr;
     aStr.sprintf("%ld", _left);
@@ -416,28 +418,33 @@ void HTMLLayerElement::setLeft( long _left )
 
 DOMString HTMLLayerElement::visibility() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_VISIBILITY);
 }
 
-void HTMLLayerElement::setVisibility( const DOMString &value )
+void HTMLLayerElement::setVisibility(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_VISIBILITY, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_VISIBILITY, value);
 }
 
 DOMString HTMLLayerElement::bgColor() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_BGCOLOR);
 }
 
-void HTMLLayerElement::setBgColor( const DOMString &value )
+void HTMLLayerElement::setBgColor(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_BGCOLOR, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_BGCOLOR, value);
 }
 
 HTMLCollection HTMLLayerElement::layers() const
 {
-    if(!impl) return HTMLCollection();
+    if(!impl)
+        return HTMLCollection();
     return HTMLCollection(impl, HTMLCollectionImpl::DOC_LAYERS);
 }

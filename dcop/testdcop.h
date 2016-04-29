@@ -41,37 +41,43 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 **/
 
-class TestObject : public QObject
-{
-  Q_OBJECT
+class TestObject : public QObject {
+    Q_OBJECT
 public:
-  TestObject(const QCString &app);
+    TestObject(const QCString &app);
 
 public slots:
-  void slotTimeout();
-  void slotCallBack(int, const QCString&, const QByteArray&);
-private:
+    void slotTimeout();
+    void slotCallBack(int, const QCString &, const QByteArray &);
 
-  QCString m_app;
+private:
+    QCString m_app;
 };
 
 
-class MyDCOPObject : public QObject, public DCOPObject
-{
-  Q_OBJECT
+class MyDCOPObject : public QObject, public DCOPObject {
+    Q_OBJECT
 public:
-  MyDCOPObject(const QCString &name) : DCOPObject(name) {}
-  bool process(const QCString &fun, const QByteArray &data,
-	       QCString& replyType, QByteArray &replyData);
-  void function(const QString &arg1, int arg2) { qDebug("function got arg: %s and %d", arg1.utf8().data(), arg2); }
+    MyDCOPObject(const QCString &name) : DCOPObject(name)
+    {
+    }
+    bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
+    void function(const QString &arg1, int arg2)
+    {
+        qDebug("function got arg: %s and %d", arg1.utf8().data(), arg2);
+    }
 public slots:
-  void slotTimeout();
-  void slotTimeout2();
-  void registered(const QCString &appName)
-     { printf("REGISTER: %s\n", appName.data()); }
+    void slotTimeout();
+    void slotTimeout2();
+    void registered(const QCString &appName)
+    {
+        printf("REGISTER: %s\n", appName.data());
+    }
 
-  void unregistered(const QCString &appName)
-     { printf("UNREGISTER: %s\n", appName.data()); }
-  QCStringList functions();
+    void unregistered(const QCString &appName)
+    {
+        printf("UNREGISTER: %s\n", appName.data());
+    }
+    QCStringList functions();
 };
 #endif

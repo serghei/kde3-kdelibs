@@ -44,13 +44,12 @@ class QScrollBar;
 
 enum Bias
 {
-    left  = -1,
-    none  =  0,
-    right =  1
+    left = -1,
+    none = 0,
+    right = 1
 };
 
-class KateViewInternal : public QWidget
-{
+class KateViewInternal : public QWidget {
     Q_OBJECT
 
     friend class KateView;
@@ -60,69 +59,81 @@ class KateViewInternal : public QWidget
     friend class BoundedCursor;
     friend class WrappingCursor;
 
-  public:
-    KateViewInternal ( KateView *view, KateDocument *doc );
-    ~KateViewInternal ();
+public:
+    KateViewInternal(KateView *view, KateDocument *doc);
+    ~KateViewInternal();
 
-  //BEGIN EDIT STUFF
-  public:
-    void editStart ();
-    void editEnd (int editTagLineStart, int editTagLineEnd, bool tagFrom);
+    // BEGIN EDIT STUFF
+public:
+    void editStart();
+    void editEnd(int editTagLineStart, int editTagLineEnd, bool tagFrom);
 
-    void editSetCursor (const KateTextCursor &cursor);
+    void editSetCursor(const KateTextCursor &cursor);
 
-  private:
+private:
     uint editSessionNumber;
     bool editIsRunning;
     KateTextCursor editOldCursor;
-  //END
+    // END
 
-  //BEGIN TAG & CLEAR & UPDATE STUFF
-  public:
-    bool tagLine (const KateTextCursor& virtualCursor);
+    // BEGIN TAG & CLEAR & UPDATE STUFF
+public:
+    bool tagLine(const KateTextCursor &virtualCursor);
 
-    bool tagLines (int start, int end, bool realLines = false);
-    bool tagLines (KateTextCursor start, KateTextCursor end, bool realCursors = false);
+    bool tagLines(int start, int end, bool realLines = false);
+    bool tagLines(KateTextCursor start, KateTextCursor end, bool realCursors = false);
 
-    void tagAll ();
+    void tagAll();
 
-    void clear ();
-  //END
+    void clear();
+    // END
 
-  private:
-    void updateView (bool changed = false, int viewLinesScrolled = 0);
-    void makeVisible (const KateTextCursor& c, uint endCol, bool force = false, bool center = false, bool calledExternally = false);
+private:
+    void updateView(bool changed = false, int viewLinesScrolled = 0);
+    void makeVisible(const KateTextCursor &c, uint endCol, bool force = false, bool center = false, bool calledExternally = false);
 
-  public:
-    inline const KateTextCursor& startPos() const { return m_startPos; }
-    inline uint startLine () const { return m_startPos.line(); }
-    inline uint startX () const { return m_startX; }
+public:
+    inline const KateTextCursor &startPos() const
+    {
+        return m_startPos;
+    }
+    inline uint startLine() const
+    {
+        return m_startPos.line();
+    }
+    inline uint startX() const
+    {
+        return m_startX;
+    }
 
-    KateTextCursor endPos () const;
-    uint endLine () const;
+    KateTextCursor endPos() const;
+    uint endLine() const;
 
     KateLineRange yToKateLineRange(uint y) const;
 
     void prepareForDynWrapChange();
     void dynWrapChanged();
 
-    KateView *view () { return m_view; }
+    KateView *view()
+    {
+        return m_view;
+    }
 
-  public slots:
+public slots:
     void slotIncFontSizes();
     void slotDecFontSizes();
 
-  private slots:
+private slots:
     void scrollLines(int line); // connected to the sliderMoved of the m_lineScroll
     void scrollViewLines(int offset);
     void scrollNextPage();
     void scrollPrevPage();
     void scrollPrevLine();
     void scrollNextLine();
-    void scrollColumns (int x); // connected to the valueChanged of the m_columnScroll
-    void viewSelectionChanged ();
+    void scrollColumns(int x); // connected to the valueChanged of the m_columnScroll
+    void viewSelectionChanged();
 
-  public:
+public:
     void doReturn();
     void doDelete();
     void doBackspace();
@@ -130,90 +141,93 @@ class KateViewInternal : public QWidget
     void doDeleteWordLeft();
     void doDeleteWordRight();
 
-    void cursorLeft(bool sel=false);
-    void cursorRight(bool sel=false);
-    void wordLeft(bool sel=false);
-    void wordRight(bool sel=false);
-    void home(bool sel=false);
-    void end(bool sel=false);
-    void cursorUp(bool sel=false);
-    void cursorDown(bool sel=false);
-    void cursorToMatchingBracket(bool sel=false);
+    void cursorLeft(bool sel = false);
+    void cursorRight(bool sel = false);
+    void wordLeft(bool sel = false);
+    void wordRight(bool sel = false);
+    void home(bool sel = false);
+    void end(bool sel = false);
+    void cursorUp(bool sel = false);
+    void cursorDown(bool sel = false);
+    void cursorToMatchingBracket(bool sel = false);
     void scrollUp();
     void scrollDown();
-    void topOfView(bool sel=false);
-    void bottomOfView(bool sel=false);
-    void pageUp(bool sel=false);
-    void pageDown(bool sel=false);
-    void top(bool sel=false);
-    void bottom(bool sel=false);
-    void top_home(bool sel=false);
-    void bottom_end(bool sel=false);
+    void topOfView(bool sel = false);
+    void bottomOfView(bool sel = false);
+    void pageUp(bool sel = false);
+    void pageDown(bool sel = false);
+    void top(bool sel = false);
+    void bottom(bool sel = false);
+    void top_home(bool sel = false);
+    void bottom_end(bool sel = false);
 
-    inline const KateTextCursor& getCursor() { return cursor; }
+    inline const KateTextCursor &getCursor()
+    {
+        return cursor;
+    }
     QPoint cursorCoordinates();
 
-    void paintText (int x, int y, int width, int height, bool paintOnlyDirty = false);
+    void paintText(int x, int y, int width, int height, bool paintOnlyDirty = false);
 
-  // EVENT HANDLING STUFF - IMPORTANT
-  protected:
+    // EVENT HANDLING STUFF - IMPORTANT
+protected:
     void paintEvent(QPaintEvent *e);
-    bool eventFilter( QObject *obj, QEvent *e );
-    void keyPressEvent( QKeyEvent* );
-    void keyReleaseEvent( QKeyEvent* );
-    void resizeEvent( QResizeEvent* );
-    void mousePressEvent(       QMouseEvent* );
-    void mouseDoubleClickEvent( QMouseEvent* );
-    void mouseReleaseEvent(     QMouseEvent* );
-    void mouseMoveEvent(        QMouseEvent* );
-    void dragEnterEvent( QDragEnterEvent* );
-    void dragMoveEvent( QDragMoveEvent* );
-    void dropEvent( QDropEvent* );
-    void showEvent ( QShowEvent *);
-    void wheelEvent(QWheelEvent* e);
-    void focusInEvent (QFocusEvent *);
-    void focusOutEvent (QFocusEvent *);
+    bool eventFilter(QObject *obj, QEvent *e);
+    void keyPressEvent(QKeyEvent *);
+    void keyReleaseEvent(QKeyEvent *);
+    void resizeEvent(QResizeEvent *);
+    void mousePressEvent(QMouseEvent *);
+    void mouseDoubleClickEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *);
+    void dragEnterEvent(QDragEnterEvent *);
+    void dragMoveEvent(QDragMoveEvent *);
+    void dropEvent(QDropEvent *);
+    void showEvent(QShowEvent *);
+    void wheelEvent(QWheelEvent *e);
+    void focusInEvent(QFocusEvent *);
+    void focusOutEvent(QFocusEvent *);
 
-    void contextMenuEvent ( QContextMenuEvent * e );
+    void contextMenuEvent(QContextMenuEvent *e);
 
-  private slots:
+private slots:
     void tripleClickTimeout();
 
-  signals:
+signals:
     // emitted when KateViewInternal is not handling its own URI drops
-    void dropEventPass(QDropEvent*);
+    void dropEventPass(QDropEvent *);
 
-  private slots:
+private slots:
     void slotRegionVisibilityChangedAt(unsigned int);
     void slotRegionBeginEndAddedRemoved(unsigned int);
     void slotCodeFoldingChanged();
 
-  private:
-    void moveChar( Bias bias, bool sel );
-    void moveEdge( Bias bias, bool sel );
+private:
+    void moveChar(Bias bias, bool sel);
+    void moveEdge(Bias bias, bool sel);
     KateTextCursor maxStartPos(bool changed = false);
-    void scrollPos(KateTextCursor& c, bool force = false, bool calledExternally = false);
-    void scrollLines( int lines, bool sel );
+    void scrollPos(KateTextCursor &c, bool force = false, bool calledExternally = false);
+    void scrollLines(int lines, bool sel);
 
     uint linesDisplayed() const;
 
     int lineToY(uint viewLine) const;
 
-    void updateSelection( const KateTextCursor&, bool keepSel );
-    void updateCursor( const KateTextCursor& newCursor, bool force = false, bool center = false, bool calledExternally = false );
+    void updateSelection(const KateTextCursor &, bool keepSel);
+    void updateCursor(const KateTextCursor &newCursor, bool force = false, bool center = false, bool calledExternally = false);
     void updateBracketMarks();
 
     void paintCursor();
 
     void updateMicroFocusHint();
 
-    void placeCursor( const QPoint& p, bool keepSelection = false, bool updateSelection = true );
-    bool isTargetSelected( const QPoint& p );
+    void placeCursor(const QPoint &p, bool keepSelection = false, bool updateSelection = true);
+    bool isTargetSelected(const QPoint &p);
 
     void doDrag();
 
     KateView *m_view;
-    KateDocument* m_doc;
+    KateDocument *m_doc;
     class KateIconBorder *leftBorder;
 
     int mouseX;
@@ -232,12 +246,18 @@ class KateViewInternal : public QWidget
     // Bracket mark
     KateBracketRange bm;
 
-    enum DragState { diNone, diPending, diDragging };
+    enum DragState
+    {
+        diNone,
+        diPending,
+        diDragging
+    };
 
-    struct _dragInfo {
-      DragState    state;
-      QPoint       start;
-      QTextDrag*   dragObject;
+    struct _dragInfo
+    {
+        DragState state;
+        QPoint start;
+        QTextDrag *dragObject;
     } dragInfo;
 
     uint iconBorderHeight;
@@ -246,9 +266,9 @@ class KateViewInternal : public QWidget
     // line scrollbar + first visible (virtual) line in the current view
     //
     KateScrollBar *m_lineScroll;
-    QWidget* m_dummy;
-    QVBoxLayout* m_lineLayout;
-    QHBoxLayout* m_colLayout;
+    QWidget *m_dummy;
+    QVBoxLayout *m_lineLayout;
+    QHBoxLayout *m_colLayout;
 
     // These are now cursors to account for word-wrap.
     KateSuperCursor m_startPos;
@@ -273,7 +293,13 @@ class KateViewInternal : public QWidget
     bool m_selChangedByUser;
     KateTextCursor selectAnchor;
 
-    enum SelectionMode { Default=0, Word, Line, Mouse }; ///< for drag selection. @since 2.3
+    enum SelectionMode
+    {
+        Default = 0,
+        Word,
+        Line,
+        Mouse
+    }; ///< for drag selection. @since 2.3
     uint m_selectionMode;
     // when drag selecting after double/triple click, keep the initial selected
     // word/line independant of direction.
@@ -284,38 +310,38 @@ class KateViewInternal : public QWidget
     //
     // lines Ranges, mostly useful to speedup + dyn. word wrap
     //
-    QMemArray<KateLineRange> lineRanges;
+    QMemArray< KateLineRange > lineRanges;
 
     // maximal lenght of textlines visible from given startLine
     int maxLen(uint startLine);
 
     // are we allowed to scroll columns?
-    bool columnScrollingPossible ();
+    bool columnScrollingPossible();
 
     // returns the maximum X value / col value a cursor can take for a specific line range
-    int lineMaxCursorX(const KateLineRange& range);
-    int lineMaxCol(const KateLineRange& range);
+    int lineMaxCursorX(const KateLineRange &range);
+    int lineMaxCol(const KateLineRange &range);
 
     // get the values for a specific range.
     // specify lastLine to get the next line of a range.
-    KateLineRange range(int realLine, const KateLineRange* previous = 0L);
+    KateLineRange range(int realLine, const KateLineRange *previous = 0L);
 
     KateLineRange currentRange();
     KateLineRange previousRange();
     KateLineRange nextRange();
 
     // Finds the lineRange currently occupied by the cursor.
-    KateLineRange range(const KateTextCursor& realCursor);
+    KateLineRange range(const KateTextCursor &realCursor);
 
     // Returns the lineRange of the specified realLine + viewLine.
     KateLineRange range(uint realLine, int viewLine);
 
     // find the view line of cursor c (0 = same line, 1 = down one, etc.)
-    uint viewLine(const KateTextCursor& realCursor);
+    uint viewLine(const KateTextCursor &realCursor);
 
     // find the view line of the cursor, relative to the display (0 = top line of view, 1 = second line, etc.)
     // if limitToVisible is true, only lines which are currently visible will be searched for, and -1 returned if the line is not visible.
-    int displayViewLine(const KateTextCursor& virtualCursor, bool limitToVisible = false);
+    int displayViewLine(const KateTextCursor &virtualCursor, bool limitToVisible = false);
 
     // find the index of the last view line for a specific line
     uint lastViewLine(uint realLine);
@@ -326,7 +352,7 @@ class KateViewInternal : public QWidget
     // find the cursor offset by (offset) view lines from a cursor.
     // when keepX is true, the column position will be calculated based on the x
     // position of the specified cursor.
-    KateTextCursor viewLineOffset(const KateTextCursor& virtualCursor, int offset, bool keepX = false);
+    KateTextCursor viewLineOffset(const KateTextCursor &virtualCursor, int offset, bool keepX = false);
 
     // These variable holds the most recent maximum real & visible column number
     bool m_preserveMaxX;
@@ -334,24 +360,24 @@ class KateViewInternal : public QWidget
 
     bool m_usePlainLines; // accept non-highlighted lines if this is set
 
-    inline KateTextLine::Ptr textLine( int realLine )
+    inline KateTextLine::Ptr textLine(int realLine)
     {
-      if (m_usePlainLines)
-        return m_doc->plainKateTextLine(realLine);
-      else
-        return m_doc->kateTextLine(realLine);
+        if(m_usePlainLines)
+            return m_doc->plainKateTextLine(realLine);
+        else
+            return m_doc->kateTextLine(realLine);
     }
 
     bool m_updatingView;
     int m_wrapChangeViewLine;
     KateTextCursor m_cachedMaxStartPos;
 
-  private slots:
+private slots:
     void doDragScroll();
     void startDragScroll();
     void stopDragScroll();
 
-  private:
+private:
     // Timers
     QTimer m_dragScrollTimer;
     QTimer m_scrollTimer;
@@ -361,31 +387,31 @@ class KateViewInternal : public QWidget
     static const int scrollTime = 30;
     static const int scrollMargin = 16;
 
-  private slots:
-    void scrollTimeout ();
-    void cursorTimeout ();
-    void textHintTimeout ();
+private slots:
+    void scrollTimeout();
+    void cursorTimeout();
+    void textHintTimeout();
 
-  //TextHint
- public:
-   void enableTextHints(int timeout);
-   void disableTextHints();
+    // TextHint
+public:
+    void enableTextHints(int timeout);
+    void disableTextHints();
 
- private:
-   bool m_textHintEnabled;
-   int m_textHintTimeout;
-   int m_textHintMouseX;
-   int m_textHintMouseY;
+private:
+    bool m_textHintEnabled;
+    int m_textHintTimeout;
+    int m_textHintMouseX;
+    int m_textHintMouseY;
 
-  /**
-   * IM input stuff
-   */
-  protected:
-    void imStartEvent( QIMEvent *e );
-    void imComposeEvent( QIMEvent *e );
-    void imEndEvent( QIMEvent *e );
+    /**
+     * IM input stuff
+     */
+protected:
+    void imStartEvent(QIMEvent *e);
+    void imComposeEvent(QIMEvent *e);
+    void imEndEvent(QIMEvent *e);
 
-  private:
+private:
     int m_imPreeditStartLine;
     int m_imPreeditStart;
     int m_imPreeditLength;

@@ -41,10 +41,12 @@
 #include <qfont.h>
 
 #ifndef NDEBUG
-#define MYASSERT(x) if (!x) \
-   qFatal("Fatal error: you need to have a KInstance object before\n" \
-         "you do anything that requires it! Examples of this are config\n" \
-         "objects, standard directories or translations.");
+#define MYASSERT(x)                                                                                                                                  \
+    if(!x)                                                                                                                                           \
+        qFatal(                                                                                                                                      \
+            "Fatal error: you need to have a KInstance object before\n"                                                                              \
+            "you do anything that requires it! Examples of this are config\n"                                                                        \
+            "objects, standard directories or translations.");
 #else
 #define MYASSERT(x) /* nope */
 #endif
@@ -58,7 +60,7 @@ KStandardDirs *KGlobal::dirs()
     return _instance->dirs();
 }
 
-KConfig	*KGlobal::config()
+KConfig *KGlobal::config()
 {
     MYASSERT(_instance);
 
@@ -85,16 +87,17 @@ KInstance *KGlobal::instance()
     return _instance;
 }
 
-KLocale	*KGlobal::locale()
+KLocale *KGlobal::locale()
 {
-    if( _locale == 0 ) {
-	if (!_instance)
-	   return 0;
+    if(_locale == 0)
+    {
+        if(!_instance)
+            return 0;
         kglobal_init();
 
         // will set _locale if it works - otherwise 0 is returned
         KLocale::initInstance();
-        if( _instance->aboutData())
+        if(_instance->aboutData())
             _instance->aboutData()->translateInternalProgramName();
     }
 
@@ -103,8 +106,9 @@ KLocale	*KGlobal::locale()
 
 KCharsets *KGlobal::charsets()
 {
-    if( _charsets == 0 ) {
-        _charsets =new KCharsets();
+    if(_charsets == 0)
+    {
+        _charsets = new KCharsets();
         kglobal_init();
     }
 
@@ -114,8 +118,8 @@ KCharsets *KGlobal::charsets()
 void KGlobal::setActiveInstance(KInstance *i)
 {
     _activeInstance = i;
-    if (i && _locale)
-	_locale->setActiveCatalogue(QString::fromUtf8(i->instanceName()));
+    if(i && _locale)
+        _locale->setActiveCatalogue(QString::fromUtf8(i->instanceName()));
 }
 
 /**
@@ -124,16 +128,16 @@ void KGlobal::setActiveInstance(KInstance *i)
  * To be used inside functions(!) like:
  * static const QString &myString = KGlobal::staticQString("myText");
  */
-const QString &
-KGlobal::staticQString(const char *str)
+const QString &KGlobal::staticQString(const char *str)
 {
-   return staticQString(QString::fromLatin1(str));
+    return staticQString(QString::fromLatin1(str));
 }
 
-class KStringDict : public QDict<QString>
-{
+class KStringDict : public QDict< QString > {
 public:
-   KStringDict() : QDict<QString>(139) { }
+    KStringDict() : QDict< QString >(139)
+    {
+    }
 };
 
 /**
@@ -142,52 +146,50 @@ public:
  * To be used inside functions(!) like:
  * static const QString &myString = KGlobal::staticQString(i18n("My Text"));
  */
-const QString &
-KGlobal::staticQString(const QString &str)
+const QString &KGlobal::staticQString(const QString &str)
 {
-    if (!_stringDict) {
-      _stringDict = new KStringDict;
-      _stringDict->setAutoDelete( true );
-      kglobal_init();
+    if(!_stringDict)
+    {
+        _stringDict = new KStringDict;
+        _stringDict->setAutoDelete(true);
+        kglobal_init();
     }
-   QString *result = _stringDict->find(str);
-   if (!result)
-   {
-      result = new QString(str);
-      _stringDict->insert(str, result);
-   }
-   return *result;
+    QString *result = _stringDict->find(str);
+    if(!result)
+    {
+        result = new QString(str);
+        _stringDict->insert(str, result);
+    }
+    return *result;
 }
 
-class KStaticDeleterList: public QPtrList<KStaticDeleterBase>
-{
+class KStaticDeleterList : public QPtrList< KStaticDeleterBase > {
 public:
-   KStaticDeleterList() { }
+    KStaticDeleterList()
+    {
+    }
 };
 
-void
-KGlobal::registerStaticDeleter(KStaticDeleterBase *obj)
+void KGlobal::registerStaticDeleter(KStaticDeleterBase *obj)
 {
-   if (!_staticDeleters)
-      kglobal_init();
-   if (_staticDeleters->find(obj) == -1)
-      _staticDeleters->append(obj);
+    if(!_staticDeleters)
+        kglobal_init();
+    if(_staticDeleters->find(obj) == -1)
+        _staticDeleters->append(obj);
 }
 
-void
-KGlobal::unregisterStaticDeleter(KStaticDeleterBase *obj)
+void KGlobal::unregisterStaticDeleter(KStaticDeleterBase *obj)
 {
-   if (_staticDeleters)
-      _staticDeleters->removeRef(obj);
+    if(_staticDeleters)
+        _staticDeleters->removeRef(obj);
 }
 
-void
-KGlobal::deleteStaticDeleters()
+void KGlobal::deleteStaticDeleters()
 {
-    if (!KGlobal::_staticDeleters)
+    if(!KGlobal::_staticDeleters)
         return;
 
-    for(;_staticDeleters->count();)
+    for(; _staticDeleters->count();)
     {
         _staticDeleters->take(0)->destructObject();
     }
@@ -198,19 +200,19 @@ KGlobal::deleteStaticDeleters()
 
 // The Variables
 
-KStringDict     *KGlobal::_stringDict   = 0;
-KInstance       *KGlobal::_instance     = 0;
-KInstance       *KGlobal::_activeInstance = 0;
-KLocale         *KGlobal::_locale	= 0;
-KCharsets       *KGlobal::_charsets	= 0;
+KStringDict *KGlobal::_stringDict = 0;
+KInstance *KGlobal::_instance = 0;
+KInstance *KGlobal::_activeInstance = 0;
+KLocale *KGlobal::_locale = 0;
+KCharsets *KGlobal::_charsets = 0;
 KStaticDeleterList *KGlobal::_staticDeleters = 0;
 
 #ifdef WIN32
 #include <windows.h>
 static void kglobal_freeAll();
-BOOL WINAPI DllMain(HINSTANCE hinst, DWORD reason, LPVOID impLoad )
+BOOL WINAPI DllMain(HINSTANCE hinst, DWORD reason, LPVOID impLoad)
 {
-    if (reason == DLL_PROCESS_DETACH)
+    if(reason == DLL_PROCESS_DETACH)
         kglobal_freeAll();
     return TRUE;
 }
@@ -232,33 +234,34 @@ static void kglobal_freeAll()
 
 static void kglobal_init()
 {
-    if (KGlobal::_staticDeleters)
+    if(KGlobal::_staticDeleters)
         return;
 
     KGlobal::_staticDeleters = new KStaticDeleterList;
 }
 
-int kasciistricmp( const char *str1, const char *str2 )
+int kasciistricmp(const char *str1, const char *str2)
 {
     const unsigned char *s1 = (const unsigned char *)str1;
     const unsigned char *s2 = (const unsigned char *)str2;
     int res;
     unsigned char c1, c2;
 
-    if ( !s1 || !s2 )
+    if(!s1 || !s2)
         return s1 ? 1 : (s2 ? -1 : 0);
-    if ( !*s1 || !*s2 )
+    if(!*s1 || !*s2)
         return *s1 ? 1 : (*s2 ? -1 : 0);
-    for (;*s1; ++s1, ++s2) {
-        c1 = *s1; c2 = *s2;
-        if (c1 >= 'A' && c1 <= 'Z')
+    for(; *s1; ++s1, ++s2)
+    {
+        c1 = *s1;
+        c2 = *s2;
+        if(c1 >= 'A' && c1 <= 'Z')
             c1 += 'a' - 'A';
-        if (c2 >= 'A' && c2 <= 'Z')
+        if(c2 >= 'A' && c2 <= 'Z')
             c2 += 'a' - 'A';
 
-        if ((res = c1 - c2))
+        if((res = c1 - c2))
             break;
     }
     return *s1 ? res : (*s2 ? -1 : 0);
 }
-

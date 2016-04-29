@@ -39,15 +39,15 @@ HTMLBaseFontElement::HTMLBaseFontElement(HTMLBaseFontElementImpl *impl) : HTMLEl
 {
 }
 
-HTMLBaseFontElement &HTMLBaseFontElement::operator = (const Node &other)
+HTMLBaseFontElement &HTMLBaseFontElement::operator=(const Node &other)
 {
-    assignOther( other, ID_BASEFONT );
+    assignOther(other, ID_BASEFONT);
     return *this;
 }
 
-HTMLBaseFontElement &HTMLBaseFontElement::operator = (const HTMLBaseFontElement &other)
+HTMLBaseFontElement &HTMLBaseFontElement::operator=(const HTMLBaseFontElement &other)
 {
-    HTMLElement::operator = (other);
+    HTMLElement::operator=(other);
     return *this;
 }
 
@@ -57,48 +57,55 @@ HTMLBaseFontElement::~HTMLBaseFontElement()
 
 DOMString HTMLBaseFontElement::color() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_COLOR);
 }
 
-void HTMLBaseFontElement::setColor( const DOMString &value )
+void HTMLBaseFontElement::setColor(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_COLOR, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_COLOR, value);
 }
 
 DOMString HTMLBaseFontElement::face() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_FACE);
 }
 
-void HTMLBaseFontElement::setFace( const DOMString &value )
+void HTMLBaseFontElement::setFace(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_FACE, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_FACE, value);
 }
 
 DOMString HTMLBaseFontElement::size() const
 {
-    if(!impl) return DOMString();
+    if(!impl)
+        return DOMString();
     return ((ElementImpl *)impl)->getAttribute(ATTR_SIZE);
 }
 
-void HTMLBaseFontElement::setSize( const DOMString &value )
+void HTMLBaseFontElement::setSize(const DOMString &value)
 {
-    if(impl) ((ElementImpl *)impl)->setAttribute(ATTR_SIZE, value);
+    if(impl)
+        ((ElementImpl *)impl)->setAttribute(ATTR_SIZE, value);
 }
 
 long HTMLBaseFontElement::getSize() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((ElementImpl *)impl)->getAttribute(ATTR_SIZE).toInt();
 }
 
-void HTMLBaseFontElement::setSize( long _value )
+void HTMLBaseFontElement::setSize(long _value)
 {
-    if ( impl )
+    if(impl)
     {
-        DOMString value( QString::number( _value ) );
+        DOMString value(QString::number(_value));
         ((ElementImpl *)impl)->setAttribute(ATTR_SIZE, value);
     }
 }
@@ -106,15 +113,15 @@ void HTMLBaseFontElement::setSize( long _value )
 
 // --------------------------------------------------------------------------
 
-HTMLCollection::HTMLCollection()
-  : impl(0)
+HTMLCollection::HTMLCollection() : impl(0)
 {
 }
 
 HTMLCollection::HTMLCollection(const HTMLCollection &other)
 {
     impl = other.impl;
-    if(impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
 HTMLCollection::HTMLCollection(NodeImpl *base, int type)
@@ -123,66 +130,73 @@ HTMLCollection::HTMLCollection(NodeImpl *base, int type)
     impl->ref();
 }
 
-HTMLCollection &HTMLCollection::operator = (const HTMLCollection &other)
+HTMLCollection &HTMLCollection::operator=(const HTMLCollection &other)
 {
-    if(impl != other.impl) {
-        if(impl) impl->deref();
+    if(impl != other.impl)
+    {
+        if(impl)
+            impl->deref();
         impl = other.impl;
-        if(impl) impl->ref();
+        if(impl)
+            impl->ref();
     }
     return *this;
 }
 
 HTMLCollection::~HTMLCollection()
 {
-    if(impl) impl->deref();
+    if(impl)
+        impl->deref();
 }
 
 unsigned long HTMLCollection::length() const
 {
-    if(!impl) return 0;
+    if(!impl)
+        return 0;
     return ((HTMLCollectionImpl *)impl)->length();
 }
 
-Node HTMLCollection::item( unsigned long index ) const
+Node HTMLCollection::item(unsigned long index) const
 {
-    if(!impl) return 0;
-    return ((HTMLCollectionImpl *)impl)->item( index );
+    if(!impl)
+        return 0;
+    return ((HTMLCollectionImpl *)impl)->item(index);
 }
 
-Node HTMLCollection::namedItem( const DOMString &name ) const
+Node HTMLCollection::namedItem(const DOMString &name) const
 {
-    if(!impl) return 0;
-    return ((HTMLCollectionImpl *)impl)->namedItem( name );
+    if(!impl)
+        return 0;
+    return ((HTMLCollectionImpl *)impl)->namedItem(name);
 }
 
 Node HTMLCollection::base() const
 {
-    if ( !impl )
+    if(!impl)
         return 0;
 
-    return static_cast<HTMLCollectionImpl*>( impl )->m_refNode;
+    return static_cast< HTMLCollectionImpl * >(impl)->m_refNode;
 }
 
 Node HTMLCollection::firstItem() const
 {
-    if ( !impl )
+    if(!impl)
         return 0;
-    return static_cast<HTMLCollectionImpl*>( impl )->firstItem();
+    return static_cast< HTMLCollectionImpl * >(impl)->firstItem();
 }
 
 Node HTMLCollection::nextItem() const
 {
-    if ( !impl )
+    if(!impl)
         return 0;
-    return static_cast<HTMLCollectionImpl*>( impl )->nextItem();
+    return static_cast< HTMLCollectionImpl * >(impl)->nextItem();
 }
 
-Node HTMLCollection::nextNamedItem( const DOMString &name ) const
+Node HTMLCollection::nextNamedItem(const DOMString &name) const
 {
-    if ( !impl )
+    if(!impl)
         return 0;
-    return static_cast<HTMLCollectionImpl*>( impl )->nextNamedItem( name );
+    return static_cast< HTMLCollectionImpl * >(impl)->nextNamedItem(name);
 }
 
 HTMLCollectionImpl *HTMLCollection::handle() const
@@ -198,8 +212,7 @@ bool HTMLCollection::isNull() const
 
 // -----------------------------------------------------------------------------
 
-HTMLFormCollection::HTMLFormCollection(NodeImpl *base)
-    : HTMLCollection()
+HTMLFormCollection::HTMLFormCollection(NodeImpl *base) : HTMLCollection()
 {
     impl = new HTMLFormCollectionImpl(base);
     impl->ref();
@@ -207,7 +220,7 @@ HTMLFormCollection::HTMLFormCollection(NodeImpl *base)
 
 
 // -----------------------------------------------------------------------------
-HTMLMappedNameCollection::HTMLMappedNameCollection(NodeImpl *base, int type, const DOMString &name )
+HTMLMappedNameCollection::HTMLMappedNameCollection(NodeImpl *base, int type, const DOMString &name)
 {
     impl = new HTMLMappedNameCollectionImpl(base, type, name);
     impl->ref();

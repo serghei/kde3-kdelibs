@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,55 +27,47 @@
 
 using namespace VCARD;
 
-ImageParam::ImageParam()
-	:	Param()
+ImageParam::ImageParam() : Param()
 {
 }
 
-ImageParam::ImageParam(const ImageParam & x)
-	:	Param(x)
+ImageParam::ImageParam(const ImageParam &x) : Param(x)
 {
 }
 
-ImageParam::ImageParam(const QCString & s)
-	:	Param(s)
+ImageParam::ImageParam(const QCString &s) : Param(s)
 {
 }
 
-	ImageParam &
-ImageParam::operator = (ImageParam & x)
+ImageParam &ImageParam::operator=(ImageParam &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Param::operator = (x);
-	return *this;
+    Param::operator=(x);
+    return *this;
 }
 
-	ImageParam &
-ImageParam::operator = (const QCString & s)
+ImageParam &ImageParam::operator=(const QCString &s)
 {
-	Param::operator = (s);
-	return *this;
+    Param::operator=(s);
+    return *this;
 }
 
-	bool
-ImageParam::operator == (ImageParam & x)
+bool ImageParam::operator==(ImageParam &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 ImageParam::~ImageParam()
 {
 }
 
-	void
-ImageParam::_parse()
+void ImageParam::_parse()
 {
 }
 
-	void
-ImageParam::_assemble()
+void ImageParam::_assemble()
 {
 }
-

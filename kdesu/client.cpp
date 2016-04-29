@@ -43,8 +43,7 @@ public:
 };
 
 #ifndef SUN_LEN
-#define SUN_LEN(ptr) ((socklen_t) (((struct sockaddr_un *) 0)->sun_path) \
-	             + strlen ((ptr)->sun_path))
+#define SUN_LEN(ptr) ((socklen_t)(((struct sockaddr_un *)0)->sun_path) + strlen((ptr)->sun_path))
 #endif
 
 KDEsuClient::KDEsuClient()
@@ -52,7 +51,7 @@ KDEsuClient::KDEsuClient()
     sockfd = -1;
 #ifdef Q_WS_X11
     QCString display(getenv("DISPLAY"));
-    if (display.isEmpty())
+    if(display.isEmpty())
     {
         kdWarning(900) << k_lineinfo << "$DISPLAY is not set\n";
         return;
@@ -73,90 +72,96 @@ KDEsuClient::KDEsuClient()
 KDEsuClient::~KDEsuClient()
 {
     delete d;
-    if (sockfd >= 0)
-	close(sockfd);
+    if(sockfd >= 0)
+        close(sockfd);
 }
 
 int KDEsuClient::connect()
 {
-    if (sockfd >= 0)
-	close(sockfd);
-    if (access(sock, R_OK|W_OK))
+    if(sockfd >= 0)
+        close(sockfd);
+    if(access(sock, R_OK | W_OK))
     {
-	sockfd = -1;
-	return -1;
+        sockfd = -1;
+        return -1;
     }
 
     sockfd = socket(PF_UNIX, SOCK_STREAM, 0);
-    if (sockfd < 0)
+    if(sockfd < 0)
     {
-	kdWarning(900) << k_lineinfo << "socket(): " << perror << "\n";
-	return -1;
+        kdWarning(900) << k_lineinfo << "socket(): " << perror << "\n";
+        return -1;
     }
     struct sockaddr_un addr;
     addr.sun_family = AF_UNIX;
     strcpy(addr.sun_path, sock);
 
-    if (::connect(sockfd, (struct sockaddr *) &addr, SUN_LEN(&addr)) < 0)
+    if(::connect(sockfd, (struct sockaddr *)&addr, SUN_LEN(&addr)) < 0)
     {
         kdWarning(900) << k_lineinfo << "connect():" << perror << endl;
-	close(sockfd); sockfd = -1;
-	return -1;
+        close(sockfd);
+        sockfd = -1;
+        return -1;
     }
 
 #if !defined(SO_PEERCRED) || !defined(HAVE_STRUCT_UCRED)
-# if defined(HAVE_GETPEEREID)
+#if defined(HAVE_GETPEEREID)
     uid_t euid;
     gid_t egid;
     // Security: if socket exists, we must own it
-    if (getpeereid(sockfd, &euid, &egid) == 0)
+    if(getpeereid(sockfd, &euid, &egid) == 0)
     {
-       if (euid != getuid())
-       {
+        if(euid != getuid())
+        {
             kdWarning(900) << "socket not owned by me! socket uid = " << euid << endl;
-            close(sockfd); sockfd = -1;
+            close(sockfd);
+            sockfd = -1;
             return -1;
-       }
+        }
     }
-# else
-#  ifdef __GNUC__
-#   warning "Using sloppy security checks"
-#  endif
+#else
+#ifdef __GNUC__
+#warning "Using sloppy security checks"
+#endif
     // We check the owner of the socket after we have connected.
     // If the socket was somehow not ours an attacker will be able
     // to delete it after we connect but shouldn't be able to
     // create a socket that is owned by us.
     KDE_struct_stat s;
-    if (KDE_lstat(sock, &s)!=0)
+    if(KDE_lstat(sock, &s) != 0)
     {
         kdWarning(900) << "stat failed (" << sock << ")" << endl;
-	close(sockfd); sockfd = -1;
-	return -1;
+        close(sockfd);
+        sockfd = -1;
+        return -1;
     }
-    if (s.st_uid != getuid())
+    if(s.st_uid != getuid())
     {
         kdWarning(900) << "socket not owned by me! socket uid = " << s.st_uid << endl;
-	close(sockfd); sockfd = -1;
-	return -1;
+        close(sockfd);
+        sockfd = -1;
+        return -1;
     }
-    if (!S_ISSOCK(s.st_mode))
+    if(!S_ISSOCK(s.st_mode))
     {
         kdWarning(900) << "socket is not a socket (" << sock << ")" << endl;
-	close(sockfd); sockfd = -1;
-	return -1;
+        close(sockfd);
+        sockfd = -1;
+        return -1;
     }
-# endif
+#endif
 #else
     struct ucred cred;
     socklen_t siz = sizeof(cred);
 
     // Security: if socket exists, we must own it
-    if (getsockopt(sockfd, SOL_SOCKET, SO_PEERCRED, &cred, &siz) == 0)
+    if(getsockopt(sockfd, SOL_SOCKET, SO_PEERCRED, &cred, &siz) == 0)
     {
-        if (cred.uid != getuid())
+        if(cred.uid != getuid())
         {
             kdWarning(900) << "socket not owned by me! socket uid = " << cred.uid << endl;
-            close(sockfd); sockfd = -1;
+            close(sockfd);
+            sockfd = -1;
             return -1;
         }
     }
@@ -169,13 +174,13 @@ QCString KDEsuClient::escape(const QCString &str)
 {
     QCString copy = str;
     int n = 0;
-    while ((n = copy.find("\\", n)) != -1)
+    while((n = copy.find("\\", n)) != -1)
     {
         copy.insert(n, '\\');
         n += 2;
     }
     n = 0;
-    while ((n = copy.find("\"", n)) != -1)
+    while((n = copy.find("\"", n)) != -1)
     {
         copy.insert(n, '\\');
         n += 2;
@@ -187,27 +192,27 @@ QCString KDEsuClient::escape(const QCString &str)
 
 int KDEsuClient::command(const QCString &cmd, QCString *result)
 {
-    if (sockfd < 0)
-	return -1;
+    if(sockfd < 0)
+        return -1;
 
-    if (send(sockfd, cmd, cmd.length(), 0) != (int) cmd.length())
-	return -1;
+    if(send(sockfd, cmd, cmd.length(), 0) != (int)cmd.length())
+        return -1;
 
     char buf[1024];
     int nbytes = recv(sockfd, buf, 1023, 0);
-    if (nbytes <= 0)
+    if(nbytes <= 0)
     {
-	kdWarning(900) << k_lineinfo << "no reply from daemon\n";
-	return -1;
+        kdWarning(900) << k_lineinfo << "no reply from daemon\n";
+        return -1;
     }
     buf[nbytes] = '\000';
 
     QCString reply = buf;
-    if (reply.left(2) != "OK")
-	return -1;
+    if(reply.left(2) != "OK")
+        return -1;
 
-    if (result)
-	*result = reply.mid(3, reply.length()-4);
+    if(result)
+        *result = reply.mid(3, reply.length() - 4);
     return 0;
 }
 
@@ -228,16 +233,15 @@ int KDEsuClient::exec(const QCString &prog, const QCString &user, const QCString
     cmd += escape(prog);
     cmd += " ";
     cmd += escape(user);
-    if (!options.isEmpty() || !env.isEmpty())
+    if(!options.isEmpty() || !env.isEmpty())
     {
-       cmd += " ";
-       cmd += escape(options);
-       for(QCStringList::ConstIterator it = env.begin(); 
-          it != env.end(); ++it)
-       {
-          cmd += " ";
-          cmd += escape(*it);
-       }
+        cmd += " ";
+        cmd += escape(options);
+        for(QCStringList::ConstIterator it = env.begin(); it != env.end(); ++it)
+        {
+            cmd += " ";
+            cmd += escape(*it);
+        }
     }
     cmd += "\n";
     return command(cmd);
@@ -274,8 +278,7 @@ int KDEsuClient::delCommand(const QCString &key, const QCString &user)
     cmd += "\n";
     return command(cmd);
 }
-int KDEsuClient::setVar(const QCString &key, const QCString &value, int timeout,
-                        const QCString &group)
+int KDEsuClient::setVar(const QCString &key, const QCString &value, int timeout, const QCString &group)
 {
     QCString cmd = "SET ";
     cmd += escape(key);
@@ -299,34 +302,34 @@ QCString KDEsuClient::getVar(const QCString &key)
     return reply;
 }
 
-QValueList<QCString> KDEsuClient::getKeys(const QCString &group)
+QValueList< QCString > KDEsuClient::getKeys(const QCString &group)
 {
     QCString cmd = "GETK ";
     cmd += escape(group);
     cmd += "\n";
     QCString reply;
     command(cmd, &reply);
-    int index=0, pos;
-    QValueList<QCString> list;
-    if( !reply.isEmpty() )
+    int index = 0, pos;
+    QValueList< QCString > list;
+    if(!reply.isEmpty())
     {
         // kdDebug(900) << "Found a matching entry: " << reply << endl;
-        while (1)
+        while(1)
         {
-            pos = reply.find( '\007', index );
-            if( pos == -1 )
+            pos = reply.find('\007', index);
+            if(pos == -1)
             {
-                if( index == 0 )
-                    list.append( reply );
+                if(index == 0)
+                    list.append(reply);
                 else
-                    list.append( reply.mid(index) );
+                    list.append(reply.mid(index));
                 break;
             }
             else
             {
-                list.append( reply.mid(index, pos-index) );
+                list.append(reply.mid(index, pos - index));
             }
-            index = pos+1;
+            index = pos + 1;
         }
     }
     return list;
@@ -337,7 +340,7 @@ bool KDEsuClient::findGroup(const QCString &group)
     QCString cmd = "CHKG ";
     cmd += escape(group);
     cmd += "\n";
-    if( command(cmd) == -1 )
+    if(command(cmd) == -1)
         return false;
     return true;
 }
@@ -374,9 +377,9 @@ int KDEsuClient::ping()
 int KDEsuClient::exitCode()
 {
     QCString result;
-    if (command("EXIT\n", &result) != 0)
-       return -1;
-       
+    if(command("EXIT\n", &result) != 0)
+        return -1;
+
     return result.toLong();
 }
 
@@ -388,41 +391,42 @@ int KDEsuClient::stopServer()
 static QString findDaemon()
 {
     QString daemon = locate("bin", "kdesud");
-    if (daemon.isEmpty()) // if not in KDEDIRS, rely on PATH
-	daemon = KStandardDirs::findExe("kdesud");
+    if(daemon.isEmpty()) // if not in KDEDIRS, rely on PATH
+        daemon = KStandardDirs::findExe("kdesud");
 
-    if (daemon.isEmpty())
+    if(daemon.isEmpty())
     {
-	kdWarning(900) << k_lineinfo << "daemon not found\n";
+        kdWarning(900) << k_lineinfo << "daemon not found\n";
     }
     return daemon;
 }
 
 bool KDEsuClient::isServerSGID()
 {
-    if (d->daemon.isEmpty())
-       d->daemon = findDaemon();
-    if (d->daemon.isEmpty())
-       return false;
-   
+    if(d->daemon.isEmpty())
+        d->daemon = findDaemon();
+    if(d->daemon.isEmpty())
+        return false;
+
     KDE_struct_stat sbuf;
-    if (KDE_stat(QFile::encodeName(d->daemon), &sbuf) < 0)
+    if(KDE_stat(QFile::encodeName(d->daemon), &sbuf) < 0)
     {
-	kdWarning(900) << k_lineinfo << "stat(): " << perror << "\n";
-	return false;
+        kdWarning(900) << k_lineinfo << "stat(): " << perror << "\n";
+        return false;
     }
     return (sbuf.st_mode & S_ISGID);
 }
 
 int KDEsuClient::startServer()
 {
-    if (d->daemon.isEmpty())
-       d->daemon = findDaemon();
-    if (d->daemon.isEmpty())
-       return -1;
+    if(d->daemon.isEmpty())
+        d->daemon = findDaemon();
+    if(d->daemon.isEmpty())
+        return -1;
 
-    if (!isServerSGID()) {
-	kdWarning(900) << k_lineinfo << "kdesud not setgid!\n";
+    if(!isServerSGID())
+    {
+        kdWarning(900) << k_lineinfo << "kdesud not setgid!\n";
     }
 
     // kdesud only forks to the background after it is accepting

@@ -11,16 +11,16 @@
 void KJSErrorDlg::init()
 {
     _errorText->setTextFormat(QTextEdit::LogText);
-    _errorText->setMaxLogLines(2048);//Limit to about 2K errors so we don't use much CPU
+    _errorText->setMaxLogLines(2048); // Limit to about 2K errors so we don't use much CPU
 }
 
-void KJSErrorDlg::addError( const QString & error )
+void KJSErrorDlg::addError(const QString &error)
 {
-    
+
     _errorText->append(error);
 }
 
-void KJSErrorDlg::setURL( const QString & url )
+void KJSErrorDlg::setURL(const QString &url)
 {
     _url->setText(url);
 }

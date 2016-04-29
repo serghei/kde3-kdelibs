@@ -34,198 +34,208 @@ typedef struct snd_seq_event snd_seq_event_t;
  * @version 0.9.5 17/01/2000
  * @author Antonio Larrosa Jimenez <larrosa@kde.org>
  */
-class AlsaOut : public MidiOut
-{
-  friend class DeviceManager;
+class AlsaOut : public MidiOut {
+    friend class DeviceManager;
 
-  protected:
+protected:
+    /**
+     * @internal
+     * Total number of devices.
+     */
+    int ndevs;
 
-/**
- * @internal
- * Total number of devices.
- */
-  int ndevs;
+    /**
+     * @internal
+     * Total number of midi ports
+     */
+    int nmidiports;
 
-/**
- * @internal
- * Total number of midi ports
- */
-  int nmidiports;
+    double count;
+    double lastcount;
+    double lasttime;
+    double begintime;
+    int m_rate;
 
-  double count;
-  double lastcount;
-  double lasttime;
-  double begintime;
-  int m_rate;
+    /**
+     * @internal
+     * A "constant" used to convert from milliseconds to the computer rate
+     */
+    double convertrate;
 
-/**
- * @internal
- * A "constant" used to convert from milliseconds to the computer rate
- */
-  double convertrate;
+    long int time;
 
-  long int time;
+    virtual void seqbuf_dump(void);
+    virtual void seqbuf_clean(void);
+    void eventInit(snd_seq_event_t *ev);
+    void eventSend(snd_seq_event_t *ep);
+    void timerEventSend(int type);
 
-  virtual void seqbuf_dump (void);
-  virtual void seqbuf_clean(void);
-  void eventInit(snd_seq_event_t *ev);
-  void eventSend(snd_seq_event_t *ep);
-  void timerEventSend(int type);
+public:
+    /**
+     * Constructor. After constructing a MidiOut device, you must open it
+     * (using openDev() ). Additionally you may want to initialize it
+     * (with initDev() ),
+     */
+    AlsaOut(int d, int client = 64, int port = 0, const char *cname = "", const char *pname = "");
 
-  public:
+    /**
+     * Destructor. It doesn't matter if you close the device ( closeDev() )
+     * before you destruct the object because in other case, it will be closed
+     * here.
+     */
+    virtual ~AlsaOut();
 
-  /**
-   * Constructor. After constructing a MidiOut device, you must open it
-   * (using openDev() ). Additionally you may want to initialize it
-   * (with initDev() ),
-   */
-  AlsaOut(int d, int client=64, int port=0, const char *cname="", const char *pname="");
+    /**
+     * Opens the device. This is generally called from DeviceManager , so you
+     * shouldn't call this yourself (except if you created the MidiOut object
+     * yourself.
+     * @param sqfd a file descriptor of /dev/sequencer
+     * @see closeDev
+     * @see initDev
+     */
+    virtual void openDev(int sqfd);
 
-  /**
-   * Destructor. It doesn't matter if you close the device ( closeDev() )
-   * before you destruct the object because in other case, it will be closed
-   * here.
-   */
-  virtual ~AlsaOut();
+    /**
+     * Closes the device. It basically tells the device (the file descriptor)
+     * is going to be closed.
+     * @see openDev
+     */
+    virtual void closeDev();
 
-  /**
-   * Opens the device. This is generally called from DeviceManager , so you
-   * shouldn't call this yourself (except if you created the MidiOut object
-   * yourself.
-   * @param sqfd a file descriptor of /dev/sequencer
-   * @see closeDev
-   * @see initDev
-   */
-  virtual void openDev	(int sqfd);
+    /**
+     * Initializes the device sending generic standard midi events and controllers,
+     * such as changing the patches of each channel to an Acoustic Piano (000),
+     * setting the volume to a normal value, etc.
+     */
+    virtual void initDev();
 
-  /**
-   * Closes the device. It basically tells the device (the file descriptor)
-   * is going to be closed.
-   * @see openDev
-   */
-  virtual void closeDev	();
+    /**
+     * @return the device type of the object. This is to identify the
+     * inherited class that a given object is polymorphed to.
+     * The returned value is one of these :
+     *
+     * @li KMID_EXTERNAL_MIDI if it's a MidiOut object
+     * @li KMID_SYNTH if it's a SynthOut object (as an AWE device)
+     * @li KMID_FM if it's a FMOut object
+     * @li KMID_GUS if it's a GUSOut object
+     *
+     * which are defined in midispec.h
+     *
+     * @see deviceName
+     */
+    int deviceType() const
+    {
+        return devicetype;
+    }
 
-  /**
-   * Initializes the device sending generic standard midi events and controllers,
-   * such as changing the patches of each channel to an Acoustic Piano (000),
-   * setting the volume to a normal value, etc.
-   */
-  virtual void initDev	();
+    /**
+     * Returns the name and type of this MIDI device.
+     * @see deviceType
+     */
+    virtual const char *deviceName(void) const;
 
-  /**
-   * @return the device type of the object. This is to identify the
-   * inherited class that a given object is polymorphed to.
-   * The returned value is one of these :
-   *
-   * @li KMID_EXTERNAL_MIDI if it's a MidiOut object
-   * @li KMID_SYNTH if it's a SynthOut object (as an AWE device)
-   * @li KMID_FM if it's a FMOut object
-   * @li KMID_GUS if it's a GUSOut object
-   *
-   * which are defined in midispec.h
-   *
-   * @see deviceName
-   */
-  int          deviceType () const { return devicetype; }
+    /**
+     * @internal
+     */
+    int rate(void)
+    {
+        return m_rate;
+    }
 
-  /**
-   * Returns the name and type of this MIDI device.
-   * @see deviceType
-   */
-  virtual const char * deviceName (void) const;
+    /**
+     * See DeviceManager::noteOn()
+     */
+    virtual void noteOn(uchar chn, uchar note, uchar vel);
 
-  /**
-   * @internal
-   */
-  int  rate    (void) { return m_rate; }
+    /**
+     * See DeviceManager::noteOff()
+     */
+    virtual void noteOff(uchar chn, uchar note, uchar vel);
 
-  /**
-   * See DeviceManager::noteOn()
-   */
-  virtual void noteOn	( uchar chn, uchar note, uchar vel );
+    /**
+     * See DeviceManager::keyPressure()
+     */
+    virtual void keyPressure(uchar chn, uchar note, uchar vel);
 
-  /**
-   * See DeviceManager::noteOff()
-   */
-  virtual void noteOff	( uchar chn, uchar note, uchar vel );
+    /**
+     * See DeviceManager::chnPatchChange()
+     */
+    virtual void chnPatchChange(uchar chn, uchar patch);
 
-  /**
-   * See DeviceManager::keyPressure()
-   */
-  virtual void keyPressure	( uchar chn, uchar note, uchar vel );
+    /**
+     * See DeviceManager::chnPressure()
+     */
+    virtual void chnPressure(uchar chn, uchar vel);
 
-  /**
-   * See DeviceManager::chnPatchChange()
-   */
-  virtual void chnPatchChange	( uchar chn, uchar patch );
+    /**
+     * See DeviceManager::chnPitchBender()
+     */
+    virtual void chnPitchBender(uchar chn, uchar lsb, uchar msb);
 
-  /**
-   * See DeviceManager::chnPressure()
-   */
-  virtual void chnPressure	( uchar chn, uchar vel );
+    /**
+     * See DeviceManager::chnController()
+     */
+    virtual void chnController(uchar chn, uchar ctl, uchar v);
 
-  /**
-   * See DeviceManager::chnPitchBender()
-   */
-  virtual void chnPitchBender	( uchar chn, uchar lsb,  uchar msb );
+    /**
+     * See DeviceManager::sysex()
+     */
+    virtual void sysex(uchar *data, ulong size);
 
-  /**
-   * See DeviceManager::chnController()
-   */
-  virtual void chnController	( uchar chn, uchar ctl , uchar v );
+    /**
+     * Mutes all notes being played on a given channel.
+     */
+    virtual void channelSilence(uchar chn);
 
-  /**
-   * See DeviceManager::sysex()
-   */
-  virtual void sysex		( uchar *data,ulong size);
+    /**
+     * Mute or "unmute" a given channel .
+     * @param chn channel to work on
+     * @param b if true, the device will ignore subsequent notes played on the chn
+     * channel, and mute all notes being played on it. If b is false, the channel
+     * is back to work.
+     */
+    virtual void channelMute(uchar chn, int b);
 
-  /**
-   * Mutes all notes being played on a given channel.
-   */
-  virtual void channelSilence	( uchar chn );
+    /**
+     * Change all channel volume events multiplying it by this percentage correction
+     * Instead of forcing a channel to a fixed volume, this method allows to
+     * music to fade out even when it was being played softly.
+     * @param volper is an integer value, where 0 is quiet, 100 is used to send
+     * an unmodified value, 200 play music twice louder than it should, etc.
+     */
+    virtual void setVolumePercentage(int volper)
+    {
+        volumepercentage = volper;
+    }
 
-  /**
-   * Mute or "unmute" a given channel .
-   * @param chn channel to work on
-   * @param b if true, the device will ignore subsequent notes played on the chn
-   * channel, and mute all notes being played on it. If b is false, the channel
-   * is back to work.
-   */
-  virtual void channelMute	( uchar chn, int b );
+    /**
+     * Returns true if everything's ok and false if there has been any problem
+     */
+    int ok(void)
+    {
+        if(seqfd < 0)
+            return 0;
+        return (_ok > 0);
+    }
 
-  /**
-   * Change all channel volume events multiplying it by this percentage correction
-   * Instead of forcing a channel to a fixed volume, this method allows to
-   * music to fade out even when it was being played softly.
-   * @param volper is an integer value, where 0 is quiet, 100 is used to send
-   * an unmodified value, 200 play music twice louder than it should, etc.
-   */
-  virtual void setVolumePercentage ( int volper )
-  { volumepercentage = volper; }
+    virtual void wait(double ticks);
+    virtual void tmrSetTempo(int v);
+    virtual void tmrStart(int tpcn);
+    virtual void tmrStart()
+    {
+        tmrStart(-1);
+    }
+    virtual void tmrStop();
+    virtual void tmrContinue();
+    /**
+     * @internal
+     * If i==1 syncronizes by cleaning the buffer instead of sending it (in fact,
+     * this is what synchronizing really means :-) )
+     */
+    void sync(int i = 0);
 
-  /**
-   * Returns true if everything's ok and false if there has been any problem
-   */
-  int ok (void)
-  { if (seqfd<0) return 0;
-    return (_ok>0);
-  }
-
-  virtual void wait        (double ticks);
-  virtual void tmrSetTempo (int v);
-  virtual void tmrStart    (int tpcn);
-  virtual void tmrStart    () { tmrStart(-1); }
-  virtual void tmrStop     ();
-  virtual void tmrContinue ();
-  /**
-   * @internal
-   * If i==1 syncronizes by cleaning the buffer instead of sending it (in fact,
-   * this is what synchronizing really means :-) )
-   */
-  void sync        (int i=0);
-
-  class AlsaOutPrivate;
-  AlsaOutPrivate *di;
+    class AlsaOutPrivate;
+    AlsaOutPrivate *di;
 };
 
 #endif // _ALSAOUT_H

@@ -25,12 +25,11 @@
 
 using namespace KRES;
 
-ConfigWidget::ConfigWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+ConfigWidget::ConfigWidget(QWidget *parent, const char *name) : QWidget(parent, name)
 {
 }
 
-void ConfigWidget::setInEditMode( bool )
+void ConfigWidget::setInEditMode(bool)
 {
 }
 

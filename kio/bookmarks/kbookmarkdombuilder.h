@@ -28,21 +28,22 @@
  * @since 3.2
  */
 class KIO_EXPORT KBookmarkDomBuilder : public QObject {
-   Q_OBJECT
+    Q_OBJECT
 public:
-   KBookmarkDomBuilder(const KBookmarkGroup &group, KBookmarkManager *);
-   virtual ~KBookmarkDomBuilder();
-   void connectImporter(const QObject *);
+    KBookmarkDomBuilder(const KBookmarkGroup &group, KBookmarkManager *);
+    virtual ~KBookmarkDomBuilder();
+    void connectImporter(const QObject *);
 protected slots:
-   void newBookmark(const QString &text, const QCString &url, const QString &additionalInfo);
-   void newFolder(const QString &text, bool open, const QString &additionalInfo);
-   void newSeparator();
-   void endFolder();
+    void newBookmark(const QString &text, const QCString &url, const QString &additionalInfo);
+    void newFolder(const QString &text, bool open, const QString &additionalInfo);
+    void newSeparator();
+    void endFolder();
+
 private:
-   QValueStack<KBookmarkGroup> m_stack;
-   QValueList<KBookmarkGroup> m_list;
-   KBookmarkManager *m_manager;
-   class KBookmarkDomBuilderPrivate *p;
+    QValueStack< KBookmarkGroup > m_stack;
+    QValueList< KBookmarkGroup > m_list;
+    KBookmarkManager *m_manager;
+    class KBookmarkDomBuilderPrivate *p;
 };
 
 #endif

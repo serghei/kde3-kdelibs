@@ -27,78 +27,83 @@
 
 using namespace KIO;
 
-SpeedTest::SpeedTest( const KURL & url )
-    : QObject(0, "speed")
+SpeedTest::SpeedTest(const KURL &url) : QObject(0, "speed")
 {
-    Job *job = listRecursive( url );
-    //Job *job = del( KURL("file:" + QDir::currentDirPath()) ); DANGEROUS !
-    connect(job, SIGNAL( result( KIO::Job*)),
-	    SLOT( finished( KIO::Job* ) ));
+    Job *job = listRecursive(url);
+    // Job *job = del( KURL("file:" + QDir::currentDirPath()) ); DANGEROUS !
+    connect(job, SIGNAL(result(KIO::Job *)), SLOT(finished(KIO::Job *)));
     /*connect(job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList&)),
-	    SLOT( entries( KIO::Job*, const KIO::UDSEntryList&)));
+        SLOT( entries( KIO::Job*, const KIO::UDSEntryList&)));
     */
 }
 
-void SpeedTest::entries(KIO::Job*, const UDSEntryList& list) {
+void SpeedTest::entries(KIO::Job *, const UDSEntryList &list)
+{
 
-    UDSEntryListConstIterator it=list.begin();
-    for (; it != list.end(); ++it) {
-      UDSEntry::ConstIterator it2 = (*it).begin();
-        for( ; it2 != (*it).end(); it2++ ) {
-            if ((*it2).m_uds == UDS_NAME)
-              kdDebug() << ( *it2 ).m_str << endl;
+    UDSEntryListConstIterator it = list.begin();
+    for(; it != list.end(); ++it)
+    {
+        UDSEntry::ConstIterator it2 = (*it).begin();
+        for(; it2 != (*it).end(); it2++)
+        {
+            if((*it2).m_uds == UDS_NAME)
+                kdDebug() << (*it2).m_str << endl;
         }
     }
 }
 
 
-void SpeedTest::finished(Job*) {
+void SpeedTest::finished(Job *)
+{
     kdDebug() << "job finished" << endl;
     kapp->quit();
 }
 
-static KCmdLineOptions options[] =
+static KCmdLineOptions options[] = {{"+[URL]", "the URL to list", 0}, KCmdLineLastOption};
+
+int main(int argc, char **argv)
 {
-  { "+[URL]", "the URL to list", 0 },
-  KCmdLineLastOption
-};
 
-int main(int argc, char **argv) {
+    KCmdLineArgs::init(argc, argv, "speedapp", "A KIO::listRecursive testing tool", "0.0");
 
-    KCmdLineArgs::init( argc, argv, "speedapp", "A KIO::listRecursive testing tool", "0.0" );
-
-    KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::addCmdLineOptions(options);
 
     KApplication app;
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     KURL url;
-    if ( args->count() == 1 )
-      url = args->url(0);
+    if(args->count() == 1)
+        url = args->url(0);
     else
-      url = "file:" + QDir::currentDirPath();
+        url = "file:" + QDir::currentDirPath();
 
     kdDebug() << url.url() << " is probably " << (KIO::probably_slow_mounted(url.path()) ? "slow" : "normal") << " mounted\n";
     kdDebug() << url.url() << " is " << (KIO::manually_mounted(url.path()) ? "manually" : "system") << " mounted\n";
     QString mp = KIO::findDeviceMountPoint(url.path());
-    if (mp.isEmpty()) {
+    if(mp.isEmpty())
+    {
         kdDebug() << "no mount point for device " << url.url() << " found\n";
-    } else
+    }
+    else
         kdDebug() << mp << " is the mount point for device " << url.url() << endl;
 
     mp = KIO::findPathMountPoint(url.path());
-    if (mp.isEmpty()) {
+    if(mp.isEmpty())
+    {
         kdDebug() << "no mount point for path " << url.url() << " found\n";
-    } else
+    }
+    else
         kdDebug() << mp << " is the mount point for path " << url.url() << endl;
     // SpeedTest test( url );
     // app.exec();
 
     mp = KIO::findPathMountPoint(url.path());
-    if (mp.isEmpty()) {
+    if(mp.isEmpty())
+    {
         kdDebug() << "no mount point for path " << url.url() << " found\n";
-    } else
+    }
+    else
         kdDebug() << mp << " is the mount point for path " << url.url() << endl;
     // SpeedTest test( url );
     // app.exec();
@@ -106,34 +111,39 @@ int main(int argc, char **argv) {
     url.setPath(QDir::homeDirPath());
 
     mp = KIO::findPathMountPoint(url.path());
-    if (mp.isEmpty()) {
+    if(mp.isEmpty())
+    {
         kdDebug() << "no mount point for path " << url.url() << " found\n";
-    } else
-        kdDebug() << mp << " is the mount point for path " << url.url() << endl;
-    // SpeedTest test( url );
-    // app.exec();
-
-    mp = KIO::findPathMountPoint(url.path());
-    if (mp.isEmpty()) {
-        kdDebug() << "no mount point for path " << url.url() << " found\n";
-    } else
-        kdDebug() << mp << " is the mount point for path " << url.url() << endl;
-    // SpeedTest test( url );
-    // app.exec();
-
-    if ( args->count() == 1 )
-      url = args->url(0);
+    }
     else
-      url = "file:" + QDir::currentDirPath();
-
-    mp = KIO::findPathMountPoint(url.path());
-    if (mp.isEmpty()) {
-        kdDebug() << "no mount point for path " << url.url() << " found\n";
-    } else
         kdDebug() << mp << " is the mount point for path " << url.url() << endl;
     // SpeedTest test( url );
     // app.exec();
 
+    mp = KIO::findPathMountPoint(url.path());
+    if(mp.isEmpty())
+    {
+        kdDebug() << "no mount point for path " << url.url() << " found\n";
+    }
+    else
+        kdDebug() << mp << " is the mount point for path " << url.url() << endl;
+    // SpeedTest test( url );
+    // app.exec();
+
+    if(args->count() == 1)
+        url = args->url(0);
+    else
+        url = "file:" + QDir::currentDirPath();
+
+    mp = KIO::findPathMountPoint(url.path());
+    if(mp.isEmpty())
+    {
+        kdDebug() << "no mount point for path " << url.url() << " found\n";
+    }
+    else
+        kdDebug() << mp << " is the mount point for path " << url.url() << endl;
+    // SpeedTest test( url );
+    // app.exec();
 }
 
 #include "speed.moc"

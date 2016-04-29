@@ -95,21 +95,48 @@ class KPanelExtensionPrivate;
  *
  * @author Matthias Elter <elter@kde.org>
  **/
-class KDEUI_EXPORT KPanelExtension : public QFrame
-{
+class KDEUI_EXPORT KPanelExtension : public QFrame {
     Q_OBJECT
 
 public:
-
     /// The type of the extension (TODO)
-    enum Type { Normal = 0, Stretch };
+    enum Type
+    {
+        Normal = 0,
+        Stretch
+    };
     // KDE4: Merge these with KPanelApplet's enums
     /// An action to be taken sometime.
-    enum Action { About = 1, Help = 2, Preferences = 4, ReportBug = 8 };
-    enum Position { Left = 0, Right, Top, Bottom, Floating };
-    enum Alignment { LeftTop = 0, Center, RightBottom };
+    enum Action
+    {
+        About = 1,
+        Help = 2,
+        Preferences = 4,
+        ReportBug = 8
+    };
+    enum Position
+    {
+        Left = 0,
+        Right,
+        Top,
+        Bottom,
+        Floating
+    };
+    enum Alignment
+    {
+        LeftTop = 0,
+        Center,
+        RightBottom
+    };
     /// @since 3.1
-    enum Size { SizeTiny = 0, SizeSmall, SizeNormal, SizeLarge, SizeCustom };
+    enum Size
+    {
+        SizeTiny = 0,
+        SizeSmall,
+        SizeNormal,
+        SizeLarge,
+        SizeCustom
+    };
 
     /**
      * Constructs a KPanelExtension just like any other widget.
@@ -120,8 +147,7 @@ public:
      * @param parent The pointer to the parent widget handed over in the factory function.
      * @param name A Qt object name for your extension.
      **/
-    KPanelExtension(const QString& configFile, Type t = Normal,
-		 int actions = 0, QWidget *parent = 0, const char *name = 0);
+    KPanelExtension(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
 
     /**
      * Destructor.
@@ -137,7 +163,10 @@ public:
      * location in the Window Manager Dock. Please note that the size can not be larger than the
      * maxsize given by the handler.
      **/
-    virtual QSize sizeHint(Position /*p*/, QSize maxsize) const { return maxsize; }
+    virtual QSize sizeHint(Position /*p*/, QSize maxsize) const
+    {
+        return maxsize;
+    }
 
     /**
      * Always use this KConfig object to save/load your extensions configuration.
@@ -148,19 +177,28 @@ public:
      * For normal extensions this config object will write to a instance specific config file
      * called \<extensionname\>\<instanceid\>rc in the users local KDE directory.
      **/
-    KConfig* config() const { return _config; }
+    KConfig *config() const
+    {
+        return _config;
+    }
 
     /**
      * @return Type indicating the extensions type.
      * Type
      **/
-    Type type() const { return _type; }
+    Type type() const
+    {
+        return _type;
+    }
 
     /**
      * @return int indicating the supported RMB menu actions.
      * Action
      **/
-    int actions() const { return _actions; }
+    int actions() const
+    {
+        return _actions;
+    }
 
     /**
      * Generic action dispatcher. Called  when the user selects an item
@@ -172,7 +210,7 @@ public:
      * ref about(), help(), preferences(), reportBug()
      *
      **/
-    virtual void action( Action a );
+    virtual void action(Action a);
 
 
     /**
@@ -181,21 +219,24 @@ public:
      * to this setting.
      * @return Position
      **/
-    virtual Position preferedPosition() const { return Bottom; }
+    virtual Position preferedPosition() const
+    {
+        return Bottom;
+    }
 
     /**
      * @internal
      **/
-    void setPosition( Position p );
+    void setPosition(Position p);
     /**
      * @internal
      **/
-    void setAlignment( Alignment a );
+    void setAlignment(Alignment a);
     /**
      * @internal
      * @since 3.1
      **/
-    void setSize( Size size, int customSize );
+    void setSize(Size size, int customSize);
 
     /**
     * @return the extension's size
@@ -214,7 +255,7 @@ public:
      * @see setCustomMenu(QPopupMenu*)
      * @since 3.4
      */
-    QPopupMenu* customMenu() const;
+    QPopupMenu *customMenu() const;
 
     /**
      * @return whether or not to set a desktop geometry claiming strut for this panel
@@ -239,7 +280,6 @@ signals:
     void maintainFocus(bool);
 
 protected:
-
     /**
      * Is called when the user selects "About" from the extensions RMB menu.
      * Reimplement this function to launch a about dialog.
@@ -247,7 +287,9 @@ protected:
      * Note that this is called only when your extension supports the About action.
      * See Action.
      **/
-    virtual void about() {}
+    virtual void about()
+    {
+    }
 
     /**
      * Is called when the user selects "Help" from the extensions RMB menu.
@@ -256,7 +298,9 @@ protected:
      * Note that this is called only when your extension supports the Help action.
      * See Action.
      **/
-    virtual void help() {}
+    virtual void help()
+    {
+    }
 
     /**
      * Is called when the user selects "Preferences" from the extensions RMB menu.
@@ -265,7 +309,9 @@ protected:
      * Note that this is called only when your extension supports the preferences action.
      * See Action.
      **/
-    virtual void preferences() {}
+    virtual void preferences()
+    {
+    }
 
     /**
      * Is called when the user selects "Report bug" from the applet's RMB menu.
@@ -275,17 +321,25 @@ protected:
      * action.
      * See Action.
      **/
-    virtual void reportBug() {}
+    virtual void reportBug()
+    {
+    }
 
     /**
      * @return the extension's position. (left, right, top, bottom)
      **/
-    Position position() const { return _position; }
+    Position position() const
+    {
+        return _position;
+    }
 
     /**
      * @return the extension's alignment. (left/top, center, or right/bottom)
      **/
-    Alignment alignment() const { return _alignment; }
+    Alignment alignment() const
+    {
+        return _alignment;
+    }
 
     /**
      * @return the extensions orientation. (horizontal or vertical)
@@ -303,14 +357,18 @@ protected:
      * Reimplement this change handler in order to adjust the look of your
      * applet.
      **/
-    virtual void positionChange( Position ) {}
+    virtual void positionChange(Position)
+    {
+    }
 
     /**
      * This extension has changed its alignment.
      * Reimplement this change handler in order to adjust the look of your
      * applet.
      **/
-    virtual void alignmentChange( Alignment ) {}
+    virtual void alignmentChange(Alignment)
+    {
+    }
 
     /**
      * Use this method to set the custom menu for this extensions so that it can be shown
@@ -322,7 +380,7 @@ protected:
      * with the new menu (or 0) to avoid crashes
      * @since 3.4
      */
-    void setCustomMenu(QPopupMenu*);
+    void setCustomMenu(QPopupMenu *);
 
     /**
      * Use this method to set the return value for reserveStrut
@@ -332,15 +390,17 @@ protected:
     void setReserveStrut(bool shouldUseStrut);
 
 private:
-    Type         		_type;
-    Position     		_position;
-    Alignment    		_alignment;
-    KConfig*     		_config;
-    int          		_actions;
+    Type _type;
+    Position _position;
+    Alignment _alignment;
+    KConfig *_config;
+    int _actions;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-    KPanelExtensionPrivate     *d;
+    KPanelExtensionPrivate *d;
 };
 
 #endif

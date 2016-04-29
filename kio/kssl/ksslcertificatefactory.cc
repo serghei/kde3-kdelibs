@@ -16,7 +16,7 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- */ 
+ */
 
 #include <ksslcertificatefactory.h>
 #include <ksslcertificate.h>
@@ -24,8 +24,8 @@
 
 //#include <kopenssl.h>
 
-KSSLCertificate*
-KSSLCertificateFactory::generateSelfSigned(KSSLKeyType /*keytype*/) {
+KSSLCertificate *KSSLCertificateFactory::generateSelfSigned(KSSLKeyType /*keytype*/)
+{
 #if 0
   //#ifdef KSSL_HAVE_SSL
   X509_NAME *x509name = X509_NAME_new();
@@ -114,9 +114,8 @@ KSSLCertificateFactory::generateSelfSigned(KSSLKeyType /*keytype*/) {
 
   newCert = new KSSLCertificate;
   newCert->setCert(x509);
-  return newCert;  
+  return newCert;
 #else
-  return NULL;
+    return NULL;
 #endif
 }
-

@@ -22,21 +22,20 @@
 
 #include "kmmanager.h"
 
-class KMLpdUnixManager : public KMManager
-{
+class KMLpdUnixManager : public KMManager {
 public:
-	KMLpdUnixManager(QObject *parent, const char *name, const QStringList & /*args*/);
+    KMLpdUnixManager(QObject *parent, const char *name, const QStringList & /*args*/);
 
 protected:
-	void listPrinters();
-	void parseEtcPrintcap();
-	void parseEtcPrintersConf();
-	void parseEtcLpPrinters();
-	void parseEtcLpMember();
-	void parseSpoolInterface();
+    void listPrinters();
+    void parseEtcPrintcap();
+    void parseEtcPrintersConf();
+    void parseEtcLpPrinters();
+    void parseEtcLpMember();
+    void parseSpoolInterface();
 
 private:
-	bool	m_loaded;
+    bool m_loaded;
 };
 
 #endif

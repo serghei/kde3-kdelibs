@@ -34,62 +34,65 @@
 
 using namespace KNS;
 
-class ProviderItem : public KListViewItem
-{
-  public:
-    ProviderItem( KListView *parent, Provider *provider ) :
-      KListViewItem( parent ), mProvider( provider )
+class ProviderItem : public KListViewItem {
+public:
+    ProviderItem(KListView *parent, Provider *provider) : KListViewItem(parent), mProvider(provider)
     {
-      setText( 0, provider->name() );
+        setText(0, provider->name());
     }
 
-    Provider *provider() { return mProvider; }
+    Provider *provider()
+    {
+        return mProvider;
+    }
 
-  private:
+private:
     Provider *mProvider;
 };
 
-ProviderDialog::ProviderDialog( Engine *engine, QWidget *parent ) :
-  KDialogBase( Plain, i18n("Hot New Stuff Providers"), Ok | Cancel, Cancel,
-               parent, 0, false, true ),
-  mEngine( engine )
+ProviderDialog::ProviderDialog(Engine *engine, QWidget *parent)
+    : KDialogBase(Plain, i18n("Hot New Stuff Providers"), Ok | Cancel, Cancel, parent, 0, false, true), mEngine(engine)
 {
-  QFrame *topPage = plainPage();
+    QFrame *topPage = plainPage();
 
-  QBoxLayout *topLayout = new QVBoxLayout( topPage );
+    QBoxLayout *topLayout = new QVBoxLayout(topPage);
 
-  QLabel *description = new QLabel( i18n("Please select one of the providers listed below:"), topPage );
-  topLayout->addWidget( description );
+    QLabel *description = new QLabel(i18n("Please select one of the providers listed below:"), topPage);
+    topLayout->addWidget(description);
 
-  mListView = new KListView( topPage );
-  mListView->addColumn( i18n("Name") );
-  topLayout->addWidget( mListView );
+    mListView = new KListView(topPage);
+    mListView->addColumn(i18n("Name"));
+    topLayout->addWidget(mListView);
 }
 
 void ProviderDialog::clear()
 {
-  mListView->clear();
+    mListView->clear();
 }
 
-void ProviderDialog::addProvider( Provider *provider )
+void ProviderDialog::addProvider(Provider *provider)
 {
-  new ProviderItem( mListView, provider );
-  if ( mListView->childCount() == 1 ) {
-    mListView->setSelected(mListView->firstChild(), true);
-  } else if (mListView->childCount() > 1) {
-    mListView->setSelected(mListView->firstChild(), false);
-  }
+    new ProviderItem(mListView, provider);
+    if(mListView->childCount() == 1)
+    {
+        mListView->setSelected(mListView->firstChild(), true);
+    }
+    else if(mListView->childCount() > 1)
+    {
+        mListView->setSelected(mListView->firstChild(), false);
+    }
 }
 
 void ProviderDialog::slotOk()
 {
-  ProviderItem *item = static_cast<ProviderItem *>( mListView->selectedItem() );
-  if ( !item ) {
-    KMessageBox::error( this, i18n("No provider selected.") );
-    return;
-  }
+    ProviderItem *item = static_cast< ProviderItem * >(mListView->selectedItem());
+    if(!item)
+    {
+        KMessageBox::error(this, i18n("No provider selected."));
+        return;
+    }
 
-  mEngine->requestMetaInformation( item->provider() );
+    mEngine->requestMetaInformation(item->provider());
 
-  accept();
+    accept();
 }

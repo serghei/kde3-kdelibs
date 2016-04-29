@@ -21,25 +21,28 @@
 
 #include "kfilterbase.h"
 
-class KGzipFilter : public KFilterBase
-{
+class KGzipFilter : public KFilterBase {
 public:
     KGzipFilter();
     virtual ~KGzipFilter();
 
-    virtual void init( int mode );
-    virtual int mode() const { return m_mode; }
+    virtual void init(int mode);
+    virtual int mode() const
+    {
+        return m_mode;
+    }
     virtual void terminate();
     virtual void reset();
     virtual bool readHeader();
-    virtual bool writeHeader( const QCString & fileName );
+    virtual bool writeHeader(const QCString &fileName);
     void writeFooter();
-    virtual void setOutBuffer( char * data, uint maxlen );
-    virtual void setInBuffer( const char * data, uint size );
-    virtual int  inBufferAvailable() const;
-    virtual int  outBufferAvailable() const;
+    virtual void setOutBuffer(char *data, uint maxlen);
+    virtual void setInBuffer(const char *data, uint size);
+    virtual int inBufferAvailable() const;
+    virtual int outBufferAvailable() const;
     virtual Result uncompress();
-    virtual Result compress( bool finish );
+    virtual Result compress(bool finish);
+
 private:
     Result uncompress_noop();
     int m_mode;

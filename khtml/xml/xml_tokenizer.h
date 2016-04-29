@@ -34,22 +34,21 @@
 class KHTMLView;
 
 namespace khtml {
-    class CachedObject;
-    class CachedScript;
+class CachedObject;
+class CachedScript;
 }
 
 namespace DOM {
-    class DocumentImpl;
-    class NodeImpl;
-    class HTMLScriptElementImpl;
-    class DocumentImpl;
-    class HTMLScriptElementImpl;
+class DocumentImpl;
+class NodeImpl;
+class HTMLScriptElementImpl;
+class DocumentImpl;
+class HTMLScriptElementImpl;
 }
 
 namespace khtml {
 
-class XMLHandler : public QXmlDefaultHandler
-{
+class XMLHandler : public QXmlDefaultHandler {
 public:
     XMLHandler(DOM::DocumentImpl *_doc, KHTMLView *_view);
     virtual ~XMLHandler();
@@ -59,20 +58,20 @@ public:
 
     // overloaded handler functions
     bool startDocument();
-    bool startElement(const QString& namespaceURI, const QString& localName, const QString& qName, const QXmlAttributes& atts);
-    bool endElement(const QString& namespaceURI, const QString& localName, const QString& qName);
+    bool startElement(const QString &namespaceURI, const QString &localName, const QString &qName, const QXmlAttributes &atts);
+    bool endElement(const QString &namespaceURI, const QString &localName, const QString &qName);
     bool startCDATA();
     bool endCDATA();
-    bool characters(const QString& ch);
-    bool comment(const QString & ch);
+    bool characters(const QString &ch);
+    bool comment(const QString &ch);
     bool processingInstruction(const QString &target, const QString &data);
-    
+
     // namespace handling, to workaround problem in QXML where some attributes
     // do not get the namespace resolved properly
-    bool startPrefixMapping(const QString& prefix, const QString& uri);
-    bool endPrefixMapping(const QString& prefix);
-    void fixUpNSURI(QString& uri, const QString& qname);
-    QMap<QString, QValueStack<QString> > namespaceInfo;
+    bool startPrefixMapping(const QString &prefix, const QString &uri);
+    bool endPrefixMapping(const QString &prefix);
+    void fixUpNSURI(QString &uri, const QString &qname);
+    QMap< QString, QValueStack< QString > > namespaceInfo;
 
 
     // from QXmlDeclHandler
@@ -89,23 +88,25 @@ public:
 
     QString errorString();
 
-    bool fatalError( const QXmlParseException& exception );
+    bool fatalError(const QXmlParseException &exception);
 
     unsigned long errorLine;
     unsigned long errorCol;
 
 private:
-    void pushNode( DOM::NodeImpl *node );
+    void pushNode(DOM::NodeImpl *node);
     DOM::NodeImpl *popNode();
     DOM::NodeImpl *currentNode() const;
+
 private:
     QString errorProt;
     DOM::DocumentImpl *m_doc;
     KHTMLView *m_view;
-    QPtrStack<DOM::NodeImpl> m_nodes;
+    QPtrStack< DOM::NodeImpl > m_nodes;
     DOM::NodeImpl *m_rootNode;
 
-    enum State {
+    enum State
+    {
         StateInit,
         StateDocument,
         StateQuote,
@@ -116,8 +117,7 @@ private:
     State state;
 };
 
-class Tokenizer : public QObject
-{
+class Tokenizer : public QObject {
     Q_OBJECT
 public:
     virtual void begin() = 0;
@@ -125,56 +125,64 @@ public:
     // received during executing a script must be appended, hence the
     // extra bool to be able to distinguish between both cases. document.write()
     // always uses false, while khtmlpart uses true
-    virtual void write( const TokenizerString &str, bool appendData) = 0;
+    virtual void write(const TokenizerString &str, bool appendData) = 0;
     virtual void end() = 0;
     virtual void finish() = 0;
-    virtual void setOnHold(bool /*_onHold*/) {}
+    virtual void setOnHold(bool /*_onHold*/)
+    {
+    }
     virtual bool isWaitingForScripts() const = 0;
     virtual bool isExecutingScript() const = 0;
-    virtual void abort() {}
-    virtual void setAutoClose(bool b=true) = 0;
+    virtual void abort()
+    {
+    }
+    virtual void setAutoClose(bool b = true) = 0;
 
 signals:
     void finishedParsing();
-
 };
 
-class XMLIncrementalSource : public QXmlInputSource
-{
+class XMLIncrementalSource : public QXmlInputSource {
 public:
     XMLIncrementalSource();
     virtual void fetchData();
     virtual QChar next();
-    virtual void setData( const QString& str );
-    virtual void setData( const QByteArray& data );
+    virtual void setData(const QString &str);
+    virtual void setData(const QByteArray &data);
     virtual QString data();
 
-    void appendXML( const QString& str );
-    void setFinished( bool );
+    void appendXML(const QString &str);
+    void setFinished(bool);
 
 private:
-    QString      m_data;
-    uint         m_pos;
+    QString m_data;
+    uint m_pos;
     const QChar *m_unicode;
-    bool         m_finished;
+    bool m_finished;
 };
 
-class XMLTokenizer : public Tokenizer, public khtml::CachedObjectClient
-{
+class XMLTokenizer : public Tokenizer, public khtml::CachedObjectClient {
 public:
     XMLTokenizer(DOM::DocumentImpl *, KHTMLView * = 0);
     virtual ~XMLTokenizer();
     virtual void begin();
-    virtual void write( const TokenizerString &str, bool );
+    virtual void write(const TokenizerString &str, bool);
     virtual void end();
     virtual void finish();
-    virtual void setAutoClose(bool b=true) { qWarning("XMLTokenizer::setAutoClose: stub."); (void)b; }
+    virtual void setAutoClose(bool b = true)
+    {
+        qWarning("XMLTokenizer::setAutoClose: stub.");
+        (void)b;
+    }
 
     // from CachedObjectClient
     void notifyFinished(khtml::CachedObject *finishedObj);
 
     virtual bool isWaitingForScripts() const;
-    virtual bool isExecutingScript() const { return false; }
+    virtual bool isExecutingScript() const
+    {
+        return false;
+    }
 
 protected:
     DOM::DocumentImpl *m_doc;
@@ -183,8 +191,8 @@ protected:
     void executeScripts();
     void addScripts(DOM::NodeImpl *n);
 
-    QPtrList<DOM::HTMLScriptElementImpl> m_scripts;
-    QPtrListIterator<DOM::HTMLScriptElementImpl> *m_scriptsIt;
+    QPtrList< DOM::HTMLScriptElementImpl > m_scripts;
+    QPtrListIterator< DOM::HTMLScriptElementImpl > *m_scriptsIt;
     khtml::CachedScript *m_cachedScript;
 
     XMLHandler m_handler;

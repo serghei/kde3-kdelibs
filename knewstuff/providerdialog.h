@@ -40,17 +40,16 @@ class Engine;
  * \par Maintainer:
  * Josef Spillner (spillner@kde.org)
  */
-class ProviderDialog : public KDialogBase
-{
+class ProviderDialog : public KDialogBase {
     Q_OBJECT
-  public:
+public:
     /**
       Constructor.
 
       @param engine a KNewStuff engine object
       @param parent the parent window
     */
-    ProviderDialog( Engine *engine, QWidget *parent );
+    ProviderDialog(Engine *engine, QWidget *parent);
 
     /**
       Clears the list of providers.
@@ -60,17 +59,16 @@ class ProviderDialog : public KDialogBase
     /**
       Adds a Hotstuff provider to the list.
     */
-    void addProvider( Provider * );
+    void addProvider(Provider *);
 
-  protected slots:
+protected slots:
     void slotOk();
 
-  private:
+private:
     Engine *mEngine;
 
     KListView *mListView;
 };
-
 }
 
 #endif

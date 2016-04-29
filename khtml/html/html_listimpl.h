@@ -29,67 +29,78 @@
 
 #include "html_elementimpl.h"
 
-namespace DOM
-{
+namespace DOM {
 
 class DOMString;
 
-class HTMLUListElementImpl : public HTMLElementImpl
-{
+class HTMLUListElementImpl : public HTMLElementImpl {
 public:
-    HTMLUListElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc) {}
+    HTMLUListElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
     virtual Id id() const;
 
     virtual void parseAttribute(AttributeImpl *);
 
-    virtual int start() const { return 1; }
+    virtual int start() const
+    {
+        return 1;
+    }
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLDirectoryElementImpl : public HTMLElementImpl
-{
+class HTMLDirectoryElementImpl : public HTMLElementImpl {
 public:
-    HTMLDirectoryElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc) {}
+    HTMLDirectoryElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
     virtual Id id() const;
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLMenuElementImpl : public HTMLElementImpl
-{
+class HTMLMenuElementImpl : public HTMLElementImpl {
 public:
-    HTMLMenuElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc) {}
-    virtual ~HTMLMenuElementImpl() {}
+    HTMLMenuElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
+    virtual ~HTMLMenuElementImpl()
+    {
+    }
 
     virtual Id id() const;
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLOListElementImpl : public HTMLUListElementImpl
-{
+class HTMLOListElementImpl : public HTMLUListElementImpl {
 public:
-    HTMLOListElementImpl(DocumentImpl *doc)
-        : HTMLUListElementImpl(doc), _start(1) {}
+    HTMLOListElementImpl(DocumentImpl *doc) : HTMLUListElementImpl(doc), _start(1)
+    {
+    }
 
     virtual Id id() const;
     virtual void parseAttribute(AttributeImpl *);
 
-    int start() const { return _start; }
+    int start() const
+    {
+        return _start;
+    }
+
 private:
     int _start;
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLLIElementImpl : public HTMLElementImpl
-{
+class HTMLLIElementImpl : public HTMLElementImpl {
 public:
-    HTMLLIElementImpl(DocumentImpl *doc)
-        : HTMLElementImpl(doc) {}
+    HTMLLIElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
 
     virtual Id id() const;
     virtual void parseAttribute(AttributeImpl *attr);
@@ -98,15 +109,18 @@ public:
 
 // -------------------------------------------------------------------------
 
-class HTMLDListElementImpl : public HTMLElementImpl
-{
+class HTMLDListElementImpl : public HTMLElementImpl {
 public:
-    HTMLDListElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc) {}
-    virtual ~HTMLDListElementImpl() {}
+    HTMLDListElementImpl(DocumentImpl *doc) : HTMLElementImpl(doc)
+    {
+    }
+    virtual ~HTMLDListElementImpl()
+    {
+    }
 
     virtual Id id() const;
 };
 
-} //namespace
+} // namespace
 
 #endif

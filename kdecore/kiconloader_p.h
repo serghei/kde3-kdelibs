@@ -19,22 +19,20 @@
 #include <kiconeffect.h>
 #include <qdict.h>
 
-class KIconThemeNode
-{
+class KIconThemeNode {
 public:
     KIconThemeNode(KIconTheme *_theme);
     ~KIconThemeNode();
 
     void queryIcons(QStringList *lst, int size, KIcon::Context context) const;
     void queryIconsByContext(QStringList *lst, int size, KIcon::Context context) const;
-    KIcon findIcon(const QString& name, int size, KIcon::MatchType match) const;
-    void printTree(QString& dbgString) const;
+    KIcon findIcon(const QString &name, int size, KIcon::MatchType match) const;
+    void printTree(QString &dbgString) const;
 
     KIconTheme *theme;
 };
 
-class KIconLoaderPrivate : public QObject
-{
+class KIconLoaderPrivate : public QObject {
     Q_OBJECT
 public:
     QStringList mThemesInTree;
@@ -43,13 +41,13 @@ public:
     KStandardDirs *mpDirs;
     KIconLoader *q;
     KIconEffect mpEffect;
-    QDict<QImage> imgDict;
-    QImage lastImage; // last loaded image without effect applied
+    QDict< QImage > imgDict;
+    QImage lastImage;     // last loaded image without effect applied
     QString lastImageKey; // key for icon without effect
     QString appname;
-    int lastIconType; // see KIcon::type
+    int lastIconType;      // see KIcon::type
     int lastIconThreshold; // see KIcon::threshold
-    QPtrList<KIconThemeNode> links;
+    QPtrList< KIconThemeNode > links;
     bool extraDesktopIconsLoaded;
     bool delayedLoading;
 

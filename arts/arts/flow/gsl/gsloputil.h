@@ -27,27 +27,27 @@ extern "C" {
 
 
 /* --- typedefs --- */
-typedef struct _EngineNode     EngineNode;
+typedef struct _EngineNode EngineNode;
 typedef struct _EngineSchedule EngineSchedule;
 
 
 /* --- UserThread --- */
-void		_engine_free_trans		(GslTrans      *trans);
-GslOStream*	_engine_alloc_ostreams		(guint		n);
-#if 0	/* gslengine.h: */
+void _engine_free_trans(GslTrans *trans);
+GslOStream *_engine_alloc_ostreams(guint n);
+#if 0 /* gslengine.h: */
 void            gsl_engine_garbage_collect	(void);
 gfloat*		gsl_engine_const_values		(gfloat		value);
 #endif
 
 
 /* --- MasterThread --- */
-void		_engine_recycle_const_values	(void);
+void _engine_recycle_const_values(void);
 /* master node list */
-void		_engine_mnl_remove		(EngineNode	*node);
-void		_engine_mnl_reorder		(EngineNode	*node);
-void		_engine_mnl_integrate		(EngineNode	*node);
-#define	GSL_MNL_HEAD_NODE(node)			((node)->flow_jobs && !(node)->sched_tag)
-EngineNode*	_engine_mnl_head		(void);
+void _engine_mnl_remove(EngineNode *node);
+void _engine_mnl_reorder(EngineNode *node);
+void _engine_mnl_integrate(EngineNode *node);
+#define GSL_MNL_HEAD_NODE(node) ((node)->flow_jobs && !(node)->sched_tag)
+EngineNode *_engine_mnl_head(void);
 
 /* communication routines for threads:
  * UserThread   - main application
@@ -59,25 +59,24 @@ EngineNode*	_engine_mnl_head		(void);
 
 /* --- job transactions --- */
 /* UserThread */
-void		_engine_enqueue_trans	(GslTrans	*trans);
-GslTrans*	_engine_collect_trans	(void);
-void		_engine_wait_on_trans	(void);
+void _engine_enqueue_trans(GslTrans *trans);
+GslTrans *_engine_collect_trans(void);
+void _engine_wait_on_trans(void);
 /* MasterThread */
 /* GslJob*	_engine_pop_job_timed	(glong		 max_useconds); */
-GslJob*		_engine_pop_job		(void);
-gboolean	_engine_job_pending	(void);
+GslJob *_engine_pop_job(void);
+gboolean _engine_job_pending(void);
 
 
 /* --- node processing queue --- */
-void	    _engine_set_schedule		(EngineSchedule	*schedule);
-void	    _engine_unset_schedule		(EngineSchedule	*schedule);
-EngineNode* _engine_pop_unprocessed_node	(void);
-void	    _engine_push_processed_node		(EngineNode	*node);
-GslRing*    _engine_pop_unprocessed_cycle	(void);
-void	    _engine_push_processed_cycle	(GslRing	*cycle);
-void	    _engine_wait_on_unprocessed		(void);
+void _engine_set_schedule(EngineSchedule *schedule);
+void _engine_unset_schedule(EngineSchedule *schedule);
+EngineNode *_engine_pop_unprocessed_node(void);
+void _engine_push_processed_node(EngineNode *node);
+GslRing *_engine_pop_unprocessed_cycle(void);
+void _engine_push_processed_cycle(GslRing *cycle);
+void _engine_wait_on_unprocessed(void);
 
-       
 
 #ifdef __cplusplus
 }

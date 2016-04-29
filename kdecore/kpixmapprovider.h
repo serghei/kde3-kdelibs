@@ -35,8 +35,7 @@
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  * @short an abstract interface for looking up icons
  */
-class KDECORE_EXPORT KPixmapProvider
-{
+class KDECORE_EXPORT KPixmapProvider {
 public:
     virtual ~KPixmapProvider();
     /**
@@ -46,9 +45,10 @@ public:
      *             See KIcon::StdSize.
      * @return the pixmap for the arguments, or null if there is none
      */
-    virtual QPixmap pixmapFor( const QString& text, int size = 0 ) = 0;
+    virtual QPixmap pixmapFor(const QString &text, int size = 0) = 0;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 };
 
 

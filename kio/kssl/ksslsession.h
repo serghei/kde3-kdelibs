@@ -40,34 +40,34 @@ class KSSLSessionPrivate;
  * @short KDE SSL Session Information
  */
 class KIO_EXPORT KSSLSession {
-friend class KSSL;
+    friend class KSSL;
+
 public:
-	/**
-	 *  Destroy this instance
-	 */
-	~KSSLSession();
+    /**
+     *  Destroy this instance
+     */
+    ~KSSLSession();
 
-	/**
-	 *  Convert to a base64 encoded string (so it can be copied safely)
-	 */
-	QString toString() const;
+    /**
+     *  Convert to a base64 encoded string (so it can be copied safely)
+     */
+    QString toString() const;
 
-	/**
-	 *  Create as session ID object from a base64 encoded string.
-	 *  @param s the session id in base64 encoded ASN.1 format
-	 *  @return a KSSLSession object, or 0L on error
-	 */
-	static KSSLSession* fromString(const QString& s);
+    /**
+     *  Create as session ID object from a base64 encoded string.
+     *  @param s the session id in base64 encoded ASN.1 format
+     *  @return a KSSLSession object, or 0L on error
+     */
+    static KSSLSession *fromString(const QString &s);
 
 protected:
-	KSSLSession();
-	KSSLSession(const KSSLSession&);
-	void *_session;
+    KSSLSession();
+    KSSLSession(const KSSLSession &);
+    void *_session;
 
 private:
-	KSSLSessionPrivate *d;
+    KSSLSessionPrivate *d;
 };
 
 
 #endif
-

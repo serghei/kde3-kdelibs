@@ -25,72 +25,73 @@
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     NULLTOKEN = 258,
-     TRUETOKEN = 259,
-     FALSETOKEN = 260,
-     STRING = 261,
-     NUMBER = 262,
-     BREAK = 263,
-     CASE = 264,
-     DEFAULT = 265,
-     FOR = 266,
-     NEW = 267,
-     VAR = 268,
-     CONST = 269,
-     CONTINUE = 270,
-     FUNCTION = 271,
-     RETURN = 272,
-     VOID = 273,
-     DELETE = 274,
-     IF = 275,
-     THIS = 276,
-     DO = 277,
-     WHILE = 278,
-     ELSE = 279,
-     IN = 280,
-     INSTANCEOF = 281,
-     TYPEOF = 282,
-     SWITCH = 283,
-     WITH = 284,
-     RESERVED = 285,
-     THROW = 286,
-     TRY = 287,
-     CATCH = 288,
-     FINALLY = 289,
-     DEBUGGER = 290,
-     EQEQ = 291,
-     NE = 292,
-     STREQ = 293,
-     STRNEQ = 294,
-     LE = 295,
-     GE = 296,
-     OR = 297,
-     AND = 298,
-     PLUSPLUS = 299,
-     MINUSMINUS = 300,
-     LSHIFT = 301,
-     RSHIFT = 302,
-     URSHIFT = 303,
-     PLUSEQUAL = 304,
-     MINUSEQUAL = 305,
-     MULTEQUAL = 306,
-     DIVEQUAL = 307,
-     LSHIFTEQUAL = 308,
-     RSHIFTEQUAL = 309,
-     URSHIFTEQUAL = 310,
-     ANDEQUAL = 311,
-     MODEQUAL = 312,
-     XOREQUAL = 313,
-     OREQUAL = 314,
-     IDENT = 315,
-     FUNCEXPRIDENT = 316,
-     AUTOPLUSPLUS = 317,
-     AUTOMINUSMINUS = 318
-   };
+#define YYTOKENTYPE
+/* Put the tokens into the symbol table, so that GDB and other debuggers
+   know about them.  */
+enum yytokentype
+{
+    NULLTOKEN = 258,
+    TRUETOKEN = 259,
+    FALSETOKEN = 260,
+    STRING = 261,
+    NUMBER = 262,
+    BREAK = 263,
+    CASE = 264,
+    DEFAULT = 265,
+    FOR = 266,
+    NEW = 267,
+    VAR = 268,
+    CONST = 269,
+    CONTINUE = 270,
+    FUNCTION = 271,
+    RETURN = 272,
+    VOID = 273,
+    DELETE = 274,
+    IF = 275,
+    THIS = 276,
+    DO = 277,
+    WHILE = 278,
+    ELSE = 279,
+    IN = 280,
+    INSTANCEOF = 281,
+    TYPEOF = 282,
+    SWITCH = 283,
+    WITH = 284,
+    RESERVED = 285,
+    THROW = 286,
+    TRY = 287,
+    CATCH = 288,
+    FINALLY = 289,
+    DEBUGGER = 290,
+    EQEQ = 291,
+    NE = 292,
+    STREQ = 293,
+    STRNEQ = 294,
+    LE = 295,
+    GE = 296,
+    OR = 297,
+    AND = 298,
+    PLUSPLUS = 299,
+    MINUSMINUS = 300,
+    LSHIFT = 301,
+    RSHIFT = 302,
+    URSHIFT = 303,
+    PLUSEQUAL = 304,
+    MINUSEQUAL = 305,
+    MULTEQUAL = 306,
+    DIVEQUAL = 307,
+    LSHIFTEQUAL = 308,
+    RSHIFTEQUAL = 309,
+    URSHIFTEQUAL = 310,
+    ANDEQUAL = 311,
+    MODEQUAL = 312,
+    XOREQUAL = 313,
+    OREQUAL = 314,
+    IDENT = 315,
+    FUNCEXPRIDENT = 316,
+    AUTOPLUSPLUS = 317,
+    AUTOMINUSMINUS = 318
+};
 #endif
 /* Tokens.  */
 #define NULLTOKEN 258
@@ -156,60 +157,56 @@
 #define AUTOMINUSMINUS 318
 
 
-
-
-#if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
+#if !defined(YYSTYPE) && !defined(YYSTYPE_IS_DECLARED)
 #line 52 "grammar.y"
 typedef union YYSTYPE {
-  int                 ival;
-  double              dval;
-  UString             *ustr;
-  Identifier          *ident;
-  Node                *node;
-  StatementNode       *stat;
-  ParameterNode       *param;
-  FunctionBodyNode    *body;
-  FuncDeclNode        *func;
-  FunctionBodyNode    *prog;
-  AssignExprNode      *init;
-  SourceElementsNode  *srcs;
-  StatListNode        *slist;
-  ArgumentsNode       *args;
-  ArgumentListNode    *alist;
-  VarDeclNode         *decl;
-  VarDeclListNode     *vlist;
-  CaseBlockNode       *cblk;
-  ClauseListNode      *clist;
-  CaseClauseNode      *ccl;
-  ElementNode         *elm;
-  Operator            op;
-  PropertyValueNode   *plist;
-  PropertyNode        *pnode;
-  CatchNode           *cnode;
-  FinallyNode         *fnode;
+    int ival;
+    double dval;
+    UString *ustr;
+    Identifier *ident;
+    Node *node;
+    StatementNode *stat;
+    ParameterNode *param;
+    FunctionBodyNode *body;
+    FuncDeclNode *func;
+    FunctionBodyNode *prog;
+    AssignExprNode *init;
+    SourceElementsNode *srcs;
+    StatListNode *slist;
+    ArgumentsNode *args;
+    ArgumentListNode *alist;
+    VarDeclNode *decl;
+    VarDeclListNode *vlist;
+    CaseBlockNode *cblk;
+    ClauseListNode *clist;
+    CaseClauseNode *ccl;
+    ElementNode *elm;
+    Operator op;
+    PropertyValueNode *plist;
+    PropertyNode *pnode;
+    CatchNode *cnode;
+    FinallyNode *fnode;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */
 #line 193 "grammar.tab.h"
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
-# define YYSTYPE_IS_DECLARED 1
-# define YYSTYPE_IS_TRIVIAL 1
+#define yystype YYSTYPE /* obsolescent; will be withdrawn */
+#define YYSTYPE_IS_DECLARED 1
+#define YYSTYPE_IS_TRIVIAL 1
 #endif
 
 extern YYSTYPE kjsyylval;
 
-#if ! defined (YYLTYPE) && ! defined (YYLTYPE_IS_DECLARED)
+#if !defined(YYLTYPE) && !defined(YYLTYPE_IS_DECLARED)
 typedef struct YYLTYPE
 {
-  int first_line;
-  int first_column;
-  int last_line;
-  int last_column;
+    int first_line;
+    int first_column;
+    int last_line;
+    int last_column;
 } YYLTYPE;
-# define yyltype YYLTYPE /* obsolescent; will be withdrawn */
-# define YYLTYPE_IS_DECLARED 1
-# define YYLTYPE_IS_TRIVIAL 1
+#define yyltype YYLTYPE /* obsolescent; will be withdrawn */
+#define YYLTYPE_IS_DECLARED 1
+#define YYLTYPE_IS_TRIVIAL 1
 #endif
 
 extern YYLTYPE kjsyylloc;
-
-

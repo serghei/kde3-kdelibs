@@ -5,8 +5,8 @@
  * This file is part of the KDE project, module kdesu.
  * Copyright (C) 1999,2000 Geert Jansen <jansen@kde.org>
  *
- * This is free software; you can use this library under the GNU Library 
- * General Public License, version 2. See the file "COPYING.LIB" for the 
+ * This is free software; you can use this library under the GNU Library
+ * General Public License, version 2. See the file "COPYING.LIB" for the
  * exact licensing terms.
  */
 
@@ -23,21 +23,30 @@
  * Executes a command under elevated privileges, using su.
  */
 
-class KDESU_EXPORT SuProcess: public StubProcess
-{
+class KDESU_EXPORT SuProcess : public StubProcess {
 public:
-    SuProcess(const QCString &user=0, const QCString &command=0);
+    SuProcess(const QCString &user = 0, const QCString &command = 0);
     ~SuProcess();
 
-    enum Errors { SuNotFound=1, SuNotAllowed, SuIncorrectPassword };
+    enum Errors
+    {
+        SuNotFound = 1,
+        SuNotAllowed,
+        SuIncorrectPassword
+    };
 
     /**
      * Executes the command. This will wait for the command to finish.
      */
-    enum checkMode { NoCheck=0, Install=1, NeedPassword=2 } ;
-    int exec(const char *password, int check=NoCheck);
+    enum checkMode
+    {
+        NoCheck = 0,
+        Install = 1,
+        NeedPassword = 2
+    };
+    int exec(const char *password, int check = NoCheck);
 
-    /** 
+    /**
      * Checks if the stub is installed and the password is correct.
      * @return Zero if everything is correct, nonzero otherwise.
      */
@@ -49,11 +58,18 @@ public:
     int checkNeedPassword();
 
 private:
-    enum SuErrors { error=-1, ok=0, killme=1, notauthorized=2 } ;
+    enum SuErrors
+    {
+        error = -1,
+        ok = 0,
+        killme = 1,
+        notauthorized = 2
+    };
     int ConverseSU(const char *password);
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class SuProcessPrivate;
     SuProcessPrivate *d;

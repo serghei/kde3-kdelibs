@@ -29,38 +29,41 @@
 // KateFontMetrics implementation
 //
 
-KateFontMetrics::KateFontMetrics(const QFont& f) : QFontMetrics(f)
+KateFontMetrics::KateFontMetrics(const QFont &f) : QFontMetrics(f)
 {
-  for (int i=0; i<256; i++) warray[i]=0;
+    for(int i = 0; i < 256; i++)
+        warray[i] = 0;
 }
 
 KateFontMetrics::~KateFontMetrics()
 {
-  for (int i=0; i<256; i++)
-    delete[] warray[i];
+    for(int i = 0; i < 256; i++)
+        delete[] warray[i];
 }
 
-short * KateFontMetrics::createRow (short *wa, uchar row)
+short *KateFontMetrics::createRow(short *wa, uchar row)
 {
-  wa=warray[row]=new short[256];
+    wa = warray[row] = new short[256];
 
-  for (int i=0; i<256; i++) wa[i]=-1;
+    for(int i = 0; i < 256; i++)
+        wa[i] = -1;
 
-  return wa;
+    return wa;
 }
 
 int KateFontMetrics::width(QChar c)
 {
-  uchar cell=c.cell();
-  uchar row=c.row();
-  short *wa=warray[row];
+    uchar cell = c.cell();
+    uchar row = c.row();
+    short *wa = warray[row];
 
-  if (!wa)
-    wa = createRow (wa, row);
+    if(!wa)
+        wa = createRow(wa, row);
 
-  if (wa[cell]<0) wa[cell]=(short) QFontMetrics::width(c);
+    if(wa[cell] < 0)
+        wa[cell] = (short)QFontMetrics::width(c);
 
-  return (int)wa[cell];
+    return (int)wa[cell];
 }
 
 //
@@ -68,60 +71,60 @@ int KateFontMetrics::width(QChar c)
 //
 
 KateFontStruct::KateFontStruct()
-: myFont(KGlobalSettings::fixedFont()),
-  myFontBold(KGlobalSettings::fixedFont()),
-  myFontItalic(KGlobalSettings::fixedFont()),
-  myFontBI(KGlobalSettings::fixedFont()),
-  myFontMetrics(myFont),
-  myFontMetricsBold(myFontBold),
-  myFontMetricsItalic(myFontItalic),
-  myFontMetricsBI(myFontBI),
-  m_fixedPitch (false)
+    : myFont(KGlobalSettings::fixedFont())
+    , myFontBold(KGlobalSettings::fixedFont())
+    , myFontItalic(KGlobalSettings::fixedFont())
+    , myFontBI(KGlobalSettings::fixedFont())
+    , myFontMetrics(myFont)
+    , myFontMetricsBold(myFontBold)
+    , myFontMetricsItalic(myFontItalic)
+    , myFontMetricsBI(myFontBI)
+    , m_fixedPitch(false)
 {
-  updateFontData ();
+    updateFontData();
 }
 
 KateFontStruct::~KateFontStruct()
 {
 }
 
-void KateFontStruct::updateFontData ()
+void KateFontStruct::updateFontData()
 {
-  int maxAscent = myFontMetrics.ascent();
-  int maxDescent = myFontMetrics.descent();
+    int maxAscent = myFontMetrics.ascent();
+    int maxDescent = myFontMetrics.descent();
 
-  fontHeight = maxAscent + maxDescent + 1;
-  fontAscent = maxAscent;
-  
-  m_fixedPitch = QFontInfo( myFont ).fixedPitch();
+    fontHeight = maxAscent + maxDescent + 1;
+    fontAscent = maxAscent;
+
+    m_fixedPitch = QFontInfo(myFont).fixedPitch();
 }
 
-void KateFontStruct::setFont (const QFont & font)
+void KateFontStruct::setFont(const QFont &font)
 {
-  QFontMetrics testFM (font);
+    QFontMetrics testFM(font);
 
-  // no valid font tried
-  if ((testFM.ascent() + testFM.descent() + 1) < 1)
-    return;
+    // no valid font tried
+    if((testFM.ascent() + testFM.descent() + 1) < 1)
+        return;
 
-  myFont = font;
+    myFont = font;
 
-  myFontBold = QFont (font);
-  myFontBold.setBold (true);
+    myFontBold = QFont(font);
+    myFontBold.setBold(true);
 
-  myFontItalic = QFont (font);
-  myFontItalic.setItalic (true);
+    myFontItalic = QFont(font);
+    myFontItalic.setItalic(true);
 
-  myFontBI = QFont (font);
-  myFontBI.setBold (true);
-  myFontBI.setItalic (true);
+    myFontBI = QFont(font);
+    myFontBI.setBold(true);
+    myFontBI.setItalic(true);
 
-  myFontMetrics = KateFontMetrics (myFont);
-  myFontMetricsBold = KateFontMetrics (myFontBold);
-  myFontMetricsItalic = KateFontMetrics (myFontItalic);
-  myFontMetricsBI = KateFontMetrics (myFontBI);
+    myFontMetrics = KateFontMetrics(myFont);
+    myFontMetricsBold = KateFontMetrics(myFontBold);
+    myFontMetricsItalic = KateFontMetrics(myFontItalic);
+    myFontMetricsBI = KateFontMetrics(myFontBI);
 
-  updateFontData ();
+    updateFontData();
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

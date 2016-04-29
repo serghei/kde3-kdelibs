@@ -45,29 +45,28 @@ class KDirWatch;
 class KVMAllocator;
 
 namespace Kate {
-  class Command;
+class Command;
 }
 
 
-class KateFactory
-{
-  private:
+class KateFactory {
+private:
     /**
      * Default constructor, private, as singleton
      */
-    KateFactory ();
+    KateFactory();
 
-  public:
+public:
     /**
      * Destructor
      */
-    ~KateFactory ();
+    ~KateFactory();
 
     /**
      * singleton accessor
      * @return instance of the factory
      */
-    static KateFactory *self ();
+    static KateFactory *self();
 
     /**
      * reimplemented create object method
@@ -79,140 +78,178 @@ class KateFactory
      * @param args additional arguments
      * @return constructed part object
      */
-    KParts::Part *createPartObject ( QWidget *parentWidget, const char *widgetName,
-                                     QObject *parent, const char *name, const char *classname,
-                                     const QStringList &args );
+    KParts::Part *createPartObject(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, const char *classname,
+                                   const QStringList &args);
 
     /**
      * public accessor to the instance
      * @return instance
      */
-    inline KInstance *instance () { return &m_instance; };
+    inline KInstance *instance()
+    {
+        return &m_instance;
+    };
 
     /**
      * register document at the factory
      * this allows us to loop over all docs for example on config changes
      * @param doc document to register
      */
-    void registerDocument ( KateDocument *doc );
+    void registerDocument(KateDocument *doc);
 
     /**
      * unregister document at the factory
      * @param doc document to register
      */
-    void deregisterDocument ( KateDocument *doc );
+    void deregisterDocument(KateDocument *doc);
 
     /**
      * register view at the factory
      * this allows us to loop over all views for example on config changes
      * @param view view to register
      */
-    void registerView ( KateView *view );
+    void registerView(KateView *view);
 
     /**
      * unregister view at the factory
      * @param view view to unregister
      */
-    void deregisterView ( KateView *view );
+    void deregisterView(KateView *view);
 
-     /**
-     * register renderer at the factory
-     * this allows us to loop over all views for example on config changes
-     * @param renderer renderer to register
-     */
-    void registerRenderer ( KateRenderer  *renderer );
+    /**
+    * register renderer at the factory
+    * this allows us to loop over all views for example on config changes
+    * @param renderer renderer to register
+    */
+    void registerRenderer(KateRenderer *renderer);
 
     /**
      * unregister renderer at the factory
      * @param renderer renderer to unregister
      */
-    void deregisterRenderer ( KateRenderer  *renderer );
+    void deregisterRenderer(KateRenderer *renderer);
 
     /**
      * return a list of all registered docs
      * @return all known documents
      */
-    inline QPtrList<KateDocument> *documents () { return &m_documents; };
+    inline QPtrList< KateDocument > *documents()
+    {
+        return &m_documents;
+    };
 
     /**
      * return a list of all registered views
      * @return all known views
      */
-    inline QPtrList<KateView> *views () { return &m_views; };
+    inline QPtrList< KateView > *views()
+    {
+        return &m_views;
+    };
 
     /**
      * return a list of all registered renderers
      * @return all known renderers
      */
-    inline QPtrList<KateRenderer> *renderers () { return &m_renderers; };
+    inline QPtrList< KateRenderer > *renderers()
+    {
+        return &m_renderers;
+    };
 
     /**
      * on start detected plugins
      * @return list of all at launch detected ktexteditor::plugins
      */
-    inline const KTrader::OfferList &plugins () { return m_plugins; };
+    inline const KTrader::OfferList &plugins()
+    {
+        return m_plugins;
+    };
 
     /**
      * global dirwatch
      * @return dirwatch instance
      */
-    inline KDirWatch *dirWatch () { return m_dirWatch; };
+    inline KDirWatch *dirWatch()
+    {
+        return m_dirWatch;
+    };
 
     /**
      * global filetype manager
      * used to manage the file types centrally
      * @return filetype manager
      */
-    inline KateFileTypeManager *fileTypeManager () { return m_fileTypeManager; };
+    inline KateFileTypeManager *fileTypeManager()
+    {
+        return m_fileTypeManager;
+    };
 
     /**
      * manager for the katepart schemas
      * @return schema manager
      */
-    inline KateSchemaManager *schemaManager () { return m_schemaManager; };
+    inline KateSchemaManager *schemaManager()
+    {
+        return m_schemaManager;
+    };
 
     /**
      * fallback document config
      * @return default config for all documents
      */
-    inline KateDocumentConfig *documentConfig () { return m_documentConfig; }
+    inline KateDocumentConfig *documentConfig()
+    {
+        return m_documentConfig;
+    }
 
     /**
      * fallback view config
      * @return default config for all views
      */
-    inline KateViewConfig *viewConfig () { return m_viewConfig; }
+    inline KateViewConfig *viewConfig()
+    {
+        return m_viewConfig;
+    }
 
     /**
      * fallback renderer config
      * @return default config for all renderers
      */
-    inline KateRendererConfig *rendererConfig () { return m_rendererConfig; }
+    inline KateRendererConfig *rendererConfig()
+    {
+        return m_rendererConfig;
+    }
 
     /**
      * Global allocator for swapping
      * @return allocator
      */
-    inline KVMAllocator *vm () { return m_vm; }
+    inline KVMAllocator *vm()
+    {
+        return m_vm;
+    }
 
     /**
      * global interpreter, for nice js stuff
      */
-    KateJScript *jscript ();
+    KateJScript *jscript();
 
     /**
      * Global javascript collection
      */
-    KateJScriptManager *jscriptManager () { return m_jscriptManager; }
+    KateJScriptManager *jscriptManager()
+    {
+        return m_jscriptManager;
+    }
 
 
     /**
      * looks up a script given by name. If there are more than
      * one matching, the first found will be taken
      */
-    KateIndentScript indentScript (const QString &scriptname);
+    KateIndentScript indentScript(const QString &scriptname);
 
-  private:
+private:
     /**
      * instance of this factory
      */
@@ -231,17 +268,17 @@ class KateFactory
     /**
      * registered docs
      */
-    QPtrList<KateDocument> m_documents;
+    QPtrList< KateDocument > m_documents;
 
     /**
      * registered views
      */
-    QPtrList<KateView> m_views;
+    QPtrList< KateView > m_views;
 
     /**
      * registered renderers
      */
-    QPtrList<KateRenderer> m_renderers;
+    QPtrList< KateRenderer > m_renderers;
 
     /**
      * global dirwatch object
@@ -286,7 +323,7 @@ class KateFactory
     /**
      * internal commands
      */
-    QValueList<Kate::Command *> m_cmds;
+    QValueList< Kate::Command * > m_cmds;
 
     /**
      * js interpreter
@@ -303,8 +340,7 @@ class KateFactory
     /**
      * manager for js based indenters
      */
-    QPtrList<KateIndentScriptManagerAbstract> m_indentScriptManagers;
-
+    QPtrList< KateIndentScriptManagerAbstract > m_indentScriptManagers;
 };
 
 #endif

@@ -27,26 +27,25 @@
 /**
  * @short DCOP interface to KDebug.
  **/
-class KDECORE_EXPORT KDebugDCOPIface : virtual public DCOPObject
-{
-	K_DCOP
+class KDECORE_EXPORT KDebugDCOPIface : virtual public DCOPObject {
+    K_DCOP
 public:
-	KDebugDCOPIface();
-	~KDebugDCOPIface();
+    KDebugDCOPIface();
+    ~KDebugDCOPIface();
 
-k_dcop:
-	/**
-	 * The kdebugrc has been changed and should be reparsed now.
-	 * This will simply call kdClearDebugConfig
-	 **/
-	void notifyKDebugConfigChanged();
+    k_dcop :
+        /**
+         * The kdebugrc has been changed and should be reparsed now.
+         * This will simply call kdClearDebugConfig
+         **/
+        void
+        notifyKDebugConfigChanged();
 
-	/**
-	 * Print out a kdBacktrace. Useful when trying to understand why
-	 * a dialog is popping up, without having to launch gdb
-	 */
-	void printBacktrace();
+    /**
+     * Print out a kdBacktrace. Useful when trying to understand why
+     * a dialog is popping up, without having to launch gdb
+     */
+    void printBacktrace();
 };
 
 #endif
-

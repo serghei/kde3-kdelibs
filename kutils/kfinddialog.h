@@ -71,13 +71,10 @@ class QCheckBox;
  * To use your own extensions: see findExtension().
  *
  */
-class KUTILS_EXPORT KFindDialog:
-    public KDialogBase
-{
+class KUTILS_EXPORT KFindDialog : public KDialogBase {
     Q_OBJECT
 
 public:
-
     // Options.
 
     // KDE4: move to KFind
@@ -107,8 +104,8 @@ public:
      * @param findStrings The find history, see findHistory()
      * @param hasSelection Whether a selection exists
      */
-    KFindDialog( QWidget *parent = 0, const char *name = 0, long options = 0,
-                 const QStringList &findStrings = QStringList(), bool hasSelection = false );
+    KFindDialog(QWidget *parent = 0, const char *name = 0, long options = 0, const QStringList &findStrings = QStringList(),
+                bool hasSelection = false);
     // KDE4: fix ambiguity with private constructor
     // Maybe remove options (there's setOptions) and findStrings (setFindHistory) and hasSelection (setHasSelection)
 
@@ -122,8 +119,8 @@ public:
      * @param findStrings The find history, see findHistory()
      * @param hasSelection Whether a selection exists
      */
-    KFindDialog( bool modal, QWidget *parent = 0, const char *name = 0, long options = 0,
-                 const QStringList &findStrings = QStringList(), bool hasSelection = false );
+    KFindDialog(bool modal, QWidget *parent = 0, const char *name = 0, long options = 0, const QStringList &findStrings = QStringList(),
+                bool hasSelection = false);
     // KDE4: consider simplifying
 
     /**
@@ -139,7 +136,7 @@ public:
      * @param history The find history.
      * @see findHistory
      */
-    void setFindHistory( const QStringList &history );
+    void setFindHistory(const QStringList &history);
 
     /**
      * Returns the list of history items.
@@ -155,7 +152,7 @@ public:
      *
      * @param hasSelection @c true if a selection exists
      */
-    void setHasSelection( bool hasSelection );
+    void setHasSelection(bool hasSelection);
 
     /**
      * Hide/show the 'from cursor' option, depending
@@ -164,47 +161,47 @@ public:
      * @param hasCursor @c true if the application features a cursor
      * This is assumed to be the case by default.
      */
-    void setHasCursor( bool hasCursor );
+    void setHasCursor(bool hasCursor);
 
-     /**
-     * Enable/disable the 'Find backwards' option, depending
-     * on whether the application supports it.
-     *
-     * @param supports @c true if the application supports backwards find
-     * This is assumed to be the case by default.
-     * @since 3.4
-     */
-    void setSupportsBackwardsFind( bool supports );
+    /**
+    * Enable/disable the 'Find backwards' option, depending
+    * on whether the application supports it.
+    *
+    * @param supports @c true if the application supports backwards find
+    * This is assumed to be the case by default.
+    * @since 3.4
+    */
+    void setSupportsBackwardsFind(bool supports);
 
-     /**
-     * Enable/disable the 'Case sensitive' option, depending
-     * on whether the application supports it.
-     *
-     * @param supports @c true if the application supports case sensitive find
-     * This is assumed to be the case by default.
-     * @since 3.4
-     */
-    void setSupportsCaseSensitiveFind( bool supports );
+    /**
+    * Enable/disable the 'Case sensitive' option, depending
+    * on whether the application supports it.
+    *
+    * @param supports @c true if the application supports case sensitive find
+    * This is assumed to be the case by default.
+    * @since 3.4
+    */
+    void setSupportsCaseSensitiveFind(bool supports);
 
-     /**
-     * Enable/disable the 'Whole words only' option, depending
-     * on whether the application supports it.
-     *
-     * @param supports @c true if the application supports whole words only find
-     * This is assumed to be the case by default.
-     * @since 3.4
-     */
-    void setSupportsWholeWordsFind( bool supports );
+    /**
+    * Enable/disable the 'Whole words only' option, depending
+    * on whether the application supports it.
+    *
+    * @param supports @c true if the application supports whole words only find
+    * This is assumed to be the case by default.
+    * @since 3.4
+    */
+    void setSupportsWholeWordsFind(bool supports);
 
-     /**
-     * Enable/disable the 'Regular expression' option, depending
-     * on whether the application supports it.
-     *
-     * @param supports @c true if the application supports regular expression find
-     * This is assumed to be the case by default.
-     * @since 3.4
-     */
-    void setSupportsRegularExpressionFind( bool supports );
+    /**
+    * Enable/disable the 'Regular expression' option, depending
+    * on whether the application supports it.
+    *
+    * @param supports @c true if the application supports regular expression find
+    * This is assumed to be the case by default.
+    * @since 3.4
+    */
+    void setSupportsRegularExpressionFind(bool supports);
 
     /**
      * Set the options which are checked.
@@ -212,7 +209,7 @@ public:
      * @param options The setting of the Options.
      * @see Options
      */
-    void setOptions( long options );
+    void setOptions(long options);
 
     /**
      * Returns the state of the options. Disabled options may be returned in
@@ -233,7 +230,7 @@ public:
      * Sets the pattern to find.
      * @param pattern The new search pattern.
      */
-    void setPattern ( const QString &pattern );
+    void setPattern(const QString &pattern);
 
     /**
      * Returns an empty widget which the user may fill with additional UI
@@ -250,10 +247,10 @@ protected slots:
     void slotSelectedTextToggled(bool);
     void showPatterns();
     void showPlaceholders();
-    void textSearchChanged( const QString &);
+    void textSearchChanged(const QString &);
 
 protected:
-    virtual void showEvent ( QShowEvent * );
+    virtual void showEvent(QShowEvent *);
 
 private slots:
     /**
@@ -263,7 +260,6 @@ private slots:
     void slotPlaceholdersAboutToShow();
 
 private:
-
     QGroupBox *m_findGrp;
     QLabel *m_findLabel;
     KHistoryCombo *m_find;
@@ -292,18 +288,18 @@ private:
      *
      * @param forReplace Is this a replace dialog?
      */
-    KFindDialog( QWidget *parent, const char *name, bool forReplace );
-    void init( bool forReplace, const QStringList &findStrings, bool hasSelection );
+    KFindDialog(QWidget *parent, const char *name, bool forReplace);
+    void init(bool forReplace, const QStringList &findStrings, bool hasSelection);
 
     QGroupBox *m_replaceGrp;
     QLabel *m_replaceLabel;
     KHistoryCombo *m_replace;
-    QCheckBox* m_backRef;
-    QPushButton* m_backRefItem;
+    QCheckBox *m_backRef;
+    QPushButton *m_backRefItem;
     QGridLayout *m_replaceLayout;
     QWidget *m_replaceExtension;
 
-    QCheckBox* m_promptOnReplace;
+    QCheckBox *m_promptOnReplace;
 
     QPopupMenu *m_placeholders;
 

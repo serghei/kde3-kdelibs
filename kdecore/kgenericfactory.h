@@ -28,19 +28,15 @@
 #include <kdebug.h>
 
 /* @internal */
-template <class T>
-class KGenericFactoryBase
-{
+template < class T > class KGenericFactoryBase {
 public:
-    KGenericFactoryBase( const char *instanceName )
-        : m_instanceName( instanceName )
+    KGenericFactoryBase(const char *instanceName) : m_instanceName(instanceName)
     {
-        m_aboutData=0L;
+        m_aboutData = 0L;
         s_self = this;
         m_catalogueInitialized = false;
     }
-    KGenericFactoryBase( const KAboutData *data )
-        : m_aboutData(data)
+    KGenericFactoryBase(const KAboutData *data) : m_aboutData(data)
     {
         s_self = this;
         m_catalogueInitialized = false;
@@ -48,8 +44,8 @@ public:
 
     virtual ~KGenericFactoryBase()
     {
-        if ( s_instance )
-            KGlobal::locale()->removeCatalogue( QString::fromAscii( s_instance->instanceName() ) );
+        if(s_instance)
+            KGlobal::locale()->removeCatalogue(QString::fromAscii(s_instance->instanceName()));
         delete s_instance;
         s_instance = 0;
         s_self = 0;
@@ -60,24 +56,25 @@ public:
 protected:
     virtual KInstance *createInstance()
     {
-        if ( m_aboutData )
-            return new KInstance( m_aboutData );
-        if ( !m_instanceName ) {
+        if(m_aboutData)
+            return new KInstance(m_aboutData);
+        if(!m_instanceName)
+        {
             kdWarning() << "KGenericFactory: instance requested but no instance name or about data passed to the constructor!" << endl;
             return 0;
         }
-        return new KInstance( m_instanceName );
+        return new KInstance(m_instanceName);
     }
 
-    virtual void setupTranslations( void )
+    virtual void setupTranslations(void)
     {
-        if ( instance() )
-            KGlobal::locale()->insertCatalogue( QString::fromAscii( instance()->instanceName() ) );
+        if(instance())
+            KGlobal::locale()->insertCatalogue(QString::fromAscii(instance()->instanceName()));
     }
 
     void initializeMessageCatalogue()
     {
-        if ( !m_catalogueInitialized )
+        if(!m_catalogueInitialized)
         {
             m_catalogueInitialized = true;
             setupTranslations();
@@ -90,22 +87,19 @@ private:
     bool m_catalogueInitialized;
 
     static KInstance *s_instance;
-    static KGenericFactoryBase<T> *s_self;
+    static KGenericFactoryBase< T > *s_self;
 };
 
 /* @internal */
-template <class T>
-KInstance *KGenericFactoryBase<T>::s_instance = 0;
+template < class T > KInstance *KGenericFactoryBase< T >::s_instance = 0;
 
 /* @internal */
-template <class T>
-KGenericFactoryBase<T> *KGenericFactoryBase<T>::s_self = 0;
+template < class T > KGenericFactoryBase< T > *KGenericFactoryBase< T >::s_self = 0;
 
 /* @internal */
-template <class T>
-KInstance *KGenericFactoryBase<T>::instance()
+template < class T > KInstance *KGenericFactoryBase< T >::instance()
 {
-    if ( !s_instance && s_self )
+    if(!s_instance && s_self)
         s_instance = s_self->createInstance();
     return s_instance;
 }
@@ -169,29 +163,25 @@ KInstance *KGenericFactoryBase<T>::instance()
  *     K_EXPORT_COMPONENT_FACTORY( libmyplugin, KGenericFactory&lt;MyPlugin&gt; )
  * \endcode
  */
-template <class Product, class ParentType = QObject>
-class KGenericFactory : public KLibFactory, public KGenericFactoryBase<Product>
-{
+template < class Product, class ParentType = QObject > class KGenericFactory : public KLibFactory, public KGenericFactoryBase< Product > {
 public:
-    KGenericFactory( const char *instanceName = 0 )
-        : KGenericFactoryBase<Product>( instanceName )
-    {}
+    KGenericFactory(const char *instanceName = 0) : KGenericFactoryBase< Product >(instanceName)
+    {
+    }
 
     /**
      * @since 3.3
-	*/
-    KGenericFactory( const KAboutData *data )
-        : KGenericFactoryBase<Product>( data )
-    {}
+    */
+    KGenericFactory(const KAboutData *data) : KGenericFactoryBase< Product >(data)
+    {
+    }
 
 
 protected:
-    virtual QObject *createObject( QObject *parent, const char *name,
-                                  const char *className, const QStringList &args )
+    virtual QObject *createObject(QObject *parent, const char *name, const char *className, const QStringList &args)
     {
-        KGenericFactoryBase<Product>::initializeMessageCatalogue();
-        return KDEPrivate::ConcreteFactory<Product, ParentType>
-            ::create( 0, 0, parent, name, className, args );
+        KGenericFactoryBase< Product >::initializeMessageCatalogue();
+        return KDEPrivate::ConcreteFactory< Product, ParentType >::create(0, 0, parent, name, className, args);
     }
 };
 
@@ -262,31 +252,27 @@ protected:
  *     K_EXPORT_COMPONENT_FACTORY( libmyplugin, KGenericFactory&lt;Products&gt; )
  * \endcode
  */
-template <class Product, class ProductListTail>
-class KGenericFactory< KTypeList<Product, ProductListTail>, QObject >
-    : public KLibFactory,
-      public KGenericFactoryBase< KTypeList<Product, ProductListTail> >
-{
+template < class Product, class ProductListTail >
+class KGenericFactory< KTypeList< Product, ProductListTail >, QObject > : public KLibFactory,
+                                                                          public KGenericFactoryBase< KTypeList< Product, ProductListTail > > {
 public:
-    KGenericFactory( const char *instanceName  = 0 )
-        : KGenericFactoryBase< KTypeList<Product, ProductListTail> >( instanceName )
-    {}
+    KGenericFactory(const char *instanceName = 0) : KGenericFactoryBase< KTypeList< Product, ProductListTail > >(instanceName)
+    {
+    }
 
     /**
      * @since 3.3
-	*/
-    KGenericFactory( const KAboutData *data )
-        : KGenericFactoryBase< KTypeList<Product, ProductListTail> >( data )
-    {}
+    */
+    KGenericFactory(const KAboutData *data) : KGenericFactoryBase< KTypeList< Product, ProductListTail > >(data)
+    {
+    }
 
 
 protected:
-    virtual QObject *createObject( QObject *parent, const char *name,
-                                   const char *className, const QStringList &args )
+    virtual QObject *createObject(QObject *parent, const char *name, const char *className, const QStringList &args)
     {
         this->initializeMessageCatalogue();
-        return KDEPrivate::MultiFactory< KTypeList< Product, ProductListTail > >
-            ::create( 0, 0, parent, name, className, args );
+        return KDEPrivate::MultiFactory< KTypeList< Product, ProductListTail > >::create(0, 0, parent, name, className, args);
     }
 };
 
@@ -357,34 +343,27 @@ protected:
  *     K_EXPORT_COMPONENT_FACTORY( libmyplugin, KGenericFactory&lt;Products&gt; )
  * \endcode
  */
-template <class Product, class ProductListTail,
-          class ParentType, class ParentTypeListTail>
-class KGenericFactory< KTypeList<Product, ProductListTail>,
-                       KTypeList<ParentType, ParentTypeListTail> >
-    : public KLibFactory,
-      public KGenericFactoryBase< KTypeList<Product, ProductListTail> >
-{
+template < class Product, class ProductListTail, class ParentType, class ParentTypeListTail >
+class KGenericFactory< KTypeList< Product, ProductListTail >, KTypeList< ParentType, ParentTypeListTail > >
+    : public KLibFactory, public KGenericFactoryBase< KTypeList< Product, ProductListTail > > {
 public:
-    KGenericFactory( const char *instanceName  = 0 )
-        : KGenericFactoryBase< KTypeList<Product, ProductListTail> >( instanceName )
-    {}
-	/**
-	* @since 3.3
-	*/
-    KGenericFactory( const KAboutData *data )
-        : KGenericFactoryBase< KTypeList<Product, ProductListTail> >( data )
-    {}
+    KGenericFactory(const char *instanceName = 0) : KGenericFactoryBase< KTypeList< Product, ProductListTail > >(instanceName)
+    {
+    }
+    /**
+    * @since 3.3
+    */
+    KGenericFactory(const KAboutData *data) : KGenericFactoryBase< KTypeList< Product, ProductListTail > >(data)
+    {
+    }
 
 
 protected:
-    virtual QObject *createObject( QObject *parent, const char *name,
-                                   const char *className, const QStringList &args )
+    virtual QObject *createObject(QObject *parent, const char *name, const char *className, const QStringList &args)
     {
         this->initializeMessageCatalogue();
-        return KDEPrivate::MultiFactory< KTypeList< Product, ProductListTail >,
-                                         KTypeList< ParentType, ParentTypeListTail > >
-                                       ::create( 0, 0, parent, name,
-                                                 className, args );
+        return KDEPrivate::MultiFactory< KTypeList< Product, ProductListTail >, KTypeList< ParentType, ParentTypeListTail > >::create(
+            0, 0, parent, name, className, args);
     }
 };
 
@@ -394,4 +373,3 @@ protected:
  */
 
 #endif
-

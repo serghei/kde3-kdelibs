@@ -26,28 +26,27 @@ class KListView;
 class QListViewItem;
 class QPushButton;
 
-class QDirMultiLineEdit : public QWidget
-{
-	Q_OBJECT
+class QDirMultiLineEdit : public QWidget {
+    Q_OBJECT
 
 public:
-	QDirMultiLineEdit(QWidget *parent = 0, const char *name = 0);
-	~QDirMultiLineEdit();
+    QDirMultiLineEdit(QWidget *parent = 0, const char *name = 0);
+    ~QDirMultiLineEdit();
 
-	void setURLs(const QStringList&);
-	QStringList urls();
+    void setURLs(const QStringList &);
+    QStringList urls();
 
 protected:
-	void addURL(const QString&);
+    void addURL(const QString &);
 
 private slots:
-	void slotAddClicked();
-	void slotRemoveClicked();
-	void slotSelected(QListViewItem*);
+    void slotAddClicked();
+    void slotRemoveClicked();
+    void slotSelected(QListViewItem *);
 
 private:
-	KListView	*m_view;
-	QPushButton	*m_add, *m_remove;
+    KListView *m_view;
+    QPushButton *m_add, *m_remove;
 };
 
 #endif

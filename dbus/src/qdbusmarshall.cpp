@@ -37,8 +37,7 @@
 
 #include <dbus/dbus.h>
 
-template <typename T>
-inline T qIterGet(DBusMessageIter *it)
+template < typename T > inline T qIterGet(DBusMessageIter *it)
 {
     T t;
     dbus_message_iter_get_basic(it, &t);
@@ -47,21 +46,34 @@ inline T qIterGet(DBusMessageIter *it)
 
 static QDBusData::Type qSingleTypeForDBusSignature(char signature)
 {
-    switch (signature)
+    switch(signature)
     {
-        case 'b': return QDBusData::Bool;
-        case 'y': return QDBusData::Byte;
-        case 'n': return QDBusData::Int16;
-        case 'q': return QDBusData::UInt16;
-        case 'i': return QDBusData::Int32;
-        case 'u': return QDBusData::UInt32;
-        case 'x': return QDBusData::Int64;
-        case 't': return QDBusData::UInt64;
-        case 'd': return QDBusData::Double;
-        case 's': return QDBusData::String;
-        case 'o': return QDBusData::ObjectPath;
-        case 'g': return QDBusData::String;
-        case 'v': return QDBusData::Variant;
+        case 'b':
+            return QDBusData::Bool;
+        case 'y':
+            return QDBusData::Byte;
+        case 'n':
+            return QDBusData::Int16;
+        case 'q':
+            return QDBusData::UInt16;
+        case 'i':
+            return QDBusData::Int32;
+        case 'u':
+            return QDBusData::UInt32;
+        case 'x':
+            return QDBusData::Int64;
+        case 't':
+            return QDBusData::UInt64;
+        case 'd':
+            return QDBusData::Double;
+        case 's':
+            return QDBusData::String;
+        case 'o':
+            return QDBusData::ObjectPath;
+        case 'g':
+            return QDBusData::String;
+        case 'v':
+            return QDBusData::Variant;
 
         default:
             break;
@@ -70,73 +82,66 @@ static QDBusData::Type qSingleTypeForDBusSignature(char signature)
     return QDBusData::Invalid;
 }
 
-static QValueList<QDBusData> parseSignature(QCString& signature)
+static QValueList< QDBusData > parseSignature(QCString &signature)
 {
-//    qDebug("parseSignature(%s)", signature.data());
-    QValueList<QDBusData> result;
+    //    qDebug("parseSignature(%s)", signature.data());
+    QValueList< QDBusData > result;
 
-    while (!signature.isEmpty())
+    while(!signature.isEmpty())
     {
-        switch (signature[0])
+        switch(signature[0])
         {
-            case '(': {
+            case '(':
+            {
                 signature = signature.mid(1);
-                QValueList<QDBusData> memberList = parseSignature(signature);
+                QValueList< QDBusData > memberList = parseSignature(signature);
                 result << QDBusData::fromStruct(memberList);
                 Q_ASSERT(!signature.isEmpty() && signature[0] == ')');
                 signature = signature.mid(1);
                 break;
             }
-            case ')': return result;
-            case '{': {
-                QDBusData::Type keyType =
-                    qSingleTypeForDBusSignature(signature[1]);
-                QDBusData::Type valueType =
-                    qSingleTypeForDBusSignature(signature[2]);
-                if (valueType != QDBusData::Invalid)
+            case ')':
+                return result;
+            case '{':
+            {
+                QDBusData::Type keyType = qSingleTypeForDBusSignature(signature[1]);
+                QDBusData::Type valueType = qSingleTypeForDBusSignature(signature[2]);
+                if(valueType != QDBusData::Invalid)
                 {
-                    switch (keyType)
+                    switch(keyType)
                     {
                         case QDBusData::Byte:
-                            result << QDBusData::fromByteKeyMap(
-                                QDBusDataMap<Q_UINT8>(valueType));
+                            result << QDBusData::fromByteKeyMap(QDBusDataMap< Q_UINT8 >(valueType));
                             break;
                         case QDBusData::Int16:
-                            result << QDBusData::fromInt16KeyMap(
-                                QDBusDataMap<Q_INT16>(valueType));
+                            result << QDBusData::fromInt16KeyMap(QDBusDataMap< Q_INT16 >(valueType));
                             break;
                         case QDBusData::UInt16:
-                            result << QDBusData::fromUInt16KeyMap(
-                                QDBusDataMap<Q_UINT16>(valueType));
+                            result << QDBusData::fromUInt16KeyMap(QDBusDataMap< Q_UINT16 >(valueType));
                             break;
                         case QDBusData::Int32:
-                            result << QDBusData::fromInt32KeyMap(
-                                QDBusDataMap<Q_INT32>(valueType));
+                            result << QDBusData::fromInt32KeyMap(QDBusDataMap< Q_INT32 >(valueType));
                             break;
                         case QDBusData::UInt32:
-                            result << QDBusData::fromUInt32KeyMap(
-                                QDBusDataMap<Q_UINT32>(valueType));
+                            result << QDBusData::fromUInt32KeyMap(QDBusDataMap< Q_UINT32 >(valueType));
                             break;
                         case QDBusData::Int64:
-                            result << QDBusData::fromInt64KeyMap(
-                                QDBusDataMap<Q_INT64>(valueType));
+                            result << QDBusData::fromInt64KeyMap(QDBusDataMap< Q_INT64 >(valueType));
                             break;
                         case QDBusData::UInt64:
-                            result << QDBusData::fromUInt64KeyMap(
-                                QDBusDataMap<Q_UINT64>(valueType));
+                            result << QDBusData::fromUInt64KeyMap(QDBusDataMap< Q_UINT64 >(valueType));
                             break;
                         case QDBusData::String:
-                            result << QDBusData::fromStringKeyMap(
-                                QDBusDataMap<QString>(valueType));
+                            result << QDBusData::fromStringKeyMap(QDBusDataMap< QString >(valueType));
                             break;
                         case QDBusData::ObjectPath:
-                            result << QDBusData::fromObjectPathKeyMap(
-                                QDBusDataMap<QDBusObjectPath>(valueType));
+                            result << QDBusData::fromObjectPathKeyMap(QDBusDataMap< QDBusObjectPath >(valueType));
                             break;
                         default:
-                            qWarning("QDBusMarshall: unsupported map key type %s "
-                                     "at de-marshalling",
-                                     QDBusData::typeName(keyType));
+                            qWarning(
+                                "QDBusMarshall: unsupported map key type %s "
+                                "at de-marshalling",
+                                QDBusData::typeName(keyType));
                             break;
                     }
                     signature = signature.mid(3);
@@ -144,52 +149,43 @@ static QValueList<QDBusData> parseSignature(QCString& signature)
                 else
                 {
                     signature = signature.mid(2);
-                    QValueList<QDBusData> valueContainer =
-                        parseSignature(signature);
+                    QValueList< QDBusData > valueContainer = parseSignature(signature);
                     Q_ASSERT(valueContainer.count() == 1);
 
-                    switch (keyType)
+                    switch(keyType)
                     {
                         case QDBusData::Byte:
-                            result << QDBusData::fromByteKeyMap(
-                                QDBusDataMap<Q_UINT8>(valueContainer[0]));
+                            result << QDBusData::fromByteKeyMap(QDBusDataMap< Q_UINT8 >(valueContainer[0]));
                             break;
                         case QDBusData::Int16:
-                            result << QDBusData::fromInt16KeyMap(
-                                QDBusDataMap<Q_INT16>(valueContainer[0]));
+                            result << QDBusData::fromInt16KeyMap(QDBusDataMap< Q_INT16 >(valueContainer[0]));
                             break;
                         case QDBusData::UInt16:
-                            result << QDBusData::fromUInt16KeyMap(
-                                QDBusDataMap<Q_UINT16>(valueContainer[0]));
+                            result << QDBusData::fromUInt16KeyMap(QDBusDataMap< Q_UINT16 >(valueContainer[0]));
                             break;
                         case QDBusData::Int32:
-                            result << QDBusData::fromInt32KeyMap(
-                                QDBusDataMap<Q_INT32>(valueContainer[0]));
+                            result << QDBusData::fromInt32KeyMap(QDBusDataMap< Q_INT32 >(valueContainer[0]));
                             break;
                         case QDBusData::UInt32:
-                            result << QDBusData::fromUInt32KeyMap(
-                                QDBusDataMap<Q_UINT32>(valueContainer[0]));
+                            result << QDBusData::fromUInt32KeyMap(QDBusDataMap< Q_UINT32 >(valueContainer[0]));
                             break;
                         case QDBusData::Int64:
-                            result << QDBusData::fromInt64KeyMap(
-                                QDBusDataMap<Q_INT64>(valueContainer[0]));
+                            result << QDBusData::fromInt64KeyMap(QDBusDataMap< Q_INT64 >(valueContainer[0]));
                             break;
                         case QDBusData::UInt64:
-                            result << QDBusData::fromUInt64KeyMap(
-                                QDBusDataMap<Q_UINT64>(valueContainer[0]));
+                            result << QDBusData::fromUInt64KeyMap(QDBusDataMap< Q_UINT64 >(valueContainer[0]));
                             break;
                         case QDBusData::String:
-                            result << QDBusData::fromStringKeyMap(
-                                QDBusDataMap<QString>(valueContainer[0]));
+                            result << QDBusData::fromStringKeyMap(QDBusDataMap< QString >(valueContainer[0]));
                             break;
                         case QDBusData::ObjectPath:
-                            result << QDBusData::fromObjectPathKeyMap(
-                                QDBusDataMap<QDBusObjectPath>(valueContainer[0]));
+                            result << QDBusData::fromObjectPathKeyMap(QDBusDataMap< QDBusObjectPath >(valueContainer[0]));
                             break;
                         default:
-                            qWarning("QDBusMarshall: unsupported map key type %s "
-                                     "at de-marshalling",
-                                     QDBusData::typeName(keyType));
+                            qWarning(
+                                "QDBusMarshall: unsupported map key type %s "
+                                "at de-marshalling",
+                                QDBusData::typeName(keyType));
                             break;
                     }
                 }
@@ -197,11 +193,12 @@ static QValueList<QDBusData> parseSignature(QCString& signature)
                 signature = signature.mid(1);
                 break;
             }
-            case '}': return result;
-            case 'a': {
-                QDBusData::Type elementType =
-                    qSingleTypeForDBusSignature(signature[1]);
-                if (elementType != QDBusData::Invalid)
+            case '}':
+                return result;
+            case 'a':
+            {
+                QDBusData::Type elementType = qSingleTypeForDBusSignature(signature[1]);
+                if(elementType != QDBusData::Invalid)
                 {
                     QDBusDataList list(elementType);
                     result << QDBusData::fromList(list);
@@ -212,11 +209,10 @@ static QValueList<QDBusData> parseSignature(QCString& signature)
                     signature = signature.mid(1);
                     bool array = signature[0] != '{';
 
-                    QValueList<QDBusData> elementContainer =
-                        parseSignature(signature);
+                    QValueList< QDBusData > elementContainer = parseSignature(signature);
                     Q_ASSERT(elementContainer.count() == 1);
 
-                    if (array)
+                    if(array)
                     {
                         QDBusDataList list(elementContainer[0]);
                         result << QDBusData::fromList(list);
@@ -238,7 +234,7 @@ static QValueList<QDBusData> parseSignature(QCString& signature)
 
 static QDBusData qFetchParameter(DBusMessageIter *it);
 
-void qFetchByteKeyMapEntry(QDBusDataMap<Q_UINT8>& map, DBusMessageIter* it)
+void qFetchByteKeyMapEntry(QDBusDataMap< Q_UINT8 > &map, DBusMessageIter *it)
 {
     DBusMessageIter itemIter;
     dbus_message_iter_recurse(it, &itemIter);
@@ -251,7 +247,7 @@ void qFetchByteKeyMapEntry(QDBusDataMap<Q_UINT8>& map, DBusMessageIter* it)
     map.insert(key, qFetchParameter(&itemIter));
 }
 
-void qFetchInt16KeyMapEntry(QDBusDataMap<Q_INT16>& map, DBusMessageIter* it)
+void qFetchInt16KeyMapEntry(QDBusDataMap< Q_INT16 > &map, DBusMessageIter *it)
 {
     DBusMessageIter itemIter;
     dbus_message_iter_recurse(it, &itemIter);
@@ -264,7 +260,7 @@ void qFetchInt16KeyMapEntry(QDBusDataMap<Q_INT16>& map, DBusMessageIter* it)
     map.insert(key, qFetchParameter(&itemIter));
 }
 
-void qFetchUInt16KeyMapEntry(QDBusDataMap<Q_UINT16>& map, DBusMessageIter* it)
+void qFetchUInt16KeyMapEntry(QDBusDataMap< Q_UINT16 > &map, DBusMessageIter *it)
 {
     DBusMessageIter itemIter;
     dbus_message_iter_recurse(it, &itemIter);
@@ -277,7 +273,7 @@ void qFetchUInt16KeyMapEntry(QDBusDataMap<Q_UINT16>& map, DBusMessageIter* it)
     map.insert(key, qFetchParameter(&itemIter));
 }
 
-void qFetchInt32KeyMapEntry(QDBusDataMap<Q_INT32>& map, DBusMessageIter* it)
+void qFetchInt32KeyMapEntry(QDBusDataMap< Q_INT32 > &map, DBusMessageIter *it)
 {
     DBusMessageIter itemIter;
     dbus_message_iter_recurse(it, &itemIter);
@@ -290,7 +286,7 @@ void qFetchInt32KeyMapEntry(QDBusDataMap<Q_INT32>& map, DBusMessageIter* it)
     map.insert(key, qFetchParameter(&itemIter));
 }
 
-void qFetchUInt32KeyMapEntry(QDBusDataMap<Q_UINT32>& map, DBusMessageIter* it)
+void qFetchUInt32KeyMapEntry(QDBusDataMap< Q_UINT32 > &map, DBusMessageIter *it)
 {
     DBusMessageIter itemIter;
     dbus_message_iter_recurse(it, &itemIter);
@@ -303,7 +299,7 @@ void qFetchUInt32KeyMapEntry(QDBusDataMap<Q_UINT32>& map, DBusMessageIter* it)
     map.insert(key, qFetchParameter(&itemIter));
 }
 
-void qFetchInt64KeyMapEntry(QDBusDataMap<Q_INT64>& map, DBusMessageIter* it)
+void qFetchInt64KeyMapEntry(QDBusDataMap< Q_INT64 > &map, DBusMessageIter *it)
 {
     DBusMessageIter itemIter;
     dbus_message_iter_recurse(it, &itemIter);
@@ -316,7 +312,7 @@ void qFetchInt64KeyMapEntry(QDBusDataMap<Q_INT64>& map, DBusMessageIter* it)
     map.insert(key, qFetchParameter(&itemIter));
 }
 
-void qFetchUInt64KeyMapEntry(QDBusDataMap<Q_UINT64>& map, DBusMessageIter* it)
+void qFetchUInt64KeyMapEntry(QDBusDataMap< Q_UINT64 > &map, DBusMessageIter *it)
 {
     DBusMessageIter itemIter;
     dbus_message_iter_recurse(it, &itemIter);
@@ -329,7 +325,7 @@ void qFetchUInt64KeyMapEntry(QDBusDataMap<Q_UINT64>& map, DBusMessageIter* it)
     map.insert(key, qFetchParameter(&itemIter));
 }
 
-void qFetchStringKeyMapEntry(QDBusDataMap<QString>& map, DBusMessageIter* it)
+void qFetchStringKeyMapEntry(QDBusDataMap< QString > &map, DBusMessageIter *it)
 {
     DBusMessageIter itemIter;
     dbus_message_iter_recurse(it, &itemIter);
@@ -342,7 +338,7 @@ void qFetchStringKeyMapEntry(QDBusDataMap<QString>& map, DBusMessageIter* it)
     map.insert(key, qFetchParameter(&itemIter));
 }
 
-void qFetchObjectPathKeyMapEntry(QDBusDataMap<QDBusObjectPath>& map, DBusMessageIter* it)
+void qFetchObjectPathKeyMapEntry(QDBusDataMap< QDBusObjectPath > &map, DBusMessageIter *it)
 {
     DBusMessageIter itemIter;
     dbus_message_iter_recurse(it, &itemIter);
@@ -355,95 +351,114 @@ void qFetchObjectPathKeyMapEntry(QDBusDataMap<QDBusObjectPath>& map, DBusMessage
     map.insert(key, qFetchParameter(&itemIter));
 }
 
-static QDBusData qFetchMap(DBusMessageIter *it, const QDBusData& prototype)
+static QDBusData qFetchMap(DBusMessageIter *it, const QDBusData &prototype)
 {
-    if (dbus_message_iter_get_arg_type(it) == DBUS_TYPE_INVALID)
+    if(dbus_message_iter_get_arg_type(it) == DBUS_TYPE_INVALID)
         return prototype;
 
     DBusMessageIter itemIter;
     dbus_message_iter_recurse(it, &itemIter);
-    if (dbus_message_iter_get_arg_type(&itemIter) == DBUS_TYPE_INVALID)
+    if(dbus_message_iter_get_arg_type(&itemIter) == DBUS_TYPE_INVALID)
         return prototype;
 
-    switch (dbus_message_iter_get_arg_type(&itemIter)) {
-        case DBUS_TYPE_BYTE: {
-            QDBusDataMap<Q_UINT8> map = prototype.toByteKeyMap();
-            do {
+    switch(dbus_message_iter_get_arg_type(&itemIter))
+    {
+        case DBUS_TYPE_BYTE:
+        {
+            QDBusDataMap< Q_UINT8 > map = prototype.toByteKeyMap();
+            do
+            {
                 qFetchByteKeyMapEntry(map, it);
-            } while (dbus_message_iter_next(it));
+            } while(dbus_message_iter_next(it));
 
             return QDBusData::fromByteKeyMap(map);
         }
 
-        case DBUS_TYPE_INT16: {
-            QDBusDataMap<Q_INT16> map = prototype.toInt16KeyMap();
-            do {
+        case DBUS_TYPE_INT16:
+        {
+            QDBusDataMap< Q_INT16 > map = prototype.toInt16KeyMap();
+            do
+            {
                 qFetchInt16KeyMapEntry(map, it);
-            } while (dbus_message_iter_next(it));
+            } while(dbus_message_iter_next(it));
 
             return QDBusData::fromInt16KeyMap(map);
         }
 
-        case DBUS_TYPE_UINT16: {
-            QDBusDataMap<Q_UINT16> map = prototype.toUInt16KeyMap();
-            do {
+        case DBUS_TYPE_UINT16:
+        {
+            QDBusDataMap< Q_UINT16 > map = prototype.toUInt16KeyMap();
+            do
+            {
                 qFetchUInt16KeyMapEntry(map, it);
-            } while (dbus_message_iter_next(it));
+            } while(dbus_message_iter_next(it));
 
             return QDBusData::fromUInt16KeyMap(map);
         }
 
-        case DBUS_TYPE_INT32: {
-            QDBusDataMap<Q_INT32> map = prototype.toInt32KeyMap();
-            do {
+        case DBUS_TYPE_INT32:
+        {
+            QDBusDataMap< Q_INT32 > map = prototype.toInt32KeyMap();
+            do
+            {
                 qFetchInt32KeyMapEntry(map, it);
-            } while (dbus_message_iter_next(it));
+            } while(dbus_message_iter_next(it));
 
             return QDBusData::fromInt32KeyMap(map);
         }
 
-        case DBUS_TYPE_UINT32: {
-            QDBusDataMap<Q_UINT32> map = prototype.toUInt32KeyMap();
-            do {
+        case DBUS_TYPE_UINT32:
+        {
+            QDBusDataMap< Q_UINT32 > map = prototype.toUInt32KeyMap();
+            do
+            {
                 qFetchUInt32KeyMapEntry(map, it);
-            } while (dbus_message_iter_next(it));
+            } while(dbus_message_iter_next(it));
 
             return QDBusData::fromUInt32KeyMap(map);
         }
 
-        case DBUS_TYPE_INT64: {
-            QDBusDataMap<Q_INT64> map = prototype.toInt64KeyMap();
-            do {
+        case DBUS_TYPE_INT64:
+        {
+            QDBusDataMap< Q_INT64 > map = prototype.toInt64KeyMap();
+            do
+            {
                 qFetchInt64KeyMapEntry(map, it);
-            } while (dbus_message_iter_next(it));
+            } while(dbus_message_iter_next(it));
 
             return QDBusData::fromInt64KeyMap(map);
         }
 
-        case DBUS_TYPE_UINT64: {
-            QDBusDataMap<Q_UINT64> map = prototype.toUInt64KeyMap();
-            do {
+        case DBUS_TYPE_UINT64:
+        {
+            QDBusDataMap< Q_UINT64 > map = prototype.toUInt64KeyMap();
+            do
+            {
                 qFetchUInt64KeyMapEntry(map, it);
-            } while (dbus_message_iter_next(it));
+            } while(dbus_message_iter_next(it));
 
             return QDBusData::fromUInt64KeyMap(map);
         }
 
-        case DBUS_TYPE_STRING:      // fall through
-        case DBUS_TYPE_SIGNATURE: {
-            QDBusDataMap<QString> map = prototype.toStringKeyMap();
-            do {
+        case DBUS_TYPE_STRING: // fall through
+        case DBUS_TYPE_SIGNATURE:
+        {
+            QDBusDataMap< QString > map = prototype.toStringKeyMap();
+            do
+            {
                 qFetchStringKeyMapEntry(map, it);
-            } while (dbus_message_iter_next(it));
+            } while(dbus_message_iter_next(it));
 
             return QDBusData::fromStringKeyMap(map);
         }
 
-        case DBUS_TYPE_OBJECT_PATH: {
-            QDBusDataMap<QDBusObjectPath> map = prototype.toObjectPathKeyMap();
-            do {
+        case DBUS_TYPE_OBJECT_PATH:
+        {
+            QDBusDataMap< QDBusObjectPath > map = prototype.toObjectPathKeyMap();
+            do
+            {
                 qFetchObjectPathKeyMapEntry(map, it);
-            } while (dbus_message_iter_next(it));
+            } while(dbus_message_iter_next(it));
             return QDBusData::fromObjectPathKeyMap(map);
         }
 
@@ -456,125 +471,132 @@ static QDBusData qFetchMap(DBusMessageIter *it, const QDBusData& prototype)
 
 static QDBusData qFetchParameter(DBusMessageIter *it)
 {
-    switch (dbus_message_iter_get_arg_type(it)) {
-    case DBUS_TYPE_BOOLEAN:
-        return QDBusData::fromBool(qIterGet<dbus_bool_t>(it));
-    case DBUS_TYPE_BYTE:
-        return QDBusData::fromByte(qIterGet<unsigned char>(it));
-    case DBUS_TYPE_INT16:
-       return QDBusData::fromInt16(qIterGet<dbus_int16_t>(it));
-    case DBUS_TYPE_UINT16:
-        return QDBusData::fromUInt16(qIterGet<dbus_uint16_t>(it));
-    case DBUS_TYPE_INT32:
-        return QDBusData::fromInt32(qIterGet<dbus_int32_t>(it));
-    case DBUS_TYPE_UINT32:
-        return QDBusData::fromUInt32(qIterGet<dbus_uint32_t>(it));
-    case DBUS_TYPE_INT64:
-        return QDBusData::fromInt64(qIterGet<dbus_int64_t>(it));
-    case DBUS_TYPE_UINT64:
-        return QDBusData::fromUInt64(qIterGet<dbus_uint64_t>(it));
-    case DBUS_TYPE_DOUBLE:
-        return QDBusData::fromDouble(qIterGet<double>(it));
-    case DBUS_TYPE_STRING:
-    case DBUS_TYPE_SIGNATURE:
-        return QDBusData::fromString(QString::fromUtf8(qIterGet<char *>(it)));
-    case DBUS_TYPE_OBJECT_PATH:
-        return QDBusData::fromObjectPath(QDBusObjectPath(qIterGet<char *>(it)));
-    case DBUS_TYPE_ARRAY: {
-        int arrayType = dbus_message_iter_get_element_type(it);
+    switch(dbus_message_iter_get_arg_type(it))
+    {
+        case DBUS_TYPE_BOOLEAN:
+            return QDBusData::fromBool(qIterGet< dbus_bool_t >(it));
+        case DBUS_TYPE_BYTE:
+            return QDBusData::fromByte(qIterGet< unsigned char >(it));
+        case DBUS_TYPE_INT16:
+            return QDBusData::fromInt16(qIterGet< dbus_int16_t >(it));
+        case DBUS_TYPE_UINT16:
+            return QDBusData::fromUInt16(qIterGet< dbus_uint16_t >(it));
+        case DBUS_TYPE_INT32:
+            return QDBusData::fromInt32(qIterGet< dbus_int32_t >(it));
+        case DBUS_TYPE_UINT32:
+            return QDBusData::fromUInt32(qIterGet< dbus_uint32_t >(it));
+        case DBUS_TYPE_INT64:
+            return QDBusData::fromInt64(qIterGet< dbus_int64_t >(it));
+        case DBUS_TYPE_UINT64:
+            return QDBusData::fromUInt64(qIterGet< dbus_uint64_t >(it));
+        case DBUS_TYPE_DOUBLE:
+            return QDBusData::fromDouble(qIterGet< double >(it));
+        case DBUS_TYPE_STRING:
+        case DBUS_TYPE_SIGNATURE:
+            return QDBusData::fromString(QString::fromUtf8(qIterGet< char * >(it)));
+        case DBUS_TYPE_OBJECT_PATH:
+            return QDBusData::fromObjectPath(QDBusObjectPath(qIterGet< char * >(it)));
+        case DBUS_TYPE_ARRAY:
+        {
+            int arrayType = dbus_message_iter_get_element_type(it);
 
-        char* sig = dbus_message_iter_get_signature(it);
-        QCString signature = sig;
-        dbus_free(sig);
+            char *sig = dbus_message_iter_get_signature(it);
+            QCString signature = sig;
+            dbus_free(sig);
 
-        QValueList<QDBusData> prototypeList = parseSignature(signature);
+            QValueList< QDBusData > prototypeList = parseSignature(signature);
 
-        if (arrayType == DBUS_TYPE_DICT_ENTRY) {
+            if(arrayType == DBUS_TYPE_DICT_ENTRY)
+            {
+                DBusMessageIter sub;
+                dbus_message_iter_recurse(it, &sub);
+
+                return qFetchMap(&sub, prototypeList[0]);
+
+                //        } else if (arrayType == DBUS_TYPE_BYTE) {
+                //            DBusMessageIter sub;
+                //            dbus_message_iter_recurse(it, &sub);
+                //            int len = dbus_message_iter_get_array_len(&sub);
+                //            char* data;
+                //            dbus_message_iter_get_fixed_array(&sub,&data,&len);
+                //            return QCString(data,len);
+                //         } else {
+            }
+            else
+            {
+                QDBusDataList list = prototypeList[0].toList();
+
+                DBusMessageIter arrayIt;
+                dbus_message_iter_recurse(it, &arrayIt);
+
+                while(dbus_message_iter_get_arg_type(&arrayIt) != DBUS_TYPE_INVALID)
+                {
+                    list << qFetchParameter(&arrayIt);
+
+                    dbus_message_iter_next(&arrayIt);
+                }
+
+                return QDBusData::fromList(list);
+            }
+        }
+        case DBUS_TYPE_VARIANT:
+        {
+            QDBusVariant dvariant;
             DBusMessageIter sub;
             dbus_message_iter_recurse(it, &sub);
 
-            return qFetchMap(&sub, prototypeList[0]);
+            char *signature = dbus_message_iter_get_signature(&sub);
+            dvariant.signature = QString::fromUtf8(signature);
+            dbus_free(signature);
 
-//        } else if (arrayType == DBUS_TYPE_BYTE) {
-//            DBusMessageIter sub;
-//            dbus_message_iter_recurse(it, &sub);
-//            int len = dbus_message_iter_get_array_len(&sub);
-//            char* data;
-//            dbus_message_iter_get_fixed_array(&sub,&data,&len);
-//            return QCString(data,len);
-//         } else {
+            dvariant.value = qFetchParameter(&sub);
 
-        } else {
-            QDBusDataList list = prototypeList[0].toList();
+            return QDBusData::fromVariant(dvariant);
+        }
+        case DBUS_TYPE_STRUCT:
+        {
+            QValueList< QDBusData > memberList;
 
-            DBusMessageIter arrayIt;
-            dbus_message_iter_recurse(it, &arrayIt);
+            DBusMessageIter subIt;
+            dbus_message_iter_recurse(it, &subIt);
 
-            while (dbus_message_iter_get_arg_type(&arrayIt) != DBUS_TYPE_INVALID) {
-                list << qFetchParameter(&arrayIt);
+            uint index = 0;
+            while(dbus_message_iter_get_arg_type(&subIt) != DBUS_TYPE_INVALID)
+            {
+                memberList << qFetchParameter(&subIt);
 
-                dbus_message_iter_next(&arrayIt);
+                dbus_message_iter_next(&subIt);
+                ++index;
             }
 
-            return QDBusData::fromList(list);
+            return QDBusData::fromStruct(memberList);
         }
-    }
-    case DBUS_TYPE_VARIANT: {
-        QDBusVariant dvariant;
-        DBusMessageIter sub;
-        dbus_message_iter_recurse(it, &sub);
-
-        char* signature = dbus_message_iter_get_signature(&sub);
-        dvariant.signature = QString::fromUtf8(signature);
-        dbus_free(signature);
-
-        dvariant.value = qFetchParameter(&sub);
-
-        return QDBusData::fromVariant(dvariant);
-    }
-    case DBUS_TYPE_STRUCT: {
-        QValueList<QDBusData> memberList;
-
-        DBusMessageIter subIt;
-        dbus_message_iter_recurse(it, &subIt);
-
-        uint index = 0;
-        while (dbus_message_iter_get_arg_type(&subIt) != DBUS_TYPE_INVALID) {
-            memberList << qFetchParameter(&subIt);
-
-            dbus_message_iter_next(&subIt);
-            ++index;
-        }
-
-        return QDBusData::fromStruct(memberList);
-    }
 #if 0
     case DBUS_TYPE_INVALID:
         // TODO: check if there is better way to detect empty arrays
         return QDBusData();
         break;
 #endif
-    default:
-        qWarning("QDBusMarshall: Don't know how to de-marshall type %d '%c'",
-                 dbus_message_iter_get_arg_type(it),
-                 dbus_message_iter_get_arg_type(it));
-        return QDBusData();
-        break;
+        default:
+            qWarning("QDBusMarshall: Don't know how to de-marshall type %d '%c'", dbus_message_iter_get_arg_type(it),
+                     dbus_message_iter_get_arg_type(it));
+            return QDBusData();
+            break;
     }
 }
 
-void QDBusMarshall::messageToList(QValueList<QDBusData>& list, DBusMessage* message)
+void QDBusMarshall::messageToList(QValueList< QDBusData > &list, DBusMessage *message)
 {
     Q_ASSERT(message);
 
     DBusMessageIter it;
-    if (!dbus_message_iter_init(message, &it)) return;
+    if(!dbus_message_iter_init(message, &it))
+        return;
 
     do
     {
         list << qFetchParameter(&it);
-    }
-    while (dbus_message_iter_next(&it));
+    } while(dbus_message_iter_next(&it));
 }
 
 static void qAppendToMessage(DBusMessageIter *it, const QString &str)
@@ -590,9 +612,9 @@ static void qAppendToMessage(DBusMessageIter *it, const QDBusObjectPath &path)
     dbus_message_iter_append_basic(it, DBUS_TYPE_OBJECT_PATH, &cdata);
 }
 
-static const char* qDBusTypeForQDBusType(QDBusData::Type type)
+static const char *qDBusTypeForQDBusType(QDBusData::Type type)
 {
-    switch (type)
+    switch(type)
     {
         case QDBusData::Invalid:
             return 0;
@@ -645,19 +667,19 @@ static const char* qDBusTypeForQDBusType(QDBusData::Type type)
     return 0;
 }
 
-static void qDBusDataToIterator(DBusMessageIter* it, const QDBusData& var);
+static void qDBusDataToIterator(DBusMessageIter *it, const QDBusData &var);
 
-static void qDBusByteKeyMapToIterator(DBusMessageIter* it, const QDBusData& var)
+static void qDBusByteKeyMapToIterator(DBusMessageIter *it, const QDBusData &var)
 {
     DBusMessageIter sub;
     QCString sig;
 
-    QDBusDataMap<Q_UINT8> map = var.toByteKeyMap();
+    QDBusDataMap< Q_UINT8 > map = var.toByteKeyMap();
 
     sig += DBUS_DICT_ENTRY_BEGIN_CHAR;
     sig += qDBusTypeForQDBusType(map.keyType());
 
-    if (map.hasContainerValueType())
+    if(map.hasContainerValueType())
         sig += map.containerValueType().buildDBusSignature();
     else
         sig += qDBusTypeForQDBusType(map.valueType());
@@ -665,12 +687,11 @@ static void qDBusByteKeyMapToIterator(DBusMessageIter* it, const QDBusData& var)
 
     dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, sig.data(), &sub);
 
-    QDBusDataMap<Q_UINT8>::const_iterator mit = map.begin();
-    for (; mit != map.end(); ++mit)
+    QDBusDataMap< Q_UINT8 >::const_iterator mit = map.begin();
+    for(; mit != map.end(); ++mit)
     {
         DBusMessageIter itemIterator;
-        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY,
-                                         0, &itemIterator);
+        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY, 0, &itemIterator);
 
         dbus_message_iter_append_basic(it, DBUS_TYPE_BYTE, &(mit.key()));
         qDBusDataToIterator(&itemIterator, mit.data());
@@ -681,17 +702,17 @@ static void qDBusByteKeyMapToIterator(DBusMessageIter* it, const QDBusData& var)
     dbus_message_iter_close_container(it, &sub);
 }
 
-static void qDBusInt16KeyMapToIterator(DBusMessageIter* it, const QDBusData& var)
+static void qDBusInt16KeyMapToIterator(DBusMessageIter *it, const QDBusData &var)
 {
     DBusMessageIter sub;
     QCString sig;
 
-    QDBusDataMap<Q_INT16> map = var.toInt16KeyMap();
+    QDBusDataMap< Q_INT16 > map = var.toInt16KeyMap();
 
     sig += DBUS_DICT_ENTRY_BEGIN_CHAR;
     sig += qDBusTypeForQDBusType(map.keyType());
 
-    if (map.hasContainerValueType())
+    if(map.hasContainerValueType())
         sig += map.containerValueType().buildDBusSignature();
     else
         sig += qDBusTypeForQDBusType(map.valueType());
@@ -699,12 +720,11 @@ static void qDBusInt16KeyMapToIterator(DBusMessageIter* it, const QDBusData& var
 
     dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, sig.data(), &sub);
 
-    QDBusDataMap<Q_INT16>::const_iterator mit = map.begin();
-    for (; mit != map.end(); ++mit)
+    QDBusDataMap< Q_INT16 >::const_iterator mit = map.begin();
+    for(; mit != map.end(); ++mit)
     {
         DBusMessageIter itemIterator;
-        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY,
-                                         0, &itemIterator);
+        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY, 0, &itemIterator);
 
         dbus_message_iter_append_basic(it, DBUS_TYPE_INT16, &(mit.key()));
         qDBusDataToIterator(&itemIterator, mit.data());
@@ -715,17 +735,17 @@ static void qDBusInt16KeyMapToIterator(DBusMessageIter* it, const QDBusData& var
     dbus_message_iter_close_container(it, &sub);
 }
 
-static void qDBusUInt16KeyMapToIterator(DBusMessageIter* it, const QDBusData& var)
+static void qDBusUInt16KeyMapToIterator(DBusMessageIter *it, const QDBusData &var)
 {
     DBusMessageIter sub;
     QCString sig;
 
-    QDBusDataMap<Q_UINT16> map = var.toUInt16KeyMap();
+    QDBusDataMap< Q_UINT16 > map = var.toUInt16KeyMap();
 
     sig += DBUS_DICT_ENTRY_BEGIN_CHAR;
     sig += qDBusTypeForQDBusType(map.keyType());
 
-    if (map.hasContainerValueType())
+    if(map.hasContainerValueType())
         sig += map.containerValueType().buildDBusSignature();
     else
         sig += qDBusTypeForQDBusType(map.valueType());
@@ -733,12 +753,11 @@ static void qDBusUInt16KeyMapToIterator(DBusMessageIter* it, const QDBusData& va
 
     dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, sig.data(), &sub);
 
-    QDBusDataMap<Q_UINT16>::const_iterator mit = map.begin();
-    for (; mit != map.end(); ++mit)
+    QDBusDataMap< Q_UINT16 >::const_iterator mit = map.begin();
+    for(; mit != map.end(); ++mit)
     {
         DBusMessageIter itemIterator;
-        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY,
-                                         0, &itemIterator);
+        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY, 0, &itemIterator);
 
         dbus_message_iter_append_basic(it, DBUS_TYPE_UINT16, &(mit.key()));
         qDBusDataToIterator(&itemIterator, mit.data());
@@ -749,17 +768,17 @@ static void qDBusUInt16KeyMapToIterator(DBusMessageIter* it, const QDBusData& va
     dbus_message_iter_close_container(it, &sub);
 }
 
-static void qDBusInt32KeyMapToIterator(DBusMessageIter* it, const QDBusData& var)
+static void qDBusInt32KeyMapToIterator(DBusMessageIter *it, const QDBusData &var)
 {
     DBusMessageIter sub;
     QCString sig;
 
-    QDBusDataMap<Q_INT32> map = var.toInt32KeyMap();
+    QDBusDataMap< Q_INT32 > map = var.toInt32KeyMap();
 
     sig += DBUS_DICT_ENTRY_BEGIN_CHAR;
     sig += qDBusTypeForQDBusType(map.keyType());
 
-    if (map.hasContainerValueType())
+    if(map.hasContainerValueType())
         sig += map.containerValueType().buildDBusSignature();
     else
         sig += qDBusTypeForQDBusType(map.valueType());
@@ -767,12 +786,11 @@ static void qDBusInt32KeyMapToIterator(DBusMessageIter* it, const QDBusData& var
 
     dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, sig.data(), &sub);
 
-    QDBusDataMap<Q_INT32>::const_iterator mit = map.begin();
-    for (; mit != map.end(); ++mit)
+    QDBusDataMap< Q_INT32 >::const_iterator mit = map.begin();
+    for(; mit != map.end(); ++mit)
     {
         DBusMessageIter itemIterator;
-        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY,
-                                         0, &itemIterator);
+        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY, 0, &itemIterator);
 
         dbus_message_iter_append_basic(it, DBUS_TYPE_INT32, &(mit.key()));
         qDBusDataToIterator(&itemIterator, mit.data());
@@ -783,17 +801,17 @@ static void qDBusInt32KeyMapToIterator(DBusMessageIter* it, const QDBusData& var
     dbus_message_iter_close_container(it, &sub);
 }
 
-static void qDBusUInt32KeyMapToIterator(DBusMessageIter* it, const QDBusData& var)
+static void qDBusUInt32KeyMapToIterator(DBusMessageIter *it, const QDBusData &var)
 {
     DBusMessageIter sub;
     QCString sig;
 
-    QDBusDataMap<Q_UINT32> map = var.toUInt32KeyMap();
+    QDBusDataMap< Q_UINT32 > map = var.toUInt32KeyMap();
 
     sig += DBUS_DICT_ENTRY_BEGIN_CHAR;
     sig += qDBusTypeForQDBusType(map.keyType());
 
-    if (map.hasContainerValueType())
+    if(map.hasContainerValueType())
         sig += map.containerValueType().buildDBusSignature();
     else
         sig += qDBusTypeForQDBusType(map.valueType());
@@ -801,12 +819,11 @@ static void qDBusUInt32KeyMapToIterator(DBusMessageIter* it, const QDBusData& va
 
     dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, sig.data(), &sub);
 
-    QDBusDataMap<Q_UINT32>::const_iterator mit = map.begin();
-    for (; mit != map.end(); ++mit)
+    QDBusDataMap< Q_UINT32 >::const_iterator mit = map.begin();
+    for(; mit != map.end(); ++mit)
     {
         DBusMessageIter itemIterator;
-        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY,
-                                         0, &itemIterator);
+        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY, 0, &itemIterator);
 
         dbus_message_iter_append_basic(it, DBUS_TYPE_UINT32, &(mit.key()));
         qDBusDataToIterator(&itemIterator, mit.data());
@@ -817,17 +834,17 @@ static void qDBusUInt32KeyMapToIterator(DBusMessageIter* it, const QDBusData& va
     dbus_message_iter_close_container(it, &sub);
 }
 
-static void qDBusInt64KeyMapToIterator(DBusMessageIter* it, const QDBusData& var)
+static void qDBusInt64KeyMapToIterator(DBusMessageIter *it, const QDBusData &var)
 {
     DBusMessageIter sub;
     QCString sig;
 
-    QDBusDataMap<Q_INT64> map = var.toInt64KeyMap();
+    QDBusDataMap< Q_INT64 > map = var.toInt64KeyMap();
 
     sig += DBUS_DICT_ENTRY_BEGIN_CHAR;
     sig += qDBusTypeForQDBusType(map.keyType());
 
-    if (map.hasContainerValueType())
+    if(map.hasContainerValueType())
         sig += map.containerValueType().buildDBusSignature();
     else
         sig += qDBusTypeForQDBusType(map.valueType());
@@ -835,12 +852,11 @@ static void qDBusInt64KeyMapToIterator(DBusMessageIter* it, const QDBusData& var
 
     dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, sig.data(), &sub);
 
-    QDBusDataMap<Q_INT64>::const_iterator mit = map.begin();
-    for (; mit != map.end(); ++mit)
+    QDBusDataMap< Q_INT64 >::const_iterator mit = map.begin();
+    for(; mit != map.end(); ++mit)
     {
         DBusMessageIter itemIterator;
-        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY,
-                                         0, &itemIterator);
+        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY, 0, &itemIterator);
 
         dbus_message_iter_append_basic(it, DBUS_TYPE_INT64, &(mit.key()));
         qDBusDataToIterator(&itemIterator, mit.data());
@@ -851,17 +867,17 @@ static void qDBusInt64KeyMapToIterator(DBusMessageIter* it, const QDBusData& var
     dbus_message_iter_close_container(it, &sub);
 }
 
-static void qDBusUInt64KeyMapToIterator(DBusMessageIter* it, const QDBusData& var)
+static void qDBusUInt64KeyMapToIterator(DBusMessageIter *it, const QDBusData &var)
 {
     DBusMessageIter sub;
     QCString sig;
 
-    QDBusDataMap<Q_UINT64> map = var.toUInt64KeyMap();
+    QDBusDataMap< Q_UINT64 > map = var.toUInt64KeyMap();
 
     sig += DBUS_DICT_ENTRY_BEGIN_CHAR;
     sig += qDBusTypeForQDBusType(map.keyType());
 
-    if (map.hasContainerValueType())
+    if(map.hasContainerValueType())
         sig += map.containerValueType().buildDBusSignature();
     else
         sig += qDBusTypeForQDBusType(map.valueType());
@@ -869,12 +885,11 @@ static void qDBusUInt64KeyMapToIterator(DBusMessageIter* it, const QDBusData& va
 
     dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, sig.data(), &sub);
 
-    QDBusDataMap<Q_UINT64>::const_iterator mit = map.begin();
-    for (; mit != map.end(); ++mit)
+    QDBusDataMap< Q_UINT64 >::const_iterator mit = map.begin();
+    for(; mit != map.end(); ++mit)
     {
         DBusMessageIter itemIterator;
-        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY,
-                                         0, &itemIterator);
+        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY, 0, &itemIterator);
 
         dbus_message_iter_append_basic(it, DBUS_TYPE_UINT64, &(mit.key()));
         qDBusDataToIterator(&itemIterator, mit.data());
@@ -885,17 +900,17 @@ static void qDBusUInt64KeyMapToIterator(DBusMessageIter* it, const QDBusData& va
     dbus_message_iter_close_container(it, &sub);
 }
 
-static void qDBusStringKeyMapToIterator(DBusMessageIter* it, const QDBusData& var)
+static void qDBusStringKeyMapToIterator(DBusMessageIter *it, const QDBusData &var)
 {
     DBusMessageIter sub;
     QCString sig;
 
-    QDBusDataMap<QString> map = var.toStringKeyMap();
+    QDBusDataMap< QString > map = var.toStringKeyMap();
 
     sig += DBUS_DICT_ENTRY_BEGIN_CHAR;
     sig += qDBusTypeForQDBusType(map.keyType());
 
-    if (map.hasContainerValueType())
+    if(map.hasContainerValueType())
         sig += map.containerValueType().buildDBusSignature();
     else
         sig += qDBusTypeForQDBusType(map.valueType());
@@ -903,12 +918,11 @@ static void qDBusStringKeyMapToIterator(DBusMessageIter* it, const QDBusData& va
 
     dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, sig.data(), &sub);
 
-    QDBusDataMap<QString>::const_iterator mit = map.begin();
-    for (; mit != map.end(); ++mit)
+    QDBusDataMap< QString >::const_iterator mit = map.begin();
+    for(; mit != map.end(); ++mit)
     {
         DBusMessageIter itemIterator;
-        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY,
-                                         0, &itemIterator);
+        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY, 0, &itemIterator);
 
         qAppendToMessage(&itemIterator, mit.key());
         qDBusDataToIterator(&itemIterator, mit.data());
@@ -919,18 +933,17 @@ static void qDBusStringKeyMapToIterator(DBusMessageIter* it, const QDBusData& va
     dbus_message_iter_close_container(it, &sub);
 }
 
-static void qDBusObjectPathKeyMapToIterator(DBusMessageIter* it,
-                                            const QDBusData& var)
+static void qDBusObjectPathKeyMapToIterator(DBusMessageIter *it, const QDBusData &var)
 {
     DBusMessageIter sub;
     QCString sig;
 
-    QDBusDataMap<QDBusObjectPath> map = var.toObjectPathKeyMap();
+    QDBusDataMap< QDBusObjectPath > map = var.toObjectPathKeyMap();
 
     sig += DBUS_DICT_ENTRY_BEGIN_CHAR;
     sig += qDBusTypeForQDBusType(map.keyType());
 
-    if (map.hasContainerValueType())
+    if(map.hasContainerValueType())
         sig += map.containerValueType().buildDBusSignature();
     else
         sig += qDBusTypeForQDBusType(map.valueType());
@@ -938,12 +951,11 @@ static void qDBusObjectPathKeyMapToIterator(DBusMessageIter* it,
 
     dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, sig.data(), &sub);
 
-    QDBusDataMap<QDBusObjectPath>::const_iterator mit = map.begin();
-    for (; mit != map.end(); ++mit)
+    QDBusDataMap< QDBusObjectPath >::const_iterator mit = map.begin();
+    for(; mit != map.end(); ++mit)
     {
         DBusMessageIter itemIterator;
-        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY,
-                                         0, &itemIterator);
+        dbus_message_iter_open_container(&sub, DBUS_TYPE_DICT_ENTRY, 0, &itemIterator);
 
         qAppendToMessage(&itemIterator, mit.key());
         qDBusDataToIterator(&itemIterator, mit.data());
@@ -954,9 +966,9 @@ static void qDBusObjectPathKeyMapToIterator(DBusMessageIter* it,
     dbus_message_iter_close_container(it, &sub);
 }
 
-static void qDBusDataToIterator(DBusMessageIter* it, const QDBusData& var)
+static void qDBusDataToIterator(DBusMessageIter *it, const QDBusData &var)
 {
-    switch (var.type())
+    switch(var.type())
     {
         case QDBusData::Bool:
         {
@@ -970,37 +982,44 @@ static void qDBusDataToIterator(DBusMessageIter* it, const QDBusData& var)
             dbus_message_iter_append_basic(it, DBUS_TYPE_BYTE, &value);
             break;
         }
-        case QDBusData::Int16: {
+        case QDBusData::Int16:
+        {
             Q_INT16 value = var.toInt16();
             dbus_message_iter_append_basic(it, DBUS_TYPE_INT16, &value);
             break;
         }
-        case QDBusData::UInt16: {
+        case QDBusData::UInt16:
+        {
             Q_UINT16 value = var.toUInt16();
             dbus_message_iter_append_basic(it, DBUS_TYPE_UINT16, &value);
             break;
         }
-        case QDBusData::Int32: {
+        case QDBusData::Int32:
+        {
             Q_INT32 value = var.toInt32();
             dbus_message_iter_append_basic(it, DBUS_TYPE_INT32, &value);
             break;
         }
-        case QDBusData::UInt32: {
+        case QDBusData::UInt32:
+        {
             Q_UINT32 value = var.toUInt32();
             dbus_message_iter_append_basic(it, DBUS_TYPE_UINT32, &value);
             break;
         }
-        case QDBusData::Int64: {
+        case QDBusData::Int64:
+        {
             Q_INT64 value = var.toInt64();
             dbus_message_iter_append_basic(it, DBUS_TYPE_INT64, &value);
             break;
         }
-        case QDBusData::UInt64: {
+        case QDBusData::UInt64:
+        {
             Q_UINT64 value = var.toUInt64();
             dbus_message_iter_append_basic(it, DBUS_TYPE_UINT64, &value);
             break;
         }
-        case QDBusData::Double: {
+        case QDBusData::Double:
+        {
             double value = var.toDouble();
             dbus_message_iter_append_basic(it, DBUS_TYPE_DOUBLE, &value);
             break;
@@ -1011,31 +1030,33 @@ static void qDBusDataToIterator(DBusMessageIter* it, const QDBusData& var)
         case QDBusData::ObjectPath:
             qAppendToMessage(it, var.toObjectPath());
             break;
-        case QDBusData::List: {
+        case QDBusData::List:
+        {
             QDBusDataList list = var.toList();
 
             QCString signature = 0;
-            if (list.hasContainerItemType())
+            if(list.hasContainerItemType())
                 signature = list.containerItemType().buildDBusSignature();
             else
                 signature = qDBusTypeForQDBusType(list.type());
 
             DBusMessageIter sub;
-            dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY,
-                                             signature.data(), &sub);
+            dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, signature.data(), &sub);
 
-            const QValueList<QDBusData> valueList = var.toQValueList();
-            QValueList<QDBusData>::const_iterator listIt    = valueList.begin();
-            QValueList<QDBusData>::const_iterator listEndIt = valueList.end();
-            for (; listIt != listEndIt; ++listIt)
+            const QValueList< QDBusData > valueList = var.toQValueList();
+            QValueList< QDBusData >::const_iterator listIt = valueList.begin();
+            QValueList< QDBusData >::const_iterator listEndIt = valueList.end();
+            for(; listIt != listEndIt; ++listIt)
             {
                 qDBusDataToIterator(&sub, *listIt);
             }
             dbus_message_iter_close_container(it, &sub);
             break;
         }
-        case QDBusData::Map: {
-            switch (var.keyType()) {
+        case QDBusData::Map:
+        {
+            switch(var.keyType())
+            {
                 case QDBusData::Byte:
                     qDBusByteKeyMapToIterator(it, var);
                     break;
@@ -1064,36 +1085,40 @@ static void qDBusDataToIterator(DBusMessageIter* it, const QDBusData& var)
                     qDBusObjectPathKeyMapToIterator(it, var);
                     break;
                 default:
-                    qWarning("QDBusMarshall: unhandled map key type %s "
-                             "at marshalling",
-                             QDBusData::typeName(var.keyType()));
+                    qWarning(
+                        "QDBusMarshall: unhandled map key type %s "
+                        "at marshalling",
+                        QDBusData::typeName(var.keyType()));
                     break;
             }
             break;
         }
-        case QDBusData::Variant: {
+        case QDBusData::Variant:
+        {
             QDBusVariant variant = var.toVariant();
-            if (variant.signature.isEmpty() || !variant.value.isValid()) break;
+            if(variant.signature.isEmpty() || !variant.value.isValid())
+                break;
 
             DBusMessageIter sub;
-            dbus_message_iter_open_container(it, DBUS_TYPE_VARIANT,
-                                             variant.signature.utf8(), &sub);
+            dbus_message_iter_open_container(it, DBUS_TYPE_VARIANT, variant.signature.utf8(), &sub);
 
             qDBusDataToIterator(&sub, variant.value);
 
             dbus_message_iter_close_container(it, &sub);
             break;
         }
-        case QDBusData::Struct: {
-            QValueList<QDBusData> memberList = var.toStruct();
-            if (memberList.isEmpty()) break;
+        case QDBusData::Struct:
+        {
+            QValueList< QDBusData > memberList = var.toStruct();
+            if(memberList.isEmpty())
+                break;
 
             DBusMessageIter sub;
             dbus_message_iter_open_container(it, DBUS_TYPE_STRUCT, NULL, &sub);
 
-            QValueList<QDBusData>::const_iterator memberIt    = memberList.begin();
-            QValueList<QDBusData>::const_iterator memberEndIt = memberList.end();
-            for (; memberIt != memberEndIt; ++memberIt)
+            QValueList< QDBusData >::const_iterator memberIt = memberList.begin();
+            QValueList< QDBusData >::const_iterator memberEndIt = memberList.end();
+            for(; memberIt != memberEndIt; ++memberIt)
             {
                 qDBusDataToIterator(&sub, *memberIt);
             }
@@ -1112,24 +1137,25 @@ static void qDBusDataToIterator(DBusMessageIter* it, const QDBusData& var)
         }
 #endif
         default:
-            //qWarning("Don't know how to handle type %s", var.typeName());
+            // qWarning("Don't know how to handle type %s", var.typeName());
             break;
     }
 }
 
-void qListToIterator(DBusMessageIter* it, const QValueList<QDBusData>& list)
+void qListToIterator(DBusMessageIter *it, const QValueList< QDBusData > &list)
 {
-    if (list.isEmpty()) return;
+    if(list.isEmpty())
+        return;
 
-    QValueList<QDBusData>::const_iterator listIt    = list.begin();
-    QValueList<QDBusData>::const_iterator listEndIt = list.end();
-    for (; listIt != listEndIt; ++listIt)
+    QValueList< QDBusData >::const_iterator listIt = list.begin();
+    QValueList< QDBusData >::const_iterator listEndIt = list.end();
+    for(; listIt != listEndIt; ++listIt)
     {
         qDBusDataToIterator(it, *listIt);
     }
 }
 
-void QDBusMarshall::listToMessage(const QValueList<QDBusData> &list, DBusMessage *msg)
+void QDBusMarshall::listToMessage(const QValueList< QDBusData > &list, DBusMessage *msg)
 {
     Q_ASSERT(msg);
     DBusMessageIter it;

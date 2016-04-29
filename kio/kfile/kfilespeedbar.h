@@ -23,19 +23,17 @@
 
 class KConfig;
 
-class KIO_EXPORT KFileSpeedBar : public KURLBar
-{
+class KIO_EXPORT KFileSpeedBar : public KURLBar {
     Q_OBJECT
 public:
-    KFileSpeedBar( QWidget *parent = 0, const char *name = 0 );
+    KFileSpeedBar(QWidget *parent = 0, const char *name = 0);
     ~KFileSpeedBar();
 
-    virtual void save( KConfig *config );
+    virtual void save(KConfig *config);
     virtual QSize sizeHint() const;
 
 private:
     bool m_initializeSpeedbar : 1;
-
 };
 
 #endif // KFILESPEEDBAR_H

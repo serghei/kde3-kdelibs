@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,94 +27,83 @@
 
 using namespace VCARD;
 
-FloatValue::FloatValue()
-	:	Value()
+FloatValue::FloatValue() : Value()
 {
 }
 
-FloatValue::FloatValue(float f)
-	:	Value	(),
-		value_	(f)
+FloatValue::FloatValue(float f) : Value(), value_(f)
 {
-	parsed_ = true;
+    parsed_ = true;
 }
 
-FloatValue::FloatValue(const FloatValue & x)
-	:	Value(x)
+FloatValue::FloatValue(const FloatValue &x) : Value(x)
 {
-	value_ = x.value_;
+    value_ = x.value_;
 }
 
-FloatValue::FloatValue(const QCString & s)
-	:	Value(s)
+FloatValue::FloatValue(const QCString &s) : Value(s)
 {
 }
 
-	FloatValue &
-FloatValue::operator = (FloatValue & x)
+FloatValue &FloatValue::operator=(FloatValue &x)
 {
-	if (*this == x) return *this;
-	
-	x.parse();
-	value_ = x.value_;
+    if(*this == x)
+        return *this;
 
-	Value::operator = (x);
-	return *this;
+    x.parse();
+    value_ = x.value_;
+
+    Value::operator=(x);
+    return *this;
 }
 
-	FloatValue &
-FloatValue::operator = (const QCString & s)
+FloatValue &FloatValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-FloatValue::operator == (FloatValue & x)
+bool FloatValue::operator==(FloatValue &x)
 {
-	x.parse();
-	return (value_ == x.value_);
+    x.parse();
+    return (value_ == x.value_);
 }
 
 FloatValue::~FloatValue()
 {
 }
 
-	void
-FloatValue::_parse()
+void FloatValue::_parse()
 {
-	bool negative(false);
-	
-	if (strRep_[0] == '-' || strRep_[1] == '+') {
-		
-		if (strRep_[0] == '-')
-			negative = true;
-		
-		strRep_.remove(0, 1);
-	}
-	
-	value_ = strRep_.toFloat();
-	if (negative)
-		value_ = -value_;
+    bool negative(false);
+
+    if(strRep_[0] == '-' || strRep_[1] == '+')
+    {
+
+        if(strRep_[0] == '-')
+            negative = true;
+
+        strRep_.remove(0, 1);
+    }
+
+    value_ = strRep_.toFloat();
+    if(negative)
+        value_ = -value_;
 }
 
-	void
-FloatValue::_assemble()
+void FloatValue::_assemble()
 {
-	strRep_ = QCString().setNum(value_);
+    strRep_ = QCString().setNum(value_);
 }
 
-	float
-FloatValue::value()
+float FloatValue::value()
 {
-	parse();
-	return value_;
+    parse();
+    return value_;
 }
 
-	void
-FloatValue::setValue(float f)
+void FloatValue::setValue(float f)
 {
-	parsed_ = true;
-	value_ = f;
+    parsed_ = true;
+    value_ = f;
 }
-

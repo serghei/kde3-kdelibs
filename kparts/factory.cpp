@@ -30,8 +30,7 @@
 
 using namespace KParts;
 
-Factory::Factory( QObject *parent, const char *name )
-: KLibFactory( parent, name )
+Factory::Factory(QObject *parent, const char *name) : KLibFactory(parent, name)
 {
 }
 
@@ -39,11 +38,12 @@ Factory::~Factory()
 {
 }
 
-Part *Factory::createPart( QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, const char *classname, const QStringList &args )
+Part *Factory::createPart(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, const char *classname,
+                          const QStringList &args)
 {
-    Part* part = createPartObject( parentWidget, widgetName, parent, name, classname, args );
-    if ( part )
-	emit objectCreated( part );
+    Part *part = createPartObject(parentWidget, widgetName, parent, name, classname, args);
+    if(part)
+        emit objectCreated(part);
     return part;
 }
 
@@ -51,32 +51,32 @@ const KInstance *Factory::partInstance()
 {
     QueryInstanceParams params;
     params.instance = 0;
-    virtual_hook( VIRTUAL_QUERY_INSTANCE_PARAMS, &params );
+    virtual_hook(VIRTUAL_QUERY_INSTANCE_PARAMS, &params);
     return params.instance;
 }
 
-const KInstance *Factory::partInstanceFromLibrary( const QCString &libraryName )
+const KInstance *Factory::partInstanceFromLibrary(const QCString &libraryName)
 {
-    KLibrary *library = KLibLoader::self()->library( libraryName );
-    if ( !library )
+    KLibrary *library = KLibLoader::self()->library(libraryName);
+    if(!library)
         return 0;
     KLibFactory *factory = library->factory();
-    if ( !factory )
+    if(!factory)
         return 0;
-    KParts::Factory *pfactory = dynamic_cast<KParts::Factory *>( factory );
-    if ( !pfactory )
+    KParts::Factory *pfactory = dynamic_cast< KParts::Factory * >(factory);
+    if(!pfactory)
         return 0;
     return pfactory->partInstance();
 }
 
-Part *Factory::createPartObject( QWidget *, const char *, QObject *, const char *, const char *, const QStringList & )
+Part *Factory::createPartObject(QWidget *, const char *, QObject *, const char *, const char *, const QStringList &)
 {
     return 0;
 }
 
-QObject *Factory::createObject( QObject *parent, const char *name, const char *classname, const QStringList &args )
+QObject *Factory::createObject(QObject *parent, const char *name, const char *classname, const QStringList &args)
 {
-  assert( !parent || parent->isWidgetType() );
-  return createPart( static_cast<QWidget *>( parent ), name, parent, name, classname, args );
+    assert(!parent || parent->isWidgetType());
+    return createPart(static_cast< QWidget * >(parent), name, parent, name, classname, args);
 }
 #include "factory.moc"

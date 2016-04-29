@@ -41,70 +41,78 @@ class DCOPClient;
  * @see DCOPArg
  * @since 3.1
  */
-class DCOP_EXPORT DCOPReply
-{
+class DCOP_EXPORT DCOPReply {
 public:
-  /**
-   * Casts the value to the type @p T. Requires that the
-   * type @p T suppports QDataStream deserialisation
-   * and has a function dcopTypeName(T). This is true for most
-   * basic types.
-   */
-    template<class T>
-    operator T() {
-	T t;
-	dcopTypeInit(t);
-	if ( typeCheck( dcopTypeName(t), true ) ) {
-	    QDataStream reply( data, IO_ReadOnly );
-	    reply >> t;
-	}
-	return t;
+    /**
+     * Casts the value to the type @p T. Requires that the
+     * type @p T suppports QDataStream deserialisation
+     * and has a function dcopTypeName(T). This is true for most
+     * basic types.
+     */
+    template < class T > operator T()
+    {
+        T t;
+        dcopTypeInit(t);
+        if(typeCheck(dcopTypeName(t), true))
+        {
+            QDataStream reply(data, IO_ReadOnly);
+            reply >> t;
+        }
+        return t;
     }
-  /**
-   * Retrieves the value from the type @p T. Requires that the
-   * type @p T suppports QDataStream deserialisation.
-   * @param t the type will be written here, if successful
-   * @param tname the signature type name
-   * @return true if successful, false otherwise
-   */
-    template <class T> bool get(  T& t, const char* tname ) {
-	if ( typeCheck( tname, false ) ) {
-	    QDataStream reply( data, IO_ReadOnly );
-	    reply >> t;
-	    return true;
-	}
-	return false;
+    /**
+     * Retrieves the value from the type @p T. Requires that the
+     * type @p T suppports QDataStream deserialisation.
+     * @param t the type will be written here, if successful
+     * @param tname the signature type name
+     * @return true if successful, false otherwise
+     */
+    template < class T > bool get(T &t, const char *tname)
+    {
+        if(typeCheck(tname, false))
+        {
+            QDataStream reply(data, IO_ReadOnly);
+            reply >> t;
+            return true;
+        }
+        return false;
     }
-  /**
-   * Retrieves the value from the type @p T. Requires that the
-   * type @p T suppports QDataStream deserialisation
-   * and has a function dcopTypeName(T). This is true for most
-   * basic types.
-   * @param t the type will be written here, if successful
-   * @return true if successful, false otherwise
-   */
-    template <class T> bool get(  T& t ) {
-	if ( typeCheck( dcopTypeName(t), false ) ) {
-	    QDataStream reply( data, IO_ReadOnly );
-	    reply >> t;
-	    return true;
-	}
-	return false;
+    /**
+     * Retrieves the value from the type @p T. Requires that the
+     * type @p T suppports QDataStream deserialisation
+     * and has a function dcopTypeName(T). This is true for most
+     * basic types.
+     * @param t the type will be written here, if successful
+     * @return true if successful, false otherwise
+     */
+    template < class T > bool get(T &t)
+    {
+        if(typeCheck(dcopTypeName(t), false))
+        {
+            QDataStream reply(data, IO_ReadOnly);
+            reply >> t;
+            return true;
+        }
+        return false;
     }
 
     /**
      * Checks whether the type is valid.
      * @return true if valid, false otherwise
      */
-    inline bool isValid() const { return !type.isNull(); }
+    inline bool isValid() const
+    {
+        return !type.isNull();
+    }
 
     /// The serialized data.
     QByteArray data;
     /// The name of the type, or 0 if unknown.
     QCString type;
+
 private:
-    bool typeCheck( const char* t );
-    bool typeCheck( const char* t, bool warn );
+    bool typeCheck(const char *t);
+    bool typeCheck(const char *t, bool warn);
 };
 
 /**
@@ -117,7 +125,7 @@ private:
  * @see DCOPReply
  * @since 3.1
  */
-class DCOP_EXPORT DCOPArg  {
+class DCOP_EXPORT DCOPArg {
 public:
     /**
      * Creates a DCOPArg for DCOPRef::call().
@@ -127,12 +135,11 @@ public:
      * @param tname_arg the name of the data that will appear in the
      *        function's signature
      */
-    template <class T> DCOPArg( const T& t, const char* tname_arg )
-	: tname(tname_arg)
-	{
-	    QDataStream ds( data, IO_WriteOnly );
-	    ds << t;
-	}
+    template < class T > DCOPArg(const T &t, const char *tname_arg) : tname(tname_arg)
+    {
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t;
+    }
     /**
      * Creates a DCOPArg for DCOPRef::call().
      * @param t the data that will be written to a QDataStream. It must
@@ -141,23 +148,27 @@ public:
      *          calling the function dcopTypeName(T) that must be provided
      *          by you.
      */
-    template <class T> DCOPArg( const T& t )
-	: tname( dcopTypeName(t) )
-	{
-	    QDataStream ds( data, IO_WriteOnly );
-	    ds << t;
-	}
+    template < class T > DCOPArg(const T &t) : tname(dcopTypeName(t))
+    {
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t;
+    }
 
     /// The serialized data.
     QByteArray data;
     /// The signature type name of the data.
-    const char* tname;
+    const char *tname;
 };
 
-inline const char* dcopTypeName( const DCOPArg &arg )  { return arg.tname; }
-inline QDataStream & operator << (QDataStream & str, const DCOPArg& arg )
-   { str.writeRawBytes( arg.data.data(), arg.data.size() ); return str; }
-
+inline const char *dcopTypeName(const DCOPArg &arg)
+{
+    return arg.tname;
+}
+inline QDataStream &operator<<(QDataStream &str, const DCOPArg &arg)
+{
+    str.writeRawBytes(arg.data.data(), arg.data.size());
+    return str;
+}
 
 
 /**
@@ -275,8 +286,7 @@ inline QDataStream & operator << (QDataStream & str, const DCOPArg& arg )
  * @author Matthias Ettrich <ettrich@kde.org>, Torben Weis <weis@kde.org>
  */
 
-class DCOP_EXPORT DCOPRef
-{
+class DCOP_EXPORT DCOPRef {
 public:
     /**
      * Creates a null reference.
@@ -287,7 +297,7 @@ public:
     /**
      * Copy constructor.
      */
-    DCOPRef( const DCOPRef& ref );
+    DCOPRef(const DCOPRef &ref);
     /**
      *  Creates a reference for application @p app and object @p obj
      *
@@ -295,14 +305,14 @@ public:
      *            by the dcopserver.
      * @param obj The name of the dcop object.
      */
-    DCOPRef( const QCString& app, const QCString& obj = "" );
+    DCOPRef(const QCString &app, const QCString &obj = "");
 
     /**
      * Creates a reference to an existing dcop object
      *
      * @param object The dcop object to create the ref to.
      */
-    DCOPRef( DCOPObject *object );
+    DCOPRef(DCOPObject *object);
 
     /**
      *  Creates a reference for application @p app and object @p obj
@@ -313,7 +323,7 @@ public:
      * @param obj The name of the dcop object
      * @param type The object's type
      */
-    DCOPRef( const QCString& app, const QCString& obj, const QCString& type );
+    DCOPRef(const QCString &app, const QCString &obj, const QCString &type);
 
     /**
      * Tests whether this is a null reference.
@@ -350,7 +360,7 @@ public:
     /**
      * Assignment operator. Copies the references data.
      */
-    DCOPRef& operator=( const DCOPRef& );
+    DCOPRef &operator=(const DCOPRef &);
 
     /**
      * Changes the referenced object. Resets the type to unknown (null).
@@ -358,7 +368,7 @@ public:
      * @param app the application id.
      * @param obj the object id
      */
-    void setRef( const QCString& app, const QCString& obj = "" );
+    void setRef(const QCString &app, const QCString &obj = "");
 
     /**
      * Changes the referenced object.
@@ -366,7 +376,7 @@ public:
      * @param obj the object id
      * @param type the object's type
      */
-    void setRef( const QCString& app, const QCString& obj, const QCString& type );
+    void setRef(const QCString &app, const QCString &obj, const QCString &type);
 
 
     /**
@@ -382,7 +392,7 @@ public:
      * @return the DCOPClient of this object
      * @since 3.1
      */
-    DCOPClient* dcopClient() const;
+    DCOPClient *dcopClient() const;
 
     /**
      * Sets a specific dcop client for this reference. Otherwise
@@ -390,7 +400,7 @@ public:
      * @param client the new DCOPClient of this object
      * @since 3.1
      */
-    void setDCOPClient( DCOPClient *client );
+    void setDCOPClient(DCOPClient *client);
 
     /**
      * Flag for allowing entering the event loop if the call blocks too long.
@@ -400,7 +410,11 @@ public:
      * allowing also other code in the application to be executed.
      * @see DCOPClient::call()
      */
-    enum EventLoopFlag { NoEventLoop, UseEventLoop };
+    enum EventLoopFlag
+    {
+        NoEventLoop,
+        UseEventLoop
+    };
     /**
      * Calls the function @p fun on the object referenced by this reference.
      * @param fun the name of the DCOP function. This can be either the
@@ -414,9 +428,10 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    DCOPReply call( const QCString& fun ) {
-	QByteArray data;
-	return callInternal( fun, "()", data );
+    DCOPReply call(const QCString &fun)
+    {
+        QByteArray data;
+        return callInternal(fun, "()", data);
     }
 
     /**
@@ -432,10 +447,10 @@ public:
      *            the arguments
      * @since 3.2
      */
-    DCOPReply callExt( const QCString& fun, EventLoopFlag useEventLoop=NoEventLoop,
-		    int timeout=-1 ) {
-	QByteArray data;
-	return callInternal( fun, "()", data, useEventLoop, timeout );
+    DCOPReply callExt(const QCString &fun, EventLoopFlag useEventLoop = NoEventLoop, int timeout = -1)
+    {
+        QByteArray data;
+        return callInternal(fun, "()", data, useEventLoop, timeout);
     }
 
     /**
@@ -453,15 +468,14 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1>
-    DCOPReply call( const QCString& fun, const T1& t1 ) {
-	QCString args;
-	args.sprintf( "(%s)",
-		     dcopTypeName(t1) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1;
-	return callInternal( fun, args, data );
+    template < class T1 > DCOPReply call(const QCString &fun, const T1 &t1)
+    {
+        QCString args;
+        args.sprintf("(%s)", dcopTypeName(t1));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1;
+        return callInternal(fun, args, data);
     }
 
     /**
@@ -479,17 +493,14 @@ public:
      *           supported base type or a DCOPArg object.
      * @since 3.2
      */
-    template <class T1>
-    DCOPReply callExt( const QCString& fun,
-		    EventLoopFlag useEventLoop, int timeout,
-		    const T1& t1) {
-	QCString args;
-	args.sprintf( "(%s)",
-		     dcopTypeName(t1) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1;
-	return callInternal( fun, args, data, useEventLoop, timeout );
+    template < class T1 > DCOPReply callExt(const QCString &fun, EventLoopFlag useEventLoop, int timeout, const T1 &t1)
+    {
+        QCString args;
+        args.sprintf("(%s)", dcopTypeName(t1));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1;
+        return callInternal(fun, args, data, useEventLoop, timeout);
     }
 
     /**
@@ -509,18 +520,14 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1, class T2>
-    DCOPReply call( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2 ) {
-	QCString args;
-	args.sprintf( "(%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2;
-	return callInternal( fun, args, data );
+    template < class T1, class T2 > DCOPReply call(const QCString &fun, const T1 &t1, const T2 &t2)
+    {
+        QCString args;
+        args.sprintf("(%s,%s)", dcopTypeName(t1), dcopTypeName(t2));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2;
+        return callInternal(fun, args, data);
     }
 
     /**
@@ -540,19 +547,14 @@ public:
      *           supported base type or a DCOPArg object.
      * @since 3.2
      */
-    template <class T1, class T2>
-    DCOPReply callExt( const QCString& fun,
-		    EventLoopFlag useEventLoop, int timeout,
-		    const T1& t1,
-		    const T2& t2) {
-	QCString args;
-	args.sprintf( "(%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2;
-	return callInternal( fun, args, data, useEventLoop, timeout );
+    template < class T1, class T2 > DCOPReply callExt(const QCString &fun, EventLoopFlag useEventLoop, int timeout, const T1 &t1, const T2 &t2)
+    {
+        QCString args;
+        args.sprintf("(%s,%s)", dcopTypeName(t1), dcopTypeName(t2));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2;
+        return callInternal(fun, args, data, useEventLoop, timeout);
     }
 
     /**
@@ -574,20 +576,14 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1, class T2, class T3>
-    DCOPReply call( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3;
-	return callInternal( fun, args, data );
+    template < class T1, class T2, class T3 > DCOPReply call(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3;
+        return callInternal(fun, args, data);
     }
 
     /**
@@ -609,21 +605,15 @@ public:
      * @param timeout timeout for the call in miliseconds, or -1 for no timeout
      * @since 3.2
      */
-    template <class T1, class T2, class T3>
-    DCOPReply callExt( const QCString& fun,
-		    EventLoopFlag useEventLoop, int timeout,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3;
-	return callInternal( fun, args, data, useEventLoop, timeout );
+    template < class T1, class T2, class T3 >
+    DCOPReply callExt(const QCString &fun, EventLoopFlag useEventLoop, int timeout, const T1 &t1, const T2 &t2, const T3 &t3)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3;
+        return callInternal(fun, args, data, useEventLoop, timeout);
     }
 
     /**
@@ -647,22 +637,14 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1,class T2,class T3,class T4>
-    DCOPReply call( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4;
-	return callInternal( fun, args, data );
+    template < class T1, class T2, class T3, class T4 > DCOPReply call(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4;
+        return callInternal(fun, args, data);
     }
 
     /**
@@ -686,23 +668,15 @@ public:
      *           supported base type or a DCOPArg object.
      * @since 3.2
      */
-    template <class T1,class T2,class T3,class T4>
-    DCOPReply callExt( const QCString& fun,
-		    EventLoopFlag useEventLoop, int timeout,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4;
-	return callInternal( fun, args, data, useEventLoop, timeout );
+    template < class T1, class T2, class T3, class T4 >
+    DCOPReply callExt(const QCString &fun, EventLoopFlag useEventLoop, int timeout, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4;
+        return callInternal(fun, args, data, useEventLoop, timeout);
     }
 
     /**
@@ -728,24 +702,15 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1,class T2,class T3,class T4,class T5>
-    DCOPReply call( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5;
-	return callInternal( fun, args, data );
+    template < class T1, class T2, class T3, class T4, class T5 >
+    DCOPReply call(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4, const T5 &t5)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5;
+        return callInternal(fun, args, data);
     }
 
     /**
@@ -771,25 +736,16 @@ public:
      *           supported base type or a DCOPArg object.
      * @since 3.2
      */
-    template <class T1,class T2,class T3,class T4,class T5>
-    DCOPReply callExt( const QCString& fun,
-		    EventLoopFlag useEventLoop, int timeout,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5;
-	return callInternal( fun, args, data, useEventLoop, timeout );
+    template < class T1, class T2, class T3, class T4, class T5 >
+    DCOPReply callExt(const QCString &fun, EventLoopFlag useEventLoop, int timeout, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4,
+                      const T5 &t5)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5;
+        return callInternal(fun, args, data, useEventLoop, timeout);
     }
 
     /**
@@ -817,26 +773,16 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1,class T2,class T3,class T4,class T5,class T6>
-    DCOPReply call( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5,
-		    const T6& t6 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5),
-		     dcopTypeName(t6) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5 << t6;
-	return callInternal( fun, args, data );
+    template < class T1, class T2, class T3, class T4, class T5, class T6 >
+    DCOPReply call(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4, const T5 &t5, const T6 &t6)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5),
+                     dcopTypeName(t6));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5 << t6;
+        return callInternal(fun, args, data);
     }
 
     /**
@@ -864,27 +810,17 @@ public:
      *           supported base type or a DCOPArg object.
      * @since 3.2
      */
-    template <class T1,class T2,class T3,class T4,class T5,class T6>
-    DCOPReply callExt( const QCString& fun,
-		    EventLoopFlag useEventLoop, int timeout,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5,
-		    const T6& t6) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5),
-		     dcopTypeName(t6) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5 << t6;
-	return callInternal( fun, args, data, useEventLoop, timeout );
+    template < class T1, class T2, class T3, class T4, class T5, class T6 >
+    DCOPReply callExt(const QCString &fun, EventLoopFlag useEventLoop, int timeout, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4,
+                      const T5 &t5, const T6 &t6)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5),
+                     dcopTypeName(t6));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5 << t6;
+        return callInternal(fun, args, data, useEventLoop, timeout);
     }
     /**
      * Calls the function @p fun on the object referenced by this reference.
@@ -913,28 +849,16 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1,class T2,class T3,class T4,class T5,class T6,class T7>
-    DCOPReply call( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5,
-		    const T6& t6,
-		    const T7& t7 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5),
-		     dcopTypeName(t6),
-		     dcopTypeName(t7) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5 << t6 << t7;
-	return callInternal( fun, args, data );
+    template < class T1, class T2, class T3, class T4, class T5, class T6, class T7 >
+    DCOPReply call(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4, const T5 &t5, const T6 &t6, const T7 &t7)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5),
+                     dcopTypeName(t6), dcopTypeName(t7));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5 << t6 << t7;
+        return callInternal(fun, args, data);
     }
 
     /**
@@ -964,29 +888,17 @@ public:
      *           supported base type or a DCOPArg object.
      * @since 3.2
      */
-    template <class T1,class T2,class T3,class T4,class T5,class T6,class T7>
-    DCOPReply callExt( const QCString& fun,
-		    EventLoopFlag useEventLoop, int timeout,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5,
-		    const T6& t6,
-		    const T7& t7) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5),
-		     dcopTypeName(t6),
-		     dcopTypeName(t7) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5 << t6 << t7;
-	return callInternal( fun, args, data, useEventLoop, timeout );
+    template < class T1, class T2, class T3, class T4, class T5, class T6, class T7 >
+    DCOPReply callExt(const QCString &fun, EventLoopFlag useEventLoop, int timeout, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4,
+                      const T5 &t5, const T6 &t6, const T7 &t7)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5),
+                     dcopTypeName(t6), dcopTypeName(t7));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5 << t6 << t7;
+        return callInternal(fun, args, data, useEventLoop, timeout);
     }
 
     /**
@@ -1018,30 +930,17 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1,class T2,class T3,class T4,class T5,class T6,class T7,class T8>
-    DCOPReply call( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5,
-		    const T6& t6,
-		    const T7& t7,
-		    const T8& t8 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5),
-		     dcopTypeName(t6),
-		     dcopTypeName(t7),
-		     dcopTypeName(t8) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5 << t6 << t7 << t8;
-	return callInternal( fun, args, data );
+    template < class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8 >
+    DCOPReply call(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4, const T5 &t5, const T6 &t6, const T7 &t7,
+                   const T8 &t8)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5),
+                     dcopTypeName(t6), dcopTypeName(t7), dcopTypeName(t8));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5 << t6 << t7 << t8;
+        return callInternal(fun, args, data);
     }
 
     /**
@@ -1073,31 +972,17 @@ public:
      *            the arguments
      * @since 3.2
      */
-    template <class T1,class T2,class T3,class T4,class T5,class T6,class T7,class T8>
-    DCOPReply callExt( const QCString& fun,
-		    EventLoopFlag useEventLoop, int timeout,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5,
-		    const T6& t6,
-		    const T7& t7,
-		    const T8& t8) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5),
-		     dcopTypeName(t6),
-		     dcopTypeName(t7),
-		     dcopTypeName(t8) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5 << t6 << t7 << t8;
-	return callInternal( fun, args, data, useEventLoop, timeout );
+    template < class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8 >
+    DCOPReply callExt(const QCString &fun, EventLoopFlag useEventLoop, int timeout, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4,
+                      const T5 &t5, const T6 &t6, const T7 &t7, const T8 &t8)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5),
+                     dcopTypeName(t6), dcopTypeName(t7), dcopTypeName(t8));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5 << t6 << t7 << t8;
+        return callInternal(fun, args, data, useEventLoop, timeout);
     }
 
     /**
@@ -1113,9 +998,10 @@ public:
      * @see call()
      * @since 3.1
      */
-    bool send( const QCString& fun ) {
-	QByteArray data;
-	return sendInternal( fun, "()", data );
+    bool send(const QCString &fun)
+    {
+        QByteArray data;
+        return sendInternal(fun, "()", data);
     }
 
     /**
@@ -1134,15 +1020,14 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1>
-    bool send( const QCString& fun, const T1& t1 ) {
-	QCString args;
-	args.sprintf( "(%s)",
-		     dcopTypeName(t1) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1;
-	return sendInternal( fun, args, data );
+    template < class T1 > bool send(const QCString &fun, const T1 &t1)
+    {
+        QCString args;
+        args.sprintf("(%s)", dcopTypeName(t1));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1;
+        return sendInternal(fun, args, data);
     }
     /**
      * Calls the function @p fun on the object referenced by this reference.
@@ -1162,18 +1047,14 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1, class T2>
-    bool send( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2 ) {
-	QCString args;
-	args.sprintf( "(%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2;
-	return sendInternal( fun, args, data );
+    template < class T1, class T2 > bool send(const QCString &fun, const T1 &t1, const T2 &t2)
+    {
+        QCString args;
+        args.sprintf("(%s,%s)", dcopTypeName(t1), dcopTypeName(t2));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2;
+        return sendInternal(fun, args, data);
     }
     /**
      * Calls the function @p fun on the object referenced by this reference.
@@ -1195,20 +1076,14 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1, class T2, class T3>
-    bool send( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3;
-	return sendInternal( fun, args, data );
+    template < class T1, class T2, class T3 > bool send(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3;
+        return sendInternal(fun, args, data);
     }
     /**
      * Calls the function @p fun on the object referenced by this reference.
@@ -1232,22 +1107,14 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1,class T2,class T3,class T4>
-    bool send( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4;
-	return sendInternal( fun, args, data );
+    template < class T1, class T2, class T3, class T4 > bool send(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4;
+        return sendInternal(fun, args, data);
     }
     /**
      * Calls the function @p fun on the object referenced by this reference.
@@ -1273,24 +1140,15 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1,class T2,class T3,class T4,class T5>
-    bool send( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5;
-	return sendInternal( fun, args, data );
+    template < class T1, class T2, class T3, class T4, class T5 >
+    bool send(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4, const T5 &t5)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5;
+        return sendInternal(fun, args, data);
     }
     /**
      * Calls the function @p fun on the object referenced by this reference.
@@ -1318,26 +1176,16 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1,class T2,class T3,class T4,class T5,class T6>
-    bool send( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5,
-		    const T6& t6 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5),
-		     dcopTypeName(t6) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5 << t6;
-	return sendInternal( fun, args, data );
+    template < class T1, class T2, class T3, class T4, class T5, class T6 >
+    bool send(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4, const T5 &t5, const T6 &t6)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5),
+                     dcopTypeName(t6));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5 << t6;
+        return sendInternal(fun, args, data);
     }
     /**
      * Calls the function @p fun on the object referenced by this reference.
@@ -1367,28 +1215,16 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1,class T2,class T3,class T4,class T5,class T6,class T7>
-    bool send( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5,
-		    const T6& t6,
-		    const T7& t7 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5),
-		     dcopTypeName(t6),
-		     dcopTypeName(t7) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5 << t6 << t7;
-	return sendInternal( fun, args, data );
+    template < class T1, class T2, class T3, class T4, class T5, class T6, class T7 >
+    bool send(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4, const T5 &t5, const T6 &t6, const T7 &t7)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5),
+                     dcopTypeName(t6), dcopTypeName(t7));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5 << t6 << t7;
+        return sendInternal(fun, args, data);
     }
     /**
      * Calls the function @p fun on the object referenced by this reference.
@@ -1420,39 +1256,23 @@ public:
      * @see DCOPArg
      * @since 3.1
      */
-    template <class T1,class T2,class T3,class T4,class T5,class T6,class T7,class T8>
-    bool send( const QCString& fun,
-		    const T1& t1,
-		    const T2& t2,
-		    const T3& t3,
-		    const T4& t4,
-		    const T5& t5,
-		    const T6& t6,
-		    const T7& t7,
-		    const T8& t8 ) {
-	QCString args;
-	args.sprintf( "(%s,%s,%s,%s,%s,%s,%s,%s)",
-		     dcopTypeName(t1),
-		     dcopTypeName(t2),
-		     dcopTypeName(t3),
-		     dcopTypeName(t4),
-		     dcopTypeName(t5),
-		     dcopTypeName(t6),
-		     dcopTypeName(t7),
-		     dcopTypeName(t8) );
-	QByteArray data;
-	QDataStream ds( data, IO_WriteOnly );
-	ds << t1 << t2 << t3 << t4 << t5 << t6 << t7 << t8;
-	return sendInternal( fun, args, data );
+    template < class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8 >
+    bool send(const QCString &fun, const T1 &t1, const T2 &t2, const T3 &t3, const T4 &t4, const T5 &t5, const T6 &t6, const T7 &t7, const T8 &t8)
+    {
+        QCString args;
+        args.sprintf("(%s,%s,%s,%s,%s,%s,%s,%s)", dcopTypeName(t1), dcopTypeName(t2), dcopTypeName(t3), dcopTypeName(t4), dcopTypeName(t5),
+                     dcopTypeName(t6), dcopTypeName(t7), dcopTypeName(t8));
+        QByteArray data;
+        QDataStream ds(data, IO_WriteOnly);
+        ds << t1 << t2 << t3 << t4 << t5 << t6 << t7 << t8;
+        return sendInternal(fun, args, data);
     }
-
 
 
 private:
-    DCOPReply callInternal( const QCString& fun, const QCString& args, const QByteArray& data,
-			    EventLoopFlag useEventLoop, int timeout );
-    DCOPReply callInternal( const QCString& fun, const QCString& args, const QByteArray& data );
-    bool sendInternal( const QCString& fun, const QCString& args, const QByteArray& data );
+    DCOPReply callInternal(const QCString &fun, const QCString &args, const QByteArray &data, EventLoopFlag useEventLoop, int timeout);
+    DCOPReply callInternal(const QCString &fun, const QCString &args, const QByteArray &data);
+    bool sendInternal(const QCString &fun, const QCString &args, const QByteArray &data);
 
     QCString m_app;
     QCString m_obj;
@@ -1465,10 +1285,10 @@ private:
 /**
  * Writes the reference (NOT the object itself) to the stream.
  */
-DCOP_EXPORT QDataStream& operator<<( QDataStream&, const DCOPRef& ref );
+DCOP_EXPORT QDataStream &operator<<(QDataStream &, const DCOPRef &ref);
 /**
  * Reads a reference from the stream.
  */
-DCOP_EXPORT QDataStream& operator>>( QDataStream&, DCOPRef& ref );
+DCOP_EXPORT QDataStream &operator>>(QDataStream &, DCOPRef &ref);
 
 #endif

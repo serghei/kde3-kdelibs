@@ -18,23 +18,25 @@
 
 // $Id: viewstatusmsginterface.cpp 465272 2005-09-29 09:47:40Z mueller $
 
-#include "viewstatusmsginterface.h"       
-#include "viewstatusmsgdcopinterface.h" 
+#include "viewstatusmsginterface.h"
+#include "viewstatusmsgdcopinterface.h"
 #include "view.h"
 
 #include <qstring.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateViewStatusMsgInterface
-{
-  public:
-    PrivateViewStatusMsgInterface() {interface=0;}
-    ~PrivateViewStatusMsgInterface() {}
-    ViewStatusMsgDCOPInterface  *interface;
+class PrivateViewStatusMsgInterface {
+public:
+    PrivateViewStatusMsgInterface()
+    {
+        interface = 0;
+    }
+    ~PrivateViewStatusMsgInterface()
+    {
+    }
+    ViewStatusMsgDCOPInterface *interface;
 };
-
 }
 
 using namespace KTextEditor;
@@ -43,34 +45,34 @@ unsigned int ViewStatusMsgInterface::globalViewStatusMsgInterfaceNumber = 0;
 
 ViewStatusMsgInterface::ViewStatusMsgInterface()
 {
-  globalViewStatusMsgInterfaceNumber++;
-  myViewStatusMsgInterfaceNumber = globalViewStatusMsgInterfaceNumber++;
+    globalViewStatusMsgInterfaceNumber++;
+    myViewStatusMsgInterfaceNumber = globalViewStatusMsgInterfaceNumber++;
 
-  d = new PrivateViewStatusMsgInterface();
-  ::QString name = "ViewStatusMsgInterface#" + ::QString::number(myViewStatusMsgInterfaceNumber);
-  d->interface = new ViewStatusMsgDCOPInterface(this, name.latin1());
+    d = new PrivateViewStatusMsgInterface();
+    ::QString name = "ViewStatusMsgInterface#" + ::QString::number(myViewStatusMsgInterfaceNumber);
+    d->interface = new ViewStatusMsgDCOPInterface(this, name.latin1());
 }
 
 ViewStatusMsgInterface::~ViewStatusMsgInterface()
 {
-  delete d->interface;
-  delete d;
+    delete d->interface;
+    delete d;
 }
 
-unsigned int ViewStatusMsgInterface::viewStatusMsgInterfaceNumber () const
+unsigned int ViewStatusMsgInterface::viewStatusMsgInterfaceNumber() const
 {
-  return myViewStatusMsgInterfaceNumber;
+    return myViewStatusMsgInterfaceNumber;
 }
 
-void ViewStatusMsgInterface::setViewStatusMsgInterfaceDCOPSuffix (const QCString &suffix)
+void ViewStatusMsgInterface::setViewStatusMsgInterfaceDCOPSuffix(const QCString &suffix)
 {
-  d->interface->setObjId ("ViewStatusMsgInterface#"+suffix);
+    d->interface->setObjId("ViewStatusMsgInterface#" + suffix);
 }
 
-ViewStatusMsgInterface *KTextEditor::viewStatusMsgInterface (View *view)
-{           
-  if (!view)
-    return 0;
+ViewStatusMsgInterface *KTextEditor::viewStatusMsgInterface(View *view)
+{
+    if(!view)
+        return 0;
 
-  return static_cast<ViewStatusMsgInterface*>(view->qt_cast("KTextEditor::ViewStatusMsgInterface"));
+    return static_cast< ViewStatusMsgInterface * >(view->qt_cast("KTextEditor::ViewStatusMsgInterface"));
 }

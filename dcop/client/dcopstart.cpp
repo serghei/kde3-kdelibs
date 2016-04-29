@@ -28,20 +28,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <qstringlist.h>
 
-static DCOPClient* dcop = 0;
+static DCOPClient *dcop = 0;
 
 void startApp(const char *_app, int argc, const char **args)
 {
     const char *function = 0;
     QString app = QString::fromLatin1(_app);
-    if (app.endsWith(".desktop"))
-       function = "start_service_by_desktop_path(QString,QStringList)";
+    if(app.endsWith(".desktop"))
+        function = "start_service_by_desktop_path(QString,QStringList)";
     else
-       function = "start_service_by_desktop_name(QString,QStringList)";
+        function = "start_service_by_desktop_name(QString,QStringList)";
     QStringList URLs;
     for(int i = 0; i < argc; i++)
     {
-       URLs.append(QString::fromLocal8Bit(args[i]));
+        URLs.append(QString::fromLocal8Bit(args[i]));
     }
 
     QByteArray data, replyData;
@@ -49,40 +49,44 @@ void startApp(const char *_app, int argc, const char **args)
     QDataStream arg(data, IO_WriteOnly);
     arg << app << URLs;
 
-    if ( !dcop->call( "klauncher", "klauncher", function,  data, replyType, replyData) ) {
-	qWarning( "call failed");
+    if(!dcop->call("klauncher", "klauncher", function, data, replyType, replyData))
+    {
+        qWarning("call failed");
         exit(1);
-    } else {
-	QDataStream reply(replyData, IO_ReadOnly);
+    }
+    else
+    {
+        QDataStream reply(replyData, IO_ReadOnly);
 
-        if ( replyType != "serviceResult" )
+        if(replyType != "serviceResult")
         {
-            qWarning( "unexpected result '%s'", replyType.data());
+            qWarning("unexpected result '%s'", replyType.data());
             exit(1);
         }
         int result;
         QCString dcopName;
         QString error;
         reply >> result >> dcopName >> error;
-        if (result != 0)
+        if(result != 0)
         {
             qWarning("Error: %s", error.local8Bit().data());
             exit(1);
         }
-        if (!dcopName.isEmpty())
+        if(!dcopName.isEmpty())
             puts(dcopName.data());
     }
 }
 
 #ifdef Q_OS_WIN
-# define main kdemain
+#define main kdemain
 #endif
 
-int main( int argc, char** argv )
+int main(int argc, char **argv)
 {
-    if (( argc < 2) || (argv[1][0] == '-' )) {
-	fprintf( stderr, "Usage: dcopstart <application> [url1] [url2] ...\n" );
-	exit(0);
+    if((argc < 2) || (argv[1][0] == '-'))
+    {
+        fprintf(stderr, "Usage: dcopstart <application> [url1] [url2] ...\n");
+        exit(0);
     }
 
     DCOPClient client;
@@ -93,7 +97,7 @@ int main( int argc, char** argv )
     QCString objid;
     QCString function;
     /*char **args = 0;*/
-    startApp( argv[1], argc - 2, (const char**)&argv[2] );
+    startApp(argv[1], argc - 2, (const char **)&argv[2]);
 
     return 0;
 }

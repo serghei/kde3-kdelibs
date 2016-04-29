@@ -40,16 +40,14 @@ class QToolButton;
  * the iterator only includes visible items (for example, by adding
  * QListViewItemIterator::Visible to the iterator flags). Otherwise,
  * actions (such as deletion) may be taken on items that have been
- * hidden by the search function. } 
+ * hidden by the search function. }
  * @since 3.3
  */
 
-class KDEUI_EXPORT KListViewSearchLine : public KLineEdit
-{
+class KDEUI_EXPORT KListViewSearchLine : public KLineEdit {
     Q_OBJECT
 
 public:
-
     /**
      * Constructs a KListViewSearchLine with \a listView being the KListView to
      * be filtered.
@@ -61,7 +59,7 @@ public:
 
     /**
      * Constructs a KListViewSearchLine without any KListView to filter. The
-     * KListView object has to be set later with setListView(). 
+     * KListView object has to be set later with setListView().
      */
     KListViewSearchLine(QWidget *parent, const char *name);
 
@@ -83,7 +81,7 @@ public:
      *
      * @see setSearchColumns
      */
-    QValueList<int> searchColumns() const;
+    QValueList< int > searchColumns() const;
 
     /**
      * If this is true (the default) then the parents of matched items will also
@@ -133,7 +131,7 @@ public slots:
      *
      * @see searchColumns
      */
-    void setSearchColumns(const QValueList<int> &columns);
+    void setSearchColumns(const QValueList< int > &columns);
 
     /**
      * Sets the KListView that is filtered by this search line.  If \a lv is null
@@ -144,7 +142,6 @@ public slots:
     void setListView(KListView *lv);
 
 protected:
-
     /**
      * Returns true if \a item matches the search \a s.  This will be evaluated
      * based on the value of caseSensitive().  This can be overridden in
@@ -186,7 +183,6 @@ protected slots:
     void activateSearch();
 
 private:
-
     /**
      * This is used in case parent items of matching items shouldn't be
      * visible.  It hides all items that don't match the search string.
@@ -216,8 +212,7 @@ private:
  *
  * @since 3.4
  */
-class KDEUI_EXPORT KListViewSearchLineWidget : public QHBox
-{
+class KDEUI_EXPORT KListViewSearchLineWidget : public QHBox {
     Q_OBJECT
 
 public:
@@ -225,8 +220,7 @@ public:
      * Creates a KListViewSearchLineWidget for \a listView with \a parent as the
      * parent with and \a name.
      */
-    KListViewSearchLineWidget(KListView *listView = 0, QWidget *parent = 0,
-                              const char *name = 0);
+    KListViewSearchLineWidget(KListView *listView = 0, QWidget *parent = 0, const char *name = 0);
 
     /**
      * Destroys the KListViewSearchLineWidget

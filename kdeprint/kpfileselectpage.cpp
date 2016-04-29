@@ -27,39 +27,38 @@
 #include <klocale.h>
 #include <kiconloader.h>
 
-KPFileSelectPage::KPFileSelectPage(QWidget *parent, const char *name)
-: KPrintDialogPage(parent, name)
+KPFileSelectPage::KPFileSelectPage(QWidget *parent, const char *name) : KPrintDialogPage(parent, name)
 {
-	setTitle(i18n("&Files"));
-	m_first = true;
+    setTitle(i18n("&Files"));
+    m_first = true;
 
-	m_files = new KFileList(this);
+    m_files = new KFileList(this);
 
-	QHBoxLayout	*l0 = new QHBoxLayout(this, 0, 10);
-	l0->addWidget(m_files);
+    QHBoxLayout *l0 = new QHBoxLayout(this, 0, 10);
+    l0->addWidget(m_files);
 
-	resize(100, 100);
+    resize(100, 100);
 }
 
-void KPFileSelectPage::getOptions(QMap<QString,QString>& opts, bool incldef)
+void KPFileSelectPage::getOptions(QMap< QString, QString > &opts, bool incldef)
 {
-	// (incldef == false) is a hint telling that it should be the last time
-	// and we want to do it only once
-	if (!incldef)
-	{
-		QStringList	l = m_files->fileList();
-		opts["kde-filelist"] = l.join("@@");
-	}
+    // (incldef == false) is a hint telling that it should be the last time
+    // and we want to do it only once
+    if(!incldef)
+    {
+        QStringList l = m_files->fileList();
+        opts["kde-filelist"] = l.join("@@");
+    }
 }
 
-void KPFileSelectPage::setOptions(const QMap<QString,QString>& opts)
+void KPFileSelectPage::setOptions(const QMap< QString, QString > &opts)
 {
-	// do it only once as files will only be selected there
-	if (m_first)
-	{
-		QStringList	l = QStringList::split("@@", opts["kde-filelist"], false);
-		m_files->setFileList(l);
+    // do it only once as files will only be selected there
+    if(m_first)
+    {
+        QStringList l = QStringList::split("@@", opts["kde-filelist"], false);
+        m_files->setFileList(l);
 
-		m_first = false;
-	}
+        m_first = false;
+    }
 }

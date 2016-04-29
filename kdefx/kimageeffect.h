@@ -47,22 +47,23 @@ class QRect;
  * just call the static methods. They are encapsulated here merely to provide
  * a common namespace.
  */
-class KDEFX_EXPORT KImageEffect
-{
+class KDEFX_EXPORT KImageEffect {
 public:
     /**
      * This enum provides a gradient type specification
      * @see KImageEffect::blend(), KImageEffect::gradient(),
      * KImageEffect::unbalancedGradient()
      */
-    enum GradientType { VerticalGradient,
-			HorizontalGradient,
-                        DiagonalGradient,
-			CrossDiagonalGradient,
-                        PyramidGradient,
-			RectangleGradient,
-                        PipeCrossGradient,
-			EllipticGradient
+    enum GradientType
+    {
+        VerticalGradient,
+        HorizontalGradient,
+        DiagonalGradient,
+        CrossDiagonalGradient,
+        PyramidGradient,
+        RectangleGradient,
+        PipeCrossGradient,
+        EllipticGradient
     };
 
     /**
@@ -70,63 +71,74 @@ public:
      * @see KImageEffect::blend(), KImageEffect::channelIntensity(),
      * KImageEffect::modulate()
      */
-    enum RGBComponent { Red,   //!< Red channel
-			Green, //!< Green channel
-			Blue,  //!< Blue channel
-			Gray,  //!< Grey channel
-			All    //!< All channels
+    enum RGBComponent
+    {
+        Red,   //!< Red channel
+        Green, //!< Green channel
+        Blue,  //!< Blue channel
+        Gray,  //!< Grey channel
+        All    //!< All channels
     };
 
     /**
      * This enum provides a lighting direction specification
      * @see KImageEffect::hash()
      */
-    enum Lighting {NorthLite, //!< Lighting from the top of the image
-		   NWLite,    //!< Lighting from the top left of the image
-		   WestLite,  //!< Lighting from the left of the image
-		   SWLite,    //!< Lighting from the bottom left of the image
-                   SouthLite, //!< Lighting from the bottom of the image
-		   SELite,    //!< Lighting from the bottom right of the image
-		   EastLite,  //!< Lighting from the right of the image
-		   NELite     //!< Lighting from the top right of the image
+    enum Lighting
+    {
+        NorthLite, //!< Lighting from the top of the image
+        NWLite,    //!< Lighting from the top left of the image
+        WestLite,  //!< Lighting from the left of the image
+        SWLite,    //!< Lighting from the bottom left of the image
+        SouthLite, //!< Lighting from the bottom of the image
+        SELite,    //!< Lighting from the bottom right of the image
+        EastLite,  //!< Lighting from the right of the image
+        NELite     //!< Lighting from the top right of the image
     };
 
     /**
      * This enum provides a modulation type specification
      * @see KImageEffect::modulate()
      */
-    enum ModulationType { Intensity,  //!< Modulate image intensity
-			  Saturation, //!< Modulate image saturation
-			  HueShift,   //!< Modulate image hue
-			  Contrast    //!< Modulate image contrast
+    enum ModulationType
+    {
+        Intensity,  //!< Modulate image intensity
+        Saturation, //!< Modulate image saturation
+        HueShift,   //!< Modulate image hue
+        Contrast    //!< Modulate image contrast
     };
 
     /**
      * This enum provides a noise type specification
      * @see KImageEffect::addNoise()
      */
-    enum NoiseType { UniformNoise=0,              //!< Uniform distribution
-		     GaussianNoise,               //!< Gaussian distribution
-		     MultiplicativeGaussianNoise, //!< Multiplicative Gaussian distribution
-                     ImpulseNoise,                //!< Impulse distribution
-		     LaplacianNoise,              //!< Laplacian distribution
-		     PoissonNoise                 //!< Poisson distribution
+    enum NoiseType
+    {
+        UniformNoise = 0,            //!< Uniform distribution
+        GaussianNoise,               //!< Gaussian distribution
+        MultiplicativeGaussianNoise, //!< Multiplicative Gaussian distribution
+        ImpulseNoise,                //!< Impulse distribution
+        LaplacianNoise,              //!< Laplacian distribution
+        PoissonNoise                 //!< Poisson distribution
     };
 
     /**
      * This enum provides a rotation specification.
      * @see KImageEffect::rotate()
      */
-    enum RotateDirection{ Rotate90,  //!< Rotate 90 degrees to the right.
-			  Rotate180, //!< Rotate 180 degrees.
-			  Rotate270  //!< Rotate 90 degrees to the left.
+    enum RotateDirection
+    {
+        Rotate90,  //!< Rotate 90 degrees to the right.
+        Rotate180, //!< Rotate 180 degrees.
+        Rotate270  //!< Rotate 90 degrees to the left.
     };
 
     /**
      * This enum lists possible bumpmapping implementations.
      * @see KImageEffect::bumpmap()
      */
-    enum BumpmapType {
+    enum BumpmapType
+    {
         Linear,
         Spherical,
         Sinuosidal
@@ -143,8 +155,7 @@ public:
      * truecolor display. The gradient will be dithered to this number of
      * colors. Pass 0 to prevent dithering.
      */
-    static QImage gradient(const QSize &size, const QColor &ca,
-                           const QColor &cb, GradientType type, int ncols=3);
+    static QImage gradient(const QSize &size, const QColor &ca, const QColor &cb, GradientType type, int ncols = 3);
 
     /**
      * Create an unbalanced gradient.
@@ -160,9 +171,8 @@ public:
      * @param yfactor The y decay length.
      * @param ncols The number of colors. See KImageEffect:gradient.
      */
-    static QImage unbalancedGradient(const QSize &size, const QColor &ca,
-	    const QColor &cb, GradientType type, int xfactor = 100,
-	    int yfactor = 100, int ncols = 3);
+    static QImage unbalancedGradient(const QSize &size, const QColor &ca, const QColor &cb, GradientType type, int xfactor = 100, int yfactor = 100,
+                                     int ncols = 3);
 
     /**
      * Blends a color into the destination image, using an opacity
@@ -180,7 +190,7 @@ public:
      * @author Karol Szwed (gallium@kde.org)
      * @author Fredrik H&ouml;glund (fredrik@kde.org)
      */
-    static QImage& blend(const QColor& clr, QImage& dst, float opacity);
+    static QImage &blend(const QColor &clr, QImage &dst, float opacity);
 
     /**
      * Blend the src image into the destination image, using an opacity
@@ -198,7 +208,7 @@ public:
      * @author Karol Szwed (gallium@kde.org)
      * @author Fredrik H&ouml;glund (fredrik@kde.org)
      */
-    static QImage& blend(QImage& src, QImage& dst, float opacity);
+    static QImage &blend(QImage &src, QImage &dst, float opacity);
 
     /**
      * Blend the provided image into a background of the indicated color.
@@ -214,9 +224,7 @@ public:
      *                  with concentric blending effects)
      * @param image must be 32bpp
      */
-    static QImage& blend(QImage &image, float initial_intensity,
-                      const QColor &bgnd, GradientType eff,
-                      bool anti_dir=false);
+    static QImage &blend(QImage &image, float initial_intensity, const QColor &bgnd, GradientType eff, bool anti_dir = false);
 
     /**
      * Blend an image into another one, using a gradient type
@@ -228,8 +236,7 @@ public:
      * @param xf x decay length for unbalanced gradient tpye
      * @param yf y decay length for unbalanced gradient tpye
      */
-    static QImage& blend(QImage &image1,QImage &image2,
-			 GradientType gt, int xf=100, int yf=100);
+    static QImage &blend(QImage &image1, QImage &image2, GradientType gt, int xf = 100, int yf = 100);
 
     /**
      * Blend an image into another one, using a color channel of a
@@ -243,8 +250,7 @@ public:
      *               in between, a corresponding blending is used.
      * @param channel The RBG channel to use for the blending decision.
      */
-    static QImage& blend(QImage &image1, QImage &image2,
-			 QImage &blendImage, RGBComponent channel);
+    static QImage &blend(QImage &image1, QImage &image2, QImage &blendImage, RGBComponent channel);
 
     /**
      * Blend an image into another one, using alpha in the expected way.
@@ -253,8 +259,8 @@ public:
      * @param output the target image
      * @author Rik Hemsley (rikkus) <rik@kde.org>
      */
-    static bool blend(const QImage & upper, const QImage & lower, QImage & output);
-// Not yet...    static bool blend(const QImage & image1, const QImage & image2, QImage & output, const QRect & destRect);
+    static bool blend(const QImage &upper, const QImage &lower, QImage &output);
+    // Not yet...    static bool blend(const QImage & image1, const QImage & image2, QImage & output, const QRect & destRect);
 
     /**
      * Blend an image into another one, using alpha in the expected way and
@@ -272,7 +278,7 @@ public:
      * @param lower the "lower" image
      * @param output the target image
      */
-    static bool blend(int &x, int &y, const QImage & upper, const QImage & lower, QImage & output);
+    static bool blend(int &x, int &y, const QImage &upper, const QImage &lower, QImage &output);
 
     /**
      * Blend an image into another one, using alpha in the expected way and
@@ -284,7 +290,7 @@ public:
      * @param upper the "upper" image
      * @param lower the "lower" image, which becomes the output image
      */
-    static bool blendOnLower(int x, int y, const QImage & upper, const QImage & lower);
+    static bool blendOnLower(int x, int y, const QImage &upper, const QImage &lower);
 
     /**
      * Blend part of an image into part of another, using the alpha channel in
@@ -298,8 +304,7 @@ public:
      *                  blending will occur.
      * @since 3.2
      */
-    static void blendOnLower(const QImage &upper, const QPoint &upperOffset,
-                             QImage &lower, const QRect &lowerRect);
+    static void blendOnLower(const QImage &upper, const QPoint &upperOffset, QImage &lower, const QRect &lowerRect);
 
     /**
      * Blend part of an image into part of another, using the opacity value
@@ -315,22 +320,23 @@ public:
      *             the source image will be blended into the destination image.
      * @since 3.2
      */
-    static void blendOnLower(const QImage &upper, const QPoint &upperOffset,
-                             QImage &lower, const QRect &lowerRect, float opacity);
+    static void blendOnLower(const QImage &upper, const QPoint &upperOffset, QImage &lower, const QRect &lowerRect, float opacity);
 
     /**
      * Disposition of a source image on top of a destination image.
      * @see KImageEffect::computeDestinationRect, KImageEffect::blendOnLower
      * @since 3.2
      */
-    enum Disposition { NoImage = 0, //!< Don't overlay
-		       Centered,    //!< Center top image on botton image
-		       Tiled,       //!< Tile top image on bottom image
-		       CenterTiled, //!< Center and tile top image on bottom image
-		       CenteredMaxpect, //!< Center and scale aspect
-		       TiledMaxpect, //!< Tile and scale aspect
-		       Scaled,      //!< Scale
-		       CenteredAutoFit //!< Center and scale or scale aspect
+    enum Disposition
+    {
+        NoImage = 0,     //!< Don't overlay
+        Centered,        //!< Center top image on botton image
+        Tiled,           //!< Tile top image on bottom image
+        CenterTiled,     //!< Center and tile top image on bottom image
+        CenteredMaxpect, //!< Center and scale aspect
+        TiledMaxpect,    //!< Tile and scale aspect
+        Scaled,          //!< Scale
+        CenteredAutoFit  //!< Center and scale or scale aspect
     };
 
     /**
@@ -347,8 +353,7 @@ public:
      * @return the computed rectangle. Its size may exceed @e lowerSize.
      * @since 3.2
      */
-    static QRect computeDestinationRect(const QSize &lowerSize,
-                                      Disposition disposition, QImage &upper);
+    static QRect computeDestinationRect(const QSize &lowerSize, Disposition disposition, QImage &upper);
 
     /**
      * Blend an image on top of another using a given disposition and a given
@@ -356,8 +361,7 @@ public:
      * way. Beware the upper image may be modified.
      * @since 3.2
      */
-    static void blendOnLower(QImage &upper, QImage &lower,
-                             Disposition disposition, float opacity);
+    static void blendOnLower(QImage &upper, QImage &lower, Disposition disposition, float opacity);
 
     /**
      * Modifies the intensity of a pixmap's RGB channel component.
@@ -368,8 +372,7 @@ public:
      * @return The @p image, provided for convenience.
      * @author Daniel M. Duley (mosfet)
      */
-    static QImage& channelIntensity(QImage &image, float percent,
-                                    RGBComponent channel);
+    static QImage &channelIntensity(QImage &image, float percent, RGBComponent channel);
 
     /**
      * Fade an image to a certain background color.
@@ -381,7 +384,7 @@ public:
      * @param color The background color.
      * @return Returns the image(), provided for convenience.
      */
-    static QImage& fade(QImage &image, float val, const QColor &color);
+    static QImage &fade(QImage &image, float val, const QColor &color);
 
 
     /**
@@ -394,8 +397,7 @@ public:
      * @param ncols The number of colors to dither the image to.
      * Pass 0 to prevent dithering.
      */
-    static QImage& flatten(QImage &image, const QColor &ca,
-           const QColor &cb, int ncols=0);
+    static QImage &flatten(QImage &image, const QColor &ca, const QColor &cb, int ncols = 0);
 
     /**
      * Build a hash on any given QImage
@@ -405,8 +407,7 @@ public:
      * @param spacing How many unmodified pixels in between hashes.
      * @return Returns the image(), provided for convenience.
      */
-    static QImage& hash(QImage &image, Lighting lite=NorthLite,
-                        unsigned int spacing=0);
+    static QImage &hash(QImage &image, Lighting lite = NorthLite, unsigned int spacing = 0);
 
     /**
      * Either brighten or dim the image by a specified percent.
@@ -421,7 +422,7 @@ public:
      * @author Daniel M. Duley (mosfet)
      * @author Benjamin Roe (ben@benroe.com)
      */
-    static QImage& intensity(QImage &image, float percent);
+    static QImage &intensity(QImage &image, float percent);
 
     /**
      * Modulate the image with a color channel of another image.
@@ -434,8 +435,7 @@ public:
      * @param channel The RBG channel of image2 to use for modulation.
      * @return Returns the image(), provided for convenience.
      */
-    static QImage& modulate(QImage &image, QImage &modImage, bool reverse,
-		ModulationType type, int factor, RGBComponent channel);
+    static QImage &modulate(QImage &image, QImage &modImage, bool reverse, ModulationType type, int factor, RGBComponent channel);
 
     /**
      * Convert an image to grayscale.
@@ -446,7 +446,7 @@ public:
      * @return Returns the image(), provided for convenience.
      * @author Daniel M. Duley (mosfet)
      */
-    static QImage& toGray(QImage &image, bool fast = false);
+    static QImage &toGray(QImage &image, bool fast = false);
 
     /**
      * Desaturate an image evenly.
@@ -455,7 +455,7 @@ public:
      * @param desat A value between 0 and 1 setting the degree of desaturation
      * @return Returns the image(), provided for convenience.
      */
-    static QImage& desaturate(QImage &image, float desat = 0.3);
+    static QImage &desaturate(QImage &image, float desat = 0.3);
 
     /**
      * Fast, but low quality contrast of an image. Also see contrastHSV.
@@ -466,7 +466,7 @@ public:
      * @author Daniel M. Duley (mosfet)
      * ### KDE 4: remove
      */
-    static QImage& contrast(QImage &image, int c);
+    static QImage &contrast(QImage &image, int c);
 
     /**
      * Dither an image using Floyd-Steinberg dithering for low-color
@@ -477,7 +477,7 @@ public:
      * @param size The size of the palette
      * @return Returns the image(), provided for convenience.
      */
-    static QImage& dither(QImage &image, const QColor *palette, int size);
+    static QImage &dither(QImage &image, const QColor *palette, int size);
 
     /**
      * Calculate the image for a selected image, for instance a selected icon
@@ -485,7 +485,7 @@ public:
      * @param img the QImage to select
      * @param col the selected color, usually from QColorGroup::highlight().
      */
-    static QImage& selectedImage( QImage &img, const QColor &col );
+    static QImage &selectedImage(QImage &img, const QColor &col);
 
     /**
      * High quality, expensive HSV contrast. You can do a faster one by just
@@ -498,7 +498,7 @@ public:
      * it is decreased, (dulled).
      * @author Daniel M. Duley (mosfet)
      */
-    static void contrastHSV(QImage &img, bool sharpen=true);
+    static void contrastHSV(QImage &img, bool sharpen = true);
 
     /**
      * Normalises the pixel values to span the full range of color values.
@@ -525,7 +525,7 @@ public:
      * @param value The threshold value.
      * @author Daniel M. Duley (mosfet)
      */
-    static void threshold(QImage &img, unsigned int value=128);
+    static void threshold(QImage &img, unsigned int value = 128);
 
     /**
      * Produces a 'solarization' effect seen when exposing a photographic
@@ -535,7 +535,7 @@ public:
      * @param factor The extent of the solarization (0-99.9)
      * @author Daniel M. Duley (mosfet)
      */
-    static void solarize(QImage &img, double factor=50.0);
+    static void solarize(QImage &img, double factor = 50.0);
 
     /**
      * Embosses the source image. This involves highlighting the edges
@@ -584,7 +584,7 @@ public:
      * This is provided for binary compatability only! Use the above method
      * with a radius and sigma instead!
      */
-     static QImage charcoal(QImage &src, double factor=50.0);
+    static QImage charcoal(QImage &src, double factor = 50.0);
 
     /**
      * Rotates the image by the specified amount
@@ -636,7 +636,7 @@ public:
      * This is provided for binary compatability only! Use the above method
      * with a radius and sigma instead!
      */
-    static QImage blur(QImage &src, double factor=50.0);
+    static QImage blur(QImage &src, double factor = 50.0);
 
     /**
      * Detects edges in an image using pixel neighborhoods and an edge
@@ -660,8 +660,7 @@ public:
      * @return The imploded image. The original is not changed.
      * @author Daniel M. Duley (mosfet)
      */
-    static QImage implode(QImage &src, double factor=30.0,
-                   unsigned int background = 0xFFFFFFFF);
+    static QImage implode(QImage &src, double factor = 30.0, unsigned int background = 0xFFFFFFFF);
 
     /**
      * Produces an oil painting effect.
@@ -678,7 +677,7 @@ public:
      * This is provided for binary compatability only! Use the above method
      * instead!
      */
-    static QImage oilPaint(QImage &src, int radius=3);
+    static QImage oilPaint(QImage &src, int radius = 3);
 
     /**
      * Sharpens the pixels in the image using pixel neighborhoods.
@@ -697,7 +696,7 @@ public:
      * This is provided for binary compatability only! Use the above method
      * instead!
      */
-    static QImage sharpen(QImage &src, double factor=30.0);
+    static QImage sharpen(QImage &src, double factor = 30.0);
 
     /**
      * Randomly displaces pixels.
@@ -707,7 +706,7 @@ public:
      * @return The image with pixels displaced. The original is not changed.
      * @author Daniel M. Duley (mosfet)
      */
-    static QImage spread(QImage &src, unsigned int amount=3);
+    static QImage spread(QImage &src, unsigned int amount = 3);
 
     /**
      * Shades the image using a distance light source.
@@ -719,8 +718,7 @@ public:
      * @return The shaded image. The original is not changed.
      * @author Daniel M. Duley (mosfet)
      */
-    static QImage shade(QImage &src, bool color_shading=true, double azimuth=30.0,
-                        double elevation=30.0);
+    static QImage shade(QImage &src, bool color_shading = true, double azimuth = 30.0, double elevation = 30.0);
     /**
      * Swirls the image by a specified amount
      *
@@ -731,8 +729,7 @@ public:
      * @return The swirled image. The original is not changed.
      * @author Daniel M. Duley (mosfet)
      */
-    static QImage swirl(QImage &src, double degrees=50.0, unsigned int background =
-                         0xFFFFFFFF);
+    static QImage swirl(QImage &src, double degrees = 50.0, unsigned int background = 0xFFFFFFFF);
 
     /**
      * Modifies the pixels along a sine wave.
@@ -745,8 +742,7 @@ public:
      * @return The new image. The original is not changed.
      * @author Daniel M. Duley (mosfet)
      */
-    static QImage wave(QImage &src, double amplitude=25.0, double frequency=150.0,
-                        unsigned int background = 0xFFFFFFFF);
+    static QImage wave(QImage &src, double amplitude = 25.0, double frequency = 150.0, unsigned int background = 0xFFFFFFFF);
 
     /**
      * A bumpmapping algorithm.
@@ -768,13 +764,10 @@ public:
      * @return The destination image (dst) containing the result.
      * @author Zack Rusin <zack@kde.org>
      */
-    static QImage bumpmap(QImage &img, QImage &map, double azimuth, double elevation,
-                          int depth, int xofs, int yofs, int waterlevel,
-                          int ambient, bool compensate, bool invert,
-                          BumpmapType type, bool tiled);
+    static QImage bumpmap(QImage &img, QImage &map, double azimuth, double elevation, int depth, int xofs, int yofs, int waterlevel, int ambient,
+                          bool compensate, bool invert, BumpmapType type, bool tiled);
 
 private:
-
     /**
      * Helper function to fast calc some altered (lighten, shaded) colors
      *
@@ -785,22 +778,15 @@ private:
     /**
      * Helper function to find the nearest color to the RBG triplet
      */
-    static int nearestColor( int r, int g, int b, const QColor *pal, int size );
+    static int nearestColor(int r, int g, int b, const QColor *pal, int size);
 
-    static void hull(const int x_offset, const int y_offset, const int polarity,
-                     const int width, const int height,
-                     unsigned int *f, unsigned int *g);
+    static void hull(const int x_offset, const int y_offset, const int polarity, const int width, const int height, unsigned int *f, unsigned int *g);
     static unsigned int generateNoise(unsigned int pixel, NoiseType type);
-    static unsigned int interpolateColor(QImage *image, double x, double y,
-                                         unsigned int background);
+    static unsigned int interpolateColor(QImage *image, double x, double y, unsigned int background);
     /* Various convolve routines */
     static int getOptimalKernelWidth(double radius, double sigma);
-    static bool convolveImage(QImage *image, QImage *dest,
-                              const unsigned int order,
-                              const double *kernel);
-    static void blurScanLine(double *kernel, int width,
-                             unsigned int *src, unsigned int *dest,
-                             int columns);
+    static bool convolveImage(QImage *image, QImage *dest, const unsigned int order, const double *kernel);
+    static void blurScanLine(double *kernel, int width, unsigned int *src, unsigned int *dest, int columns);
     static int getBlurKernel(int width, double sigma, double **kernel);
 };
 

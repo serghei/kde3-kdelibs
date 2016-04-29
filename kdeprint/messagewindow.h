@@ -27,29 +27,28 @@
 
 class QLabel;
 
-class KDEPRINT_EXPORT MessageWindow : public QWidget
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT MessageWindow : public QWidget {
+    Q_OBJECT
 
 public:
-	~MessageWindow();
+    ~MessageWindow();
 
-	static void add( QWidget *parent, const QString& txt, int delay = 500 );
-	static void change( QWidget *parent, const QString& txt );
-	static void remove( QWidget *parent );
-	static void removeAll();
+    static void add(QWidget *parent, const QString &txt, int delay = 500);
+    static void change(QWidget *parent, const QString &txt);
+    static void remove(QWidget *parent);
+    static void removeAll();
 
 protected slots:
-	void slotTimer();
+    void slotTimer();
 
 protected:
-	MessageWindow( const QString& txt, int delay = 500, QWidget *parent = 0, const char *name = 0 );
-	void setText( const QString& txt );
-	QString text() const;
+    MessageWindow(const QString &txt, int delay = 500, QWidget *parent = 0, const char *name = 0);
+    void setText(const QString &txt);
+    QString text() const;
 
 private:
-	QLabel *m_text;
-	static QPtrDict<MessageWindow> m_windows;
+    QLabel *m_text;
+    static QPtrDict< MessageWindow > m_windows;
 };
 
 #endif

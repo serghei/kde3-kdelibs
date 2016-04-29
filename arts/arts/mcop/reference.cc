@@ -1,6 +1,6 @@
 /*
-	Copyright (C) 2000 Nicolas Brodu, nicolas.brodu@free.fr
-	                   Stefan Westerfeld, stefan@space.twc.de
+    Copyright (C) 2000 Nicolas Brodu, nicolas.brodu@free.fr
+                       Stefan Westerfeld, stefan@space.twc.de
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -26,7 +26,7 @@ using namespace Arts;
 // unfortunately...
 FlowSystem Object::_flowSystem() const
 {
-	_pool->checkcreate();
-	assert(_pool->base);
-	return _pool->base->_flowSystem();
+    _pool->checkcreate();
+    assert(_pool->base);
+    return _pool->base->_flowSystem();
 }

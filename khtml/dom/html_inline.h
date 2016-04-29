@@ -44,19 +44,21 @@ class DOMString;
  * element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLAnchorElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLAnchorElement : public HTMLElement {
 public:
     HTMLAnchorElement();
     HTMLAnchorElement(const HTMLAnchorElement &other);
     HTMLAnchorElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLAnchorElement(HTMLAnchorElementImpl *impl);
-public:
 
-    HTMLAnchorElement & operator = (const HTMLAnchorElement &other);
-    HTMLAnchorElement & operator = (const Node &other);
+public:
+    HTMLAnchorElement &operator=(const HTMLAnchorElement &other);
+    HTMLAnchorElement &operator=(const Node &other);
 
     ~HTMLAnchorElement();
 
@@ -72,7 +74,7 @@ public:
     /**
      * see accessKey
      */
-    void setAccessKey( const DOMString & );
+    void setAccessKey(const DOMString &);
 
     /**
      * The character encoding of the linked resource. See the <a
@@ -85,7 +87,7 @@ public:
     /**
      * see charset
      */
-    void setCharset( const DOMString & );
+    void setCharset(const DOMString &);
 
     /**
      * Comma-separated list of lengths, defining an active region
@@ -100,7 +102,7 @@ public:
     /**
      * see coords
      */
-    void setCoords( const DOMString & );
+    void setCoords(const DOMString &);
 
     /**
      * The URI of the linked resource. See the <a
@@ -113,7 +115,7 @@ public:
     /**
      * see href
      */
-    void setHref( const DOMString & );
+    void setHref(const DOMString &);
 
     /**
      * Language code of the linked resource. See the <a
@@ -126,7 +128,7 @@ public:
     /**
      * see hreflang
      */
-    void setHreflang( const DOMString & );
+    void setHreflang(const DOMString &);
 
     /**
      * Anchor name. See the <a
@@ -139,7 +141,7 @@ public:
     /**
      * see name
      */
-    void setName( const DOMString & );
+    void setName(const DOMString &);
 
     /**
      * Forward link type. See the <a
@@ -152,7 +154,7 @@ public:
     /**
      * see rel
      */
-    void setRel( const DOMString & );
+    void setRel(const DOMString &);
 
     /**
      * Reverse link type. See the <a
@@ -165,7 +167,7 @@ public:
     /**
      * see rev
      */
-    void setRev( const DOMString & );
+    void setRev(const DOMString &);
 
     /**
      * The shape of the active area. The coordinates are given by
@@ -179,7 +181,7 @@ public:
     /**
      * see shape
      */
-    void setShape( const DOMString & );
+    void setShape(const DOMString &);
 
     /**
      * Index that represents the element's position in the tabbing
@@ -193,7 +195,7 @@ public:
     /**
      * see tabIndex
      */
-    void setTabIndex( long );
+    void setTabIndex(long);
 
     /**
      * Frame to render the resource in. See the <a
@@ -206,7 +208,7 @@ public:
     /**
      * see target
      */
-    void setTarget( const DOMString & );
+    void setTarget(const DOMString &);
 
     /**
      * Advisory content type. See the <a
@@ -219,7 +221,7 @@ public:
     /**
      * see type
      */
-    void setType( const DOMString & );
+    void setType(const DOMString &);
 
     /**
      * Removes keyboard focus from this element.
@@ -227,7 +229,7 @@ public:
      * @return
      *
      */
-    void blur (  );
+    void blur();
 
     /**
      * Gives keyboard focus to this element.
@@ -235,15 +237,14 @@ public:
      * @return
      *
      */
-    void focus (  );
+    void focus();
 
     /**
-     * Simulate a mouse-click. 
+     * Simulate a mouse-click.
      * NOTE: this method is not part of the DOM
      * @since 3.5.7
      */
-    void click (  );
-
+    void click();
 };
 
 // --------------------------------------------------------------------------
@@ -256,19 +257,21 @@ class HTMLBRElementImpl;
  * element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLBRElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLBRElement : public HTMLElement {
 public:
     HTMLBRElement();
     HTMLBRElement(const HTMLBRElement &other);
     HTMLBRElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLBRElement(HTMLBRElementImpl *impl);
-public:
 
-    HTMLBRElement & operator = (const HTMLBRElement &other);
-    HTMLBRElement & operator = (const Node &other);
+public:
+    HTMLBRElement &operator=(const HTMLBRElement &other);
+    HTMLBRElement &operator=(const Node &other);
 
     ~HTMLBRElement();
 
@@ -284,7 +287,7 @@ public:
     /**
      * see clear
      */
-    void setClear( const DOMString & );
+    void setClear(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -299,19 +302,21 @@ class DOMString;
  * deprecated in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLFontElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLFontElement : public HTMLElement {
 public:
     HTMLFontElement();
     HTMLFontElement(const HTMLFontElement &other);
     HTMLFontElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLFontElement(HTMLFontElementImpl *impl);
-public:
 
-    HTMLFontElement & operator = (const HTMLFontElement &other);
-    HTMLFontElement & operator = (const Node &other);
+public:
+    HTMLFontElement &operator=(const HTMLFontElement &other);
+    HTMLFontElement &operator=(const Node &other);
 
     ~HTMLFontElement();
 
@@ -327,7 +332,7 @@ public:
     /**
      * see color
      */
-    void setColor( const DOMString & );
+    void setColor(const DOMString &);
 
     /**
      * Font face identifier. See the <a
@@ -341,7 +346,7 @@ public:
     /**
      * see face
      */
-    void setFace( const DOMString & );
+    void setFace(const DOMString &);
 
     /**
      * Font size. See the <a
@@ -355,7 +360,7 @@ public:
     /**
      * see size
      */
-    void setSize( const DOMString & );
+    void setSize(const DOMString &);
 };
 
 class HTMLModElementImpl;
@@ -369,19 +374,21 @@ class DOMString;
  * DEL </a> element definitions in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLModElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLModElement : public HTMLElement {
 public:
     HTMLModElement();
     HTMLModElement(const HTMLModElement &other);
     HTMLModElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLModElement(HTMLElementImpl *impl);
-public:
 
-    HTMLModElement & operator = (const HTMLModElement &other);
-    HTMLModElement & operator = (const Node &other);
+public:
+    HTMLModElement &operator=(const HTMLModElement &other);
+    HTMLModElement &operator=(const Node &other);
 
     ~HTMLModElement();
 
@@ -396,7 +403,7 @@ public:
     /**
      * see cite
      */
-    void setCite( const DOMString & );
+    void setCite(const DOMString &);
 
     /**
      * The date and time of the change. See the <a
@@ -409,7 +416,7 @@ public:
     /**
      * see dateTime
      */
-    void setDateTime( const DOMString & );
+    void setDateTime(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -427,19 +434,21 @@ class HTMLQuoteElementImpl;
  * element. To resolve ambiquities, we use this one for the \c Q
  * element only.
  */
-class KHTML_EXPORT HTMLQuoteElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLQuoteElement : public HTMLElement {
 public:
     HTMLQuoteElement();
     HTMLQuoteElement(const HTMLQuoteElement &other);
     HTMLQuoteElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLQuoteElement(HTMLGenericElementImpl *impl);
-public:
 
-    HTMLQuoteElement & operator = (const HTMLQuoteElement &other);
-    HTMLQuoteElement & operator = (const Node &other);
+public:
+    HTMLQuoteElement &operator=(const HTMLQuoteElement &other);
+    HTMLQuoteElement &operator=(const Node &other);
 
     ~HTMLQuoteElement();
 
@@ -455,9 +464,9 @@ public:
     /**
      * see cite
      */
-    void setCite( const DOMString & );
+    void setCite(const DOMString &);
 };
 
-} //namespace
+} // namespace
 
 #endif

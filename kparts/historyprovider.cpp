@@ -24,31 +24,30 @@
 #include "historyprovider.h"
 
 using namespace KParts;
-template class QDict<void>;
+template class QDict< void >;
 
-HistoryProvider * HistoryProvider::s_self = 0L;
+HistoryProvider *HistoryProvider::s_self = 0L;
 
-class HistoryProvider::HistoryProviderPrivate
-{
+class HistoryProvider::HistoryProviderPrivate {
 public:
-    HistoryProviderPrivate()
-	: dict( 1009 ) {}
+    HistoryProviderPrivate() : dict(1009)
+    {
+    }
 
-    QDict<void> dict;
+    QDict< void > dict;
 };
 
-HistoryProvider * HistoryProvider::self()
+HistoryProvider *HistoryProvider::self()
 {
-    if ( !s_self )
-	s_self = new HistoryProvider( kapp, "history provider" );
+    if(!s_self)
+        s_self = new HistoryProvider(kapp, "history provider");
     return s_self;
 }
 
-HistoryProvider::HistoryProvider( QObject *parent, const char *name )
-    : QObject( parent, name )
+HistoryProvider::HistoryProvider(QObject *parent, const char *name) : QObject(parent, name)
 {
-    if ( !s_self )
-	s_self = this;
+    if(!s_self)
+        s_self = this;
 
     d = new HistoryProviderPrivate;
 }
@@ -57,34 +56,35 @@ HistoryProvider::~HistoryProvider()
 {
     delete d;
 
-    if ( s_self == this )
-	s_self = 0;
+    if(s_self == this)
+        s_self = 0;
 }
 
-bool HistoryProvider::contains( const QString& item ) const
+bool HistoryProvider::contains(const QString &item) const
 {
-    return (bool) d->dict.find( item );
+    return (bool)d->dict.find(item);
 }
 
-void HistoryProvider::insert( const QString& item )
+void HistoryProvider::insert(const QString &item)
 {
     // no need to allocate memory, we only want to have fast lookup, no mapping
-    d->dict.replace( item, (void*) 1 );
-    emit inserted( item );
+    d->dict.replace(item, (void *)1);
+    emit inserted(item);
 }
 
-void HistoryProvider::remove( const QString& item )
+void HistoryProvider::remove(const QString &item)
 {
-    (void) d->dict.remove( item );
+    (void)d->dict.remove(item);
 }
 
 void HistoryProvider::clear()
 {
     d->dict.clear();
     emit cleared();
-}	
+}
 
-void HistoryProvider::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void HistoryProvider::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "historyprovider.moc"

@@ -51,8 +51,7 @@ class KAboutDataPrivate;
  *   KCmdLineArgs::init(argc, argv, &about);
  * \endcode
  */
-class KDECORE_EXPORT KAboutPerson
-{
+class KDECORE_EXPORT KAboutPerson {
 public:
     /**
      * Convenience constructor
@@ -67,19 +66,20 @@ public:
      *
      * @param webAddress Home page of the person.
      */
-    KAboutPerson( const char *name, const char *task,
-                  const char *emailAddress, const char *webAddress )
+    KAboutPerson(const char *name, const char *task, const char *emailAddress, const char *webAddress)
     {
-      mName = name;
-      mTask = task;
-      mEmailAddress = emailAddress;
-      mWebAddress = webAddress;
+        mName = name;
+        mTask = task;
+        mEmailAddress = emailAddress;
+        mWebAddress = webAddress;
     }
     /**
      * @internal
      * Don't use. Required by QValueList
      */
-    KAboutPerson() {}
+    KAboutPerson()
+    {
+    }
 
     /**
      * The person's name
@@ -131,8 +131,7 @@ class KAboutTranslatorPrivate;
  * translator information is generated dynamically from the translation
  * of a dummy string.
 */
-class KDECORE_EXPORT KAboutTranslator
-{
+class KDECORE_EXPORT KAboutTranslator {
 public:
     /**
      * Convenience constructor
@@ -141,8 +140,7 @@ public:
      *
      * @param emailAddress The email address of the person.
      */
-    KAboutTranslator(const QString & name=QString::null,
-                     const QString & emailAddress=QString::null);
+    KAboutTranslator(const QString &name = QString::null, const QString &emailAddress = QString::null);
 
     /**
      * The translator's name
@@ -161,7 +159,7 @@ public:
 private:
     QString mName;
     QString mEmail;
-    KAboutTranslatorPrivate* d;
+    KAboutTranslatorPrivate *d;
 };
 
 
@@ -179,28 +177,27 @@ private:
  * classes.
  * @author Espen Sand (espen@kde.org), David Faure (faure@kde.org)
  */
-class KDECORE_EXPORT KAboutData
-{
-  public:
-  /**
-   * Descibes the license of the software.
-   */
+class KDECORE_EXPORT KAboutData {
+public:
+    /**
+     * Descibes the license of the software.
+     */
     enum LicenseKey
     {
-      License_Custom = -2,
-      License_File = -1,
-      License_Unknown = 0,
-      License_GPL  = 1,
-      License_GPL_V2 = 1,
-      License_LGPL = 2,
-      License_LGPL_V2 = 2,
-      License_BSD  = 3,
-      License_Artistic = 4,
-      License_QPL = 5,
-      License_QPL_V1_0 = 5
+        License_Custom = -2,
+        License_File = -1,
+        License_Unknown = 0,
+        License_GPL = 1,
+        License_GPL_V2 = 1,
+        License_LGPL = 2,
+        License_LGPL_V2 = 2,
+        License_BSD = 3,
+        License_Artistic = 4,
+        License_QPL = 5,
+        License_QPL_V1_0 = 5
     };
 
-  public:
+public:
     /**
      * Constructor.
      *
@@ -235,18 +232,11 @@ class KDECORE_EXPORT KAboutData
      *        This defaults to the kde.org bug system.
      *
      */
-    KAboutData( const char *appName,
-                const char *programName,
-		const char *version,
-		const char *shortDescription = 0,
-		int licenseType = License_Unknown,
-		const char *copyrightStatement = 0,
-		const char *text = 0,
-		const char *homePageAddress = 0,
-		const char *bugsEmailAddress = "submit@bugs.kde.org"
-		);
+    KAboutData(const char *appName, const char *programName, const char *version, const char *shortDescription = 0, int licenseType = License_Unknown,
+               const char *copyrightStatement = 0, const char *text = 0, const char *homePageAddress = 0,
+               const char *bugsEmailAddress = "submit@bugs.kde.org");
 
-     ~KAboutData();
+    ~KAboutData();
 
     /**
      * Defines an author. You can call this function as many times you
@@ -267,10 +257,7 @@ class KDECORE_EXPORT KAboutData
      *        correct, "some.domain" is not. Can be 0.
      *
      */
-    void addAuthor( const char *name,
-		    const char *task=0,
-		    const char *emailAddress=0,
-		    const char *webAddress=0 );
+    void addAuthor(const char *name, const char *task = 0, const char *emailAddress = 0, const char *webAddress = 0);
 
     /**
      * Defines a person that deserves credit. You can call this function
@@ -291,10 +278,7 @@ class KDECORE_EXPORT KAboutData
      *        is correct, "some.domain" is not. Can be 0.
      *
      */
-    void addCredit( const char *name,
-                    const char *task=0,
-		    const char *emailAddress=0,
-		    const char *webAddress=0 );
+    void addCredit(const char *name, const char *task = 0, const char *emailAddress = 0, const char *webAddress = 0);
 
     /**
      * Sets the name of the translator of the gui. Since this depends
@@ -320,7 +304,7 @@ class KDECORE_EXPORT KAboutData
      * @param emailAddress the email address of the translator
      * @see KAboutTranslator
      */
-    void setTranslator(const char* name, const char* emailAddress);
+    void setTranslator(const char *name, const char *emailAddress);
 
     /**
      * Defines a license text.
@@ -337,22 +321,22 @@ class KDECORE_EXPORT KAboutData
      *
      * @param license The license text in utf8 encoding.
      */
-    void setLicenseText( const char *license );
+    void setLicenseText(const char *license);
 
     /**
      * Defines a license text.
      *
      * @param file File containing the license text.
      */
-    void setLicenseTextFile( const QString &file );
+    void setLicenseTextFile(const QString &file);
 
     /**
      * Defines the program name used internally.
      *
      * @param appName The application name. Example: "kate".
      */
-    void setAppName( const char *appName );
-    
+    void setAppName(const char *appName);
+
     /**
      * Defines the displayable program name string.
      *
@@ -361,26 +345,26 @@ class KDECORE_EXPORT KAboutData
      *        Example: I18N_NOOP("Advanced Text Editor").
      * @since 3.2
      */
-    void setProgramName( const char* programName );
+    void setProgramName(const char *programName);
 
     /**
      * Defines the program logo.
-     * Use this if you need to have application logo 
+     * Use this if you need to have application logo
      * in AboutData other than application icon.
      *
      * @param image logo image.
      * @see programLogo()
      * @since 3.4
     */
-    void setProgramLogo(const QImage& image);
+    void setProgramLogo(const QImage &image);
 
     /**
      * Defines the program version string.
      *
      * @param version The program version.
      */
-    void setVersion( const char* version );
-    
+    void setVersion(const char *version);
+
     /**
      * Defines a short description of what the program does.
      *
@@ -388,15 +372,15 @@ class KDECORE_EXPORT KAboutData
      *        for translation. Example: I18N_NOOP("An advanced text editor
      *        with syntax highlithing support.").
      */
-    void setShortDescription( const char *shortDescription );
-    
+    void setShortDescription(const char *shortDescription);
+
     /**
      * Defines the license identifier.
      *
      * @param licenseKey The license identifier.
      */
-    void setLicense( LicenseKey licenseKey);
-    
+    void setLicense(LicenseKey licenseKey);
+
     /**
      * Defines the copyright statement to show when displaying the license.
      *
@@ -405,8 +389,8 @@ class KDECORE_EXPORT KAboutData
      *        modified in any manner. The author information from addAuthor
      *        is not used.
      */
-    void setCopyrightStatement( const char *copyrightStatement );
-    
+    void setCopyrightStatement(const char *copyrightStatement);
+
     /**
      * Defines the additional text to show in the about dialog.
      *
@@ -414,8 +398,8 @@ class KDECORE_EXPORT KAboutData
      *        information. The text can contain newlines. This string
      *        should be marked for translation.
      */
-    void setOtherText( const char *otherText );
-    
+    void setOtherText(const char *otherText);
+
     /**
      * Defines the program homepage.
      *
@@ -423,16 +407,16 @@ class KDECORE_EXPORT KAboutData
      *        Start the address with "http://". "http://kate.kde.org" is
      *        is correct, "kde.kde.org" is not.
      */
-    void setHomepage( const char *homepage );
-    
+    void setHomepage(const char *homepage);
+
     /**
      * Defines the address where bug reports should be sent.
      *
      * @param bugAddress The bug report email address string.
      *        This defaults to the kde.org bug system.
      */
-    void setBugAddress( const char *bugAddress );
-    
+    void setBugAddress(const char *bugAddress);
+
     /**
      * Defines the product name wich will be used in the KBugReport dialog.
      * By default it's the appName, but you can overwrite it here to provide
@@ -441,7 +425,7 @@ class KDECORE_EXPORT KAboutData
      *
      * @param name The name of product
      */
-    void setProductName( const char *name );
+    void setProductName(const char *name);
 
     /**
      * Returns the application's internal name.
@@ -453,7 +437,7 @@ class KDECORE_EXPORT KAboutData
      * Returns the application's product name, which will be used in KBugReport
      * dialog. By default it returns appName(), otherwise the one which is set
      * with setProductName()
-     * 
+     *
      * @return the product name.
      */
     const char *productName() const;
@@ -467,15 +451,15 @@ class KDECORE_EXPORT KAboutData
     /**
      * @internal
      */
-    const char* internalProgramName() const;
+    const char *internalProgramName() const;
     /**
      * @internal
      */
     void translateInternalProgramName() const;
 
     /**
-     * Returns the program logo image. 
-     * @return the program logo data or null image if there is 
+     * Returns the program logo image.
+     * @return the program logo data or null image if there is
      * no custom application logo defined.
      * @since 3.4
      */
@@ -490,7 +474,10 @@ class KDECORE_EXPORT KAboutData
     /**
      * @internal
      */
-    const char* internalVersion() const { return mVersion; }
+    const char *internalVersion() const
+    {
+        return mVersion;
+    }
 
     /**
      * Returns a short, translated description.
@@ -511,29 +498,32 @@ class KDECORE_EXPORT KAboutData
      * @return the email address where to report bugs.
      */
     QString bugAddress() const;
-    
+
     /**
      * @internal
      */
-    const char* internalBugAddress() const { return mBugEmailAddress; }
+    const char *internalBugAddress() const
+    {
+        return mBugEmailAddress;
+    }
 
     /**
      * Returns a list of authors.
      * @return author information (list of persons).
      */
-    const QValueList<KAboutPerson> authors() const;
+    const QValueList< KAboutPerson > authors() const;
 
     /**
      * Returns a list of persons who contributed.
      * @return credit information (list of persons).
      */
-    const QValueList<KAboutPerson> credits() const;
+    const QValueList< KAboutPerson > credits() const;
 
     /**
      * Returns a list of translators.
      * @return translators information (list of persons)
      */
-    const QValueList<KAboutTranslator> translators() const;
+    const QValueList< KAboutTranslator > translators() const;
 
     /**
      * Returns a message about the translation team.
@@ -588,7 +578,7 @@ class KDECORE_EXPORT KAboutData
      *         authors.
      */
     bool customAuthorTextEnabled() const;
-    
+
     /**
      * Sets the custom text displayed around the list of authors instead
      * of the default message telling users to send bug reports to bugAddress().
@@ -600,15 +590,15 @@ class KDECORE_EXPORT KAboutData
      * all.  Call unsetCustomAuthorText() to revert to the default mesage.
      */
     void setCustomAuthorText(const QString &plainText, const QString &richText);
-    
+
     /**
      * Clears any custom text displayed around the list of authors and falls
      * back to the default message telling users to send bug reports to
      * bugAddress().
      */
     void unsetCustomAuthorText();
-    
-  private:
+
+private:
     const char *mAppName;
     const char *mProgramName;
     const char *mVersion;
@@ -618,12 +608,11 @@ class KDECORE_EXPORT KAboutData
     const char *mOtherText;
     const char *mHomepageAddress;
     const char *mBugEmailAddress;
-    QValueList<KAboutPerson> mAuthorList;
-    QValueList<KAboutPerson> mCreditList;
+    QValueList< KAboutPerson > mAuthorList;
+    QValueList< KAboutPerson > mCreditList;
     const char *mLicenseText;
 
     KAboutDataPrivate *d;
 };
 
 #endif
-

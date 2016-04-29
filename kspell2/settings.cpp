@@ -31,14 +31,12 @@
 #include <qmap.h>
 #include <qstringlist.h>
 
-namespace KSpell2
-{
-class Settings::Private
-{
+namespace KSpell2 {
+class Settings::Private {
 public:
-    Broker*  broker; //can't be a Ptr since we don't want to hold a ref on it
+    Broker *broker; // can't be a Ptr since we don't want to hold a ref on it
     KSharedConfig::Ptr config;
-    bool     modified;
+    bool modified;
 
     QString defaultLanguage;
     QString defaultClient;
@@ -47,15 +45,15 @@ public:
     bool skipRunTogether;
     bool backgroundCheckerEnabled;
 
-    QMap<QString, bool> ignore;
+    QMap< QString, bool > ignore;
 };
 
-Settings::Settings( Broker *broker, KSharedConfig *config )
+Settings::Settings(Broker *broker, KSharedConfig *config)
 {
     d = new Private;
     d->broker = broker;
 
-    Q_ASSERT( config );
+    Q_ASSERT(config);
     d->config = config;
 
     d->modified = false;
@@ -64,7 +62,8 @@ Settings::Settings( Broker *broker, KSharedConfig *config )
 
 Settings::~Settings()
 {
-    delete d; d = 0;
+    delete d;
+    d = 0;
 }
 
 KSharedConfig *Settings::sharedConfig() const
@@ -72,11 +71,11 @@ KSharedConfig *Settings::sharedConfig() const
     return d->config;
 }
 
-void Settings::setDefaultLanguage( const QString& lang )
+void Settings::setDefaultLanguage(const QString &lang)
 {
     QStringList cs = d->broker->languages();
-    if ( cs.find( lang ) != cs.end() &&
-         d->defaultLanguage != lang ) {
+    if(cs.find(lang) != cs.end() && d->defaultLanguage != lang)
+    {
         d->defaultLanguage = lang;
         readIgnoreList();
         d->modified = true;
@@ -89,12 +88,13 @@ QString Settings::defaultLanguage() const
     return d->defaultLanguage;
 }
 
-void Settings::setDefaultClient( const QString& client )
+void Settings::setDefaultClient(const QString &client)
 {
-    //Different from setDefaultLanguage because
-    //the number of clients can't be even close
-    //as big as the number of languages
-    if ( d->broker->clients().contains( client ) ) {
+    // Different from setDefaultLanguage because
+    // the number of clients can't be even close
+    // as big as the number of languages
+    if(d->broker->clients().contains(client))
+    {
         d->defaultClient = client;
         d->modified = true;
         d->broker->changed();
@@ -106,9 +106,10 @@ QString Settings::defaultClient() const
     return d->defaultClient;
 }
 
-void Settings::setCheckUppercase( bool check )
+void Settings::setCheckUppercase(bool check)
 {
-    if ( d->checkUppercase != check ) {
+    if(d->checkUppercase != check)
+    {
         d->modified = true;
         d->checkUppercase = check;
     }
@@ -119,9 +120,10 @@ bool Settings::checkUppercase() const
     return d->checkUppercase;
 }
 
-void Settings::setSkipRunTogether( bool skip )
+void Settings::setSkipRunTogether(bool skip)
 {
-    if ( d->skipRunTogether != skip ) {
+    if(d->skipRunTogether != skip)
+    {
         d->modified = true;
         d->skipRunTogether = skip;
     }
@@ -132,9 +134,10 @@ bool Settings::skipRunTogether() const
     return d->skipRunTogether;
 }
 
-void Settings::setBackgroundCheckerEnabled( bool enable )
+void Settings::setBackgroundCheckerEnabled(bool enable)
 {
-    if ( d->backgroundCheckerEnabled != enable ) {
+    if(d->backgroundCheckerEnabled != enable)
+    {
         d->modified = true;
         d->backgroundCheckerEnabled = enable;
     }
@@ -145,18 +148,18 @@ bool Settings::backgroundCheckerEnabled() const
     return d->backgroundCheckerEnabled;
 }
 
-void Settings::setCurrentIgnoreList( const QStringList& ignores )
+void Settings::setCurrentIgnoreList(const QStringList &ignores)
 {
-    setQuietIgnoreList( ignores );
+    setQuietIgnoreList(ignores);
     d->modified = true;
 }
 
-void Settings::setQuietIgnoreList( const QStringList& ignores )
+void Settings::setQuietIgnoreList(const QStringList &ignores)
 {
-    d->ignore = QMap<QString, bool>();//clear out
-    for ( QStringList::const_iterator itr = ignores.begin();
-          itr != ignores.end(); ++itr ) {
-        d->ignore.insert( *itr, true );
+    d->ignore = QMap< QString, bool >(); // clear out
+    for(QStringList::const_iterator itr = ignores.begin(); itr != ignores.end(); ++itr)
+    {
+        d->ignore.insert(*itr, true);
     }
 }
 
@@ -165,62 +168,56 @@ QStringList Settings::currentIgnoreList() const
     return d->ignore.keys();
 }
 
-void Settings::addWordToIgnore( const QString& word )
+void Settings::addWordToIgnore(const QString &word)
 {
-    if ( !d->ignore.contains( word ) ) {
+    if(!d->ignore.contains(word))
+    {
         d->modified = true;
-        d->ignore.insert( word, true );
+        d->ignore.insert(word, true);
     }
 }
 
-bool Settings::ignore( const QString& word )
+bool Settings::ignore(const QString &word)
 {
-    return d->ignore.contains( word );
+    return d->ignore.contains(word);
 }
 
 void Settings::readIgnoreList()
 {
-    KConfigGroup conf( d->config, "Spelling" );
-    QString ignoreEntry = QString( "ignore_%1" ).arg( d->defaultLanguage );
-    QStringList ignores = conf.readListEntry( ignoreEntry );
-    setQuietIgnoreList( ignores );
+    KConfigGroup conf(d->config, "Spelling");
+    QString ignoreEntry = QString("ignore_%1").arg(d->defaultLanguage);
+    QStringList ignores = conf.readListEntry(ignoreEntry);
+    setQuietIgnoreList(ignores);
 }
 
 void Settings::save()
 {
-    if ( d->modified ) {
-        KConfigGroup conf( d->config, "Spelling" );
-        conf.writeEntry( "defaultClient", d->defaultClient );
-        conf.writeEntry( "defaultLanguage", d->defaultLanguage );
-        conf.writeEntry( "checkUppercase", d->checkUppercase );
-        conf.writeEntry( "skipRunTogether", d->skipRunTogether );
-        conf.writeEntry( "backgroundCheckerEnabled", d->backgroundCheckerEnabled );
-        conf.writeEntry( QString( "ignore_%1" ).arg( d->defaultLanguage ),
-                         d->ignore.keys() );
+    if(d->modified)
+    {
+        KConfigGroup conf(d->config, "Spelling");
+        conf.writeEntry("defaultClient", d->defaultClient);
+        conf.writeEntry("defaultLanguage", d->defaultLanguage);
+        conf.writeEntry("checkUppercase", d->checkUppercase);
+        conf.writeEntry("skipRunTogether", d->skipRunTogether);
+        conf.writeEntry("backgroundCheckerEnabled", d->backgroundCheckerEnabled);
+        conf.writeEntry(QString("ignore_%1").arg(d->defaultLanguage), d->ignore.keys());
         conf.sync();
     }
 }
 
 void Settings::loadConfig()
 {
-    KConfigGroup conf( d->config, "Spelling" );
-    d->defaultClient = conf.readEntry( "defaultClient",
-                                        QString::null );
-    d->defaultLanguage = conf.readEntry(
-        "defaultLanguage", KGlobal::locale()->language() );
+    KConfigGroup conf(d->config, "Spelling");
+    d->defaultClient = conf.readEntry("defaultClient", QString::null);
+    d->defaultLanguage = conf.readEntry("defaultLanguage", KGlobal::locale()->language());
 
-    //same defaults are in the default filter (filter.cpp)
-    d->checkUppercase = conf.readBoolEntry(
-        "checkUppercase", true );
+    // same defaults are in the default filter (filter.cpp)
+    d->checkUppercase = conf.readBoolEntry("checkUppercase", true);
 
-    d->skipRunTogether = conf.readBoolEntry(
-        "skipRunTogether", true );
+    d->skipRunTogether = conf.readBoolEntry("skipRunTogether", true);
 
-    d->backgroundCheckerEnabled = conf.readBoolEntry(
-        "backgroundCheckerEnabled", true );
+    d->backgroundCheckerEnabled = conf.readBoolEntry("backgroundCheckerEnabled", true);
 
     readIgnoreList();
 }
-
-
 }

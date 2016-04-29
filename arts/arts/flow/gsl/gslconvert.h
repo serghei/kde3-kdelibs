@@ -26,14 +26,11 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-#define GSL_CODESET_8859_1      "ISO-8859-1"	/* LATIN-1 */
-#define GSL_CODESET_UTF8        "UTF8"		/* "ISO-10646" */
+#define GSL_CODESET_8859_1 "ISO-8859-1" /* LATIN-1 */
+#define GSL_CODESET_UTF8 "UTF8"         /* "ISO-10646" */
 
-gchar*	gsl_convert_from_utf8	(const gchar	*codeset,
-				 const gchar	*string);
-gchar*	gsl_convert_to_utf8	(const gchar	*codeset,
-				 const gchar	*string);
-
+gchar *gsl_convert_from_utf8(const gchar *codeset, const gchar *string);
+gchar *gsl_convert_to_utf8(const gchar *codeset, const gchar *string);
 
 
 #ifdef __cplusplus

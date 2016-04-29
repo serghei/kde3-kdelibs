@@ -35,11 +35,10 @@ class QEvent;
 struct QUnknownInterface;
 
 namespace KIO {
-  class Job;
+class Job;
 }
 
-namespace KParts
-{
+namespace KParts {
 
 class PartManager;
 class Plugin;
@@ -54,99 +53,99 @@ class PartBasePrivate;
  *
  *  @short Base class for all parts.
  */
-class KPARTS_EXPORT PartBase : virtual public KXMLGUIClient
-{
+class KPARTS_EXPORT PartBase : virtual public KXMLGUIClient {
     friend class PartBasePrivate;
+
 public:
+    /**
+     *  Constructor.
+     */
+    PartBase();
 
-  /**
-   *  Constructor.
-   */
-  PartBase();
+    /**
+     *  Destructor.
+     */
+    virtual ~PartBase();
 
-  /**
-   *  Destructor.
-   */
-  virtual ~PartBase();
-
-  /**
-   *  Internal method. Called by KParts::Part to specify the parent object for plugin objects.
-   *
-   * @internal
-   */
-  void setPartObject( QObject *object );
-  QObject *partObject() const;
+    /**
+     *  Internal method. Called by KParts::Part to specify the parent object for plugin objects.
+     *
+     * @internal
+     */
+    void setPartObject(QObject *object);
+    QObject *partObject() const;
 
 protected:
-  /**
-   * Set the instance ( KInstance) for this part.
-   *
-   * Call this *first* in the inherited class constructor,
-   * because it loads the i18n catalogues.
-   */
-  virtual void setInstance( KInstance *instance );
-
-  /**
-   * Set the instance ( KInstance) for this part.
-   *
-   * Call this *first* in the inherited class constructor,
-   * because it loads the i18n catalogues.
-   */
-  virtual void setInstance( KInstance *instance, bool loadPlugins );
-
-  /**
-   * We have three different policies, whether to load new plugins or not. The
-   * value in the KConfig object of the KInstance object always overrides
-   * LoadPlugins and LoadPluginsIfEnabled.
-   */
-  enum PluginLoadingMode {
     /**
-     * Don't load any plugins at all.
+     * Set the instance ( KInstance) for this part.
+     *
+     * Call this *first* in the inherited class constructor,
+     * because it loads the i18n catalogues.
      */
-    DoNotLoadPlugins = 0,
-    /**
-     * Load new plugins automatically. Can be
-     * overridden by the plugin if it sets
-     * EnabledByDefault=false in the corresponding
-     * .desktop file.
-     */
-    LoadPlugins = 1,
-    /**
-     * New plugins are disabled by default. Can be
-     * overridden by the plugin if it sets
-     * EnabledByDefault=true in the corresponding
-     * .desktop file.
-     */
-    LoadPluginsIfEnabled = 2
-  };
+    virtual void setInstance(KInstance *instance);
 
-  /**
-   * Load the Plugins honoring the PluginLoadingMode.
-   *
-   * If you call this method in an already constructed GUI (like when the user
-   * has changed which plugins are enabled) you need to add the new plugins to
-   * the KXMLGUIFactory:
-   * \code
-   * if( factory() )
-   * {
-   *   QPtrList<KParts::Plugin> plugins = KParts::Plugin::pluginObjects( this );
-   *   QPtrListIterator<KParts::Plugin> it( plugins );
-   *   KParts::Plugin * plugin;
-   *   while( ( plugin = it.current() ) != 0 )
-   *   {
-   *     ++it;
-   *     factory()->addClient(  plugin );
-   *   }
-   * }
-   * \endcode
-   */
-  void loadPlugins( QObject *parent, KXMLGUIClient *parentGUIClient, KInstance *instance );
+    /**
+     * Set the instance ( KInstance) for this part.
+     *
+     * Call this *first* in the inherited class constructor,
+     * because it loads the i18n catalogues.
+     */
+    virtual void setInstance(KInstance *instance, bool loadPlugins);
 
-  /**
-   * For a KParts::Part: call this before setInstance().
-   * For a KParts::MainWindow: call this before createGUI().
-   */
-  void setPluginLoadingMode( PluginLoadingMode loadingMode );
+    /**
+     * We have three different policies, whether to load new plugins or not. The
+     * value in the KConfig object of the KInstance object always overrides
+     * LoadPlugins and LoadPluginsIfEnabled.
+     */
+    enum PluginLoadingMode
+    {
+        /**
+         * Don't load any plugins at all.
+         */
+        DoNotLoadPlugins = 0,
+        /**
+         * Load new plugins automatically. Can be
+         * overridden by the plugin if it sets
+         * EnabledByDefault=false in the corresponding
+         * .desktop file.
+         */
+        LoadPlugins = 1,
+        /**
+         * New plugins are disabled by default. Can be
+         * overridden by the plugin if it sets
+         * EnabledByDefault=true in the corresponding
+         * .desktop file.
+         */
+        LoadPluginsIfEnabled = 2
+    };
+
+    /**
+     * Load the Plugins honoring the PluginLoadingMode.
+     *
+     * If you call this method in an already constructed GUI (like when the user
+     * has changed which plugins are enabled) you need to add the new plugins to
+     * the KXMLGUIFactory:
+     * \code
+     * if( factory() )
+     * {
+     *   QPtrList<KParts::Plugin> plugins = KParts::Plugin::pluginObjects( this );
+     *   QPtrListIterator<KParts::Plugin> it( plugins );
+     *   KParts::Plugin * plugin;
+     *   while( ( plugin = it.current() ) != 0 )
+     *   {
+     *     ++it;
+     *     factory()->addClient(  plugin );
+     *   }
+     * }
+     * \endcode
+     */
+    void loadPlugins(QObject *parent, KXMLGUIClient *parentGUIClient, KInstance *instance);
+
+    /**
+     * For a KParts::Part: call this before setInstance().
+     * For a KParts::MainWindow: call this before createGUI().
+     */
+    void setPluginLoadingMode(PluginLoadingMode loadingMode);
 
 private:
     PartBasePrivate *d;
@@ -178,19 +177,17 @@ private:
  * framework for a "viewer" part and for an "editor"-like part.
  * Use Part directly only if your part doesn't fit into those.
  */
-class KPARTS_EXPORT Part : public QObject, public PartBase
-{
+class KPARTS_EXPORT Part : public QObject, public PartBase {
     Q_OBJECT
 
 public:
-
     /**
      *  Constructor.
      *
      *  @param parent Parent object of the part.
      *  @param name   QT-internal name of the part.
      */
-    Part( QObject *parent = 0, const char* name = 0 );
+    Part(QObject *parent = 0, const char *name = 0);
 
     /**
      *  Destructor.
@@ -208,7 +205,7 @@ public:
      * This method is not recommended since creating the widget with the correct
      * parent is simpler anyway.
      */
-    virtual void embed( QWidget * parentWidget );
+    virtual void embed(QWidget *parentWidget);
 
     /**
      * @return The widget defined by this part, set by setWidget().
@@ -219,12 +216,12 @@ public:
      * @internal
      * Used by the part manager.
      */
-    virtual void setManager( PartManager * manager );
+    virtual void setManager(PartManager *manager);
 
     /**
      * Returns the part manager handling this part, if any (0L otherwise).
      */
-    PartManager * manager() const;
+    PartManager *manager() const;
 
     /**
      * Returns the part (this, or a child part) at the given global position.
@@ -234,12 +231,12 @@ public:
      * @param widget the part widget being clicked - usually the same as widget(), except in koffice.
      * @param globalPos the mouse coordinates in global coordinates
      */
-    virtual Part *hitTest( QWidget *widget, const QPoint &globalPos );
+    virtual Part *hitTest(QWidget *widget, const QPoint &globalPos);
 
     /**
      *  @param selectable Indicates whether the part is selectable or not.
      */
-    virtual void setSelectable( bool selectable );
+    virtual void setSelectable(bool selectable);
 
     /**
      *  Returns whether the part is selectable or not.
@@ -251,33 +248,32 @@ signals:
      * Emitted by the part, to set the caption of the window(s)
      * hosting this part
      */
-    void setWindowCaption( const QString & caption );
+    void setWindowCaption(const QString &caption);
     /**
      * Emited by the part, to set a text in the statusbar of the window(s)
      * hosting this part
      */
-    void setStatusBarText( const QString & text );
+    void setStatusBarText(const QString &text);
 
 protected:
-
     /**
      * Set the main widget.
      *
      * Call this in the Part-inherited class constructor.
      */
-    virtual void setWidget( QWidget * widget );
+    virtual void setWidget(QWidget *widget);
 
     /**
      * @internal
      */
-    virtual void customEvent( QCustomEvent *event );
+    virtual void customEvent(QCustomEvent *event);
 
     /**
      * Convenience method which is called when the Part received a PartActivateEvent .
      * Reimplement this if you don't want to reimplement event and test for the event yourself
      * or even install an event filter.
      */
-    virtual void partActivateEvent( PartActivateEvent *event );
+    virtual void partActivateEvent(PartActivateEvent *event);
 
     /**
      * Convenience method which is called when the Part received a
@@ -285,7 +281,7 @@ protected:
      * Reimplement this if you don't want to reimplement event and
      * test for the event yourself or even install an event filter.
      */
-    virtual void partSelectEvent( PartSelectEvent *event );
+    virtual void partSelectEvent(PartSelectEvent *event);
 
     /**
      * Convenience method which is called when the Part received a
@@ -293,21 +289,21 @@ protected:
      * Reimplement this if you don't want to reimplement event and
      * test for the event yourself or even install an event filter.
      */
-    virtual void guiActivateEvent( GUIActivateEvent *event );
+    virtual void guiActivateEvent(GUIActivateEvent *event);
 
     /**
      * Convenience method for KXMLGUIFactory::container.
      * @return a container widget owned by the Part's GUI.
      */
-    QWidget *hostContainer( const QString &containerName );
+    QWidget *hostContainer(const QString &containerName);
 
 private slots:
     void slotWidgetDestroyed();
 
 private:
-    QGuardedPtr<QWidget> m_widget;
+    QGuardedPtr< QWidget > m_widget;
 
-    PartManager * m_manager;
+    PartManager *m_manager;
 
     PartPrivate *d;
 };
@@ -335,195 +331,206 @@ class ReadOnlyPartPrivate;
  * If you want another caption, set it in openFile() and
  * (if the part might ever be used with a part manager) in guiActivateEvent()
  */
-class KPARTS_EXPORT ReadOnlyPart : public Part
-{
-  Q_OBJECT
-  friend class ReadWritePart;
+class KPARTS_EXPORT ReadOnlyPart : public Part {
+    Q_OBJECT
+    friend class ReadWritePart;
+
 public:
-  /**
-   * Constructor
-   * See also Part for the setXXX methods to call.
-   */
-  ReadOnlyPart( QObject *parent = 0, const char *name = 0 );
+    /**
+     * Constructor
+     * See also Part for the setXXX methods to call.
+     */
+    ReadOnlyPart(QObject *parent = 0, const char *name = 0);
 
-  /**
-   * Destructor
-   */
-  virtual ~ReadOnlyPart();
+    /**
+     * Destructor
+     */
+    virtual ~ReadOnlyPart();
 
-  /**
-   * Call this to turn off the progress info dialog used by
-   * the internal KIO job. Use this if you provide another way
-   * of displaying progress info (e.g. a statusbar), using the
-   * signals emitted by this class, and/or those emitted by
-   * the Job given by started.
-   */
-  void setProgressInfoEnabled( bool show );
+    /**
+     * Call this to turn off the progress info dialog used by
+     * the internal KIO job. Use this if you provide another way
+     * of displaying progress info (e.g. a statusbar), using the
+     * signals emitted by this class, and/or those emitted by
+     * the Job given by started.
+     */
+    void setProgressInfoEnabled(bool show);
 
-  /**
-   * Returns whether the part shows the progress info dialog used by internal
-   * KIO job.
-   */
-  bool isProgressInfoEnabled() const;
+    /**
+     * Returns whether the part shows the progress info dialog used by internal
+     * KIO job.
+     */
+    bool isProgressInfoEnabled() const;
 
 #ifndef KDE_NO_COMPAT
-  void showProgressInfo( bool show );
+    void showProgressInfo(bool show);
 #endif
 
 public slots:
-  /**
-   * Only reimplement openURL if you don't want the network transparency support
-   * to download from the url into a temporary file (when the url isn't local).
-   * Otherwise, reimplement openFile() only .
-   *
-   * If you reimplement it, don't forget to set the caption, usually with
-   * emit setWindowCaption( url.prettyURL() );
-   */
-  virtual bool openURL( const KURL &url );
+    /**
+     * Only reimplement openURL if you don't want the network transparency support
+     * to download from the url into a temporary file (when the url isn't local).
+     * Otherwise, reimplement openFile() only .
+     *
+     * If you reimplement it, don't forget to set the caption, usually with
+     * emit setWindowCaption( url.prettyURL() );
+     */
+    virtual bool openURL(const KURL &url);
 
 public:
-  /**
-   *  Returns the currently in part used URL.
-   *
-   *  @return The current used URL.
-   */
-  KURL url() const { return m_url; }
+    /**
+     *  Returns the currently in part used URL.
+     *
+     *  @return The current used URL.
+     */
+    KURL url() const
+    {
+        return m_url;
+    }
 
-  /**
-   * Called when closing the current url (e.g. document), for instance
-   * when switching to another url (note that openURL() calls it
-   * automatically in this case).
-   * If the current URL is not fully loaded yet, aborts loading.
-   * Deletes the temporary file used when the url is remote.
-   * @return always true, but the return value exists for reimplementations
-   */
-  virtual bool closeURL();
+    /**
+     * Called when closing the current url (e.g. document), for instance
+     * when switching to another url (note that openURL() calls it
+     * automatically in this case).
+     * If the current URL is not fully loaded yet, aborts loading.
+     * Deletes the temporary file used when the url is remote.
+     * @return always true, but the return value exists for reimplementations
+     */
+    virtual bool closeURL();
 
 public:
-  /**
-   * Initiate sending data to this part.
-   * This is an alternative to openURL, which allows the user of the part
-   * to load the data itself, and send it progressively to the part.
-   *
-   * @param mimeType the type of data that is going to be sent to this part.
-   * @param url the URL representing this data. Although not directly used,
-   * every ReadOnlyPart has a URL (see url()), so this simply sets it.
-   * @return true if the part supports progressive loading and accepts data, false otherwise.
-   */
-  bool openStream( const QString& mimeType, const KURL& url );
+    /**
+     * Initiate sending data to this part.
+     * This is an alternative to openURL, which allows the user of the part
+     * to load the data itself, and send it progressively to the part.
+     *
+     * @param mimeType the type of data that is going to be sent to this part.
+     * @param url the URL representing this data. Although not directly used,
+     * every ReadOnlyPart has a URL (see url()), so this simply sets it.
+     * @return true if the part supports progressive loading and accepts data, false otherwise.
+     */
+    bool openStream(const QString &mimeType, const KURL &url);
 
-  /**
-   * Send some data to the part. openStream must have been called previously,
-   * and must have returned true.
-   * @return true if the data was accepted by the part. If false is returned,
-   * the application should stop sending data, and doesn't have to call closeStream.
-   */
-  bool writeStream( const QByteArray& data );
+    /**
+     * Send some data to the part. openStream must have been called previously,
+     * and must have returned true.
+     * @return true if the data was accepted by the part. If false is returned,
+     * the application should stop sending data, and doesn't have to call closeStream.
+     */
+    bool writeStream(const QByteArray &data);
 
-  /**
-   * Terminate the sending of data to the part.
-   * With some data types (text, html...) closeStream might never actually be called,
-   * in the case of continuous streams, for instance plain text or HTML data.
-   */
-  bool closeStream();
+    /**
+     * Terminate the sending of data to the part.
+     * With some data types (text, html...) closeStream might never actually be called,
+     * in the case of continuous streams, for instance plain text or HTML data.
+     */
+    bool closeStream();
 
 private: // Makes no sense for inherited classes to call those. But make it protected there.
-
-  /**
-   * Called by openStream to initiate sending of data.
-   * Parts which implement progress loading should check the @p mimeType
-   * parameter, and return true if they can accept a data stream of that type.
-   */
-  virtual bool doOpenStream( const QString& /*mimeType*/ ) { return false; }
-  /**
-   * Receive some data from the hosting application.
-   * In this method the part should attempt to display the data progressively.
-   * With some data types (text, html...) closeStream might never actually be called,
-   * in the case of continuous streams. This can't happen with e.g. images.
-   */
-  virtual bool doWriteStream( const QByteArray& /*data*/ ) { return false; }
-  /**
-   * This is called by closeStream(), to indicate that all the data has been sent.
-   * Parts should ensure that all of the data is displayed at this point.
-   * @return whether the data could be displayed correctly.
-   */
-  virtual bool doCloseStream() { return false; }
+         /**
+          * Called by openStream to initiate sending of data.
+          * Parts which implement progress loading should check the @p mimeType
+          * parameter, and return true if they can accept a data stream of that type.
+          */
+    virtual bool doOpenStream(const QString & /*mimeType*/)
+    {
+        return false;
+    }
+    /**
+     * Receive some data from the hosting application.
+     * In this method the part should attempt to display the data progressively.
+     * With some data types (text, html...) closeStream might never actually be called,
+     * in the case of continuous streams. This can't happen with e.g. images.
+     */
+    virtual bool doWriteStream(const QByteArray & /*data*/)
+    {
+        return false;
+    }
+    /**
+     * This is called by closeStream(), to indicate that all the data has been sent.
+     * Parts should ensure that all of the data is displayed at this point.
+     * @return whether the data could be displayed correctly.
+     */
+    virtual bool doCloseStream()
+    {
+        return false;
+    }
 
 signals:
-  /**
-   * The part emits this when starting data.
-   * If using a KIO::Job, it sets the job in the signal, so that
-   * progress information can be shown. Otherwise, job is 0.
-   **/
-  void started( KIO::Job * );
+    /**
+     * The part emits this when starting data.
+     * If using a KIO::Job, it sets the job in the signal, so that
+     * progress information can be shown. Otherwise, job is 0.
+     **/
+    void started(KIO::Job *);
 
-  /**
-   * Emit this when you have completed loading data.
-   * Hosting apps will want to know when the process of loading the data
-   * is finished, so that they can access the data when everything is loaded.
-   **/
-  void completed();
+    /**
+     * Emit this when you have completed loading data.
+     * Hosting apps will want to know when the process of loading the data
+     * is finished, so that they can access the data when everything is loaded.
+     **/
+    void completed();
 
-  /**
-   * Same as the above signal except it indicates whether there is
-   * a pending action to be executed on a delay timer. An example of
-   * this is the meta-refresh tags on web pages used to reload/redirect
-   * after a certain period of time. This signal is useful if you want
-   * to give the user the ability to cancel such pending actions.
-   *
-   * @param pendingAction true if a pending action exists, false otherwise.
-   */
-  void completed( bool pendingAction );
+    /**
+     * Same as the above signal except it indicates whether there is
+     * a pending action to be executed on a delay timer. An example of
+     * this is the meta-refresh tags on web pages used to reload/redirect
+     * after a certain period of time. This signal is useful if you want
+     * to give the user the ability to cancel such pending actions.
+     *
+     * @param pendingAction true if a pending action exists, false otherwise.
+     */
+    void completed(bool pendingAction);
 
-  /**
-   * Emit this if loading is canceled by the user or by an error.
-   * @param errMsg the error message, empty if the user canceled the loading voluntarily.
-   */
-  void canceled( const QString &errMsg );
+    /**
+     * Emit this if loading is canceled by the user or by an error.
+     * @param errMsg the error message, empty if the user canceled the loading voluntarily.
+     */
+    void canceled(const QString &errMsg);
 
 protected slots:
-  void slotJobFinished( KIO::Job * job );
+    void slotJobFinished(KIO::Job *job);
 
 protected:
-  /**
-   * If the part uses the standard implementation of openURL(),
-   * it must reimplement this, to open @p m_file.
-   * Otherwise simply define it to { return false; }
-   */
-  virtual bool openFile() = 0;
+    /**
+     * If the part uses the standard implementation of openURL(),
+     * it must reimplement this, to open @p m_file.
+     * Otherwise simply define it to { return false; }
+     */
+    virtual bool openFile() = 0;
 
-  /**
-   * @internal
-   */
-  void abortLoad();
+    /**
+     * @internal
+     */
+    void abortLoad();
 
-  /**
-   * Reimplemented from Part, so that the window caption is set to
-   * the current url (decoded) when the part is activated.
-   * This is the usual behavior in 99% of the apps.
-   * Reimplement if you don't like it - test for event->activated() !
-   *
-   * Technical note : this is done with GUIActivateEvent and not with
-   * PartActivateEvent because it's handled by the mainwindow
-   * (which gets the even after the PartActivateEvent events have been sent)
-   */
-  virtual void guiActivateEvent( GUIActivateEvent *event );
+    /**
+     * Reimplemented from Part, so that the window caption is set to
+     * the current url (decoded) when the part is activated.
+     * This is the usual behavior in 99% of the apps.
+     * Reimplement if you don't like it - test for event->activated() !
+     *
+     * Technical note : this is done with GUIActivateEvent and not with
+     * PartActivateEvent because it's handled by the mainwindow
+     * (which gets the even after the PartActivateEvent events have been sent)
+     */
+    virtual void guiActivateEvent(GUIActivateEvent *event);
 
-  /**
-   * Remote (or local) url - the one displayed to the user.
-   */
-  KURL m_url;
-  /**
-   * Local file - the only one the part implementation should deal with.
-   */
-  QString m_file;
-  /**
-   * If @p true, @p m_file is a temporary file that needs to be deleted later.
-   */
-  bool m_bTemp;
+    /**
+     * Remote (or local) url - the one displayed to the user.
+     */
+    KURL m_url;
+    /**
+     * Local file - the only one the part implementation should deal with.
+     */
+    QString m_file;
+    /**
+     * If @p true, @p m_file is a temporary file that needs to be deleted later.
+     */
+    bool m_bTemp;
 
 private:
-  ReadOnlyPartPrivate *d;
+    ReadOnlyPartPrivate *d;
 };
 
 /**
@@ -541,160 +548,165 @@ private:
  * The part probably wants to reimplement setReadWrite, disable those
  * actions. Don't forget to call the parent setReadWrite().
  */
-class KPARTS_EXPORT ReadWritePart : public ReadOnlyPart
-{
-  Q_OBJECT
+class KPARTS_EXPORT ReadWritePart : public ReadOnlyPart {
+    Q_OBJECT
 public:
-  /**
-   * Constructor.
-   * See parent constructor for instructions.
-   */
-  ReadWritePart( QObject *parent = 0, const char *name = 0 );
-  /**
-   * Destructor.
-   * Applications using a ReadWritePart should make sure, before
-   * destroying it, to call closeURL().
-   * In KMainWindow::queryClose(), for instance, they should allow
-   * closing only if the return value of closeURL() was true.
-   * This allows to cancel.
-   */
-  virtual ~ReadWritePart();
+    /**
+     * Constructor.
+     * See parent constructor for instructions.
+     */
+    ReadWritePart(QObject *parent = 0, const char *name = 0);
+    /**
+     * Destructor.
+     * Applications using a ReadWritePart should make sure, before
+     * destroying it, to call closeURL().
+     * In KMainWindow::queryClose(), for instance, they should allow
+     * closing only if the return value of closeURL() was true.
+     * This allows to cancel.
+     */
+    virtual ~ReadWritePart();
 
-  /**
-   * @return true if the part is in read-write mode
-   */
-  bool isReadWrite() const { return m_bReadWrite; }
+    /**
+     * @return true if the part is in read-write mode
+     */
+    bool isReadWrite() const
+    {
+        return m_bReadWrite;
+    }
 
-  /**
-   * Changes the behavior of this part to readonly or readwrite.
-   * @param readwrite set to true to enable readwrite mode
-   */
-  virtual void setReadWrite ( bool readwrite = true );
+    /**
+     * Changes the behavior of this part to readonly or readwrite.
+     * @param readwrite set to true to enable readwrite mode
+     */
+    virtual void setReadWrite(bool readwrite = true);
 
-  /**
-   * @return true if the document has been modified.
-   */
-  bool isModified() const { return m_bModified; }
+    /**
+     * @return true if the document has been modified.
+     */
+    bool isModified() const
+    {
+        return m_bModified;
+    }
 
-  /**
-   * If the document has been modified, ask the user to save changes.
-   * This method is meant to be called from KMainWindow::queryClose().
-   * It will also be called from closeURL().
-   *
-   * @return true if closeURL() can be called without the user losing
-   * important data, false if the user chooses to cancel.
-   *
-   * @since 3.2
-   */
-  // TODO: Make virtual for KDE 4
-  bool queryClose();
+    /**
+     * If the document has been modified, ask the user to save changes.
+     * This method is meant to be called from KMainWindow::queryClose().
+     * It will also be called from closeURL().
+     *
+     * @return true if closeURL() can be called without the user losing
+     * important data, false if the user chooses to cancel.
+     *
+     * @since 3.2
+     */
+    // TODO: Make virtual for KDE 4
+    bool queryClose();
 
-  /**
-   * Called when closing the current url (e.g. document), for instance
-   * when switching to another url (note that openURL() calls it
-   * automatically in this case).
-   *
-   * If the current URL is not fully loaded yet, aborts loading.
-   *
-   * If isModified(), queryClose() will be called.
-   *
-   * @return false on cancel
-   */
-  virtual bool closeURL();
+    /**
+     * Called when closing the current url (e.g. document), for instance
+     * when switching to another url (note that openURL() calls it
+     * automatically in this case).
+     *
+     * If the current URL is not fully loaded yet, aborts loading.
+     *
+     * If isModified(), queryClose() will be called.
+     *
+     * @return false on cancel
+     */
+    virtual bool closeURL();
 
-  /**
-   * Call this method instead of the above if you need control if
-   * the save prompt is shown. For example, if you call queryClose()
-   * from KMainWindow::queryClose(), you would not want to prompt
-   * again when closing the url.
-   *
-   * Equivalent to promptToSave ? closeURL() : ReadOnlyPart::closeURL()
-   *
-   * @since 3.2
-   */
-  // TODO: Make virtual for KDE 4
-  bool closeURL( bool promptToSave );
+    /**
+     * Call this method instead of the above if you need control if
+     * the save prompt is shown. For example, if you call queryClose()
+     * from KMainWindow::queryClose(), you would not want to prompt
+     * again when closing the url.
+     *
+     * Equivalent to promptToSave ? closeURL() : ReadOnlyPart::closeURL()
+     *
+     * @since 3.2
+     */
+    // TODO: Make virtual for KDE 4
+    bool closeURL(bool promptToSave);
 
-  /**
-   * Save the file to a new location.
-   *
-   * Calls save(), no need to reimplement
-   */
-  virtual bool saveAs( const KURL &url );
+    /**
+     * Save the file to a new location.
+     *
+     * Calls save(), no need to reimplement
+     */
+    virtual bool saveAs(const KURL &url);
 
-  /**
-   *  Sets the modified flag of the part.
-   */
-  virtual void setModified( bool modified );
+    /**
+     *  Sets the modified flag of the part.
+     */
+    virtual void setModified(bool modified);
 
 signals:
-   /**
-    * @since 3.2, remove in KDE 4, when queryClose is made virtual
-    *
-    * set handled to true, if you don't want the default handling
-    * set abortClosing to true, if you handled the request,
-    * but for any reason don't  want to allow closing the document
-    */
-   void sigQueryClose(bool *handled, bool* abortClosing);
+    /**
+     * @since 3.2, remove in KDE 4, when queryClose is made virtual
+     *
+     * set handled to true, if you don't want the default handling
+     * set abortClosing to true, if you handled the request,
+     * but for any reason don't  want to allow closing the document
+     */
+    void sigQueryClose(bool *handled, bool *abortClosing);
 
 public slots:
-  /**
-   * Call setModified() whenever the contents get modified.
-   * This is a slot for convenience, so that you can connect it
-   * to a signal, like textChanged().
-   */
-  virtual void setModified();
+    /**
+     * Call setModified() whenever the contents get modified.
+     * This is a slot for convenience, so that you can connect it
+     * to a signal, like textChanged().
+     */
+    virtual void setModified();
 
-  /**
-   * Save the file in the location from which it was opened.
-   * You can connect this to the "save" action.
-   * Calls saveFile() and saveToURL(), no need to reimplement.
-   */
-  virtual bool save();
+    /**
+     * Save the file in the location from which it was opened.
+     * You can connect this to the "save" action.
+     * Calls saveFile() and saveToURL(), no need to reimplement.
+     */
+    virtual bool save();
 
-  /**
-   * Waits for any pending upload job to finish and returns whether the
-   * last save() action was successful.
-   */
-  bool waitSaveComplete();
+    /**
+     * Waits for any pending upload job to finish and returns whether the
+     * last save() action was successful.
+     */
+    bool waitSaveComplete();
 
 protected:
-  /**
-   * Save to a local file.
-   * You need to implement it, to save to @p m_file.
-   * The framework takes care of re-uploading afterwards.
-   *
-   * @return true on success, false on failure.
-   * On failure the function should inform the user about the
-   * problem with an appropriate message box. Standard error
-   * messages can be constructed using KIO::buildErrorString()
-   * in combination with the error codes defined in kio/global.h
-   */
-  virtual bool saveFile() = 0;
+    /**
+     * Save to a local file.
+     * You need to implement it, to save to @p m_file.
+     * The framework takes care of re-uploading afterwards.
+     *
+     * @return true on success, false on failure.
+     * On failure the function should inform the user about the
+     * problem with an appropriate message box. Standard error
+     * messages can be constructed using KIO::buildErrorString()
+     * in combination with the error codes defined in kio/global.h
+     */
+    virtual bool saveFile() = 0;
 
-  /**
-   * Save the file.
-   *
-   * Uploads the file, if @p m_url is remote.
-   * This will emit started(), and either completed() or canceled(),
-   * in case you want to provide feedback.
-   * @return true on success, false on failure.
-   */
-  virtual bool saveToURL();
+    /**
+     * Save the file.
+     *
+     * Uploads the file, if @p m_url is remote.
+     * This will emit started(), and either completed() or canceled(),
+     * in case you want to provide feedback.
+     * @return true on success, false on failure.
+     */
+    virtual bool saveToURL();
 
 protected slots:
-  /**
-   * @internal
-   */
-  void slotUploadFinished( KIO::Job * job );
+    /**
+     * @internal
+     */
+    void slotUploadFinished(KIO::Job *job);
 
 private:
-  void prepareSaving();
+    void prepareSaving();
 
 private:
-  bool m_bModified;
-  bool m_bReadWrite;
-  bool m_bClosing;
+    bool m_bModified;
+    bool m_bReadWrite;
+    bool m_bClosing;
 };
 
 } // namespace

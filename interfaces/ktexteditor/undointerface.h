@@ -23,62 +23,59 @@
 
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 *  This is an interface to undo functionality of a Document.
 */
-class KTEXTEDITOR_EXPORT UndoInterface
-{
-  friend class PrivateUndoInterface;
+class KTEXTEDITOR_EXPORT UndoInterface {
+    friend class PrivateUndoInterface;
 
-  public:
-    UndoInterface ();
-    virtual ~UndoInterface ();
+public:
+    UndoInterface();
+    virtual ~UndoInterface();
 
-    unsigned int undoInterfaceNumber () const;
-    
-  protected:  
-    void setUndoInterfaceDCOPSuffix (const QCString &suffix); 
+    unsigned int undoInterfaceNumber() const;
 
-  //
-  // slots !!!
-  //
-  public:
-    virtual void undo () = 0;
+protected:
+    void setUndoInterfaceDCOPSuffix(const QCString &suffix);
 
-    virtual void redo () = 0;
+    //
+    // slots !!!
+    //
+public:
+    virtual void undo() = 0;
 
-    virtual void clearUndo () = 0;
+    virtual void redo() = 0;
 
-    virtual void clearRedo () = 0;
+    virtual void clearUndo() = 0;
 
-    virtual unsigned int undoCount () const = 0;
+    virtual void clearRedo() = 0;
 
-    virtual unsigned int redoCount () const = 0;
+    virtual unsigned int undoCount() const = 0;
+
+    virtual unsigned int redoCount() const = 0;
 
     /**
       returns the maximum of undo steps possible, 0 means no limit !
      */
-    virtual unsigned int undoSteps () const = 0;
+    virtual unsigned int undoSteps() const = 0;
 
-    virtual void setUndoSteps ( unsigned int steps ) = 0;
+    virtual void setUndoSteps(unsigned int steps) = 0;
 
-  //
-  // signals !!!
-  //
-  public:
-    virtual void undoChanged () = 0;
+    //
+    // signals !!!
+    //
+public:
+    virtual void undoChanged() = 0;
 
-  private:
+private:
     class PrivateUndoInterface *d;
     static unsigned int globalUndoInterfaceNumber;
     unsigned int myUndoInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT UndoInterface *undoInterface (class Document *doc);
-
+KTEXTEDITOR_EXPORT UndoInterface *undoInterface(class Document *doc);
 }
 
 #endif

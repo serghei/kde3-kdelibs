@@ -32,233 +32,219 @@
 
 #define DEFAULT_CASESENSITIVE false
 
-typedef QValueList <QIconViewItem *> QIconViewItemList;
+typedef QValueList< QIconViewItem * > QIconViewItemList;
 
-class KIconViewSearchLine::KIconViewSearchLinePrivate
-{
+class KIconViewSearchLine::KIconViewSearchLinePrivate {
 public:
-  KIconViewSearchLinePrivate() :
-    iconView( 0 ),
-    caseSensitive( DEFAULT_CASESENSITIVE ),
-    activeSearch( false ),
-    queuedSearches( 0 ) {}
+    KIconViewSearchLinePrivate() : iconView(0), caseSensitive(DEFAULT_CASESENSITIVE), activeSearch(false), queuedSearches(0)
+    {
+    }
 
-  QIconView *iconView;
-  bool caseSensitive;
-  bool activeSearch;
-  QString search;
-  int queuedSearches;
-  QIconViewItemList hiddenItems;
+    QIconView *iconView;
+    bool caseSensitive;
+    bool activeSearch;
+    QString search;
+    int queuedSearches;
+    QIconViewItemList hiddenItems;
 };
 
 /******************************************************************************
  * Public Methods                                                             *
  *****************************************************************************/
-KIconViewSearchLine::KIconViewSearchLine( QWidget *parent,
-					  QIconView *iconView,
-					  const char *name ) :
-  KLineEdit( parent, name )
+KIconViewSearchLine::KIconViewSearchLine(QWidget *parent, QIconView *iconView, const char *name) : KLineEdit(parent, name)
 {
-  d = NULL;
-  init( iconView );
+    d = NULL;
+    init(iconView);
 }
 
-KIconViewSearchLine::KIconViewSearchLine( QWidget *parent, const char *name ) :
-  KLineEdit( parent, name )
+KIconViewSearchLine::KIconViewSearchLine(QWidget *parent, const char *name) : KLineEdit(parent, name)
 {
-  d = NULL;
-  init( NULL );
+    d = NULL;
+    init(NULL);
 }
 
 KIconViewSearchLine::~KIconViewSearchLine()
 {
-  clear(); // empty hiddenItems, returning items back to iconView
-  delete d;
+    clear(); // empty hiddenItems, returning items back to iconView
+    delete d;
 }
 
 bool KIconViewSearchLine::caseSensitive() const
 {
-  return d->caseSensitive;
+    return d->caseSensitive;
 }
 
 QIconView *KIconViewSearchLine::iconView() const
 {
-  return d->iconView;
+    return d->iconView;
 }
 
 /******************************************************************************
  * Public Slots                                                               *
  *****************************************************************************/
-void KIconViewSearchLine::updateSearch( const QString &s )
+void KIconViewSearchLine::updateSearch(const QString &s)
 {
-  QIconView *iv = d->iconView;
-  if( ! iv )
-    return; // disabled
+    QIconView *iv = d->iconView;
+    if(!iv)
+        return; // disabled
 
-  QString search = d->search = s.isNull() ? text() : s;
+    QString search = d->search = s.isNull() ? text() : s;
 
-  QIconViewItemList *hi = &(d->hiddenItems);
+    QIconViewItemList *hi = &(d->hiddenItems);
 
-  QIconViewItem *currentItem = iv->currentItem();
+    QIconViewItem *currentItem = iv->currentItem();
 
-  QIconViewItem *item = NULL;
+    QIconViewItem *item = NULL;
 
-  // Remove Non-Matching items, add them them to hidden list
-  QIconViewItem *i = iv->firstItem();
-  while ( i != NULL )
+    // Remove Non-Matching items, add them them to hidden list
+    QIconViewItem *i = iv->firstItem();
+    while(i != NULL)
     {
-      item = i;
-      i = i->nextItem(); // Point to next, otherwise will loose it.
-      if ( ! itemMatches( item, search ) )
-	{
-	  hideItem( item );
+        item = i;
+        i = i->nextItem(); // Point to next, otherwise will loose it.
+        if(!itemMatches(item, search))
+        {
+            hideItem(item);
 
-	  if ( item == currentItem )
-	    currentItem = NULL; // It's not in iconView anymore.
-	}
+            if(item == currentItem)
+                currentItem = NULL; // It's not in iconView anymore.
+        }
     }
 
     // Add Matching items, remove from hidden list
     QIconViewItemList::iterator it = hi->begin();
-    while ( it != hi->end() )
-      {
-	item = *it;
-	++it;
-	if ( itemMatches( item, search ) )
-	  showItem( item );
-      }
+    while(it != hi->end())
+    {
+        item = *it;
+        ++it;
+        if(itemMatches(item, search))
+            showItem(item);
+    }
 
     iv->sort();
 
-    if ( currentItem != NULL )
-      iv->ensureItemVisible( currentItem );
+    if(currentItem != NULL)
+        iv->ensureItemVisible(currentItem);
 }
 
 void KIconViewSearchLine::clear()
 {
-  // Clear hidden list, give items back to QIconView, if it still exists
-  QIconViewItem *item = NULL;
-  QIconViewItemList::iterator it = d->hiddenItems.begin();
-  while ( it != d->hiddenItems.end() )
+    // Clear hidden list, give items back to QIconView, if it still exists
+    QIconViewItem *item = NULL;
+    QIconViewItemList::iterator it = d->hiddenItems.begin();
+    while(it != d->hiddenItems.end())
     {
-      item = *it;
-      ++it;
-      if ( item != NULL )
-	{
-	  if ( d->iconView != NULL )
-	    showItem( item );
-	  else
-	    delete item;
-	}
+        item = *it;
+        ++it;
+        if(item != NULL)
+        {
+            if(d->iconView != NULL)
+                showItem(item);
+            else
+                delete item;
+        }
     }
-  if ( ! d->hiddenItems.isEmpty() )
-    kdDebug() << __FILE__ << ":" << __LINE__ <<
-      "hiddenItems is not empty as it should be. " <<
-      d->hiddenItems.count() << " items are still there.\n" << endl;
+    if(!d->hiddenItems.isEmpty())
+        kdDebug() << __FILE__ << ":" << __LINE__ << "hiddenItems is not empty as it should be. " << d->hiddenItems.count()
+                  << " items are still there.\n"
+                  << endl;
 
-  d->search = "";
-  d->queuedSearches = 0;
-  KLineEdit::clear();
+    d->search = "";
+    d->queuedSearches = 0;
+    KLineEdit::clear();
 }
 
-void KIconViewSearchLine::setCaseSensitive( bool cs )
+void KIconViewSearchLine::setCaseSensitive(bool cs)
 {
-  d->caseSensitive = cs;
+    d->caseSensitive = cs;
 }
 
-void KIconViewSearchLine::setIconView( QIconView *iv )
+void KIconViewSearchLine::setIconView(QIconView *iv)
 {
-  if ( d->iconView != NULL )
-    disconnect( d->iconView, SIGNAL( destroyed() ),
-		this,        SLOT(   iconViewDeleted() ) );
+    if(d->iconView != NULL)
+        disconnect(d->iconView, SIGNAL(destroyed()), this, SLOT(iconViewDeleted()));
 
-  d->iconView = iv;
+    d->iconView = iv;
 
-  if ( iv != NULL )
+    if(iv != NULL)
     {
-      connect( d->iconView, SIGNAL( destroyed() ),
-	       this,        SLOT(   iconViewDeleted() ) );
-      setEnabled( true );
+        connect(d->iconView, SIGNAL(destroyed()), this, SLOT(iconViewDeleted()));
+        setEnabled(true);
     }
-  else
-    setEnabled( false );
+    else
+        setEnabled(false);
 }
 
 /******************************************************************************
  * Protected Methods                                                          *
  *****************************************************************************/
-bool KIconViewSearchLine::itemMatches( const QIconViewItem *item,
-				       const QString &s ) const
+bool KIconViewSearchLine::itemMatches(const QIconViewItem *item, const QString &s) const
 {
-  if ( s.isEmpty() )
-    return true;
+    if(s.isEmpty())
+        return true;
 
-  if ( item == NULL )
-    return false;
+    if(item == NULL)
+        return false;
 
-  return ( item->text().find( s, 0, caseSensitive() ) >= 0 );
+    return (item->text().find(s, 0, caseSensitive()) >= 0);
 }
 
-void KIconViewSearchLine::init( QIconView *iconView )
+void KIconViewSearchLine::init(QIconView *iconView)
 {
-  delete d;
-  d = new KIconViewSearchLinePrivate;
+    delete d;
+    d = new KIconViewSearchLinePrivate;
 
-  d->iconView = iconView;
+    d->iconView = iconView;
 
-  connect( this, SIGNAL( textChanged( const QString & ) ),
-	   this, SLOT(   queueSearch( const QString & ) ) );
+    connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(queueSearch(const QString &)));
 
-  if ( iconView != NULL )
+    if(iconView != NULL)
     {
-      connect( iconView, SIGNAL( destroyed() ),
-	       this,     SLOT(   iconViewDeleted() ) );
-      setEnabled( true );
+        connect(iconView, SIGNAL(destroyed()), this, SLOT(iconViewDeleted()));
+        setEnabled(true);
     }
-  else
-    setEnabled( false );
+    else
+        setEnabled(false);
 }
 
-void KIconViewSearchLine::hideItem( QIconViewItem *item )
+void KIconViewSearchLine::hideItem(QIconViewItem *item)
 {
-  if ( ( item == NULL ) || ( d->iconView == NULL ) )
-    return;
+    if((item == NULL) || (d->iconView == NULL))
+        return;
 
-  d->hiddenItems.append( item );
-  d->iconView->takeItem( item );
+    d->hiddenItems.append(item);
+    d->iconView->takeItem(item);
 }
 
-void KIconViewSearchLine::showItem( QIconViewItem *item )
+void KIconViewSearchLine::showItem(QIconViewItem *item)
 {
-  if ( d->iconView == NULL )
+    if(d->iconView == NULL)
     {
-      kdDebug() << __FILE__ << ":" << __LINE__ <<
-	"showItem() could not be called while there's no iconView set." <<
-	endl;
-      return;
+        kdDebug() << __FILE__ << ":" << __LINE__ << "showItem() could not be called while there's no iconView set." << endl;
+        return;
     }
-  d->iconView->insertItem( item );
-  d->hiddenItems.remove( item );
+    d->iconView->insertItem(item);
+    d->hiddenItems.remove(item);
 }
 
 /******************************************************************************
  * Protected Slots                                                            *
  *****************************************************************************/
-void KIconViewSearchLine::queueSearch( const QString &s )
+void KIconViewSearchLine::queueSearch(const QString &s)
 {
-  d->queuedSearches++;
-  d->search = s;
-  QTimer::singleShot( 200, this, SLOT( activateSearch() ) );
+    d->queuedSearches++;
+    d->search = s;
+    QTimer::singleShot(200, this, SLOT(activateSearch()));
 }
 
 void KIconViewSearchLine::activateSearch()
 {
-  d->queuedSearches--;
+    d->queuedSearches--;
 
-  if ( d->queuedSearches <= 0 )
+    if(d->queuedSearches <= 0)
     {
-      updateSearch( d->search );
-      d->queuedSearches = 0;
+        updateSearch(d->search);
+        d->queuedSearches = 0;
     }
 }
 
@@ -267,8 +253,8 @@ void KIconViewSearchLine::activateSearch()
  *****************************************************************************/
 void KIconViewSearchLine::iconViewDeleted()
 {
-  d->iconView = NULL;
-  setEnabled( false );
+    d->iconView = NULL;
+    setEnabled(false);
 }
 
 #include "kiconviewsearchline.moc"

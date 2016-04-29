@@ -23,8 +23,7 @@
 #include <kstandarddirs.h>
 #include <klocale.h>
 
-KFoomaticPrinterImpl::KFoomaticPrinterImpl(QObject *parent, const char *name, const QStringList & /*args*/)
-: KPrinterImpl(parent,name)
+KFoomaticPrinterImpl::KFoomaticPrinterImpl(QObject *parent, const char *name, const QStringList & /*args*/) : KPrinterImpl(parent, name)
 {
 }
 
@@ -35,19 +34,19 @@ KFoomaticPrinterImpl::~KFoomaticPrinterImpl()
 // look for executable
 QString KFoomaticPrinterImpl::executable()
 {
-	QString	exe = KStandardDirs::findExe("foomatic-printjob");
-	return exe;
+    QString exe = KStandardDirs::findExe("foomatic-printjob");
+    return exe;
 }
 
-bool KFoomaticPrinterImpl::setupCommand(QString& cmd, KPrinter *printer)
+bool KFoomaticPrinterImpl::setupCommand(QString &cmd, KPrinter *printer)
 {
-	QString		exe = executable();
-	if (!exe.isEmpty())
-	{
-		cmd = exe + QString::fromLatin1(" -P %1 -# %2").arg(quote(printer->printerName())).arg(printer->numCopies());
-		return true;
-	}
-	else
-		printer->setErrorMessage(i18n("No valid print executable was found in your path. Check your installation."));
-	return false;
+    QString exe = executable();
+    if(!exe.isEmpty())
+    {
+        cmd = exe + QString::fromLatin1(" -P %1 -# %2").arg(quote(printer->printerName())).arg(printer->numCopies());
+        return true;
+    }
+    else
+        printer->setErrorMessage(i18n("No valid print executable was found in your path. Check your installation."));
+    return false;
 }

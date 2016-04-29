@@ -27,31 +27,30 @@
 
 namespace KJS {
 
-  class DebuggerImp;
-  class Interpreter;
-  class ExecState;
-  class Value;
-  class Object;
-  class UString;
-  class List;
-  class Completion;
+class DebuggerImp;
+class Interpreter;
+class ExecState;
+class Value;
+class Object;
+class UString;
+class List;
+class Completion;
 
-  /**
-   * @internal
-   *
-   * Provides an interface which receives notification about various
-   * script-execution related events such as statement execution and function
-   * calls.
-   *
-   * WARNING: This interface is still a work in progress and is not yet
-   * offically publicly available. It is likely to change in binary incompatible
-   * (and possibly source incompatible) ways in future versions. It is
-   * anticipated that at some stage the interface will be frozen and made
-   * available for general use.
-   */
-  class KJS_EXPORT Debugger {
-  public:
-
+/**
+ * @internal
+ *
+ * Provides an interface which receives notification about various
+ * script-execution related events such as statement execution and function
+ * calls.
+ *
+ * WARNING: This interface is still a work in progress and is not yet
+ * offically publicly available. It is likely to change in binary incompatible
+ * (and possibly source incompatible) ways in future versions. It is
+ * anticipated that at some stage the interface will be frozen and made
+ * available for general use.
+ */
+class KJS_EXPORT Debugger {
+public:
     /**
      * Creates a new debugger
      */
@@ -63,7 +62,10 @@ namespace KJS {
      */
     virtual ~Debugger();
 
-    DebuggerImp *imp() const { return rep; }
+    DebuggerImp *imp() const
+    {
+        return rep;
+    }
 
     /**
      * Attaches the debugger to specified interpreter. This will cause this
@@ -111,8 +113,7 @@ namespace KJS {
      * @return true if execution should be continue, false if it should
      * be aborted
      */
-    virtual bool sourceParsed(ExecState *exec, int sourceId,
-			      const UString &source, int errorLine);
+    virtual bool sourceParsed(ExecState *exec, int sourceId, const UString &source, int errorLine);
 
     /**
      * Called when all functions/programs associated with a particular
@@ -143,8 +144,7 @@ namespace KJS {
      * @return true if execution should be continue, false if it should
      * be aborted
      */
-    virtual bool exception(ExecState *exec, const Value &value,
-			   bool inTryCatch);
+    virtual bool exception(ExecState *exec, const Value &value, bool inTryCatch);
 
     /**
      * Called when a line of the script is reached (before it is executed)
@@ -164,7 +164,7 @@ namespace KJS {
     /**
      * Called when the interpreter enters a new execution context (stack
      * frame). This can happen in three situations:
-     * 
+     *
      * <ul>
      *   <li>A call to Interpreter::evaluate(). This has a codeType of
      *   GlobalCode, and the sourceId is the id of the code passed to
@@ -184,7 +184,7 @@ namespace KJS {
      *
      * enterContext() is not called for functions implemented in the native
      * code, since these do not use an execution context.
-     * 
+     *
      * @param exec The current execution state (corresponding to the new stack
      * frame)
      */
@@ -201,10 +201,9 @@ namespace KJS {
      */
     virtual bool exitContext(ExecState *exec, const Completion &completion);
 
-  private:
+private:
     DebuggerImp *rep;
-  };
-
+};
 }
 
 #endif

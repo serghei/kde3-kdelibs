@@ -27,18 +27,28 @@ class KHTMLPart;
 
 namespace KJS {
 
-  class MozillaSidebarExtension : public ObjectImp {
-  public:
+class MozillaSidebarExtension : public ObjectImp {
+public:
     MozillaSidebarExtension(ExecState *exec, KHTMLPart *p);
     virtual Value get(ExecState *exec, const Identifier &propertyName) const;
     Value getValueProperty(ExecState *exec, int token) const;
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    enum { addPanel };
-    KHTMLPart *part() const { return m_part; }
-  private:
+    enum
+    {
+        addPanel
+    };
+    KHTMLPart *part() const
+    {
+        return m_part;
+    }
+
+private:
     KHTMLPart *m_part;
-  };
+};
 } // namespace
 
 #endif

@@ -38,75 +38,91 @@ class QTextStream;
  * The attribute stores the index to a table that contains fonts and colors
  * and also if a character is selected.
  */
-class KateTextLine : public KShared
-{
-  public:
+class KateTextLine : public KShared {
+public:
     /**
      * Define a Shared-Pointer type
      */
-    typedef KSharedPtr<KateTextLine> Ptr;
+    typedef KSharedPtr< KateTextLine > Ptr;
 
-  public:
+public:
     /**
      * Used Flags
      */
     enum Flags
     {
-      flagNoOtherData = 1, // ONLY INTERNAL USE, NEVER EVER SET THAT !!!!
-      flagHlContinue = 2,
-      flagAutoWrapped = 4,
-      flagFoldingColumnsOutdated = 8,
-      flagNoIndentationBasedFolding = 16,
-      flagNoIndentationBasedFoldingAtStart = 32
+        flagNoOtherData = 1, // ONLY INTERNAL USE, NEVER EVER SET THAT !!!!
+        flagHlContinue = 2,
+        flagAutoWrapped = 4,
+        flagFoldingColumnsOutdated = 8,
+        flagNoIndentationBasedFolding = 16,
+        flagNoIndentationBasedFoldingAtStart = 32
     };
 
-  public:
+public:
     /**
      * Constructor
      * Creates an empty text line with given attribute and syntax highlight
      * context
      */
-    KateTextLine ();
+    KateTextLine();
 
     /**
      * Destructor
      */
-    ~KateTextLine ();
+    ~KateTextLine();
 
-  /**
-   * Methods to get data
-   */
-  public:
+    /**
+     * Methods to get data
+     */
+public:
     /**
     * Set the flag that only positions have changed, not folding region begins/ends themselve
     */
-    inline void setFoldingColumnsOutdated(bool set) { if (set) m_flags |= KateTextLine::flagFoldingColumnsOutdated; else m_flags&=
-                                                      (~KateTextLine::flagFoldingColumnsOutdated);}
+    inline void setFoldingColumnsOutdated(bool set)
+    {
+        if(set)
+            m_flags |= KateTextLine::flagFoldingColumnsOutdated;
+        else
+            m_flags &= (~KateTextLine::flagFoldingColumnsOutdated);
+    }
 
     /**
      * folding columns outdated ?
      * @return folding columns outdated?
      */
-     inline bool foldingColumnsOutdated() { return m_flags & KateTextLine::flagFoldingColumnsOutdated; }
+    inline bool foldingColumnsOutdated()
+    {
+        return m_flags & KateTextLine::flagFoldingColumnsOutdated;
+    }
 
 
     /**
      * Returns the length
      * @return length of text in line
      */
-    inline uint length() const { return m_text.length(); }
+    inline uint length() const
+    {
+        return m_text.length();
+    }
 
     /**
      * has the line the hl continue flag set
      * @return hl continue set?
      */
-    inline bool hlLineContinue () const { return m_flags & KateTextLine::flagHlContinue; }
+    inline bool hlLineContinue() const
+    {
+        return m_flags & KateTextLine::flagHlContinue;
+    }
 
     /**
      * was this line automagically wrapped
      * @return line auto-wrapped
      */
-    inline bool isAutoWrapped () const { return m_flags & KateTextLine::flagAutoWrapped; }
+    inline bool isAutoWrapped() const
+    {
+        return m_flags & KateTextLine::flagAutoWrapped;
+    }
 
     /**
      * Returns the position of the first non-whitespace character
@@ -142,13 +158,19 @@ class KateTextLine : public KShared
      * @return character at the given position or QChar::null if position is
      *   beyond the length of the string
      */
-    inline QChar getChar (uint pos) const { return m_text[pos]; }
+    inline QChar getChar(uint pos) const
+    {
+        return m_text[pos];
+    }
 
     /**
      * Gets the text as a unicode representation
      * @return text of this line as QChar array
      */
-    inline const QChar *text() const { return m_text.unicode(); }
+    inline const QChar *text() const
+    {
+        return m_text.unicode();
+    }
 
     /**
      * Highlighting array
@@ -164,13 +186,19 @@ class KateTextLine : public KShared
      *
      * @return hl-attributes array
      */
-    inline uchar *attributes () const { return m_attributes.data(); }
+    inline uchar *attributes() const
+    {
+        return m_attributes.data();
+    }
 
     /**
      * Gets a QString
      * @return text of line as QString reference
      */
-    inline const QString& string() const { return m_text; }
+    inline const QString &string() const
+    {
+        return m_text;
+    }
 
     /**
      * Gets a substring.
@@ -179,7 +207,9 @@ class KateTextLine : public KShared
      * @return wanted substring
      */
     inline QString string(uint startCol, uint length) const
-    { return m_text.mid(startCol, length); }
+    {
+        return m_text.mid(startCol, length);
+    }
 
     /**
      * Gets a null terminated pointer to first non space char
@@ -192,7 +222,7 @@ class KateTextLine : public KShared
      * @param tabwidth width of the tabulators
      * @return indentation width
      */
-    uint indentDepth (uint tabwidth) const;
+    uint indentDepth(uint tabwidth) const;
 
     /**
      * Returns the x position of the cursor at the given position, which
@@ -208,7 +238,7 @@ class KateTextLine : public KShared
      * @param tabChars tabulator width in chars
      * @return text length
      */
-    uint lengthWithTabs (uint tabChars) const;
+    uint lengthWithTabs(uint tabChars) const;
 
     /**
      * Can we find the given string at the given position
@@ -216,21 +246,21 @@ class KateTextLine : public KShared
      * @param match string to match at given pos
      * @return did the string match?
      */
-    bool stringAtPos(uint pos, const QString& match) const;
+    bool stringAtPos(uint pos, const QString &match) const;
 
     /**
      * Is the line starting with the given string
      * @param match string to test
      * @return does line start with given string?
      */
-    bool startingWith(const QString& match) const;
+    bool startingWith(const QString &match) const;
 
     /**
      * Is the line ending with the given string
      * @param match string to test
      * @return does the line end with given string?
      */
-    bool endingWith(const QString& match) const;
+    bool endingWith(const QString &match) const;
 
     /**
      * search given string
@@ -242,10 +272,7 @@ class KateTextLine : public KShared
      * @param backwards search backwards?
      * @return string found?
      */
-    bool searchText (uint startCol, const QString &text,
-                     uint *foundAtCol, uint *matchLen,
-                     bool casesensitive = true,
-                     bool backwards = false);
+    bool searchText(uint startCol, const QString &text, uint *foundAtCol, uint *matchLen, bool casesensitive = true, bool backwards = false);
 
     /**
      * search given regexp
@@ -256,9 +283,7 @@ class KateTextLine : public KShared
      * @param backwards search backwards?
      * @return regexp found?
      */
-    bool searchText (uint startCol, const QRegExp &regexp,
-                     uint *foundAtCol, uint *matchLen,
-                     bool backwards = false);
+    bool searchText(uint startCol, const QRegExp &regexp, uint *foundAtCol, uint *matchLen, bool backwards = false);
 
     /**
      * Gets the attribute at the given position
@@ -268,34 +293,50 @@ class KateTextLine : public KShared
      * @return value of attribute
      * @see attributes
      */
-    inline uchar attribute (uint pos) const
+    inline uchar attribute(uint pos) const
     {
-      if (pos < m_attributes.size()) return m_attributes[pos];
-      return 0;
+        if(pos < m_attributes.size())
+            return m_attributes[pos];
+        return 0;
     }
 
     /**
      * context stack
      * @return context stack
      */
-    inline const QMemArray<short> &ctxArray () const { return m_ctx; };
+    inline const QMemArray< short > &ctxArray() const
+    {
+        return m_ctx;
+    };
 
     /**
-     * @return true if any context at the line end has the noIndentBasedFolding flag set 
+     * @return true if any context at the line end has the noIndentBasedFolding flag set
      */
-    inline const bool noIndentBasedFolding() const { return m_flags & KateTextLine::flagNoIndentationBasedFolding; };
-    inline const bool noIndentBasedFoldingAtStart() const { return m_flags & KateTextLine::flagNoIndentationBasedFoldingAtStart; };
+    inline const bool noIndentBasedFolding() const
+    {
+        return m_flags & KateTextLine::flagNoIndentationBasedFolding;
+    };
+    inline const bool noIndentBasedFoldingAtStart() const
+    {
+        return m_flags & KateTextLine::flagNoIndentationBasedFoldingAtStart;
+    };
     /**
      * folding list
      * @return folding array
      */
-    inline const QMemArray<uint> &foldingListArray () const { return m_foldingList; };
+    inline const QMemArray< uint > &foldingListArray() const
+    {
+        return m_foldingList;
+    };
 
     /**
      * indentation stack
      * @return indentation array
      */
-    inline const QMemArray<unsigned short> &indentationDepthArray () const { return m_indentationDepth; };
+    inline const QMemArray< unsigned short > &indentationDepthArray() const
+    {
+        return m_indentationDepth;
+    };
 
     /**
      * insert text into line
@@ -304,14 +345,14 @@ class KateTextLine : public KShared
      * @param insText text to insert
      * @param insAttribs attributes for the insert text
      */
-    void insertText (uint pos, uint insLen, const QChar *insText, uchar *insAttribs = 0);
+    void insertText(uint pos, uint insLen, const QChar *insText, uchar *insAttribs = 0);
 
     /**
      * remove text at given position
      * @param pos start position of remove
      * @param delLen length to remove
      */
-    void removeText (uint pos, uint delLen);
+    void removeText(uint pos, uint delLen);
 
     /**
      * Truncates the textline to the new length
@@ -323,78 +364,88 @@ class KateTextLine : public KShared
      * set hl continue flag
      * @param cont continue flag?
      */
-    inline void setHlLineContinue (bool cont)
+    inline void setHlLineContinue(bool cont)
     {
-      if (cont) m_flags = m_flags | KateTextLine::flagHlContinue;
-      else m_flags = m_flags & ~ KateTextLine::flagHlContinue;
+        if(cont)
+            m_flags = m_flags | KateTextLine::flagHlContinue;
+        else
+            m_flags = m_flags & ~KateTextLine::flagHlContinue;
     }
 
     /**
      * auto-wrapped
      * @param wrapped line was wrapped?
      */
-    inline void setAutoWrapped (bool wrapped)
+    inline void setAutoWrapped(bool wrapped)
     {
-      if (wrapped) m_flags = m_flags | KateTextLine::flagAutoWrapped;
-      else m_flags = m_flags & ~ KateTextLine::flagAutoWrapped;
+        if(wrapped)
+            m_flags = m_flags | KateTextLine::flagAutoWrapped;
+        else
+            m_flags = m_flags & ~KateTextLine::flagAutoWrapped;
     }
 
     /**
      * Sets the syntax highlight context number
      * @param val new context array
      */
-    inline void setContext (QMemArray<short> &val) { m_ctx.assign (val); }
+    inline void setContext(QMemArray< short > &val)
+    {
+        m_ctx.assign(val);
+    }
 
     /**
      * sets if for the next line indent based folding should be disabled
      */
     inline void setNoIndentBasedFolding(bool val)
     {
-      if (val) m_flags = m_flags | KateTextLine::flagNoIndentationBasedFolding;
-      else m_flags = m_flags & ~ KateTextLine::flagNoIndentationBasedFolding;
+        if(val)
+            m_flags = m_flags | KateTextLine::flagNoIndentationBasedFolding;
+        else
+            m_flags = m_flags & ~KateTextLine::flagNoIndentationBasedFolding;
     }
 
     inline void setNoIndentBasedFoldingAtStart(bool val)
     {
-      if (val) m_flags = m_flags | KateTextLine::flagNoIndentationBasedFoldingAtStart;
-      else m_flags = m_flags & ~ KateTextLine::flagNoIndentationBasedFoldingAtStart;
+        if(val)
+            m_flags = m_flags | KateTextLine::flagNoIndentationBasedFoldingAtStart;
+        else
+            m_flags = m_flags & ~KateTextLine::flagNoIndentationBasedFoldingAtStart;
     }
 
     /**
      * update folding list
      * @param val new folding list
      */
-    inline void setFoldingList (QMemArray<uint> &val) { m_foldingList.assign (val); m_foldingList.detach(); }
+    inline void setFoldingList(QMemArray< uint > &val)
+    {
+        m_foldingList.assign(val);
+        m_foldingList.detach();
+    }
 
     /**
      * update indentation stack
      * @param val new indentation stack
      */
-    inline void setIndentationDepth (QMemArray<unsigned short> &val) { m_indentationDepth.assign (val); }
+    inline void setIndentationDepth(QMemArray< unsigned short > &val)
+    {
+        m_indentationDepth.assign(val);
+    }
 
-  /**
-   * Methodes for dump/restore of the line in the buffer
-   */
-  public:
+    /**
+     * Methodes for dump/restore of the line in the buffer
+     */
+public:
     /**
      * Dumpsize in bytes
      * @param withHighlighting should we dump the hl, too?
      * @return size of line for dumping
      */
-    inline uint dumpSize (bool withHighlighting) const
+    inline uint dumpSize(bool withHighlighting) const
     {
-      return ( 1
-               + sizeof(uint)
-               + (m_text.length() * sizeof(QChar))
-               + ( withHighlighting ?
-                     ( (3 * sizeof(uint))
-                       + (m_text.length() * sizeof(uchar))
-                       + (m_ctx.size() * sizeof(short))
-                       + (m_foldingList.size() * sizeof(uint))
-                       + (m_indentationDepth.size() * sizeof(unsigned short))
-                     ) : 0
-                 )
-             );
+        return (1 + sizeof(uint) + (m_text.length() * sizeof(QChar))
+                + (withHighlighting ? ((3 * sizeof(uint)) + (m_text.length() * sizeof(uchar)) + (m_ctx.size() * sizeof(short))
+                                       + (m_foldingList.size() * sizeof(uint)) + (m_indentationDepth.size() * sizeof(unsigned short)))
+                                    : 0));
     }
 
     /**
@@ -404,7 +455,7 @@ class KateTextLine : public KShared
      * @param withHighlighting dump hl data, too?
      * @return buffer index after dumping
      */
-    char *dump (char *buf, bool withHighlighting) const;
+    char *dump(char *buf, bool withHighlighting) const;
 
     /**
      * Restores the line from *buf and counts buff dumpSize bytes up
@@ -412,12 +463,12 @@ class KateTextLine : public KShared
      * @param buf buffer to restore from
      * @return buffer index after restoring
      */
-    char *restore (char *buf);
+    char *restore(char *buf);
 
-  /**
-   * REALLY PRIVATE ;) please no new friend classes
-   */
-  private:
+    /**
+     * REALLY PRIVATE ;) please no new friend classes
+     */
+private:
     /**
      * text of line as unicode
      */
@@ -428,22 +479,22 @@ class KateTextLine : public KShared
      * This is exactly the same size as m_text.length()
      * Each letter in m_text has a uchar attribute
      */
-    QMemArray<uchar> m_attributes;
+    QMemArray< uchar > m_attributes;
 
     /**
      * context stack
      */
-    QMemArray<short> m_ctx;
+    QMemArray< short > m_ctx;
 
     /**
      * list of folding starts/ends
      */
-    QMemArray<uint> m_foldingList;
+    QMemArray< uint > m_foldingList;
 
     /**
      * indentation stack
      */
-    QMemArray<unsigned short> m_indentationDepth;
+    QMemArray< unsigned short > m_indentationDepth;
 
     /**
      * flags

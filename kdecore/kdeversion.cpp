@@ -43,4 +43,3 @@ const char *KDE::versionString()
 {
     return KDE_VERSION_STRING;
 }
-

@@ -21,16 +21,17 @@
 #include "popupmenuinterface.h"
 #include "view.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivatePopupMenuInterface
-{
-  public:
-    PrivatePopupMenuInterface() {}
-    ~PrivatePopupMenuInterface() {}
+class PrivatePopupMenuInterface {
+public:
+    PrivatePopupMenuInterface()
+    {
+    }
+    ~PrivatePopupMenuInterface()
+    {
+    }
 };
-
 }
 
 using namespace KTextEditor;
@@ -39,31 +40,31 @@ unsigned int PopupMenuInterface::globalPopupMenuInterfaceNumber = 0;
 
 PopupMenuInterface::PopupMenuInterface()
 {
-  globalPopupMenuInterfaceNumber++;
-  myPopupMenuInterfaceNumber = globalPopupMenuInterfaceNumber++;
+    globalPopupMenuInterfaceNumber++;
+    myPopupMenuInterfaceNumber = globalPopupMenuInterfaceNumber++;
 
-  d = new PrivatePopupMenuInterface();
+    d = new PrivatePopupMenuInterface();
 }
 
 PopupMenuInterface::~PopupMenuInterface()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int PopupMenuInterface::popupMenuInterfaceNumber () const
+unsigned int PopupMenuInterface::popupMenuInterfaceNumber() const
 {
-  return myPopupMenuInterfaceNumber;
+    return myPopupMenuInterfaceNumber;
 }
 
-void PopupMenuInterface::setPopupMenuInterfaceDCOPSuffix (const QCString &/*suffix*/)
+void PopupMenuInterface::setPopupMenuInterfaceDCOPSuffix(const QCString & /*suffix*/)
 {
-  //d->interface->setObjId ("PopupMenuInterface#"+suffix);
+    // d->interface->setObjId ("PopupMenuInterface#"+suffix);
 }
 
-PopupMenuInterface *KTextEditor::popupMenuInterface (View *view)
-{        
-  if (!view)
-    return 0;
+PopupMenuInterface *KTextEditor::popupMenuInterface(View *view)
+{
+    if(!view)
+        return 0;
 
-  return static_cast<PopupMenuInterface*>(view->qt_cast("KTextEditor::PopupMenuInterface"));
+    return static_cast< PopupMenuInterface * >(view->qt_cast("KTextEditor::PopupMenuInterface"));
 }

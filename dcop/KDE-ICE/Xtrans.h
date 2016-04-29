@@ -51,7 +51,7 @@ from The Open Group.
 #define _XTRANS_H_
 
 #include "config.h"
-#if defined Q_WS_X11 && ! defined K_WS_QTONLY
+#if defined Q_WS_X11 && !defined K_WS_QTONLY
 #include <X11/Xfuncproto.h>
 #include <X11/Xos.h>
 #else
@@ -64,103 +64,103 @@ from The Open Group.
  */
 
 #ifdef X11_t
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
+#if(defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 #define TRANS(func) _X11Trans##func
 #else
-#define TRANS(func) _X11Trans/**/func
+#define TRANS(func) _X11Trans /**/ func
 #endif
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_X11Trans";
+static char *__xtransname = "_X11Trans";
 #endif
 #endif /* X11_t */
 
 #ifdef XSERV_t
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
+#if(defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 #define TRANS(func) _XSERVTrans##func
 #else
-#define TRANS(func) _XSERVTrans/**/func
+#define TRANS(func) _XSERVTrans /**/ func
 #endif
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_XSERVTrans";
+static char *__xtransname = "_XSERVTrans";
 #endif
 #define X11_t
 #endif /* X11_t */
 
 #ifdef XIM_t
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
+#if(defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 #define TRANS(func) _XimXTrans##func
 #else
-#define TRANS(func) _XimXTrans/**/func
+#define TRANS(func) _XimXTrans /**/ func
 #endif
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_XimTrans";
+static char *__xtransname = "_XimTrans";
 #endif
 #endif /* XIM_t */
 
 #ifdef FS_t
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
+#if(defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 #define TRANS(func) _FSTrans##func
 #else
-#define TRANS(func) _FSTrans/**/func
+#define TRANS(func) _FSTrans /**/ func
 #endif
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_FSTrans";
+static char *__xtransname = "_FSTrans";
 #endif
 #endif /* FS_t */
 
 #ifdef FONT_t
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
+#if(defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 #define TRANS(func) _FontTrans##func
 #else
-#define TRANS(func) _FontTrans/**/func
+#define TRANS(func) _FontTrans /**/ func
 #endif
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_FontTrans";
+static char *__xtransname = "_FontTrans";
 #endif
 #endif /* FONT_t */
 
 #ifdef ICE_t
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
+#if(defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 #define TRANS(func) _kde_IceTrans##func
 #else
-#define TRANS(func) _kde_IceTrans/**/func
+#define TRANS(func) _kde_IceTrans /**/ func
 #endif
 #ifdef XTRANSDEBUG
-static char* __xtransname = (char *)"_kde_IceTrans";
+static char *__xtransname = (char *)"_kde_IceTrans";
 #endif
 #endif /* ICE_t */
 
 #ifdef TEST_t
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
+#if(defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 #define TRANS(func) _TESTTrans##func
 #else
-#define TRANS(func) _TESTTrans/**/func
+#define TRANS(func) _TESTTrans /**/ func
 #endif
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_TESTTrans";
+static char *__xtransname = "_TESTTrans";
 #endif
 #endif /* TEST_t */
 
 #ifdef LBXPROXY_t
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
+#if(defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 #define TRANS(func) _LBXPROXYTrans##func
 #else
-#define TRANS(func) _LBXPROXYTrans/**/func
+#define TRANS(func) _LBXPROXYTrans /**/ func
 #endif
-#define X11_t		/* The server defines this - so should the LBX proxy */
+#define X11_t /* The server defines this - so should the LBX proxy */
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_LBXPROXYTrans";
+static char *__xtransname = "_LBXPROXYTrans";
 #endif
 #endif /* LBXPROXY_t */
 
 #if !defined(TRANS)
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
+#if(defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 #define TRANS(func) _XTrans##func
 #else
-#define TRANS(func) _XTrans/**/func
+#define TRANS(func) _XTrans /**/ func
 #endif
 #ifdef XTRANSDEBUG
-static char* __xtransname = "_XTrans";
+static char *__xtransname = "_XTrans";
 #endif
 #endif /* !TRANS */
 
@@ -174,10 +174,11 @@ static char* __xtransname = "_XTrans";
  * This structure needs to be independent of the socket/TLI interface used.
  */
 
-#define XTRANS_MAX_ADDR_LEN	128	/* large enough to hold sun_path */
+#define XTRANS_MAX_ADDR_LEN 128 /* large enough to hold sun_path */
 
-typedef	struct {
-    unsigned char	addr[XTRANS_MAX_ADDR_LEN];
+typedef struct
+{
+    unsigned char addr[XTRANS_MAX_ADDR_LEN];
 } Xtransaddr;
 
 
@@ -188,7 +189,8 @@ typedef long BytesReadable_t;
 #endif
 
 
-#if defined(_WIN32) || (defined(USG) && !defined(CRAY) && !defined(umips) && !defined(MOTOROLA) && !defined(uniosu) && !defined(__sxg__)) || defined(MINIX)
+#if defined(_WIN32) || (defined(USG) && !defined(CRAY) && !defined(umips) && !defined(MOTOROLA) && !defined(uniosu) && !defined(__sxg__))            \
+    || defined(MINIX)
 
 /*
  *      TRANS(Readv) and TRANS(Writev) use struct iovec, normally found
@@ -196,7 +198,8 @@ typedef long BytesReadable_t;
  *      manual pages for details.
  */
 
-struct iovec {
+struct iovec
+{
     caddr_t iov_base;
     int iov_len;
 };
@@ -216,224 +219,196 @@ typedef struct _XtransConnInfo *XtransConnInfo;
  * Transport Option definitions
  */
 
-#define TRANS_NONBLOCKING	1
-#define	TRANS_CLOSEONEXEC	2
+#define TRANS_NONBLOCKING 1
+#define TRANS_CLOSEONEXEC 2
 
 
 /*
  * Return values of Connect (0 is success)
  */
 
-#define TRANS_CONNECT_FAILED 	-1
+#define TRANS_CONNECT_FAILED -1
 #define TRANS_TRY_CONNECT_AGAIN -2
-#define TRANS_IN_PROGRESS	-3
+#define TRANS_IN_PROGRESS -3
 
 
 /*
  * Return values of CreateListener (0 is success)
  */
 
-#define TRANS_CREATE_LISTENER_FAILED 	-1
-#define TRANS_ADDR_IN_USE		-2
+#define TRANS_CREATE_LISTENER_FAILED -1
+#define TRANS_ADDR_IN_USE -2
 
 
 /*
  * Return values of Accept (0 is success)
  */
 
-#define TRANS_ACCEPT_BAD_MALLOC			-1
-#define TRANS_ACCEPT_FAILED 			-2
-#define TRANS_ACCEPT_MISC_ERROR			-3
+#define TRANS_ACCEPT_BAD_MALLOC -1
+#define TRANS_ACCEPT_FAILED -2
+#define TRANS_ACCEPT_MISC_ERROR -3
 
 
 /*
  * ResetListener return values
  */
 
-#define TRANS_RESET_NOOP	1
-#define TRANS_RESET_NEW_FD	2
-#define TRANS_RESET_FAILURE	3
+#define TRANS_RESET_NOOP 1
+#define TRANS_RESET_NEW_FD 2
+#define TRANS_RESET_FAILURE 3
 
 
 /*
  * Function prototypes for the exposed interface
  */
 
-void TRANS(FreeConnInfo) (
-    XtransConnInfo 	/* ciptr */
-);
+void TRANS(FreeConnInfo)(XtransConnInfo /* ciptr */
+                         );
 
 #ifdef TRANS_CLIENT
 
-XtransConnInfo TRANS(OpenCOTSClient)(
-    char *		/* address */
-);
+XtransConnInfo TRANS(OpenCOTSClient)(char * /* address */
+                                     );
 
 #endif /* TRANS_CLIENT */
 
 #ifdef TRANS_SERVER
 
-XtransConnInfo TRANS(OpenCOTSServer)(
-    char *		/* address */
-);
+XtransConnInfo TRANS(OpenCOTSServer)(char * /* address */
+                                     );
 
 #endif /* TRANS_SERVER */
 
 #ifdef TRANS_CLIENT
 
-XtransConnInfo TRANS(OpenCLTSClient)(
-    char *		/* address */
-);
+XtransConnInfo TRANS(OpenCLTSClient)(char * /* address */
+                                     );
 
 #endif /* TRANS_CLIENT */
 
 #ifdef TRANS_SERVER
 
-XtransConnInfo TRANS(OpenCLTSServer)(
-    char *		/* address */
-);
+XtransConnInfo TRANS(OpenCLTSServer)(char * /* address */
+                                     );
 
 #endif /* TRANS_SERVER */
 
 #ifdef TRANS_REOPEN
 
-XtransConnInfo TRANS(ReopenCOTSServer)(
-    int,		/* trans_id */
-    int,		/* fd */
-    char *		/* port */
-);
+XtransConnInfo TRANS(ReopenCOTSServer)(int,   /* trans_id */
+                                       int,   /* fd */
+                                       char * /* port */
+                                       );
 
-XtransConnInfo TRANS(ReopenCLTSServer)(
-    int,		/* trans_id */
-    int,		/* fd */
-    char *		/* port */
-);
+XtransConnInfo TRANS(ReopenCLTSServer)(int,   /* trans_id */
+                                       int,   /* fd */
+                                       char * /* port */
+                                       );
 
-int TRANS(GetReopenInfo)(
-    XtransConnInfo,	/* ciptr */
-    int *,		/* trans_id */
-    int *,		/* fd */
-    char **		/* port */
-);
+int TRANS(GetReopenInfo)(XtransConnInfo, /* ciptr */
+                         int *,          /* trans_id */
+                         int *,          /* fd */
+                         char **         /* port */
+                         );
 
 #endif /* TRANS_REOPEN */
 
 
-int TRANS(SetOption)(
-    XtransConnInfo,	/* ciptr */
-    int,		/* option */
-    int			/* arg */
-);
+int TRANS(SetOption)(XtransConnInfo, /* ciptr */
+                     int,            /* option */
+                     int             /* arg */
+                     );
 
 #ifdef TRANS_SERVER
 
-int TRANS(CreateListener)(
-    XtransConnInfo,	/* ciptr */
-    char *		/* port */
-);
+int TRANS(CreateListener)(XtransConnInfo, /* ciptr */
+                          char *          /* port */
+                          );
 
-int TRANS(NoListen) (
-    char*               /* protocol*/
-);
+int TRANS(NoListen)(char * /* protocol*/
+                    );
 
-int TRANS(ResetListener)(
-    XtransConnInfo	/* ciptr */
-);
+int TRANS(ResetListener)(XtransConnInfo /* ciptr */
+                         );
 
-XtransConnInfo TRANS(Accept)(
-    XtransConnInfo,	/* ciptr */
-    int *		/* status */
-);
+XtransConnInfo TRANS(Accept)(XtransConnInfo, /* ciptr */
+                             int *           /* status */
+                             );
 
 #endif /* TRANS_SERVER */
 
 #ifdef TRANS_CLIENT
 
-int TRANS(Connect)(
-    XtransConnInfo,	/* ciptr */
-    char *		/* address */
-);
+int TRANS(Connect)(XtransConnInfo, /* ciptr */
+                   char *          /* address */
+                   );
 
 #endif /* TRANS_CLIENT */
 
-int TRANS(BytesReadable)(
-    XtransConnInfo,	/* ciptr */
-    BytesReadable_t *	/* pend */
-);
+int TRANS(BytesReadable)(XtransConnInfo,   /* ciptr */
+                         BytesReadable_t * /* pend */
+                         );
 
-int TRANS(Read)(
-    XtransConnInfo,	/* ciptr */
-    char *,		/* buf */
-    int			/* size */
-);
+int TRANS(Read)(XtransConnInfo, /* ciptr */
+                char *,         /* buf */
+                int             /* size */
+                );
 
-int TRANS(Write)(
-    XtransConnInfo,	/* ciptr */
-    char *,		/* buf */
-    int			/* size */
-);
+int TRANS(Write)(XtransConnInfo, /* ciptr */
+                 char *,         /* buf */
+                 int             /* size */
+                 );
 
-int TRANS(Readv)(
-    XtransConnInfo,	/* ciptr */
-    struct iovec *,	/* buf */
-    int			/* size */
-);
+int TRANS(Readv)(XtransConnInfo, /* ciptr */
+                 struct iovec *, /* buf */
+                 int             /* size */
+                 );
 
-int TRANS(Writev)(
-    XtransConnInfo,	/* ciptr */
-    struct iovec *,	/* buf */
-    int			/* size */
-);
+int TRANS(Writev)(XtransConnInfo, /* ciptr */
+                  struct iovec *, /* buf */
+                  int             /* size */
+                  );
 
-int TRANS(Disconnect)(
-    XtransConnInfo	/* ciptr */
-);
+int TRANS(Disconnect)(XtransConnInfo /* ciptr */
+                      );
 
-int TRANS(Close)(
-    XtransConnInfo	/* ciptr */
-);
+int TRANS(Close)(XtransConnInfo /* ciptr */
+                 );
 
-int TRANS(CloseForCloning)(
-    XtransConnInfo	/* ciptr */
-);
+int TRANS(CloseForCloning)(XtransConnInfo /* ciptr */
+                           );
 
-int TRANS(IsLocal)(
-    XtransConnInfo	/* ciptr */
-);
+int TRANS(IsLocal)(XtransConnInfo /* ciptr */
+                   );
 
-int TRANS(GetMyAddr)(
-    XtransConnInfo,	/* ciptr */
-    int *,		/* familyp */
-    int *,		/* addrlenp */
-    Xtransaddr **	/* addrp */
-);
+int TRANS(GetMyAddr)(XtransConnInfo, /* ciptr */
+                     int *,          /* familyp */
+                     int *,          /* addrlenp */
+                     Xtransaddr **   /* addrp */
+                     );
 
-int TRANS(GetPeerAddr)(
-    XtransConnInfo,	/* ciptr */
-    int *,		/* familyp */
-    int *,		/* addrlenp */
-    Xtransaddr **	/* addrp */
-);
+int TRANS(GetPeerAddr)(XtransConnInfo, /* ciptr */
+                       int *,          /* familyp */
+                       int *,          /* addrlenp */
+                       Xtransaddr **   /* addrp */
+                       );
 
-int TRANS(GetConnectionNumber)(
-    XtransConnInfo	/* ciptr */
-);
+int TRANS(GetConnectionNumber)(XtransConnInfo /* ciptr */
+                               );
 
 #ifdef TRANS_SERVER
 
-int TRANS(MakeAllCOTSServerListeners)(
-    char *,		/* port */
-    int *,		/* partial */
-    int *,		/* count_ret */
-    XtransConnInfo **	/* ciptrs_ret */
-);
+int TRANS(MakeAllCOTSServerListeners)(char *,           /* port */
+                                      int *,            /* partial */
+                                      int *,            /* count_ret */
+                                      XtransConnInfo ** /* ciptrs_ret */
+                                      );
 
-int TRANS(MakeAllCLTSServerListeners)(
-    char *,		/* port */
-    int *,		/* partial */
-    int *,		/* count_ret */
-    XtransConnInfo **	/* ciptrs_ret */
-);
+int TRANS(MakeAllCLTSServerListeners)(char *,           /* port */
+                                      int *,            /* partial */
+                                      int *,            /* count_ret */
+                                      XtransConnInfo ** /* ciptrs_ret */
+                                      );
 
 #endif /* TRANS_SERVER */
 
@@ -444,33 +419,25 @@ int TRANS(MakeAllCLTSServerListeners)(
 
 #ifdef X11_t
 
-int TRANS(ConvertAddress)(
-    int *,		/* familyp */
-    int *,		/* addrlenp */
-    Xtransaddr **	/* addrp */
-);
+int TRANS(ConvertAddress)(int *,        /* familyp */
+                          int *,        /* addrlenp */
+                          Xtransaddr ** /* addrp */
+                          );
 
 #endif /* X11_t */
 
 #if defined(ICE_t)
 
-char *
-TRANS(GetMyNetworkId)(
-    XtransConnInfo	/* ciptr */
-);
+char *TRANS(GetMyNetworkId)(XtransConnInfo /* ciptr */
+                            );
 
-char *
-TRANS(GetPeerNetworkId)(
-    XtransConnInfo	/* ciptr */
-);
+char *TRANS(GetPeerNetworkId)(XtransConnInfo /* ciptr */
+                              );
 
 #endif /* ICE_t */
 
-int
-TRANS(GetHostname) (
-    char *	/* buf */,
-    int 	/* maxlen */
-);
+int TRANS(GetHostname)(char * /* buf */, int /* maxlen */
+                       );
 
 #if defined(_WIN32) && (defined(TCPCONN) || defined(DNETCONN))
 int TRANS(WSAStartup)();

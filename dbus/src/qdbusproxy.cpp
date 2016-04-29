@@ -26,11 +26,14 @@
 #include "qdbusmessage.h"
 #include "qdbusproxy.h"
 
-class QDBusProxy::Private
-{
+class QDBusProxy::Private {
 public:
-    Private() : canSend(false) {}
-    ~Private() {}
+    Private() : canSend(false)
+    {
+    }
+    ~Private()
+    {
+    }
 
     void checkCanSend()
     {
@@ -48,25 +51,19 @@ public:
     QDBusError error;
 };
 
-QDBusProxy::QDBusProxy(QObject* parent, const char* name)
-    : QObject(parent, (name ? name : "QDBusProxy")),
-      d(new Private())
+QDBusProxy::QDBusProxy(QObject *parent, const char *name) : QObject(parent, (name ? name : "QDBusProxy")), d(new Private())
 {
 }
 
-QDBusProxy::QDBusProxy(const QDBusConnection& connection,
-                       QObject* parent, const char* name)
-    : QObject(parent, (name ? name : "QDBusProxy")),
-      d(new Private())
+QDBusProxy::QDBusProxy(const QDBusConnection &connection, QObject *parent, const char *name)
+    : QObject(parent, (name ? name : "QDBusProxy")), d(new Private())
 {
     setConnection(connection);
 }
 
-QDBusProxy::QDBusProxy(const QString& service, const QString& path,
-                       const QString& interface, const QDBusConnection& connection,
-                       QObject* parent, const char* name)
-    : QObject(parent, (name ? name : "QDBusProxy")),
-      d(new Private())
+QDBusProxy::QDBusProxy(const QString &service, const QString &path, const QString &interface, const QDBusConnection &connection, QObject *parent,
+                       const char *name)
+    : QObject(parent, (name ? name : "QDBusProxy")), d(new Private())
 {
     setConnection(connection);
 
@@ -81,21 +78,21 @@ QDBusProxy::~QDBusProxy()
     delete d;
 }
 
-bool QDBusProxy::setConnection(const QDBusConnection& connection)
+bool QDBusProxy::setConnection(const QDBusConnection &connection)
 {
-    d->connection.disconnect(this, SLOT(handleDBusSignal(const QDBusMessage&)));
+    d->connection.disconnect(this, SLOT(handleDBusSignal(const QDBusMessage &)));
 
     d->connection = connection;
 
-    return d->connection.connect(this, SLOT(handleDBusSignal(const QDBusMessage&)));
+    return d->connection.connect(this, SLOT(handleDBusSignal(const QDBusMessage &)));
 }
 
-const QDBusConnection& QDBusProxy::connection() const
+const QDBusConnection &QDBusProxy::connection() const
 {
     return d->connection;
 }
 
-void QDBusProxy::setService(const QString& service)
+void QDBusProxy::setService(const QString &service)
 {
     d->service = service;
     d->checkCanSend();
@@ -106,7 +103,7 @@ QString QDBusProxy::service() const
     return d->service;
 }
 
-void QDBusProxy::setPath(const QString& path)
+void QDBusProxy::setPath(const QString &path)
 {
     d->path = path;
     d->checkCanSend();
@@ -117,7 +114,7 @@ QString QDBusProxy::path() const
     return d->path;
 }
 
-void QDBusProxy::setInterface(const QString& interface)
+void QDBusProxy::setInterface(const QString &interface)
 {
     d->interface = interface;
     d->checkCanSend();
@@ -133,48 +130,42 @@ bool QDBusProxy::canSend() const
     return d->canSend && d->connection.isConnected();
 }
 
-bool QDBusProxy::send(const QString& method, const QValueList<QDBusData>& params) const
+bool QDBusProxy::send(const QString &method, const QValueList< QDBusData > &params) const
 {
-    if (!d->canSend || method.isEmpty() || !d->connection.isConnected())
+    if(!d->canSend || method.isEmpty() || !d->connection.isConnected())
         return false;
 
-    QDBusMessage message = QDBusMessage::methodCall(d->service, d->path,
-                                                    d->interface, method);
+    QDBusMessage message = QDBusMessage::methodCall(d->service, d->path, d->interface, method);
     message += params;
 
     return d->connection.send(message);
 }
 
-QDBusMessage QDBusProxy::sendWithReply(const QString& method,
-                                       const QValueList<QDBusData>& params,
-                                       QDBusError* error) const
+QDBusMessage QDBusProxy::sendWithReply(const QString &method, const QValueList< QDBusData > &params, QDBusError *error) const
 {
-    if (!d->canSend || method.isEmpty() || !d->connection.isConnected())
+    if(!d->canSend || method.isEmpty() || !d->connection.isConnected())
         return QDBusMessage();
 
-    QDBusMessage message = QDBusMessage::methodCall(d->service, d->path,
-                                                    d->interface, method);
+    QDBusMessage message = QDBusMessage::methodCall(d->service, d->path, d->interface, method);
     message += params;
 
     QDBusMessage reply = d->connection.sendWithReply(message, &d->error);
 
-    if (error)
+    if(error)
         *error = d->error;
 
     return reply;
 }
 
-int QDBusProxy::sendWithAsyncReply(const QString& method, const QValueList<QDBusData>& params)
+int QDBusProxy::sendWithAsyncReply(const QString &method, const QValueList< QDBusData > &params)
 {
-    if (!d->canSend || method.isEmpty() || !d->connection.isConnected())
+    if(!d->canSend || method.isEmpty() || !d->connection.isConnected())
         return 0;
 
-    QDBusMessage message = QDBusMessage::methodCall(d->service, d->path,
-                                                    d->interface, method);
+    QDBusMessage message = QDBusMessage::methodCall(d->service, d->path, d->interface, method);
     message += params;
 
-    return d->connection.sendWithAsyncReply(message, this,
-                   SLOT(handleAsyncReply(const QDBusMessage&)));
+    return d->connection.sendWithAsyncReply(message, this, SLOT(handleAsyncReply(const QDBusMessage &)));
 }
 
 QDBusError QDBusProxy::lastError() const
@@ -182,24 +173,24 @@ QDBusError QDBusProxy::lastError() const
     return d->error;
 }
 
-void QDBusProxy::handleDBusSignal(const QDBusMessage& message)
+void QDBusProxy::handleDBusSignal(const QDBusMessage &message)
 {
-    if (!d->path.isEmpty() && d->path != message.path())
+    if(!d->path.isEmpty() && d->path != message.path())
         return;
 
     // only filter by service name if the name is a unique name
     // because signals are always coming from a connection's unique name
     // and filtering by a generic name would reject all signals
-    if (d->service.startsWith(":") && d->service != message.sender())
+    if(d->service.startsWith(":") && d->service != message.sender())
         return;
 
-    if (!d->interface.isEmpty() && d->interface != message.interface())
+    if(!d->interface.isEmpty() && d->interface != message.interface())
         return;
 
     emit dbusSignal(message);
 }
 
-void QDBusProxy::handleAsyncReply(const QDBusMessage& message)
+void QDBusProxy::handleAsyncReply(const QDBusMessage &message)
 {
     d->error = message.error();
 

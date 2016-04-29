@@ -39,162 +39,164 @@
 
 #include "autostart.h"
 
-class IdleSlave : public QObject
-{
-   Q_OBJECT
+class IdleSlave : public QObject {
+    Q_OBJECT
 public:
-   IdleSlave(KSocket *socket);
-   bool match( const QString &protocol, const QString &host, bool connected);
-   void connect( const QString &app_socket);
-   pid_t pid() const { return mPid;}
-   int age(time_t now);
-   void reparseConfiguration();
-   bool onHold(const KURL &url);
-   QString protocol() const   {return mProtocol;}
+    IdleSlave(KSocket *socket);
+    bool match(const QString &protocol, const QString &host, bool connected);
+    void connect(const QString &app_socket);
+    pid_t pid() const
+    {
+        return mPid;
+    }
+    int age(time_t now);
+    void reparseConfiguration();
+    bool onHold(const KURL &url);
+    QString protocol() const
+    {
+        return mProtocol;
+    }
 
 signals:
-   void statusUpdate(IdleSlave *);
+    void statusUpdate(IdleSlave *);
 
 protected slots:
-   void gotInput();
+    void gotInput();
 
 protected:
-   KIO::Connection mConn;
-   QString mProtocol;
-   QString mHost;
-   bool mConnected;
-   pid_t mPid;
-   time_t mBirthDate;
-   bool mOnHold;
-   KURL mUrl;
+    KIO::Connection mConn;
+    QString mProtocol;
+    QString mHost;
+    bool mConnected;
+    pid_t mPid;
+    time_t mBirthDate;
+    bool mOnHold;
+    KURL mUrl;
 };
 
-class SlaveWaitRequest
-{
+class SlaveWaitRequest {
 public:
-   pid_t pid;
-   DCOPClientTransaction *transaction;
+    pid_t pid;
+    DCOPClientTransaction *transaction;
 };
 
-class KLaunchRequest
-{
+class KLaunchRequest {
 public:
-   QCString name;
-   QValueList<QCString> arg_list;
-   QCString dcop_name;
-   enum status_t { Init = 0, Launching, Running, Error, Done };
-   pid_t pid;
-   status_t status;
-   DCOPClientTransaction *transaction;
-   KService::DCOPServiceType_t dcop_service_type;
-   bool autoStart;
-   QString errorMsg;
+    QCString name;
+    QValueList< QCString > arg_list;
+    QCString dcop_name;
+    enum status_t
+    {
+        Init = 0,
+        Launching,
+        Running,
+        Error,
+        Done
+    };
+    pid_t pid;
+    status_t status;
+    DCOPClientTransaction *transaction;
+    KService::DCOPServiceType_t dcop_service_type;
+    bool autoStart;
+    QString errorMsg;
 #ifdef Q_WS_X11
-   QCString startup_id; // "" is the default, "0" for none
-   QCString startup_dpy; // Display to send startup notification to.
+    QCString startup_id;  // "" is the default, "0" for none
+    QCString startup_dpy; // Display to send startup notification to.
 #endif
-   QValueList<QCString> envs; // env. variables to be app's environment
-   QCString cwd;
+    QValueList< QCString > envs; // env. variables to be app's environment
+    QCString cwd;
 };
 
 struct serviceResult
 {
-  int result;        // 0 means success. > 0 means error (-1 means pending)
-  QCString dcopName; // Contains DCOP name on success
-  QString error;     // Contains error description on failure.
-  pid_t pid;
+    int result;        // 0 means success. > 0 means error (-1 means pending)
+    QCString dcopName; // Contains DCOP name on success
+    QString error;     // Contains error description on failure.
+    pid_t pid;
 };
 
-class KLauncher : public KApplication, public DCOPObject
-{
-   Q_OBJECT
+class KLauncher : public KApplication, public DCOPObject {
+    Q_OBJECT
 
 public:
-   KLauncher(int _kdeinitSocket, bool new_startup);
+    KLauncher(int _kdeinitSocket, bool new_startup);
 
-   ~KLauncher();
+    ~KLauncher();
 
-   void close();
-   static void destruct(int exit_code); // exit!
+    void close();
+    static void destruct(int exit_code); // exit!
 
-   // DCOP
-   virtual bool process(const QCString &fun, const QByteArray &data,
-                QCString &replyType, QByteArray &replyData);
-   virtual QCStringList functions();
-   virtual QCStringList interfaces();
+    // DCOP
+    virtual bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
+    virtual QCStringList functions();
+    virtual QCStringList interfaces();
 
 protected:
-   void processDied(pid_t pid, long exitStatus);
+    void processDied(pid_t pid, long exitStatus);
 
-   void requestStart(KLaunchRequest *request);
-   void requestDone(KLaunchRequest *request);
+    void requestStart(KLaunchRequest *request);
+    void requestDone(KLaunchRequest *request);
 
-   void setLaunchEnv(const QCString &name, const QCString &value);
-   void exec_blind(const QCString &name, const QValueList<QCString> &arg_list,
-       const QValueList<QCString> &envs, const QCString& startup_id = "" );
-   bool start_service(KService::Ptr service, const QStringList &urls,
-       const QValueList<QCString> &envs, const QCString& startup_id = "",
-       bool blind = false, bool autoStart = false );
-   bool start_service_by_name(const QString &serviceName, const QStringList &urls,
-       const QValueList<QCString> &envs, const QCString& startup_id, bool blind);
-   bool start_service_by_desktop_path(const QString &serviceName, const QStringList &urls,
-       const QValueList<QCString> &envs, const QCString& startup_id, bool blind);
-   bool start_service_by_desktop_name(const QString &serviceName, const QStringList &urls,
-       const QValueList<QCString> &envs, const QCString& startup_id, bool blind);
-   bool kdeinit_exec(const QString &app, const QStringList &args,
-       const QValueList<QCString> &envs, QCString startup_id, bool wait);
+    void setLaunchEnv(const QCString &name, const QCString &value);
+    void exec_blind(const QCString &name, const QValueList< QCString > &arg_list, const QValueList< QCString > &envs,
+                    const QCString &startup_id = "");
+    bool start_service(KService::Ptr service, const QStringList &urls, const QValueList< QCString > &envs, const QCString &startup_id = "",
+                       bool blind = false, bool autoStart = false);
+    bool start_service_by_name(const QString &serviceName, const QStringList &urls, const QValueList< QCString > &envs, const QCString &startup_id,
+                               bool blind);
+    bool start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QValueList< QCString > &envs,
+                                       const QCString &startup_id, bool blind);
+    bool start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QValueList< QCString > &envs,
+                                       const QCString &startup_id, bool blind);
+    bool kdeinit_exec(const QString &app, const QStringList &args, const QValueList< QCString > &envs, QCString startup_id, bool wait);
 
-   void waitForSlave(pid_t pid);
+    void waitForSlave(pid_t pid);
 
-   void autoStart(int phase);
+    void autoStart(int phase);
 
-   void createArgs( KLaunchRequest *request, const KService::Ptr service,
-                    const QStringList &url);
+    void createArgs(KLaunchRequest *request, const KService::Ptr service, const QStringList &url);
 
-   pid_t requestHoldSlave(const KURL &url, const QString &app_socket);
-   pid_t requestSlave(const QString &protocol, const QString &host,
-                      const QString &app_socket, QString &error);
+    pid_t requestHoldSlave(const KURL &url, const QString &app_socket);
+    pid_t requestSlave(const QString &protocol, const QString &host, const QString &app_socket, QString &error);
 
 
-   void queueRequest(KLaunchRequest *);
+    void queueRequest(KLaunchRequest *);
 
-   void send_service_startup_info( KLaunchRequest *request, KService::Ptr service, const QCString& startup_id,
-       const QValueList<QCString> &envs );
-   void cancel_service_startup_info( KLaunchRequest *request, const QCString& startup_id,
-       const QValueList<QCString> &envs );
+    void send_service_startup_info(KLaunchRequest *request, KService::Ptr service, const QCString &startup_id, const QValueList< QCString > &envs);
+    void cancel_service_startup_info(KLaunchRequest *request, const QCString &startup_id, const QValueList< QCString > &envs);
 
 public slots:
-   void slotAutoStart();
-   void slotDequeue();
-   void slotKDEInitData(int);
-   void slotAppRegistered(const QCString &appId);
-   void slotSlaveStatus(IdleSlave *);
-   void acceptSlave( KSocket *);
-   void slotSlaveGone();
-   void idleTimeout();
+    void slotAutoStart();
+    void slotDequeue();
+    void slotKDEInitData(int);
+    void slotAppRegistered(const QCString &appId);
+    void slotSlaveStatus(IdleSlave *);
+    void acceptSlave(KSocket *);
+    void slotSlaveGone();
+    void idleTimeout();
 
 protected:
-   QPtrList<KLaunchRequest> requestList; // Requests being handled
-   QPtrList<KLaunchRequest> requestQueue; // Requests waiting to being handled
-   int kdeinitSocket;
-   QSocketNotifier *kdeinitNotifier;
-   serviceResult DCOPresult;
-   KLaunchRequest *lastRequest;
-   QPtrList<SlaveWaitRequest> mSlaveWaitRequest;
-   QString mPoolSocketName;
-   KServerSocket *mPoolSocket;
-   QPtrList<IdleSlave> mSlaveList;
-   QTimer mTimer;
-   QTimer mAutoTimer;
-   bool bProcessingQueue;
-   AutoStart mAutoStart;
-   QCString mSlaveDebug;
-   QCString mSlaveValgrind;
-   QCString mSlaveValgrindSkin;
-   bool dontBlockReading;
-   bool newStartup;
+    QPtrList< KLaunchRequest > requestList;  // Requests being handled
+    QPtrList< KLaunchRequest > requestQueue; // Requests waiting to being handled
+    int kdeinitSocket;
+    QSocketNotifier *kdeinitNotifier;
+    serviceResult DCOPresult;
+    KLaunchRequest *lastRequest;
+    QPtrList< SlaveWaitRequest > mSlaveWaitRequest;
+    QString mPoolSocketName;
+    KServerSocket *mPoolSocket;
+    QPtrList< IdleSlave > mSlaveList;
+    QTimer mTimer;
+    QTimer mAutoTimer;
+    bool bProcessingQueue;
+    AutoStart mAutoStart;
+    QCString mSlaveDebug;
+    QCString mSlaveValgrind;
+    QCString mSlaveValgrindSkin;
+    bool dontBlockReading;
+    bool newStartup;
 #ifdef Q_WS_X11
-   Display *mCached_dpy;
+    Display *mCached_dpy;
 #endif
 };
 #endif

@@ -3,20 +3,19 @@
 
 #include <kparts/mainwindow.h>
 
-class Shell : public KParts::MainWindow
-{
-  Q_OBJECT
+class Shell : public KParts::MainWindow {
+    Q_OBJECT
 public:
-  Shell();
-  virtual ~Shell();
+    Shell();
+    virtual ~Shell();
 
-  void openURL( const KURL & url );
+    void openURL(const KURL &url);
 
 protected slots:
-  void slotFileOpen();
+    void slotFileOpen();
 
 private:
-  KParts::ReadOnlyPart *m_gvpart;
+    KParts::ReadOnlyPart *m_gvpart;
 };
 
 #endif

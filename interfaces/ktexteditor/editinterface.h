@@ -23,115 +23,114 @@
 
 #include <kdelibs_export.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 * This is the main interface for accessing and modifying
 * text of the Document class.
 */
-class KTEXTEDITOR_EXPORT EditInterface
-{
-  friend class PrivateEditInterface;
+class KTEXTEDITOR_EXPORT EditInterface {
+    friend class PrivateEditInterface;
 
-  public:
+public:
     EditInterface();
     virtual ~EditInterface();
 
-    uint editInterfaceNumber () const;
+    uint editInterfaceNumber() const;
 
-  protected:  
-    void setEditInterfaceDCOPSuffix (const QCString &suffix);  
-    
-  public:
-  /**
-  * slots !!!
-  */
+protected:
+    void setEditInterfaceDCOPSuffix(const QCString &suffix);
+
+public:
+    /**
+    * slots !!!
+    */
     /**
     * @return the complete document as a single QString
     */
-    virtual QString text () const = 0;
+    virtual QString text() const = 0;
 
     /**
     * @return a QString
     */
-    virtual QString text ( uint startLine, uint startCol, uint endLine, uint endCol ) const = 0;
+    virtual QString text(uint startLine, uint startCol, uint endLine, uint endCol) const = 0;
 
     /**
     * @return All the text from the requested line.
     */
-    virtual QString textLine ( uint line ) const = 0;
+    virtual QString textLine(uint line) const = 0;
 
     /**
     * @return The current number of lines in the document
     */
-    virtual uint numLines () const = 0;
+    virtual uint numLines() const = 0;
 
     /**
     * @return the number of characters in the document
     */
-    virtual uint length () const = 0;
+    virtual uint length() const = 0;
 
     /**
     * @return the number of characters in the line (-1 if no line "line")
     */
-    virtual int lineLength ( uint line ) const = 0;
+    virtual int lineLength(uint line) const = 0;
 
     /**
     * Set the given text into the view.
     * Warning: This will overwrite any data currently held in this view.
     */
-    virtual bool setText ( const QString &text ) = 0;
+    virtual bool setText(const QString &text) = 0;
 
     /**
     *  clears the document
     * Warning: This will overwrite any data currently held in this view.
     */
-    virtual bool clear () = 0;
+    virtual bool clear() = 0;
 
     /**
     *  Inserts text at line "line", column "col"
     *  returns true if success
     *  Use insertText(numLines(), ...) to append text at end of document
     */
-    virtual bool insertText ( uint line, uint col, const QString &text ) = 0;
+    virtual bool insertText(uint line, uint col, const QString &text) = 0;
 
     /**
     *  remove text at line "line", column "col"
     *  returns true if success
     */
-    virtual bool removeText ( uint startLine, uint startCol, uint endLine, uint endCol ) = 0;
+    virtual bool removeText(uint startLine, uint startCol, uint endLine, uint endCol) = 0;
 
     /**
-    * Insert line(s) at the given line number. 
+    * Insert line(s) at the given line number.
     * Use insertLine(numLines(), text) to append line at end of document
     */
-    virtual bool insertLine ( uint line, const QString &text ) = 0;
+    virtual bool insertLine(uint line, const QString &text) = 0;
 
     /**
     * Remove line(s) at the given line number.
     */
-    virtual bool removeLine ( uint line ) = 0;
+    virtual bool removeLine(uint line) = 0;
 
-  /**
-  * signals !!!
-  */
-  public:
-    virtual void textChanged () = 0;
+    /**
+    * signals !!!
+    */
+public:
+    virtual void textChanged() = 0;
 
-    virtual void charactersInteractivelyInserted(int ,int ,const QString&)=0; //line, col, characters if you don't support this, don't create a signal, just overload it.
+    virtual void
+    charactersInteractivelyInserted(int, int,
+                                    const QString &) = 0; // line, col, characters if you don't support this, don't create a signal, just overload it.
 
-  /**
-  * only for the interface itself - REAL PRIVATE
-  */
-  private:
+    /**
+    * only for the interface itself - REAL PRIVATE
+    */
+private:
     class PrivateEditInterface *d;
     static uint globalEditInterfaceNumber;
     uint myEditInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT EditInterface *editInterface (class Document *doc);
-
+KTEXTEDITOR_EXPORT EditInterface *editInterface(class Document *doc);
 }
 
 #endif

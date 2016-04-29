@@ -53,68 +53,64 @@ class KateSyntaxModeListItem;
 class KateSyntaxContextData;
 
 // some typedefs
-typedef QPtrList<KateAttribute> KateAttributeList;
-typedef QValueList<KateHlIncludeRule*> KateHlIncludeRules;
-typedef QPtrList<KateHlItemData> KateHlItemDataList;
-typedef QPtrList<KateHlData> KateHlDataList;
-typedef QMap<QString,KateEmbeddedHlInfo> KateEmbeddedHlInfos;
-typedef QMap<int*,QString> KateHlUnresolvedCtxRefs;
-typedef QValueList<int> IntList;
+typedef QPtrList< KateAttribute > KateAttributeList;
+typedef QValueList< KateHlIncludeRule * > KateHlIncludeRules;
+typedef QPtrList< KateHlItemData > KateHlItemDataList;
+typedef QPtrList< KateHlData > KateHlDataList;
+typedef QMap< QString, KateEmbeddedHlInfo > KateEmbeddedHlInfos;
+typedef QMap< int *, QString > KateHlUnresolvedCtxRefs;
+typedef QValueList< int > IntList;
 
-//Item Properties: name, Item Style, Item Font
-class KateHlItemData : public KateAttribute
-{
-  public:
-    KateHlItemData(const QString  name, int defStyleNum);
+// Item Properties: name, Item Style, Item Font
+class KateHlItemData : public KateAttribute {
+public:
+    KateHlItemData(const QString name, int defStyleNum);
 
-    enum ItemStyles {
-      dsNormal,
-      dsKeyword,
-      dsDataType,
-      dsDecVal,
-      dsBaseN,
-      dsFloat,
-      dsChar,
-      dsString,
-      dsComment,
-      dsOthers,
-      dsAlert,
-      dsFunction,
-      dsRegionMarker,
-      dsError };
+    enum ItemStyles
+    {
+        dsNormal,
+        dsKeyword,
+        dsDataType,
+        dsDecVal,
+        dsBaseN,
+        dsFloat,
+        dsChar,
+        dsString,
+        dsComment,
+        dsOthers,
+        dsAlert,
+        dsFunction,
+        dsRegionMarker,
+        dsError
+    };
 
-  public:
+public:
     const QString name;
     int defStyleNum;
 };
 
-class KateHlData
-{
-  public:
-    KateHlData(const QString &wildcards, const QString &mimetypes,const QString &identifier, int priority);
+class KateHlData {
+public:
+    KateHlData(const QString &wildcards, const QString &mimetypes, const QString &identifier, int priority);
 
-  public:
+public:
     QString wildcards;
     QString mimetypes;
     QString identifier;
     int priority;
 };
 
-class KateHighlighting
-{
-  public:
+class KateHighlighting {
+public:
     KateHighlighting(const KateSyntaxModeListItem *def);
     ~KateHighlighting();
 
-  public:
-    void doHighlight ( KateTextLine *prevLine,
-                       KateTextLine *textLine,
-                       QMemArray<uint> *foldingList,
-                       bool *ctxChanged );
+public:
+    void doHighlight(KateTextLine *prevLine, KateTextLine *textLine, QMemArray< uint > *foldingList, bool *ctxChanged);
 
     void loadWildcards();
-    QValueList<QRegExp>& getRegexpExtensions();
-    QStringList& getPlainExtensions();
+    QValueList< QRegExp > &getRegexpExtensions();
+    QStringList &getPlainExtensions();
 
     QString getMimetypes();
 
@@ -127,17 +123,41 @@ class KateHighlighting
     // both methodes return hard copies of the internal lists
     // the lists are cleared first + autodelete is set !
     // keep track that you delete them, or mem will be lost
-    void getKateHlItemDataListCopy (uint schema, KateHlItemDataList &);
+    void getKateHlItemDataListCopy(uint schema, KateHlItemDataList &);
 
-    const QString &name() const {return iName;}
-    const QString &nameTranslated() const {return iNameTranslated;}
-    const QString &section() const {return iSection;}
-    bool hidden() const {return iHidden;}
-    const QString &version() const {return iVersion;}
-    const QString &author () const { return iAuthor; }
-    const QString &license () const { return iLicense; }
+    const QString &name() const
+    {
+        return iName;
+    }
+    const QString &nameTranslated() const
+    {
+        return iNameTranslated;
+    }
+    const QString &section() const
+    {
+        return iSection;
+    }
+    bool hidden() const
+    {
+        return iHidden;
+    }
+    const QString &version() const
+    {
+        return iVersion;
+    }
+    const QString &author() const
+    {
+        return iAuthor;
+    }
+    const QString &license() const
+    {
+        return iLicense;
+    }
     int priority();
-    const QString &getIdentifier() const {return identifier;}
+    const QString &getIdentifier() const
+    {
+        return identifier;
+    }
     void use();
     void release();
 
@@ -145,19 +165,19 @@ class KateHighlighting
      * @return true if the character @p c is not a deliminator character
      *     for the corresponding highlight.
      */
-    bool isInWord( QChar c, int attrib=0 ) const;
+    bool isInWord(QChar c, int attrib = 0) const;
 
     /**
      * @return true if the character @p c is a wordwrap deliminator as specified
      * in the general keyword section of the xml file.
      */
-    bool canBreakAt( QChar c, int attrib=0 ) const;
+    bool canBreakAt(QChar c, int attrib = 0) const;
 
     /**
     * @return true if @p beginAttr and @p endAttr are members of the same
     * highlight, and there are comment markers of either type in that.
     */
-    bool canComment( int startAttr, int endAttr ) const;
+    bool canComment(int startAttr, int endAttr) const;
 
     /**
     * @return 0 if highlighting which attr is a member of does not
@@ -169,89 +189,104 @@ class KateHighlighting
      * @return the mulitiline comment start marker for the highlight
      * corresponding to @p attrib.
      */
-    QString getCommentStart( int attrib=0 ) const;
+    QString getCommentStart(int attrib = 0) const;
 
     /**
      * @return the muiltiline comment end marker for the highlight corresponding
      * to @p attrib.
      */
-    QString getCommentEnd( int attrib=0 ) const;
+    QString getCommentEnd(int attrib = 0) const;
 
     /**
      * @return the single comment marker for the highlight corresponding
      * to @p attrib.
      */
-    QString getCommentSingleLineStart( int attrib=0 ) const;
+    QString getCommentSingleLineStart(int attrib = 0) const;
 
 
     /**
      * This enum is used for storing the information where a single line comment marker should be inserted
      */
-    enum CSLPos { CSLPosColumn0=0,CSLPosAfterWhitespace=1};
+    enum CSLPos
+    {
+        CSLPosColumn0 = 0,
+        CSLPosAfterWhitespace = 1
+    };
 
     /**
      * @return the single comment marker position for the highlight corresponding
      * to @p attrib.
      */
-    CSLPos getCommentSingleLinePosition( int attrib=0 ) const;
+    CSLPos getCommentSingleLinePosition(int attrib = 0) const;
 
     /**
     * @return the attribute for @p context.
     */
-    int attribute( int context ) const;
+    int attribute(int context) const;
 
     /**
      * map attribute to its highlighting file.
      * the returned string is used as key for m_additionalData.
      */
-    QString hlKeyForAttrib( int attrib ) const;
+    QString hlKeyForAttrib(int attrib) const;
 
 
-    void clearAttributeArrays ();
+    void clearAttributeArrays();
 
-    QMemArray<KateAttribute> *attributes (uint schema);
+    QMemArray< KateAttribute > *attributes(uint schema);
 
-    inline bool noHighlighting () const { return noHl; };
+    inline bool noHighlighting() const
+    {
+        return noHl;
+    };
 
     // be carefull: all documents hl should be invalidated after calling this method!
     void dropDynamicContexts();
 
-    QString indentation () { return m_indentation; }
+    QString indentation()
+    {
+        return m_indentation;
+    }
 
-  private:
+private:
     // make this private, nobody should play with the internal data pointers
     void getKateHlItemDataList(uint schema, KateHlItemDataList &);
 
     void init();
     void done();
-    void makeContextList ();
+    void makeContextList();
     int makeDynamicContext(KateHlContext *model, const QStringList *args);
-    void handleKateHlIncludeRules ();
+    void handleKateHlIncludeRules();
     void handleKateHlIncludeRulesRecursive(KateHlIncludeRules::iterator it, KateHlIncludeRules *list);
     int addToContextList(const QString &ident, int ctx0);
     void addToKateHlItemDataList();
-    void createKateHlItemData (KateHlItemDataList &list);
+    void createKateHlItemData(KateHlItemDataList &list);
     void readGlobalKeywordConfig();
     void readWordWrapConfig();
     void readCommentConfig();
-    void readIndentationConfig ();
-    void readFoldingConfig ();
+    void readIndentationConfig();
+    void readFoldingConfig();
 
     // manipulates the ctxs array directly ;)
-    void generateContextStack(int *ctxNum, int ctx, QMemArray<short> *ctxs, int *posPrevLine);
+    void generateContextStack(int *ctxNum, int ctx, QMemArray< short > *ctxs, int *posPrevLine);
 
     KateHlItem *createKateHlItem(KateSyntaxContextData *data, KateHlItemDataList &iDl, QStringList *RegionList, QStringList *ContextList);
-    int lookupAttrName(const QString& name, KateHlItemDataList &iDl);
+    int lookupAttrName(const QString &name, KateHlItemDataList &iDl);
 
     void createContextNameList(QStringList *ContextNameList, int ctx0);
-    int getIdFromString(QStringList *ContextNameList, QString tmpLineEndContext,/*NO CONST*/ QString &unres);
+    int getIdFromString(QStringList *ContextNameList, QString tmpLineEndContext, /*NO CONST*/ QString &unres);
 
     KateHlItemDataList internalIDList;
 
-    QValueVector<KateHlContext*> m_contexts;
-    inline KateHlContext *contextNum (uint n) { if (n < m_contexts.size()) return m_contexts[n]; return 0; }
+    QValueVector< KateHlContext * > m_contexts;
+    inline KateHlContext *contextNum(uint n)
+    {
+        if(n < m_contexts.size())
+            return m_contexts[n];
+        return 0;
+    }
 
-    QMap< QPair<KateHlContext *, QString>, short> dynamicCtxs;
+    QMap< QPair< KateHlContext *, QString >, short > dynamicCtxs;
 
     // make them pointers perhaps
     KateEmbeddedHlInfos embeddedHls;
@@ -289,7 +324,7 @@ class KateHighlighting
     KateHlIncludeRules includeRules;
     bool m_foldingIndentationSensitive;
 
-    QIntDict< QMemArray<KateAttribute> > m_attributeArrays;
+    QIntDict< QMemArray< KateAttribute > > m_attributeArrays;
 
 
     /**
@@ -305,12 +340,12 @@ class KateHighlighting
      * If you need to add a property to a highlight, add it here.
      */
     class HighlightPropertyBag {
-      public:
+    public:
         QString singleLineCommentMarker;
         QString multiLineCommentStart;
         QString multiLineCommentEnd;
         QString multiLineRegion;
-        CSLPos  singleLineCommentPosition;
+        CSLPos singleLineCommentPosition;
         QString deliminator;
         QString wordWrapDeliminator;
     };
@@ -319,46 +354,57 @@ class KateHighlighting
      * Highlight properties for each included highlight definition.
      * The key is the identifier
      */
-    QDict<HighlightPropertyBag> m_additionalData;
+    QDict< HighlightPropertyBag > m_additionalData;
 
     /**
      * Fast lookup of hl properties, based on attribute index
      * The key is the starting index in the attribute array for each file.
      * @see hlKeyForAttrib
      */
-    QMap<int, QString> m_hlIndex;
+    QMap< int, QString > m_hlIndex;
 
 
     QString extensionSource;
-    QValueList<QRegExp> regexpExtensions;
+    QValueList< QRegExp > regexpExtensions;
     QStringList plainExtensions;
 
-  public:
-    inline bool foldingIndentationSensitive () { return m_foldingIndentationSensitive; }
-    inline bool allowsFolding(){return folding;}
+public:
+    inline bool foldingIndentationSensitive()
+    {
+        return m_foldingIndentationSensitive;
+    }
+    inline bool allowsFolding()
+    {
+        return folding;
+    }
 };
 
-class KateHlManager : public QObject
-{
-  Q_OBJECT
+class KateHlManager : public QObject {
+    Q_OBJECT
 
-  private:
+private:
     KateHlManager();
 
-  public:
+public:
     ~KateHlManager();
 
     static KateHlManager *self();
 
-    inline KConfig *getKConfig() { return &m_config; };
+    inline KConfig *getKConfig()
+    {
+        return &m_config;
+    };
 
     KateHighlighting *getHl(int n);
     int nameFind(const QString &name);
 
-    int detectHighlighting (class KateDocument *doc);
+    int detectHighlighting(class KateDocument *doc);
 
-    int findHl(KateHighlighting *h) {return hlList.find(h);}
-    QString identifierForName(const QString&);
+    int findHl(KateHighlighting *h)
+    {
+        return hlList.find(h);
+    }
+    QString identifierForName(const QString &);
 
     // methodes to get the default style count + names
     static uint defaultStyles();
@@ -369,30 +415,39 @@ class KateHlManager : public QObject
 
     int highlights();
     QString hlName(int n);
-    QString hlNameTranslated (int n);
+    QString hlNameTranslated(int n);
     QString hlSection(int n);
     bool hlHidden(int n);
 
-    void incDynamicCtxs() { ++dynamicCtxsCount; };
-    uint countDynamicCtxs() { return dynamicCtxsCount; };
-    void setForceNoDCReset(bool b) { forceNoDCReset = b; };
+    void incDynamicCtxs()
+    {
+        ++dynamicCtxsCount;
+    };
+    uint countDynamicCtxs()
+    {
+        return dynamicCtxsCount;
+    };
+    void setForceNoDCReset(bool b)
+    {
+        forceNoDCReset = b;
+    };
 
     // be carefull: all documents hl should be invalidated after having successfully called this method!
     bool resetDynamicCtxs();
 
-  signals:
+signals:
     void changed();
 
-  private:
+private:
     int wildcardFind(const QString &fileName);
     int mimeFind(KateDocument *);
     int realWildcardFind(const QString &fileName);
 
-  private:
+private:
     friend class KateHighlighting;
 
-    QPtrList<KateHighlighting> hlList;
-    QDict<KateHighlighting> hlDict;
+    QPtrList< KateHighlighting > hlList;
+    QDict< KateHighlighting > hlDict;
 
     static KateHlManager *s_self;
 
@@ -406,31 +461,35 @@ class KateHlManager : public QObject
     bool forceNoDCReset;
 };
 
-class KateViewHighlightAction: public Kate::ActionMenu
-{
-  Q_OBJECT
+class KateViewHighlightAction : public Kate::ActionMenu {
+    Q_OBJECT
 
-  public:
-    KateViewHighlightAction(const QString& text, QObject* parent = 0, const char* name = 0)
-       : Kate::ActionMenu(text, parent, name) { init(); };
+public:
+    KateViewHighlightAction(const QString &text, QObject *parent = 0, const char *name = 0) : Kate::ActionMenu(text, parent, name)
+    {
+        init();
+    };
 
-    ~KateViewHighlightAction(){;};
+    ~KateViewHighlightAction()
+    {
+        ;
+    };
 
-    void updateMenu (Kate::Document *doc);
+    void updateMenu(Kate::Document *doc);
 
-  private:
+private:
     void init();
 
-    QGuardedPtr<Kate::Document> m_doc;
+    QGuardedPtr< Kate::Document > m_doc;
     QStringList subMenusName;
     QStringList names;
-    QPtrList<QPopupMenu> subMenus;
+    QPtrList< QPopupMenu > subMenus;
 
-  public  slots:
+public slots:
     void slotAboutToShow();
 
-  private slots:
-    void setHl (int mode);
+private slots:
+    void setHl(int mode);
 };
 
 #endif

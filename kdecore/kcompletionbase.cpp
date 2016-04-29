@@ -35,119 +35,125 @@ KCompletionBase::KCompletionBase()
     // By default we initialize everything to false.
     // All the variables would be setup properly when
     // the appropriate member functions are called.
-    setup( false, false, false );
+    setup(false, false, false);
 }
 
 KCompletionBase::~KCompletionBase()
 {
-    if( m_bAutoDelCompObj && m_pCompObj )
+    if(m_bAutoDelCompObj && m_pCompObj)
     {
         delete m_pCompObj;
     }
 }
 
-void KCompletionBase::setDelegate( KCompletionBase *delegate )
+void KCompletionBase::setDelegate(KCompletionBase *delegate)
 {
     m_delegate = delegate;
 
-    if ( m_delegate ) {
+    if(m_delegate)
+    {
         m_delegate->m_bAutoDelCompObj = m_bAutoDelCompObj;
-        m_delegate->m_bHandleSignals  = m_bHandleSignals;
-        m_delegate->m_bEmitSignals    = m_bEmitSignals;
+        m_delegate->m_bHandleSignals = m_bHandleSignals;
+        m_delegate->m_bEmitSignals = m_bEmitSignals;
         m_delegate->m_iCompletionMode = m_iCompletionMode;
-        m_delegate->m_keyMap          = m_keyMap;
+        m_delegate->m_keyMap = m_keyMap;
     }
 }
 
-KCompletion* KCompletionBase::completionObject( bool hsig )
+KCompletion *KCompletionBase::completionObject(bool hsig)
 {
-    if ( m_delegate )
-        return m_delegate->completionObject( hsig );
-    
-    if ( !m_pCompObj )
+    if(m_delegate)
+        return m_delegate->completionObject(hsig);
+
+    if(!m_pCompObj)
     {
-        setCompletionObject( new KCompletion(), hsig );
-	m_bAutoDelCompObj = true;
+        setCompletionObject(new KCompletion(), hsig);
+        m_bAutoDelCompObj = true;
     }
     return m_pCompObj;
 }
 
-void KCompletionBase::setCompletionObject( KCompletion* compObj, bool hsig )
+void KCompletionBase::setCompletionObject(KCompletion *compObj, bool hsig)
 {
-    if ( m_delegate ) {
-        m_delegate->setCompletionObject( compObj, hsig );
+    if(m_delegate)
+    {
+        m_delegate->setCompletionObject(compObj, hsig);
         return;
     }
-    
-    if ( m_bAutoDelCompObj && compObj != m_pCompObj )
+
+    if(m_bAutoDelCompObj && compObj != m_pCompObj)
         delete m_pCompObj;
 
     m_pCompObj = compObj;
 
     // We emit rotation and completion signals
     // if completion object is not NULL.
-    setup( false, hsig, !m_pCompObj.isNull() );
+    setup(false, hsig, !m_pCompObj.isNull());
 }
 
 // BC: Inline this function and possibly rename it to setHandleEvents??? (DA)
-void KCompletionBase::setHandleSignals( bool handle )
+void KCompletionBase::setHandleSignals(bool handle)
 {
-    if ( m_delegate )
-        m_delegate->setHandleSignals( handle );
+    if(m_delegate)
+        m_delegate->setHandleSignals(handle);
     else
         m_bHandleSignals = handle;
 }
 
-void KCompletionBase::setCompletionMode( KGlobalSettings::Completion mode )
+void KCompletionBase::setCompletionMode(KGlobalSettings::Completion mode)
 {
-    if ( m_delegate ) {
-        m_delegate->setCompletionMode( mode );
+    if(m_delegate)
+    {
+        m_delegate->setCompletionMode(mode);
         return;
     }
-    
+
     m_iCompletionMode = mode;
     // Always sync up KCompletion mode with ours as long as we
     // are performing completions.
-    if( m_pCompObj && m_iCompletionMode != KGlobalSettings::CompletionNone )
-        m_pCompObj->setCompletionMode( m_iCompletionMode );
+    if(m_pCompObj && m_iCompletionMode != KGlobalSettings::CompletionNone)
+        m_pCompObj->setCompletionMode(m_iCompletionMode);
 }
 
-bool KCompletionBase::setKeyBinding( KeyBindingType item, const KShortcut& cut )
+bool KCompletionBase::setKeyBinding(KeyBindingType item, const KShortcut &cut)
 {
-    if ( m_delegate )
-        return m_delegate->setKeyBinding( item, cut );
+    if(m_delegate)
+        return m_delegate->setKeyBinding(item, cut);
 
 
-    if( !cut.isNull() )
+    if(!cut.isNull())
     {
-        for( KeyBindingMap::Iterator it = m_keyMap.begin(); it != m_keyMap.end(); ++it )
-            if( it.data() == cut )  return false;
+        for(KeyBindingMap::Iterator it = m_keyMap.begin(); it != m_keyMap.end(); ++it)
+            if(it.data() == cut)
+                return false;
     }
-    m_keyMap.replace( item, cut );
+    m_keyMap.replace(item, cut);
     return true;
 }
 
 void KCompletionBase::useGlobalKeyBindings()
 {
-    if ( m_delegate ) {
+    if(m_delegate)
+    {
         m_delegate->useGlobalKeyBindings();
         return;
     }
-    
+
     m_keyMap.clear();
-    m_keyMap.insert( TextCompletion, 0 );
-    m_keyMap.insert( PrevCompletionMatch, 0 );
-    m_keyMap.insert( NextCompletionMatch, 0 );
-    m_keyMap.insert( SubstringCompletion, 0 );
+    m_keyMap.insert(TextCompletion, 0);
+    m_keyMap.insert(PrevCompletionMatch, 0);
+    m_keyMap.insert(NextCompletionMatch, 0);
+    m_keyMap.insert(SubstringCompletion, 0);
 }
 
-void KCompletionBase::setup( bool autodel, bool hsig, bool esig )
+void KCompletionBase::setup(bool autodel, bool hsig, bool esig)
 {
-    if ( m_delegate ) {
-        m_delegate->setup( autodel, hsig, esig );
+    if(m_delegate)
+    {
+        m_delegate->setup(autodel, hsig, esig);
         return;
     }
-    
+
     m_bAutoDelCompObj = autodel;
     m_bHandleSignals = hsig;
     m_bEmitSignals = esig;

@@ -24,7 +24,7 @@
 #include <qobject.h>
 #include <kio/global.h>
 
-namespace KIO  {
+namespace KIO {
 
 class SlaveConfig;
 
@@ -32,34 +32,33 @@ class SlaveConfig;
 /**
  * @internal
  */
-class KIO_EXPORT SessionData : public QObject
-{
+class KIO_EXPORT SessionData : public QObject {
     Q_OBJECT
 
 public:
     SessionData();
     ~SessionData();
 
-    virtual void configDataFor( KIO::MetaData &configData, const QString &proto,
-                                const QString &host );
+    virtual void configDataFor(KIO::MetaData &configData, const QString &proto, const QString &host);
     virtual void reset();
 
     /// @since 3.1
     struct AuthData;
 public slots:
-    void slotAuthData( const QCString&, const QCString&, bool );
-    void slotDelAuthData( const QCString& );
+    void slotAuthData(const QCString &, const QCString &, bool);
+    void slotDelAuthData(const QCString &);
 
 private:
     class AuthDataList;
     friend class AuthDataList;
-    AuthDataList* authData;
+    AuthDataList *authData;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class SessionDataPrivate;
-    SessionDataPrivate* d;
+    SessionDataPrivate *d;
 };
 
 } // namespace

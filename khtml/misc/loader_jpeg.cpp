@@ -54,29 +54,30 @@ extern "C" {
 
 // -----------------------------------------------------------------------------
 
-struct khtml_error_mgr : public jpeg_error_mgr {
+struct khtml_error_mgr : public jpeg_error_mgr
+{
     jmp_buf setjmp_buffer;
 };
 
 extern "C" {
 
-    static
-    void khtml_error_exit (j_common_ptr cinfo)
-    {
-        khtml_error_mgr* myerr = (khtml_error_mgr*) cinfo->err;
-        char buffer[JMSG_LENGTH_MAX];
-        (*cinfo->err->format_message)(cinfo, buffer);
+static void khtml_error_exit(j_common_ptr cinfo)
+{
+    khtml_error_mgr *myerr = (khtml_error_mgr *)cinfo->err;
+    char buffer[JMSG_LENGTH_MAX];
+    (*cinfo->err->format_message)(cinfo, buffer);
 #ifdef JPEG_DEBUG
-        qWarning("%s", buffer);
+    qWarning("%s", buffer);
 #endif
-        longjmp(myerr->setjmp_buffer, 1);
-    }
+    longjmp(myerr->setjmp_buffer, 1);
+}
 }
 
 static const int max_buf = 32768;
 static const int max_consumingtime = 2000;
 
-struct khtml_jpeg_source_mgr : public jpeg_source_mgr {
+struct khtml_jpeg_source_mgr : public jpeg_source_mgr
+{
     JOCTET buffer[max_buf];
 
     int valid_buffer_len;
@@ -96,73 +97,70 @@ public:
 
 extern "C" {
 
-    static
-    void khtml_j_decompress_dummy(j_decompress_ptr)
+static void khtml_j_decompress_dummy(j_decompress_ptr)
+{
+}
+
+static boolean khtml_fill_input_buffer(j_decompress_ptr cinfo)
+{
+#ifdef BUFFER_DEBUG
+    qDebug("khtml_fill_input_buffer called!");
+#endif
+
+    khtml_jpeg_source_mgr *src = (khtml_jpeg_source_mgr *)cinfo->src;
+
+    if(src->ateof)
     {
+        /* Insert a fake EOI marker - as per jpeglib recommendation */
+        src->buffer[0] = (JOCTET)0xFF;
+        src->buffer[1] = (JOCTET)JPEG_EOI;
+        src->bytes_in_buffer = 2;
+        src->next_input_byte = (JOCTET *)src->buffer;
+#ifdef BUFFER_DEBUG
+        qDebug("...returning true!");
+#endif
+        return true;
     }
+    else
+        return false; /* I/O suspension mode */
+}
 
-    static
-    boolean khtml_fill_input_buffer(j_decompress_ptr cinfo)
-    {
-#ifdef BUFFER_DEBUG
-        qDebug("khtml_fill_input_buffer called!");
-#endif
-
-        khtml_jpeg_source_mgr* src = (khtml_jpeg_source_mgr*)cinfo->src;
-
-        if ( src->ateof )
-        {
-            /* Insert a fake EOI marker - as per jpeglib recommendation */
-            src->buffer[0] = (JOCTET) 0xFF;
-            src->buffer[1] = (JOCTET) JPEG_EOI;
-            src->bytes_in_buffer = 2;
-            src->next_input_byte = (JOCTET *) src->buffer;
-#ifdef BUFFER_DEBUG
-            qDebug("...returning true!");
-#endif
-            return true;
-        }
-        else
-            return false;  /* I/O suspension mode */
-    }
-
-    static
-    void khtml_skip_input_data(j_decompress_ptr cinfo, long num_bytes)
-    {
-        if(num_bytes <= 0)
-            return; /* required noop */
+static void khtml_skip_input_data(j_decompress_ptr cinfo, long num_bytes)
+{
+    if(num_bytes <= 0)
+        return; /* required noop */
 
 #ifdef BUFFER_DEBUG
-        qDebug("khtml_skip_input_data (%d) called!", num_bytes);
+    qDebug("khtml_skip_input_data (%d) called!", num_bytes);
 #endif
 
-        khtml_jpeg_source_mgr* src = (khtml_jpeg_source_mgr*)cinfo->src;
-        src->skip_input_bytes += num_bytes;
+    khtml_jpeg_source_mgr *src = (khtml_jpeg_source_mgr *)cinfo->src;
+    src->skip_input_bytes += num_bytes;
 
-        unsigned int skipbytes = kMin(src->bytes_in_buffer, src->skip_input_bytes);
+    unsigned int skipbytes = kMin(src->bytes_in_buffer, src->skip_input_bytes);
 
 #ifdef BUFFER_DEBUG
-        qDebug("skip_input_bytes is now %d", src->skip_input_bytes);
-        qDebug("skipbytes is now %d", skipbytes);
-        qDebug("valid_buffer_len is before %d", src->valid_buffer_len);
-        qDebug("bytes_in_buffer is %d", src->bytes_in_buffer);
+    qDebug("skip_input_bytes is now %d", src->skip_input_bytes);
+    qDebug("skipbytes is now %d", skipbytes);
+    qDebug("valid_buffer_len is before %d", src->valid_buffer_len);
+    qDebug("bytes_in_buffer is %d", src->bytes_in_buffer);
 #endif
 
-        if(skipbytes < src->bytes_in_buffer)
-            memmove(src->buffer, src->next_input_byte+skipbytes, src->bytes_in_buffer - skipbytes);
+    if(skipbytes < src->bytes_in_buffer)
+        memmove(src->buffer, src->next_input_byte + skipbytes, src->bytes_in_buffer - skipbytes);
 
-        src->bytes_in_buffer -= skipbytes;
-        src->valid_buffer_len = src->bytes_in_buffer;
-        src->skip_input_bytes -= skipbytes;
+    src->bytes_in_buffer -= skipbytes;
+    src->valid_buffer_len = src->bytes_in_buffer;
+    src->skip_input_bytes -= skipbytes;
 
-        /* adjust data for jpeglib */
-        cinfo->src->next_input_byte = (JOCTET *) src->buffer;
-        cinfo->src->bytes_in_buffer = (size_t) src->valid_buffer_len;
+    /* adjust data for jpeglib */
+    cinfo->src->next_input_byte = (JOCTET *)src->buffer;
+    cinfo->src->bytes_in_buffer = (size_t)src->valid_buffer_len;
 #ifdef BUFFER_DEBUG
-        qDebug("valid_buffer_len is afterwards %d", src->valid_buffer_len);
-        qDebug("skip_input_bytes is now %d", src->skip_input_bytes);
+    qDebug("valid_buffer_len is afterwards %d", src->valid_buffer_len);
+    qDebug("skip_input_bytes is now %d", src->skip_input_bytes);
 #endif
-    }
+}
 }
 
 
@@ -183,21 +181,19 @@ khtml_jpeg_source_mgr::khtml_jpeg_source_mgr()
 }
 
 
-
 // -----------------------------------------------------------------------------
 
-class KJPEGFormat : public QImageFormat
-{
+class KJPEGFormat : public QImageFormat {
 public:
     KJPEGFormat();
 
     virtual ~KJPEGFormat();
 
-    virtual int decode(QImage& img, QImageConsumer* consumer,
-                       const uchar* buffer, int length);
-private:
+    virtual int decode(QImage &img, QImageConsumer *consumer, const uchar *buffer, int length);
 
-    enum {
+private:
+    enum
+    {
         Init,
         readHeader,
         startDecompress,
@@ -232,7 +228,7 @@ KJPEGFormat::KJPEGFormat()
 
 KJPEGFormat::~KJPEGFormat()
 {
-    (void) jpeg_destroy_decompress(&cinfo);
+    (void)jpeg_destroy_decompress(&cinfo);
 }
 
 /*
@@ -241,14 +237,14 @@ KJPEGFormat::~KJPEGFormat()
  * return  < 0 means "fatal error in image decoding, don't call me ever again"
  */
 
-int KJPEGFormat::decode(QImage& image, QImageConsumer* consumer, const uchar* buffer, int length)
+int KJPEGFormat::decode(QImage &image, QImageConsumer *consumer, const uchar *buffer, int length)
 {
 #ifdef JPEG_DEBUG
-    qDebug("KJPEGFormat::decode(%08lx, %08lx, %08lx, %d)",
-           &image, consumer, buffer, length);
+    qDebug("KJPEGFormat::decode(%08lx, %08lx, %08lx, %d)", &image, consumer, buffer, length);
 #endif
 
-    if(jsrc.ateof) {
+    if(jsrc.ateof)
+    {
 #ifdef JPEG_DEBUG
         qDebug("ateof, eating");
 #endif
@@ -285,24 +281,25 @@ int KJPEGFormat::decode(QImage& image, QImageConsumer* consumer, const uchar* bu
         qDebug("valid_buffer_len %d", jsrc.valid_buffer_len);
         qDebug("skip_input_bytes %d", jsrc.skip_input_bytes);
 #endif
-        int skipbytes = kMin((size_t) jsrc.valid_buffer_len, jsrc.skip_input_bytes);
+        int skipbytes = kMin((size_t)jsrc.valid_buffer_len, jsrc.skip_input_bytes);
 
         if(skipbytes < jsrc.valid_buffer_len)
-            memmove(jsrc.buffer, jsrc.buffer+skipbytes, jsrc.valid_buffer_len - skipbytes);
+            memmove(jsrc.buffer, jsrc.buffer + skipbytes, jsrc.valid_buffer_len - skipbytes);
 
         jsrc.valid_buffer_len -= skipbytes;
         jsrc.skip_input_bytes -= skipbytes;
 
         // still more bytes to skip
-        if(jsrc.skip_input_bytes) {
-            if(consumed <= 0) qDebug("ERROR!!!");
+        if(jsrc.skip_input_bytes)
+        {
+            if(consumed <= 0)
+                qDebug("ERROR!!!");
             return consumed;
         }
-
     }
 
-    cinfo.src->next_input_byte = (JOCTET *) jsrc.buffer;
-    cinfo.src->bytes_in_buffer = (size_t) jsrc.valid_buffer_len;
+    cinfo.src->next_input_byte = (JOCTET *)jsrc.buffer;
+    cinfo.src->bytes_in_buffer = (size_t)jsrc.valid_buffer_len;
 
 #ifdef BUFFER_DEBUG
     qDebug("buffer contains %d bytes", jsrc.valid_buffer_len);
@@ -310,20 +307,20 @@ int KJPEGFormat::decode(QImage& image, QImageConsumer* consumer, const uchar* bu
 
     if(state == Init)
     {
-        if(jpeg_read_header(&cinfo, true) != JPEG_SUSPENDED) {
+        if(jpeg_read_header(&cinfo, true) != JPEG_SUSPENDED)
+        {
             // do some simple memory requirements limitations
             // as long as we use that stupid Qt stuff
             int s = cinfo.image_width * cinfo.image_height;
-            if ( s > 16384 * 12388 )
+            if(s > 16384 * 12388)
                 cinfo.scale_denom = 8;
-            else if ( s > 8192 * 6144 )
+            else if(s > 8192 * 6144)
                 cinfo.scale_denom = 4;
-            else if ( s > 4096 * 3072 )
+            else if(s > 4096 * 3072)
                 cinfo.scale_denom = 2;
 
-            if ( consumer )
-                consumer->setSize(cinfo.image_width/cinfo.scale_denom,
-                                  cinfo.image_height/cinfo.scale_denom);
+            if(consumer)
+                consumer->setSize(cinfo.image_width / cinfo.scale_denom, cinfo.image_height / cinfo.scale_denom);
 
             state = startDecompress;
         }
@@ -331,20 +328,20 @@ int KJPEGFormat::decode(QImage& image, QImageConsumer* consumer, const uchar* bu
 
     if(state == startDecompress)
     {
-        jsrc.do_progressive = jpeg_has_multiple_scans( &cinfo );
+        jsrc.do_progressive = jpeg_has_multiple_scans(&cinfo);
 
 #ifdef JPEG_DEBUG
-        qDebug( "**** DOPROGRESSIVE: %d",  jsrc.do_progressive );
+        qDebug("**** DOPROGRESSIVE: %d", jsrc.do_progressive);
 #endif
-        if ( jsrc.do_progressive )
+        if(jsrc.do_progressive)
             cinfo.buffered_image = true;
         else
             cinfo.buffered_image = false;
 
         // setup image sizes
-        jpeg_calc_output_dimensions( &cinfo );
+        jpeg_calc_output_dimensions(&cinfo);
 
-        if ( cinfo.jpeg_color_space == JCS_YCbCr )
+        if(cinfo.jpeg_color_space == JCS_YCbCr)
             cinfo.out_color_space = JCS_RGB;
 
         cinfo.do_fancy_upsampling = true;
@@ -352,13 +349,17 @@ int KJPEGFormat::decode(QImage& image, QImageConsumer* consumer, const uchar* bu
         cinfo.quantize_colors = false;
 
         // false: IO suspension
-        if(jpeg_start_decompress(&cinfo)) {
-            if ( cinfo.output_components == 3 || cinfo.output_components == 4) {
-                image.create( cinfo.output_width, cinfo.output_height, 32 );
-            } else if ( cinfo.output_components == 1 ) {
-                image.create( cinfo.output_width, cinfo.output_height, 8, 256 );
-                for (int i=0; i<256; i++)
-                    image.setColor(i, qRgb(i,i,i));
+        if(jpeg_start_decompress(&cinfo))
+        {
+            if(cinfo.output_components == 3 || cinfo.output_components == 4)
+            {
+                image.create(cinfo.output_width, cinfo.output_height, 32);
+            }
+            else if(cinfo.output_components == 1)
+            {
+                image.create(cinfo.output_width, cinfo.output_height, 8, 256);
+                for(int i = 0; i < 256; i++)
+                    image.setColor(i, qRgb(i, i, i));
             }
 
 #ifdef JPEG_DEBUG
@@ -376,29 +377,28 @@ int KJPEGFormat::decode(QImage& image, QImageConsumer* consumer, const uchar* bu
 
 again:
 
-    if(state == decompressStarted) {
-        state =  (!jsrc.final_pass && jsrc.decoder_timestamp.elapsed() < max_consumingtime)
-                ? consumeInput : prepareOutputScan;
+    if(state == decompressStarted)
+    {
+        state = (!jsrc.final_pass && jsrc.decoder_timestamp.elapsed() < max_consumingtime) ? consumeInput : prepareOutputScan;
     }
 
     if(state == consumeInput)
     {
         int retval;
 
-        do {
+        do
+        {
             retval = jpeg_consume_input(&cinfo);
-        } while (retval != JPEG_SUSPENDED && retval != JPEG_REACHED_EOI
-                 && (retval != JPEG_REACHED_SOS || jsrc.decoder_timestamp.elapsed() < max_consumingtime));
+        } while(retval != JPEG_SUSPENDED && retval != JPEG_REACHED_EOI
+                && (retval != JPEG_REACHED_SOS || jsrc.decoder_timestamp.elapsed() < max_consumingtime));
 
-        if(jsrc.decoder_timestamp.elapsed() >= max_consumingtime ||
-           jsrc.final_pass ||
-           retval == JPEG_REACHED_EOI || retval == JPEG_REACHED_SOS)
+        if(jsrc.decoder_timestamp.elapsed() >= max_consumingtime || jsrc.final_pass || retval == JPEG_REACHED_EOI || retval == JPEG_REACHED_SOS)
             state = prepareOutputScan;
     }
 
     if(state == prepareOutputScan)
     {
-        if ( jpeg_start_output(&cinfo, cinfo.input_scan_number) )
+        if(jpeg_start_output(&cinfo, cinfo.input_scan_number))
             state = doOutputScan;
     }
 
@@ -411,11 +411,10 @@ again:
 #endif
             return consumed;
         }
-        uchar** lines = image.jumpTable();
+        uchar **lines = image.jumpTable();
         int oldoutput_scanline = cinfo.output_scanline;
 
-        while(cinfo.output_scanline < cinfo.output_height &&
-              jpeg_read_scanlines(&cinfo, lines+cinfo.output_scanline, cinfo.output_height))
+        while(cinfo.output_scanline < cinfo.output_height && jpeg_read_scanlines(&cinfo, lines + cinfo.output_scanline, cinfo.output_height))
             ; // here happens all the magic of decoding
 
         int completed_scanlines = cinfo.output_scanline - oldoutput_scanline;
@@ -423,18 +422,21 @@ again:
         qDebug("completed now %d scanlines", completed_scanlines);
 #endif
 
-        if ( cinfo.output_components == 3 ) {
-	    // Expand 24->32 bpp.
-	    for (int j=oldoutput_scanline; j<oldoutput_scanline+completed_scanlines; j++) {
-		uchar *in = image.scanLine(j) + cinfo.output_width * 3;
-		QRgb *out = (QRgb*)image.scanLine(j);
+        if(cinfo.output_components == 3)
+        {
+            // Expand 24->32 bpp.
+            for(int j = oldoutput_scanline; j < oldoutput_scanline + completed_scanlines; j++)
+            {
+                uchar *in = image.scanLine(j) + cinfo.output_width * 3;
+                QRgb *out = (QRgb *)image.scanLine(j);
 
-		for (uint i=cinfo.output_width; i--; ) {
-		    in-=3;
-		    out[i] = qRgb(in[0], in[1], in[2]);
-		}
-	    }
-	}
+                for(uint i = cinfo.output_width; i--;)
+                {
+                    in -= 3;
+                    out[i] = qRgb(in[0], in[1], in[2]);
+                }
+            }
+        }
 
         if(consumer && completed_scanlines)
         {
@@ -444,8 +446,10 @@ again:
 #endif
             jsrc.change_rect |= r;
 
-            if ( jsrc.decoder_timestamp.elapsed() >= max_consumingtime ) {
-                if( !jsrc.old_change_rect.isEmpty()) {
+            if(jsrc.decoder_timestamp.elapsed() >= max_consumingtime)
+            {
+                if(!jsrc.old_change_rect.isEmpty())
+                {
                     consumer->changed(jsrc.old_change_rect);
                     jsrc.old_change_rect = QRect();
                 }
@@ -457,27 +461,28 @@ again:
 
         if(cinfo.output_scanline >= cinfo.output_height)
         {
-            if ( jsrc.do_progressive ) {
+            if(jsrc.do_progressive)
+            {
                 jpeg_finish_output(&cinfo);
                 jsrc.final_pass = jpeg_input_complete(&cinfo);
                 jsrc.decoding_done = jsrc.final_pass && cinfo.input_scan_number == cinfo.output_scan_number;
-                if ( !jsrc.decoding_done ) {
+                if(!jsrc.decoding_done)
+                {
                     jsrc.old_change_rect |= jsrc.change_rect;
-                    jsrc.change_rect =  QRect();
+                    jsrc.change_rect = QRect();
                 }
             }
             else
                 jsrc.decoding_done = true;
 
 #ifdef JPEG_DEBUG
-            qDebug("one pass is completed, final_pass = %d, dec_done: %d, complete: %d",
-                   jsrc.final_pass, jsrc.decoding_done, jpeg_input_complete(&cinfo));
+            qDebug("one pass is completed, final_pass = %d, dec_done: %d, complete: %d", jsrc.final_pass, jsrc.decoding_done,
+                   jpeg_input_complete(&cinfo));
 #endif
             if(!jsrc.decoding_done)
             {
 #ifdef JPEG_DEBUG
-                qDebug("starting another one, input_scan_number is %d/%d", cinfo.input_scan_number,
-                       cinfo.output_scan_number);
+                qDebug("starting another one, input_scan_number is %d/%d", cinfo.input_scan_number, cinfo.output_scan_number);
 #endif
                 jsrc.decoder_timestamp.restart();
                 state = decompressStarted;
@@ -486,20 +491,21 @@ again:
             }
         }
 
-        if(state == doOutputScan && jsrc.decoding_done) {
+        if(state == doOutputScan && jsrc.decoding_done)
+        {
 #ifdef JPEG_DEBUG
             qDebug("input is complete, cleaning up, returning..");
 #endif
-            if ( consumer && !jsrc.change_rect.isEmpty() )
-                consumer->changed( jsrc.change_rect );
+            if(consumer && !jsrc.change_rect.isEmpty())
+                consumer->changed(jsrc.change_rect);
 
             if(consumer)
                 consumer->end();
 
             jsrc.ateof = true;
 
-            (void) jpeg_finish_decompress(&cinfo);
-            (void) jpeg_destroy_decompress(&cinfo);
+            (void)jpeg_finish_decompress(&cinfo);
+            (void)jpeg_destroy_decompress(&cinfo);
 
             state = readDone;
 
@@ -521,19 +527,18 @@ again:
 // -----------------------------------------------------------------------------
 // This is the factory that teaches Qt about progressive JPEG's
 
-QImageFormat* khtml::KJPEGFormatType::decoderFor(const unsigned char* buffer, int length)
+QImageFormat *khtml::KJPEGFormatType::decoderFor(const unsigned char *buffer, int length)
 {
-    if(length < 3) return 0;
+    if(length < 3)
+        return 0;
 
-    if(buffer[0] == 0377 &&
-       buffer[1] == 0330 &&
-       buffer[2] == 0377)
-         return new KJPEGFormat;
+    if(buffer[0] == 0377 && buffer[1] == 0330 && buffer[2] == 0377)
+        return new KJPEGFormat;
 
     return 0;
 }
 
-const char* khtml::KJPEGFormatType::formatName() const
+const char *khtml::KJPEGFormatType::formatName() const
 {
     return "JPEG";
 }
@@ -545,4 +550,3 @@ const char* khtml::KJPEGFormatType::formatName() const
 #endif // HAVE_LIBJPEG
 
 // -----------------------------------------------------------------------------
-

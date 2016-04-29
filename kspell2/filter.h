@@ -26,97 +26,95 @@
 #include <qstring.h>
 #include <kdelibs_export.h>
 
-namespace KSpell2
+namespace KSpell2 {
+class Settings;
+
+/**
+ * Structure abstracts the word and its position in the
+ * parent text.
+ *
+ * @author Zack Rusin <zack@kde.org>
+ * @short struct represents word
+ */
+struct Word
 {
-    class Settings;
+    Word() : start(0), end(true)
+    {
+    }
+
+    Word(const QString &w, int st, bool e = false) : word(w), start(st), end(e)
+    {
+    }
+    Word(const Word &other) : word(other.word), start(other.start), end(other.end)
+    {
+    }
+
+    QString word;
+    uint start;
+    bool end;
+};
+
+/**
+ * Filter is used to split text into words which
+ * will be spell checked.
+ *
+ * @author Zack Rusin <zack@kde.org>
+ * @short used to split text into words
+ */
+class KDE_EXPORT Filter {
+public:
+    static Filter *defaultFilter();
+
+public:
+    Filter();
+    virtual ~Filter();
+
+    static Word end();
 
     /**
-     * Structure abstracts the word and its position in the
-     * parent text.
-     *
-     * @author Zack Rusin <zack@kde.org>
-     * @short struct represents word
+     * Sets the Settings object for this Filter
      */
-    struct Word
-    {
-        Word() : start( 0 ), end( true )
-            {}
-
-        Word( const QString& w, int st, bool e = false )
-            : word( w ), start( st ), end( e )
-            {}
-        Word( const Word& other )
-            : word( other.word ), start( other.start ),
-              end( other.end )
-            {}
-
-        QString word;
-        uint    start;
-        bool    end;
-    };
+    void setSettings(Settings *);
 
     /**
-     * Filter is used to split text into words which
-     * will be spell checked.
-     *
-     * @author Zack Rusin <zack@kde.org>
-     * @short used to split text into words
+     * Returns currently used Settings object
      */
-    class KDE_EXPORT Filter
-    {
-    public:
-        static Filter *defaultFilter();
-    public:
-        Filter();
-        virtual ~Filter();
+    Settings *settings() const;
 
-        static Word end();
+    bool atEnd() const;
 
-        /**
-         * Sets the Settings object for this Filter
-         */
-        void setSettings( Settings* );
+    void setBuffer(const QString &buffer);
+    QString buffer() const;
 
-        /**
-         * Returns currently used Settings object
-         */
-        Settings *settings() const;
+    void restart();
 
-        bool atEnd() const;
+    virtual Word nextWord() const;
+    virtual Word previousWord() const;
+    virtual Word wordAtPosition(unsigned int pos) const;
 
-        void setBuffer( const QString& buffer );
-        QString buffer() const;
+    virtual void setCurrentPosition(int);
+    virtual int currentPosition() const;
+    virtual void replace(const Word &w, const QString &newWord);
 
-        void restart();
+    /**
+     * Should return the sentence containing the current word
+     */
+    virtual QString context() const;
 
-        virtual Word nextWord() const;
-        virtual Word previousWord() const;
-        virtual Word wordAtPosition( unsigned int pos ) const;
+protected:
+    bool trySkipLinks() const;
+    bool ignore(const QString &word) const;
+    QChar skipToLetter(uint &fromPosition) const;
+    bool shouldBeSkipped(bool wordWasUppercase, bool wordWasRunTogether, const QString &foundWord) const;
 
-        virtual void setCurrentPosition( int );
-        virtual int currentPosition() const;
-        virtual void replace( const Word& w, const QString& newWord );
+protected:
+    QString m_buffer;
+    mutable uint m_currentPosition;
 
-        /**
-         * Should return the sentence containing the current word
-         */
-        virtual QString context() const;
-    protected:
-        bool trySkipLinks() const;
-        bool ignore( const QString& word ) const;
-        QChar skipToLetter( uint &fromPosition ) const;
-        bool shouldBeSkipped( bool wordWasUppercase, bool wordWasRunTogether,
-                              const QString& foundWord ) const;
-
-    protected:
-        QString      m_buffer;
-        mutable uint m_currentPosition;
-
-    private:
-        class Private;
-        Private *d;
-    };
-
+private:
+    class Private;
+    Private *d;
+};
 }
 
 #endif

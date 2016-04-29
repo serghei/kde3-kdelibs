@@ -23,99 +23,99 @@
 */
 
 #include <qwidget.h>
-#ifdef Q_WS_X11 //FIXME
+#ifdef Q_WS_X11 // FIXME
 
 #include "kxerrorhandler.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <netwm_def.h>
 
-KXErrorHandler** KXErrorHandler::handlers = NULL;
+KXErrorHandler **KXErrorHandler::handlers = NULL;
 int KXErrorHandler::pos = 0;
 int KXErrorHandler::size = 0;
-    
-KXErrorHandler::KXErrorHandler( Display* dpy )
-    :   user_handler1( NULL ),
-        user_handler2( NULL ),
-        old_handler( XSetErrorHandler( handler_wrapper )),
-        first_request( XNextRequest( dpy )),
-        display( dpy ),
-        was_error( false )
-    {
-    addHandler();
-    }
 
-KXErrorHandler::KXErrorHandler( bool (*handler)( int request, int error_code, unsigned long resource_id ), Display* dpy )
-    :   user_handler1( handler ),
-        user_handler2( NULL ),
-        old_handler( XSetErrorHandler( handler_wrapper )),
-        first_request( XNextRequest( dpy )),
-        display( dpy ),
-        was_error( false )
-    {
+KXErrorHandler::KXErrorHandler(Display *dpy)
+    : user_handler1(NULL)
+    , user_handler2(NULL)
+    , old_handler(XSetErrorHandler(handler_wrapper))
+    , first_request(XNextRequest(dpy))
+    , display(dpy)
+    , was_error(false)
+{
     addHandler();
-    }
+}
 
-KXErrorHandler::KXErrorHandler( int (*handler)( Display*, XErrorEvent* ), Display* dpy )
-    :   user_handler1( NULL ),
-        user_handler2( handler ),
-        old_handler( XSetErrorHandler( handler_wrapper )),
-        first_request( XNextRequest( dpy )),
-        display( dpy ),
-        was_error( false )
-    {
+KXErrorHandler::KXErrorHandler(bool (*handler)(int request, int error_code, unsigned long resource_id), Display *dpy)
+    : user_handler1(handler)
+    , user_handler2(NULL)
+    , old_handler(XSetErrorHandler(handler_wrapper))
+    , first_request(XNextRequest(dpy))
+    , display(dpy)
+    , was_error(false)
+{
     addHandler();
-    }
+}
+
+KXErrorHandler::KXErrorHandler(int (*handler)(Display *, XErrorEvent *), Display *dpy)
+    : user_handler1(NULL)
+    , user_handler2(handler)
+    , old_handler(XSetErrorHandler(handler_wrapper))
+    , first_request(XNextRequest(dpy))
+    , display(dpy)
+    , was_error(false)
+{
+    addHandler();
+}
 
 KXErrorHandler::~KXErrorHandler()
-    {
-    XSetErrorHandler( old_handler );
-    assert( this == handlers[ pos - 1 ] ); // destroy in reverse order
+{
+    XSetErrorHandler(old_handler);
+    assert(this == handlers[pos - 1]); // destroy in reverse order
     --pos;
-    }
+}
 
 void KXErrorHandler::addHandler()
+{
+    if(size == pos)
     {
-    if( size == pos )
-        {
         size += 16;
-        handlers = static_cast< KXErrorHandler** >( realloc( handlers, size * sizeof( KXErrorHandler* )));
-        }
-    handlers[ pos++ ] = this;
+        handlers = static_cast< KXErrorHandler ** >(realloc(handlers, size * sizeof(KXErrorHandler *)));
     }
+    handlers[pos++] = this;
+}
 
-bool KXErrorHandler::error( bool sync ) const
-    {
-    if( sync )
-        XSync( display, False );
+bool KXErrorHandler::error(bool sync) const
+{
+    if(sync)
+        XSync(display, False);
     return was_error;
-    }
-    
-int KXErrorHandler::handler_wrapper( Display* dpy, XErrorEvent* e )
-    {
+}
+
+int KXErrorHandler::handler_wrapper(Display *dpy, XErrorEvent *e)
+{
     --pos;
-    int ret = handlers[ pos ]->handle( dpy, e );
+    int ret = handlers[pos]->handle(dpy, e);
     ++pos;
     return ret;
-    }
+}
 
-int KXErrorHandler::handle( Display* dpy, XErrorEvent* e )
-    {
-    if( dpy == display
-        // e->serial >= first_request , compare like X timestamps to handle wrapping
-        && NET::timestampCompare( e->serial, first_request ) >= 0 )
-        { // it's for us
-        //qDebug( "Handling: %p", static_cast< void* >( this ));
-        if( user_handler1 != NULL && user_handler1( e->request_code, e->error_code, e->resourceid ))
+int KXErrorHandler::handle(Display *dpy, XErrorEvent *e)
+{
+    if(dpy == display
+       // e->serial >= first_request , compare like X timestamps to handle wrapping
+       && NET::timestampCompare(e->serial, first_request) >= 0)
+    { // it's for us
+        // qDebug( "Handling: %p", static_cast< void* >( this ));
+        if(user_handler1 != NULL && user_handler1(e->request_code, e->error_code, e->resourceid))
             was_error = true;
-        if( user_handler2 != NULL && user_handler2( dpy, e ) != 0 )
+        if(user_handler2 != NULL && user_handler2(dpy, e) != 0)
             was_error = true;
         else // no handler set, simply set that there was an error
             was_error = true;
         return 0;
-        }
-    //qDebug( "Going deeper: %p", static_cast< void* >( this ));
-    return old_handler( dpy, e );
     }
+    // qDebug( "Going deeper: %p", static_cast< void* >( this ));
+    return old_handler(dpy, e);
+}
 
 #endif

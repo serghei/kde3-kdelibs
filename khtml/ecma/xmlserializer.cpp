@@ -42,68 +42,74 @@ KJS_DEFINE_PROTOTYPE(XMLSerializerProto)
 IMPLEMENT_PROTOFUNC_DOM(XMLSerializerProtoFunc)
 KJS_IMPLEMENT_PROTOTYPE("XMLSerializer", XMLSerializerProto, XMLSerializerProtoFunc)
 
-XMLSerializerConstructorImp::XMLSerializerConstructorImp(ExecState *)
-    : ObjectImp()
+XMLSerializerConstructorImp::XMLSerializerConstructorImp(ExecState *) : ObjectImp()
 {
 }
 
 bool XMLSerializerConstructorImp::implementsConstruct() const
 {
-  return true;
+    return true;
 }
 
 Object XMLSerializerConstructorImp::construct(ExecState *exec, const List &)
 {
-  return Object(new XMLSerializer(exec));
+    return Object(new XMLSerializer(exec));
 }
 
-const ClassInfo XMLSerializer::info = { "XMLSerializer", 0, 0, 0 };
+const ClassInfo XMLSerializer::info = {"XMLSerializer", 0, 0, 0};
 
-XMLSerializer::XMLSerializer(ExecState *exec)
-  : DOMObject(XMLSerializerProto::self(exec))
+XMLSerializer::XMLSerializer(ExecState *exec) : DOMObject(XMLSerializerProto::self(exec))
 {
 }
 
 Value XMLSerializerProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
 {
-  if (!thisObj.inherits(&XMLSerializer::info)) {
-    Object err = Error::create(exec,TypeError);
-    exec->setException(err);
-    return err;
-  }
-
-  switch (id) {
-  case XMLSerializer::SerializeToString:
+    if(!thisObj.inherits(&XMLSerializer::info))
     {
-      if (args.size() != 1) {
-	return Undefined();
-      }
-
-      if (!args[0].toObject(exec).inherits(&DOMNode::info)) {
-	return Undefined();
-      }
-
-      DOM::NodeImpl *node = static_cast<DOM::NodeImpl *>(static_cast<KJS::DOMNode *>(args[0].toObject(exec).imp())->toNode().handle());
-
-      if (!node) {
-	return Undefined();
-      }
-
-      QString body;
-
-      try {
-	  body = node->toString().string();
-      } catch(DOM::DOMException& e) {
-	  Object err = Error::create(exec, GeneralError, "Exception serializing document");
-	  exec->setException(err);
-	  return err;
-      }
-
-      return getString(body);
+        Object err = Error::create(exec, TypeError);
+        exec->setException(err);
+        return err;
     }
-  }
 
-  return Undefined();
+    switch(id)
+    {
+        case XMLSerializer::SerializeToString:
+        {
+            if(args.size() != 1)
+            {
+                return Undefined();
+            }
+
+            if(!args[0].toObject(exec).inherits(&DOMNode::info))
+            {
+                return Undefined();
+            }
+
+            DOM::NodeImpl *node = static_cast< DOM::NodeImpl * >(static_cast< KJS::DOMNode * >(args[0].toObject(exec).imp())->toNode().handle());
+
+            if(!node)
+            {
+                return Undefined();
+            }
+
+            QString body;
+
+            try
+            {
+                body = node->toString().string();
+            }
+            catch(DOM::DOMException &e)
+            {
+                Object err = Error::create(exec, GeneralError, "Exception serializing document");
+                exec->setException(err);
+                return err;
+            }
+
+            return getString(body);
+        }
+    }
+
+    return Undefined();
 }
 
 } // end namespace

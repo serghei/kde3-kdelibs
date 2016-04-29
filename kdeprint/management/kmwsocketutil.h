@@ -17,8 +17,8 @@
  *  Boston, MA 02110-1301, USA.
  **/
 
-#ifndef	KMWSOCKETUTIL_H
-#define	KMWSOCKETUTIL_H
+#ifndef KMWSOCKETUTIL_H
+#define KMWSOCKETUTIL_H
 
 #include <qstring.h>
 #include <qptrlist.h>
@@ -26,9 +26,9 @@
 
 struct SocketInfo
 {
-	QString	IP;
-	QString	Name;
-	int	Port;
+    QString IP;
+    QString Name;
+    int Port;
 };
 
 class QProgressBar;
@@ -36,41 +36,45 @@ class QLineEdit;
 class QComboBox;
 class KMWSocketUtil;
 
-class SocketConfig : public KDialogBase
-{
-	friend class KMWSocketUtil;
-	Q_OBJECT
+class SocketConfig : public KDialogBase {
+    friend class KMWSocketUtil;
+    Q_OBJECT
 public:
-	SocketConfig(KMWSocketUtil *util, QWidget *parent = 0, const char *name = 0);
-	~SocketConfig();
+    SocketConfig(KMWSocketUtil *util, QWidget *parent = 0, const char *name = 0);
+    ~SocketConfig();
 
 protected slots:
-	void slotOk();
+    void slotOk();
 
 private:
-	QLineEdit	*mask_, *tout_;
-	QComboBox	*port_;
+    QLineEdit *mask_, *tout_;
+    QComboBox *port_;
 };
 
-class KMWSocketUtil
-{
-	friend class SocketConfig;
+class KMWSocketUtil {
+    friend class SocketConfig;
 
 public:
-	KMWSocketUtil();
+    KMWSocketUtil();
 
-	bool checkPrinter(const QString& host, int port, QString* hostname = 0);
+    bool checkPrinter(const QString &host, int port, QString *hostname = 0);
 
-	const QPtrList<SocketInfo>* printerList() { return &printerlist_; }
-	bool scanNetwork(QProgressBar *bar = 0);
-	void configureScan(QWidget *parent = 0);
-	void setDefaultPort(int p) { port_ = p; }
+    const QPtrList< SocketInfo > *printerList()
+    {
+        return &printerlist_;
+    }
+    bool scanNetwork(QProgressBar *bar = 0);
+    void configureScan(QWidget *parent = 0);
+    void setDefaultPort(int p)
+    {
+        port_ = p;
+    }
 
 private:
-	QPtrList<SocketInfo>	printerlist_;
-	QString			root_;
-	int			port_;
-	int			timeout_;	// in milliseconds
+    QPtrList< SocketInfo > printerlist_;
+    QString root_;
+    int port_;
+    int timeout_; // in milliseconds
 };
 
 #endif

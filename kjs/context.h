@@ -27,49 +27,96 @@
 
 #include "function.h"
 
-namespace KJS  {
+namespace KJS {
 
-  /**
-   * @short Execution context.
-   */
-  class ContextImp {
+/**
+ * @short Execution context.
+ */
+class ContextImp {
     friend class Context;
     friend class StatementNode;
-  public:
+
+public:
     // TODO: remove glob parameter. deducable from exec.
-    ContextImp(Object &glob, InterpreterImp *interpreter, Object &thisV, int _sourceId, CodeType type = GlobalCode,
-               ContextImp *callingContext = 0L, FunctionImp *func = 0L, const List *args = 0);
+    ContextImp(Object &glob, InterpreterImp *interpreter, Object &thisV, int _sourceId, CodeType type = GlobalCode, ContextImp *callingContext = 0L,
+               FunctionImp *func = 0L, const List *args = 0);
     virtual ~ContextImp();
 
-    const ScopeChain &scopeChain() const { return scope; }
-    CodeType codeType() const { return m_codeType; }
-    Object variableObject() const { return variable; }
-    void setVariableObject(const Object &v) { variable = v; }
-    Object thisValue() const { return thisVal; }
-    ContextImp *callingContext() { return _callingContext; }
-    ObjectImp *activationObject() { return activation.imp(); }
-    FunctionImp *function() const { return _function; }
-    const List *arguments() const { return _arguments; }
+    const ScopeChain &scopeChain() const
+    {
+        return scope;
+    }
+    CodeType codeType() const
+    {
+        return m_codeType;
+    }
+    Object variableObject() const
+    {
+        return variable;
+    }
+    void setVariableObject(const Object &v)
+    {
+        variable = v;
+    }
+    Object thisValue() const
+    {
+        return thisVal;
+    }
+    ContextImp *callingContext()
+    {
+        return _callingContext;
+    }
+    ObjectImp *activationObject()
+    {
+        return activation.imp();
+    }
+    FunctionImp *function() const
+    {
+        return _function;
+    }
+    const List *arguments() const
+    {
+        return _arguments;
+    }
 
-    void pushScope(const Object &s) { scope.push(s.imp()); }
-    void popScope() { scope.pop(); }
-    LabelStack *seenLabels() { return &ls; }
-    
+    void pushScope(const Object &s)
+    {
+        scope.push(s.imp());
+    }
+    void popScope()
+    {
+        scope.pop();
+    }
+    LabelStack *seenLabels()
+    {
+        return &ls;
+    }
+
     void mark();
 
-    void pushTryCatch() { tryCatch++; };
-    void popTryCatch() { tryCatch--; };
+    void pushTryCatch()
+    {
+        tryCatch++;
+    };
+    void popTryCatch()
+    {
+        tryCatch--;
+    };
     bool inTryCatch() const;
 
-    void setLines(int l0, int l1) { line0 = l0; line1 = l1; }
+    void setLines(int l0, int l1)
+    {
+        line0 = l0;
+        line1 = l1;
+    }
 
-  private:
+private:
     InterpreterImp *_interpreter;
     ContextImp *_callingContext;
     FunctionImp *_function;
     const List *_arguments;
     Object activation;
-    
+
     ScopeChain scope;
     Object variable;
     Object thisVal;
@@ -83,7 +130,7 @@ namespace KJS  {
     int line1;
     Identifier functionName;
     List args;
-  };
+};
 
 } // namespace KJS
 

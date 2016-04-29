@@ -40,15 +40,17 @@ class DOMStringImpl;
  * that modifications to one instance will also modify all others. If you
  * wish to get a DOMString that is independent, use copy().
  */
-class KHTML_EXPORT DOMString
-{
+class KHTML_EXPORT DOMString {
     friend class CharacterDataImpl;
-    friend KHTML_EXPORT bool operator==( const DOMString &a, const char *b );
+    friend KHTML_EXPORT bool operator==(const DOMString &a, const char *b);
+
 public:
     /**
      * default constructor. Gives an empty DOMString
      */
-    DOMString() : impl(0) {}
+    DOMString() : impl(0)
+    {
+    }
 
     DOMString(const QChar *str, uint len);
     DOMString(const QString &);
@@ -59,16 +61,16 @@ public:
 
     // assign and copy
     DOMString(const DOMString &str);
-    DOMString &operator =(const DOMString &str);
+    DOMString &operator=(const DOMString &str);
 
     /**
      * append str to this string
      */
-    DOMString &operator += (const DOMString &str);
+    DOMString &operator+=(const DOMString &str);
     /**
      * add two DOMString's
      */
-    DOMString operator + (const DOMString &str);
+    DOMString operator+(const DOMString &str);
 
     void insert(DOMString str, uint pos);
 
@@ -76,13 +78,13 @@ public:
      * The character at position i of the DOMString. If i >= length(), the
      * character returned will be 0.
      */
-    const QChar &operator [](unsigned int i) const;
+    const QChar &operator[](unsigned int i) const;
 
     int find(const QChar c, int start = 0) const;
 
     uint length() const;
-    void truncate( unsigned int len );
-    void remove(unsigned int pos, int len=1);
+    void truncate(unsigned int len);
+    void remove(unsigned int pos, int len = 1);
     /**
      * Splits the string into two. The original string gets truncated to pos, and the rest is returned.
      */
@@ -105,40 +107,59 @@ public:
 
     DOMString copy() const;
 
-    bool isNull()  const { return (impl == 0); }
-    bool isEmpty()  const;
+    bool isNull() const
+    {
+        return (impl == 0);
+    }
+    bool isEmpty() const;
 
     /**
      * @internal get a handle to the imlementation of the DOMString
      * Use at own risk!!!
      */
-    DOMStringImpl *implementation() const { return impl; }
+    DOMStringImpl *implementation() const
+    {
+        return impl;
+    }
 
 protected:
     DOMStringImpl *impl;
 };
 
 #ifndef NDEBUG
-inline kdbgstream &operator<<(kdbgstream &stream, const DOMString &string) {
-	return (stream << string.string());
+inline kdbgstream &operator<<(kdbgstream &stream, const DOMString &string)
+{
+    return (stream << string.string());
 }
 #else
-inline kndbgstream &operator<<(kndbgstream &stream, const DOMString &) {
-	return stream;
+inline kndbgstream &operator<<(kndbgstream &stream, const DOMString &)
+{
+    return stream;
 }
 #endif
 
-KHTML_EXPORT bool operator==( const DOMString &a, const DOMString &b );
-KHTML_EXPORT bool operator==( const DOMString &a, const QString &b );
-KHTML_EXPORT bool operator==( const DOMString &a, const char *b );
-inline bool operator!=( const DOMString &a, const DOMString &b ) { return !(a==b); }
-inline bool operator!=( const DOMString &a, const QString &b ) { return !(a==b); }
-inline bool operator!=( const DOMString &a, const char *b )  { return !(a==b); }
-inline bool strcmp( const DOMString &a, const DOMString &b ) { return a != b; }
+KHTML_EXPORT bool operator==(const DOMString &a, const DOMString &b);
+KHTML_EXPORT bool operator==(const DOMString &a, const QString &b);
+KHTML_EXPORT bool operator==(const DOMString &a, const char *b);
+inline bool operator!=(const DOMString &a, const DOMString &b)
+{
+    return !(a == b);
+}
+inline bool operator!=(const DOMString &a, const QString &b)
+{
+    return !(a == b);
+}
+inline bool operator!=(const DOMString &a, const char *b)
+{
+    return !(a == b);
+}
+inline bool strcmp(const DOMString &a, const DOMString &b)
+{
+    return a != b;
+}
 
 // returns false when equal, true otherwise (ignoring case)
-KHTML_EXPORT bool strcasecmp( const DOMString &a, const DOMString &b );
-KHTML_EXPORT bool strcasecmp( const DOMString& a, const char* b );
-
+KHTML_EXPORT bool strcasecmp(const DOMString &a, const DOMString &b);
+KHTML_EXPORT bool strcasecmp(const DOMString &a, const char *b);
 }
 #endif

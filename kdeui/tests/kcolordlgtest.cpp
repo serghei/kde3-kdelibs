@@ -22,20 +22,19 @@
 #include <kconfig.h>
 #include <klocale.h>
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-	QColor color;
+    QColor color;
 
-	KLocale::setMainCatalogue("kdelibs");
-	QApplication::setColorMode( QApplication::CustomColors );
-	KApplication a( argc, argv, "KColorDialogTest" );
-        KConfig aConfig;
-        aConfig.setGroup( "KColorDialog-test" );
-    
-	color = aConfig.readColorEntry( "Chosen" );
-	int nRet = KColorDialog::getColor( color, Qt::red /*testing default color*/ );
-	aConfig.writeEntry( "Chosen", color );
-	
-	return nRet;
+    KLocale::setMainCatalogue("kdelibs");
+    QApplication::setColorMode(QApplication::CustomColors);
+    KApplication a(argc, argv, "KColorDialogTest");
+    KConfig aConfig;
+    aConfig.setGroup("KColorDialog-test");
+
+    color = aConfig.readColorEntry("Chosen");
+    int nRet = KColorDialog::getColor(color, Qt::red /*testing default color*/);
+    aConfig.writeEntry("Chosen", color);
+
+    return nRet;
 }
-

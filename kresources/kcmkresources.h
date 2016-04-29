@@ -24,18 +24,17 @@
 
 #include <kcmodule.h>
 
-class KRESOURCES_EXPORT KCMKResources : public KCModule
-{
-  Q_OBJECT
+class KRESOURCES_EXPORT KCMKResources : public KCModule {
+    Q_OBJECT
 
-  public:
-    KCMKResources( QWidget *parent, const char *name, const QStringList& );
+public:
+    KCMKResources(QWidget *parent, const char *name, const QStringList &);
 
     void load();
     void save();
     void defaults();
 
-  private:
+private:
     KRES::ConfigPage *mConfigPage;
 };
 

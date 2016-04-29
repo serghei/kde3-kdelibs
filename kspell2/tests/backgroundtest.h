@@ -26,15 +26,14 @@
 
 #include "backgroundchecker.h"
 
-class BackgroundTest : public QObject
-{
+class BackgroundTest : public QObject {
     Q_OBJECT
 public:
     BackgroundTest();
 
 protected slots:
     void slotDone();
-    void slotMisspelling( const QString& word, int start );
+    void slotMisspelling(const QString &word, int start);
 
 private:
     KSpell2::BackgroundChecker *m_checker;

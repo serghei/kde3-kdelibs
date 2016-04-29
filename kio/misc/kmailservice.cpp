@@ -20,23 +20,19 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 
-static const KCmdLineOptions options[] =
-{
-    { "+url", 0, 0 },
-    KCmdLineLastOption
-};
+static const KCmdLineOptions options[] = {{"+url", 0, 0}, KCmdLineLastOption};
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
     KLocale::setMainCatalogue("kdelibs");
-    KCmdLineArgs::init( argc, argv, "kmailservice", I18N_NOOP("KMailService"), I18N_NOOP("Mail service"), "unknown" );
-    KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::init(argc, argv, "kmailservice", I18N_NOOP("KMailService"), I18N_NOOP("Mail service"), "unknown");
+    KCmdLineArgs::addCmdLineOptions(options);
 
-    KApplication a( false, false );
+    KApplication a(false, false);
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-    if ( args->count() != 1 )
+    if(args->count() != 1)
         return 1;
 
     a.invokeMailer(KURL(args->arg(0)), a.startupId(), true);

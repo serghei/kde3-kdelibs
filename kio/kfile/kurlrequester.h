@@ -53,25 +53,24 @@ class QTimer;
  * @short A widget to request a filename/url from the user
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-class KIO_EXPORT KURLRequester : public QHBox
-{
+class KIO_EXPORT KURLRequester : public QHBox {
     Q_OBJECT
-    Q_PROPERTY( QString url READ url WRITE setURL )
-    Q_PROPERTY( bool showLocalProtocol READ showLocalProtocol WRITE setShowLocalProtocol )
-    Q_PROPERTY( QString filter READ filter WRITE setFilter )
-    Q_PROPERTY( uint mode READ mode WRITE setMode )
+    Q_PROPERTY(QString url READ url WRITE setURL)
+    Q_PROPERTY(bool showLocalProtocol READ showLocalProtocol WRITE setShowLocalProtocol)
+    Q_PROPERTY(QString filter READ filter WRITE setFilter)
+    Q_PROPERTY(uint mode READ mode WRITE setMode)
 
 public:
     /**
      * Constructs a KURLRequester widget.
      */
-    KURLRequester( QWidget *parent=0, const char *name=0 );
+    KURLRequester(QWidget *parent = 0, const char *name = 0);
 
     /**
      * Constructs a KURLRequester widget with the initial URL @p url.
      * // TODO KDE4: Use KURL instead
      */
-    KURLRequester( const QString& url, QWidget *parent=0, const char *name=0 );
+    KURLRequester(const QString &url, QWidget *parent = 0, const char *name = 0);
 
     /**
      * Special constructor, which creates a KURLRequester widget with a custom
@@ -79,7 +78,7 @@ public:
      * (or inherited thereof). Note: for geometry management reasons, the
      * edit-widget is reparented to have the KURLRequester as parent.
      */
-    KURLRequester( QWidget *editWidget, QWidget *parent, const char *name=0 );
+    KURLRequester(QWidget *editWidget, QWidget *parent, const char *name = 0);
     /**
      * Destructs the KURLRequester.
      */
@@ -99,7 +98,7 @@ public:
      * Default is false, not showing file:/
      * @see showLocalProtocol
      */
-    void setShowLocalProtocol( bool b );
+    void setShowLocalProtocol(bool b);
 
     /**
      * Sets the mode of the file dialog.
@@ -107,7 +106,7 @@ public:
      * so KFile::Files doesn't make much sense.
      * @see KFileDialog::setMode()
      */
-    void setMode( uint m );
+    void setMode(uint m);
 
     /**
     * Returns the current mode
@@ -121,7 +120,7 @@ public:
      * Sets the filter for the file dialog.
      * @see KFileDialog::setFilter()
      */
-    void setFilter( const QString& filter );
+    void setFilter(const QString &filter);
 
     /**
     * Returns the current filter for the file dialog.
@@ -135,7 +134,10 @@ public:
      * lineedit
      * @see setShowLocalProtocol
      */
-    bool showLocalProtocol() const { return myShowLocalProt; }
+    bool showLocalProtocol() const
+    {
+        return myShowLocalProt;
+    }
     // ## KDE4: there's no reason to keep this, it should always be false
 
     /**
@@ -146,7 +148,7 @@ public:
      * Remove in KDE4? KURLRequester should use KDirSelectDialog for
      * (mode & KFile::Directory) && !(mode & KFile::File)
      */
-    virtual KFileDialog * fileDialog() const;
+    virtual KFileDialog *fileDialog() const;
 
     /**
      * @returns a pointer to the lineedit, either the default one, or the
@@ -155,24 +157,27 @@ public:
      * It is provided so that you can e.g. set an own completion object
      * (e.g. KShellCompletion) into it.
      */
-    KLineEdit * lineEdit() const;
+    KLineEdit *lineEdit() const;
 
     /**
      * @returns a pointer to the combobox, in case you have set one using the
      * special constructor. Returns 0L otherwise.
      */
-    KComboBox * comboBox() const;
+    KComboBox *comboBox() const;
 
     /**
      * @returns a pointer to the pushbutton. It is provided so that you can
      * specify an own pixmap or a text, if you really need to.
      */
-    KPushButton * button() const;
+    KPushButton *button() const;
 
     /**
      * @returns the KURLCompletion object used in the lineedit/combobox.
      */
-    KURLCompletion *completionObject() const { return myCompletion; }
+    KURLCompletion *completionObject() const
+    {
+        return myCompletion;
+    }
 
     /**
      * @returns an object, suitable for use with KEditListBox. It allows you
@@ -194,20 +199,20 @@ public slots:
      * @since 3.1
      * // TODO KDE4: Use KURL instead
      */
-    void setURL( const QString& url );
+    void setURL(const QString &url);
 
     /**
      * Sets the url in the lineedit to @p url.
      * @since 3.4
      * // TODO KDE4: rename to setURL
      */
-    void setKURL( const KURL& url );
+    void setKURL(const KURL &url);
 
     /**
      * Sets the caption of the file dialog.
      * @since 3.1
      */
-    virtual void setCaption( const QString& caption );
+    virtual void setCaption(const QString &caption);
 
     /**
      * Clears the lineedit/combobox.
@@ -221,7 +226,7 @@ signals:
      * The parameter contains the contents of the lineedit.
      * @since 3.1
      */
-    void textChanged( const QString& );
+    void textChanged(const QString &);
 
     /**
      * Emitted when return or enter was pressed in the lineedit.
@@ -232,7 +237,7 @@ signals:
      * Emitted when return or enter was pressed in the lineedit.
      * The parameter contains the contents of the lineedit.
      */
-    void returnPressed( const QString& );
+    void returnPressed(const QString &);
 
     /**
      * Emitted before the filedialog is going to open. Connect
@@ -245,25 +250,25 @@ signals:
      * to the same slot and use the given KURLRequester pointer to know
      * which one is going to open.
      */
-    void openFileDialog( KURLRequester * );
+    void openFileDialog(KURLRequester *);
 
     /**
      * Emitted when the user changed the URL via the file dialog.
      * The parameter contains the contents of the lineedit.
      * // TODO KDE4: Use KURL instead
      */
-    void urlSelected( const QString& );
+    void urlSelected(const QString &);
 
 protected:
-    void		init();
+    void init();
 
-    KURLCompletion *    myCompletion;
+    KURLCompletion *myCompletion;
 
 
 private:
-    KURLDragPushButton * myButton;
-    bool 		myShowLocalProt;
-    mutable KFileDialog * myFileDialog;
+    KURLDragPushButton *myButton;
+    bool myShowLocalProt;
+    mutable KFileDialog *myFileDialog;
 
 
 protected slots:
@@ -277,8 +282,9 @@ private slots:
     void slotUpdateURL();
 
 protected:
-    virtual void virtual_hook( int id, void* data );
-    bool eventFilter( QObject *obj, QEvent *ev );
+    virtual void virtual_hook(int id, void *data);
+    bool eventFilter(QObject *obj, QEvent *ev);
+
 private:
     class KURLRequesterPrivate;
     KURLRequesterPrivate *d;
@@ -287,14 +293,13 @@ private:
 /**
  * URL requester with a combo box, for use in Designer
  */
-class KIO_EXPORT KURLComboRequester : public KURLRequester
-{
+class KIO_EXPORT KURLComboRequester : public KURLRequester {
     Q_OBJECT
 public:
     /**
      * Constructs a KURLRequester widget with a combobox.
      */
-    KURLComboRequester( QWidget *parent=0, const char *name=0 );
+    KURLComboRequester(QWidget *parent = 0, const char *name = 0);
 };
 
 

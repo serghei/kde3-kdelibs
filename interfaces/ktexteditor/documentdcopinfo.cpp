@@ -4,30 +4,28 @@
 #include <dcopclient.h>
 using namespace KTextEditor;
 
-DocumentInfoDCOPInterface::DocumentInfoDCOPInterface( DocumentInfoInterface *Parent, const char *name)
-	: DCOPObject(name)
+DocumentInfoDCOPInterface::DocumentInfoDCOPInterface(DocumentInfoInterface *Parent, const char *name) : DCOPObject(name)
 {
-	m_parent = Parent;
+    m_parent = Parent;
 }
 
 DocumentInfoDCOPInterface::~DocumentInfoDCOPInterface()
 {
-
 }
 
 QString DocumentInfoDCOPInterface::mimeType()
 {
-	return m_parent->mimeType();
+    return m_parent->mimeType();
 }
-long  DocumentInfoDCOPInterface::fileSize()
+long DocumentInfoDCOPInterface::fileSize()
 {
-	return m_parent->fileSize();
+    return m_parent->fileSize();
 }
 QString DocumentInfoDCOPInterface::niceFileSize()
 {
-	return m_parent->niceFileSize();
+    return m_parent->niceFileSize();
 }
-uint DocumentInfoDCOPInterface::documentInfoInterfaceNumber ()
+uint DocumentInfoDCOPInterface::documentInfoInterfaceNumber()
 {
-	return m_parent->documentInfoInterfaceNumber ();
+    return m_parent->documentInfoInterfaceNumber();
 }

@@ -9,35 +9,33 @@ namespace KParts {
 class GUIActivateEvent;
 };
 
-class Part1 : public KParts::ReadOnlyPart
-{
-  Q_OBJECT
+class Part1 : public KParts::ReadOnlyPart {
+    Q_OBJECT
 public:
-  Part1( QObject *parent, QWidget * parentWidget );
-  virtual ~Part1();
+    Part1(QObject *parent, QWidget *parentWidget);
+    virtual ~Part1();
 
 protected:
-  virtual bool openFile();
+    virtual bool openFile();
 
 protected:
-  QMultiLineEdit * m_edit;
-  KInstance *m_instance;
+    QMultiLineEdit *m_edit;
+    KInstance *m_instance;
 };
 
-class Part2 : public KParts::Part
-{
-  Q_OBJECT
+class Part2 : public KParts::Part {
+    Q_OBJECT
 public:
-  Part2( QObject *parent, QWidget * parentWidget );
-  virtual ~Part2();
+    Part2(QObject *parent, QWidget *parentWidget);
+    virtual ~Part2();
 
 protected:
-  // This is not mandatory - only if you care about setting the
-  // part caption when the part is used in a multi-part environment
-  // (i.e. in a part manager)
-  // There is a default impl for ReadOnlyPart...
-  virtual void guiActivateEvent( KParts::GUIActivateEvent * );
-  KInstance *m_instance;
+    // This is not mandatory - only if you care about setting the
+    // part caption when the part is used in a multi-part environment
+    // (i.e. in a part manager)
+    // There is a default impl for ReadOnlyPart...
+    virtual void guiActivateEvent(KParts::GUIActivateEvent *);
+    KInstance *m_instance;
 };
 
 #endif

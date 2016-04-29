@@ -32,10 +32,10 @@ class QCString;
  * @author David Faure <faure@kde.org>
  */
 class KIO_EXPORT KDCOPServiceStarter {
-    friend class KStaticDeleter<KDCOPServiceStarter>;
-public:
+    friend class KStaticDeleter< KDCOPServiceStarter >;
 
-    static KDCOPServiceStarter* self();
+public:
+    static KDCOPServiceStarter *self();
 
     /**
      * Check if a given DCOP interface is available - from the serviceType it's supposed to implement.
@@ -58,11 +58,8 @@ public:
      *
      * @return an error code indicating success (== 0) or failure (> 0).
      */
-    int findServiceFor( const QString& serviceType,
-                        const QString& constraint = QString::null,
-                        const QString& preferences = QString::null,
-                        QString *error=0, QCString* dcopService=0,
-                        int flags=0 );
+    int findServiceFor(const QString &serviceType, const QString &constraint = QString::null, const QString &preferences = QString::null,
+                       QString *error = 0, QCString *dcopService = 0, int flags = 0);
 
     /**
      * Find an implementation of the given @p serviceType,
@@ -86,18 +83,15 @@ public:
      *
      * @return an error code indicating success (== 0) or failure (> 0).
      */
-    virtual int startServiceFor( const QString& serviceType,
-                                 const QString& constraint = QString::null,
-                                 const QString& preferences = QString::null,
-                                 QString *error=0, QCString* dcopService=0,
-                                 int flags=0 );
+    virtual int startServiceFor(const QString &serviceType, const QString &constraint = QString::null, const QString &preferences = QString::null,
+                                QString *error = 0, QCString *dcopService = 0, int flags = 0);
+
 protected:
     KDCOPServiceStarter();
     virtual ~KDCOPServiceStarter();
 
 private:
-    static KDCOPServiceStarter* s_self;
+    static KDCOPServiceStarter *s_self;
 };
 
 #endif
-

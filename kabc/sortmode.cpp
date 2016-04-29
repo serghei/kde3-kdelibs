@@ -24,56 +24,55 @@
 
 using namespace KABC;
 
-NameSortMode::NameSortMode()
- : mNameType( FormattedName ), mAscendingOrder( true ), d( 0 )
+NameSortMode::NameSortMode() : mNameType(FormattedName), mAscendingOrder(true), d(0)
 {
-  mNameType = FormattedName;
+    mNameType = FormattedName;
 }
 
-NameSortMode::NameSortMode( NameType type, bool ascending )
-  : mNameType( type ), mAscendingOrder( ascending ), d( 0 )
-{
-}
-
-bool NameSortMode::lesser( const KABC::Addressee &first, const KABC::Addressee &second ) const
-{
-  bool lesser = false;
-
-  switch ( mNameType ) {
-    case FormattedName:
-      lesser = QString::localeAwareCompare( first.formattedName(), second.formattedName() ) < 0;
-      break;
-    case FamilyName:
-      lesser = QString::localeAwareCompare( first.familyName(), second.familyName() ) < 0;
-      break;
-    case GivenName:
-      lesser = QString::localeAwareCompare( first.givenName(), second.givenName() ) < 0;
-      break;
-    default:
-      lesser = false;
-      break;
-  }
-
-  if ( !mAscendingOrder )
-    lesser = !lesser;
-
-  return lesser;
-}
-
-FieldSortMode::FieldSortMode( KABC::Field *field, bool ascending )
-  : mField( field ), mAscendingOrder( ascending ), d( 0 )
+NameSortMode::NameSortMode(NameType type, bool ascending) : mNameType(type), mAscendingOrder(ascending), d(0)
 {
 }
 
-bool FieldSortMode::lesser( const KABC::Addressee &first, const KABC::Addressee &second ) const
+bool NameSortMode::lesser(const KABC::Addressee &first, const KABC::Addressee &second) const
 {
-  if ( !mField )
-    return false;
-  else {
-    bool lesser = QString::localeAwareCompare( mField->value( first ), mField->value( second ) ) < 0;
-    if ( !mAscendingOrder )
-      lesser = !lesser;
+    bool lesser = false;
+
+    switch(mNameType)
+    {
+        case FormattedName:
+            lesser = QString::localeAwareCompare(first.formattedName(), second.formattedName()) < 0;
+            break;
+        case FamilyName:
+            lesser = QString::localeAwareCompare(first.familyName(), second.familyName()) < 0;
+            break;
+        case GivenName:
+            lesser = QString::localeAwareCompare(first.givenName(), second.givenName()) < 0;
+            break;
+        default:
+            lesser = false;
+            break;
+    }
+
+    if(!mAscendingOrder)
+        lesser = !lesser;
 
     return lesser;
-  }
+}
+
+FieldSortMode::FieldSortMode(KABC::Field *field, bool ascending) : mField(field), mAscendingOrder(ascending), d(0)
+{
+}
+
+bool FieldSortMode::lesser(const KABC::Addressee &first, const KABC::Addressee &second) const
+{
+    if(!mField)
+        return false;
+    else
+    {
+        bool lesser = QString::localeAwareCompare(mField->value(first), mField->value(second)) < 0;
+        if(!mAscendingOrder)
+            lesser = !lesser;
+
+        return lesser;
+    }
 }

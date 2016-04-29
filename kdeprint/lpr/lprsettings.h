@@ -20,7 +20,7 @@
 #ifndef LPRSETTINGS_H
 #define LPRSETTINGS_H
 
-#if !defined( _KDEPRINT_COMPILE ) && defined( __GNUC__ )
+#if !defined(_KDEPRINT_COMPILE) && defined(__GNUC__)
 #warning internal header, do not use except if you are a KDEPrint developer
 #endif
 
@@ -34,34 +34,49 @@
  * if you're a KDEPrint developer. The API might change in the
  * future and binary compatibility might be broken.
  */
-class LprSettings : public QObject, public KPReloadObject
-{
+class LprSettings : public QObject, public KPReloadObject {
 public:
-	LprSettings(QObject *parent = 0, const char *name = 0);
-	~LprSettings();
+    LprSettings(QObject *parent = 0, const char *name = 0);
+    ~LprSettings();
 
-	static LprSettings* self();
+    static LprSettings *self();
 
-	enum Mode { LPR, LPRng };
-	Mode mode() const		{ return m_mode; }
-	void setMode(Mode m)	{ m_mode = m; }
-	QString printcapFile();
-	QString defaultRemoteHost();
-	bool isLocalPrintcap()		{ return m_local; }
-	QString baseSpoolDir()		{ return m_spooldir; }
+    enum Mode
+    {
+        LPR,
+        LPRng
+    };
+    Mode mode() const
+    {
+        return m_mode;
+    }
+    void setMode(Mode m)
+    {
+        m_mode = m;
+    }
+    QString printcapFile();
+    QString defaultRemoteHost();
+    bool isLocalPrintcap()
+    {
+        return m_local;
+    }
+    QString baseSpoolDir()
+    {
+        return m_spooldir;
+    }
 
 protected:
-	void init();
-	void reload();
-	void configChanged();
+    void init();
+    void reload();
+    void configChanged();
 
 private:
-	static LprSettings*	m_self;
-	Mode	m_mode;
-	QString	m_printcapfile;
-	bool	m_local;
-	QString	m_spooldir;
-	QString m_defaultremotehost;
+    static LprSettings *m_self;
+    Mode m_mode;
+    QString m_printcapfile;
+    bool m_local;
+    QString m_spooldir;
+    QString m_defaultremotehost;
 };
 
 #endif

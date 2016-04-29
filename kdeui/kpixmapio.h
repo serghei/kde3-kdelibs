@@ -84,8 +84,7 @@ struct KPixmapIOPrivate;
  * point in using it.
  */
 
-class KDEUI_EXPORT KPixmapIO
-{
+class KDEUI_EXPORT KPixmapIO {
 public:
     KPixmapIO();
     ~KPixmapIO();
@@ -139,9 +138,10 @@ public:
     /**
      * Shared memory allocation policies.
      */
-    enum ShmPolicies {
-	ShmDontKeep,
-	ShmKeepAndGrow
+    enum ShmPolicies
+    {
+        ShmDontKeep,
+        ShmKeepAndGrow
     };
 
     /**
@@ -163,10 +163,17 @@ private:
      * Supported XImage byte orders. The notation ARGB means bytes
      * containing A:R:G:B succeed in memory.
      */
-    enum ByteOrders {
-	bo32_ARGB, bo32_BGRA, bo24_RGB, bo24_BGR,
-	bo16_RGB_565, bo16_BGR_565, bo16_RGB_555,
-	bo16_BGR_555, bo8
+    enum ByteOrders
+    {
+        bo32_ARGB,
+        bo32_BGRA,
+        bo24_RGB,
+        bo24_BGR,
+        bo16_RGB_565,
+        bo16_BGR_565,
+        bo16_RGB_555,
+        bo16_BGR_555,
+        bo8
     };
 
     bool m_bShm;
@@ -178,8 +185,9 @@ private:
     void destroyShmSegment();
     void convertToXImage(const QImage &);
     QImage convertFromXImage();
+
 private:
-    KPixmapIOPrivate* d;
+    KPixmapIOPrivate *d;
 };
 
 #endif // __KPixmapIO_h_Included__

@@ -15,7 +15,7 @@
    along with this library; see the file COPYING.LIB.  If not, write to
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
-   
+
    $Id: selectionextdcopinterface.h 465272 2005-09-29 09:47:40Z mueller $
 */
 
@@ -33,25 +33,26 @@ namespace KTextEditor {
     DCOP interface for the SelectionInterfaceExt.
     @author Anders Lund <anders@alweb.dk>
 */
-class KTEXTEDITOR_EXPORT SelectionExtDCOPInterface : virtual public DCOPObject
-{
-  K_DCOP
-  public:
-    SelectionExtDCOPInterface( SelectionInterfaceExt *parent, const char *name );
+class KTEXTEDITOR_EXPORT SelectionExtDCOPInterface : virtual public DCOPObject {
+    K_DCOP
+public:
+    SelectionExtDCOPInterface(SelectionInterfaceExt *parent, const char *name);
     virtual ~SelectionExtDCOPInterface();
-  k_dcop:
-    /** The selection start line number */
-    int selStartLine();
+    k_dcop :
+        /** The selection start line number */
+        int
+        selStartLine();
     /** The selection start col */
     int selStartCol();
     /** The selection end line */
     int selEndLine();
     /** The selection end col */
     int selEndCol();
-  private:
+
+private:
     SelectionInterfaceExt *m_parent;
 };
 
-}  // namespace KTextEditor
+} // namespace KTextEditor
 
 #endif // _SELECTION_EXT_DCOP_INTERFACE_H_

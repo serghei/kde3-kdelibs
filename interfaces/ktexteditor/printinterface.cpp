@@ -22,17 +22,19 @@
 #include "printdcopinterface.h"
 #include "document.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivatePrintInterface
-{
-  public:
-    PrivatePrintInterface() {interface=0;}
-    ~PrivatePrintInterface() {}
+class PrivatePrintInterface {
+public:
+    PrivatePrintInterface()
+    {
+        interface = 0;
+    }
+    ~PrivatePrintInterface()
+    {
+    }
     PrintDCOPInterface *interface;
 };
-
 }
 
 using namespace KTextEditor;
@@ -41,34 +43,34 @@ unsigned int PrintInterface::globalPrintInterfaceNumber = 0;
 
 PrintInterface::PrintInterface()
 {
-  globalPrintInterfaceNumber++;
-  myPrintInterfaceNumber = globalPrintInterfaceNumber++;
+    globalPrintInterfaceNumber++;
+    myPrintInterfaceNumber = globalPrintInterfaceNumber++;
 
-  d = new PrivatePrintInterface();
-  QString name = "PrintInterface#" + QString::number(myPrintInterfaceNumber);
-  d->interface = new PrintDCOPInterface(this, name.latin1());
+    d = new PrivatePrintInterface();
+    QString name = "PrintInterface#" + QString::number(myPrintInterfaceNumber);
+    d->interface = new PrintDCOPInterface(this, name.latin1());
 }
 
 PrintInterface::~PrintInterface()
 {
-  delete d->interface;
-  delete d;
+    delete d->interface;
+    delete d;
 }
 
-unsigned int PrintInterface::printInterfaceNumber () const
+unsigned int PrintInterface::printInterfaceNumber() const
 {
-  return myPrintInterfaceNumber;
+    return myPrintInterfaceNumber;
 }
 
-void PrintInterface::setPrintInterfaceDCOPSuffix (const QCString &suffix)
+void PrintInterface::setPrintInterfaceDCOPSuffix(const QCString &suffix)
 {
-  d->interface->setObjId ("PrintInterface#"+suffix);
+    d->interface->setObjId("PrintInterface#" + suffix);
 }
 
-PrintInterface *KTextEditor::printInterface (Document *doc)
-{           
-  if (!doc)
-    return 0;
+PrintInterface *KTextEditor::printInterface(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<PrintInterface*>(doc->qt_cast("KTextEditor::PrintInterface"));
+    return static_cast< PrintInterface * >(doc->qt_cast("KTextEditor::PrintInterface"));
 }

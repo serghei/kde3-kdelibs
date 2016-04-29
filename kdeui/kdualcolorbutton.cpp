@@ -26,24 +26,23 @@
 #include <qbitmap.h>
 #include <qdrawutil.h>
 
-class KDualColorButton::KDualColorPrivate
-{
+class KDualColorButton::KDualColorPrivate {
 public:
-    QWidget* dialogParent;
+    QWidget *dialogParent;
 };
 
-KDualColorButton::KDualColorButton(QWidget *parent, const char *name, QWidget* dialogParent)
-  : QWidget(parent, name),
-    d (new KDualColorPrivate)
+KDualColorButton::KDualColorButton(QWidget *parent, const char *name, QWidget *dialogParent) : QWidget(parent, name), d(new KDualColorPrivate)
 {
-    if (!dialogParent && parent) {
-	d->dialogParent = parent;
-    } else {
-	d->dialogParent = dialogParent;
+    if(!dialogParent && parent)
+    {
+        d->dialogParent = parent;
+    }
+    else
+    {
+        d->dialogParent = dialogParent;
     }
 
-    arrowBitmap = new QBitmap(dcolorarrow_width, dcolorarrow_height,
-                              (const unsigned char *)dcolorarrow_bits, true);
+    arrowBitmap = new QBitmap(dcolorarrow_width, dcolorarrow_height, (const unsigned char *)dcolorarrow_bits, true);
     arrowBitmap->setMask(*arrowBitmap); // heh
     resetPixmap = new QPixmap((const char **)dcolorreset_xpm);
     fg = QBrush(Qt::black, SolidPattern);
@@ -56,15 +55,12 @@ KDualColorButton::KDualColorButton(QWidget *parent, const char *name, QWidget* d
     setAcceptDrops(true);
 }
 
-KDualColorButton::KDualColorButton(const QColor &fgColor, const QColor &bgColor,
-                                   QWidget *parent, const char *name, QWidget* dialogParent)
-  : QWidget(parent, name),
-    d (new KDualColorPrivate)
+KDualColorButton::KDualColorButton(const QColor &fgColor, const QColor &bgColor, QWidget *parent, const char *name, QWidget *dialogParent)
+    : QWidget(parent, name), d(new KDualColorPrivate)
 {
     d->dialogParent = dialogParent;
 
-    arrowBitmap = new QBitmap(dcolorarrow_width, dcolorarrow_height,
-                              (const unsigned char *)dcolorarrow_bits, true);
+    arrowBitmap = new QBitmap(dcolorarrow_width, dcolorarrow_height, (const unsigned char *)dcolorarrow_bits, true);
     arrowBitmap->setMask(*arrowBitmap);
     resetPixmap = new QPixmap((const char **)dcolorreset_xpm);
     fg = QBrush(fgColor, SolidPattern);
@@ -79,9 +75,9 @@ KDualColorButton::KDualColorButton(const QColor &fgColor, const QColor &bgColor,
 
 KDualColorButton::~KDualColorButton()
 {
-  delete d;
-  delete arrowBitmap;
-  delete resetPixmap;
+    delete d;
+    delete arrowBitmap;
+    delete resetPixmap;
 }
 
 QColor KDualColorButton::foreground() const
@@ -142,8 +138,8 @@ void KDualColorButton::setCurrent(DualColor s)
 
 void KDualColorButton::metrics(QRect &fgRect, QRect &bgRect)
 {
-    fgRect = QRect(0, 0, width()-14, height()-14);
-    bgRect = QRect(14, 14, width()-14, height()-14);
+    fgRect = QRect(0, 0, width() - 14, height() - 14);
+    bgRect = QRect(14, 14, width() - 14, height() - 14);
 }
 
 void KDualColorButton::paintEvent(QPaintEvent *)
@@ -154,14 +150,11 @@ void KDualColorButton::paintEvent(QPaintEvent *)
     metrics(fgRect, bgRect);
     QBrush defBrush = colorGroup().brush(QColorGroup::Button);
 
-    qDrawShadeRect(&p, bgRect, colorGroup(), curColor == Background, 2, 0,
-                   isEnabled() ? &bg : &defBrush);
-    qDrawShadeRect(&p, fgRect, colorGroup(), curColor == Foreground, 2, 0,
-                   isEnabled() ? &fg : &defBrush);
+    qDrawShadeRect(&p, bgRect, colorGroup(), curColor == Background, 2, 0, isEnabled() ? &bg : &defBrush);
+    qDrawShadeRect(&p, fgRect, colorGroup(), curColor == Foreground, 2, 0, isEnabled() ? &fg : &defBrush);
     p.setPen(colorGroup().shadow());
-    p.drawPixmap(fgRect.right()+2, 0, *arrowBitmap);
-    p.drawPixmap(0, fgRect.bottom()+2, *resetPixmap);
-
+    p.drawPixmap(fgRect.right() + 2, 0, *arrowBitmap);
+    p.drawPixmap(0, fgRect.bottom() + 2, *resetPixmap);
 }
 
 void KDualColorButton::dragEnterEvent(QDragEnterEvent *ev)
@@ -172,12 +165,15 @@ void KDualColorButton::dragEnterEvent(QDragEnterEvent *ev)
 void KDualColorButton::dropEvent(QDropEvent *ev)
 {
     QColor c;
-    if(KColorDrag::decode(ev, c)){
-        if(curColor == Foreground){
+    if(KColorDrag::decode(ev, c))
+    {
+        if(curColor == Foreground)
+        {
             fg.setColor(c);
             emit fgChanged(c);
         }
-        else{
+        else
+        {
             bg.setColor(c);
             emit(bgChanged(c));
         }
@@ -192,15 +188,18 @@ void KDualColorButton::mousePressEvent(QMouseEvent *ev)
     mPos = ev->pos();
     tmpColor = curColor;
     dragFlag = false;
-    if(fgRect.contains(mPos)){
+    if(fgRect.contains(mPos))
+    {
         curColor = Foreground;
         miniCtlFlag = false;
     }
-    else if(bgRect.contains(mPos)){
+    else if(bgRect.contains(mPos))
+    {
         curColor = Background;
         miniCtlFlag = false;
-   }
-    else if(ev->pos().x() > fgRect.width()){
+    }
+    else if(ev->pos().x() > fgRect.width())
+    {
         // We handle the swap and reset controls as soon as the mouse is
         // is pressed and ignore further events on this click (mosfet).
         QBrush c = fg;
@@ -210,7 +209,8 @@ void KDualColorButton::mousePressEvent(QMouseEvent *ev)
         emit bgChanged(bg.color());
         miniCtlFlag = true;
     }
-    else if(ev->pos().x() < bgRect.x()){
+    else if(ev->pos().x() < bgRect.x())
+    {
         fg.setColor(Qt::black);
         bg.setColor(Qt::white);
         emit fgChanged(fg.color());
@@ -223,13 +223,12 @@ void KDualColorButton::mousePressEvent(QMouseEvent *ev)
 
 void KDualColorButton::mouseMoveEvent(QMouseEvent *ev)
 {
-    if(!miniCtlFlag){
+    if(!miniCtlFlag)
+    {
         int delay = KGlobalSettings::dndEventDelay();
-        if(ev->x() >= mPos.x()+delay || ev->x() <= mPos.x()-delay ||
-           ev->y() >= mPos.y()+delay || ev->y() <= mPos.y()-delay) {
-            KColorDrag *d = new KColorDrag( curColor == Foreground ?
-                                            fg.color() : bg.color(),
-                                            this);
+        if(ev->x() >= mPos.x() + delay || ev->x() <= mPos.x() - delay || ev->y() >= mPos.y() + delay || ev->y() <= mPos.y() - delay)
+        {
+            KColorDrag *d = new KColorDrag(curColor == Foreground ? fg.color() : bg.color(), this);
             d->dragCopy();
             dragFlag = true;
         }
@@ -238,33 +237,42 @@ void KDualColorButton::mouseMoveEvent(QMouseEvent *ev)
 
 void KDualColorButton::mouseReleaseEvent(QMouseEvent *ev)
 {
-    if(!miniCtlFlag){
+    if(!miniCtlFlag)
+    {
         QRect fgRect, bgRect;
 
         metrics(fgRect, bgRect);
         if(dragFlag)
             curColor = tmpColor;
-        else if(fgRect.contains(ev->pos()) && curColor == Foreground){
-            if(tmpColor == Background){
+        else if(fgRect.contains(ev->pos()) && curColor == Foreground)
+        {
+            if(tmpColor == Background)
+            {
                 curColor = Foreground;
                 emit currentChanged(Foreground);
             }
-            else{
+            else
+            {
                 QColor newColor = fg.color();
-                if(KColorDialog::getColor(newColor, d->dialogParent) != QDialog::Rejected){
+                if(KColorDialog::getColor(newColor, d->dialogParent) != QDialog::Rejected)
+                {
                     fg.setColor(newColor);
                     emit fgChanged(newColor);
                 }
             }
         }
-        else if(bgRect.contains(ev->pos()) && curColor == Background){
-            if(tmpColor == Foreground){
+        else if(bgRect.contains(ev->pos()) && curColor == Background)
+        {
+            if(tmpColor == Foreground)
+            {
                 curColor = Background;
                 emit currentChanged(Background);
             }
-            else{
+            else
+            {
                 QColor newColor = bg.color();
-                if(KColorDialog::getColor(newColor, d->dialogParent) != QDialog::Rejected){
+                if(KColorDialog::getColor(newColor, d->dialogParent) != QDialog::Rejected)
+                {
                     bg.setColor(newColor);
                     emit bgChanged(newColor);
                 }
@@ -277,7 +285,8 @@ void KDualColorButton::mouseReleaseEvent(QMouseEvent *ev)
         miniCtlFlag = false;
 }
 
-void KDualColorButton::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KDualColorButton::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "kdualcolorbutton.moc"

@@ -37,8 +37,7 @@ struct DBusError;
  * @ref dbusconventions-errorname) and a message string detailing the error in
  * human presentable form.
  */
-class QDBUS_EXPORT QDBusError
-{
+class QDBUS_EXPORT QDBusError {
 public:
     /**
      * @brief Enum of standard D-Bus error types
@@ -268,7 +267,7 @@ public:
      *
      * @see name()
      */
-    QDBusError(const QString& error, const QString& message);
+    QDBusError(const QString &error, const QString &message);
 
     /**
      * @brief Returns the D-Bus error name
@@ -279,7 +278,10 @@ public:
      *
      * @see message()
      */
-    inline QString name() const { return nm; }
+    inline QString name() const
+    {
+        return nm;
+    }
 
     /**
      * @brief Returns a string describing the error
@@ -292,7 +294,10 @@ public:
      *
      * @see name()
      */
-    inline QString message() const { return msg; }
+    inline QString message() const
+    {
+        return msg;
+    }
 
     /**
      * @brief Returns a type for checking of standard errors
@@ -304,7 +309,10 @@ public:
      *
      * @see name()
      */
-    inline ErrorType type() const { return errorType; }
+    inline ErrorType type() const
+    {
+        return errorType;
+    }
 
     /**
      * @brief Returns whether the error object is valid
@@ -323,7 +331,7 @@ public:
      *
      * @return an error object of type #Failed with the given @p message
      */
-    static QDBusError stdFailed(const QString& message);
+    static QDBusError stdFailed(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for out of memory situations
@@ -332,7 +340,7 @@ public:
      *
      * @return an error object of type #NoMemory with the given @p message
      */
-    static QDBusError stdNoMemory(const QString& message);
+    static QDBusError stdNoMemory(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for expected reply missing
@@ -341,7 +349,7 @@ public:
      *
      * @return an error object of type #NoReply with the given @p message
      */
-    static QDBusError stdNoReply(const QString& message);
+    static QDBusError stdNoReply(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for generic IO errors
@@ -350,7 +358,7 @@ public:
      *
      * @return an error object of type #IOError with the given @p message
      */
-    static QDBusError stdIOError(const QString& message);
+    static QDBusError stdIOError(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for unsupported operations
@@ -359,7 +367,7 @@ public:
      *
      * @return an error object of type #NotSupported with the given @p message
      */
-    static QDBusError stdNotSupported(const QString& message);
+    static QDBusError stdNotSupported(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for exceeding a limited resource
@@ -368,7 +376,7 @@ public:
      *
      * @return an error object of type #LimitsExceeded with the given @p message
      */
-    static QDBusError stdLimitsExceeded(const QString& message);
+    static QDBusError stdLimitsExceeded(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for access to a resource being denied
@@ -377,7 +385,7 @@ public:
      *
      * @return an error object of type #AccessDenied with the given @p message
      */
-    static QDBusError stdAccessDenied(const QString& message);
+    static QDBusError stdAccessDenied(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for failed authentification
@@ -386,7 +394,7 @@ public:
      *
      * @return an error object of type #AuthFailed with the given @p message
      */
-    static QDBusError stdAuthFailed(const QString& message);
+    static QDBusError stdAuthFailed(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for timeouts during operations
@@ -395,7 +403,7 @@ public:
      *
      * @return an error object of type #Timeout with the given @p message
      */
-    static QDBusError stdTimeout(const QString& message);
+    static QDBusError stdTimeout(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for call arguments being invalid
@@ -404,7 +412,7 @@ public:
      *
      * @return an error object of type #InvalidArgs with the given @p message
      */
-    static QDBusError stdInvalidArgs(const QString& message);
+    static QDBusError stdInvalidArgs(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for a file not being available
@@ -413,7 +421,7 @@ public:
      *
      * @return an error object of type #FileNotFound with the given @p message
      */
-    static QDBusError stdFileNotFound(const QString& message);
+    static QDBusError stdFileNotFound(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for a file being in the way
@@ -422,7 +430,7 @@ public:
      *
      * @return an error object of type #FileExists with the given @p message
      */
-    static QDBusError stdFileExists(const QString& message);
+    static QDBusError stdFileExists(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for an unknown methods being called
@@ -431,7 +439,7 @@ public:
      *
      * @return an error object of type #UnknownMethod with the given @p message
      */
-    static QDBusError stdUnknownMethod(const QString& message);
+    static QDBusError stdUnknownMethod(const QString &message);
 
     /**
      * @brief Creates a D-Bus standard error for D-Bus type signature not valid
@@ -440,7 +448,7 @@ public:
      *
      * @return an error object of type #InvalidSignature with the given @p message
      */
-    static QDBusError stdInvalidSignature(const QString& message);
+    static QDBusError stdInvalidSignature(const QString &message);
 
 private:
     ErrorType errorType;
@@ -455,7 +463,7 @@ private:
      *
      * @see ErrorType
      */
-    QDBusError(ErrorType type, const QString& message);
+    QDBusError(ErrorType type, const QString &message);
 };
 
 #endif

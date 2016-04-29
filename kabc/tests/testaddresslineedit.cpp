@@ -8,22 +8,21 @@
 
 using namespace KABC;
 
-int main( int argc,char **argv )
+int main(int argc, char **argv)
 {
-  KAboutData aboutData( "testaddresslineedit",
-                        I18N_NOOP( "Test Address LineEdit" ), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KAboutData aboutData("testaddresslineedit", I18N_NOOP("Test Address LineEdit"), "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KApplication app;
+    KApplication app;
 
-  AddressLineEdit *lineEdit = new AddressLineEdit( 0 );
+    AddressLineEdit *lineEdit = new AddressLineEdit(0);
 
-  lineEdit->show();
-  app.setMainWidget( lineEdit );
-  
-  QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
+    lineEdit->show();
+    app.setMainWidget(lineEdit);
 
-  app.exec();
-  
-  delete lineEdit;
+    QObject::connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
+
+    app.exec();
+
+    delete lineEdit;
 }

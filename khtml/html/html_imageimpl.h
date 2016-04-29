@@ -35,10 +35,9 @@ namespace DOM {
 class DOMString;
 class HTMLFormElementImpl;
 
-class HTMLImageElementImpl
-    : public HTMLElementImpl, public khtml::CachedObjectClient
-{
+class HTMLImageElementImpl : public HTMLElementImpl, public khtml::CachedObjectClient {
     friend class HTMLFormElementImpl;
+
 public:
     HTMLImageElementImpl(DocumentImpl *doc, HTMLFormElementImpl *f = 0);
     ~HTMLImageElementImpl();
@@ -50,14 +49,17 @@ public:
     virtual void attach();
     virtual void removedFromDocument();
     virtual void insertedIntoDocument();
-    virtual void addId(const QString& id);
-    virtual void removeId(const QString& id);
+    virtual void addId(const QString &id);
+    virtual void removeId(const QString &id);
 
 
     long width() const;
     long height() const;
 
-    bool isServerMap() const { return ( ismap && !usemap.length() );  }
+    bool isServerMap() const
+    {
+        return (ismap && !usemap.length());
+    }
     /** Return the image for this element.
      *  This has to convert the pixmap into an image first.
      *  This will return undefined results if complete() is not true.
@@ -70,30 +72,39 @@ public:
 
     DOMString altText() const;
 
-    DOMString imageMap() const { return usemap; }
-    /** See if the image has been completely downloaded. 
+    DOMString imageMap() const
+    {
+        return usemap;
+    }
+    /** See if the image has been completely downloaded.
      * @return True if and only if the image is completely downloaded yet*/
     bool complete() const;
 
     virtual void notifyFinished(khtml::CachedObject *finishedObj);
     void dispatchLoadEvent();
+
 protected:
     DOMString usemap;
     bool ismap : 1;
     bool loadEventSent : 1;
-    khtml::CachedImage  *m_image;
+    khtml::CachedImage *m_image;
     HTMLFormElementImpl *m_form;
-    DOMString            m_name;
+    DOMString m_name;
 };
 
 
 //------------------------------------------------------------------
 
-class HTMLAreaElementImpl : public HTMLAnchorElementImpl
-{
+class HTMLAreaElementImpl : public HTMLAnchorElementImpl {
 public:
-
-    enum Shape { Default, Poly, Rect, Circle, Unknown };
+    enum Shape
+    {
+        Default,
+        Poly,
+        Rect,
+        Circle,
+        Unknown
+    };
 
     HTMLAreaElementImpl(DocumentImpl *doc);
     ~HTMLAreaElementImpl();
@@ -102,30 +113,34 @@ public:
 
     virtual void parseAttribute(AttributeImpl *attr);
 
-    bool isDefault() const { return shape==Default; }
+    bool isDefault() const
+    {
+        return shape == Default;
+    }
 
-    bool mapMouseEvent(int x_, int y_, int width_, int height_,
-                       khtml::RenderObject::NodeInfo& info);
+    bool mapMouseEvent(int x_, int y_, int width_, int height_, khtml::RenderObject::NodeInfo &info);
 
     virtual QRect getRect() const;
 
-    QRegion cachedRegion() const { return region; }
+    QRegion cachedRegion() const
+    {
+        return region;
+    }
 
 protected:
     QRegion getRegion(int width_, int height) const;
     QRegion region;
-    khtml::Length* m_coords;
+    khtml::Length *m_coords;
     int m_coordsLen;
     int lastw, lasth;
-    Shape shape  : 3;
-    bool nohref  : 1;
+    Shape shape : 3;
+    bool nohref : 1;
 };
 
 
 // -------------------------------------------------------------------------
 
-class HTMLMapElementImpl : public HTMLElementImpl
-{
+class HTMLMapElementImpl : public HTMLElementImpl {
 public:
     HTMLMapElementImpl(DocumentImpl *doc);
 
@@ -133,18 +148,20 @@ public:
 
     virtual Id id() const;
 
-    virtual DOMString getName() const { return name; }
+    virtual DOMString getName() const
+    {
+        return name;
+    }
 
     virtual void parseAttribute(AttributeImpl *attr);
 
-    bool mapMouseEvent(int x_, int y_, int width_, int height_,
-                       khtml::RenderObject::NodeInfo& info);
-private:
+    bool mapMouseEvent(int x_, int y_, int width_, int height_, khtml::RenderObject::NodeInfo &info);
 
+private:
     QString name;
 };
 
 
-} //namespace
+} // namespace
 
 #endif

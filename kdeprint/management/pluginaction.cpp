@@ -20,15 +20,15 @@
 #include "pluginaction.h"
 
 // automatically connect to "pluginActionActived(int)" in the receiver.
-PluginAction::PluginAction(int ID, const QString& txt, const QString& icon, int accel, QObject *parent, const char *name)
-: KAction(txt, icon, accel, parent, name), m_id(ID)
+PluginAction::PluginAction(int ID, const QString &txt, const QString &icon, int accel, QObject *parent, const char *name)
+    : KAction(txt, icon, accel, parent, name), m_id(ID)
 {
-	connect(this, SIGNAL(activated()), SLOT(slotActivated()));
+    connect(this, SIGNAL(activated()), SLOT(slotActivated()));
 }
 
 void PluginAction::slotActivated()
 {
-	emit activated(m_id);
+    emit activated(m_id);
 }
 
 #include "pluginaction.moc"

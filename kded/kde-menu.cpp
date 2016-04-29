@@ -32,15 +32,13 @@
 #include "kservicegroup.h"
 #include "kstandarddirs.h"
 
-static KCmdLineOptions options[] = {
-   { "utf8", I18N_NOOP("Output data in UTF-8 instead of local encoding"), 0 },
-   { "print-menu-id", I18N_NOOP("Print menu-id of the menu that contains\nthe application"), 0 },
-   { "print-menu-name", I18N_NOOP("Print menu name (caption) of the menu that\ncontains the application"), 0 },
-   { "highlight", I18N_NOOP("Highlight the entry in the menu"), 0 },
-   { "nocache-update", I18N_NOOP("Do not check if sycoca database is up to date"), 0 },
-   { "+<application-id>", I18N_NOOP("The id of the menu entry to locate"), 0 },
-   KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"utf8", I18N_NOOP("Output data in UTF-8 instead of local encoding"), 0},
+                                    {"print-menu-id", I18N_NOOP("Print menu-id of the menu that contains\nthe application"), 0},
+                                    {"print-menu-name", I18N_NOOP("Print menu name (caption) of the menu that\ncontains the application"), 0},
+                                    {"highlight", I18N_NOOP("Highlight the entry in the menu"), 0},
+                                    {"nocache-update", I18N_NOOP("Do not check if sycoca database is up to date"), 0},
+                                    {"+<application-id>", I18N_NOOP("The id of the menu entry to locate"), 0},
+                                    KCmdLineLastOption};
 
 static const char appName[] = "kde-menu";
 static const char appVersion[] = "1.0";
@@ -52,120 +50,118 @@ static bool bHighlight;
 
 static void result(const QString &txt)
 {
-   if (utf8)
-      puts( txt.utf8() );
-   else
-      puts( txt.local8Bit() );
+    if(utf8)
+        puts(txt.utf8());
+    else
+        puts(txt.local8Bit());
 }
 
 static void error(int exitCode, const QString &txt)
 {
-   qWarning("kde-menu: %s", txt.local8Bit().data());
-   exit(exitCode);
+    qWarning("kde-menu: %s", txt.local8Bit().data());
+    exit(exitCode);
 }
 
 static void findMenuEntry(KServiceGroup::Ptr parent, const QString &name, const QString &menuId)
 {
-   KServiceGroup::List list = parent->entries(true, true, false);
-   KServiceGroup::List::ConstIterator it = list.begin();
-   for (; it != list.end(); ++it)
-   {
-      KSycocaEntry * e = *it;
+    KServiceGroup::List list = parent->entries(true, true, false);
+    KServiceGroup::List::ConstIterator it = list.begin();
+    for(; it != list.end(); ++it)
+    {
+        KSycocaEntry *e = *it;
 
-      if (e->isType(KST_KServiceGroup))
-      {
-         KServiceGroup::Ptr g(static_cast<KServiceGroup *>(e));
-         
-         findMenuEntry(g, name.isEmpty() ? g->caption() : name+"/"+g->caption(), menuId);
-      }
-      else if (e->isType(KST_KService))
-      {
-         KService::Ptr s(static_cast<KService *>(e));
-         if (s->menuId() == menuId)
-         {
-            if (bPrintMenuId)
+        if(e->isType(KST_KServiceGroup))
+        {
+            KServiceGroup::Ptr g(static_cast< KServiceGroup * >(e));
+
+            findMenuEntry(g, name.isEmpty() ? g->caption() : name + "/" + g->caption(), menuId);
+        }
+        else if(e->isType(KST_KService))
+        {
+            KService::Ptr s(static_cast< KService * >(e));
+            if(s->menuId() == menuId)
             {
-               result(parent->relPath());
+                if(bPrintMenuId)
+                {
+                    result(parent->relPath());
+                }
+                if(bPrintMenuName)
+                {
+                    result(name);
+                }
+                if(bHighlight)
+                {
+                    DCOPRef kicker("kicker", "kicker");
+                    bool result = kicker.call("highlightMenuItem", menuId);
+                    if(!result)
+                        error(3, i18n("Menu item '%1' could not be highlighted.").arg(menuId).local8Bit());
+                }
+                exit(0);
             }
-            if (bPrintMenuName)
-            {
-               result(name);
-            }
-            if (bHighlight)
-            {
-               DCOPRef kicker( "kicker", "kicker" );
-               bool result = kicker.call( "highlightMenuItem", menuId );
-               if (!result)
-                  error(3, i18n("Menu item '%1' could not be highlighted.").arg(menuId).local8Bit());
-            }
-            exit(0);
-         }
-      }
-   }
+        }
+    }
 }
 
 
 int main(int argc, char **argv)
 {
-   KLocale::setMainCatalogue("kdelibs");
-   const char *description = I18N_NOOP("KDE Menu query tool.\n"
-   "This tool can be used to find in which menu a specific application is shown.\n"
-   "The --highlight option can be used to visually indicate to the user where\n"
-   "in the KDE menu a specific application is located.");
-   
-   KAboutData d(appName, I18N_NOOP("kde-menu"), appVersion,
-                description,
-                KAboutData::License_GPL, "(c) 2003 Waldo Bastian");
-   d.addAuthor("Waldo Bastian", I18N_NOOP("Author"), "bastian@kde.org");
+    KLocale::setMainCatalogue("kdelibs");
+    const char *description = I18N_NOOP(
+        "KDE Menu query tool.\n"
+        "This tool can be used to find in which menu a specific application is shown.\n"
+        "The --highlight option can be used to visually indicate to the user where\n"
+        "in the KDE menu a specific application is located.");
 
-   KCmdLineArgs::init(argc, argv, &d);
-   KCmdLineArgs::addCmdLineOptions(options);
+    KAboutData d(appName, I18N_NOOP("kde-menu"), appVersion, description, KAboutData::License_GPL, "(c) 2003 Waldo Bastian");
+    d.addAuthor("Waldo Bastian", I18N_NOOP("Author"), "bastian@kde.org");
 
-//   KApplication k(false, false);
-   KApplication k(false);
-   k.disableSessionManagement();
+    KCmdLineArgs::init(argc, argv, &d);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-   // this program is in kdelibs so it uses kdelibs as catalog
-   KLocale::setMainCatalogue("kdelibs");
+    //   KApplication k(false, false);
+    KApplication k(false);
+    k.disableSessionManagement();
 
-   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-   if (args->count() != 1)
-      KCmdLineArgs::usage(i18n("You must specify an application-id such as 'kde-konsole.desktop'"));
+    // this program is in kdelibs so it uses kdelibs as catalog
+    KLocale::setMainCatalogue("kdelibs");
 
-   utf8 = args->isSet("utf8");
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    if(args->count() != 1)
+        KCmdLineArgs::usage(i18n("You must specify an application-id such as 'kde-konsole.desktop'"));
 
-   bPrintMenuId = args->isSet("print-menu-id");
-   bPrintMenuName = args->isSet("print-menu-name");
-   bHighlight = args->isSet("highlight");
+    utf8 = args->isSet("utf8");
 
-   if (!bPrintMenuId && !bPrintMenuName && !bHighlight)
-      KCmdLineArgs::usage(i18n("You must specify at least one of --print-menu-id, --print-menu-name or --highlight"));
+    bPrintMenuId = args->isSet("print-menu-id");
+    bPrintMenuName = args->isSet("print-menu-name");
+    bHighlight = args->isSet("highlight");
 
-   if (args->isSet("cache-update"))
-   {
-      QStringList args;
-      args.append("--incremental");
-      args.append("--checkstamps");
-      QString command = "kbuildsycoca";
-      QCString _launcher = KApplication::launcher();
-      if (!DCOPRef(_launcher, _launcher).call("kdeinit_exec_wait", command, args).isValid())
-      {
-         qWarning("Can't talk to klauncher!");
-         command = KGlobal::dirs()->findExe(command);
-         command += " " + args.join(" ");
-         system(command.local8Bit());
-      }
-   }
+    if(!bPrintMenuId && !bPrintMenuName && !bHighlight)
+        KCmdLineArgs::usage(i18n("You must specify at least one of --print-menu-id, --print-menu-name or --highlight"));
 
-   QString menuId = QFile::decodeName(args->arg(0));
-   KService::Ptr s = KService::serviceByMenuId(menuId);
-   
-   if (!s)
-      error(1, i18n("No menu item '%1'.").arg(menuId));
+    if(args->isSet("cache-update"))
+    {
+        QStringList args;
+        args.append("--incremental");
+        args.append("--checkstamps");
+        QString command = "kbuildsycoca";
+        QCString _launcher = KApplication::launcher();
+        if(!DCOPRef(_launcher, _launcher).call("kdeinit_exec_wait", command, args).isValid())
+        {
+            qWarning("Can't talk to klauncher!");
+            command = KGlobal::dirs()->findExe(command);
+            command += " " + args.join(" ");
+            system(command.local8Bit());
+        }
+    }
 
-   findMenuEntry(KServiceGroup::root(), "", menuId);
+    QString menuId = QFile::decodeName(args->arg(0));
+    KService::Ptr s = KService::serviceByMenuId(menuId);
 
-   error(2, i18n("Menu item '%1' not found in menu.").arg(menuId));
-   return 2;
+    if(!s)
+        error(1, i18n("No menu item '%1'.").arg(menuId));
+
+    findMenuEntry(KServiceGroup::root(), "", menuId);
+
+    error(2, i18n("Menu item '%1' not found in menu.").arg(menuId));
+    return 2;
 }
-

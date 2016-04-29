@@ -38,17 +38,16 @@ namespace KParts {
  *
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-class KPARTS_EXPORT HistoryProvider : public QObject
-{
+class KPARTS_EXPORT HistoryProvider : public QObject {
     Q_OBJECT
 
 public:
-    static HistoryProvider * self();
+    static HistoryProvider *self();
 
     /**
      * Creates a KHistoryProvider with an optional parent and name
      */
-    HistoryProvider( QObject *parent = 0L, const char *name = 0 );
+    HistoryProvider(QObject *parent = 0L, const char *name = 0);
 
     /**
      * Destroys the provider.
@@ -58,17 +57,17 @@ public:
     /**
      * @returns true if @p item is present in the history.
      */
-    virtual bool contains( const QString& item ) const;
+    virtual bool contains(const QString &item) const;
 
     /**
      * Inserts @p item into the history.
      */
-    virtual void insert( const QString& item );
+    virtual void insert(const QString &item);
 
     /**
      * Removes @p item from the history.
      */
-    virtual void remove( const QString& item );
+    virtual void remove(const QString &item);
 
     /**
      * Clears the history. The cleared() signal is emitted after clearing.
@@ -87,23 +86,23 @@ signals:
      * history has changed. Put those items that were added or removed from the
      * history into @p items.
      */
-    void updated( const QStringList& items );
+    void updated(const QStringList &items);
 
     /**
      * Emitted after the item has been inserted
      */
-    void inserted( const QString& item );
+    void inserted(const QString &item);
 
 private:
     static HistoryProvider *s_self;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class HistoryProviderPrivate;
     HistoryProviderPrivate *d;
 };
-
 }
 
 #endif // KHISTORYPROVIDER_H

@@ -48,9 +48,7 @@ class KTimezonesPrivate;
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KDECORE_EXPORT KTimezoneSource :
-    public KShared
-{
+class KDECORE_EXPORT KTimezoneSource : public KShared {
 public:
     KTimezoneSource(const QString &db);
     virtual ~KTimezoneSource();
@@ -82,8 +80,7 @@ private:
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KDECORE_EXPORT KTimezone
-{
+class KDECORE_EXPORT KTimezone {
 public:
     /**
      * A representation for unknown locations; this is a float
@@ -113,10 +110,8 @@ public:
      * @param longitude in degrees, UNKNOWN if not known.
      * @param comment description of the timezone, if any.
      */
-    KTimezone(
-        KSharedPtr<KTimezoneSource> db, const QString &name,
-        const QString &countryCode = QString(), float latitude = UNKNOWN, float longitude = UNKNOWN,
-        const QString &comment = QString());
+    KTimezone(KSharedPtr< KTimezoneSource > db, const QString &name, const QString &countryCode = QString(), float latitude = UNKNOWN,
+              float longitude = UNKNOWN, const QString &comment = QString());
     ~KTimezone();
 
     /**
@@ -188,10 +183,10 @@ public:
     bool parse(KTimezoneDetails &dataReceiver) const;
 
 private:
-    KTimezone(const KTimezone&);
-    KTimezone& operator=(const KTimezone&);
+    KTimezone(const KTimezone &);
+    KTimezone &operator=(const KTimezone &);
 
-    KSharedPtr<KTimezoneSource> m_db;
+    KSharedPtr< KTimezoneSource > m_db;
     QString m_name;
     QString m_countryCode;
     float m_latitude;
@@ -222,8 +217,7 @@ private:
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KDECORE_EXPORT KTimezoneDetails
-{
+class KDECORE_EXPORT KTimezoneDetails {
 public:
     KTimezoneDetails();
     virtual ~KTimezoneDetails();
@@ -241,9 +235,7 @@ public:
     /**
      * Called when the header is seen.
      */
-    virtual void gotHeader(
-        unsigned ttIsGmtCnt, unsigned ttIsStdCnt, unsigned leapCnt,
-        unsigned timeCnt, unsigned typeCnt, unsigned charCnt);
+    virtual void gotHeader(unsigned ttIsGmtCnt, unsigned ttIsStdCnt, unsigned leapCnt, unsigned timeCnt, unsigned typeCnt, unsigned charCnt);
 
     /**
      * Called when a transition time is seen.
@@ -293,8 +285,7 @@ private:
  * @since 3.5
  * @author S.R.Haque <srhaque@iee.org>.
  */
-class KDECORE_EXPORT KTimezones
-{
+class KDECORE_EXPORT KTimezones {
 public:
     KTimezones();
     ~KTimezones();
@@ -323,7 +314,7 @@ public:
      */
     const KTimezone *zone(const QString &name);
 
-    typedef QMap<QString, KTimezone *> ZoneMap;
+    typedef QMap< QString, KTimezone * > ZoneMap;
 
     /**
      * Return timezone database.
@@ -337,8 +328,8 @@ public:
     void add(KTimezone *zone);
 
 private:
-    KTimezones(const KTimezones&);
-    KTimezones& operator=(const KTimezones&);
+    KTimezones(const KTimezones &);
+    KTimezones &operator=(const KTimezones &);
 
     float convertCoordinate(const QString &coordinate);
 

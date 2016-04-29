@@ -33,12 +33,15 @@
  * A class for importing IE bookmarks
  * @deprecated
  */
-class KIO_EXPORT_DEPRECATED KIEBookmarkImporter : public QObject
-{
+class KIO_EXPORT_DEPRECATED KIEBookmarkImporter : public QObject {
     Q_OBJECT
 public:
-    KIEBookmarkImporter( const QString & fileName ) : m_fileName(fileName) {}
-    ~KIEBookmarkImporter() {}
+    KIEBookmarkImporter(const QString &fileName) : m_fileName(fileName)
+    {
+    }
+    ~KIEBookmarkImporter()
+    {
+    }
 
     void parseIEBookmarks();
 
@@ -46,14 +49,14 @@ public:
     static QString IEBookmarksDir();
 
 signals:
-    void newBookmark( const QString & text, const QCString & url, const QString & additionalInfo );
-    void newFolder( const QString & text, bool open, const QString & additionalInfo );
+    void newBookmark(const QString &text, const QCString &url, const QString &additionalInfo);
+    void newFolder(const QString &text, bool open, const QString &additionalInfo);
     void newSeparator();
     void endFolder();
 
 protected:
-    void parseIEBookmarks_dir( QString dirname, QString name = QString::null );
-    void parseIEBookmarks_url_file( QString filename, QString name );
+    void parseIEBookmarks_dir(QString dirname, QString name = QString::null);
+    void parseIEBookmarks_url_file(QString filename, QString name);
 
     QString m_fileName;
 };
@@ -62,12 +65,14 @@ protected:
  * A class for importing IE bookmarks
  * @since 3.2
  */
-class KIO_EXPORT KIEBookmarkImporterImpl : public KBookmarkImporterBase
-{
+class KIO_EXPORT KIEBookmarkImporterImpl : public KBookmarkImporterBase {
 public:
-    KIEBookmarkImporterImpl() { }
+    KIEBookmarkImporterImpl()
+    {
+    }
     virtual void parse();
     virtual QString findDefaultLocation(bool forSaving = false) const;
+
 private:
     class KIEBookmarkImporterImplPrivate *d;
 };
@@ -75,14 +80,17 @@ private:
 /*
  * @since 3.2
  */
-class KIO_EXPORT KIEBookmarkExporterImpl : public KBookmarkExporterBase
-{
+class KIO_EXPORT KIEBookmarkExporterImpl : public KBookmarkExporterBase {
 public:
-    KIEBookmarkExporterImpl(KBookmarkManager* mgr, const QString & path)
-      : KBookmarkExporterBase(mgr, path) 
-    { ; }
-    virtual ~KIEBookmarkExporterImpl() {}
+    KIEBookmarkExporterImpl(KBookmarkManager *mgr, const QString &path) : KBookmarkExporterBase(mgr, path)
+    {
+        ;
+    }
+    virtual ~KIEBookmarkExporterImpl()
+    {
+    }
     virtual void write(KBookmarkGroup);
+
 private:
     class KIEBookmarkExporterImplPrivate *d;
 };

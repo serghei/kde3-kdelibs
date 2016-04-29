@@ -37,70 +37,72 @@ class KFileTreeItem;
 /**
  * An item for a KFileTreeView that knows about its own KFileItem.
  */
-class KIO_EXPORT KFileTreeViewItem : public KListViewItem
-{
+class KIO_EXPORT KFileTreeViewItem : public KListViewItem {
 public:
-   KFileTreeViewItem( KFileTreeViewItem*, KFileItem*, KFileTreeBranch * );
-   KFileTreeViewItem( KFileTreeView*, KFileItem*, KFileTreeBranch * );
-   ~KFileTreeViewItem();
+    KFileTreeViewItem(KFileTreeViewItem *, KFileItem *, KFileTreeBranch *);
+    KFileTreeViewItem(KFileTreeView *, KFileItem *, KFileTreeBranch *);
+    ~KFileTreeViewItem();
 
-   /**
-    * @return the KFileTreeBranch the item is sorted in.
-    */
-   KFileTreeBranch* branch() const     { return m_branch; }
+    /**
+     * @return the KFileTreeBranch the item is sorted in.
+     */
+    KFileTreeBranch *branch() const
+    {
+        return m_branch;
+    }
 
-   /**
-    * @return the KFileItem the viewitem is representing.
-    */
-   KFileItem *fileItem() const         { return m_kfileitem; }
+    /**
+     * @return the KFileItem the viewitem is representing.
+     */
+    KFileItem *fileItem() const
+    {
+        return m_kfileitem;
+    }
 
-   /**
-    * @return the path of the item.
-    */
-   QString path() const;
+    /**
+     * @return the path of the item.
+     */
+    QString path() const;
 
-   /**
-    * @return the items KURL
-    */
-   KURL    url() const;
+    /**
+     * @return the items KURL
+     */
+    KURL url() const;
 
-   /**
-    * @return if the item represents a directory
-    */
-   bool    isDir() const;
+    /**
+     * @return if the item represents a directory
+     */
+    bool isDir() const;
 
-   /**
-    * @return if this directory was already seen by a KDirLister.
-    */
-   bool    alreadyListed() const;
+    /**
+     * @return if this directory was already seen by a KDirLister.
+     */
+    bool alreadyListed() const;
 
-   /**
-    * set the flag if the directory was already listed.
-    */
-   void    setListed( bool wasListed );
+    /**
+     * set the flag if the directory was already listed.
+     */
+    void setListed(bool wasListed);
 
 protected:
-
 private:
-
-   KFileItem *m_kfileitem;
-   KFileTreeBranch *m_branch;
-   bool  m_wasListed;
-   class KFileTreeViewItemPrivate;
-   KFileTreeViewItemPrivate *d;
+    KFileItem *m_kfileitem;
+    KFileTreeBranch *m_branch;
+    bool m_wasListed;
+    class KFileTreeViewItemPrivate;
+    KFileTreeViewItemPrivate *d;
 };
 
 
 /**
  * List of KFileTreeViewItems
  */
-typedef QPtrList<KFileTreeViewItem> KFileTreeViewItemList;
+typedef QPtrList< KFileTreeViewItem > KFileTreeViewItemList;
 
 /**
  * Iterator for KFileTreeViewItemList
  */
-typedef QPtrListIterator<KFileTreeViewItem> KFileTreeViewItemListIterator;
+typedef QPtrListIterator< KFileTreeViewItem > KFileTreeViewItemListIterator;
 
 
 #endif
-

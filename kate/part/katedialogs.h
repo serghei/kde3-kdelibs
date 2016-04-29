@@ -46,10 +46,9 @@ struct syntaxContextData;
 class KateDocument;
 class KateView;
 
-namespace KIO
-{
-  class Job;
-  class TransferJob;
+namespace KIO {
+class Job;
+class TransferJob;
 }
 
 class KAccel;
@@ -77,52 +76,53 @@ class QVBox;
 class QListViewItem;
 class QCheckBox;
 
-class KateConfigPage : public Kate::ConfigPage
-{
-  Q_OBJECT
+class KateConfigPage : public Kate::ConfigPage {
+    Q_OBJECT
 
-  public:
-    KateConfigPage ( QWidget *parent=0, const char *name=0 );
-    virtual ~KateConfigPage ();
+public:
+    KateConfigPage(QWidget *parent = 0, const char *name = 0);
+    virtual ~KateConfigPage();
 
-  public:
-    bool changed () { return m_changed; }
+public:
+    bool changed()
+    {
+        return m_changed;
+    }
 
-  private slots:
-    void somethingHasChanged ();
+private slots:
+    void somethingHasChanged();
 
-  protected:
+protected:
     bool m_changed;
 };
 
-class KateGotoLineDialog : public KDialogBase
-{
-  Q_OBJECT
+class KateGotoLineDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-
+public:
     KateGotoLineDialog(QWidget *parent, int line, int max);
     int getLine();
 
-  protected:
-
+protected:
     KIntNumInput *e1;
     QPushButton *btnOK;
 };
 
-class KateIndentConfigTab : public KateConfigPage
-{
-  Q_OBJECT
+class KateIndentConfigTab : public KateConfigPage {
+    Q_OBJECT
 
-  public:
+public:
     KateIndentConfigTab(QWidget *parent);
 
-  protected slots:
+protected slots:
     void somethingToggled();
-    void indenterSelected (int);
+    void indenterSelected(int);
 
-  protected:
-    enum { numFlags = 8 };
+protected:
+    enum
+    {
+        numFlags = 8
+    };
     static const int flags[numFlags];
     QCheckBox *opt[numFlags];
     KIntNumInput *indentationWidth;
@@ -130,24 +130,26 @@ class KateIndentConfigTab : public KateConfigPage
     KComboBox *m_indentMode;
     QPushButton *m_configPage;
 
-  public slots:
+public slots:
     void configPage();
 
-    void apply ();
-    void reload ();
-    void reset () {};
-    void defaults () {};
+    void apply();
+    void reload();
+    void reset(){};
+    void defaults(){};
 };
 
-class KateSelectConfigTab : public KateConfigPage
-{
-  Q_OBJECT
+class KateSelectConfigTab : public KateConfigPage {
+    Q_OBJECT
 
-  public:
+public:
     KateSelectConfigTab(QWidget *parent);
 
-  protected:
-    enum { numFlags = 2 };
+protected:
+    enum
+    {
+        numFlags = 2
+    };
     static const int flags[numFlags];
     QCheckBox *opt[numFlags];
 
@@ -155,22 +157,24 @@ class KateSelectConfigTab : public KateConfigPage
     KIntNumInput *e4;
     QCheckBox *e6;
 
-  public slots:
-    void apply ();
-    void reload ();
-    void reset () {};
-    void defaults () {};
+public slots:
+    void apply();
+    void reload();
+    void reset(){};
+    void defaults(){};
 };
 
-class KateEditConfigTab : public KateConfigPage
-{
+class KateEditConfigTab : public KateConfigPage {
     Q_OBJECT
 
-  public:
+public:
     KateEditConfigTab(QWidget *parent);
 
-  protected:
-    enum { numFlags = 5 };
+protected:
+    enum
+    {
+        numFlags = 5
+    };
     static const int flags[numFlags];
     QCheckBox *opt[numFlags];
 
@@ -180,152 +184,146 @@ class KateEditConfigTab : public KateConfigPage
     KComboBox *e5;
     QCheckBox *m_wwmarker;
 
-  public slots:
-    void apply ();
-    void reload ();
-    void reset () {};
-    void defaults () {};
+public slots:
+    void apply();
+    void reload();
+    void reset(){};
+    void defaults(){};
 };
 
-class KateViewDefaultsConfig : public KateConfigPage
-{
-  Q_OBJECT
+class KateViewDefaultsConfig : public KateConfigPage {
+    Q_OBJECT
 
-  public:
-    KateViewDefaultsConfig( QWidget *parent );
+public:
+    KateViewDefaultsConfig(QWidget *parent);
     ~KateViewDefaultsConfig();
 
-  private:
+private:
     QCheckBox *m_line;
     QCheckBox *m_folding;
     QCheckBox *m_collapseTopLevel;
     QCheckBox *m_icons;
     QCheckBox *m_scrollBarMarks;
     QCheckBox *m_dynwrap;
-	QCheckBox *m_showIndentLines;
+    QCheckBox *m_showIndentLines;
     KIntNumInput *m_dynwrapAlignLevel;
     QLabel *m_dynwrapIndicatorsLabel;
     KComboBox *m_dynwrapIndicatorsCombo;
     QButtonGroup *m_bmSort;
 
-  public slots:
-  void apply ();
-  void reload ();
-  void reset ();
-  void defaults ();
+public slots:
+    void apply();
+    void reload();
+    void reset();
+    void defaults();
 };
 
-class KateEditKeyConfiguration: public KateConfigPage
-{
-  Q_OBJECT
+class KateEditKeyConfiguration : public KateConfigPage {
+    Q_OBJECT
 
-  public:
-    KateEditKeyConfiguration( QWidget* parent, KateDocument* doc );
+public:
+    KateEditKeyConfiguration(QWidget *parent, KateDocument *doc);
 
-  public slots:
+public slots:
     void apply();
-    void reload()   {};
-    void reset()    {};
-    void defaults() {};
+    void reload(){};
+    void reset(){};
+    void defaults(){};
 
-  protected:
-    void showEvent ( QShowEvent * );
+protected:
+    void showEvent(QShowEvent *);
 
-  private:
+private:
     bool m_ready;
     class KateDocument *m_doc;
-    KKeyChooser* m_keyChooser;
+    KKeyChooser *m_keyChooser;
     class KActionCollection *m_ac;
 };
 
-class KateSaveConfigTab : public KateConfigPage
-{
-  Q_OBJECT
-  public:
-  KateSaveConfigTab( QWidget *parent );
+class KateSaveConfigTab : public KateConfigPage {
+    Q_OBJECT
+public:
+    KateSaveConfigTab(QWidget *parent);
 
-  public slots:
-  void apply();
-  void reload();
-  void reset();
-  void defaults();
+public slots:
+    void apply();
+    void reload();
+    void reset();
+    void defaults();
 
-  protected:
-  KComboBox *m_encoding, *m_eol;
-  QCheckBox *cbLocalFiles, *cbRemoteFiles;
-  QCheckBox *replaceTabs, *removeSpaces, *allowEolDetection;
-  QLineEdit *leBuPrefix;
-  QLineEdit *leBuSuffix;
-  KIntNumInput *dirSearchDepth;
-  class QSpinBox *blockCount;
-  class QLabel *blockCountLabel;
+protected:
+    KComboBox *m_encoding, *m_eol;
+    QCheckBox *cbLocalFiles, *cbRemoteFiles;
+    QCheckBox *replaceTabs, *removeSpaces, *allowEolDetection;
+    QLineEdit *leBuPrefix;
+    QLineEdit *leBuSuffix;
+    KIntNumInput *dirSearchDepth;
+    class QSpinBox *blockCount;
+    class QLabel *blockCountLabel;
 };
 
 class KatePartPluginListItem;
 
-class KatePartPluginListView : public KListView
-{
-  Q_OBJECT
+class KatePartPluginListView : public KListView {
+    Q_OBJECT
 
-  friend class KatePartPluginListItem;
+    friend class KatePartPluginListItem;
 
-  public:
-    KatePartPluginListView (QWidget *parent = 0, const char *name = 0);
+public:
+    KatePartPluginListView(QWidget *parent = 0, const char *name = 0);
 
-  signals:
+signals:
     void stateChange(KatePartPluginListItem *, bool);
 
-  private:
+private:
     void stateChanged(KatePartPluginListItem *, bool);
 };
 
 class QListViewItem;
-class KatePartPluginConfigPage : public KateConfigPage
-{
-  Q_OBJECT
+class KatePartPluginConfigPage : public KateConfigPage {
+    Q_OBJECT
 
-  public:
-    KatePartPluginConfigPage (QWidget *parent);
-    ~KatePartPluginConfigPage ();
+public:
+    KatePartPluginConfigPage(QWidget *parent);
+    ~KatePartPluginConfigPage();
 
-  public slots:
-    void apply ();
-    void reload () {};
-    void reset () {};
-    void defaults () {};
+public slots:
+    void apply();
+    void reload(){};
+    void reset(){};
+    void defaults(){};
 
-  private slots:
-    void slotCurrentChanged( QListViewItem * );
+private slots:
+    void slotCurrentChanged(QListViewItem *);
     void slotConfigure();
-    void slotStateChanged( KatePartPluginListItem *, bool );
+    void slotStateChanged(KatePartPluginListItem *, bool);
 
-  private:
+private:
     KatePartPluginListView *listView;
-    QPtrList<KatePartPluginListItem> m_items;
+    QPtrList< KatePartPluginListItem > m_items;
     class QPushButton *btnConfigure;
 };
 
-class KateHlConfigPage : public KateConfigPage
-{
-  Q_OBJECT
+class KateHlConfigPage : public KateConfigPage {
+    Q_OBJECT
 
-  public:
-    KateHlConfigPage (QWidget *parent, KateDocument *doc);
-    ~KateHlConfigPage ();
+public:
+    KateHlConfigPage(QWidget *parent, KateDocument *doc);
+    ~KateHlConfigPage();
 
-  public slots:
-    void apply ();
-    void reload ();
-    void reset () {};
-    void defaults () {};
+public slots:
+    void apply();
+    void reload();
+    void reset(){};
+    void defaults(){};
 
-  protected slots:
+protected slots:
     void hlChanged(int);
     void hlDownload();
     void showMTDlg();
 
-  private:
-    void writeback ();
+private:
+    void writeback();
 
     QComboBox *hlCombo;
     QLineEdit *wildcards;
@@ -333,29 +331,28 @@ class KateHlConfigPage : public KateConfigPage
     class KIntNumInput *priority;
     class QLabel *author, *license;
 
-    QIntDict<KateHlData> hlDataDict;
+    QIntDict< KateHlData > hlDataDict;
     KateHlData *hlData;
 
-	KateDocument *m_doc;
+    KateDocument *m_doc;
 };
 
-class KateHlDownloadDialog: public KDialogBase
-{
-  Q_OBJECT
+class KateHlDownloadDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
+public:
     KateHlDownloadDialog(QWidget *parent, const char *name, bool modal);
     ~KateHlDownloadDialog();
 
-  private:
-    class QListView  *list;
+private:
+    class QListView *list;
     class QString listData;
     KIO::TransferJob *transferJob;
 
-  private slots:
+private slots:
     void listDataReceived(KIO::Job *, const QByteArray &data);
 
-  public slots:
+public slots:
     void slotUser1();
 };
 
@@ -367,20 +364,20 @@ class KProcess;
  * If the file wasn't deleted, it has a 'diff' button, which will create
  * a diff file (uing diff(1)) and launch that using KRun.
  */
-class KateModOnHdPrompt : public KDialogBase
-{
-  Q_OBJECT
-  public:
-    enum Status {
-      Reload=1, // 0 is KDialogBase::Cancel
-      Save,
-      Overwrite,
-      Ignore
+class KateModOnHdPrompt : public KDialogBase {
+    Q_OBJECT
+public:
+    enum Status
+    {
+        Reload = 1, // 0 is KDialogBase::Cancel
+        Save,
+        Overwrite,
+        Ignore
     };
-    KateModOnHdPrompt( KateDocument *doc, int modtype, const QString &reason, QWidget *parent  );
+    KateModOnHdPrompt(KateDocument *doc, int modtype, const QString &reason, QWidget *parent);
     ~KateModOnHdPrompt();
 
-  public slots:
+public slots:
     /**
      * Show a diff between the document text and the disk file.
      * This will not close the dialog, since we still need a
@@ -392,15 +389,14 @@ class KateModOnHdPrompt : public KDialogBase
     void slotApply();
     void slotUser1();
 
-  private slots:
-    void slotPRead(KProcIO*); ///< Read from the diff process
-    void slotPDone(KProcess*); ///< Runs the diff file when done
+private slots:
+    void slotPRead(KProcIO *);  ///< Read from the diff process
+    void slotPDone(KProcess *); ///< Runs the diff file when done
 
-  private:
+private:
     KateDocument *m_doc;
     int m_modtype;
     class KTempFile *m_tmpfile; ///< The diff file. Deleted by KRun when the viewer is exited.
-
 };
 
 #endif

@@ -13,47 +13,45 @@
 
 using namespace KABC;
 
-static const KCmdLineOptions options[] =
+static const KCmdLineOptions options[] = {{"list <listname>", I18N_NOOP("Show distribution list with name <listname>"), 0}, KCmdLineLastOption};
+
+
+int main(int argc, char **argv)
 {
-  {"list <listname>", I18N_NOOP("Show distribution list with name <listname>"), 0},
-  KCmdLineLastOption
-};
+    KAboutData aboutData("testdistlist", I18N_NOOP("Test Distribution Lists"), "0.1");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
+    KApplication app;
 
-int main(int argc,char **argv)
-{
-  KAboutData aboutData("testdistlist",I18N_NOOP("Test Distribution Lists"),"0.1");
-  KCmdLineArgs::init(argc,argv,&aboutData);
-  KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    if(args->isSet("list"))
+    {
+        QString name = args->getOption("list");
 
-  KApplication app;
-
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  if (args->isSet("list")) {
-    QString name = args->getOption("list");
-    
-    DistributionListManager *manager =
-        new DistributionListManager( StdAddressBook::self() );
-    manager->load();
-    DistributionList *list = manager->list( name );
-    if ( !list ) {
-      kdDebug() << "No list with name '" << name << "'" << endl;
-      return 1;
-    } else {
-      kdDebug() << "RESULT: " << list->emails().join(", ") << endl;
-      return 0; 
+        DistributionListManager *manager = new DistributionListManager(StdAddressBook::self());
+        manager->load();
+        DistributionList *list = manager->list(name);
+        if(!list)
+        {
+            kdDebug() << "No list with name '" << name << "'" << endl;
+            return 1;
+        }
+        else
+        {
+            kdDebug() << "RESULT: " << list->emails().join(", ") << endl;
+            return 0;
+        }
     }
-  }
 
-  DistributionListEditor *editor =
-      new DistributionListEditor( StdAddressBook::self(), 0 );
+    DistributionListEditor *editor = new DistributionListEditor(StdAddressBook::self(), 0);
 
-  editor->show();
-  app.setMainWidget(editor);
-  
-  QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
+    editor->show();
+    app.setMainWidget(editor);
 
-  app.exec();
-  
-  delete editor;
+    QObject::connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
+
+    app.exec();
+
+    delete editor;
 }

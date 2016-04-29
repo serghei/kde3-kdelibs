@@ -24,37 +24,30 @@
 #include <qguardedptr.h>
 #include <kaction.h>
 
-namespace KMDIPrivate
-{
+namespace KMDIPrivate {
 
-class ToolViewAccessorPrivate
-{
-  public:
-    ToolViewAccessorPrivate()
-     : widgetContainer (0)
-     , widget (0)
+class ToolViewAccessorPrivate {
+public:
+    ToolViewAccessorPrivate() : widgetContainer(0), widget(0)
     {
     }
 
     ~ToolViewAccessorPrivate()
     {
-      delete action;
+        delete action;
 
-      if (!widgetContainer.isNull())
-        widgetContainer->undock();
+        if(!widgetContainer.isNull())
+            widgetContainer->undock();
 
-      delete (KDockWidget*)widgetContainer;
+        delete(KDockWidget *)widgetContainer;
     }
 
-    QGuardedPtr<KDockWidget> widgetContainer;
+    QGuardedPtr< KDockWidget > widgetContainer;
     QWidget *widget;
-    QGuardedPtr<KAction> action;
+    QGuardedPtr< KAction > action;
 };
-
 }
 
 #endif
 
 // kate: space-indent on; indent-width 2; replace-tabs on;
-
-

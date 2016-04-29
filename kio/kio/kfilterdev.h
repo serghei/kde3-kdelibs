@@ -33,8 +33,7 @@ class KFilterBase;
  *
  * @author David Faure <faure@kde.org>
  */
-class KIO_EXPORT KFilterDev : public QIODevice
-{
+class KIO_EXPORT KFilterDev : public QIODevice {
 public:
     /**
      * Constructs a KFilterDev for a given filter (e.g. gzip, bzip2 etc.).
@@ -42,7 +41,7 @@ public:
      * @param autoDeleteFilterBase when true this object will become the
      * owner of @p filter.
      */
-    KFilterDev( KFilterBase * filter, bool autoDeleteFilterBase = false );
+    KFilterDev(KFilterBase *filter, bool autoDeleteFilterBase = false);
     /**
      * Destructs the KFilterDev.
      * Calls close() if the filter device is still open.
@@ -53,7 +52,7 @@ public:
      * Open for reading or writing.
      * If the KFilterBase's device is not opened, it will be opened.
      */
-    virtual bool open( int mode );
+    virtual bool open(int mode);
     /**
      * Close after reading or writing.
      * If the KFilterBase's device was opened by open(), it will be closed.
@@ -66,7 +65,7 @@ public:
      * set the name of the original file, to be used in the gzip header.
      * @param fileName the name of the original file
      */
-    void setOrigFileName( const QCString & fileName );
+    void setOrigFileName(const QCString &fileName);
 
     /**
      * Call this let this device skip the gzip headers when reading/writing.
@@ -83,17 +82,17 @@ public:
     /**
      * That one can be quite slow, when going back. Use with care.
      */
-    virtual bool at( QIODevice::Offset );
+    virtual bool at(QIODevice::Offset);
 
     virtual bool atEnd() const;
 
-    virtual Q_LONG readBlock( char *data, Q_ULONG maxlen );
-    virtual Q_LONG writeBlock( const char *data, Q_ULONG len );
-    //int readLine( char *data, uint maxlen );
+    virtual Q_LONG readBlock(char *data, Q_ULONG maxlen);
+    virtual Q_LONG writeBlock(const char *data, Q_ULONG len);
+    // int readLine( char *data, uint maxlen );
 
     virtual int getch();
-    virtual int putch( int );
-    virtual int ungetch( int );
+    virtual int putch(int);
+    virtual int ungetch(int);
 
 #ifdef KDE_NO_COMPAT
 private:
@@ -105,9 +104,9 @@ private:
      * @deprecated. Use deviceForFile instead.
      * To be removed in KDE 3.0
      */
-    static QIODevice* createFilterDevice(KFilterBase* base, QFile* file) KDE_DEPRECATED;
-public:
+    static QIODevice *createFilterDevice(KFilterBase *base, QFile *file) KDE_DEPRECATED;
 
+public:
     /**
      * Creates an i/o device that is able to read from @p fileName,
      * whether it's compressed or not. Available compression filters
@@ -134,8 +133,7 @@ public:
      *         filter does not exist, the return value depends on @p forceFilter.
      *         The returned QIODevice has to be deleted after using.
      */
-    static QIODevice * deviceForFile( const QString & fileName, const QString & mimetype = QString::null,
-                                      bool forceFilter = false );
+    static QIODevice *deviceForFile(const QString &fileName, const QString &mimetype = QString::null, bool forceFilter = false);
 
     /**
      * Creates an i/o device that is able to read from the QIODevice @p inDevice,
@@ -155,7 +153,7 @@ public:
      * @return a QIODevice that filters the original stream. Must be deleted after
      *         using
      */
-    static QIODevice * device( QIODevice* inDevice, const QString & mimetype);
+    static QIODevice *device(QIODevice *inDevice, const QString &mimetype);
     // BIC: merge with device() method below, using default value for autoDeleteInDevice
 
     /**
@@ -178,12 +176,12 @@ public:
      *         using
      * @since 3.1
      */
-    static QIODevice * device( QIODevice* inDevice, const QString & mimetype, bool autoDeleteInDevice );
+    static QIODevice *device(QIODevice *inDevice, const QString &mimetype, bool autoDeleteInDevice);
 
 private:
     KFilterBase *filter;
     class KFilterDevPrivate;
-    KFilterDevPrivate * d;
+    KFilterDevPrivate *d;
 };
 
 

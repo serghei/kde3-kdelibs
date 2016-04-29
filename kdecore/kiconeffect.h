@@ -31,12 +31,11 @@ class KIconEffectPrivate;
  * in a toolbar gray.
  * @see KIcon
  */
-class KDECORE_EXPORT KIconEffect
-{
+class KDECORE_EXPORT KIconEffect {
 public:
-  /**
-   * Create a new KIconEffect.
-   */
+    /**
+     * Create a new KIconEffect.
+     */
     KIconEffect();
     ~KIconEffect();
 
@@ -52,9 +51,16 @@ public:
      * @li DeSaturate: Reduce the saturation of the icon
      * @li ToMonochrome: Produces a monochrome icon
      */
-    enum Effects { NoEffect, ToGray, Colorize, ToGamma, DeSaturate,
-                   ToMonochrome,   ///< @since 3.4
-		   LastEffect };
+    enum Effects
+    {
+        NoEffect,
+        ToGray,
+        Colorize,
+        ToGamma,
+        DeSaturate,
+        ToMonochrome, ///< @since 3.4
+        LastEffect
+    };
 
     /**
      * Rereads configuration.
@@ -80,7 +86,7 @@ public:
      * @param state the state, see KIcon::States
      * @return the fingerprint of the given @p group+@p state
      */
-     QString fingerprint(int group, int state) const;
+    QString fingerprint(int group, int state) const;
 
     /**
      * Applies an effect to an image. The effect to apply depends on the

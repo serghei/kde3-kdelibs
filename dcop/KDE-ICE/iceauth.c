@@ -39,13 +39,13 @@ Author: Ralph Mor, X Consortium
 
 #if defined(X_NOT_STDC_ENV) && !defined(__EMX__)
 #define Time_t long
-extern Time_t time ();
+extern Time_t time();
 #else
 #include <time.h>
 #define Time_t time_t
 #endif
 
-static int binaryEqual (register const char *a, register const char *b, register unsigned len);
+static int binaryEqual(register const char *a, register const char *b, register unsigned len);
 
 static int was_called_state;
 
@@ -54,34 +54,33 @@ static int was_called_state;
  * the SI.  It is not part of standard ICElib.
  */
 
-
-char *
-IceGenerateMagicCookie (len)
 
-int len;
+char *IceGenerateMagicCookie(len)
+
+    int len;
 
 {
-    char    *auth;
-    long    ldata[2];
-    int	    seed;
-    int	    value;
-    int	    i;
+    char *auth;
+    long ldata[2];
+    int seed;
+    int value;
+    int i;
 
-    if ((auth = (char *) malloc (len + 1)) == NULL)
-	return (NULL);
+    if((auth = (char *)malloc(len + 1)) == NULL)
+        return (NULL);
 
     {
-	struct timeval  now;
-	gettimeofday(&now, 0);
-	ldata[0] = now.tv_sec;
-	ldata[1] = now.tv_usec;
+        struct timeval now;
+        gettimeofday(&now, 0);
+        ldata[0] = now.tv_sec;
+        ldata[1] = now.tv_usec;
     }
     seed = (ldata[0]) + (ldata[1] << 16);
-    srand (seed);
-    for (i = 0; i < len; i++)
+    srand(seed);
+    for(i = 0; i < len; i++)
     {
-	value = rand ();
-	auth[i] = value & 0xff;
+        value = rand();
+        auth[i] = value & 0xff;
     }
     auth[len] = '\0';
 
@@ -89,185 +88,174 @@ int len;
 }
 
 
-IcePoAuthStatus
-_IcePoMagicCookie1Proc (iceConn, authStatePtr, cleanUp, swap,
-    authDataLen, authData, replyDataLenRet, replyDataRet, errorStringRet)
+IcePoAuthStatus _IcePoMagicCookie1Proc(iceConn, authStatePtr, cleanUp, swap, authDataLen, authData, replyDataLenRet, replyDataRet, errorStringRet)
 
-IceConn		iceConn;
-IcePointer	*authStatePtr;
-Bool 		cleanUp;
-Bool		swap;
-int     	authDataLen;
-IcePointer	authData;
-int 		*replyDataLenRet;
-IcePointer	*replyDataRet;
-char    	**errorStringRet;
+    IceConn iceConn;
+IcePointer *authStatePtr;
+Bool cleanUp;
+Bool swap;
+int authDataLen;
+IcePointer authData;
+int *replyDataLenRet;
+IcePointer *replyDataRet;
+char **errorStringRet;
 
 {
-    (void)swap;/*unused*/
-    (void)authDataLen;/*unused*/
-    (void)authData;/*unused*/
-    if (cleanUp)
+    (void)swap;        /*unused*/
+    (void)authDataLen; /*unused*/
+    (void)authData;    /*unused*/
+    if(cleanUp)
     {
-	/*
-	 * We didn't allocate any state.  We're done.
-	 */
+        /*
+         * We didn't allocate any state.  We're done.
+         */
 
-	return (IcePoAuthDoneCleanup);
+        return (IcePoAuthDoneCleanup);
     }
 
     *errorStringRet = NULL;
 
-    if (*authStatePtr == NULL)
+    if(*authStatePtr == NULL)
     {
-	/*
-	 * This is the first time we're being called.  Search the
-	 * authentication data for the first occurrence of
-	 * MIT-MAGIC-COOKIE-1 that matches iceConn->connection_string.
-	 */
+        /*
+         * This is the first time we're being called.  Search the
+         * authentication data for the first occurrence of
+         * MIT-MAGIC-COOKIE-1 that matches iceConn->connection_string.
+         */
 
-	unsigned short  length;
-	char		*data;
+        unsigned short length;
+        char *data;
 
-	_IceGetPoAuthData ("ICE", iceConn->connection_string,
-	    "MIT-MAGIC-COOKIE-1", &length, &data);
+        _IceGetPoAuthData("ICE", iceConn->connection_string, "MIT-MAGIC-COOKIE-1", &length, &data);
 
-	if (!data)
-	{
-	    const char *tempstr =
-		"Could not find correct MIT-MAGIC-COOKIE-1 authentication";
+        if(!data)
+        {
+            const char *tempstr = "Could not find correct MIT-MAGIC-COOKIE-1 authentication";
 
-	    *errorStringRet = (char *) malloc (strlen (tempstr) + 1);
-	    if (*errorStringRet)
-		strcpy (*errorStringRet, tempstr);
+            *errorStringRet = (char *)malloc(strlen(tempstr) + 1);
+            if(*errorStringRet)
+                strcpy(*errorStringRet, tempstr);
 
-	    return (IcePoAuthFailed);
-	}
-	else
-	{
-	    *authStatePtr = (IcePointer) &was_called_state;
+            return (IcePoAuthFailed);
+        }
+        else
+        {
+            *authStatePtr = (IcePointer)&was_called_state;
 
-	    *replyDataLenRet = length;
-	    *replyDataRet = data;
+            *replyDataLenRet = length;
+            *replyDataRet = data;
 
-	    return (IcePoAuthHaveReply);
-	}
+            return (IcePoAuthHaveReply);
+        }
     }
     else
     {
-	/*
-	 * We should never get here for MIT-MAGIC-COOKIE-1 since it is
-	 * a single pass authentication method.
-	 */
+        /*
+         * We should never get here for MIT-MAGIC-COOKIE-1 since it is
+         * a single pass authentication method.
+         */
 
-	const char *tempstr = "MIT-MAGIC-COOKIE-1 authentication internal error";
+        const char *tempstr = "MIT-MAGIC-COOKIE-1 authentication internal error";
 
-	*errorStringRet = (char *) malloc (strlen (tempstr) + 1);
-	if (*errorStringRet)
-	    strcpy (*errorStringRet, tempstr);
+        *errorStringRet = (char *)malloc(strlen(tempstr) + 1);
+        if(*errorStringRet)
+            strcpy(*errorStringRet, tempstr);
 
-	return (IcePoAuthFailed);
+        return (IcePoAuthFailed);
     }
 }
 
 
+IcePaAuthStatus _IcePaMagicCookie1Proc(iceConn, authStatePtr, swap, authDataLen, authData, replyDataLenRet, replyDataRet, errorStringRet)
 
-IcePaAuthStatus
-_IcePaMagicCookie1Proc (iceConn, authStatePtr, swap,
-    authDataLen, authData, replyDataLenRet, replyDataRet, errorStringRet)
-
-IceConn		iceConn;
-IcePointer	*authStatePtr;
-Bool		swap;
-int     	authDataLen;
-IcePointer	authData;
-int 		*replyDataLenRet;
-IcePointer	*replyDataRet;
-char    	**errorStringRet;
+    IceConn iceConn;
+IcePointer *authStatePtr;
+Bool swap;
+int authDataLen;
+IcePointer authData;
+int *replyDataLenRet;
+IcePointer *replyDataRet;
+char **errorStringRet;
 
 {
-    (void)swap;/*unused*/
+    (void)swap; /*unused*/
     *errorStringRet = NULL;
     *replyDataLenRet = 0;
     *replyDataRet = NULL;
 
-    if (*authStatePtr == NULL)
+    if(*authStatePtr == NULL)
     {
-	/*
-	 * This is the first time we're being called.  We don't have
-	 * any data to pass to the other client.
-	 */
+        /*
+         * This is the first time we're being called.  We don't have
+         * any data to pass to the other client.
+         */
 
-	*authStatePtr = (IcePointer) &was_called_state;
+        *authStatePtr = (IcePointer)&was_called_state;
 
-	return (IcePaAuthContinue);
+        return (IcePaAuthContinue);
     }
     else
     {
-	/*
-	 * Search the authentication data for the first occurrence of
-	 * MIT-MAGIC-COOKIE-1 that matches iceConn->connection_string.
-	 */
+        /*
+         * Search the authentication data for the first occurrence of
+         * MIT-MAGIC-COOKIE-1 that matches iceConn->connection_string.
+         */
 
-	unsigned short  length;
-	char		*data;
+        unsigned short length;
+        char *data;
 
-	_IceGetPaAuthData ("ICE", iceConn->connection_string,
-	    "MIT-MAGIC-COOKIE-1", &length, &data);
+        _IceGetPaAuthData("ICE", iceConn->connection_string, "MIT-MAGIC-COOKIE-1", &length, &data);
 
-	if (data)
-	{
-	    IcePaAuthStatus status;
+        if(data)
+        {
+            IcePaAuthStatus status;
 
-	    if (authDataLen == length &&
-	        binaryEqual ((char *) authData, data, authDataLen))
-	    {
-		status = IcePaAuthAccepted;
-	    }
-	    else
-	    {
-		const char *tempstr = "MIT-MAGIC-COOKIE-1 authentication rejected";
+            if(authDataLen == length && binaryEqual((char *)authData, data, authDataLen))
+            {
+                status = IcePaAuthAccepted;
+            }
+            else
+            {
+                const char *tempstr = "MIT-MAGIC-COOKIE-1 authentication rejected";
 
-		*errorStringRet = (char *) malloc (strlen (tempstr) + 1);
-		if (*errorStringRet)
-		    strcpy (*errorStringRet, tempstr);
+                *errorStringRet = (char *)malloc(strlen(tempstr) + 1);
+                if(*errorStringRet)
+                    strcpy(*errorStringRet, tempstr);
 
-		status = IcePaAuthRejected;
-	    }
+                status = IcePaAuthRejected;
+            }
 
-	    free (data);
-	    return (status);
-	}
-	else
-	{
-	    /*
-	     * We should never get here because in the ConnectionReply
-	     * we should have passed all the valid methods.  So we should
-	     * always find a valid entry.
-	     */
+            free(data);
+            return (status);
+        }
+        else
+        {
+            /*
+             * We should never get here because in the ConnectionReply
+             * we should have passed all the valid methods.  So we should
+             * always find a valid entry.
+             */
 
-	    const char *tempstr =
-		"MIT-MAGIC-COOKIE-1 authentication internal error";
+            const char *tempstr = "MIT-MAGIC-COOKIE-1 authentication internal error";
 
-	    *errorStringRet = (char *) malloc (strlen (tempstr) + 1);
-	    if (*errorStringRet)
-		strcpy (*errorStringRet, tempstr);
+            *errorStringRet = (char *)malloc(strlen(tempstr) + 1);
+            if(*errorStringRet)
+                strcpy(*errorStringRet, tempstr);
 
-	    return (IcePaAuthFailed);
-	}
+            return (IcePaAuthFailed);
+        }
     }
 }
 
 
-
 /*
  * local routines
  */
 
-static int binaryEqual (register const char *a, register const char *b, register unsigned len)
+static int binaryEqual(register const char *a, register const char *b, register unsigned len)
 {
-    while (len--)
-	if (*a++ != *b++)
-	    return 0;
+    while(len--)
+        if(*a++ != *b++)
+            return 0;
     return 1;
 }

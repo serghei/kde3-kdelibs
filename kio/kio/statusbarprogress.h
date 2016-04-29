@@ -59,54 +59,62 @@ class Job;
 */
 class KIO_EXPORT StatusbarProgress : public ProgressBase {
 
-  Q_OBJECT
+    Q_OBJECT
 
 public:
+    /**
+     * Creates a new StatusbarProgress.
+     * @param parent the parent of this widget
+     * @param button true to add an abort button. The button will be
+     *               connected to ProgressBase::slotStop()
+     */
+    StatusbarProgress(QWidget *parent, bool button = true);
+    ~StatusbarProgress()
+    {
+    }
 
-  /**
-   * Creates a new StatusbarProgress.
-   * @param parent the parent of this widget
-   * @param button true to add an abort button. The button will be
-   *               connected to ProgressBase::slotStop()
-   */
-  StatusbarProgress( QWidget* parent, bool button = true );
-  ~StatusbarProgress() {}
-
-  /**
-   * Sets the job to monitor.
-   * @param job the job to monitor
-   */
-  void setJob( KIO::Job *job );
+    /**
+     * Sets the job to monitor.
+     * @param job the job to monitor
+     */
+    void setJob(KIO::Job *job);
 
 public slots:
-  virtual void slotClean();
-  virtual void slotTotalSize( KIO::Job* job, KIO::filesize_t size );
-  virtual void slotPercent( KIO::Job* job, unsigned long percent );
-  virtual void slotSpeed( KIO::Job* job, unsigned long speed );
+    virtual void slotClean();
+    virtual void slotTotalSize(KIO::Job *job, KIO::filesize_t size);
+    virtual void slotPercent(KIO::Job *job, unsigned long percent);
+    virtual void slotSpeed(KIO::Job *job, unsigned long speed);
 
 protected:
-  KProgress* m_pProgressBar;
-  QLabel* m_pLabel;
-  QPushButton* m_pButton;
+    KProgress *m_pProgressBar;
+    QLabel *m_pLabel;
+    QPushButton *m_pButton;
 
-  KIO::filesize_t m_iTotalSize;
+    KIO::filesize_t m_iTotalSize;
 
-  enum Mode { None, Label, Progress };
+    enum Mode
+    {
+        None,
+        Label,
+        Progress
+    };
 
-  uint mode;
-  bool m_bShowButton;
+    uint mode;
+    bool m_bShowButton;
 
-  void setMode();
+    void setMode();
 
-  virtual bool eventFilter( QObject *, QEvent * );
-  QBoxLayout *box;
-  QWidgetStack *stack;
+    virtual bool eventFilter(QObject *, QEvent *);
+    QBoxLayout *box;
+    QWidgetStack *stack;
+
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class StatusbarProgressPrivate* d;
+    class StatusbarProgressPrivate *d;
 };
 
 } /* namespace */
 
-#endif  //  __statusbarprogress_h__
+#endif //  __statusbarprogress_h__

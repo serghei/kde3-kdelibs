@@ -26,28 +26,30 @@
 #include <qdict.h>
 #include <qstringlist.h>
 
-class KATEPARTINTERFACES_EXPORT KateCmd
-{
-  private:
-    KateCmd ();
+class KATEPARTINTERFACES_EXPORT KateCmd {
+private:
+    KateCmd();
 
-  public:
-    ~KateCmd ();
+public:
+    ~KateCmd();
 
-    static KateCmd *self ();
+    static KateCmd *self();
 
-    bool registerCommand (Kate::Command *cmd);
-    bool unregisterCommand (Kate::Command *cmd);
-    Kate::Command *queryCommand (const QString &cmd);
+    bool registerCommand(Kate::Command *cmd);
+    bool unregisterCommand(Kate::Command *cmd);
+    Kate::Command *queryCommand(const QString &cmd);
 
-    QStringList cmds ();
-    void appendHistory( const QString &cmd );
-    const QString fromHistory( uint i ) const;
-    uint historyLength() const { return m_history.count(); }
+    QStringList cmds();
+    void appendHistory(const QString &cmd);
+    const QString fromHistory(uint i) const;
+    uint historyLength() const
+    {
+        return m_history.count();
+    }
 
-  private:
+private:
     static KateCmd *s_self;
-    QDict<Kate::Command> m_dict;
+    QDict< Kate::Command > m_dict;
     QStringList m_cmds;
     QStringList m_history;
 };
@@ -58,9 +60,8 @@ class KATEPARTINTERFACES_EXPORT KateCmd
  * simply mimics shell tab completion by completing the last word in the
  * provided text.
  */
-class KATEPARTINTERFACES_EXPORT KateCmdShellCompletion : public KCompletion
-{
-  public:
+class KATEPARTINTERFACES_EXPORT KateCmdShellCompletion : public KCompletion {
+public:
     KateCmdShellCompletion();
 
     /**
@@ -71,29 +72,28 @@ class KATEPARTINTERFACES_EXPORT KateCmdShellCompletion : public KCompletion
      */
     QString makeCompletion(const QString &text);
 
-  protected:
-        // Called by KCompletion
-    void postProcessMatch( QString *match ) const;
-    void postProcessMatches( QStringList *matches ) const;
-    void postProcessMatches( KCompletionMatches *matches ) const;
+protected:
+    // Called by KCompletion
+    void postProcessMatch(QString *match) const;
+    void postProcessMatches(QStringList *matches) const;
+    void postProcessMatches(KCompletionMatches *matches) const;
 
-  private:
-  /**
-   * Split text at the last unquoted space
-   *
-   * @param text_start will be set to the text at the left, including the space
-   * @param text_compl Will be set to the text at the right. This is the text to complete.
-   */
-   void splitText( const QString &text, QString &text_start, QString &text_compl ) const;
+private:
+    /**
+     * Split text at the last unquoted space
+     *
+     * @param text_start will be set to the text at the left, including the space
+     * @param text_compl Will be set to the text at the right. This is the text to complete.
+     */
+    void splitText(const QString &text, QString &text_start, QString &text_compl) const;
 
-   QChar m_word_break_char;
-   QChar m_quote_char1;
-   QChar m_quote_char2;
-   QChar m_escape_char;
+    QChar m_word_break_char;
+    QChar m_quote_char1;
+    QChar m_quote_char2;
+    QChar m_escape_char;
 
-   QString m_text_start;
-   QString m_text_compl;
-
+    QString m_text_start;
+    QString m_text_compl;
 };
 
 #endif

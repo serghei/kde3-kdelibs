@@ -27,31 +27,28 @@
 #include "kfiledialog.h"
 #include "kfilebookmarkhandler.h"
 
-KFileBookmarkHandler::KFileBookmarkHandler( KFileDialog *dialog )
-    : QObject( dialog, "KFileBookmarkHandler" ),
-      KBookmarkOwner(),
-      m_dialog( dialog )
+KFileBookmarkHandler::KFileBookmarkHandler(KFileDialog *dialog) : QObject(dialog, "KFileBookmarkHandler"), KBookmarkOwner(), m_dialog(dialog)
 {
-    m_menu = new KPopupMenu( dialog, "bookmark menu" );
+    m_menu = new KPopupMenu(dialog, "bookmark menu");
 
-    QString file = locate( "data", "kfile/bookmarks.xml" );
-    if ( file.isEmpty() )
-        file = locateLocal( "data", "kfile/bookmarks.xml" );
+    QString file = locate("data", "kfile/bookmarks.xml");
+    if(file.isEmpty())
+        file = locateLocal("data", "kfile/bookmarks.xml");
 
-    KBookmarkManager *manager = KBookmarkManager::managerForFile( file, false);
+    KBookmarkManager *manager = KBookmarkManager::managerForFile(file, false);
 
     // import old bookmarks
-    if ( !KStandardDirs::exists( file ) ) {
-        QString oldFile = locate( "data", "kfile/bookmarks.html" );
-        if ( !oldFile.isEmpty() )
-            importOldBookmarks( oldFile, manager );
+    if(!KStandardDirs::exists(file))
+    {
+        QString oldFile = locate("data", "kfile/bookmarks.html");
+        if(!oldFile.isEmpty())
+            importOldBookmarks(oldFile, manager);
     }
 
-    manager->setUpdate( true );
-    manager->setShowNSBookmarks( false );
+    manager->setUpdate(true);
+    manager->setShowNSBookmarks(false);
 
-    m_bookmarkMenu = new KBookmarkMenu( manager, this, m_menu,
-                                        dialog->actionCollection(), true );
+    m_bookmarkMenu = new KBookmarkMenu(manager, this, m_menu, dialog->actionCollection(), true);
 }
 
 KFileBookmarkHandler::~KFileBookmarkHandler()
@@ -64,18 +61,19 @@ QString KFileBookmarkHandler::currentURL() const
     return m_dialog->baseURL().url();
 }
 
-void KFileBookmarkHandler::importOldBookmarks( const QString& path,
-                                               KBookmarkManager *manager )
+void KFileBookmarkHandler::importOldBookmarks(const QString &path, KBookmarkManager *manager)
 {
-    KBookmarkDomBuilder *builder = new KBookmarkDomBuilder( manager->root(), manager );
-    KNSBookmarkImporter importer( path );
-    builder->connectImporter( &importer );
+    KBookmarkDomBuilder *builder = new KBookmarkDomBuilder(manager->root(), manager);
+    KNSBookmarkImporter importer(path);
+    builder->connectImporter(&importer);
     importer.parseNSBookmarks();
     delete builder;
     manager->save();
 }
 
-void KFileBookmarkHandler::virtual_hook( int id, void* data )
-{ KBookmarkOwner::virtual_hook( id, data ); }
+void KFileBookmarkHandler::virtual_hook(int id, void *data)
+{
+    KBookmarkOwner::virtual_hook(id, data);
+}
 
 #include "kfilebookmarkhandler.moc"

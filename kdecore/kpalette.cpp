@@ -17,7 +17,7 @@
     Boston, MA 02110-1301, USA.
 */
 //-----------------------------------------------------------------------------
-// KDE color palette 
+// KDE color palette
 
 #include "kpalette.h"
 
@@ -28,210 +28,212 @@
 #include <ksavefile.h>
 #include <kstringhandler.h>
 
-template class QPtrList<KPalette::kolor>;
+template class QPtrList< KPalette::kolor >;
 
-QStringList
-KPalette::getPaletteList()
+QStringList KPalette::getPaletteList()
 {
-  QStringList paletteList;
-  KGlobal::dirs()->findAllResources("config", "colors/*", false, true, paletteList);
+    QStringList paletteList;
+    KGlobal::dirs()->findAllResources("config", "colors/*", false, true, paletteList);
 
-  int strip = strlen("colors/");
-  for(QStringList::Iterator it = paletteList.begin();
-      it != paletteList.end();
-      it++)
-  { 
-      (*it) = (*it).mid(strip); 
-  }
+    int strip = strlen("colors/");
+    for(QStringList::Iterator it = paletteList.begin(); it != paletteList.end(); it++)
+    {
+        (*it) = (*it).mid(strip);
+    }
 
-  return paletteList;
+    return paletteList;
 }
 
-KPalette::KPalette(const QString &name)
- : mName(name)
+KPalette::KPalette(const QString &name) : mName(name)
 {
-  mKolorList.setAutoDelete(true);
-  if (mName.isEmpty()) return;
+    mKolorList.setAutoDelete(true);
+    if(mName.isEmpty())
+        return;
 
-  QString filename = locate("config", "colors/"+mName);
-  if (filename.isEmpty()) return;
+    QString filename = locate("config", "colors/" + mName);
+    if(filename.isEmpty())
+        return;
 
-  QFile paletteFile(filename);
-  if (!paletteFile.exists()) return;
-  if (!paletteFile.open(IO_ReadOnly)) return;
+    QFile paletteFile(filename);
+    if(!paletteFile.exists())
+        return;
+    if(!paletteFile.open(IO_ReadOnly))
+        return;
 
-  uint maxLength = 1024;
-  QString line;
+    uint maxLength = 1024;
+    QString line;
 
-  // Read first line
-  // Expected "GIMP Palette"
-  if (paletteFile.readLine(line, maxLength) == -1) return;
-  if (line.find(" Palette") == -1) return;
+    // Read first line
+    // Expected "GIMP Palette"
+    if(paletteFile.readLine(line, maxLength) == -1)
+        return;
+    if(line.find(" Palette") == -1)
+        return;
 
-  while( paletteFile.readLine(line, maxLength) != -1)
-  {
-     if (line[0] == '#') 
-     {
-        // This is a comment line
-        line = line.mid(1); // Strip '#' 
-        line = line.stripWhiteSpace(); // Strip remaining white space..
-        if (!line.isEmpty())
+    while(paletteFile.readLine(line, maxLength) != -1)
+    {
+        if(line[0] == '#')
         {
-           mDesc += line+"\n"; // Add comment to description
+            // This is a comment line
+            line = line.mid(1);            // Strip '#'
+            line = line.stripWhiteSpace(); // Strip remaining white space..
+            if(!line.isEmpty())
+            {
+                mDesc += line + "\n"; // Add comment to description
+            }
         }
-     }
-     else
-     {
-        // This is a color line, hopefully
-        line = line.stripWhiteSpace();
-        if (line.isEmpty()) continue;
-        int red, green, blue;
-        int pos = 0;
-        if (sscanf(line.ascii(), "%d %d %d%n", &red, &green, &blue, &pos) >= 3)
+        else
         {
-           if (red > 255) red = 255;
-           if (red < 0) red = 0;	
-           if (green > 255) green = 255;
-           if (green < 0) green = 0;	
-           if (blue > 255) blue = 255;
-           if (blue < 0) blue = 0;	
-           kolor *node = new kolor();
-           node->color.setRgb(red, green, blue);
-           node->name = line.mid(pos).stripWhiteSpace();
-           if (node->name.isNull()) node->name = "";
-           mKolorList.append( node );
+            // This is a color line, hopefully
+            line = line.stripWhiteSpace();
+            if(line.isEmpty())
+                continue;
+            int red, green, blue;
+            int pos = 0;
+            if(sscanf(line.ascii(), "%d %d %d%n", &red, &green, &blue, &pos) >= 3)
+            {
+                if(red > 255)
+                    red = 255;
+                if(red < 0)
+                    red = 0;
+                if(green > 255)
+                    green = 255;
+                if(green < 0)
+                    green = 0;
+                if(blue > 255)
+                    blue = 255;
+                if(blue < 0)
+                    blue = 0;
+                kolor *node = new kolor();
+                node->color.setRgb(red, green, blue);
+                node->name = line.mid(pos).stripWhiteSpace();
+                if(node->name.isNull())
+                    node->name = "";
+                mKolorList.append(node);
+            }
         }
-     }
-  }
+    }
 }
 
-KPalette::KPalette(const KPalette &p)
- : mName(p.mName), mDesc(p.mDesc), mEditable(p.mEditable)
+KPalette::KPalette(const KPalette &p) : mName(p.mName), mDesc(p.mDesc), mEditable(p.mEditable)
 {
-   mKolorList.setAutoDelete(true);
-   // Make a deep copy of the color list
-   // We can't iterate a const list :(
-   // DF: yes you can - use the proper iterator, not first/next
-   QPtrList<kolor> *nonConstList = (QPtrList<kolor> *) &p.mKolorList;
-   for(kolor *node = nonConstList->first(); node; node = nonConstList->next())
-   {
-       mKolorList.append(new kolor(*node));
-   }
+    mKolorList.setAutoDelete(true);
+    // Make a deep copy of the color list
+    // We can't iterate a const list :(
+    // DF: yes you can - use the proper iterator, not first/next
+    QPtrList< kolor > *nonConstList = (QPtrList< kolor > *)&p.mKolorList;
+    for(kolor *node = nonConstList->first(); node; node = nonConstList->next())
+    {
+        mKolorList.append(new kolor(*node));
+    }
 }
 
 KPalette::~KPalette()
 {
-  // Need auto-save?
+    // Need auto-save?
 }
 
-bool
-KPalette::save()
+bool KPalette::save()
 {
-   QString filename = locateLocal("config", "colors/"+mName);
-   KSaveFile sf(filename);
-   if (sf.status() != 0) return false;
+    QString filename = locateLocal("config", "colors/" + mName);
+    KSaveFile sf(filename);
+    if(sf.status() != 0)
+        return false;
 
-   QTextStream *str = sf.textStream();
+    QTextStream *str = sf.textStream();
 
-   QString description = mDesc.stripWhiteSpace();
-   description = "#"+QStringList::split("\n", description, true).join("\n#");
+    QString description = mDesc.stripWhiteSpace();
+    description = "#" + QStringList::split("\n", description, true).join("\n#");
 
-   (*str) << "KDE RGB Palette\n";   
-   (*str) << description << "\n";
-   // We can't iterate a const list :(
-   // DF: yes you can - use the proper iterator, not first/next
-   QPtrList<kolor> *nonConstList = (QPtrList<kolor> *) (&mKolorList);
-   for(kolor *node = nonConstList->first(); node; node = nonConstList->next())
-   {
-       int r,g,b;
-       node->color.rgb(&r, &g, &b);
-       (*str) << r << " " << g << " " << b << " " << node->name << "\n";
-   }
-   return sf.close();
+    (*str) << "KDE RGB Palette\n";
+    (*str) << description << "\n";
+    // We can't iterate a const list :(
+    // DF: yes you can - use the proper iterator, not first/next
+    QPtrList< kolor > *nonConstList = (QPtrList< kolor > *)(&mKolorList);
+    for(kolor *node = nonConstList->first(); node; node = nonConstList->next())
+    {
+        int r, g, b;
+        node->color.rgb(&r, &g, &b);
+        (*str) << r << " " << g << " " << b << " " << node->name << "\n";
+    }
+    return sf.close();
 }
 
 
-KPalette&
-KPalette::operator=( const KPalette &p)
+KPalette &KPalette::operator=(const KPalette &p)
 {
-  if (&p == this) return *this;
-  mKolorList.clear();
-  // Make a deep copy of the color list
-  // We can't iterate a const list :(
-   // DF: yes you can - use the proper iterator, not first/next
-  QPtrList<kolor> *nonConstList = (QPtrList<kolor> *) &p.mKolorList;
-  for(kolor *node = nonConstList->first(); node; node = nonConstList->next())
-  {
-     mKolorList.append(new kolor(*node));
-  }
-  mName = p.mName;
-  mDesc = p.mDesc;
-  mEditable = p.mEditable; 
-  return *this;
+    if(&p == this)
+        return *this;
+    mKolorList.clear();
+    // Make a deep copy of the color list
+    // We can't iterate a const list :(
+    // DF: yes you can - use the proper iterator, not first/next
+    QPtrList< kolor > *nonConstList = (QPtrList< kolor > *)&p.mKolorList;
+    for(kolor *node = nonConstList->first(); node; node = nonConstList->next())
+    {
+        mKolorList.append(new kolor(*node));
+    }
+    mName = p.mName;
+    mDesc = p.mDesc;
+    mEditable = p.mEditable;
+    return *this;
 }
 
-QColor
-KPalette::color(int index) 
+QColor KPalette::color(int index)
 {
-  if ((index < 0) || (index >= nrColors()))
-	return QColor();
+    if((index < 0) || (index >= nrColors()))
+        return QColor();
 
-  kolor *node = mKolorList.at(index);
-  if (!node)
-	return QColor();
+    kolor *node = mKolorList.at(index);
+    if(!node)
+        return QColor();
 
-  return node->color;
+    return node->color;
 }
 
-int
-KPalette::findColor(const QColor &color) const
+int KPalette::findColor(const QColor &color) const
 {
-  int index;
-  QPtrListIterator<kolor> it( mKolorList );
-  for (index = 0; it.current(); ++it, ++index)
-  {
-     if (it.current()->color == color)
-         return index;
-  }
-  return -1;
+    int index;
+    QPtrListIterator< kolor > it(mKolorList);
+    for(index = 0; it.current(); ++it, ++index)
+    {
+        if(it.current()->color == color)
+            return index;
+    }
+    return -1;
 }
 
-QString
-KPalette::colorName(int index) 
+QString KPalette::colorName(int index)
 {
-  if ((index < 0) || (index >= nrColors()))
-	return QString::null;
+    if((index < 0) || (index >= nrColors()))
+        return QString::null;
 
-  kolor *node = mKolorList.at(index);
-  if (!node)
-	return QString::null;
+    kolor *node = mKolorList.at(index);
+    if(!node)
+        return QString::null;
 
-  return node->name;
+    return node->name;
 }
 
-int
-KPalette::addColor(const QColor &newColor, const QString &newColorName)
+int KPalette::addColor(const QColor &newColor, const QString &newColorName)
 {
-  kolor *node = new kolor();
-  node->color = newColor;
-  node->name = newColorName;
-  mKolorList.append( node );
-  return nrColors()-1;
+    kolor *node = new kolor();
+    node->color = newColor;
+    node->name = newColorName;
+    mKolorList.append(node);
+    return nrColors() - 1;
 }
 
-int
-KPalette::changeColor(int index, 
-                      const QColor &newColor, 
-                      const QString &newColorName)
+int KPalette::changeColor(int index, const QColor &newColor, const QString &newColorName)
 {
-  if ((index < 0) || (index >= nrColors()))
-	return -1;
+    if((index < 0) || (index >= nrColors()))
+        return -1;
 
-  kolor *node = mKolorList.at(index);
-  if (!node)
-	return -1;
+    kolor *node = mKolorList.at(index);
+    if(!node)
+        return -1;
 
-  node->color = newColor;
-  node->name = newColorName;
-  return index;
+    node->color = newColor;
+    node->name = newColorName;
+    return index;
 }

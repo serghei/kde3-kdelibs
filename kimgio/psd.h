@@ -15,9 +15,8 @@
 class QImageIO;
 
 extern "C" {
-KDE_EXPORT void kimgio_psd_read( QImageIO * );
-KDE_EXPORT void kimgio_psd_write( QImageIO * );
+KDE_EXPORT void kimgio_psd_read(QImageIO *);
+KDE_EXPORT void kimgio_psd_write(QImageIO *);
 }
 
 #endif
- 

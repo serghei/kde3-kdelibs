@@ -27,17 +27,17 @@
 #include <qcstring.h>
 #include <qvaluelist.h>
 
-typedef QValueList<QCString> QCStringList;
+typedef QValueList< QCString > QCStringList;
 
 /**
- * A client class to access kdesud, the KDE su daemon. Kdesud can assist in 
+ * A client class to access kdesud, the KDE su daemon. Kdesud can assist in
  * password caching in two ways:
  *
  * @li For high security passwords, like for su and ssh, it executes the
  * password requesting command for you. It feeds the password to the
- * command, without ever returning it to you, the user. The daemon should 
- * be installed setgid nogroup, in order to be able to act as an inaccessible, 
- * trusted 3rd party. 
+ * command, without ever returning it to you, the user. The daemon should
+ * be installed setgid nogroup, in order to be able to act as an inaccessible,
+ * trusted 3rd party.
  * See exec, setPass, delCommand.
  *
  * @li For lower security passwords, like web and ftp passwords, it can act
@@ -62,7 +62,7 @@ public:
      * @param env Extra environment variables.
      * @return Zero on success, -1 on failure.
      */
-    int exec(const QCString &command, const QCString &user, const QCString &options=0, const QCStringList &env=QCStringList());
+    int exec(const QCString &command, const QCString &user, const QCString &options = 0, const QCStringList &env = QCStringList());
 
     /**
      * Wait for the last command to exit and return the exit code.
@@ -111,7 +111,7 @@ public:
      * @param group Make the key part of a group. See delGroup.
      * @return zero on success, -1 on failure.
      */
-    int setVar(const QCString &key, const QCString &value, int timeout=0, const QCString &group=0);
+    int setVar(const QCString &key, const QCString &value, int timeout = 0, const QCString &group = 0);
 
     /**
      * Get a persistent variable.
@@ -125,7 +125,7 @@ public:
      * @param group the group name of the variables.
      * @return a list of the keys in the group.
      */
-    QValueList<QCString> getKeys(const QCString &group);
+    QValueList< QCString > getKeys(const QCString &group);
 
     /**
      * Returns true if the specified group exists is
@@ -195,13 +195,13 @@ private:
     int sockfd;
     QCString sock;
 
-    int command(const QCString &cmd, QCString *result=0L);
+    int command(const QCString &cmd, QCString *result = 0L);
     QCString escape(const QCString &str);
 
     class KDEsuClientPrivate;
     KDEsuClientPrivate *d;
 };
 
-#endif //Q_OS_UNIX
+#endif // Q_OS_UNIX
 
 #endif //__KDE_su_Client_h_Included__

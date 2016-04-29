@@ -35,60 +35,65 @@ class KArrowButtonPrivate;
  *
  * @author Frerich Raabe
  */
-class KDEUI_EXPORT KArrowButton : public QPushButton
-{
-	Q_OBJECT
-	Q_PROPERTY( int arrowType READ arrowTp WRITE setArrowTp )
+class KDEUI_EXPORT KArrowButton : public QPushButton {
+    Q_OBJECT
+    Q_PROPERTY(int arrowType READ arrowTp WRITE setArrowTp)
 
-	public:
-		/**
-		 * Constructs an arrow button.
-		 *
-		 * @param parent This button's parent
-		 * @param arrow The direction the arrrow should be pointing in
-		 * @param name An internal name for this widget
-		 */
-		KArrowButton(QWidget *parent = 0, Qt::ArrowType arrow = Qt::UpArrow,
-			const char *name = 0);
+public:
+    /**
+     * Constructs an arrow button.
+     *
+     * @param parent This button's parent
+     * @param arrow The direction the arrrow should be pointing in
+     * @param name An internal name for this widget
+     */
+    KArrowButton(QWidget *parent = 0, Qt::ArrowType arrow = Qt::UpArrow, const char *name = 0);
 
-		/**
-		 * Destructor.
-		 */
-		virtual ~KArrowButton();
+    /**
+     * Destructor.
+     */
+    virtual ~KArrowButton();
 
-		/**
-		 * Reimplemented from QPushButton.
-		 */
-		virtual QSize sizeHint() const;
+    /**
+     * Reimplemented from QPushButton.
+     */
+    virtual QSize sizeHint() const;
 
-		/**
-		* Returns the arrow type
-		* @since 3.4
-		*/
-		Qt::ArrowType arrowType() const;
+    /**
+    * Returns the arrow type
+    * @since 3.4
+    */
+    Qt::ArrowType arrowType() const;
 
-		// hacks for moc braindamages with enums
-		int arrowTp() const { return (int) arrowType(); }
-		void setArrowTp( int tp ) { setArrowType( (Qt::ArrowType) tp ); }
-	public slots:
-		/**
-		 * Defines in what direction the arrow is pointing to. Will repaint the
-		 * button if necessary.
-		 *
-		 * @param a The direction this arrow should be pointing in
-		 */
-		void setArrowType(Qt::ArrowType a);
+    // hacks for moc braindamages with enums
+    int arrowTp() const
+    {
+        return (int)arrowType();
+    }
+    void setArrowTp(int tp)
+    {
+        setArrowType((Qt::ArrowType)tp);
+    }
+public slots:
+    /**
+     * Defines in what direction the arrow is pointing to. Will repaint the
+     * button if necessary.
+     *
+     * @param a The direction this arrow should be pointing in
+     */
+    void setArrowType(Qt::ArrowType a);
 
-	protected:
-		/**
-		 * Reimplemented from QPushButton.
-		 */
-		virtual void drawButton(QPainter *);
+protected:
+    /**
+     * Reimplemented from QPushButton.
+     */
+    virtual void drawButton(QPainter *);
 
-	protected:
-		virtual void virtual_hook( int id, void* data );
-	private:
-		KArrowButtonPrivate *d;
+protected:
+    virtual void virtual_hook(int id, void *data);
+
+private:
+    KArrowButtonPrivate *d;
 };
 
 #endif // __karrowbutton_h__

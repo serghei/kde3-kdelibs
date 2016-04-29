@@ -30,11 +30,11 @@
 
 using namespace KUnitTest;
 
-KUNITTEST_MODULE( kunittest_samplemodule, "Suite1" );
-KUNITTEST_MODULE_REGISTER_TESTER( SampleTester );
+KUNITTEST_MODULE(kunittest_samplemodule, "Suite1");
+KUNITTEST_MODULE_REGISTER_TESTER(SampleTester);
 
 void SampleTester::allTests()
 {
-  int i = 2;
-  CHECK( i + 2, 4 );
+    int i = 2;
+    CHECK(i + 2, 4);
 }

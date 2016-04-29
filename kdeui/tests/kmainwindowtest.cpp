@@ -9,24 +9,24 @@
 
 MainWindow::MainWindow()
 {
-    QTimer::singleShot( 2*1000, this, SLOT( showMessage() ) );
+    QTimer::singleShot(2 * 1000, this, SLOT(showMessage()));
 
-    setCentralWidget( new QLabel( "foo", this ) );
+    setCentralWidget(new QLabel("foo", this));
 
-    menuBar()->insertItem( "hi" );
+    menuBar()->insertItem("hi");
 }
 
 void MainWindow::showMessage()
 {
     statusBar()->show();
-    statusBar()->message( "test" );
+    statusBar()->message("test");
 }
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-    KApplication app( argc, argv, "kmainwindowtest" );
+    KApplication app(argc, argv, "kmainwindowtest");
 
-    MainWindow* mw = new MainWindow; // deletes itself when closed
+    MainWindow *mw = new MainWindow; // deletes itself when closed
     mw->show();
 
     return app.exec();

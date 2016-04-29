@@ -6,18 +6,16 @@
 
 #include "kdedmodule.h"
 
-class TestModule : public KDEDModule
-{
-   Q_OBJECT
-   K_DCOP
+class TestModule : public KDEDModule {
+    Q_OBJECT
+    K_DCOP
 public:
-   TestModule(const QCString &obj);
+    TestModule(const QCString &obj);
 
-   void idle();
+    void idle();
 
-k_dcop:
-   QString world();
-   void registerMe(const QCString &app);
+    k_dcop : QString world();
+    void registerMe(const QCString &app);
 };
 
 #endif

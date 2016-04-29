@@ -37,49 +37,57 @@ int SMTPClientStatus[] = {
 
 #define SMTP_READ_BUFFER_SIZE 256
 
-class SMTP:public QObject
-{
+class SMTP : public QObject {
     Q_OBJECT
 public:
     SMTP(char *serverhost = 0, unsigned short int port = 0, int timeout = DEFAULT_SMTP_TIMEOUT);
     ~SMTP();
 
-    void setServerHost(const QString& serverhost);
+    void setServerHost(const QString &serverhost);
     void setPort(unsigned short int port);
     void setTimeOut(int timeout);
 
-    bool isConnected(){return connected;};
-    bool isFinished(){return finished;};
-    QString getLastLine(){return lastLine;};
+    bool isConnected()
+    {
+        return connected;
+    };
+    bool isFinished()
+    {
+        return finished;
+    };
+    QString getLastLine()
+    {
+        return lastLine;
+    };
 
-    void setSenderAddress(const QString& sender);
-    void setRecipientAddress(const QString& recipient);
-    void setMessageSubject(const QString& subject);
-    void setMessageBody(const QString& message);
+    void setSenderAddress(const QString &sender);
+    void setRecipientAddress(const QString &recipient);
+    void setMessageSubject(const QString &subject);
+    void setMessageBody(const QString &message);
     void setMessageHeader(const QString &header);
 
     typedef enum {
-        NONE = 0,             // null
-        GREET = 220,          // greeting from server
-        GOODBYE = 221,        // server acknolages quit
-        SUCCESSFUL = 250,     // command successful
-        READYDATA = 354,      // server ready to receive data
-        ERROR = 501,          // error
-        UNKNOWN = 550        // user unknown
-    }SMTPServerStatus;
+        NONE = 0,         // null
+        GREET = 220,      // greeting from server
+        GOODBYE = 221,    // server acknolages quit
+        SUCCESSFUL = 250, // command successful
+        READYDATA = 354,  // server ready to receive data
+        ERROR = 501,      // error
+        UNKNOWN = 550     // user unknown
+    } SMTPServerStatus;
 
     typedef enum {
-        INIT = 50,            // not logged in yet
-        IN = 100,             // logged in, got 220
-        READY = 150,          // sent HELO, got 250
-        SENTFROM = 200,       // sent MAIL FROM:, got 250
-        SENTTO = 250,         // sent RCTP TO:, got 250
-        DATA = 300,           // DATA sent, got 354
-        FINISHED = 350,       // finished sending data, got 250
-        QUIT = 400,           // sent QUIT, got 221
-        OUT = 450,            // finished, logged out
-        CERROR = 500           // didn't finish, had error or connection drop
-    }SMTPClientStatus;
+        INIT = 50,      // not logged in yet
+        IN = 100,       // logged in, got 220
+        READY = 150,    // sent HELO, got 250
+        SENTFROM = 200, // sent MAIL FROM:, got 250
+        SENTTO = 250,   // sent RCTP TO:, got 250
+        DATA = 300,     // DATA sent, got 354
+        FINISHED = 350, // finished sending data, got 250
+        QUIT = 400,     // sent QUIT, got 221
+        OUT = 450,      // finished, logged out
+        CERROR = 500    // didn't finish, had error or connection drop
+    } SMTPClientStatus;
 
     typedef enum {
         NOERROR = 0,
@@ -90,7 +98,7 @@ public:
         UNKNOWNRESPONSE = 20,
         UNKNOWNUSER = 30,
         COMMAND = 40
-    }SMTPError;
+    } SMTPError;
 
 protected:
     void processLine(QString *line);

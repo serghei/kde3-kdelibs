@@ -24,39 +24,37 @@
 #include <qevent.h>
 #include <qstring.h>
 
-namespace KSpell2
+namespace KSpell2 {
+enum
 {
-    enum {
-        FoundMisspelling = 2003,
-        FinishedChecking  = 2004
-    };
-    class MisspellingEvent : public QCustomEvent
+    FoundMisspelling = 2003,
+    FinishedChecking = 2004
+};
+class MisspellingEvent : public QCustomEvent {
+public:
+    MisspellingEvent(const QString &word, int pos) : QCustomEvent(FoundMisspelling), m_word(word), m_position(pos)
     {
-    public:
-        MisspellingEvent( const QString& word,
-                         int pos )
-            : QCustomEvent( FoundMisspelling ), m_word( word ),
-              m_position( pos )
-            {}
+    }
 
-        QString word() const {
-            return m_word;
-        }
-        int     position() const {
-            return m_position;
-        }
-    private:
-        QString m_word;
-        int     m_position;
-    };
-    class FinishedCheckingEvent : public QCustomEvent
+    QString word() const
     {
-    public:
-        FinishedCheckingEvent()
-            : QCustomEvent( FinishedChecking )
-            {}
-    };
+        return m_word;
+    }
+    int position() const
+    {
+        return m_position;
+    }
 
+private:
+    QString m_word;
+    int m_position;
+};
+class FinishedCheckingEvent : public QCustomEvent {
+public:
+    FinishedCheckingEvent() : QCustomEvent(FinishedChecking)
+    {
+    }
+};
 }
 
 #endif

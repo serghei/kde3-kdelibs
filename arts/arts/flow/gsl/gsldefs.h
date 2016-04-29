@@ -29,36 +29,35 @@ extern "C" {
 
 
 /* --- forward decls --- */
-typedef struct _GslMagic		GslMagic;
-typedef struct _GslClass		GslClass;
-typedef struct _GslComplex		GslComplex;
-typedef struct _GslDataCache		GslDataCache;
-typedef struct _GslDataHandle		GslDataHandle;
-typedef struct _GslDataHandleFuncs	GslDataHandleFuncs;
-typedef struct _GslGlueContext          GslGlueContext;
-typedef struct _GslJob			GslJob;
-typedef struct _GslModule		GslModule;
-typedef struct _GslIStream		GslIStream;
-typedef struct _GslJStream		GslJStream;
-typedef struct _GslLoader		GslLoader;
-typedef struct _GslOStream		GslOStream;
-typedef struct _GslThread		GslThread;
-typedef struct _GslTrans		GslTrans;
-typedef struct _GslWaveChunk		GslWaveChunk;
-typedef struct _GslWaveChunkBlock	GslWaveChunkBlock;
-typedef struct _GslRecMutex		GslRecMutex;
-typedef struct _GslRing			GslRing;
-typedef union _GslCond			GslCond;
-typedef union _GslMutex			GslMutex;
+typedef struct _GslMagic GslMagic;
+typedef struct _GslClass GslClass;
+typedef struct _GslComplex GslComplex;
+typedef struct _GslDataCache GslDataCache;
+typedef struct _GslDataHandle GslDataHandle;
+typedef struct _GslDataHandleFuncs GslDataHandleFuncs;
+typedef struct _GslGlueContext GslGlueContext;
+typedef struct _GslJob GslJob;
+typedef struct _GslModule GslModule;
+typedef struct _GslIStream GslIStream;
+typedef struct _GslJStream GslJStream;
+typedef struct _GslLoader GslLoader;
+typedef struct _GslOStream GslOStream;
+typedef struct _GslThread GslThread;
+typedef struct _GslTrans GslTrans;
+typedef struct _GslWaveChunk GslWaveChunk;
+typedef struct _GslWaveChunkBlock GslWaveChunkBlock;
+typedef struct _GslRecMutex GslRecMutex;
+typedef struct _GslRing GslRing;
+typedef union _GslCond GslCond;
+typedef union _GslMutex GslMutex;
 /* ssize_t/off_t type used within Gsl */
-typedef glong			  GslLong;
-#define	GSL_MAXLONG		  G_MAXLONG
+typedef glong GslLong;
+#define GSL_MAXLONG G_MAXLONG
 
 
 /* --- GSL errors --- */
-typedef enum    /*< skip >*/
-{
-  GSL_ERROR_NONE,
+typedef enum /*< skip >*/
+{ GSL_ERROR_NONE,
   GSL_ERROR_INTERNAL,
   GSL_ERROR_UNKNOWN,
   /* I/O errors */
@@ -68,7 +67,7 @@ typedef enum    /*< skip >*/
   GSL_ERROR_EXISTS,
   GSL_ERROR_TEMP,
   GSL_ERROR_EOF,
-#define GSL_ERROR_FILE_EMPTY	GSL_ERROR_EOF
+#define GSL_ERROR_FILE_EMPTY GSL_ERROR_EOF
   GSL_ERROR_NOT_FOUND,
   GSL_ERROR_OPEN_FAILED,
   GSL_ERROR_SEEK_FAILED,
@@ -82,49 +81,44 @@ typedef enum    /*< skip >*/
   /* miscellaneous errors */
   GSL_ERROR_NO_RESOURCE,
   GSL_ERROR_CODEC_FAILURE,
-  GSL_ERROR_LAST        /* administrative */
+  GSL_ERROR_LAST /* administrative */
 } GslErrorType;
 
 
 /* --- functions --- */
-typedef void     (*GslAccessFunc)       (GslModule      *module,
-					 gpointer        data);
-typedef void     (*GslFreeFunc)         (gpointer        data);
-typedef void     (*GslModuleFreeFunc)   (gpointer        data,
-					 const GslClass	*klass);
+typedef void (*GslAccessFunc)(GslModule *module, gpointer data);
+typedef void (*GslFreeFunc)(gpointer data);
+typedef void (*GslModuleFreeFunc)(gpointer data, const GslClass *klass);
 
 
-#if defined (BSE_COMPILATION) || defined (BSE_PLUGIN_FALLBACK) \
-    || (GSL_USE_GSL_GLIB) || defined (GSL_EXTENSIONS)
-#  define if_expect(cond)		if (GSL_GCC_EXPECT (cond))
-#  define if_reject(cond)		if (GSL_GCC_REJECT (cond))
+#if defined(BSE_COMPILATION) || defined(BSE_PLUGIN_FALLBACK) || (GSL_USE_GSL_GLIB) || defined(GSL_EXTENSIONS)
+#define if_expect(cond) if(GSL_GCC_EXPECT(cond))
+#define if_reject(cond) if(GSL_GCC_REJECT(cond))
 #endif
 
 
 /* --- implementation details --- */
-#define	GSL_ENGINE_MAX_POLLFDS	(128)
-union _GslCond
-{
-  gpointer cond_pointer;
-  guint8   cond_dummy[MAX (8, GSL_SIZEOF_PTH_COND_T)];
+#define GSL_ENGINE_MAX_POLLFDS (128)
+union _GslCond {
+    gpointer cond_pointer;
+    guint8 cond_dummy[MAX(8, GSL_SIZEOF_PTH_COND_T)];
 };
-union _GslMutex
-{
-  gpointer mutex_pointer;
-  guint8   mutex_dummy[MAX (8, GSL_SIZEOF_PTH_MUTEX_T)];
+union _GslMutex {
+    gpointer mutex_pointer;
+    guint8 mutex_dummy[MAX(8, GSL_SIZEOF_PTH_MUTEX_T)];
 };
 struct _GslRecMutex
 {
-  GslMutex sync_mutex;
-  gpointer owner;
-  guint    depth;
+    GslMutex sync_mutex;
+    gpointer owner;
+    guint depth;
 };
 #if __GNUC__ >= 3 && defined __OPTIMIZE__
-#  define GSL_GCC_EXPECT(cond)	(__builtin_expect ((cond) != 0, 1))
-#  define GSL_GCC_REJECT(cond)	(__builtin_expect ((cond) != 0, 0))
+#define GSL_GCC_EXPECT(cond) (__builtin_expect((cond) != 0, 1))
+#define GSL_GCC_REJECT(cond) (__builtin_expect((cond) != 0, 0))
 #else
-#  define GSL_GCC_EXPECT(cond)	cond
-#  define GSL_GCC_REJECT(cond)	cond
+#define GSL_GCC_EXPECT(cond) cond
+#define GSL_GCC_REJECT(cond) cond
 #endif
 
 #ifdef __cplusplus

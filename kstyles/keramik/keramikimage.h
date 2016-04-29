@@ -36,34 +36,34 @@
 
 struct KeramikEmbedImage
 {
-	bool haveAlpha;
-	int width;
-	int height;
-	int id;
-	const unsigned char* data;
+    bool haveAlpha;
+    int width;
+    int height;
+    int id;
+    const unsigned char *data;
 };
 
-extern KeramikEmbedImage* KeramikGetDbImage(int id);
+extern KeramikEmbedImage *KeramikGetDbImage(int id);
 extern void KeramikDbCleanup();
 
 enum KeramikTileType
 {
-	KeramikTileTL = 0,
-	KeramikTileTC = 1,
-	KeramikTileTR = 2,
-	KeramikTileCL = 3,
-	KeramikTileCC = 4,
-	KeramikTileCR = 5,
-	KeramikTileRL = 6,
-	KeramikTileRC = 7,
-	KeramikTileRR = 8,
-	KeramikTileSeparator = 16,
-	KeramikSlider1 = 32,
-	KeramikSlider2 = 48,
-	KeramikSlider3 = 64,
-	KeramikSlider4 = 80,
-	KeramikGroove1 = 96,
-	KeramikGroove2 = 112
+    KeramikTileTL = 0,
+    KeramikTileTC = 1,
+    KeramikTileTR = 2,
+    KeramikTileCL = 3,
+    KeramikTileCC = 4,
+    KeramikTileCR = 5,
+    KeramikTileRL = 6,
+    KeramikTileRC = 7,
+    KeramikTileRR = 8,
+    KeramikTileSeparator = 16,
+    KeramikSlider1 = 32,
+    KeramikSlider2 = 48,
+    KeramikSlider3 = 64,
+    KeramikSlider4 = 80,
+    KeramikGroove1 = 96,
+    KeramikGroove2 = 112
 };
 
 #endif

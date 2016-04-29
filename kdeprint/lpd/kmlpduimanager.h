@@ -22,14 +22,13 @@
 
 #include "kmuimanager.h"
 
-class KMLpdUiManager : public KMUiManager
-{
+class KMLpdUiManager : public KMUiManager {
 public:
-	KMLpdUiManager(QObject *parent = 0, const char *name = 0);
-	~KMLpdUiManager();
+    KMLpdUiManager(QObject *parent = 0, const char *name = 0);
+    ~KMLpdUiManager();
 
-	void setupWizard(KMWizard*);
-	void setupPropertyPages(KMPropertyPage*);
+    void setupWizard(KMWizard *);
+    void setupPropertyPages(KMPropertyPage *);
 };
 
 #endif

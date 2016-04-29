@@ -27,30 +27,27 @@
 #include <kpopupmenu.h>
 #include <klocale.h>
 
-KateBrowserExtension::KateBrowserExtension( KateDocument* doc )
-: KParts::BrowserExtension( doc, "katepartbrowserextension" ),
-  m_doc (doc)
+KateBrowserExtension::KateBrowserExtension(KateDocument *doc) : KParts::BrowserExtension(doc, "katepartbrowserextension"), m_doc(doc)
 {
-  connect( doc, SIGNAL( selectionChanged() ),
-           this, SLOT( slotSelectionChanged() ) );
-  emit enableAction( "print", true );
+    connect(doc, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
+    emit enableAction("print", true);
 }
 
 void KateBrowserExtension::copy()
 {
-  if (m_doc->activeView())
-    m_doc->activeView()->copy();
+    if(m_doc->activeView())
+        m_doc->activeView()->copy();
 }
 
 void KateBrowserExtension::print()
 {
-  m_doc->printDialog();
+    m_doc->printDialog();
 }
 
 void KateBrowserExtension::slotSelectionChanged()
 {
-  if (m_doc->activeView())
-    emit enableAction( "copy", m_doc->activeView()->hasSelection() );
+    if(m_doc->activeView())
+        emit enableAction("copy", m_doc->activeView()->hasSelection());
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

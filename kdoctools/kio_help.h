@@ -18,26 +18,24 @@
 #include <kio/global.h>
 #include <kio/slavebase.h>
 
-class HelpProtocol : public KIO::SlaveBase
-{
+class HelpProtocol : public KIO::SlaveBase {
 public:
+    HelpProtocol(bool ghelp, const QCString &pool, const QCString &app);
+    virtual ~HelpProtocol()
+    {
+    }
 
-    HelpProtocol( bool ghelp, const QCString &pool, const QCString &app);
-    virtual ~HelpProtocol() { }
+    virtual void get(const KURL &url);
 
-    virtual void get( const KURL& url );
-
-    virtual void mimetype( const KURL& url );
+    virtual void mimetype(const KURL &url);
 
 private:
+    QString langLookup(const QString &fname);
+    void emitFile(const KURL &url);
+    void get_file(const KURL &url);
+    QString lookupFile(const QString &fname, const QString &query, bool &redirect);
 
-    QString langLookup(const QString& fname);
-    void emitFile( const KURL &url );
-    void get_file( const KURL& url );
-    QString lookupFile(const QString &fname, const QString &query,
-                       bool &redirect);
-
-    void unicodeError( const QString &t );
+    void unicodeError(const QString &t);
 
     QString mParsed;
     bool mGhelp;

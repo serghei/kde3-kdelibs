@@ -6,16 +6,17 @@
 #include <qstrlist.h>
 #include <qtimer.h>
 
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
-class KIOExec : public QObject
-{
+class KIOExec : public QObject {
     Q_OBJECT
 public:
     KIOExec();
 
 public slots:
-    void slotResult( KIO::Job * );
+    void slotResult(KIO::Job *);
     void slotRunApp();
 
 protected:
@@ -24,12 +25,13 @@ protected:
     int counter;
     int expectedCounter;
     QString command;
-    struct fileInfo {
-       QString path;
-       KURL url;
-       int time;
+    struct fileInfo
+    {
+        QString path;
+        KURL url;
+        int time;
     };
-    QValueList<fileInfo> fileList;
+    QValueList< fileInfo > fileList;
 };
 
 #endif

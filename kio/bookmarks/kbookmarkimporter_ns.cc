@@ -40,56 +40,58 @@
 void KNSBookmarkImporterImpl::parse()
 {
     QFile f(m_fileName);
-    QTextCodec * codec = m_utf8 ? QTextCodec::codecForName("UTF-8") : QTextCodec::codecForLocale();
+    QTextCodec *codec = m_utf8 ? QTextCodec::codecForName("UTF-8") : QTextCodec::codecForLocale();
     Q_ASSERT(codec);
-    if (!codec)
+    if(!codec)
         return;
 
-    if(f.open(IO_ReadOnly)) {
+    if(f.open(IO_ReadOnly))
+    {
 
-        static const int g_lineLimit = 16*1024;
+        static const int g_lineLimit = 16 * 1024;
         QCString s(g_lineLimit);
         // skip header
-        while(f.readLine(s.data(), g_lineLimit) >= 0 && !s.contains("<DL>"));
+        while(f.readLine(s.data(), g_lineLimit) >= 0 && !s.contains("<DL>"))
+            ;
 
-        while(f.readLine(s.data(), g_lineLimit)>=0) {
-            if ( s[s.length()-1] != '\n' ) // Gosh, this line is longer than g_lineLimit. Skipping.
+        while(f.readLine(s.data(), g_lineLimit) >= 0)
+        {
+            if(s[s.length() - 1] != '\n') // Gosh, this line is longer than g_lineLimit. Skipping.
             {
-               kdWarning() << "Netscape bookmarks contain a line longer than " << g_lineLimit << ". Skipping." << endl;
-               continue;
+                kdWarning() << "Netscape bookmarks contain a line longer than " << g_lineLimit << ". Skipping." << endl;
+                continue;
             }
             QCString t = s.stripWhiteSpace();
-            if(t.left(12).upper() == "<DT><A HREF=" ||
-               t.left(16).upper() == "<DT><H3><A HREF=") {
-              int firstQuotes = t.find('"')+1;
-              int secondQuotes = t.find('"', firstQuotes);
-              if (firstQuotes != -1 && secondQuotes != -1)
-              {
-                QCString link = t.mid(firstQuotes, secondQuotes-firstQuotes);
-                int endTag = t.find('>', secondQuotes+1);
-                QCString name = t.mid(endTag+1);
-                name = name.left(name.findRev('<'));
-                if ( name.right(4) == "</A>" )
-                    name = name.left( name.length() - 4 );
-                QString qname = KCharsets::resolveEntities( codec->toUnicode( name ) );
-                QCString additionalInfo = t.mid( secondQuotes+1, endTag-secondQuotes-1 );
+            if(t.left(12).upper() == "<DT><A HREF=" || t.left(16).upper() == "<DT><H3><A HREF=")
+            {
+                int firstQuotes = t.find('"') + 1;
+                int secondQuotes = t.find('"', firstQuotes);
+                if(firstQuotes != -1 && secondQuotes != -1)
+                {
+                    QCString link = t.mid(firstQuotes, secondQuotes - firstQuotes);
+                    int endTag = t.find('>', secondQuotes + 1);
+                    QCString name = t.mid(endTag + 1);
+                    name = name.left(name.findRev('<'));
+                    if(name.right(4) == "</A>")
+                        name = name.left(name.length() - 4);
+                    QString qname = KCharsets::resolveEntities(codec->toUnicode(name));
+                    QCString additionalInfo = t.mid(secondQuotes + 1, endTag - secondQuotes - 1);
 
-                emit newBookmark( qname,
-                                  link, codec->toUnicode(additionalInfo) );
-              }
+                    emit newBookmark(qname, link, codec->toUnicode(additionalInfo));
+                }
             }
-            else if(t.left(7).upper() == "<DT><H3") {
+            else if(t.left(7).upper() == "<DT><H3")
+            {
                 int endTag = t.find('>', 7);
-                QCString name = t.mid(endTag+1);
+                QCString name = t.mid(endTag + 1);
                 name = name.left(name.findRev('<'));
-                QString qname = KCharsets::resolveEntities( codec->toUnicode( name ) );
-                QCString additionalInfo = t.mid( 8, endTag-8 );
+                QString qname = KCharsets::resolveEntities(codec->toUnicode(name));
+                QCString additionalInfo = t.mid(8, endTag - 8);
                 bool folded = (additionalInfo.left(6) == "FOLDED");
-                if (folded) additionalInfo.remove(0,7);
+                if(folded)
+                    additionalInfo.remove(0, 7);
 
-                emit newFolder( qname,
-                                !folded,
-                                codec->toUnicode(additionalInfo) );
+                emit newFolder(qname, !folded, codec->toUnicode(additionalInfo));
             }
             else if(t.left(4).upper() == "<HR>")
                 emit newSeparator();
@@ -103,25 +105,23 @@ void KNSBookmarkImporterImpl::parse()
 
 QString KNSBookmarkImporterImpl::findDefaultLocation(bool forSaving) const
 {
-    if (m_utf8) 
+    if(m_utf8)
     {
-       if ( forSaving )
-           return KFileDialog::getSaveFileName( QDir::homeDirPath() + "/.mozilla",
-                                                i18n("*.html|HTML Files (*.html)") );
-       else
-           return KFileDialog::getOpenFileName( QDir::homeDirPath() + "/.mozilla",
-                                                i18n("*.html|HTML Files (*.html)") );
-    } 
-    else 
+        if(forSaving)
+            return KFileDialog::getSaveFileName(QDir::homeDirPath() + "/.mozilla", i18n("*.html|HTML Files (*.html)"));
+        else
+            return KFileDialog::getOpenFileName(QDir::homeDirPath() + "/.mozilla", i18n("*.html|HTML Files (*.html)"));
+    }
+    else
     {
-       return QDir::homeDirPath() + "/.netscape/bookmarks.html";
+        return QDir::homeDirPath() + "/.netscape/bookmarks.html";
     }
 }
 
 ////////////////////////////////////////////////////////////////
 
 
-void KNSBookmarkImporter::parseNSBookmarks( bool utf8 )
+void KNSBookmarkImporter::parseNSBookmarks(bool utf8)
 {
     KNSBookmarkImporterImpl importer;
     importer.setFilename(m_fileName);
@@ -130,10 +130,10 @@ void KNSBookmarkImporter::parseNSBookmarks( bool utf8 )
     importer.parse();
 }
 
-QString KNSBookmarkImporter::netscapeBookmarksFile( bool forSaving )
+QString KNSBookmarkImporter::netscapeBookmarksFile(bool forSaving)
 {
     static KNSBookmarkImporterImpl *p = 0;
-    if (!p)
+    if(!p)
     {
         p = new KNSBookmarkImporterImpl;
         p->setUtf8(false);
@@ -141,10 +141,10 @@ QString KNSBookmarkImporter::netscapeBookmarksFile( bool forSaving )
     return p->findDefaultLocation(forSaving);
 }
 
-QString KNSBookmarkImporter::mozillaBookmarksFile( bool forSaving )
+QString KNSBookmarkImporter::mozillaBookmarksFile(bool forSaving)
 {
     static KNSBookmarkImporterImpl *p = 0;
-    if (!p)
+    if(!p)
     {
         p = new KNSBookmarkImporterImpl;
         p->setUtf8(true);
@@ -157,85 +157,86 @@ QString KNSBookmarkImporter::mozillaBookmarksFile( bool forSaving )
 //                   compat only
 ////////////////////////////////////////////////////////////////
 
-void KNSBookmarkExporter::write(bool utf8) {
-   KNSBookmarkExporterImpl exporter(m_pManager, m_fileName);
-   exporter.setUtf8(utf8);
-   exporter.write(m_pManager->root());
+void KNSBookmarkExporter::write(bool utf8)
+{
+    KNSBookmarkExporterImpl exporter(m_pManager, m_fileName);
+    exporter.setUtf8(utf8);
+    exporter.write(m_pManager->root());
 }
 
-void KNSBookmarkExporter::writeFolder(QTextStream &/*stream*/, KBookmarkGroup /*gp*/) {
-   // TODO - requires a d pointer workaround hack?
+void KNSBookmarkExporter::writeFolder(QTextStream & /*stream*/, KBookmarkGroup /*gp*/)
+{
+    // TODO - requires a d pointer workaround hack?
 }
 
 ////////////////////////////////////////////////////////////////
 
-void KNSBookmarkExporterImpl::setUtf8(bool utf8) {
-   m_utf8 = utf8;
+void KNSBookmarkExporterImpl::setUtf8(bool utf8)
+{
+    m_utf8 = utf8;
 }
 
-void KNSBookmarkExporterImpl::write(KBookmarkGroup parent) {
-   if (QFile::exists(m_fileName)) {
-      ::rename(
-         QFile::encodeName(m_fileName), 
-         QFile::encodeName(m_fileName + ".beforekde"));
-   }
+void KNSBookmarkExporterImpl::write(KBookmarkGroup parent)
+{
+    if(QFile::exists(m_fileName))
+    {
+        ::rename(QFile::encodeName(m_fileName), QFile::encodeName(m_fileName + ".beforekde"));
+    }
 
-   QFile file(m_fileName);
+    QFile file(m_fileName);
 
-   if (!file.open(IO_WriteOnly)) {
-      kdError(7043) << "Can't write to file " << m_fileName << endl;
-      return;
-   }
+    if(!file.open(IO_WriteOnly))
+    {
+        kdError(7043) << "Can't write to file " << m_fileName << endl;
+        return;
+    }
 
-   QTextStream fstream(&file);
-   fstream.setEncoding(m_utf8 ? QTextStream::UnicodeUTF8 : QTextStream::Locale);
+    QTextStream fstream(&file);
+    fstream.setEncoding(m_utf8 ? QTextStream::UnicodeUTF8 : QTextStream::Locale);
 
-   QString charset 
-      = m_utf8 ? "UTF-8" : QString::fromLatin1(QTextCodec::codecForLocale()->name()).upper();
+    QString charset = m_utf8 ? "UTF-8" : QString::fromLatin1(QTextCodec::codecForLocale()->name()).upper();
 
-   fstream << "<!DOCTYPE NETSCAPE-Bookmark-file-1>" << endl
-           << i18n("<!-- This file was generated by Konqueror -->") << endl
-           << "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=" 
-              << charset << "\">" << endl
-           << "<TITLE>" << i18n("Bookmarks") << "</TITLE>" << endl
-           << "<H1>" << i18n("Bookmarks") << "</H1>" << endl
-           << "<DL><p>" << endl
-           << folderAsString(parent)
-           << "</DL><P>" << endl;
+    fstream << "<!DOCTYPE NETSCAPE-Bookmark-file-1>" << endl
+            << i18n("<!-- This file was generated by Konqueror -->") << endl
+            << "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=" << charset << "\">" << endl
+            << "<TITLE>" << i18n("Bookmarks") << "</TITLE>" << endl
+            << "<H1>" << i18n("Bookmarks") << "</H1>" << endl
+            << "<DL><p>" << endl
+            << folderAsString(parent) << "</DL><P>" << endl;
 }
 
-QString KNSBookmarkExporterImpl::folderAsString(KBookmarkGroup parent) const {
-   QString str;
-   QTextStream fstream(&str, IO_WriteOnly);
+QString KNSBookmarkExporterImpl::folderAsString(KBookmarkGroup parent) const
+{
+    QString str;
+    QTextStream fstream(&str, IO_WriteOnly);
 
-   for (KBookmark bk = parent.first(); !bk.isNull(); bk = parent.next(bk)) {
-      if (bk.isSeparator()) {
-         fstream << "<HR>" << endl;
-         continue;
-      }
+    for(KBookmark bk = parent.first(); !bk.isNull(); bk = parent.next(bk))
+    {
+        if(bk.isSeparator())
+        {
+            fstream << "<HR>" << endl;
+            continue;
+        }
 
-      QString text = QStyleSheet::escape(bk.fullText());
+        QString text = QStyleSheet::escape(bk.fullText());
 
-      if (bk.isGroup() ) {
-         fstream << "<DT><H3 " 
-                    << (!bk.toGroup().isOpen() ? "FOLDED " : "")
-                    << bk.internalElement().attribute("netscapeinfo") << ">" 
-                 << text << "</H3>" << endl
-                 << "<DL><P>" << endl
-                 << folderAsString(bk.toGroup())
-                 << "</DL><P>" << endl;
-         continue;
+        if(bk.isGroup())
+        {
+            fstream << "<DT><H3 " << (!bk.toGroup().isOpen() ? "FOLDED " : "") << bk.internalElement().attribute("netscapeinfo") << ">" << text
+                    << "</H3>" << endl
+                    << "<DL><P>" << endl
+                    << folderAsString(bk.toGroup()) << "</DL><P>" << endl;
+            continue;
+        }
+        else
+        {
+            // note - netscape seems to use local8bit for url...
+            fstream << "<DT><A HREF=\"" << bk.url().url() << "\"" << bk.internalElement().attribute("netscapeinfo") << ">" << text << "</A>" << endl;
+            continue;
+        }
+    }
 
-      } else {
-         // note - netscape seems to use local8bit for url...
-         fstream << "<DT><A HREF=\"" << bk.url().url() << "\""
-                    << bk.internalElement().attribute("netscapeinfo") << ">" 
-                 << text << "</A>" << endl;
-         continue;
-      }
-   }
-
-   return str;
+    return str;
 }
 
 ////

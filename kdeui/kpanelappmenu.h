@@ -34,19 +34,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Daniel M. Duley <mosfet@kde.org>
  */
-class KDEUI_EXPORT KPanelAppMenu : public QObject, public DCOPObject
-{
+class KDEUI_EXPORT KPanelAppMenu : public QObject, public DCOPObject {
     Q_OBJECT
 public:
     /**
      * Constructs a new menu with the given title.
      */
-    KPanelAppMenu(const QString &title, QObject *parent = 0, const char *name = 0 );
+    KPanelAppMenu(const QString &title, QObject *parent = 0, const char *name = 0);
     /**
      * Same as above, but with an icon for the submenu item.
      */
-    KPanelAppMenu(const QPixmap &icon, const QString &title, QObject *parent,
-              const char *name);
+    KPanelAppMenu(const QPixmap &icon, const QString &title, QObject *parent, const char *name);
     /**
      * Constructs a new (sub)menu with a given id.
      */
@@ -65,11 +63,11 @@ public:
     /**
      * Inserts an item with a icon. The icon name must be a full path.
      */
-    int insertItem(const QPixmap &icon, const QString &text, int id = -1 );
+    int insertItem(const QPixmap &icon, const QString &text, int id = -1);
     /**
      * Inserts a sub menu with a icon. The icon name must be a full path.
      */
-    KPanelAppMenu *insertMenu(const QPixmap &icon, const QString &text, int id=-1);
+    KPanelAppMenu *insertMenu(const QPixmap &icon, const QString &text, int id = -1);
 
     /**
      * Clears the menu.
@@ -79,8 +77,7 @@ public:
     /**
      * @internal
      */
-    bool process(const QCString &fun, const QByteArray &data,
-		 QCString &replyType, QByteArray &replyData);
+    bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
 
 signals:
     /**

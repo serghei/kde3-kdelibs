@@ -25,82 +25,81 @@
 
 #include "kmimesourcefactory.h"
 
-class KMimeSourceFactoryPrivate
-{
+class KMimeSourceFactoryPrivate {
 public:
-  inline KMimeSourceFactoryPrivate (KIconLoader* loader) : m_iconLoader(loader), m_instance(0L) {}
-  inline KIconLoader *iconLoader()
-  {
-    // If we don't have either of these, things are looking grim.
-    Q_ASSERT(m_instance || m_iconLoader);
+    inline KMimeSourceFactoryPrivate(KIconLoader *loader) : m_iconLoader(loader), m_instance(0L)
+    {
+    }
+    inline KIconLoader *iconLoader()
+    {
+        // If we don't have either of these, things are looking grim.
+        Q_ASSERT(m_instance || m_iconLoader);
 
-    if (m_iconLoader)
-      return m_iconLoader;
+        if(m_iconLoader)
+            return m_iconLoader;
 
-    return m_instance->iconLoader();
-  }
+        return m_instance->iconLoader();
+    }
 
-  KIconLoader *m_iconLoader;
-  KInstance *m_instance;
+    KIconLoader *m_iconLoader;
+    KInstance *m_instance;
 };
 
-KMimeSourceFactory::KMimeSourceFactory (KIconLoader* loader)
-  : QMimeSourceFactory (),
-	d (new KMimeSourceFactoryPrivate (loader))
+KMimeSourceFactory::KMimeSourceFactory(KIconLoader *loader) : QMimeSourceFactory(), d(new KMimeSourceFactoryPrivate(loader))
 {
 }
 
 KMimeSourceFactory::~KMimeSourceFactory()
 {
-  delete d;
+    delete d;
 }
 
-QString KMimeSourceFactory::makeAbsolute (const QString& absOrRelName, const QString& context) const
+QString KMimeSourceFactory::makeAbsolute(const QString &absOrRelName, const QString &context) const
 {
-  QString myName;
-  QString myContext;
+    QString myName;
+    QString myContext;
 
-  const int pos = absOrRelName.find ('|');
-  if (pos > -1)
-	{
-	  myContext = absOrRelName.left (pos);
-	  myName = absOrRelName.right (absOrRelName.length() - myContext.length() - 1);
-	}
+    const int pos = absOrRelName.find('|');
+    if(pos > -1)
+    {
+        myContext = absOrRelName.left(pos);
+        myName = absOrRelName.right(absOrRelName.length() - myContext.length() - 1);
+    }
 
-  QString result;
+    QString result;
 
-  if (myContext == "desktop")
-	{
-	  result = d->iconLoader()->iconPath (myName, KIcon::Desktop);
-	}
-  else if (myContext == "toolbar")
-	{	 
-	  result = d->iconLoader()->iconPath (myName, KIcon::Toolbar);
-	}
-  else if (myContext == "maintoolbar")
-	{
-	  result = d->iconLoader()->iconPath (myName, KIcon::MainToolbar);
-	}
-  else if (myContext == "small")
-	{
-	  result = d->iconLoader()->iconPath (myName, KIcon::Small);
-	}
-  else if (myContext == "user")
-	{	  
-	  result = d->iconLoader()->iconPath (myName, KIcon::User);
-	}
+    if(myContext == "desktop")
+    {
+        result = d->iconLoader()->iconPath(myName, KIcon::Desktop);
+    }
+    else if(myContext == "toolbar")
+    {
+        result = d->iconLoader()->iconPath(myName, KIcon::Toolbar);
+    }
+    else if(myContext == "maintoolbar")
+    {
+        result = d->iconLoader()->iconPath(myName, KIcon::MainToolbar);
+    }
+    else if(myContext == "small")
+    {
+        result = d->iconLoader()->iconPath(myName, KIcon::Small);
+    }
+    else if(myContext == "user")
+    {
+        result = d->iconLoader()->iconPath(myName, KIcon::User);
+    }
 
-  if (result.isEmpty())
-	result = QMimeSourceFactory::makeAbsolute (absOrRelName, context);
-  
-  return result;
+    if(result.isEmpty())
+        result = QMimeSourceFactory::makeAbsolute(absOrRelName, context);
+
+    return result;
 }
 
 void KMimeSourceFactory::setInstance(KInstance *instance)
 {
-  d->m_instance = instance;
+    d->m_instance = instance;
 }
 
-void KMimeSourceFactory::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
-
+void KMimeSourceFactory::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}

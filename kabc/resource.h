@@ -34,17 +34,16 @@ namespace KABC {
  * This class is used as helper class for saving address book.
  * @see requestSaveTicket(), save().
  */
-class KABC_EXPORT Ticket
-{
+class KABC_EXPORT Ticket {
     friend class Resource;
 
-  public:
+public:
     ~Ticket();
 
     Resource *resource();
 
-  private:
-    Ticket( Resource *resource );
+private:
+    Ticket(Resource *resource);
 
     Resource *mResource;
 };
@@ -52,12 +51,10 @@ class KABC_EXPORT Ticket
 /**
  * @internal
  */
-class KABC_EXPORT Resource : public KRES::Resource
-{
-  Q_OBJECT
+class KABC_EXPORT Resource : public KRES::Resource {
+    Q_OBJECT
 
-  public:
-
+public:
     /**
       @short Resource Iterator
 
@@ -65,22 +62,21 @@ class KABC_EXPORT Resource : public KRES::Resource
       By default it points to a QValueList<Addressee>::Iterator,
       but you can reimplement this class to fit your own needs.
     */
-    class KABC_EXPORT Iterator
-    {
-      public:
+    class KABC_EXPORT Iterator {
+    public:
         Iterator();
-        Iterator( const Iterator & );
+        Iterator(const Iterator &);
         virtual ~Iterator();
 
-        virtual Iterator &operator=( const Iterator & );
+        virtual Iterator &operator=(const Iterator &);
         virtual const Addressee &operator*() const;
         virtual Addressee &operator*();
         virtual Iterator &operator++();
-        virtual Iterator &operator++( int );
+        virtual Iterator &operator++(int);
         virtual Iterator &operator--();
-        virtual Iterator &operator--( int );
-        virtual bool operator==( const Iterator &it );
-        virtual bool operator!=( const Iterator &it );
+        virtual Iterator &operator--(int);
+        virtual bool operator==(const Iterator &it);
+        virtual bool operator!=(const Iterator &it);
 
         struct IteratorData;
         IteratorData *d;
@@ -91,22 +87,21 @@ class KABC_EXPORT Resource : public KRES::Resource
 
       This class provides a const iterator for resource entries.
     */
-    class KABC_EXPORT ConstIterator
-    {
-      public:
+    class KABC_EXPORT ConstIterator {
+    public:
         ConstIterator();
-        ConstIterator( const ConstIterator & );
-        ConstIterator( const Iterator & );
+        ConstIterator(const ConstIterator &);
+        ConstIterator(const Iterator &);
         virtual ~ConstIterator();
 
-        virtual ConstIterator &operator=( const ConstIterator & );
-        virtual const Addressee &operator*() const ;
+        virtual ConstIterator &operator=(const ConstIterator &);
+        virtual const Addressee &operator*() const;
         virtual ConstIterator &operator++();
-        virtual ConstIterator &operator++( int );
+        virtual ConstIterator &operator++(int);
         virtual ConstIterator &operator--();
-        virtual ConstIterator &operator--( int );
-        virtual bool operator==( const ConstIterator &it );
-        virtual bool operator!=( const ConstIterator &it );
+        virtual ConstIterator &operator--(int);
+        virtual bool operator==(const ConstIterator &it);
+        virtual bool operator!=(const ConstIterator &it);
 
         struct ConstIteratorData;
         ConstIteratorData *d;
@@ -118,7 +113,7 @@ class KABC_EXPORT Resource : public KRES::Resource
       @param config The config object where the derived classes can
                     read out their settings.
      */
-    Resource( const KConfig *config );
+    Resource(const KConfig *config);
 
     /**
       Destructor.
@@ -157,7 +152,7 @@ class KABC_EXPORT Resource : public KRES::Resource
     /**
       Writes the resource specific config to file.
      */
-    virtual void writeConfig( KConfig *config );
+    virtual void writeConfig(KConfig *config);
 
     /**
       Request a ticket, you have to pass through save() to
@@ -169,9 +164,9 @@ class KABC_EXPORT Resource : public KRES::Resource
     /**
       Releases the ticket previousely requested with requestSaveTicket().
       The resource has to remove its locks in this function.
-	  This function is also responsible for deleting the ticket.
+      This function is also responsible for deleting the ticket.
      */
-    virtual void releaseSaveTicket( Ticket* ) = 0;
+    virtual void releaseSaveTicket(Ticket *) = 0;
 
     /**
       Loads all addressees synchronously.
@@ -194,12 +189,12 @@ class KABC_EXPORT Resource : public KRES::Resource
     /**
       Insert an addressee into the resource.
      */
-    virtual void insertAddressee( const Addressee& );
+    virtual void insertAddressee(const Addressee &);
 
     /**
       Removes an addressee from resource.
      */
-    virtual void removeAddressee( const Addressee& addr );
+    virtual void removeAddressee(const Addressee &addr);
 
     /**
       Saves all addressees synchronously.
@@ -208,7 +203,7 @@ class KABC_EXPORT Resource : public KRES::Resource
                     releaseSaveTicket() explicitely.
       @return Whether the saving was successfully.
      */
-    virtual bool save( Ticket *ticket ) = 0;
+    virtual bool save(Ticket *ticket) = 0;
 
     /**
       Saves all addressees asynchronously. You have to make sure that either
@@ -221,7 +216,7 @@ class KABC_EXPORT Resource : public KRES::Resource
                     releaseSaveTicket() explicitely.
       @return Whether the saving was successfully.
      */
-    virtual bool asyncSave( Ticket *ticket );
+    virtual bool asyncSave(Ticket *ticket);
 
     /**
       Searches an addressee with the specified unique identifier.
@@ -230,7 +225,7 @@ class KABC_EXPORT Resource : public KRES::Resource
       @return The addressee with the specified unique identifier or an
               empty addressee.
      */
-    virtual Addressee findByUid( const QString &uid );
+    virtual Addressee findByUid(const QString &uid);
 
     /**
       Searches all addressees which match the specified name.
@@ -238,7 +233,7 @@ class KABC_EXPORT Resource : public KRES::Resource
       @param name The name you are looking for.
       @return A list of all matching addressees.
      */
-    virtual Addressee::List findByName( const QString &name );
+    virtual Addressee::List findByName(const QString &name);
 
     /**
       Searches all addressees which match the specified email address.
@@ -246,7 +241,7 @@ class KABC_EXPORT Resource : public KRES::Resource
       @param email The email address you are looking for.
       @return A list of all matching addressees.
      */
-    virtual Addressee::List findByEmail( const QString &email );
+    virtual Addressee::List findByEmail(const QString &email);
 
     /**
       Searches all addressees which belongs to the specified category.
@@ -254,7 +249,7 @@ class KABC_EXPORT Resource : public KRES::Resource
       @param category The category you are looking for.
       @return A list of all matching addressees.
      */
-    virtual Addressee::List findByCategory( const QString &category );
+    virtual Addressee::List findByCategory(const QString &category);
 
     /**
       Removes all addressees from the resource.
@@ -266,16 +261,16 @@ class KABC_EXPORT Resource : public KRES::Resource
 
       Sets the address book of the resource.
      */
-    void setAddressBook( AddressBook* );
+    void setAddressBook(AddressBook *);
 
-  signals:
+signals:
     /**
       This signal is emitted when the resource has finished the loading of all
       addressees from the backend to the internal cache.
 
       @param resource The pointer to the resource which emitted this signal.
      */
-    void loadingFinished( Resource *resource );
+    void loadingFinished(Resource *resource);
 
     /**
       This signal is emitted when an error occured during loading the
@@ -284,7 +279,7 @@ class KABC_EXPORT Resource : public KRES::Resource
       @param resource The pointer to the resource which emitted this signal.
       @param msg A translated error message.
      */
-    void loadingError( Resource *resource, const QString &msg );
+    void loadingError(Resource *resource, const QString &msg);
 
     /**
       This signal is emitted when the resource has finished the saving of all
@@ -292,7 +287,7 @@ class KABC_EXPORT Resource : public KRES::Resource
 
       @param resource The pointer to the resource which emitted this signal.
      */
-    void savingFinished( Resource *resource );
+    void savingFinished(Resource *resource);
 
     /**
       This signal is emitted when an error occured during saving the
@@ -301,19 +296,18 @@ class KABC_EXPORT Resource : public KRES::Resource
       @param resource The pointer to the resource which emitted this signal.
       @param msg A translated error message.
      */
-    void savingError( Resource *resource, const QString &msg );
+    void savingError(Resource *resource, const QString &msg);
 
-  protected:
-    Ticket *createTicket( Resource * );
+protected:
+    Ticket *createTicket(Resource *);
     Addressee::Map mAddrMap;
 
-  private:
+private:
     AddressBook *mAddressBook;
 
     class ResourcePrivate;
     ResourcePrivate *d;
 };
-
 }
 
 #endif

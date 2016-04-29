@@ -35,16 +35,19 @@ class ElementImpl;
 class DOMStringImpl;
 
 // Introduced in DOM Level 2:
-class AbstractViewImpl : public khtml::Shared<AbstractViewImpl>
-{
+class AbstractViewImpl : public khtml::Shared< AbstractViewImpl > {
 public:
     AbstractViewImpl(DocumentImpl *_document);
     ~AbstractViewImpl();
-    DocumentImpl *document() const { return m_document; }
+    DocumentImpl *document() const
+    {
+        return m_document;
+    }
     CSSStyleDeclarationImpl *getComputedStyle(ElementImpl *elt, DOMStringImpl *pseudoElt);
+
 protected:
     DocumentImpl *m_document;
 };
 
-} //namespace
+} // namespace
 #endif

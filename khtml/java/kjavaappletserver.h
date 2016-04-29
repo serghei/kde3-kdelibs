@@ -39,9 +39,8 @@ class KJavaAppletContext;
 class KJavaAppletServerPrivate;
 class JSStackFrame;
 
-class KJavaAppletServer : public QObject
-{
-Q_OBJECT
+class KJavaAppletServer : public QObject {
+    Q_OBJECT
 
 public:
     /**
@@ -73,45 +72,41 @@ public:
     /**
      * Create an applet context with the specified id.
      */
-    void createContext( int contextId, KJavaAppletContext* context );
+    void createContext(int contextId, KJavaAppletContext *context);
 
     /**
      * Destroy the applet context with the specified id. All the applets in the
      * context will be destroyed as well.
      */
-    void destroyContext( int contextId );
+    void destroyContext(int contextId);
 
     /**
      * Create an applet in the specified context with the specified id. The applet
      * name, class etc. are specified in the same way as in the HTML APPLET tag.
      */
-    bool createApplet( int contextId, int appletId,
-                       const QString & name, const QString & clazzName,
-                       const QString & baseURL, const QString & user,
-                       const QString & password, const QString & authname,
-                       const QString & codeBase, const QString & jarFile,
-                       QSize size, const QMap<QString, QString>& params,
-                       const QString & windowTitle );
+    bool createApplet(int contextId, int appletId, const QString &name, const QString &clazzName, const QString &baseURL, const QString &user,
+                      const QString &password, const QString &authname, const QString &codeBase, const QString &jarFile, QSize size,
+                      const QMap< QString, QString > &params, const QString &windowTitle);
 
     /**
      * This should be called by the KJavaAppletWidget
      */
-    void initApplet( int contextId, int appletId );
+    void initApplet(int contextId, int appletId);
 
     /**
      * Destroy an applet in the specified context with the specified id.
      */
-    void destroyApplet( int contextId, int appletId );
+    void destroyApplet(int contextId, int appletId);
 
     /**
      * Start the specified applet.
      */
-    void startApplet( int contextId, int appletId );
+    void startApplet(int contextId, int appletId);
 
     /**
      * Stop the specified applet.
      */
-    void stopApplet( int contextId, int appletId );
+    void stopApplet(int contextId, int appletId);
 
     /**
      * Show java console.
@@ -122,56 +117,58 @@ public:
      * Send data we got back from a KJavaDownloader back to the appropriate
      * class loader.
      */
-    void sendURLData( int loaderID, int code, const QByteArray& data );
+    void sendURLData(int loaderID, int code, const QByteArray &data);
     /**
      * Removes KJavaDownloader from the list (deletes it too).
      */
-    void removeDataJob( int loaderID );
+    void removeDataJob(int loaderID);
 
     /**
      * Shut down the KJAS server.
      */
     void quit();
-    KJavaProcess* javaProcess() { return process; }
+    KJavaProcess *javaProcess()
+    {
+        return process;
+    }
 
     QString appletLabel();
 
     void waitForReturnData(JSStackFrame *);
     void endWaitForReturnData();
 
-    bool getMember(QStringList & args, QStringList & ret_args);
-    bool putMember(QStringList & args);
-    bool callMember(QStringList & args, QStringList & ret_args);
-    void derefObject(QStringList & args);
+    bool getMember(QStringList &args, QStringList &ret_args);
+    bool putMember(QStringList &args);
+    bool callMember(QStringList &args, QStringList &ret_args);
+    void derefObject(QStringList &args);
 
     bool usingKIO();
-protected:
-    void setupJava( KJavaProcess* p );
 
-    KJavaProcess* process;
+protected:
+    void setupJava(KJavaProcess *p);
+
+    KJavaProcess *process;
 
 protected slots:
-    void slotJavaRequest( const QByteArray& qb );
+    void slotJavaRequest(const QByteArray &qb);
     void checkShutdown();
     void timerEvent(QTimerEvent *);
 
 private:
-    KJavaAppletServerPrivate* d;
-
+    KJavaAppletServerPrivate *d;
 };
 
 
-class PermissionDialog : public QObject
-{
+class PermissionDialog : public QObject {
     Q_OBJECT
 public:
-    PermissionDialog( QWidget* );
+    PermissionDialog(QWidget *);
     ~PermissionDialog();
 
-    QCString exec( const QString & cert, const QString & perm );
+    QCString exec(const QString &cert, const QString &perm);
 
 private slots:
-     void clicked();
+    void clicked();
 
 private:
     QCString m_button;

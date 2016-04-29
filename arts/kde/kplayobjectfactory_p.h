@@ -23,23 +23,21 @@
 #include <qobject.h>
 #include "kplayobjectfactory.h"
 
-namespace KDE
-{
+namespace KDE {
 
 /**
  * @internal
  */
-class POFHelper : public QObject
-{
-	friend class PlayObjectFactory;
-	Q_OBJECT
+class POFHelper : public QObject {
+    friend class PlayObjectFactory;
+    Q_OBJECT
 private slots:
-	void connectAmanPlay();
-private:
-	KDE::PlayObject *po;
-	KAudioManagerPlay *ap;
-};
+    void connectAmanPlay();
 
+private:
+    KDE::PlayObject *po;
+    KAudioManagerPlay *ap;
+};
 }
 
 #endif // KPLAYOBJECTFACTORY_P_H

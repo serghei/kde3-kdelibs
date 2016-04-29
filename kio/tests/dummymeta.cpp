@@ -2,19 +2,17 @@
 
 #include "dummymeta.h"
 
-K_EXPORT_COMPONENT_FACTORY( dummymeta, KGenericFactory<DummyMeta> )
+K_EXPORT_COMPONENT_FACTORY(dummymeta, KGenericFactory< DummyMeta >)
 
-DummyMeta::DummyMeta( QObject *parent, const char *name,
-                      const QStringList &preferredItems )
-    : KFilePlugin( parent, name, preferredItems )
+DummyMeta::DummyMeta(QObject *parent, const char *name, const QStringList &preferredItems) : KFilePlugin(parent, name, preferredItems)
 {
     qDebug("---- DummyMeta::DummyMeta: got %i preferred items.", preferredItems.count());
 }
 
-bool DummyMeta::readInfo( KFileMetaInfo::Internal & info )
+bool DummyMeta::readInfo(KFileMetaInfo::Internal &info)
 {
-   qDebug("#### DummyMeta:: readInfo: %s", info.path().latin1() );
-   return 0L;
+    qDebug("#### DummyMeta:: readInfo: %s", info.path().latin1());
+    return 0L;
 }
 
 #include "dummymeta.moc"

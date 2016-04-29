@@ -35,8 +35,7 @@
  *
  * @see @ref dbusconventions-objectpath
  */
-class QDBusObjectPath : public QCString
-{
+class QDBusObjectPath : public QCString {
 public:
     /**
      * @brief Creates an empty and invalid object path
@@ -48,14 +47,14 @@ public:
      *
      * @param other the object path to copy
      */
-    QDBusObjectPath(const QDBusObjectPath& other);
+    QDBusObjectPath(const QDBusObjectPath &other);
 
     /**
      * @brief Creates copy of the given @p other object path
      *
      * @param other the object path to copy
      */
-    QDBusObjectPath(const QCString& other);
+    QDBusObjectPath(const QCString &other);
 
     /**
      * @brief Creates an object path for an object as a child of the parent node
@@ -75,7 +74,7 @@ public:
      * @param parentNode the object path to create the child on
      * @param nodeName the name of the child node
      */
-    QDBusObjectPath(const QDBusObjectPath& parentNode, const QCString& nodeName);
+    QDBusObjectPath(const QDBusObjectPath &parentNode, const QCString &nodeName);
 
     /**
      * @brief Returns whether the current content is considered a valid object path
@@ -112,7 +111,7 @@ public:
      *
      * @see isValid()
      */
-    static int validate(const QCString& path);
+    static int validate(const QCString &path);
 };
 
 #endif

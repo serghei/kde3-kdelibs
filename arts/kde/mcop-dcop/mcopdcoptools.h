@@ -24,24 +24,23 @@
 
 #include <qdatastream.h>
 
-class MCOPDCOPTools
-{
+class MCOPDCOPTools {
 public:
-	static long getLong(QDataStream &stream)
-	{
-		long l;
-		stream << l;
+    static long getLong(QDataStream &stream)
+    {
+        long l;
+        stream << l;
 
-		return l;
-	}
+        return l;
+    }
 
-	static std::string getString(QDataStream &stream)
-	{
-		QCString s;
-		stream << s;
+    static std::string getString(QDataStream &stream)
+    {
+        QCString s;
+        stream << s;
 
-		return std::string(s);
-	}
+        return std::string(s);
+    }
 };
 
 #endif

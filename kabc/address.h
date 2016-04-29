@@ -28,45 +28,44 @@
 #include <kdelibs_export.h>
 
 // template tags for address formatting localization
-#define KABC_FMTTAG_realname   QString("%n")
-#define KABC_FMTTAG_REALNAME   QString("%N")
-#define KABC_FMTTAG_company    QString("%cm")
-#define KABC_FMTTAG_COMPANY    QString("%CM")
-#define KABC_FMTTAG_pobox      QString("%p")
-#define KABC_FMTTAG_street     QString("%s")
-#define KABC_FMTTAG_STREET     QString("%S")
-#define KABC_FMTTAG_zipcode    QString("%z")
-#define KABC_FMTTAG_location   QString("%l")
-#define KABC_FMTTAG_LOCATION   QString("%L")
-#define KABC_FMTTAG_region     QString("%r")
-#define KABC_FMTTAG_REGION     QString("%R")
-#define KABC_FMTTAG_newline    QString("\\n")
-#define KABC_FMTTAG_condcomma  QString("%,")
-#define KABC_FMTTAG_condwhite  QString("%w")
+#define KABC_FMTTAG_realname QString("%n")
+#define KABC_FMTTAG_REALNAME QString("%N")
+#define KABC_FMTTAG_company QString("%cm")
+#define KABC_FMTTAG_COMPANY QString("%CM")
+#define KABC_FMTTAG_pobox QString("%p")
+#define KABC_FMTTAG_street QString("%s")
+#define KABC_FMTTAG_STREET QString("%S")
+#define KABC_FMTTAG_zipcode QString("%z")
+#define KABC_FMTTAG_location QString("%l")
+#define KABC_FMTTAG_LOCATION QString("%L")
+#define KABC_FMTTAG_region QString("%r")
+#define KABC_FMTTAG_REGION QString("%R")
+#define KABC_FMTTAG_newline QString("\\n")
+#define KABC_FMTTAG_condcomma QString("%,")
+#define KABC_FMTTAG_condwhite QString("%w")
 #define KABC_FMTTAG_purgeempty QString("%0")
 
 namespace KABC {
 
 /**
   @short Postal address information.
-  
+
   This class represents information about a postal address.
 */
-class KABC_EXPORT Address
-{
-    friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const Address & );
-    friend KABC_EXPORT QDataStream &operator>>( QDataStream &, Address & );
+class KABC_EXPORT Address {
+    friend KABC_EXPORT QDataStream &operator<<(QDataStream &, const Address &);
+    friend KABC_EXPORT QDataStream &operator>>(QDataStream &, Address &);
 
-  public:
+public:
     /**
       List of addresses.
     */
-    typedef QValueList<Address> List;
-    typedef QValueList<int> TypeList;
-  
+    typedef QValueList< Address > List;
+    typedef QValueList< int > TypeList;
+
     /**
       Address types:
-     
+
       @li @p Dom -    domestic
       @li @p Intl -   international
       @li @p Postal - postal
@@ -75,24 +74,32 @@ class KABC_EXPORT Address
       @li @p Work -   address at work
       @li @p Pref -   preferred address
     */
-    enum Type { Dom = 1, Intl = 2, Postal = 4, Parcel = 8, Home = 16, Work = 32,
-           Pref = 64 };
+    enum Type
+    {
+        Dom = 1,
+        Intl = 2,
+        Postal = 4,
+        Parcel = 8,
+        Home = 16,
+        Work = 32,
+        Pref = 64
+    };
 
     /**
       Constructor that creates an empty Address, which is initialized
       with a unique id (see id()).
     */
     Address();
-  
+
     /**
       This is like Address() just above, with the difference
       that you can specify the type.
     */
-    Address( int );
+    Address(int);
 
-    bool operator==( const Address & ) const;
-    bool operator!=( const Address & ) const;
-  
+    bool operator==(const Address &) const;
+    bool operator!=(const Address &) const;
+
     /**
       Returns true, if the address is empty.
     */
@@ -106,7 +113,7 @@ class KABC_EXPORT Address
     /**
       Sets the unique id.
     */
-    void setId( const QString & );
+    void setId(const QString &);
 
     /*
       Returns the unique id.
@@ -114,11 +121,11 @@ class KABC_EXPORT Address
     QString id() const;
 
     /**
-      Sets the type of address. See enum for definiton of types. 
-     
+      Sets the type of address. See enum for definiton of types.
+
       @param type type, can be a bitwise or of multiple types.
     */
-    void setType( int type );
+    void setType(int type);
 
     /**
       Returns the type of address. Can be a bitwise or of multiple types.
@@ -133,7 +140,7 @@ class KABC_EXPORT Address
     /**
       Sets the post office box.
     */
-    void setPostOfficeBox( const QString & );
+    void setPostOfficeBox(const QString &);
 
     /**
       Returns the post office box.
@@ -148,7 +155,7 @@ class KABC_EXPORT Address
     /**
       Sets the extended address information.
     */
-    void setExtended( const QString & );
+    void setExtended(const QString &);
 
     /**
       Returns the extended address information.
@@ -159,11 +166,11 @@ class KABC_EXPORT Address
       Returns the translated label for extended field.
     */
     static QString extendedLabel();
-    
+
     /**
       Sets the street (including number).
     */
-    void setStreet( const QString & );
+    void setStreet(const QString &);
 
     /**
       Returns the street.
@@ -178,7 +185,7 @@ class KABC_EXPORT Address
     /**
       Sets the locality, e.g. city.
     */
-    void setLocality( const QString & );
+    void setLocality(const QString &);
 
     /**
       Returns the locality.
@@ -193,7 +200,7 @@ class KABC_EXPORT Address
     /**
       Sets the region, e.g. state.
     */
-    void setRegion( const QString & );
+    void setRegion(const QString &);
 
     /**
       Returns the region.
@@ -204,11 +211,11 @@ class KABC_EXPORT Address
       Returns the translated label for region field.
     */
     static QString regionLabel();
- 
+
     /**
       Sets the postal code.
     */
-    void setPostalCode( const QString & );
+    void setPostalCode(const QString &);
 
     /**
       Returns the postal code.
@@ -223,7 +230,7 @@ class KABC_EXPORT Address
     /**
       Sets the country.
     */
-    void setCountry( const QString & );
+    void setCountry(const QString &);
 
     /**
       Returns the country.
@@ -238,7 +245,7 @@ class KABC_EXPORT Address
     /**
       Sets the delivery label. This is the literal text to be used as label.
     */
-    void setLabel( const QString & );
+    void setLabel(const QString &);
 
     /**
       Returns the delivery label.
@@ -258,26 +265,25 @@ class KABC_EXPORT Address
     /**
       Returns the translated label for a special type.
     */
-    static QString typeLabel( int type );
+    static QString typeLabel(int type);
 
     /**
       Used for debug output.
     */
     void dump() const;
 
-    /** 
+    /**
       Returns this address formatted according to the country-specific
-      address formatting rules. The formatting rules applied depend on 
-      either the addresses {@link #country country} field, or (if the 
+      address formatting rules. The formatting rules applied depend on
+      either the addresses {@link #country country} field, or (if the
       latter is empty) on the system country setting. If companyName is
       provided, an available business address format will be preferred.
-      
+
       @param realName   the formatted name of the contact
       @param orgaName   the name of the organization or company
       @return           the formatted address (containing newline characters)
     */
-    QString formattedAddress( const QString &realName=QString::null
-                            , const QString &orgaName=QString::null ) const;
+    QString formattedAddress(const QString &realName = QString::null, const QString &orgaName = QString::null) const;
 
     /**
       Returns ISO code for a localized country name. Only localized country
@@ -286,41 +292,38 @@ class KABC_EXPORT Address
       @param cname  name of the country
       @return       two digit ISO code
     */
-    static QString countryToISO( const QString &cname );
+    static QString countryToISO(const QString &cname);
 
     /**
-      Returns a localized country name for a ISO code. 
+      Returns a localized country name for a ISO code.
       This might be replaced by a KLocale method in the future.
       @param ISOname two digit ISO code
       @return        localized name of the country
       @since 3.2
     */
-    static QString ISOtoCountry( const QString &ISOname );
+    static QString ISOtoCountry(const QString &ISOname);
 
-  private:
-    /** 
+private:
+    /**
       Parses a snippet of an address template
       @param tsection   the template string to be parsed
       @param result     QString reference in which the result will be stored
       @return           true if at least one tag evaluated positively, else false
     */
-    bool parseAddressTemplateSection( const QString &tsection
-                                    ,       QString &result
-                                    , const QString &realName
-                                    , const QString &orgaName ) const;
+    bool parseAddressTemplateSection(const QString &tsection, QString &result, const QString &realName, const QString &orgaName) const;
 
-    /** 
-      Finds the balanced closing bracket starting from the opening bracket at 
+    /**
+      Finds the balanced closing bracket starting from the opening bracket at
       pos in tsection.
       @return  position of closing bracket, -1 for unbalanced brackets
     */
-    int  findBalancedBracket( const QString &tsection, int pos ) const;
+    int findBalancedBracket(const QString &tsection, int pos) const;
 
     bool mEmpty;
-  
+
     QString mId;
     int mType;
-  
+
     QString mPostOfficeBox;
     QString mExtended;
     QString mStreet;
@@ -330,12 +333,11 @@ class KABC_EXPORT Address
     QString mCountry;
     QString mLabel;
 
-    static QMap<QString, QString> *mISOMap;
+    static QMap< QString, QString > *mISOMap;
 };
 
-KABC_EXPORT QDataStream &operator<<( QDataStream &, const Address & );
-KABC_EXPORT QDataStream &operator>>( QDataStream &, Address & );
-
+KABC_EXPORT QDataStream &operator<<(QDataStream &, const Address &);
+KABC_EXPORT QDataStream &operator>>(QDataStream &, Address &);
 }
 
 #endif

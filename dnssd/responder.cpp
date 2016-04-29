@@ -26,83 +26,89 @@
 // but for now it does not
 #define IDN_BROKEN_IN_MDNSRESPONDER
 
-namespace DNSSD
-{
+namespace DNSSD {
 
-Responder::Responder(DNSServiceRef ref,QObject *parent, const char *name)
-		: QObject(parent, name), m_ref(0), m_socket(0)
+Responder::Responder(DNSServiceRef ref, QObject *parent, const char *name) : QObject(parent, name), m_ref(0), m_socket(0)
 {
-	setRef(ref);
+    setRef(ref);
 }
- 
+
 void Responder::setRef(DNSServiceRef ref)
 {
-	if (m_socket || m_ref) stop();	
-	m_running = false;
-	m_ref = ref;
-	if (m_ref == 0 ) return;
+    if(m_socket || m_ref)
+        stop();
+    m_running = false;
+    m_ref = ref;
+    if(m_ref == 0)
+        return;
 #ifdef HAVE_DNSSD
-	int fd = DNSServiceRefSockFD(ref);
-	if (fd == -1) return;
-	m_socket = new QSocketNotifier(fd,QSocketNotifier::Read,this);
-	connect(m_socket,SIGNAL(activated(int)),this,SLOT(process()));
-	m_running = true;
+    int fd = DNSServiceRefSockFD(ref);
+    if(fd == -1)
+        return;
+    m_socket = new QSocketNotifier(fd, QSocketNotifier::Read, this);
+    connect(m_socket, SIGNAL(activated(int)), this, SLOT(process()));
+    m_running = true;
 #endif
 }
 Responder::~Responder()
 {
-	stop();
+    stop();
 }
 
 void Responder::stop()
 {
-	if (m_socket) delete m_socket;
-	m_socket = 0;
+    if(m_socket)
+        delete m_socket;
+    m_socket = 0;
 #ifdef HAVE_DNSSD
-	if (m_ref) DNSServiceRefDeallocate(m_ref);
+    if(m_ref)
+        DNSServiceRefDeallocate(m_ref);
 #endif
-	m_ref = 0;
-	m_running = false;
-}	
+    m_ref = 0;
+    m_running = false;
+}
 
 
 void Responder::process()
 {
 #ifdef HAVE_DNSSD
-	if ( DNSServiceProcessResult(m_ref) != kDNSServiceErr_NoError) stop();
+    if(DNSServiceProcessResult(m_ref) != kDNSServiceErr_NoError)
+        stop();
 #endif
 }
 
 bool Responder::isRunning() const
 {
-	return m_running;
+    return m_running;
 }
 
-bool domainIsLocal(const QString& domain)
+bool domainIsLocal(const QString &domain)
 {
-	return domain.section('.',-1,-1).lower()=="local";
+    return domain.section('.', -1, -1).lower() == "local";
 }
 
 QCString domainToDNS(const QString &domain)
 {
 #ifdef IDN_BROKEN_IN_MDNSRESPONDER
-	if (domainIsLocal(domain)) return domain.utf8();
-		else return KIDNA::toAsciiCString(domain);
+    if(domainIsLocal(domain))
+        return domain.utf8();
+    else
+        return KIDNA::toAsciiCString(domain);
 #else
-	return domain.utf8();       
+    return domain.utf8();
 #endif
 }
 
-QString DNSToDomain(const char* domain)
+QString DNSToDomain(const char *domain)
 {
 #ifdef IDN_BROKEN_IN_MDNSRESPONDER
-	if (domainIsLocal(domain)) return QString::fromUtf8(domain);
-		else return KIDNA::toUnicode(domain);
+    if(domainIsLocal(domain))
+        return QString::fromUtf8(domain);
+    else
+        return KIDNA::toUnicode(domain);
 #else
-	return QString::fromUtf8(domain);
+    return QString::fromUtf8(domain);
 #endif
 }
-
-
 }
 #include "responder.moc"

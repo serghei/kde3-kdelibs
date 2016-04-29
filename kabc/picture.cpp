@@ -22,18 +22,15 @@
 
 using namespace KABC;
 
-Picture::Picture()
-  : mIntern( false )
+Picture::Picture() : mIntern(false)
 {
 }
 
-Picture::Picture( const QString &url )
-  : mUrl( url ), mIntern( false )
+Picture::Picture(const QString &url) : mUrl(url), mIntern(false)
 {
 }
 
-Picture::Picture( const QImage &data )
-  : mData( data ), mIntern( true )
+Picture::Picture(const QImage &data) : mData(data), mIntern(true)
 {
 }
 
@@ -41,80 +38,84 @@ Picture::~Picture()
 {
 }
 
-bool Picture::operator==( const Picture &p ) const
+bool Picture::operator==(const Picture &p) const
 {
-  if ( mIntern != p.mIntern ) return false;
+    if(mIntern != p.mIntern)
+        return false;
 
-  if ( mIntern ) {
-    if ( mData != p.mData )
-      return false;
-  } else {
-    if ( mUrl != p.mUrl )
-      return false;
-  }
+    if(mIntern)
+    {
+        if(mData != p.mData)
+            return false;
+    }
+    else
+    {
+        if(mUrl != p.mUrl)
+            return false;
+    }
 
-  return true;
+    return true;
 }
 
-bool Picture::operator!=( const Picture &p ) const
+bool Picture::operator!=(const Picture &p) const
 {
-  return !( p == *this );
+    return !(p == *this);
 }
 
-void Picture::setUrl( const QString &url )
+void Picture::setUrl(const QString &url)
 {
-  mUrl = url;
-  mIntern = false;
+    mUrl = url;
+    mIntern = false;
 }
 
-void Picture::setData( const QImage &data )
+void Picture::setData(const QImage &data)
 {
-  mData = data;
-  mIntern = true;
+    mData = data;
+    mIntern = true;
 }
 
-void Picture::setType( const QString &type )
+void Picture::setType(const QString &type)
 {
-  mType = type;
+    mType = type;
 }
 
 bool Picture::isIntern() const
 {
-  return mIntern;
+    return mIntern;
 }
 
 QString Picture::url() const
 {
-  return mUrl;
+    return mUrl;
 }
 
 QImage Picture::data() const
 {
-  return mData;
+    return mData;
 }
 
 QString Picture::type() const
 {
-  return mType;
+    return mType;
 }
 
 QString Picture::asString() const
 {
-  if ( mIntern )
-    return "intern picture";
-  else
-    return mUrl;
+    if(mIntern)
+        return "intern picture";
+    else
+        return mUrl;
 }
 
-QDataStream &KABC::operator<<( QDataStream &s, const Picture &picture )
+QDataStream &KABC::operator<<(QDataStream &s, const Picture &picture)
 {
-  return s << picture.mIntern << picture.mUrl << picture.mType;
-//  return s << picture.mIntern << picture.mUrl << picture.mType << picture.mData;
+    return s << picture.mIntern << picture.mUrl << picture.mType;
+    //  return s << picture.mIntern << picture.mUrl << picture.mType << picture.mData;
 }
 
-QDataStream &KABC::operator>>( QDataStream &s, Picture &picture )
+QDataStream &KABC::operator>>(QDataStream &s, Picture &picture)
 {
-  s >> picture.mIntern >> picture.mUrl >> picture.mType;
-//  s >> picture.mIntern >> picture.mUrl >> picture.mType >> picture.mData;
-  return s;
+    s >> picture.mIntern >> picture.mUrl >> picture.mType;
+    //  s >> picture.mIntern >> picture.mUrl >> picture.mType >> picture.mData;
+    return s;
 }

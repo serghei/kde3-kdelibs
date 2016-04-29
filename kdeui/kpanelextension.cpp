@@ -28,30 +28,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "kpanelextension.h"
 #include "kpanelextension.moc"
 
-class KPanelExtensionPrivate
-{
+class KPanelExtensionPrivate {
 public:
-    KPanelExtensionPrivate() 
-      : _size(KPanelExtension::SizeNormal), 
-        _customMenu(0),
-        _customSize(58),
-        _reserveStrut(true)
-    {}
+    KPanelExtensionPrivate() : _size(KPanelExtension::SizeNormal), _customMenu(0), _customSize(58), _reserveStrut(true)
+    {
+    }
 
     KPanelExtension::Size _size;
-    QPopupMenu* _customMenu;
+    QPopupMenu *_customMenu;
     int _customSize;
     bool _reserveStrut;
 };
 
-KPanelExtension::KPanelExtension(const QString& configFile, Type type,
-				 int actions, QWidget *parent, const char *name)
-  : QFrame(parent, name)
-  , _type(type)
-  , _position( Top )
-  , _alignment( LeftTop )
-  , _config(0)
-  , _actions(actions)
+KPanelExtension::KPanelExtension(const QString &configFile, Type type, int actions, QWidget *parent, const char *name)
+    : QFrame(parent, name), _type(type), _position(Top), _alignment(LeftTop), _config(0), _actions(actions)
 {
     d = new KPanelExtensionPrivate;
     setFrameStyle(NoFrame);
@@ -64,46 +54,49 @@ KPanelExtension::~KPanelExtension()
     delete d;
 }
 
-void KPanelExtension::setPosition( Position p )
+void KPanelExtension::setPosition(Position p)
 {
-  if( _position == p ) return;
-  _position = p;
-  positionChange( p );
+    if(_position == p)
+        return;
+    _position = p;
+    positionChange(p);
 }
 
-void KPanelExtension::setAlignment( Alignment a )
+void KPanelExtension::setAlignment(Alignment a)
 {
-  if( _alignment == a ) return;
-  _alignment = a;
-  alignmentChange( a );
+    if(_alignment == a)
+        return;
+    _alignment = a;
+    alignmentChange(a);
 }
 
-void KPanelExtension::setSize( Size size, int customSize )
+void KPanelExtension::setSize(Size size, int customSize)
 {
-  if ( d->_size == size && d->_customSize == customSize ) return;
-  d->_size = size;
-  d->_customSize = customSize;
-  emit updateLayout();
+    if(d->_size == size && d->_customSize == customSize)
+        return;
+    d->_size = size;
+    d->_customSize = customSize;
+    emit updateLayout();
 }
 
-void KPanelExtension::action( Action a )
+void KPanelExtension::action(Action a)
 {
-  if ( (a & About) )
-    about();
-  if ( (a & Help) )
-    help();
-  if ( (a & Preferences) )
-    preferences();
-  if ( (a & ReportBug) )
-    reportBug();
+    if((a & About))
+        about();
+    if((a & Help))
+        help();
+    if((a & Preferences))
+        preferences();
+    if((a & ReportBug))
+        reportBug();
 }
 
 Qt::Orientation KPanelExtension::orientation()
 {
-    if (_position == Left || _position == Right)
-	return Vertical;
+    if(_position == Left || _position == Right)
+        return Vertical;
     else
-	return Horizontal;
+        return Horizontal;
 }
 
 KPanelExtension::Size KPanelExtension::sizeSetting() const
@@ -118,32 +111,32 @@ int KPanelExtension::customSize() const
 
 int KPanelExtension::sizeInPixels() const
 {
-  if (d->_size == SizeTiny)
-  {
-    return 24;
-  }
-  else if (d->_size == SizeSmall)
-  {
-    return 30;
-  }
-  else if (d->_size == SizeNormal)
-  {
-    return 46;
-  }
-  else if (d->_size == SizeLarge)
-  {
-    return 58;
-  }
+    if(d->_size == SizeTiny)
+    {
+        return 24;
+    }
+    else if(d->_size == SizeSmall)
+    {
+        return 30;
+    }
+    else if(d->_size == SizeNormal)
+    {
+        return 46;
+    }
+    else if(d->_size == SizeLarge)
+    {
+        return 58;
+    }
 
-  return d->_customSize;
+    return d->_customSize;
 }
 
-QPopupMenu* KPanelExtension::customMenu() const
+QPopupMenu *KPanelExtension::customMenu() const
 {
     return d->_customMenu;
 }
 
-void KPanelExtension::setCustomMenu(QPopupMenu* menu)
+void KPanelExtension::setCustomMenu(QPopupMenu *menu)
 {
     d->_customMenu = menu;
 }
@@ -158,6 +151,6 @@ void KPanelExtension::setReserveStrut(bool reserve)
     d->_reserveStrut = reserve;
 }
 
-void KPanelExtension::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
-
+void KPanelExtension::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}

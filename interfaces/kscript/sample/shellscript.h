@@ -23,26 +23,26 @@
 #include <qvariant.h>
 #include <qobject.h>
 #include <kprocess.h>
-//using namespace KScriptInterface;
-class ShellScript :  public KScriptInterface
-{
-	Q_OBJECT
+// using namespace KScriptInterface;
+class ShellScript : public KScriptInterface {
+    Q_OBJECT
 public:
-	ShellScript(KScriptClientInterface *parent, const char *name, const QStringList &args);
-	virtual ~ShellScript();
-	QString script() const;
-	void setScript( const QString &scriptFile );
-	void setScript( const QString &scriptLibFile, const QString &method );
-	void run(QObject *context = 0, const QVariant &arg = 0);
-	void kill();
+    ShellScript(KScriptClientInterface *parent, const char *name, const QStringList &args);
+    virtual ~ShellScript();
+    QString script() const;
+    void setScript(const QString &scriptFile);
+    void setScript(const QString &scriptLibFile, const QString &method);
+    void run(QObject *context = 0, const QVariant &arg = 0);
+    void kill();
 private slots:
-	void Exit(KProcess *proc);
-	void stdErr(KProcess *proc, char *buffer, int buflen);
-	void stdOut(KProcess *proc, char *buffer, int buflen);
+    void Exit(KProcess *proc);
+    void stdErr(KProcess *proc, char *buffer, int buflen);
+    void stdOut(KProcess *proc, char *buffer, int buflen);
+
 private:
-	KProcess *m_script;
-	KScriptClientInterface *ScriptClientInterface;
-	QString m_scriptName;
+    KProcess *m_script;
+    KScriptClientInterface *ScriptClientInterface;
+    QString m_scriptName;
 };
 
 #endif

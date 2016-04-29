@@ -39,162 +39,160 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-KMUiManager::KMUiManager(QObject *parent, const char *name)
-: QObject(parent,name)
+KMUiManager::KMUiManager(QObject *parent, const char *name) : QObject(parent, name)
 {
-	m_printdialogflags = KMUiManager::PrintDialogAll;
-	m_printdialogpages.setAutoDelete(false);
+    m_printdialogflags = KMUiManager::PrintDialogAll;
+    m_printdialogpages.setAutoDelete(false);
 }
 
 KMUiManager::~KMUiManager()
 {
 }
 
-void KMUiManager::setupPropertyPages(KMPropertyPage*)
+void KMUiManager::setupPropertyPages(KMPropertyPage *)
 {
 }
 
-void KMUiManager::setupWizard(KMWizard*)
+void KMUiManager::setupWizard(KMWizard *)
 {
 }
 
-void KMUiManager::setupConfigDialog(KMConfigDialog*)
+void KMUiManager::setupConfigDialog(KMConfigDialog *)
 {
 }
 
 int KMUiManager::copyFlags(KPrinter *pr, bool usePlugin)
 {
-	int	fl(0), pcap(pluginPageCap());
-	if (KMFactory::self()->settings()->pageSelection == KPrinter::ApplicationSide)
-	{
-		if (pr)
-		{
-			if (pr->currentPage() > 0) fl |= Current;
-			if (pr->minPage() > 0 && pr->maxPage() > 0)
-				fl |= (Range|PageSet|Order);
-		}
-		//else fl = CopyAll;
-		if (usePlugin)
-			fl |= (pcap & (Collate|NoAutoCollate));
-		else
-			fl |= NoAutoCollate;
-	}
-	else if (usePlugin)
-		// in this case, we want page capabilities with plugin, it means
-		// for a regular real printer.
-		fl = pageCap();
-	else
-		// int this case, we want page capabilities for non standard
-		// printer, set auto-collate to false as copies will be handled
-		// by Qt
-		fl = systemPageCap() | NoAutoCollate;
-	return fl;
+    int fl(0), pcap(pluginPageCap());
+    if(KMFactory::self()->settings()->pageSelection == KPrinter::ApplicationSide)
+    {
+        if(pr)
+        {
+            if(pr->currentPage() > 0)
+                fl |= Current;
+            if(pr->minPage() > 0 && pr->maxPage() > 0)
+                fl |= (Range | PageSet | Order);
+        }
+        // else fl = CopyAll;
+        if(usePlugin)
+            fl |= (pcap & (Collate | NoAutoCollate));
+        else
+            fl |= NoAutoCollate;
+    }
+    else if(usePlugin)
+        // in this case, we want page capabilities with plugin, it means
+        // for a regular real printer.
+        fl = pageCap();
+    else
+        // int this case, we want page capabilities for non standard
+        // printer, set auto-collate to false as copies will be handled
+        // by Qt
+        fl = systemPageCap() | NoAutoCollate;
+    return fl;
 }
 
 int KMUiManager::dialogFlags()
 {
-	int	f = m_printdialogflags;
-	int	appf = KMFactory::self()->settings()->application;
-	if (appf != KPrinter::Dialog)
-	{
-		f &= ~(KMUiManager::Preview);
-		if ( appf == KPrinter::StandAlonePersistent)
-			f |= KMUiManager::Persistent;
-	}
-	return f;
+    int f = m_printdialogflags;
+    int appf = KMFactory::self()->settings()->application;
+    if(appf != KPrinter::Dialog)
+    {
+        f &= ~(KMUiManager::Preview);
+        if(appf == KPrinter::StandAlonePersistent)
+            f |= KMUiManager::Persistent;
+    }
+    return f;
 }
 
 void KMUiManager::setupPrintDialog(KPrintDialog *dlg)
 {
-	// dialog flags
-	int	f = dialogFlags();
-	dlg->setFlags(f);
+    // dialog flags
+    int f = dialogFlags();
+    dlg->setFlags(f);
 
-	// add standard dialog pages
-	int	stdpages = KMFactory::self()->settings()->standardDialogPages;
-	if (stdpages & KPrinter::CopiesPage)
-		m_printdialogpages.prepend(new KPCopiesPage(dlg->printer(), 0, "CopiesPage"));
-	if (stdpages & KPrinter::FilesPage)
-		m_printdialogpages.prepend(new KPFileSelectPage(0, "FileSelectPage"));
+    // add standard dialog pages
+    int stdpages = KMFactory::self()->settings()->standardDialogPages;
+    if(stdpages & KPrinter::CopiesPage)
+        m_printdialogpages.prepend(new KPCopiesPage(dlg->printer(), 0, "CopiesPage"));
+    if(stdpages & KPrinter::FilesPage)
+        m_printdialogpages.prepend(new KPFileSelectPage(0, "FileSelectPage"));
 
-	// add plugins pages
-	setupPrintDialogPages(&m_printdialogpages);
+    // add plugins pages
+    setupPrintDialogPages(&m_printdialogpages);
 
-	dlg->setDialogPages(&m_printdialogpages);
+    dlg->setDialogPages(&m_printdialogpages);
 }
 
 void KMUiManager::setupPropertyDialog(KPrinterPropertyDialog *dlg)
 {
-	if (dlg->printer())
-	{
-		DrMain	*driver = KMManager::self()->loadDriver(dlg->printer(), false);
-		dlg->setDriver(driver);
+    if(dlg->printer())
+    {
+        DrMain *driver = KMManager::self()->loadDriver(dlg->printer(), false);
+        dlg->setDriver(driver);
 
-		if (dlg->printer()->isSpecial())
-		{ // special case
-			dlg->addPage(new KPQtPage(dlg,"QtPage"));
-			//dlg->enableSaveButton(false);
-		}
-		else
-		{
-			// add pages specific to print system
-			setupPrinterPropertyDialog(dlg);
-		}
+        if(dlg->printer()->isSpecial())
+        { // special case
+            dlg->addPage(new KPQtPage(dlg, "QtPage"));
+            // dlg->enableSaveButton(false);
+        }
+        else
+        {
+            // add pages specific to print system
+            setupPrinterPropertyDialog(dlg);
+        }
 
-		// retrieve the KPrinter object
-		KPrinter	*prt(0);
-		if (dlg->parent() && dlg->parent()->isA("KPrintDialog"))
-			prt = static_cast<KPrintDialog*>(dlg->parent())->printer();
+        // retrieve the KPrinter object
+        KPrinter *prt(0);
+        if(dlg->parent() && dlg->parent()->isA("KPrintDialog"))
+            prt = static_cast< KPrintDialog * >(dlg->parent())->printer();
 
-		// add margin page
-		if ( ( prt && !prt->fullPage() && prt->applicationType() == KPrinter::Dialog )
-					|| prt->applicationType() < 0 )
-			dlg->addPage(new KPMarginPage(prt, driver, dlg, "MarginPage"));
+        // add margin page
+        if((prt && !prt->fullPage() && prt->applicationType() == KPrinter::Dialog) || prt->applicationType() < 0)
+            dlg->addPage(new KPMarginPage(prt, driver, dlg, "MarginPage"));
 
-		// add driver page
-		if (driver)
-			dlg->addPage(new KPDriverPage(dlg->printer(),driver,dlg,"DriverPage"));
+        // add driver page
+        if(driver)
+            dlg->addPage(new KPDriverPage(dlg->printer(), driver, dlg, "DriverPage"));
 
-		dlg->setCaption(i18n("Configuration of %1").arg(dlg->printer()->name()));
-		if ( KXmlCommandManager::self()->checkCommand( "poster", KXmlCommandManager::None, KXmlCommandManager::None ) )
-			dlg->addPage( new KPPosterPage( dlg, "PosterPage" ) );
-		dlg->addPage(new KPFilterPage(dlg,"FilterPage"));
-		dlg->resize(100,100);
-	}
+        dlg->setCaption(i18n("Configuration of %1").arg(dlg->printer()->name()));
+        if(KXmlCommandManager::self()->checkCommand("poster", KXmlCommandManager::None, KXmlCommandManager::None))
+            dlg->addPage(new KPPosterPage(dlg, "PosterPage"));
+        dlg->addPage(new KPFilterPage(dlg, "FilterPage"));
+        dlg->resize(100, 100);
+    }
 }
 
 void KMUiManager::setupPrinterPropertyDialog(KPrinterPropertyDialog *dlg)
 {
-	if (KMFactory::self()->settings()->application == KPrinter::Dialog
-			|| KMFactory::self()->settings()->application < 0 )
-		dlg->addPage(new KPQtPage(dlg,"QtPage"));
+    if(KMFactory::self()->settings()->application == KPrinter::Dialog || KMFactory::self()->settings()->application < 0)
+        dlg->addPage(new KPQtPage(dlg, "QtPage"));
 }
 
 int KMUiManager::pageCap()
 {
-	int	val = systemPageCap();
-	val |= pluginPageCap();
-	return val;
+    int val = systemPageCap();
+    val |= pluginPageCap();
+    return val;
 }
 
 int KMUiManager::systemPageCap()
 {
-	int	val(0);
-	if (KXmlCommandManager::self()->checkCommand("psselect"))
-		val |= KMUiManager::PSSelect;
-	return val;
+    int val(0);
+    if(KXmlCommandManager::self()->checkCommand("psselect"))
+        val |= KMUiManager::PSSelect;
+    return val;
 }
 
 int KMUiManager::pluginPageCap()
 {
-	return 0;
+    return 0;
 }
 
-void KMUiManager::setupPrintDialogPages(QPtrList<KPrintDialogPage>*)
+void KMUiManager::setupPrintDialogPages(QPtrList< KPrintDialogPage > *)
 {
 }
 
-void KMUiManager::setupJobViewer(QListView*)
+void KMUiManager::setupJobViewer(QListView *)
 {
 }
 

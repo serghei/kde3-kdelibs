@@ -33,42 +33,41 @@ class DrBase;
 class DrMain;
 struct PS_private;
 
-class KDEPRINT_EXPORT PPDLoader
-{
+class KDEPRINT_EXPORT PPDLoader {
 public:
-	PPDLoader();
-	~PPDLoader();
+    PPDLoader();
+    ~PPDLoader();
 
-	DrMain* readFromFile( const QString& filename );
+    DrMain *readFromFile(const QString &filename);
 
-	bool openUi( const QString& name, const QString& desc, const QString& type );
-	bool endUi( const QString& name );
-	bool openGroup( const QString& name, const QString& desc );
-	bool endGroup( const QString& name );
-	bool putStatement( const QString& keyword, const QString& name, const QString& desc, const QStringList& values );
-	bool putStatement2( const QString& keyword, const QString& value );
-	bool putDefault( const QString& keyword, const QString& value );
-	bool putConstraint( const QString& opt1, const QString& opt2, const QString& ch1, const QString& ch2 );
-	bool putFooData( const QString& data );
-	bool putFooProcessedData( const QVariant& var );
-	bool putPaperDimension( const QString& name, const QString& s );
-	bool putImageableArea( const QString& name, const QString& s );
+    bool openUi(const QString &name, const QString &desc, const QString &type);
+    bool endUi(const QString &name);
+    bool openGroup(const QString &name, const QString &desc);
+    bool endGroup(const QString &name);
+    bool putStatement(const QString &keyword, const QString &name, const QString &desc, const QStringList &values);
+    bool putStatement2(const QString &keyword, const QString &value);
+    bool putDefault(const QString &keyword, const QString &value);
+    bool putConstraint(const QString &opt1, const QString &opt2, const QString &ch1, const QString &ch2);
+    bool putFooData(const QString &data);
+    bool putFooProcessedData(const QVariant &var);
+    bool putPaperDimension(const QString &name, const QString &s);
+    bool putImageableArea(const QString &name, const QString &s);
 
-	void setErrorMsg( const QString& msg );
-	QString errorMsg() const;
+    void setErrorMsg(const QString &msg);
+    QString errorMsg() const;
 
-	static DrMain* loadDriver( const QString& filename, QString* msg = NULL );
+    static DrMain *loadDriver(const QString &filename, QString *msg = NULL);
 
 private:
-	QValueStack<DrGroup*> m_groups;
-	DrBase*               m_option;
-	QDict<PS_private>     m_ps;
-	QStringList           m_fonts;
-	QString               m_errormsg;
+    QValueStack< DrGroup * > m_groups;
+    DrBase *m_option;
+    QDict< PS_private > m_ps;
+    QStringList m_fonts;
+    QString m_errormsg;
 
-	friend int kdeprint_ppdparse(void*);
-	DrGroup* findOrCreateGroupForOption( const QString& );
-	void processPageSizes( DrMain* );
+    friend int kdeprint_ppdparse(void *);
+    DrGroup *findOrCreateGroupForOption(const QString &);
+    void processPageSizes(DrMain *);
 };
 
 #endif /* PPDLOADER_H */

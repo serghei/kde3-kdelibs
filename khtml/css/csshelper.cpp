@@ -44,40 +44,53 @@ using namespace khtml;
 
 DOMString khtml::parseURL(const DOMString &url)
 {
-    DOMStringImpl* i = url.implementation();
-    if(!i) return DOMString();
+    DOMStringImpl *i = url.implementation();
+    if(!i)
+        return DOMString();
 
     int o = 0;
     int l = i->l;
-    while(o < l && (i->s[o] <= ' ')) { o++; l--; }
-    while(l > 0 && (i->s[o+l-1] <= ' ')) l--;
+    while(o < l && (i->s[o] <= ' '))
+    {
+        o++;
+        l--;
+    }
+    while(l > 0 && (i->s[o + l - 1] <= ' '))
+        l--;
 
-    if(l >= 5 &&
-       (i->s[o].lower() == 'u') &&
-       (i->s[o+1].lower() == 'r') &&
-       (i->s[o+2].lower() == 'l') &&
-       i->s[o+3].latin1() == '(' &&
-       i->s[o+l-1].latin1() == ')') {
+    if(l >= 5 && (i->s[o].lower() == 'u') && (i->s[o + 1].lower() == 'r') && (i->s[o + 2].lower() == 'l') && i->s[o + 3].latin1() == '('
+       && i->s[o + l - 1].latin1() == ')')
+    {
         o += 4;
         l -= 5;
     }
 
-    while(o < l && (i->s[o] <= ' ')) { o++; l--; }
-    while(l > 0 && (i->s[o+l-1] <= ' ')) l--;
+    while(o < l && (i->s[o] <= ' '))
+    {
+        o++;
+        l--;
+    }
+    while(l > 0 && (i->s[o + l - 1] <= ' '))
+        l--;
 
-    if(l >= 2 && i->s[o] == i->s[o+l-1] &&
-       (i->s[o].latin1() == '\'' || i->s[o].latin1() == '\"')) {
+    if(l >= 2 && i->s[o] == i->s[o + l - 1] && (i->s[o].latin1() == '\'' || i->s[o].latin1() == '\"'))
+    {
         o++;
         l -= 2;
     }
 
-    while(o < l && (i->s[o] <= ' ')) { o++; l--; }
-    while(l > 0 && (i->s[o+l-1] <= ' ')) l--;
+    while(o < l && (i->s[o] <= ' '))
+    {
+        o++;
+        l--;
+    }
+    while(l > 0 && (i->s[o + l - 1] <= ' '))
+        l--;
 
-    DOMStringImpl* j = new DOMStringImpl(i->s+o,l);
+    DOMStringImpl *j = new DOMStringImpl(i->s + o, l);
 
     int nl = 0;
-    for(int k = o; k < o+l; k++)
+    for(int k = o; k < o + l; k++)
         if(i->s[k].unicode() > '\r')
             j->s[nl++] = i->s[k];
 

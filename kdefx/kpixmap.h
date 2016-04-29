@@ -28,9 +28,9 @@
 
 #include <kdelibs_export.h>
 
-const int KColorMode_Mask	= 0x00000300;
-const int WebOnly 	= 0x00000200;
-const int LowOnly	= 0x00000300;
+const int KColorMode_Mask = 0x00000300;
+const int WebOnly = 0x00000200;
+const int LowOnly = 0x00000300;
 
 class KPixmapPrivate;
 
@@ -54,157 +54,157 @@ class KPixmapPrivate;
  * @author Mark Donohoe (donohoe@kde.org)
  * @version $Id: kpixmap.h 465272 2005-09-29 09:47:40Z mueller $
  */
-class KDEFX_EXPORT KPixmap : public QPixmap
-{
+class KDEFX_EXPORT KPixmap : public QPixmap {
 public:
-	/**
-	 * This enumeration provides a color pallete specification
-	 * @see KPixmap::convertFromImage(), KPixmap::load()
-	 */
-        enum ColorMode { Auto,   //!< Convert to monochrome if possible
-			 Color,  //!< Native display depth
-			 Mono,   //!< Monochrome pixmap
-			 LowColor, //!< 3x3x3 color cube (or monochrome)
-			 WebColor //!< Netscape pallete (or monochrome)
-	};
-	/**
-	 * This enumeration provides a gradient mode specification
-	 */
-        enum GradientMode { Horizontal,
-			    Vertical,
-			    Diagonal,
-			    CrossDiagonal
-	};
+    /**
+     * This enumeration provides a color pallete specification
+     * @see KPixmap::convertFromImage(), KPixmap::load()
+     */
+    enum ColorMode
+    {
+        Auto,     //!< Convert to monochrome if possible
+        Color,    //!< Native display depth
+        Mono,     //!< Monochrome pixmap
+        LowColor, //!< 3x3x3 color cube (or monochrome)
+        WebColor  //!< Netscape pallete (or monochrome)
+    };
+    /**
+     * This enumeration provides a gradient mode specification
+     */
+    enum GradientMode
+    {
+        Horizontal,
+        Vertical,
+        Diagonal,
+        CrossDiagonal
+    };
 
-	/**
-	 * Constructs a null pixmap.
-	 */
-         KPixmap() : QPixmap() {};
+    /**
+     * Constructs a null pixmap.
+     */
+    KPixmap() : QPixmap(){};
 
-	/**
-	 * Destructs the pixmap.
+    /**
+     * Destructs the pixmap.
          * ### KDE 4: remove
-	 */
-	~KPixmap();
+     */
+    ~KPixmap();
 
-	/**
-	 * Copies the QPixmap @p pix.
+    /**
+     * Copies the QPixmap @p pix.
          */
-	KPixmap(const QPixmap& pix);
+    KPixmap(const QPixmap &pix);
 
-	/**
-	 * Converts an image and sets this pixmap.
-	 *
-	 * The conversion_flags argument is a bitwise-OR from the
-	 * following choices. The options marked (default) are the
-	 * choice if no other choice from the list is included (they
-	 * are zero):
-	 *
-	 * Color/Mono preference
-	 *
-	 * @li WebColor -  If the image has depth 1 and contains
-	 * only black and white pixels then the pixmap becomes monochrome. If
-	 * the pixmap has a depth of 8 bits per pixel then the Netscape
-	 * palette is used for the pixmap color table.
-	 * @li LowColor - If the image has depth 1 and contains only black and
-	 * white pixels then the pixmap becomes monochrome. If the pixmap has a
-	 * depth of 8 bits per pixel and the image does not posess a color table
-	 * that matches the Icon palette a 3x3x3 color cube is used for the
-	 * pixmap color table.
-	 * @li AutoColor (default) - If the image has depth 1 and contains
-	 * only black and white pixels, then the pixmap becomes
-	 * monochrome.
-	 * @li ColorOnly - The pixmap is dithered/converted to the native
-	 * display depth.
-	 * @li MonoOnly - The pixmap becomes monochrome. If necessary, it
-	 * is dithered using the chosen dithering algorithm.
-	 *
-	 * Dithering mode preference, for RGB channels
-	 *
-	 * @li DiffuseDither (default) - A high quality dither.
-	 * @li OrderedDither - A faster more ordered dither.
-	 * @li ThresholdDither - No dithering, closest color is used.
-	 *
-	 * Dithering mode preference, for alpha channel
-	 *
-	 * @li DiffuseAlphaDither - A high quality dither.
-	 * @li OrderedAlphaDither - A faster more ordered dither.
-	 * @li ThresholdAlphaDither (default) - No dithering.
-	 *
-	 * Color matching versus dithering preference
-	 *
-	 * @li PreferDither - Always dither 32-bit images when the image
-	 * is being converted to 8-bits. This is the default when
-	 * converting to a pixmap.
-	 * @li AvoidDither - Only dither 32-bit images if the image has
-	 * more than 256 colors and it is being converted to 8-bits.
-	 * This is the default when an image is converted for the
-	 * purpose of saving to a file.
-	 *
-	 * Passing 0 for @p conversion_flags gives all the default
-	 * options.
-	 *
-	 * @param img the image to convert
-	 * @param conversion_flags bitmask, described above
-	 * @return @p true if successful.
-	 **/
-	bool convertFromImage( const QImage &img, int conversion_flags );
+    /**
+     * Converts an image and sets this pixmap.
+     *
+     * The conversion_flags argument is a bitwise-OR from the
+     * following choices. The options marked (default) are the
+     * choice if no other choice from the list is included (they
+     * are zero):
+     *
+     * Color/Mono preference
+     *
+     * @li WebColor -  If the image has depth 1 and contains
+     * only black and white pixels then the pixmap becomes monochrome. If
+     * the pixmap has a depth of 8 bits per pixel then the Netscape
+     * palette is used for the pixmap color table.
+     * @li LowColor - If the image has depth 1 and contains only black and
+     * white pixels then the pixmap becomes monochrome. If the pixmap has a
+     * depth of 8 bits per pixel and the image does not posess a color table
+     * that matches the Icon palette a 3x3x3 color cube is used for the
+     * pixmap color table.
+     * @li AutoColor (default) - If the image has depth 1 and contains
+     * only black and white pixels, then the pixmap becomes
+     * monochrome.
+     * @li ColorOnly - The pixmap is dithered/converted to the native
+     * display depth.
+     * @li MonoOnly - The pixmap becomes monochrome. If necessary, it
+     * is dithered using the chosen dithering algorithm.
+     *
+     * Dithering mode preference, for RGB channels
+     *
+     * @li DiffuseDither (default) - A high quality dither.
+     * @li OrderedDither - A faster more ordered dither.
+     * @li ThresholdDither - No dithering, closest color is used.
+     *
+     * Dithering mode preference, for alpha channel
+     *
+     * @li DiffuseAlphaDither - A high quality dither.
+     * @li OrderedAlphaDither - A faster more ordered dither.
+     * @li ThresholdAlphaDither (default) - No dithering.
+     *
+     * Color matching versus dithering preference
+     *
+     * @li PreferDither - Always dither 32-bit images when the image
+     * is being converted to 8-bits. This is the default when
+     * converting to a pixmap.
+     * @li AvoidDither - Only dither 32-bit images if the image has
+     * more than 256 colors and it is being converted to 8-bits.
+     * This is the default when an image is converted for the
+     * purpose of saving to a file.
+     *
+     * Passing 0 for @p conversion_flags gives all the default
+     * options.
+     *
+     * @param img the image to convert
+     * @param conversion_flags bitmask, described above
+     * @return @p true if successful.
+     **/
+    bool convertFromImage(const QImage &img, int conversion_flags);
 
-	/**
-	 * This is an overloaded member function, provided for
-	 * convenience. It differs from the above function only in
-	 * what argument(s) it accepts.
-	 * @param img the image to convert
-	 * @param mode a ColorMode to apply
-	 * @return @p true if successful.
-	 **/
-	bool convertFromImage( const QImage &img, ColorMode mode = WebColor );
+    /**
+     * This is an overloaded member function, provided for
+     * convenience. It differs from the above function only in
+     * what argument(s) it accepts.
+     * @param img the image to convert
+     * @param mode a ColorMode to apply
+     * @return @p true if successful.
+     **/
+    bool convertFromImage(const QImage &img, ColorMode mode = WebColor);
 
-	/**
-	 * Loads a pixmap from the file @p fileName.
-	 *
-	 * If format is specified, the loader attempts to read the
-	 * pixmap using the specified format. If format is not
-	 * specified (default), the loader reads a few bytes from the
-	 * header to guess the file format.
-	 *
-	 * The QImageIO documentation lists the supported image
-	 * formats and explains how to add extra formats.
-	 *
-	 * @param fileName the name of the file to load the image from
-	 * @param format the format for the image
-	 * @param conversion_flags a bitmask, as described in 
-	 *        convertFromImage()
-	 * @return @p true if successful, or false if the pixmap
-	 *         could not be loaded.
-	 **/
-	bool load( const QString& fileName, const char *format,
-		int conversion_flags );
+    /**
+     * Loads a pixmap from the file @p fileName.
+     *
+     * If format is specified, the loader attempts to read the
+     * pixmap using the specified format. If format is not
+     * specified (default), the loader reads a few bytes from the
+     * header to guess the file format.
+     *
+     * The QImageIO documentation lists the supported image
+     * formats and explains how to add extra formats.
+     *
+     * @param fileName the name of the file to load the image from
+     * @param format the format for the image
+     * @param conversion_flags a bitmask, as described in
+     *        convertFromImage()
+     * @return @p true if successful, or false if the pixmap
+     *         could not be loaded.
+     **/
+    bool load(const QString &fileName, const char *format, int conversion_flags);
 
-	/**
-	 * This is an overloaded member function, provided for
-	 * convenience. It differs from the above function only in
-	 * what argument(s) it accepts.
-	 * @param fileName the name of the file to load the image from
-	 * @param format the format for the image
-	 * @param mode a ColorMode to apply
-	 * @return @p true if successful, or false if the pixmap
-	 *         could not be loaded.
-	 **/
-	bool load( const QString& fileName,
-		const char *format = 0,
-		ColorMode mode = WebColor );
+    /**
+     * This is an overloaded member function, provided for
+     * convenience. It differs from the above function only in
+     * what argument(s) it accepts.
+     * @param fileName the name of the file to load the image from
+     * @param format the format for the image
+     * @param mode a ColorMode to apply
+     * @return @p true if successful, or false if the pixmap
+     *         could not be loaded.
+     **/
+    bool load(const QString &fileName, const char *format = 0, ColorMode mode = WebColor);
 
-	/**
-	 * Returns true if the image posesses a color table that
-	 * matches the Icon palette or false otherwise.
-	 *
-	 * An image with one color not found in the Icon palette is
-	 * considered to be a match, since this extra color may be a
-	 * transparent background.
-	 * @param image the image to test
-	 **/
-	bool checkColorTable(const QImage &image);
+    /**
+     * Returns true if the image posesses a color table that
+     * matches the Icon palette or false otherwise.
+     *
+     * An image with one color not found in the Icon palette is
+     * considered to be a match, since this extra color may be a
+     * transparent background.
+     * @param image the image to test
+     **/
+    bool checkColorTable(const QImage &image);
 
 private:
     KPixmapPrivate *d;

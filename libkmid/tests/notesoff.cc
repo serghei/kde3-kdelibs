@@ -3,22 +3,21 @@
 #include <unistd.h>
 #include <stdio.h>
 
-int main (int , char **)
+int main(int, char **)
 {
-  printf("Libkmid Notes Off . (C) 2000 Antonio Larrosa Jimenez . Malaga (Spain)\n");
-  printf("Using libkmid from a simple C++ application\n");
+    printf("Libkmid Notes Off . (C) 2000 Antonio Larrosa Jimenez . Malaga (Spain)\n");
+    printf("Using libkmid from a simple C++ application\n");
 
-  KMidSimpleAPI::kMidInit();
+    KMidSimpleAPI::kMidInit();
 
-  kMid.midi->checkInit();
-  kMid.midi->openDev();
-  kMid.midi->initDev();
-  
-  kMid.midi->allNotesOff();
-  kMid.midi->closeDev();
+    kMid.midi->checkInit();
+    kMid.midi->openDev();
+    kMid.midi->initDev();
 
-  KMidSimpleAPI::kMidDestruct();
+    kMid.midi->allNotesOff();
+    kMid.midi->closeDev();
 
-  return 0;
+    KMidSimpleAPI::kMidDestruct();
+
+    return 0;
 };
-

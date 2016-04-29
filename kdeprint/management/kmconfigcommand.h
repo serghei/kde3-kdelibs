@@ -22,10 +22,9 @@
 
 #include "kmconfigpage.h"
 
-class KMConfigCommand : public KMConfigPage
-{
+class KMConfigCommand : public KMConfigPage {
 public:
-	KMConfigCommand(QWidget *parent = 0, const char *name = 0);
+    KMConfigCommand(QWidget *parent = 0, const char *name = 0);
 };
 
 #endif

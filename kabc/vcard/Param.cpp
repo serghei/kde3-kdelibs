@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -29,101 +29,81 @@
 
 using namespace VCARD;
 
-Param::Param()
-	:	Entity(),
-		name_(""),
-		value_("")
+Param::Param() : Entity(), name_(""), value_("")
 {
 }
 
-Param::Param(const Param & x)
-	:	Entity(x),
-		name_(x.name_),
-		value_(x.value_)
+Param::Param(const Param &x) : Entity(x), name_(x.name_), value_(x.value_)
 {
 }
 
-Param::Param(const QCString & s)
-	:	Entity(s),
-		name_(""),
-		value_("")
+Param::Param(const QCString &s) : Entity(s), name_(""), value_("")
 {
 }
 
-	Param &
-Param::operator = (Param & x)
+Param &Param::operator=(Param &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Entity::operator = (x);
-        name_ = x.name_;
-        value_ = x.value_;
-        
-	return *this;
+    Entity::operator=(x);
+    name_ = x.name_;
+    value_ = x.value_;
+
+    return *this;
 }
 
-	Param &
-Param::operator = (const QCString & s)
+Param &Param::operator=(const QCString &s)
 {
-	Entity::operator = (s);
-	return *this;
+    Entity::operator=(s);
+    return *this;
 }
 
-	bool
-Param::operator == (Param & x)
+bool Param::operator==(Param &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 Param::~Param()
 {
 }
 
-	void
-Param::_parse()
+void Param::_parse()
 {
 }
 
-	void
-Param::_assemble()
+void Param::_assemble()
 {
-	strRep_ = name_ + "=" + value_;
+    strRep_ = name_ + "=" + value_;
 }
 
-Param::Param(const QCString &name, const QCString &value)
-	:	Entity(),
-		name_(name),
-		value_(value)
+Param::Param(const QCString &name, const QCString &value) : Entity(), name_(name), value_(value)
 {
-	parsed_ = true;
-	assembled_ = false;
+    parsed_ = true;
+    assembled_ = false;
 }
 
-	void
-Param::setName(const QCString & name)
+void Param::setName(const QCString &name)
 {
-	name_ = name;
-        
-        assembled_ = false;
+    name_ = name;
+
+    assembled_ = false;
 }
 
-	void
-Param::setValue(const QCString & value)
+void Param::setValue(const QCString &value)
 {
-	value_ = value;
-        
-        assembled_ = false;
+    value_ = value;
+
+    assembled_ = false;
 }
 
-	QCString
-Param::name()
+QCString Param::name()
 {
-	return name_;
+    return name_;
 }
 
-	QCString
-Param::value()
+QCString Param::value()
 {
-	return value_;
+    return value_;
 }

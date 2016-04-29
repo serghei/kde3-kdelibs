@@ -25,22 +25,21 @@
 class QSpinBox;
 class QComboBox;
 
-class KMWQuota : public KMWizardPage
-{
-	Q_OBJECT
+class KMWQuota : public KMWizardPage {
+    Q_OBJECT
 public:
-	KMWQuota(QWidget *parent = 0, const char *name = 0);
-	virtual ~KMWQuota();
+    KMWQuota(QWidget *parent = 0, const char *name = 0);
+    virtual ~KMWQuota();
 
-	bool isValid(QString&);
-	void initPrinter(KMPrinter*);
-	void updatePrinter(KMPrinter*);
+    bool isValid(QString &);
+    void initPrinter(KMPrinter *);
+    void updatePrinter(KMPrinter *);
 
 private:
-	QSpinBox	*m_period;
-	QSpinBox	*m_sizelimit;
-	QSpinBox	*m_pagelimit;
-	QComboBox	*m_timeunit;
+    QSpinBox *m_period;
+    QSpinBox *m_sizelimit;
+    QSpinBox *m_pagelimit;
+    QComboBox *m_timeunit;
 };
 
 #endif

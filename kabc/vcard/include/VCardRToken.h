@@ -1,8 +1,8 @@
 /*
-	
-	libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
@@ -29,12 +29,9 @@
 
 #include <kdelibs_export.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-KVCARD_EXPORT Q_UINT32 RTokenise(const char * str, const char * delim, QStrList & l);
-
+KVCARD_EXPORT Q_UINT32 RTokenise(const char *str, const char *delim, QStrList &l);
 }
 
 #endif
-

@@ -40,15 +40,17 @@ public:
     /**
      * Constructs a color drag with a white color.
      */
-    KColorDrag( QWidget *dragsource = 0, const char *name = 0 );
+    KColorDrag(QWidget *dragsource = 0, const char *name = 0);
     /**
      * Constructs a color drag with the color @p col.
      */
-    KColorDrag( const QColor &col, QWidget *dragsource = 0, const char *name = 0 );
-    virtual ~KColorDrag() {}
+    KColorDrag(const QColor &col, QWidget *dragsource = 0, const char *name = 0);
+    virtual ~KColorDrag()
+    {
+    }
 
     virtual const char *format(int i) const;
-    virtual QByteArray encodedData ( const char * m ) const;
+    virtual QByteArray encodedData(const char *m) const;
 
     /**
      * Sets the color of the drag to @p col.
@@ -65,14 +67,15 @@ public:
     /**
      * @deprecated This is equivalent with "new KColorDrag(color, dragsource)".
      */
-    static KColorDrag* makeDrag( const QColor&,QWidget *dragsource) KDE_DEPRECATED;
+    static KColorDrag *makeDrag(const QColor &, QWidget *dragsource) KDE_DEPRECATED;
 
 private:
-     QColor m_color; // unused
+    QColor m_color; // unused
 protected:
-     virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-     KColorDragPrivate *d;
+    KColorDragPrivate *d;
 };
 
 

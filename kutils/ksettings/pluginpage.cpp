@@ -23,38 +23,30 @@
 #include <kdialog.h>
 #include "ksettings/dispatcher.h"
 
-namespace KSettings
-{
+namespace KSettings {
 
-class PluginPage::PluginPagePrivate
-{
-    public:
-        PluginPagePrivate()
-            : selwid( 0 )
-        {
-        }
+class PluginPage::PluginPagePrivate {
+public:
+    PluginPagePrivate() : selwid(0)
+    {
+    }
 
-        KPluginSelector * selwid;
+    KPluginSelector *selwid;
 };
 
-    PluginPage::PluginPage( QWidget * parent, const char * name, const QStringList & args )
-    : KCModule( parent, name, args )
-    , d( new PluginPagePrivate )
+PluginPage::PluginPage(QWidget *parent, const char *name, const QStringList &args) : KCModule(parent, name, args), d(new PluginPagePrivate)
 {
-    ( new QVBoxLayout( this, 0, KDialog::spacingHint() ) )->setAutoAdd( true );
-    d->selwid = new KPluginSelector( this );
-    connect( d->selwid, SIGNAL( changed( bool ) ), this, SIGNAL( changed( bool ) ) );
+    (new QVBoxLayout(this, 0, KDialog::spacingHint()))->setAutoAdd(true);
+    d->selwid = new KPluginSelector(this);
+    connect(d->selwid, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
 }
 
-    PluginPage::PluginPage( KInstance * instance, QWidget * parent, const QStringList & args )
-    : KCModule( instance, parent, args )
-    , d( new PluginPagePrivate )
+PluginPage::PluginPage(KInstance *instance, QWidget *parent, const QStringList &args) : KCModule(instance, parent, args), d(new PluginPagePrivate)
 {
-    ( new QVBoxLayout( this, 0, KDialog::spacingHint() ) )->setAutoAdd( true );
-    d->selwid = new KPluginSelector( this );
-    connect( d->selwid, SIGNAL( changed( bool ) ), this, SIGNAL( changed( bool ) ) );
-    connect( d->selwid, SIGNAL( configCommitted( const QCString & ) ),
-            Dispatcher::self(), SLOT( reparseConfiguration( const QCString & ) ) );
+    (new QVBoxLayout(this, 0, KDialog::spacingHint()))->setAutoAdd(true);
+    d->selwid = new KPluginSelector(this);
+    connect(d->selwid, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+    connect(d->selwid, SIGNAL(configCommitted(const QCString &)), Dispatcher::self(), SLOT(reparseConfiguration(const QCString &)));
 }
 
 PluginPage::~PluginPage()
@@ -62,7 +54,7 @@ PluginPage::~PluginPage()
     delete d;
 }
 
-KPluginSelector * PluginPage::pluginSelector()
+KPluginSelector *PluginPage::pluginSelector()
 {
     return d->selwid;
 }
@@ -82,7 +74,7 @@ void PluginPage::defaults()
     d->selwid->defaults();
 }
 
-} //namespace
+} // namespace
 
 #include "pluginpage.moc"
 // vim: sw=4 sts=4 et

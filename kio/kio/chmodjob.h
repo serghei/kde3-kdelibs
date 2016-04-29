@@ -30,80 +30,81 @@
 
 namespace KIO {
 
+/**
+ * This job changes permissions on a list of files or directories,
+ * optionally in a recursive manner.
+ * @see KIO::chmod()
+ */
+class KIO_EXPORT ChmodJob : public KIO::Job {
+    Q_OBJECT
+public:
     /**
-     * This job changes permissions on a list of files or directories,
-     * optionally in a recursive manner.
-     * @see KIO::chmod()
+     * Create new ChmodJobs using the KIO::chmod() function.
      */
-    class KIO_EXPORT ChmodJob : public KIO::Job
+    ChmodJob(const KFileItemList &lstItems, int permissions, int mask, int newOwner, int newGroup, bool recursive, bool showProgressInfo);
+
+protected:
+    void chmodNextFile();
+
+protected slots:
+
+    virtual void slotResult(KIO::Job *job);
+    void slotEntries(KIO::Job *, const KIO::UDSEntryList &);
+    void processList();
+
+private:
+    struct ChmodInfo
     {
-        Q_OBJECT
-    public:
-	/**
-	 * Create new ChmodJobs using the KIO::chmod() function.
-	 */
-        ChmodJob( const KFileItemList & lstItems,  int permissions, int mask,
-                  int newOwner, int newGroup,
-                  bool recursive, bool showProgressInfo );
-
-    protected:
-        void chmodNextFile();
-
-    protected slots:
-
-        virtual void slotResult( KIO::Job *job );
-        void slotEntries( KIO::Job * , const KIO::UDSEntryList & );
-        void processList();
-
-    private:
-        struct ChmodInfo
-        {
-            KURL url;
-            int permissions;
-        };
-        enum { STATE_LISTING, STATE_CHMODING } state;
-        int m_permissions;
-        int m_mask;
-        int m_newOwner;
-        int m_newGroup;
-        bool m_recursive;
-        KFileItemList m_lstItems;
-        QValueList<ChmodInfo> m_infos;
-    protected:
-	virtual void virtual_hook( int id, void* data );
-    private:
-	class ChmodJobPrivate* d;
+        KURL url;
+        int permissions;
     };
+    enum
+    {
+        STATE_LISTING,
+        STATE_CHMODING
+    } state;
+    int m_permissions;
+    int m_mask;
+    int m_newOwner;
+    int m_newGroup;
+    bool m_recursive;
+    KFileItemList m_lstItems;
+    QValueList< ChmodInfo > m_infos;
+
+protected:
+    virtual void virtual_hook(int id, void *data);
+
+private:
+    class ChmodJobPrivate *d;
+};
 
 
-    /**
-     * Creates a job that changes permissions/ownership on several files or directories,
-     * optionally recursively.
-     * This version of chmod uses a KFileItemList so that it directly knows
-     * what to do with the items. TODO: a version that takes a KURL::List,
-     * and a general job that stats each url and returns a KFileItemList.
-     *
-     * Note that change of ownership is only supported for local files.
-     *
-     * Inside directories, the "x" bits will only be changed for files that had
-     * at least one "x" bit before, and for directories.
-     * This emulates the behavior of chmod +X.
-     *
-     * @param lstItems The file items representing several files or directories.
-     * @param permissions the permissions we want to set
-     * @param mask the bits we are allowed to change.
-     * For instance, if mask is 0077, we don't change
-     * the "user" bits, only "group" and "others".
-     * @param newOwner If non-empty, the new owner for the files
-     * @param newGroup If non-empty, the new group for the files
-     * @param recursive whether to open directories recursively
-     * @param showProgressInfo true to show progess information
-     * @return The job handling the operation.
-     */
-    KIO_EXPORT ChmodJob * chmod( const KFileItemList& lstItems, int permissions, int mask,
-                      QString newOwner, QString newGroup,
-                      bool recursive, bool showProgressInfo = true );
-
+/**
+ * Creates a job that changes permissions/ownership on several files or directories,
+ * optionally recursively.
+ * This version of chmod uses a KFileItemList so that it directly knows
+ * what to do with the items. TODO: a version that takes a KURL::List,
+ * and a general job that stats each url and returns a KFileItemList.
+ *
+ * Note that change of ownership is only supported for local files.
+ *
+ * Inside directories, the "x" bits will only be changed for files that had
+ * at least one "x" bit before, and for directories.
+ * This emulates the behavior of chmod +X.
+ *
+ * @param lstItems The file items representing several files or directories.
+ * @param permissions the permissions we want to set
+ * @param mask the bits we are allowed to change.
+ * For instance, if mask is 0077, we don't change
+ * the "user" bits, only "group" and "others".
+ * @param newOwner If non-empty, the new owner for the files
+ * @param newGroup If non-empty, the new group for the files
+ * @param recursive whether to open directories recursively
+ * @param showProgressInfo true to show progess information
+ * @return The job handling the operation.
+ */
+KIO_EXPORT ChmodJob *chmod(const KFileItemList &lstItems, int permissions, int mask, QString newOwner, QString newGroup, bool recursive,
+                           bool showProgressInfo = true);
 }
 
 #endif

@@ -39,83 +39,82 @@ class KBugReportPrivate;
  *
  * @author David Faure <faure@kde.org>
  */
-class KDEUI_EXPORT KBugReport : public KDialogBase
-{
-  Q_OBJECT
+class KDEUI_EXPORT KBugReport : public KDialogBase {
+    Q_OBJECT
 public:
-  /**
-   * Creates a bug-report dialog.
-   * Note that you shouldn't have to do this manually,
-   * since KHelpMenu takes care of the menu item
-   * for "Report Bug..." and of creating a KBugReport dialog.
-   */
-  KBugReport( QWidget * parent = 0L, bool modal=true, const KAboutData *aboutData = 0L );
-  /**
-   * Destructor
-   */
-  virtual ~KBugReport();
+    /**
+     * Creates a bug-report dialog.
+     * Note that you shouldn't have to do this manually,
+     * since KHelpMenu takes care of the menu item
+     * for "Report Bug..." and of creating a KBugReport dialog.
+     */
+    KBugReport(QWidget *parent = 0L, bool modal = true, const KAboutData *aboutData = 0L);
+    /**
+     * Destructor
+     */
+    virtual ~KBugReport();
 
 protected slots:
-  /**
-   * "Configure email" has been clicked - this calls kcmshell System/email
-   */
-  virtual void slotConfigureEmail();
-  /**
-   * Sets the "From" field from the e-mail configuration
-   * Called at creation time, but also after "Configure email" is closed.
-   */
-  virtual void slotSetFrom();
-  /**
-   * The URL-Label "http://bugs.kde.org/" was clicked.
-   * @deprecated remove in KDE4.0
-   */
-  virtual void slotUrlClicked(const QString &);
-  /**
-   * OK has been clicked
-   */
-  virtual void slotOk( void );
-  /**
-   * Cancel has been clicked
-   */
-  virtual void slotCancel();
+    /**
+     * "Configure email" has been clicked - this calls kcmshell System/email
+     */
+    virtual void slotConfigureEmail();
+    /**
+     * Sets the "From" field from the e-mail configuration
+     * Called at creation time, but also after "Configure email" is closed.
+     */
+    virtual void slotSetFrom();
+    /**
+     * The URL-Label "http://bugs.kde.org/" was clicked.
+     * @deprecated remove in KDE4.0
+     */
+    virtual void slotUrlClicked(const QString &);
+    /**
+     * OK has been clicked
+     */
+    virtual void slotOk(void);
+    /**
+     * Cancel has been clicked
+     */
+    virtual void slotCancel();
 
-  /**
-   * Application combo selection changed (and was activated)
-   */
-  void appChanged(int);
-  /**
-   * Update the url to match the current os, compiler, selected app, etc
-   */
-  void updateURL();
-
-protected:
-  /**
-   * A complete copy of the bug report
-   * @return QString copy of the bug report.
-   */
-  QString text() const;
-  /**
-   * Attempt to e-mail the bug report.
-   * @return true on success
-   */
-  bool sendBugReport();
-
-  KProcess * m_process;
-  const KAboutData * m_aboutData;
-
-  QMultiLineEdit * m_lineedit;
-  QLineEdit * m_subject;
-  QLabel * m_from;
-  QLabel * m_version;
-  QString m_strVersion;
-  QHButtonGroup * m_bgSeverity;
-  QPushButton * m_configureEmail;
+    /**
+     * Application combo selection changed (and was activated)
+     */
+    void appChanged(int);
+    /**
+     * Update the url to match the current os, compiler, selected app, etc
+     */
+    void updateURL();
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    /**
+     * A complete copy of the bug report
+     * @return QString copy of the bug report.
+     */
+    QString text() const;
+    /**
+     * Attempt to e-mail the bug report.
+     * @return true on success
+     */
+    bool sendBugReport();
+
+    KProcess *m_process;
+    const KAboutData *m_aboutData;
+
+    QMultiLineEdit *m_lineedit;
+    QLineEdit *m_subject;
+    QLabel *m_from;
+    QLabel *m_version;
+    QString m_strVersion;
+    QHButtonGroup *m_bgSeverity;
+    QPushButton *m_configureEmail;
+
+protected:
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  KBugReportPrivate *d;
+    KBugReportPrivate *d;
 };
 
 #endif
-

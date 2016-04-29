@@ -25,57 +25,56 @@
 
 #include "krestrictedline.h"
 
-KRestrictedLine::KRestrictedLine( QWidget *parent,
-				  const char *name,
-				  const QString& valid )
-  : KLineEdit( parent, name )
+KRestrictedLine::KRestrictedLine(QWidget *parent, const char *name, const QString &valid) : KLineEdit(parent, name)
 {
     qsValidChars = valid;
 }
 
 KRestrictedLine::~KRestrictedLine()
 {
-  ;
+    ;
 }
 
 
-void KRestrictedLine::keyPressEvent( QKeyEvent *e )
+void KRestrictedLine::keyPressEvent(QKeyEvent *e)
 {
-  // let QLineEdit process "special" keys and return/enter
-  // so that we still can use the default key binding
-  if (e->key() == Key_Enter || e->key() == Key_Return || e->key() == Key_Delete || e->ascii() < 32)
+    // let QLineEdit process "special" keys and return/enter
+    // so that we still can use the default key binding
+    if(e->key() == Key_Enter || e->key() == Key_Return || e->key() == Key_Delete || e->ascii() < 32)
     {
-      QLineEdit::keyPressEvent(e);
-      return;
+        QLineEdit::keyPressEvent(e);
+        return;
     }
 
-  // do we have a list of valid chars &&
-  // is the pressed key in the list of valid chars?
-  if (!qsValidChars.isEmpty() && !qsValidChars.contains(e->ascii()))
+    // do we have a list of valid chars &&
+    // is the pressed key in the list of valid chars?
+    if(!qsValidChars.isEmpty() && !qsValidChars.contains(e->ascii()))
     {
-      // invalid char, emit signal and return
-      emit (invalidChar(e->key()));
-      return;
+        // invalid char, emit signal and return
+        emit(invalidChar(e->key()));
+        return;
     }
-  else
-	// valid char: let QLineEdit process this key as usual
-	QLineEdit::keyPressEvent(e);
+    else
+        // valid char: let QLineEdit process this key as usual
+        QLineEdit::keyPressEvent(e);
 
-  return;
+    return;
 }
 
 
-void KRestrictedLine::setValidChars( const QString& valid)
+void KRestrictedLine::setValidChars(const QString &valid)
 {
-  qsValidChars = valid;
+    qsValidChars = valid;
 }
 
 QString KRestrictedLine::validChars() const
 {
-  return qsValidChars;
+    return qsValidChars;
 }
 
-void KRestrictedLine::virtual_hook( int id, void* data )
-{ KLineEdit::virtual_hook( id, data ); }
+void KRestrictedLine::virtual_hook(int id, void *data)
+{
+    KLineEdit::virtual_hook(id, data);
+}
 
 #include "krestrictedline.moc"

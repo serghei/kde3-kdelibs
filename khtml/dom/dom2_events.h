@@ -45,7 +45,6 @@ class KeyEventBaseImpl;
 class MutationEventImpl;
 
 
-
 /**
  * Introduced in DOM Level 2
  *
@@ -112,12 +111,13 @@ class KHTML_EXPORT Event {
     friend class Document;
     friend class NodeImpl;
     friend class DocumentImpl;
+
 public:
     Event();
     Event(const Event &other);
     virtual ~Event();
 
-    Event & operator = (const Event &other);
+    Event &operator=(const Event &other);
 
     /**
      * An integer indicating which phase of event flow is being processed.
@@ -130,10 +130,11 @@ public:
      * CAPTURING_PHASE: The current event phase is the capturing phase.
      *
      */
-    enum PhaseType {
-	CAPTURING_PHASE = 1,
-	AT_TARGET = 2,
-	BUBBLING_PHASE = 3
+    enum PhaseType
+    {
+        CAPTURING_PHASE = 1,
+        AT_TARGET = 2,
+        BUBBLING_PHASE = 3
     };
 
     /**
@@ -259,13 +260,14 @@ protected:
  * descriptions.
  *
  */
-class KHTML_EXPORT EventException
-{
+class KHTML_EXPORT EventException {
 public:
     EventException(unsigned short _code);
     EventException(const EventException &other);
-    EventException & operator = (const EventException &other);
-    virtual ~EventException() {}
+    EventException &operator=(const EventException &other);
+    virtual ~EventException()
+    {
+    }
 
     /**
      * An integer indicating the type of error generated.
@@ -276,8 +278,9 @@ public:
      * exception.
      *
      */
-    enum EventExceptionCode {
-        UNSPECIFIED_EVENT_TYPE_ERR     = 0
+    enum EventExceptionCode
+    {
+        UNSPECIFIED_EVENT_TYPE_ERR = 0
     };
 
     unsigned short code;
@@ -296,8 +299,8 @@ public:
     UIEvent();
     UIEvent(const UIEvent &other);
     UIEvent(const Event &other);
-    UIEvent & operator = (const UIEvent &other);
-    UIEvent & operator = (const Event &other);
+    UIEvent &operator=(const UIEvent &other);
+    UIEvent &operator=(const Event &other);
     virtual ~UIEvent();
 
     /**
@@ -366,16 +369,11 @@ public:
      * @param detailArg Specifies the Event's detail.
      *
      */
-    void initUIEvent(const DOMString &typeArg,
-                                 bool canBubbleArg,
-                                 bool cancelableArg,
-                                 const AbstractView &viewArg,
-                                 long detailArg);
+    void initUIEvent(const DOMString &typeArg, bool canBubbleArg, bool cancelableArg, const AbstractView &viewArg, long detailArg);
+
 protected:
     UIEvent(UIEventImpl *impl);
 };
-
-
 
 
 /**
@@ -401,8 +399,8 @@ public:
     MouseEvent();
     MouseEvent(const MouseEvent &other);
     MouseEvent(const Event &other);
-    MouseEvent & operator = (const MouseEvent &other);
-    MouseEvent & operator = (const Event &other);
+    MouseEvent &operator=(const MouseEvent &other);
+    MouseEvent &operator=(const Event &other);
     virtual ~MouseEvent();
 
     /**
@@ -522,21 +520,10 @@ public:
      * @param relatedTargetArg Specifies the Event's related EventTarget.
      *
      */
-    void initMouseEvent(const DOMString &typeArg,
-                                    bool canBubbleArg,
-                                    bool cancelableArg,
-                                    const AbstractView &viewArg,
-                                    long detailArg,
-                                    long screenXArg,
-                                    long screenYArg,
-                                    long clientXArg,
-                                    long clientYArg,
-                                    bool ctrlKeyArg,
-                                    bool altKeyArg,
-                                    bool shiftKeyArg,
-                                    bool metaKeyArg,
-                                    unsigned short buttonArg,
-                                    const Node &relatedTargetArg);
+    void initMouseEvent(const DOMString &typeArg, bool canBubbleArg, bool cancelableArg, const AbstractView &viewArg, long detailArg, long screenXArg,
+                        long screenYArg, long clientXArg, long clientYArg, bool ctrlKeyArg, bool altKeyArg, bool shiftKeyArg, bool metaKeyArg,
+                        unsigned short buttonArg, const Node &relatedTargetArg);
+
 protected:
     MouseEvent(MouseEventImpl *impl);
 };
@@ -557,8 +544,8 @@ public:
     TextEvent();
     TextEvent(const TextEvent &other);
     TextEvent(const Event &other);
-    TextEvent & operator = (const TextEvent &other);
-    TextEvent & operator = (const Event &other);
+    TextEvent &operator=(const TextEvent &other);
+    TextEvent &operator=(const Event &other);
     virtual ~TextEvent();
 
     /**
@@ -598,16 +585,9 @@ public:
      * No Return Value.
      * No Exceptions.
      */
-    void initTextEvent(const DOMString &typeArg,
-                      bool canBubbleArg,
-                      bool cancelableArg,
-                      const AbstractView &viewArg,
-                      long detailArg,
-                      const DOMString &outputStringArg,
-                      unsigned long keyValArg,
-                      unsigned long virtKeyValArg,
-                      bool inputGeneratedArg,
-                      bool numPadArg);
+    void initTextEvent(const DOMString &typeArg, bool canBubbleArg, bool cancelableArg, const AbstractView &viewArg, long detailArg,
+                       const DOMString &outputStringArg, unsigned long keyValArg, unsigned long virtKeyValArg, bool inputGeneratedArg,
+                       bool numPadArg);
 
     /**
      * initModifier
@@ -683,7 +663,7 @@ public:
      *  generated by the key event.
      */
 
-    DOMString     outputString() const;
+    DOMString outputString() const;
     /** virtKeyVal of type unsigned long
      *
      *  When the key associated with a key event is not representable via
@@ -740,8 +720,8 @@ public:
     MutationEvent();
     MutationEvent(const MutationEvent &other);
     MutationEvent(const Event &other);
-    MutationEvent & operator = (const MutationEvent &other);
-    MutationEvent & operator = (const Event &other);
+    MutationEvent &operator=(const MutationEvent &other);
+    MutationEvent &operator=(const Event &other);
     virtual ~MutationEvent();
 
     /**
@@ -754,10 +734,11 @@ public:
      * REMOVAL: The Attr was just removed.
      *
      */
-    enum attrChangeType {
-	MODIFICATION = 1,
-	ADDITION = 2,
-	REMOVAL = 3
+    enum attrChangeType
+    {
+        MODIFICATION = 1,
+        ADDITION = 2,
+        REMOVAL = 3
     };
 
 
@@ -828,19 +809,13 @@ public:
      * @param attrChangeArg Specifies the Event's attrChange attribute
      *
      */
-    void initMutationEvent(const DOMString &typeArg,
-                                       bool canBubbleArg,
-                                       bool cancelableArg,
-                                       const Node &relatedNodeArg,
-                                       const DOMString &prevValueArg,
-                                       const DOMString &newValueArg,
-                                       const DOMString &attrNameArg,
-                                       unsigned short attrChangeArg);
+    void initMutationEvent(const DOMString &typeArg, bool canBubbleArg, bool cancelableArg, const Node &relatedNodeArg, const DOMString &prevValueArg,
+                           const DOMString &newValueArg, const DOMString &attrNameArg, unsigned short attrChangeArg);
+
 protected:
     MutationEvent(MutationEventImpl *impl);
 };
 
 
-
-} //namespace
+} // namespace
 #endif

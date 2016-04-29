@@ -24,40 +24,37 @@
 
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
 *  This is an interface to printing functions of a Document.
 */
-class KTEXTEDITOR_EXPORT PrintInterface
-{
-  friend class PrivatePrintInterface;
-  
-  public:
-    PrintInterface ();
-    virtual ~PrintInterface ();
+class KTEXTEDITOR_EXPORT PrintInterface {
+    friend class PrivatePrintInterface;
 
-    unsigned int printInterfaceNumber () const;
-    
-  protected:  
-    void setPrintInterfaceDCOPSuffix (const QCString &suffix);  
-    
-  //
-  // slots !!!
-  //
-  public:
-    virtual bool printDialog () = 0;
-    virtual bool print () = 0;
-  
-  private:
+public:
+    PrintInterface();
+    virtual ~PrintInterface();
+
+    unsigned int printInterfaceNumber() const;
+
+protected:
+    void setPrintInterfaceDCOPSuffix(const QCString &suffix);
+
+    //
+    // slots !!!
+    //
+public:
+    virtual bool printDialog() = 0;
+    virtual bool print() = 0;
+
+private:
     class PrivatePrintInterface *d;
     static unsigned int globalPrintInterfaceNumber;
     unsigned int myPrintInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT PrintInterface *printInterface (class Document *doc);
-
+KTEXTEDITOR_EXPORT PrintInterface *printInterface(class Document *doc);
 }
 
 #endif

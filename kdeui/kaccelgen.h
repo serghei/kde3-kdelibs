@@ -77,30 +77,31 @@
  * + Add more Deref classes so that we can access a wider variety of
  * collections.
  * */
-namespace KAccelGen
-{
+namespace KAccelGen {
 
 // HELPERS
 
 /**
  * Static dereference class, for use as a template parameter.
  */
-template <class Iter>
-class Deref
-{
+template < class Iter > class Deref {
 public:
-    static QString deref(Iter i) { return *i; }
+    static QString deref(Iter i)
+    {
+        return *i;
+    }
 };
 
 /**
  * Static dereference class that calls the key() method on its
  * target; for use as a template parameter.
  */
-template <class Iter>
-class Deref_Key
-{
+template < class Iter > class Deref_Key {
 public:
-    static QString deref(Iter i) { return i.key(); }
+    static QString deref(Iter i)
+    {
+        return i.key();
+    }
 };
 
 /**
@@ -110,11 +111,9 @@ public:
  * @param str   base string
  * @param index offset to check
  */
-inline bool
-isLegalAccelerator(const QString& str, uint index)
+inline bool isLegalAccelerator(const QString &str, uint index)
 {
-    return index < str.length()
-        && str[index].isLetterOrNumber();
+    return index < str.length() && str[index].isLetterOrNumber();
 }
 
 /**
@@ -125,19 +124,20 @@ isLegalAccelerator(const QString& str, uint index)
  * @param end   (last+1) iterator
  * @param keys map to store output
  */
-template <class Iter, class Deref>
-inline void
-loadPredefined(Iter begin, Iter end, QMap<QChar,bool>& keys)
+template < class Iter, class Deref > inline void loadPredefined(Iter begin, Iter end, QMap< QChar, bool > &keys)
 {
-    for (Iter i = begin; i != end; ++i) {
+    for(Iter i = begin; i != end; ++i)
+    {
         QString item = Deref::deref(i);
         int user_ampersand = item.find(QChar('&'));
-        if( user_ampersand >= 0 ) {
+        if(user_ampersand >= 0)
+        {
             // Sanity check.  Note that we don't try to find an
             // accelerator if the user shoots him/herself in the foot
             // by adding a bad '&'.
-            if( isLegalAccelerator(item, user_ampersand+1) ) {
-                keys.insert(item[user_ampersand+1], true);
+            if(isLegalAccelerator(item, user_ampersand + 1))
+            {
+                keys.insert(item[user_ampersand + 1], true);
             }
         }
     }
@@ -162,44 +162,46 @@ loadPredefined(Iter begin, Iter end, QMap<QChar,bool>& keys)
  * @param end    (you know)
  * @param target collection to store generated strings
  */
-template <class Iter, class Iter_Deref >
-void
-generate(Iter begin, Iter end, QStringList& target)
+template < class Iter, class Iter_Deref > void generate(Iter begin, Iter end, QStringList &target)
 {
     // Will keep track of used accelerator chars
-    QMap<QChar,bool> used_accels;
+    QMap< QChar, bool > used_accels;
 
     // Prepass to detect manually user-coded accelerators
-    loadPredefined<Iter,Iter_Deref>(begin, end, used_accels);
+    loadPredefined< Iter, Iter_Deref >(begin, end, used_accels);
 
     // Main pass
-    for (Iter i = begin; i != end; ++i) {
+    for(Iter i = begin; i != end; ++i)
+    {
         QString item = Iter_Deref::deref(i);
 
         // Attempt to find a good accelerator, but only if the user
         // has not manually hardcoded one.
         int user_ampersand = item.find(QChar('&'));
-        if( user_ampersand < 0 || item[user_ampersand+1] == '&') {
+        if(user_ampersand < 0 || item[user_ampersand + 1] == '&')
+        {
             bool found = false;
             uint found_idx;
             uint j;
 
             // Check word-starting letters first.
-            for( j=0; j < item.length(); ++j ) {
-                if( isLegalAccelerator(item, j)
-                    && !used_accels.contains(item[j])
-                    && (0 == j || (j > 0 && item[j-1].isSpace())) ) {
+            for(j = 0; j < item.length(); ++j)
+            {
+                if(isLegalAccelerator(item, j) && !used_accels.contains(item[j]) && (0 == j || (j > 0 && item[j - 1].isSpace())))
+                {
                     found = true;
                     found_idx = j;
                     break;
                 }
             }
 
-            if( !found ) {
+            if(!found)
+            {
                 // No word-starting letter; search for any letter.
-                for( j=0; j < item.length(); ++j ) {
-                    if( isLegalAccelerator(item, j)
-                        && !used_accels.contains(item[j]) ) {
+                for(j = 0; j < item.length(); ++j)
+                {
+                    if(isLegalAccelerator(item, j) && !used_accels.contains(item[j]))
+                    {
                         found = true;
                         found_idx = j;
                         break;
@@ -207,15 +209,16 @@ generate(Iter begin, Iter end, QStringList& target)
                 }
             }
 
-            if( found ) {
+            if(found)
+            {
                 // Both upper and lower case marked as used
-                used_accels.insert(item[j].upper(),true);
-                used_accels.insert(item[j].lower(),true);
-                item.insert(j,QChar('&'));
+                used_accels.insert(item[j].upper(), true);
+                used_accels.insert(item[j].lower(), true);
+                item.insert(j, QChar('&'));
             }
         }
 
-        target.append( item );
+        target.append(item);
     }
 }
 
@@ -227,11 +230,9 @@ generate(Iter begin, Iter end, QStringList& target)
  * @param end
  * @param target
  */
-template <class Iter>
-inline void
-generateFromKeys(Iter begin, Iter end, QStringList& target)
+template < class Iter > inline void generateFromKeys(Iter begin, Iter end, QStringList &target)
 {
-    generate< Iter, Deref_Key<Iter> >(begin, end, target);
+    generate< Iter, Deref_Key< Iter > >(begin, end, target);
 }
 
 
@@ -241,10 +242,9 @@ generateFromKeys(Iter begin, Iter end, QStringList& target)
  *
  * @param source Strings for which to generate accelerators
  * @param target Output for accelerator-added strings */
-inline void
-generate(const QStringList& source, QStringList& target)
+inline void generate(const QStringList &source, QStringList &target)
 {
-    generate<QStringList::ConstIterator, Deref<QStringList::ConstIterator> >(source.begin(), source.end(), target);
+    generate< QStringList::ConstIterator, Deref< QStringList::ConstIterator > >(source.begin(), source.end(), target);
 }
 
 /**
@@ -253,11 +253,9 @@ generate(const QStringList& source, QStringList& target)
  *
  * @param source Map with input strings as VALUES.
  * @param target Output for accelerator-added strings */
-template <class Key>
-inline void
-generateFromValues(const QMap<Key,QString>& source, QStringList& target)
+template < class Key > inline void generateFromValues(const QMap< Key, QString > &source, QStringList &target)
 {
-    generate<QMapConstIterator<Key,QString>, Deref_Key<QMapConstIterator<Key,QString> > >(source.begin(), source.end(), target);
+    generate< QMapConstIterator< Key, QString >, Deref_Key< QMapConstIterator< Key, QString > > >(source.begin(), source.end(), target);
 }
 
 /**
@@ -266,9 +264,7 @@ generateFromValues(const QMap<Key,QString>& source, QStringList& target)
  *
  * @param source Map with input strings as KEYS.
  * @param target Output for accelerator-added strings */
-template <class Data>
-inline void
-generateFromKeys(const QMap<QString,Data>& source, QStringList& target)
+template < class Data > inline void generateFromKeys(const QMap< QString, Data > &source, QStringList &target)
 {
     generateFromKeys(source.begin(), source.end(), target);
 }
@@ -277,4 +273,3 @@ generateFromKeys(const QMap<QString,Data>& source, QStringList& target)
 } // end namespace KAccelGen
 
 #endif
-

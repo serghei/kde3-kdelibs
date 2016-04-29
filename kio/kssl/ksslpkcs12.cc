@@ -45,244 +45,283 @@
 #endif
 
 
-KSSLPKCS12::KSSLPKCS12() {
-   _pkcs = NULL;
-   _pkey = NULL;
-   _cert = NULL;
-   _caStack = NULL;
-   kossl = KOSSL::self();
+KSSLPKCS12::KSSLPKCS12()
+{
+    _pkcs = NULL;
+    _pkey = NULL;
+    _cert = NULL;
+    _caStack = NULL;
+    kossl = KOSSL::self();
 }
 
 
-
-KSSLPKCS12::~KSSLPKCS12() {
+KSSLPKCS12::~KSSLPKCS12()
+{
 #ifdef KSSL_HAVE_SSL
-   if (_pkey) kossl->EVP_PKEY_free(_pkey);
-   if (_caStack) {
-      for (;;) {
-         X509* x5 = sk_X509_pop(_caStack);
-         if (!x5) break;
-         kossl->X509_free(x5);
-      }
-      sk_X509_free(_caStack);
-   }
-   if (_pkcs) kossl->PKCS12_free(_pkcs);
+    if(_pkey)
+        kossl->EVP_PKEY_free(_pkey);
+    if(_caStack)
+    {
+        for(;;)
+        {
+            X509 *x5 = sk_X509_pop(_caStack);
+            if(!x5)
+                break;
+            kossl->X509_free(x5);
+        }
+        sk_X509_free(_caStack);
+    }
+    if(_pkcs)
+        kossl->PKCS12_free(_pkcs);
 #endif
-   if (_cert) delete _cert;
+    if(_cert)
+        delete _cert;
 }
 
 
-KSSLPKCS12* KSSLPKCS12::fromString(QString base64, QString password) {
+KSSLPKCS12 *KSSLPKCS12::fromString(QString base64, QString password)
+{
 #ifdef KSSL_HAVE_SSL
-KTempFile ktf;
+    KTempFile ktf;
 
-    if (base64.isEmpty()) return NULL;
+    if(base64.isEmpty())
+        return NULL;
     QByteArray qba, qbb = QCString(base64.latin1()).copy();
     KCodecs::base64Decode(qbb, qba);
     ktf.file()->writeBlock(qba);
     ktf.close();
-    KSSLPKCS12* rc = loadCertFile(ktf.name(), password);
+    KSSLPKCS12 *rc = loadCertFile(ktf.name(), password);
     ktf.unlink();
     return rc;
 #endif
-return NULL;
-}
-
-
-
-KSSLPKCS12* KSSLPKCS12::loadCertFile(QString filename, QString password) {
-#ifdef KSSL_HAVE_SSL
-QFile qf(filename);
-PKCS12 *newpkcs = NULL;
-
-  if (!qf.open(IO_ReadOnly))
     return NULL;
-
-  FILE *fp = fdopen(qf.handle(), "r");
-  if (!fp) return NULL;
-
-  newpkcs = KOSSL::self()->d2i_PKCS12_fp(fp, &newpkcs);
-
-  fclose(fp);
-  if (!newpkcs) {
-	KOSSL::self()->ERR_clear_error();
-	return NULL;
-  }
-
-  KSSLPKCS12 *c = new KSSLPKCS12;
-  c->setCert(newpkcs);
-
-  // Now we parse it to see if we can decrypt it and interpret it
-  if (!c->parse(password)) {
-        delete c;  c = NULL;
-  }
-
-  return c;
-#endif
-return NULL;
 }
 
 
-void KSSLPKCS12::setCert(PKCS12 *c) {
+KSSLPKCS12 *KSSLPKCS12::loadCertFile(QString filename, QString password)
+{
 #ifdef KSSL_HAVE_SSL
-   _pkcs = c;
+    QFile qf(filename);
+    PKCS12 *newpkcs = NULL;
+
+    if(!qf.open(IO_ReadOnly))
+        return NULL;
+
+    FILE *fp = fdopen(qf.handle(), "r");
+    if(!fp)
+        return NULL;
+
+    newpkcs = KOSSL::self()->d2i_PKCS12_fp(fp, &newpkcs);
+
+    fclose(fp);
+    if(!newpkcs)
+    {
+        KOSSL::self()->ERR_clear_error();
+        return NULL;
+    }
+
+    KSSLPKCS12 *c = new KSSLPKCS12;
+    c->setCert(newpkcs);
+
+    // Now we parse it to see if we can decrypt it and interpret it
+    if(!c->parse(password))
+    {
+        delete c;
+        c = NULL;
+    }
+
+    return c;
+#endif
+    return NULL;
+}
+
+
+void KSSLPKCS12::setCert(PKCS12 *c)
+{
+#ifdef KSSL_HAVE_SSL
+    _pkcs = c;
 #endif
 }
 
 
-bool KSSLPKCS12::changePassword(QString pold, QString pnew) {
+bool KSSLPKCS12::changePassword(QString pold, QString pnew)
+{
 #ifdef KSSL_HAVE_SSL
-   // OpenSSL makes me cast away the const here.  argh
-   return (0 == kossl->PKCS12_newpass(_pkcs, 
-                           pold.isNull() ? (char *)"" : (char *)pold.latin1(), 
-                           pnew.isNull() ? (char *)"" : (char *)pnew.latin1()));
+    // OpenSSL makes me cast away the const here.  argh
+    return (0
+            == kossl->PKCS12_newpass(_pkcs, pold.isNull() ? (char *)"" : (char *)pold.latin1(), pnew.isNull() ? (char *)"" : (char *)pnew.latin1()));
 #endif
-return false;
+    return false;
 }
 
 
-bool KSSLPKCS12::parse(QString pass) {
+bool KSSLPKCS12::parse(QString pass)
+{
 #ifdef KSSL_HAVE_SSL
-X509 *x = NULL;
+    X509 *x = NULL;
 
-  assert(_pkcs);   // if you're calling this before pkcs gets set, it's a BUG!
+    assert(_pkcs); // if you're calling this before pkcs gets set, it's a BUG!
 
-   if (_cert) delete _cert;
-   if (_pkey) kossl->EVP_PKEY_free(_pkey);
-   if (_caStack) {
-      for (;;) {
-         X509* x5 = sk_X509_pop(_caStack);
-         if (!x5) break;
-         kossl->X509_free(x5);
-      }
-      sk_X509_free(_caStack);
-   }
-   _pkey = NULL;
-   _caStack = NULL;
-   _cert = NULL;
-
-  int rc = kossl->PKCS12_parse(_pkcs, pass.latin1(), &_pkey, &x, &_caStack);
-
-  if (rc == 1) {
-     // kdDebug(7029) << "PKCS12_parse success" << endl;
-     if (x) {
-        _cert = new KSSLCertificate;
-        _cert->setCert(x);
-        if (_caStack) {
-           _cert->setChain(_caStack);
+    if(_cert)
+        delete _cert;
+    if(_pkey)
+        kossl->EVP_PKEY_free(_pkey);
+    if(_caStack)
+    {
+        for(;;)
+        {
+            X509 *x5 = sk_X509_pop(_caStack);
+            if(!x5)
+                break;
+            kossl->X509_free(x5);
         }
-        return true;
-     }
-  } else {
-    _caStack = NULL;
+        sk_X509_free(_caStack);
+    }
     _pkey = NULL;
-    kossl->ERR_clear_error();
-  }
+    _caStack = NULL;
+    _cert = NULL;
+
+    int rc = kossl->PKCS12_parse(_pkcs, pass.latin1(), &_pkey, &x, &_caStack);
+
+    if(rc == 1)
+    {
+        // kdDebug(7029) << "PKCS12_parse success" << endl;
+        if(x)
+        {
+            _cert = new KSSLCertificate;
+            _cert->setCert(x);
+            if(_caStack)
+            {
+                _cert->setChain(_caStack);
+            }
+            return true;
+        }
+    }
+    else
+    {
+        _caStack = NULL;
+        _pkey = NULL;
+        kossl->ERR_clear_error();
+    }
 #endif
-return false;  
+    return false;
 }
 
 
-EVP_PKEY *KSSLPKCS12::getPrivateKey() {
-   return _pkey;
+EVP_PKEY *KSSLPKCS12::getPrivateKey()
+{
+    return _pkey;
 }
 
 
-KSSLCertificate *KSSLPKCS12::getCertificate() {
-   return _cert;
+KSSLCertificate *KSSLPKCS12::getCertificate()
+{
+    return _cert;
 }
 
 
-QString KSSLPKCS12::toString() {
-QString base64;
+QString KSSLPKCS12::toString()
+{
+    QString base64;
 #ifdef KSSL_HAVE_SSL
-unsigned char *p;
-int len;
+    unsigned char *p;
+    int len;
 
-   len = kossl->i2d_PKCS12(_pkcs, NULL);
-   if (len >= 0) {
-       char *buf = new char[len];
-       p = (unsigned char *)buf;
-       kossl->i2d_PKCS12(_pkcs, &p);
-       QByteArray qba;
-       qba.setRawData(buf, len);
-       base64 = KCodecs::base64Encode(qba);
-       qba.resetRawData(buf, len);
-       delete[] buf;
-   }
+    len = kossl->i2d_PKCS12(_pkcs, NULL);
+    if(len >= 0)
+    {
+        char *buf = new char[len];
+        p = (unsigned char *)buf;
+        kossl->i2d_PKCS12(_pkcs, &p);
+        QByteArray qba;
+        qba.setRawData(buf, len);
+        base64 = KCodecs::base64Encode(qba);
+        qba.resetRawData(buf, len);
+        delete[] buf;
+    }
 #endif
-return base64;
+    return base64;
 }
 
 
-
-bool KSSLPKCS12::toFile(QString filename) {
+bool KSSLPKCS12::toFile(QString filename)
+{
 #ifdef KSSL_HAVE_SSL
-QFile out(filename);
+    QFile out(filename);
 
-   if (!out.open(IO_WriteOnly)) return false;
+    if(!out.open(IO_WriteOnly))
+        return false;
 
-   int fd = out.handle();
-   FILE *fp = fdopen(fd, "w");
+    int fd = out.handle();
+    FILE *fp = fdopen(fd, "w");
 
-   if (!fp) {
-      unlink(filename.latin1());
-      return false;
-   }
+    if(!fp)
+    {
+        unlink(filename.latin1());
+        return false;
+    }
 
-   kossl->i2d_PKCS12_fp(fp, _pkcs);
+    kossl->i2d_PKCS12_fp(fp, _pkcs);
 
-   fclose(fp);
-   return true;
+    fclose(fp);
+    return true;
 #endif
-return false;
+    return false;
 }
 
 
-KSSLCertificate::KSSLValidation KSSLPKCS12::validate() {
-	return validate(KSSLCertificate::SSLServer);
+KSSLCertificate::KSSLValidation KSSLPKCS12::validate()
+{
+    return validate(KSSLCertificate::SSLServer);
 }
 
 
-KSSLCertificate::KSSLValidation KSSLPKCS12::validate(KSSLCertificate::KSSLPurpose p) {
+KSSLCertificate::KSSLValidation KSSLPKCS12::validate(KSSLCertificate::KSSLPurpose p)
+{
 #ifdef KSSL_HAVE_SSL
-KSSLCertificate::KSSLValidation xx = _cert->validate(p);
-   if (1 != kossl->X509_check_private_key(_cert->getCert(), _pkey)) {
-      xx = KSSLCertificate::PrivateKeyFailed;
-   }
+    KSSLCertificate::KSSLValidation xx = _cert->validate(p);
+    if(1 != kossl->X509_check_private_key(_cert->getCert(), _pkey))
+    {
+        xx = KSSLCertificate::PrivateKeyFailed;
+    }
 
-return xx;
+    return xx;
 #else
-return KSSLCertificate::NoSSL;
+    return KSSLCertificate::NoSSL;
 #endif
 }
 
 
-KSSLCertificate::KSSLValidation KSSLPKCS12::revalidate() {
-   return revalidate(KSSLCertificate::SSLServer);
+KSSLCertificate::KSSLValidation KSSLPKCS12::revalidate()
+{
+    return revalidate(KSSLCertificate::SSLServer);
 }
 
 
-KSSLCertificate::KSSLValidation KSSLPKCS12::revalidate(KSSLCertificate::KSSLPurpose p) {
-   return _cert->revalidate(p);
+KSSLCertificate::KSSLValidation KSSLPKCS12::revalidate(KSSLCertificate::KSSLPurpose p)
+{
+    return _cert->revalidate(p);
 }
 
 
-bool KSSLPKCS12::isValid() {
-return isValid(KSSLCertificate::SSLServer);
+bool KSSLPKCS12::isValid()
+{
+    return isValid(KSSLCertificate::SSLServer);
 }
 
 
-bool KSSLPKCS12::isValid(KSSLCertificate::KSSLPurpose p) {
-return (validate(p) == KSSLCertificate::Ok);
+bool KSSLPKCS12::isValid(KSSLCertificate::KSSLPurpose p)
+{
+    return (validate(p) == KSSLCertificate::Ok);
 }
 
 
-QString KSSLPKCS12::name() {
-   return _cert->getSubject();
+QString KSSLPKCS12::name()
+{
+    return _cert->getSubject();
 }
 
- 
+
 #ifdef KSSL_HAVE_SSL
 #undef sk_new
 #undef sk_push
@@ -292,4 +331,3 @@ QString KSSLPKCS12::name() {
 #undef sk_pop
 #undef sk_dup
 #endif
-

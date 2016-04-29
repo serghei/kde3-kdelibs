@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,55 +27,47 @@
 
 using namespace VCARD;
 
-TelValue::TelValue()
-	:	Value()
+TelValue::TelValue() : Value()
 {
 }
 
-TelValue::TelValue(const TelValue & x)
-	:	Value(x)
+TelValue::TelValue(const TelValue &x) : Value(x)
 {
 }
 
-TelValue::TelValue(const QCString & s)
-	:	Value(s)
+TelValue::TelValue(const QCString &s) : Value(s)
 {
 }
 
-	TelValue &
-TelValue::operator = (TelValue & x)
+TelValue &TelValue::operator=(TelValue &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Value::operator = (x);
-	return *this;
+    Value::operator=(x);
+    return *this;
 }
 
-	TelValue &
-TelValue::operator = (const QCString & s)
+TelValue &TelValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-TelValue::operator == (TelValue & x)
+bool TelValue::operator==(TelValue &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 TelValue::~TelValue()
 {
 }
 
-	void
-TelValue::_parse()
+void TelValue::_parse()
 {
 }
 
-	void
-TelValue::_assemble()
+void TelValue::_assemble()
 {
 }
-

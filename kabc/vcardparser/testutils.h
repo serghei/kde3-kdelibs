@@ -8,7 +8,7 @@ KABC::Addressee vcard1();
 KABC::Addressee vcard2();
 KABC::Addressee vcard3();
 KABC::Addressee::List vCardsAsAddresseeList();
-QString   vCardAsText( const QString& location );
-QString   vCardsAsText();
+QString vCardAsText(const QString &location);
+QString vCardsAsText();
 
 #endif

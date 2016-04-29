@@ -25,41 +25,39 @@
  * the editor for a KListView.  please don't use this.
  * @internal
  **/
-class KDEUI_EXPORT KListViewLineEdit : public KLineEdit
-{
-Q_OBJECT
+class KDEUI_EXPORT KListViewLineEdit : public KLineEdit {
+    Q_OBJECT
 public:
-	KListViewLineEdit(KListView *parent);
-	~KListViewLineEdit();
+    KListViewLineEdit(KListView *parent);
+    ~KListViewLineEdit();
 
-	QListViewItem *currentItem() const;
+    QListViewItem *currentItem() const;
 
 signals:
-	void done(QListViewItem*, int);
+    void done(QListViewItem *, int);
 
 public slots:
-	void terminate();
-	void load(QListViewItem *i, int c);
+    void terminate();
+    void load(QListViewItem *i, int c);
 
 protected:
-	virtual void focusOutEvent(QFocusEvent *);
-	virtual void keyPressEvent(QKeyEvent *e);
-	virtual void paintEvent(QPaintEvent *e);
-	virtual bool event (QEvent *pe);
+    virtual void focusOutEvent(QFocusEvent *);
+    virtual void keyPressEvent(QKeyEvent *e);
+    virtual void paintEvent(QPaintEvent *e);
+    virtual bool event(QEvent *pe);
 
-	/// @since 3.1
-	void selectNextCell (QListViewItem *pi, int column, bool forward);
-	void terminate(bool commit);
-	QListViewItem *item;
-	int col;
-	KListView* const p;
+    /// @since 3.1
+    void selectNextCell(QListViewItem *pi, int column, bool forward);
+    void terminate(bool commit);
+    QListViewItem *item;
+    int col;
+    KListView *const p;
 
 protected slots:
-	void slotSelectionChanged();
+    void slotSelectionChanged();
 
-	/// @since 3.5.4
-	void slotItemRemoved(QListViewItem *i);
-
+    /// @since 3.5.4
+    void slotItemRemoved(QListViewItem *i);
 };
 
 #endif

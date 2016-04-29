@@ -22,22 +22,22 @@
 
 #include <qfile.h>
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-    KApplication app( argc, argv, "ktextedittest" );
+    KApplication app(argc, argv, "ktextedittest");
     KTextEdit *edit = new KTextEdit();
-    edit->setReadOnly( true );
-    edit->setCheckSpellingEnabled( true );
+    edit->setReadOnly(true);
+    edit->setCheckSpellingEnabled(true);
 
-    QFile file( "ktextedittest.cpp" );
-    if ( file.open( IO_ReadOnly ) )
+    QFile file("ktextedittest.cpp");
+    if(file.open(IO_ReadOnly))
     {
-        edit->setText( file.readAll() );
+        edit->setText(file.readAll());
         file.close();
     }
 
-    edit->resize( 600, 600 );
+    edit->resize(600, 600);
     edit->show();
-    edit->setReadOnly( false ); // also enables spell checking
+    edit->setReadOnly(false); // also enables spell checking
     return app.exec();
 }

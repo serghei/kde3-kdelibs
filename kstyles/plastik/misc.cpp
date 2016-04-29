@@ -26,13 +26,14 @@ QColor alphaBlendColors(const QColor &bgColor, const QColor &fgColor, const int 
     QRgb rgb = bgColor.rgb();
     QRgb rgb_b = fgColor.rgb();
     int alpha = a;
-    if(alpha>255) alpha = 255;
-    if(alpha<0) alpha = 0;
+    if(alpha > 255)
+        alpha = 255;
+    if(alpha < 0)
+        alpha = 0;
     int inv_alpha = 255 - alpha;
 
-    QColor result  = QColor( qRgb(qRed(rgb_b)*inv_alpha/255 + qRed(rgb)*alpha/255,
-                                  qGreen(rgb_b)*inv_alpha/255 + qGreen(rgb)*alpha/255,
-                                  qBlue(rgb_b)*inv_alpha/255 + qBlue(rgb)*alpha/255) );
+    QColor result = QColor(qRgb(qRed(rgb_b) * inv_alpha / 255 + qRed(rgb) * alpha / 255, qGreen(rgb_b) * inv_alpha / 255 + qGreen(rgb) * alpha / 255,
+                                qBlue(rgb_b) * inv_alpha / 255 + qBlue(rgb) * alpha / 255));
 
     return result;
 }

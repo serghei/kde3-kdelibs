@@ -20,7 +20,7 @@
 #ifndef KPRINTDIALOG_H
 #define KPRINTDIALOG_H
 
-#if !defined( _KDEPRINT_COMPILE ) && defined( __GNUC__ )
+#if !defined(_KDEPRINT_COMPILE) && defined(__GNUC__)
 #warning internal header, do not use except if you are a KDEPrint developer
 #endif
 
@@ -38,51 +38,50 @@ class KPrintDialogPage;
  * if you're a KDEPrint developer. The API might change in the
  * future and binary compatibility might be broken.
  */
-class KDEPRINT_EXPORT KPrintDialog : public KDialog, public KPReloadObject
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT KPrintDialog : public KDialog, public KPReloadObject {
+    Q_OBJECT
 public:
-	KPrintDialog(QWidget *parent = 0, const char *name = 0);
-	~KPrintDialog();
+    KPrintDialog(QWidget *parent = 0, const char *name = 0);
+    ~KPrintDialog();
 
-	void setFlags(int f);
-	void setDialogPages(QPtrList<KPrintDialogPage> *pages);
-	void enableDialogPage( int index, bool flag = true );
-	KPrinter* printer() const;
+    void setFlags(int f);
+    void setDialogPages(QPtrList< KPrintDialogPage > *pages);
+    void enableDialogPage(int index, bool flag = true);
+    KPrinter *printer() const;
 
-	static KPrintDialog* printerDialog(KPrinter*, QWidget*, const QString& caption = QString::null, bool forceExpand = false);
+    static KPrintDialog *printerDialog(KPrinter *, QWidget *, const QString &caption = QString::null, bool forceExpand = false);
 
 signals:
-	void printRequested(KPrinter*);
+    void printRequested(KPrinter *);
 
 protected slots:
-	void slotPrinterSelected(int);
-	void slotProperties();
-	void slotSetDefault();
-	void slotOptions();
-	virtual void done(int);
-	void slotWizard();
-	void slotExtensionClicked();
-	void slotToggleFilter(bool);
-	void slotHelp();
-	void slotOutputFileSelected(const QString&);
-	void slotUpdatePossible( bool );
-	void slotOpenFileDialog();
+    void slotPrinterSelected(int);
+    void slotProperties();
+    void slotSetDefault();
+    void slotOptions();
+    virtual void done(int);
+    void slotWizard();
+    void slotExtensionClicked();
+    void slotToggleFilter(bool);
+    void slotHelp();
+    void slotOutputFileSelected(const QString &);
+    void slotUpdatePossible(bool);
+    void slotOpenFileDialog();
 
 protected:
-	bool checkOutputFile();
-	void enableSpecial(bool on);
-	void enableOutputFile(bool on);
-	void setOutputFileExtension(const QString&);
-	void reload();
-	void configChanged();
-	void expandDialog(bool on = true);
-	void initialize( KPrinter* );
-	void init();
+    bool checkOutputFile();
+    void enableSpecial(bool on);
+    void enableOutputFile(bool on);
+    void setOutputFileExtension(const QString &);
+    void reload();
+    void configChanged();
+    void expandDialog(bool on = true);
+    void initialize(KPrinter *);
+    void init();
 
 protected:
-	class KPrintDialogPrivate;
-	KPrintDialogPrivate	*d;
+    class KPrintDialogPrivate;
+    KPrintDialogPrivate *d;
 };
 
 #endif

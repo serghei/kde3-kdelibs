@@ -25,35 +25,34 @@
 #include <qfile.h>
 #include <stdlib.h>
 
-KLprPrinterImpl::KLprPrinterImpl(QObject *parent, const char *name, const QStringList & /*args*/)
-: KPrinterImpl(parent,name)
+KLprPrinterImpl::KLprPrinterImpl(QObject *parent, const char *name, const QStringList & /*args*/) : KPrinterImpl(parent, name)
 {
-	m_exepath = KStandardDirs::findExe("lpr");
+    m_exepath = KStandardDirs::findExe("lpr");
 }
 
 KLprPrinterImpl::~KLprPrinterImpl()
 {
 }
 
-bool KLprPrinterImpl::setupCommand(QString& cmd, KPrinter *printer)
+bool KLprPrinterImpl::setupCommand(QString &cmd, KPrinter *printer)
 {
-	// check printer object
-	if (!printer || m_exepath.isEmpty())
-		return false;
+    // check printer object
+    if(!printer || m_exepath.isEmpty())
+        return false;
 
-	cmd = QString::fromLatin1("%1 -P %1 '-#%1'").arg(m_exepath).arg(quote(printer->printerName())).arg( printer->numCopies() );
-	QString	opts = static_cast<KMLprManager*>(KMManager::self())->printOptions(printer);
-	if (!opts.isEmpty())
-		cmd += (" " + opts);
-	return true;
+    cmd = QString::fromLatin1("%1 -P %1 '-#%1'").arg(m_exepath).arg(quote(printer->printerName())).arg(printer->numCopies());
+    QString opts = static_cast< KMLprManager * >(KMManager::self())->printOptions(printer);
+    if(!opts.isEmpty())
+        cmd += (" " + opts);
+    return true;
 }
 
-void KLprPrinterImpl::broadcastOption(const QString& key, const QString& value)
+void KLprPrinterImpl::broadcastOption(const QString &key, const QString &value)
 {
-	KPrinterImpl::broadcastOption(key,value);
-	if (key == "kde-pagesize")
-	{
-		QString	pagename = QString::fromLatin1(pageSizeToPageName((KPrinter::PageSize)value.toInt()));
-		KPrinterImpl::broadcastOption("PageSize",pagename);
-	}
+    KPrinterImpl::broadcastOption(key, value);
+    if(key == "kde-pagesize")
+    {
+        QString pagename = QString::fromLatin1(pageSizeToPageName((KPrinter::PageSize)value.toInt()));
+        KPrinterImpl::broadcastOption("PageSize", pagename);
+    }
 }

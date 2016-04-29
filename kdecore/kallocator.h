@@ -3,7 +3,7 @@
 
     Copyright (C) 1999 Waldo Bastian (bastian@kde.org)
     Copyright (C) 2002 Michael Matz (matz@kde.org)
-              
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
@@ -43,14 +43,13 @@ class KZoneAllocatorPrivate;
  * memory though.
  * @author Waldo Bastian <bastian@kde.org>, Michael Matz <matz@kde.org>
  */
-class KDECORE_EXPORT KZoneAllocator
-{
+class KDECORE_EXPORT KZoneAllocator {
 public:
     /**
      * Creates a KZoneAllocator object.
      * @param _blockSize Size in bytes of the blocks requested from malloc.
      */
-    KZoneAllocator(unsigned long _blockSize = 8*1024);
+    KZoneAllocator(unsigned long _blockSize = 8 * 1024);
 
     /**
      * Destructs the ZoneAllocator and free all memory allocated by it.
@@ -62,7 +61,7 @@ public:
      * @param _size Size in bytes of the memory block. Memory is aligned to
      * the size of a pointer.
      */
-    void* allocate(size_t _size);
+    void *allocate(size_t _size);
 
     /**
      * Gives back a block returned by allocate() to the zone
@@ -88,7 +87,7 @@ public:
 
     /**
      * Deallocate many objects at once.
-     * free_since() deallocates all objects allocated after @p ptr, 
+     * free_since() deallocates all objects allocated after @p ptr,
      * @em including @p ptr itself.
      *
      * The intended use is something along the lines of:
@@ -112,15 +111,15 @@ protected:
     /** A single chunk of memory from the heap. @internal */
     class MemBlock;
     /**< A list of chunks. @internal */
-    typedef QValueList<MemBlock *> MemList;
+    typedef QValueList< MemBlock * > MemList;
     void addBlock(MemBlock *b);
     void delBlock(MemBlock *b);
     void insertHash(MemBlock *b);
     void initHash();
     /** One block is 'current' to satisfy requests. @internal */
-    MemBlock *currentBlock; 
+    MemBlock *currentBlock;
     /** Store block size from constructor. @internal */
-    unsigned long blockSize; 
+    unsigned long blockSize;
     /** Store offset into current block; size-offset is free. @internal */
     unsigned long blockOffset;
     /** base-2 log of the block size. @internal */
@@ -133,6 +132,7 @@ protected:
     unsigned int hashSize;
     /** Flag the hashes as in need of reorganization. @internal */
     bool hashDirty;
+
 private:
     KZoneAllocatorPrivate *d;
 };

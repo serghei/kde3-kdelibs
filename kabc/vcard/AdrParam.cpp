@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,100 +27,95 @@
 
 using namespace VCARD;
 
-AdrParam::AdrParam()
-	:	Param()
+AdrParam::AdrParam() : Param()
 {
 }
 
-AdrParam::AdrParam(const AdrParam & x)
-	:	Param(x),
-		adrTypeList_	(x.adrTypeList_)
+AdrParam::AdrParam(const AdrParam &x) : Param(x), adrTypeList_(x.adrTypeList_)
 {
 }
 
-AdrParam::AdrParam(const QCString & s)
-	:	Param(s)
+AdrParam::AdrParam(const QCString &s) : Param(s)
 {
 }
 
-	AdrParam &
-AdrParam::operator = (AdrParam & x)
+AdrParam &AdrParam::operator=(AdrParam &x)
 {
-	if (*this == x) return *this;
-	
-	adrTypeList_	= x.adrTypeList();
-	textParam_		= x.textParam();
+    if(*this == x)
+        return *this;
 
-	Param::operator = (x);
-	return *this;
+    adrTypeList_ = x.adrTypeList();
+    textParam_ = x.textParam();
+
+    Param::operator=(x);
+    return *this;
 }
 
-	AdrParam &
-AdrParam::operator = (const QCString & s)
+AdrParam &AdrParam::operator=(const QCString &s)
 {
-	Param::operator = (s);
-	
-	adrTypeList_.clear();
-	textParam_.truncate(0);
-	
-	return *this;
+    Param::operator=(s);
+
+    adrTypeList_.clear();
+    textParam_.truncate(0);
+
+    return *this;
 }
 
-	bool
-AdrParam::operator == (AdrParam & x)
+bool AdrParam::operator==(AdrParam &x)
 {
-	parse();
+    parse();
 
-	if (!x.textParam().isEmpty())
-		return (x.textParam_ == textParam_);
+    if(!x.textParam().isEmpty())
+        return (x.textParam_ == textParam_);
 
-	if (x.adrTypeList().count() != adrTypeList_.count())
-		return false;
-	
-	QStrListIterator it(x.adrTypeList_);
-	
-	for (; it.current(); ++it)
-		if (!adrTypeList_.find(it.current()))
-			return false;
-	
-	return true;
+    if(x.adrTypeList().count() != adrTypeList_.count())
+        return false;
+
+    QStrListIterator it(x.adrTypeList_);
+
+    for(; it.current(); ++it)
+        if(!adrTypeList_.find(it.current()))
+            return false;
+
+    return true;
 }
 
 AdrParam::~AdrParam()
 {
 }
 
-	void
-AdrParam::_parse()
+void AdrParam::_parse()
 {
-	adrTypeList_.clear();
+    adrTypeList_.clear();
 
-	if (strRep_.left(4) != "TYPE") {
-		textParam_ = strRep_;
-		return;
-	}
-	
-	if (!strRep_.contains('='))
-		return;
-	
-	RTokenise(strRep_, ",", adrTypeList_);
+    if(strRep_.left(4) != "TYPE")
+    {
+        textParam_ = strRep_;
+        return;
+    }
+
+    if(!strRep_.contains('='))
+        return;
+
+    RTokenise(strRep_, ",", adrTypeList_);
 }
 
-	void
-AdrParam::_assemble()
+void AdrParam::_assemble()
 {
-	if (!textParam_.isEmpty()) {
-		strRep_ = textParam_;
-		return;
-	}
-	
-	QStrListIterator it(adrTypeList_);
-	
-	for (; it.current(); ++it) {
-		
-		strRep_ += it.current();
-		
-		if (it.current() != adrTypeList_.last())
-			strRep_ += ',';
-	}
+    if(!textParam_.isEmpty())
+    {
+        strRep_ = textParam_;
+        return;
+    }
+
+    QStrListIterator it(adrTypeList_);
+
+    for(; it.current(); ++it)
+    {
+
+        strRep_ += it.current();
+
+        if(it.current() != adrTypeList_.last())
+            strRep_ += ',';
+    }
 }

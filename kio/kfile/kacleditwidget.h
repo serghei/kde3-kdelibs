@@ -34,25 +34,24 @@ class KACLListViewItem;
 class KACLListView;
 class QPushButton;
 
-class KACLEditWidget : QWidget
-{
-  Q_OBJECT
+class KACLEditWidget : QWidget {
+    Q_OBJECT
 public:
-  KACLEditWidget( QWidget *parent = 0, const char *name = 0 );
-  KACL getACL() const;
-  KACL getDefaultACL() const;
-  void setACL( const KACL & );
-  void setDefaultACL( const KACL & );
-  void setAllowDefaults( bool value );
-  void setReadOnly( bool value );
+    KACLEditWidget(QWidget *parent = 0, const char *name = 0);
+    KACL getACL() const;
+    KACL getDefaultACL() const;
+    void setACL(const KACL &);
+    void setDefaultACL(const KACL &);
+    void setAllowDefaults(bool value);
+    void setReadOnly(bool value);
 private slots:
-  void slotUpdateButtons();
+    void slotUpdateButtons();
 
 private:
-  KACLListView* m_listView;
-  QPushButton *m_AddBtn;
-  QPushButton *m_EditBtn;
-  QPushButton *m_DelBtn;
+    KACLListView *m_listView;
+    QPushButton *m_AddBtn;
+    QPushButton *m_EditBtn;
+    QPushButton *m_DelBtn;
 };
 
 

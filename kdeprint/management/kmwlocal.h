@@ -28,31 +28,30 @@ class QLineEdit;
 class KListView;
 class QListViewItem;
 
-class KMWLocal : public KMWizardPage
-{
-	Q_OBJECT
+class KMWLocal : public KMWizardPage {
+    Q_OBJECT
 public:
-	KMWLocal(QWidget *parent = 0, const char *name = 0);
+    KMWLocal(QWidget *parent = 0, const char *name = 0);
 
-	bool isValid(QString&);
-	void updatePrinter(KMPrinter*);
-	void initPrinter(KMPrinter*);
+    bool isValid(QString &);
+    void updatePrinter(KMPrinter *);
+    void initPrinter(KMPrinter *);
 
 protected slots:
-	void slotPortSelected(QListViewItem*);
-	void slotTextChanged( const QString& );
+    void slotPortSelected(QListViewItem *);
+    void slotTextChanged(const QString &);
 
 protected:
-	void initialize();
-	QListViewItem* lookForItem( const QString& );
+    void initialize();
+    QListViewItem *lookForItem(const QString &);
 
 protected:
-	KListView	*m_ports;
-	QLineEdit	*m_localuri;
-	QStringList	m_uris;
-	QListViewItem	*m_parents[4];
-	bool		m_initialized;
-	bool m_block;
+    KListView *m_ports;
+    QLineEdit *m_localuri;
+    QStringList m_uris;
+    QListViewItem *m_parents[4];
+    bool m_initialized;
+    bool m_block;
 };
 
 #endif

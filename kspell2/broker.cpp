@@ -37,116 +37,126 @@
 #include <qptrdict.h>
 #include <qmap.h>
 
-#define DEFAULT_CONFIG_FILE   "kspellrc"
+#define DEFAULT_CONFIG_FILE "kspellrc"
 
-namespace KSpell2
-{
+namespace KSpell2 {
 
-class Broker::Private
-{
+class Broker::Private {
 public:
     KPluginInfo::List plugins;
     Settings *settings;
 
     // <language, Clients with that language >
-    QMap<QString, QPtrList<Client> > languageClients;
+    QMap< QString, QPtrList< Client > > languageClients;
     QStringList clients;
     DefaultDictionary *defaultDictionary;
 };
 
-QPtrDict<Broker> *Broker::s_brokers = 0;
+QPtrDict< Broker > *Broker::s_brokers = 0;
 
-Broker *Broker::openBroker( KSharedConfig *config )
+Broker *Broker::openBroker(KSharedConfig *config)
 {
     KSharedConfig::Ptr preventDeletion;
-    if ( !config ) {
-        preventDeletion = KSharedConfig::openConfig( DEFAULT_CONFIG_FILE );
-    } else
+    if(!config)
+    {
+        preventDeletion = KSharedConfig::openConfig(DEFAULT_CONFIG_FILE);
+    }
+    else
         preventDeletion = config;
 
-    if ( s_brokers ) {
-        Broker *broker = s_brokers->find( preventDeletion );
-        if ( broker )
+    if(s_brokers)
+    {
+        Broker *broker = s_brokers->find(preventDeletion);
+        if(broker)
             return broker;
     }
 
-    Broker *broker = new Broker( preventDeletion );
+    Broker *broker = new Broker(preventDeletion);
     return broker;
 }
 
-Broker::Broker( KSharedConfig *config )
+Broker::Broker(KSharedConfig *config)
 {
-    KSharedConfig::Ptr preventDeletion( config );
-    Q_UNUSED( preventDeletion );
+    KSharedConfig::Ptr preventDeletion(config);
+    Q_UNUSED(preventDeletion);
 
-    if ( !s_brokers )
-        s_brokers = new QPtrDict<Broker>;
-    s_brokers->insert( config, this );
+    if(!s_brokers)
+        s_brokers = new QPtrDict< Broker >;
+    s_brokers->insert(config, this);
 
     d = new Private;
-    d->settings = new Settings( this, config );
+    d->settings = new Settings(this, config);
     loadPlugins();
 
-    d->defaultDictionary = new DefaultDictionary( d->settings->defaultLanguage(),
-                                                  this );
+    d->defaultDictionary = new DefaultDictionary(d->settings->defaultLanguage(), this);
 }
 
 Broker::~Broker()
 {
-    kdDebug()<<"Removing broker : "<< this << endl;
-    s_brokers->remove( d->settings->sharedConfig() );
+    kdDebug() << "Removing broker : " << this << endl;
+    s_brokers->remove(d->settings->sharedConfig());
     KPluginInfo::List::iterator it = d->plugins.begin();
-    while ( it != d->plugins.end() ) {
+    while(it != d->plugins.end())
+    {
         KPluginInfo *pluginInfo = *it;
-        it = d->plugins.remove( it );
+        it = d->plugins.remove(it);
         delete pluginInfo;
     }
 
-    delete d->settings; d->settings = 0;
-    delete d; d = 0;
+    delete d->settings;
+    d->settings = 0;
+    delete d;
+    d = 0;
 }
 
-DefaultDictionary* Broker::defaultDictionary() const
+DefaultDictionary *Broker::defaultDictionary() const
 {
     return d->defaultDictionary;
 }
 
-Dictionary* Broker::dictionary( const QString& language, const QString& clientName ) const
+Dictionary *Broker::dictionary(const QString &language, const QString &clientName) const
 {
     QString pclient = clientName;
-    QString plang   = language;
+    QString plang = language;
     bool ddefault = false;
 
-    if ( plang.isEmpty() ) {
+    if(plang.isEmpty())
+    {
         plang = d->settings->defaultLanguage();
     }
-    if ( clientName == d->settings->defaultClient() &&
-        plang == d->settings->defaultLanguage() ) {
+    if(clientName == d->settings->defaultClient() && plang == d->settings->defaultLanguage())
+    {
         ddefault = true;
     }
 
-    QPtrList<Client> lClients = d->languageClients[ plang ];
+    QPtrList< Client > lClients = d->languageClients[plang];
 
-    if ( lClients.isEmpty() ) {
-        kdError()<<"No language dictionaries for the language : "<< plang <<endl;
+    if(lClients.isEmpty())
+    {
+        kdError() << "No language dictionaries for the language : " << plang << endl;
         return 0;
     }
 
-    QPtrListIterator<Client> itr( lClients );
-    while ( itr.current() ) {
-        if ( !pclient.isEmpty() ) {
-            if ( pclient == itr.current()->name() ) {
-                Dictionary *dict = itr.current()->dictionary( plang );
-                if ( dict ) //remove the if if the assert proves ok
+    QPtrListIterator< Client > itr(lClients);
+    while(itr.current())
+    {
+        if(!pclient.isEmpty())
+        {
+            if(pclient == itr.current()->name())
+            {
+                Dictionary *dict = itr.current()->dictionary(plang);
+                if(dict) // remove the if if the assert proves ok
                     dict->m_default = ddefault;
                 return dict;
             }
-        } else {
-            //the first one is the one with the highest
-            //reliability
-            Dictionary *dict = itr.current()->dictionary( plang );
-            Q_ASSERT( dict );
-            if ( dict ) //remove the if if the assert proves ok
+        }
+        else
+        {
+            // the first one is the one with the highest
+            // reliability
+            Dictionary *dict = itr.current()->dictionary(plang);
+            Q_ASSERT(dict);
+            if(dict) // remove the if if the assert proves ok
                 dict->m_default = ddefault;
             return dict;
         }
@@ -166,78 +176,69 @@ QStringList Broker::languages() const
     return d->languageClients.keys();
 }
 
-Settings* Broker::settings() const
+Settings *Broker::settings() const
 {
     return d->settings;
 }
 
 void Broker::loadPlugins()
 {
-    d->plugins = KPluginInfo::fromServices(
-        KTrader::self()->query( "KSpell/Client" ) );
+    d->plugins = KPluginInfo::fromServices(KTrader::self()->query("KSpell/Client"));
 
-    for ( KPluginInfo::List::Iterator itr = d->plugins.begin();
-          itr != d->plugins.end(); ++itr ) {
-        loadPlugin( ( *itr )->pluginName() );
+    for(KPluginInfo::List::Iterator itr = d->plugins.begin(); itr != d->plugins.end(); ++itr)
+    {
+        loadPlugin((*itr)->pluginName());
     }
 }
 
-void Broker::loadPlugin( const QString& pluginId )
+void Broker::loadPlugin(const QString &pluginId)
 {
     int error = 0;
 
-    kdDebug()<<"Loading plugin " << pluginId << endl;
+    kdDebug() << "Loading plugin " << pluginId << endl;
 
-    Client *client = KParts::ComponentFactory::createInstanceFromQuery<Client>(
-        QString::fromLatin1( "KSpell/Client" ),
-        QString::fromLatin1( "[X-KDE-PluginInfo-Name]=='%1'" ).arg( pluginId ),
-        this, 0, QStringList(), &error );
+    Client *client = KParts::ComponentFactory::createInstanceFromQuery< Client >(
+        QString::fromLatin1("KSpell/Client"), QString::fromLatin1("[X-KDE-PluginInfo-Name]=='%1'").arg(pluginId), this, 0, QStringList(), &error);
 
-    if ( client )
+    if(client)
     {
         QStringList languages = client->languages();
-        d->clients.append( client->name() );
+        d->clients.append(client->name());
 
-        for ( QStringList::Iterator itr = languages.begin();
-              itr != languages.end(); ++itr ) {
-            if ( !d->languageClients[ *itr ].isEmpty() &&
-                 client->reliability() < d->languageClients[ *itr ].first()->reliability() )
-                d->languageClients[ *itr ].append( client );
+        for(QStringList::Iterator itr = languages.begin(); itr != languages.end(); ++itr)
+        {
+            if(!d->languageClients[*itr].isEmpty() && client->reliability() < d->languageClients[*itr].first()->reliability())
+                d->languageClients[*itr].append(client);
             else
-                d->languageClients[ *itr ].prepend( client );
+                d->languageClients[*itr].prepend(client);
         }
 
-        kdDebug() << k_funcinfo << "Successfully loaded plugin '"
-                  << pluginId << "'" << endl;
+        kdDebug() << k_funcinfo << "Successfully loaded plugin '" << pluginId << "'" << endl;
     }
     else
     {
-        switch( error )
+        switch(error)
         {
-        case KParts::ComponentFactory::ErrNoServiceFound:
-            kdDebug() << k_funcinfo << "No service implementing the given mimetype "
-                      << "and fullfilling the given constraint expression can be found."
-                      << endl;
-            break;
-        case KParts::ComponentFactory::ErrServiceProvidesNoLibrary:
-            kdDebug() << "the specified service provides no shared library." << endl;
-            break;
-        case KParts::ComponentFactory::ErrNoLibrary:
-            kdDebug() << "the specified library could not be loaded." << endl;
-            break;
-        case KParts::ComponentFactory::ErrNoFactory:
-            kdDebug() << "the library does not export a factory for creating components."
-                      << endl;
-            break;
-        case KParts::ComponentFactory::ErrNoComponent:
-            kdDebug() << "the factory does not support creating "
-                      << "components of the specified type."
-                      << endl;
-            break;
+            case KParts::ComponentFactory::ErrNoServiceFound:
+                kdDebug() << k_funcinfo << "No service implementing the given mimetype "
+                          << "and fullfilling the given constraint expression can be found." << endl;
+                break;
+            case KParts::ComponentFactory::ErrServiceProvidesNoLibrary:
+                kdDebug() << "the specified service provides no shared library." << endl;
+                break;
+            case KParts::ComponentFactory::ErrNoLibrary:
+                kdDebug() << "the specified library could not be loaded." << endl;
+                break;
+            case KParts::ComponentFactory::ErrNoFactory:
+                kdDebug() << "the library does not export a factory for creating components." << endl;
+                break;
+            case KParts::ComponentFactory::ErrNoComponent:
+                kdDebug() << "the factory does not support creating "
+                          << "components of the specified type." << endl;
+                break;
         }
 
-        kdDebug() << k_funcinfo << "Loading plugin '" << pluginId
-                  << "' failed, KLibLoader reported error: '" << endl
+        kdDebug() << k_funcinfo << "Loading plugin '" << pluginId << "' failed, KLibLoader reported error: '" << endl
                   << KLibLoader::self()->lastErrorMessage() << "'" << endl;
     }
 }
@@ -246,7 +247,6 @@ void Broker::changed()
 {
     emit configurationChanged();
 }
-
 }
 
 #include "broker.moc"

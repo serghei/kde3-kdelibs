@@ -38,96 +38,107 @@ class KSaveFilePrivate;
  *   Some error occurred, no changes have been written whatsoever and the
  *   old file is still in place.
  */
-class KDECORE_EXPORT KSaveFile
-{
+class KDECORE_EXPORT KSaveFile {
 public:
-   /**
-    * Creates a new KSaveFile with the given file name.
-    * @param filename the path of the file
-    * @param mode the mode of the file (see chmod(1))
-    */
-   KSaveFile(const QString &filename, int mode = 0666 );
+    /**
+     * Creates a new KSaveFile with the given file name.
+     * @param filename the path of the file
+     * @param mode the mode of the file (see chmod(1))
+     */
+    KSaveFile(const QString &filename, int mode = 0666);
 
-   /**
-    * The destructor closes the file.
-    * You might want to call close() explicitely though, to test whether it worked.
-    **/
-   ~KSaveFile();
+    /**
+     * The destructor closes the file.
+     * You might want to call close() explicitely though, to test whether it worked.
+     **/
+    ~KSaveFile();
 
-   /**
-    * Returns the status of the file based on errno. (see errno.h)
-    * 0 means OK.
-    *
-    * You should check the status after object creation to check
-    * whether a file could be created in the first place.
-    *
-    * You may check the status after closing the file to verify that
-    * the file has indeed been written correctly.
-    * @return the errno status, 0 means ok
-    **/
-   int status() const
-   	{ return mTempFile.status(); }
+    /**
+     * Returns the status of the file based on errno. (see errno.h)
+     * 0 means OK.
+     *
+     * You should check the status after object creation to check
+     * whether a file could be created in the first place.
+     *
+     * You may check the status after closing the file to verify that
+     * the file has indeed been written correctly.
+     * @return the errno status, 0 means ok
+     **/
+    int status() const
+    {
+        return mTempFile.status();
+    }
 
-   /**
-    * The name of the file as passed to the constructor.
-    * @return The name of the file, or QString::null if opening the
-    *         file has failed
-    **/
-   QString name() const;
+    /**
+     * The name of the file as passed to the constructor.
+     * @return The name of the file, or QString::null if opening the
+     *         file has failed
+     **/
+    QString name() const;
 
-   /**
-    * An integer file descriptor open for writing to the file.
-    * @return The file descriptor, or a negative number if opening
-    *         the temporary file failed
-    **/
-   int handle()	const
-   	{ return mTempFile.handle(); }
+    /**
+     * An integer file descriptor open for writing to the file.
+     * @return The file descriptor, or a negative number if opening
+     *         the temporary file failed
+     **/
+    int handle() const
+    {
+        return mTempFile.handle();
+    }
 
-   /**
-    * A FILE* stream open for writing to the file.
-    * @return FILE* stream open for writing to the file, or 0
-    *         if opening the temporary file failed
-    **/
-   FILE *fstream()
-   	{ return mTempFile.fstream(); }
+    /**
+     * A FILE* stream open for writing to the file.
+     * @return FILE* stream open for writing to the file, or 0
+     *         if opening the temporary file failed
+     **/
+    FILE *fstream()
+    {
+        return mTempFile.fstream();
+    }
 
-   /**
-    * A QFile* open for writing to the file.
-    * @return A QFile open for writing to the file, or 0 if
-    *         opening the temporary file failed.
-    **/
-   QFile *file()
-   	{ return mTempFile.file(); }
+    /**
+     * A QFile* open for writing to the file.
+     * @return A QFile open for writing to the file, or 0 if
+     *         opening the temporary file failed.
+     **/
+    QFile *file()
+    {
+        return mTempFile.file();
+    }
 
-   /**
-    * A QTextStream* open for writing to the file.
-    * @return A QTextStream that is open for writing to the file, or 0
-    *         if opening the temporary file failed
-    **/
-   QTextStream *textStream()
-   	{ return mTempFile.textStream(); }
+    /**
+     * A QTextStream* open for writing to the file.
+     * @return A QTextStream that is open for writing to the file, or 0
+     *         if opening the temporary file failed
+     **/
+    QTextStream *textStream()
+    {
+        return mTempFile.textStream();
+    }
 
-   /**
-    * A QDataStream* open for writing to the file.
-    * @return A QDataStream that is open for writing to the file, or 0
-    *         if opening the file failed
-    **/
-   QDataStream *dataStream()
-   	{ return mTempFile.dataStream(); }
+    /**
+     * A QDataStream* open for writing to the file.
+     * @return A QDataStream that is open for writing to the file, or 0
+     *         if opening the file failed
+     **/
+    QDataStream *dataStream()
+    {
+        return mTempFile.dataStream();
+    }
 
-   /**
-    * Aborts the write operation and removes any intermediate files
-    * This implies a close.
-    **/
-   void abort();
+    /**
+     * Aborts the write operation and removes any intermediate files
+     * This implies a close.
+     **/
+    void abort();
 
-   /**
-    * Closes the file and makes the changes definitive.
-    * Returns 'true' is successful, or 'false' if an error has occurred.
-    * See status() for details about errors.
-    * @return true if successful, or false if an error has occurred.
-    **/
-   bool close();
+    /**
+     * Closes the file and makes the changes definitive.
+     * Returns 'true' is successful, or 'false' if an error has occurred.
+     * See status() for details about errors.
+     * @return true if successful, or false if an error has occurred.
+     **/
+    bool close();
 
     /**
      * Static method to create a backup file before saving.
@@ -138,15 +149,14 @@ public:
      * @param backupExtension the extension to append to @p filename, "~" by default.
      * @since 3.2
      */
-   static bool backupFile( const QString& filename,
-                           const QString& backupDir = QString::null,
-                           const QString& backupExtension = QString::fromLatin1( "~" ) );
+    static bool backupFile(const QString &filename, const QString &backupDir = QString::null,
+                           const QString &backupExtension = QString::fromLatin1("~"));
 
 private:
-   QString mFileName;
-   KTempFile mTempFile;
+    QString mFileName;
+    KTempFile mTempFile;
 
-   KSaveFilePrivate *d;
+    KSaveFilePrivate *d;
 };
 
 #endif

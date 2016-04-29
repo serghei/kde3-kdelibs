@@ -25,18 +25,17 @@
 
 #include <kdelibs_export.h>
 
-class KDEPRINT_EXPORT SidePixmap : public QFrame
-{
+class KDEPRINT_EXPORT SidePixmap : public QFrame {
 public:
-	SidePixmap(QWidget *parent = 0, const char *name = 0);
-	QSize sizeHint() const;
-	bool isValid();
+    SidePixmap(QWidget *parent = 0, const char *name = 0);
+    QSize sizeHint() const;
+    bool isValid();
 
 protected:
-	void drawContents(QPainter*);
+    void drawContents(QPainter *);
 
 private:
-	QPixmap	m_side, m_tileup, m_tiledown;
+    QPixmap m_side, m_tileup, m_tiledown;
 };
 
 #endif

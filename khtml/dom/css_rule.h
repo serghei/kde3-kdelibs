@@ -49,22 +49,22 @@ class CSSRuleImpl;
  * interface.
  *
  */
-class KHTML_EXPORT CSSRule
-{
+class KHTML_EXPORT CSSRule {
 public:
     CSSRule();
     CSSRule(const CSSRule &other);
     CSSRule(CSSRuleImpl *impl);
-public:
 
-    CSSRule & operator = (const CSSRule &other);
+public:
+    CSSRule &operator=(const CSSRule &other);
 
     ~CSSRule();
     /**
      * An integer indicating which type of rule this is.
      *
      */
-    enum RuleType {
+    enum RuleType
+    {
         UNKNOWN_RULE = 0,
         STYLE_RULE = 1,
         CHARSET_RULE = 2,
@@ -72,7 +72,7 @@ public:
         MEDIA_RULE = 4,
         FONT_FACE_RULE = 5,
         PAGE_RULE = 6,
-	QUIRKS_RULE = 100 // KHTML CSS Extension
+        QUIRKS_RULE = 100 // KHTML CSS Extension
     };
 
     /**
@@ -108,7 +108,7 @@ public:
      * INVALID_MODIFICATION_ERR: Raised if the specified CSS string value
      * represents a different type of rule than the current one.
      */
-    void setCssText( const DOM::DOMString & );
+    void setCssText(const DOM::DOMString &);
 
     /**
      * The style sheet that contains this rule.
@@ -135,7 +135,7 @@ public:
 protected:
     CSSRuleImpl *impl;
 
-    void assignOther( const CSSRule &other, RuleType thisType );
+    void assignOther(const CSSRule &other, RuleType thisType);
 };
 
 class CSSCharsetRuleImpl;
@@ -146,17 +146,16 @@ class CSSCharsetRuleImpl;
  * be used to define the encoding of the style sheet.
  *
  */
-class KHTML_EXPORT CSSCharsetRule : public CSSRule
-{
+class KHTML_EXPORT CSSCharsetRule : public CSSRule {
 public:
     CSSCharsetRule();
     CSSCharsetRule(const CSSCharsetRule &other);
     CSSCharsetRule(const CSSRule &other);
     CSSCharsetRule(CSSCharsetRuleImpl *impl);
-public:
 
-    CSSCharsetRule & operator = (const CSSCharsetRule &other);
-    CSSCharsetRule & operator = (const CSSRule &other);
+public:
+    CSSCharsetRule &operator=(const CSSCharsetRule &other);
+    CSSCharsetRule &operator=(const CSSRule &other);
 
     ~CSSCharsetRule();
 
@@ -178,7 +177,7 @@ public:
      * readonly.
      *
      */
-    void setEncoding( const DOM::DOMString & );
+    void setEncoding(const DOM::DOMString &);
 };
 
 
@@ -190,17 +189,16 @@ class CSSFontFaceRuleImpl;
  * rule is used to hold a set of font descriptions.
  *
  */
-class KHTML_EXPORT CSSFontFaceRule : public CSSRule
-{
+class KHTML_EXPORT CSSFontFaceRule : public CSSRule {
 public:
     CSSFontFaceRule();
     CSSFontFaceRule(const CSSFontFaceRule &other);
     CSSFontFaceRule(const CSSRule &other);
     CSSFontFaceRule(CSSFontFaceRuleImpl *impl);
-public:
 
-    CSSFontFaceRule & operator = (const CSSFontFaceRule &other);
-    CSSFontFaceRule & operator = (const CSSRule &other);
+public:
+    CSSFontFaceRule &operator=(const CSSFontFaceRule &other);
+    CSSFontFaceRule &operator=(const CSSRule &other);
 
     ~CSSFontFaceRule();
 
@@ -220,17 +218,16 @@ class CSSImportRuleImpl;
  * rule is used to import style rules from other style sheets.
  *
  */
-class KHTML_EXPORT CSSImportRule : public CSSRule
-{
+class KHTML_EXPORT CSSImportRule : public CSSRule {
 public:
     CSSImportRule();
     CSSImportRule(const CSSImportRule &other);
     CSSImportRule(const CSSRule &other);
     CSSImportRule(CSSImportRuleImpl *impl);
-public:
 
-    CSSImportRule & operator = (const CSSImportRule &other);
-    CSSImportRule & operator = (const CSSRule &other);
+public:
+    CSSImportRule &operator=(const CSSImportRule &other);
+    CSSImportRule &operator=(const CSSRule &other);
 
     ~CSSImportRule();
 
@@ -267,17 +264,16 @@ class CSSMediaRuleImpl;
  * can be used to delimit style rules for specific media types.
  *
  */
-class KHTML_EXPORT CSSMediaRule : public CSSRule
-{
+class KHTML_EXPORT CSSMediaRule : public CSSRule {
 public:
     CSSMediaRule();
     CSSMediaRule(const CSSMediaRule &other);
     CSSMediaRule(const CSSRule &other);
     CSSMediaRule(CSSMediaRuleImpl *impl);
-public:
 
-    CSSMediaRule & operator = (const CSSMediaRule &other);
-    CSSMediaRule & operator = (const CSSRule &other);
+public:
+    CSSMediaRule &operator=(const CSSMediaRule &other);
+    CSSMediaRule &operator=(const CSSRule &other);
 
     ~CSSMediaRule();
 
@@ -328,7 +324,7 @@ public:
      * and is unparsable.
      *
      */
-    unsigned long insertRule ( const DOM::DOMString &rule, unsigned long index );
+    unsigned long insertRule(const DOM::DOMString &rule, unsigned long index);
 
     /**
      * Used to delete a rule from the media block.
@@ -346,7 +342,7 @@ public:
      * readonly.
      *
      */
-    void deleteRule ( unsigned long index );
+    void deleteRule(unsigned long index);
 };
 
 
@@ -359,17 +355,16 @@ class CSSPageRuleImpl;
  * page box for paged media.
  *
  */
-class KHTML_EXPORT CSSPageRule : public CSSRule
-{
+class KHTML_EXPORT CSSPageRule : public CSSRule {
 public:
     CSSPageRule();
     CSSPageRule(const CSSPageRule &other);
     CSSPageRule(const CSSRule &other);
     CSSPageRule(CSSPageRuleImpl *impl);
-public:
 
-    CSSPageRule & operator = (const CSSPageRule &other);
-    CSSPageRule & operator = (const CSSRule &other);
+public:
+    CSSPageRule &operator=(const CSSPageRule &other);
+    CSSPageRule &operator=(const CSSRule &other);
 
     ~CSSPageRule();
 
@@ -391,7 +386,7 @@ public:
      * readonly.
      *
      */
-    void setSelectorText( const DOM::DOMString & );
+    void setSelectorText(const DOM::DOMString &);
 
     /**
      * The <a href="http://www.w3.org/TR/REC-CSS2/syndata.html#q8">
@@ -408,17 +403,16 @@ class CSSStyleRuleImpl;
  * in a CSS style sheet.
  *
  */
-class KHTML_EXPORT CSSStyleRule : public CSSRule
-{
+class KHTML_EXPORT CSSStyleRule : public CSSRule {
 public:
     CSSStyleRule();
     CSSStyleRule(const CSSStyleRule &other);
     CSSStyleRule(const CSSRule &other);
     CSSStyleRule(CSSStyleRuleImpl *impl);
-public:
 
-    CSSStyleRule & operator = (const CSSStyleRule &other);
-    CSSStyleRule & operator = (const CSSRule &other);
+public:
+    CSSStyleRule &operator=(const CSSStyleRule &other);
+    CSSStyleRule &operator=(const CSSRule &other);
 
     ~CSSStyleRule();
 
@@ -442,7 +436,7 @@ public:
      * readonly.
      *
      */
-    void setSelectorText( const DOM::DOMString & );
+    void setSelectorText(const DOM::DOMString &);
 
     /**
      * The <a href="http://www.w3.org/TR/REC-CSS2/syndata.html#q8">
@@ -458,17 +452,16 @@ class CSSUnknownRuleImpl;
  * not supported by this user agent.
  *
  */
-class KHTML_EXPORT CSSUnknownRule : public CSSRule
-{
+class KHTML_EXPORT CSSUnknownRule : public CSSRule {
 public:
     CSSUnknownRule();
     CSSUnknownRule(const CSSUnknownRule &other);
     CSSUnknownRule(const CSSRule &other);
     CSSUnknownRule(CSSUnknownRuleImpl *impl);
-public:
 
-    CSSUnknownRule & operator = (const CSSUnknownRule &other);
-    CSSUnknownRule & operator = (const CSSRule &other);
+public:
+    CSSUnknownRule &operator=(const CSSUnknownRule &other);
+    CSSUnknownRule &operator=(const CSSRule &other);
 
     ~CSSUnknownRule();
 };
@@ -481,16 +474,15 @@ class StyleListImpl;
  * of an ordered collection of CSS rules.
  *
  */
-class KHTML_EXPORT CSSRuleList
-{
+class KHTML_EXPORT CSSRuleList {
 public:
     CSSRuleList();
     CSSRuleList(const CSSRuleList &other);
     CSSRuleList(CSSRuleListImpl *i);
     CSSRuleList(StyleListImpl *i);
-public:
 
-    CSSRuleList & operator = (const CSSRuleList &other);
+public:
+    CSSRuleList &operator=(const CSSRuleList &other);
 
     ~CSSRuleList();
 
@@ -514,7 +506,7 @@ public:
      * is not a valid index.
      *
      */
-    CSSRule item ( unsigned long index );
+    CSSRule item(unsigned long index);
 
     /**
      * @internal

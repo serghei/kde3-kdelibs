@@ -28,7 +28,9 @@
 
 #include <kurl.h>
 
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
 namespace KNS {
 
@@ -43,10 +45,9 @@ namespace KNS {
  * \par Maintainer:
  * Josef Spillner (spillner@kde.org)
  */
-class KDE_EXPORT Provider
-{
-  public:
-    typedef QPtrList<Provider> List;
+class KDE_EXPORT Provider {
+public:
+    typedef QPtrList< Provider > List;
 
     /**
      * Constructor.
@@ -56,7 +57,7 @@ class KDE_EXPORT Provider
     /**
      * Constructor with XML feed.
      */
-    Provider( const QDomElement & );
+    Provider(const QDomElement &);
 
     /**
      * Destructor.
@@ -66,7 +67,7 @@ class KDE_EXPORT Provider
     /**
      * Sets the common name of the provider.
      */
-    void setName( const QString & );
+    void setName(const QString &);
 
     /**
      * Retrieves the common name of the provider.
@@ -78,7 +79,7 @@ class KDE_EXPORT Provider
     /**
      * Sets the download URL.
      */
-    void setDownloadUrl( const KURL & );
+    void setDownloadUrl(const KURL &);
 
     /**
      * Retrieves the download URL.
@@ -93,12 +94,12 @@ class KDE_EXPORT Provider
      *
      * @return download specific URL
      */
-    KURL downloadUrlVariant( QString variant ) const;
+    KURL downloadUrlVariant(QString variant) const;
 
     /**
      * Sets the upload URL.
      */
-    void setUploadUrl( const KURL & );
+    void setUploadUrl(const KURL &);
 
     /**
      * Retrieves the upload URL.
@@ -113,7 +114,7 @@ class KDE_EXPORT Provider
      *
      * @see setNoUpload
      */
-    void setNoUploadUrl( const KURL & );
+    void setNoUploadUrl(const KURL &);
 
     /**
      * Retrieves the URL where a user is led if the provider does not
@@ -126,7 +127,7 @@ class KDE_EXPORT Provider
     /**
      * Indicate whether provider supports uploads.
      */
-    void setNoUpload( bool );
+    void setNoUpload(bool);
 
     /**
      * Query whether provider supports uploads.
@@ -140,7 +141,7 @@ class KDE_EXPORT Provider
      * The icon should be in 32x32 format. If not set, the default icon
      * of KDialogBase is used.
      */
-    void setIcon( const KURL & );
+    void setIcon(const KURL &);
 
     /**
      * Retrieves the icon URL for this provider.
@@ -149,12 +150,12 @@ class KDE_EXPORT Provider
      */
     KURL icon() const;
 
-  protected:
-    void parseDomElement( const QDomElement & );
+protected:
+    void parseDomElement(const QDomElement &);
 
-    QDomElement createDomElement( QDomDocument &, QDomElement &parent );
+    QDomElement createDomElement(QDomDocument &, QDomElement &parent);
 
-  private:
+private:
     QString mName;
     KURL mDownloadUrl;
     KURL mUploadUrl;
@@ -169,16 +170,15 @@ class KDE_EXPORT Provider
  * the main provider database for this specific application.
  * It should probably not be used directly by the application.
  */
-class KDE_EXPORT ProviderLoader : public QObject
-{
+class KDE_EXPORT ProviderLoader : public QObject {
     Q_OBJECT
-  public:
+public:
     /**
      * Constructor.
      *
      * @param parentWidget the parent widget
      */
-    ProviderLoader( QWidget *parentWidget );
+    ProviderLoader(QWidget *parentWidget);
 
     /**
      * Starts asynchronously loading the list of providers of the
@@ -189,26 +189,25 @@ class KDE_EXPORT ProviderLoader : public QObject
      *    we first try the ProvidersUrl from KGlobal::config, then we
      *    fall back to a hardcoded value.
      */
-    void load( const QString &type, const QString &providerList = QString::null );
+    void load(const QString &type, const QString &providerList = QString::null);
 
-  signals:
+signals:
     /**
      * Indicates that the list of providers has been successfully loaded.
      */
-    void providersLoaded( Provider::List * );
+    void providersLoaded(Provider::List *);
 
-  protected slots:
-    void slotJobData( KIO::Job *, const QByteArray & );
-    void slotJobResult( KIO::Job * );
+protected slots:
+    void slotJobData(KIO::Job *, const QByteArray &);
+    void slotJobResult(KIO::Job *);
 
-  private:
+private:
     QWidget *mParentWidget;
 
     QString mJobData;
 
     Provider::List mProviders;
 };
-
 }
 
 #endif

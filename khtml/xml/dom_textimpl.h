@@ -30,45 +30,51 @@
 
 namespace DOM {
 
-    class DocumentImpl;
-    class CharacterData;
-    class Text;
+class DocumentImpl;
+class CharacterData;
+class Text;
 
-class CharacterDataImpl : public NodeImpl
-{
+class CharacterDataImpl : public NodeImpl {
 public:
-    CharacterDataImpl(DocumentImpl *doc, DOMStringImpl* _text);
-    CharacterDataImpl(DocumentImpl *doc)
-        : NodeImpl(doc), str(0) {}
+    CharacterDataImpl(DocumentImpl *doc, DOMStringImpl *_text);
+    CharacterDataImpl(DocumentImpl *doc) : NodeImpl(doc), str(0)
+    {
+    }
 
     virtual ~CharacterDataImpl();
 
     // DOM methods & attributes for CharacterData
 
-    virtual void setData( const DOMString &_data, int &exceptioncode );
-    virtual unsigned long length (  ) const;
-    virtual DOMString substringData ( const unsigned long offset, const unsigned long count, int &exceptioncode );
-    virtual void appendData ( const DOMString &arg, int &exceptioncode );
-    virtual void insertData ( const unsigned long offset, const DOMString &arg, int &exceptioncode );
-    virtual void deleteData ( const unsigned long offset, const unsigned long count, int &exceptioncode );
-    virtual void replaceData ( const unsigned long offset, const unsigned long count, const DOMString &arg, int &exceptioncode );
+    virtual void setData(const DOMString &_data, int &exceptioncode);
+    virtual unsigned long length() const;
+    virtual DOMString substringData(const unsigned long offset, const unsigned long count, int &exceptioncode);
+    virtual void appendData(const DOMString &arg, int &exceptioncode);
+    virtual void insertData(const unsigned long offset, const DOMString &arg, int &exceptioncode);
+    virtual void deleteData(const unsigned long offset, const unsigned long count, int &exceptioncode);
+    virtual void replaceData(const unsigned long offset, const unsigned long count, const DOMString &arg, int &exceptioncode);
 
     virtual bool containsOnlyWhitespace() const;
 
     // DOM methods overridden from  parent classes
 
     virtual DOMString nodeValue() const;
-    virtual void setNodeValue( const DOMString &_nodeValue, int &exceptioncode );
+    virtual void setNodeValue(const DOMString &_nodeValue, int &exceptioncode);
 
-    virtual DOMStringImpl* textContent() const;
-    virtual void           setTextContent( const DOMString &text, int& exceptioncode );
+    virtual DOMStringImpl *textContent() const;
+    virtual void setTextContent(const DOMString &text, int &exceptioncode);
 
     // Other methods (not part of DOM)
 
-    DOMStringImpl *string() const { return str; }
-    DOMString data() const { return str; }
+    DOMStringImpl *string() const
+    {
+        return str;
+    }
+    DOMString data() const
+    {
+        return str;
+    }
 
-    virtual void checkCharDataOperation( const unsigned long offset, int &exceptioncode );
+    virtual void checkCharDataOperation(const unsigned long offset, int &exceptioncode);
 
     virtual long minOffset() const;
     virtual long maxOffset() const;
@@ -83,13 +89,14 @@ protected:
 
 // ----------------------------------------------------------------------------
 
-class CommentImpl : public CharacterDataImpl
-{
+class CommentImpl : public CharacterDataImpl {
 public:
-    CommentImpl(DocumentImpl *doc, DOMStringImpl* _text)
-        : CharacterDataImpl(doc, _text) {}
-    CommentImpl(DocumentImpl *doc)
-        : CharacterDataImpl(doc) {}
+    CommentImpl(DocumentImpl *doc, DOMStringImpl *_text) : CharacterDataImpl(doc, _text)
+    {
+    }
+    CommentImpl(DocumentImpl *doc) : CharacterDataImpl(doc)
+    {
+    }
     // DOM methods overridden from  parent classes
     virtual DOMString nodeName() const;
     virtual unsigned short nodeType() const;
@@ -98,24 +105,25 @@ public:
     // Other methods (not part of DOM)
 
     virtual Id id() const;
-    virtual bool childTypeAllowed( unsigned short type );
+    virtual bool childTypeAllowed(unsigned short type);
 
     virtual DOMString toString() const;
 };
 
 // ----------------------------------------------------------------------------
 
-class TextImpl : public CharacterDataImpl
-{
+class TextImpl : public CharacterDataImpl {
 public:
-    TextImpl(DocumentImpl *impl, DOMStringImpl* _text)
-        : CharacterDataImpl(impl, _text) {}
-    TextImpl(DocumentImpl *impl)
-        : CharacterDataImpl(impl) {}
+    TextImpl(DocumentImpl *impl, DOMStringImpl *_text) : CharacterDataImpl(impl, _text)
+    {
+    }
+    TextImpl(DocumentImpl *impl) : CharacterDataImpl(impl)
+    {
+    }
 
     // DOM methods & attributes for CharacterData
 
-    TextImpl *splitText ( const unsigned long offset, int &exceptioncode );
+    TextImpl *splitText(const unsigned long offset, int &exceptioncode);
 
     // DOM methods overridden from  parent classes
     virtual DOMString nodeName() const;
@@ -124,36 +132,43 @@ public:
 
     // Other methods (not part of DOM)
 
-    virtual bool isTextNode() const { return true; }
+    virtual bool isTextNode() const
+    {
+        return true;
+    }
     virtual Id id() const;
     virtual void attach();
     virtual bool rendererIsNeeded(khtml::RenderStyle *);
     virtual khtml::RenderObject *createRenderer(khtml::RenderArena *, khtml::RenderStyle *);
-    virtual void recalcStyle( StyleChange = NoChange );
-    virtual bool childTypeAllowed( unsigned short type );
+    virtual void recalcStyle(StyleChange = NoChange);
+    virtual bool childTypeAllowed(unsigned short type);
 
     DOMStringImpl *renderString() const;
-    
+
     virtual DOMString toString() const;
     /** Return the text for the node, with < replaced with &lt; and so on.
-     *  @param startOffset The number of characters counted from the left, zero indexed, counting "<" as one character, to start from.  Use -1 to start from 0.
-     *  @param endOffset The number of characters counted from the left, zero indexed, counting "<" as one character, to end on.  Use -1 to end at the end of the string.
+     *  @param startOffset The number of characters counted from the left, zero indexed, counting "<" as one character, to start from.  Use -1 to
+     * start from 0.
+     *  @param endOffset The number of characters counted from the left, zero indexed, counting "<" as one character, to end on.  Use -1 to end at the
+     * end of the string.
      *  @return An html escaped version of the substring.
      */
     DOMString toString(long long startOffset, long long endOffset) const;
+
 protected:
     virtual TextImpl *createNew(DOMStringImpl *_str);
 };
 
 // ----------------------------------------------------------------------------
 
-class CDATASectionImpl : public TextImpl
-{
+class CDATASectionImpl : public TextImpl {
 public:
-    CDATASectionImpl(DocumentImpl *impl, DOMStringImpl* _text)
-        : TextImpl(impl, _text) {}
-    CDATASectionImpl(DocumentImpl *impl)
-        : TextImpl(impl) {}
+    CDATASectionImpl(DocumentImpl *impl, DOMStringImpl *_text) : TextImpl(impl, _text)
+    {
+    }
+    CDATASectionImpl(DocumentImpl *impl) : TextImpl(impl)
+    {
+    }
 
     // DOM methods overridden from  parent classes
     virtual DOMString nodeName() const;
@@ -162,7 +177,7 @@ public:
 
     // Other methods (not part of DOM)
 
-    virtual bool childTypeAllowed( unsigned short type );
+    virtual bool childTypeAllowed(unsigned short type);
 
     virtual DOMString toString() const;
 
@@ -171,6 +186,5 @@ protected:
 };
 
 
-
-} //namespace
+} // namespace
 #endif

@@ -23,27 +23,40 @@
 
 #include <VCardValue.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT GeoValue : public Value
-{
-	
+class KVCARD_EXPORT GeoValue : public Value {
+
 #include "GeoValue-generated.h"
 
     GeoValue *clone();
 
-		void setLatitude( float lat ) { latitude_ = lat; assembled_ = false; }
-		void setLongitude( float lon ) { longitude_ = lon; assembled_ = false; }
+    void setLatitude(float lat)
+    {
+        latitude_ = lat;
+        assembled_ = false;
+    }
+    void setLongitude(float lon)
+    {
+        longitude_ = lon;
+        assembled_ = false;
+    }
 
-		float latitude() { parse(); return latitude_; }
-		float longitude() { parse(); return longitude_; }
+    float latitude()
+    {
+        parse();
+        return latitude_;
+    }
+    float longitude()
+    {
+        parse();
+        return longitude_;
+    }
 
-	private:
-		float latitude_;
-		float longitude_;
+private:
+    float latitude_;
+    float longitude_;
 };
-
 }
 
 #endif

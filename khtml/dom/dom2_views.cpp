@@ -38,46 +38,51 @@ AbstractView::AbstractView()
 AbstractView::AbstractView(const AbstractView &other)
 {
     impl = other.impl;
-    if (impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
 
 AbstractView::AbstractView(AbstractViewImpl *i)
 {
     impl = i;
-    if (impl) impl->ref();
+    if(impl)
+        impl->ref();
 }
 
 AbstractView::~AbstractView()
 {
-    if (impl)
-	impl->deref();
+    if(impl)
+        impl->deref();
 }
 
-AbstractView &AbstractView::operator = (const AbstractView &other)
+AbstractView &AbstractView::operator=(const AbstractView &other)
 {
-    if ( impl != other.impl ) {
-    if(impl) impl->deref();
-    impl = other.impl;
-    if(impl) impl->ref();
+    if(impl != other.impl)
+    {
+        if(impl)
+            impl->deref();
+        impl = other.impl;
+        if(impl)
+            impl->ref();
     }
     return *this;
 }
 
 Document AbstractView::document() const
 {
-    if (!impl)
-	throw DOMException(DOMException::INVALID_STATE_ERR);
+    if(!impl)
+        throw DOMException(DOMException::INVALID_STATE_ERR);
 
     return impl->document();
 }
 
 CSSStyleDeclaration AbstractView::getComputedStyle(const Element &elt, const DOMString &pseudoElt)
 {
-    if (!impl)
-	throw DOMException(DOMException::INVALID_STATE_ERR);
+    if(!impl)
+        throw DOMException(DOMException::INVALID_STATE_ERR);
 
-    return impl->getComputedStyle(static_cast<ElementImpl*>(elt.handle()),pseudoElt.implementation());
+    return impl->getComputedStyle(static_cast< ElementImpl * >(elt.handle()), pseudoElt.implementation());
 }
 
 
@@ -90,6 +95,3 @@ bool AbstractView::isNull() const
 {
     return (impl == 0);
 }
-
-
-

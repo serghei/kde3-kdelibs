@@ -29,13 +29,12 @@
 
 /**
  * \brief QIODevice class for a gzipped file
- * \internal This class is internal to KDE. 
+ * \internal This class is internal to KDE.
  * The class KFilterDev should be used instead.
  */
-class KQIODeviceGZip : public QIODevice
-{
+class KQIODeviceGZip : public QIODevice {
 public:
-    KQIODeviceGZip(const QString& filename);
+    KQIODeviceGZip(const QString &filename);
     ~KQIODeviceGZip(void);
 
     bool open(int mode);
@@ -43,17 +42,18 @@ public:
     void flush(void);
 
     Offset size(void) const;
-    Offset  at(void) const;
+    Offset at(void) const;
     bool at(Offset pos);
     bool atEnd(void) const;
-    bool reset (void);
+    bool reset(void);
 
-    Q_LONG readBlock( char *data, Q_ULONG maxlen );
-    Q_LONG writeBlock( const char *data, Q_ULONG len );
+    Q_LONG readBlock(char *data, Q_ULONG maxlen);
+    Q_LONG writeBlock(const char *data, Q_ULONG len);
 
     int getch(void);
     int putch(int ch);
     int ungetch(int ch);
+
 private:
     gzFile m_gzfile;
     int m_ungetchar;

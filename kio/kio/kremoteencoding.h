@@ -41,87 +41,90 @@ class KRemoteEncodingPrivate;
  * @author Thiago Macieira <thiago.macieira@kdemail.net>
  * @since 3.3
  */
-class KIO_EXPORT KRemoteEncoding
-{
+class KIO_EXPORT KRemoteEncoding {
 public:
-  /**
-   * Constructor.
-   *
-   * Constructs this object to use the given encoding name.
-   * If @p name is a null pointer, the standard encoding will be used.
-   */
-  explicit KRemoteEncoding(const char *name = 0L);
+    /**
+     * Constructor.
+     *
+     * Constructs this object to use the given encoding name.
+     * If @p name is a null pointer, the standard encoding will be used.
+     */
+    explicit KRemoteEncoding(const char *name = 0L);
 
-  /**
-   * Destructor
-   */
-  virtual ~KRemoteEncoding();
+    /**
+     * Destructor
+     */
+    virtual ~KRemoteEncoding();
 
-  /**
-   * Converts the given full pathname or filename to Unicode.
-   * This function is supposed to work for dirnames, filenames
-   * or a full pathname.
-   */
-  QString decode(const QCString& name) const;
+    /**
+     * Converts the given full pathname or filename to Unicode.
+     * This function is supposed to work for dirnames, filenames
+     * or a full pathname.
+     */
+    QString decode(const QCString &name) const;
 
-  /**
-   * Converts the given name from Unicode.
-   * This function is supposed to work for dirnames, filenames
-   * or a full pathname.
-   */
-  QCString encode(const QString& name) const;
+    /**
+     * Converts the given name from Unicode.
+     * This function is supposed to work for dirnames, filenames
+     * or a full pathname.
+     */
+    QCString encode(const QString &name) const;
 
-  /**
-   * Converts the given URL into its 8-bit components
-   */
-  QCString encode(const KURL& url) const;
+    /**
+     * Converts the given URL into its 8-bit components
+     */
+    QCString encode(const KURL &url) const;
 
-  /**
-   * Converts the given URL into 8-bit form and separate the
-   * dirname from the filename. This is useful for slave functions
-   * like stat or get.
-   *
-   * The dirname is returned with the final slash always stripped
-   */
-  QCString directory(const KURL& url, bool ignore_trailing_slash = true) const;
+    /**
+     * Converts the given URL into 8-bit form and separate the
+     * dirname from the filename. This is useful for slave functions
+     * like stat or get.
+     *
+     * The dirname is returned with the final slash always stripped
+     */
+    QCString directory(const KURL &url, bool ignore_trailing_slash = true) const;
 
-  /**
-   * Converts the given URL into 8-bit form and retrieve the filename.
-   */
-  QCString fileName(const KURL& url) const;
+    /**
+     * Converts the given URL into 8-bit form and retrieve the filename.
+     */
+    QCString fileName(const KURL &url) const;
 
-  /**
-   * Returns the encoding being used.
-   */
-  inline const char *encoding() const
-  { return codec->name(); }
+    /**
+     * Returns the encoding being used.
+     */
+    inline const char *encoding() const
+    {
+        return codec->name();
+    }
 
-  /**
-   * Returns the MIB for the codec being used.
-   */
-  inline int encodingMib() const
-  { return codec->mibEnum(); }
+    /**
+     * Returns the MIB for the codec being used.
+     */
+    inline int encodingMib() const
+    {
+        return codec->mibEnum();
+    }
 
-  /**
-   * Sets the encoding being used.
-   * This function does not change the global configuration.
-   *
-   * Pass a null pointer in @p name to revert to the standard
-   * encoding.
-   */
-  void setEncoding(const char* name);
+    /**
+     * Sets the encoding being used.
+     * This function does not change the global configuration.
+     *
+     * Pass a null pointer in @p name to revert to the standard
+     * encoding.
+     */
+    void setEncoding(const char *name);
 
 protected:
-  QTextCodec *codec;
+    QTextCodec *codec;
 
-  virtual void virtual_hook(int id, void* data);
+    virtual void virtual_hook(int id, void *data);
 
 private:
-  // copy constructor
-  KRemoteEncoding(const KRemoteEncoding&);
+    // copy constructor
+    KRemoteEncoding(const KRemoteEncoding &);
 
 
-  KRemoteEncodingPrivate *d;
+    KRemoteEncodingPrivate *d;
 };
 
 #endif

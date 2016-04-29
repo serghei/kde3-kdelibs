@@ -32,13 +32,14 @@
 
 namespace KJS {
 
-  /**
-   * @short Garbage collector.
-   */
-  class Collector {
+/**
+ * @short Garbage collector.
+ */
+class Collector {
     // disallow direct construction/destruction
     Collector();
-  public:
+
+public:
     /**
      * Register an object with the collector. The following assumptions are
      * made:
@@ -49,14 +50,17 @@ namespace KJS {
      * @param s Size of the memory to be registered.
      * @return A pointer to the allocated memory.
      */
-    static void* allocate(size_t s);
+    static void *allocate(size_t s);
     /**
      * Run the garbage collection. This involves calling the delete operator
      * on each object and freeing the used memory.
      */
     static bool collect();
     static int size();
-    static bool outOfMemory() { return memoryFull; }
+    static bool outOfMemory()
+    {
+        return memoryFull;
+    }
 
 #ifdef KJS_DEBUG_MEM
     /**
@@ -65,10 +69,9 @@ namespace KJS {
     static void finalCheck();
 #endif
 
-  private:
+private:
     static bool memoryFull;
-  };
-
+};
 }
 
 #endif /* _KJSCOLLECTOR_H_ */

@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,55 +27,47 @@
 
 using namespace VCARD;
 
-PhoneNumberValue::PhoneNumberValue()
-	:	Value()
+PhoneNumberValue::PhoneNumberValue() : Value()
 {
 }
 
-PhoneNumberValue::PhoneNumberValue(const PhoneNumberValue & x)
-	:	Value(x)
+PhoneNumberValue::PhoneNumberValue(const PhoneNumberValue &x) : Value(x)
 {
 }
 
-PhoneNumberValue::PhoneNumberValue(const QCString & s)
-	:	Value(s)
+PhoneNumberValue::PhoneNumberValue(const QCString &s) : Value(s)
 {
 }
 
-	PhoneNumberValue &
-PhoneNumberValue::operator = (PhoneNumberValue & x)
+PhoneNumberValue &PhoneNumberValue::operator=(PhoneNumberValue &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Value::operator = (x);
-	return *this;
+    Value::operator=(x);
+    return *this;
 }
 
-	PhoneNumberValue &
-PhoneNumberValue::operator = (const QCString & s)
+PhoneNumberValue &PhoneNumberValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-PhoneNumberValue::operator == (PhoneNumberValue & x)
+bool PhoneNumberValue::operator==(PhoneNumberValue &x)
 {
-	x.parse();
-	return false;
+    x.parse();
+    return false;
 }
 
 PhoneNumberValue::~PhoneNumberValue()
 {
 }
 
-	void
-PhoneNumberValue::_parse()
+void PhoneNumberValue::_parse()
 {
 }
 
-	void
-PhoneNumberValue::_assemble()
+void PhoneNumberValue::_assemble()
 {
 }
-

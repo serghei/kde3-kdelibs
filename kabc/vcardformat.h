@@ -33,17 +33,16 @@ class VCardFormatImpl;
   @deprecated use VCardFormatPlugin instead.
  */
 class KABC_EXPORT_DEPRECATED VCardFormat : public Format {
-  public:
+public:
     VCardFormat();
     virtual ~VCardFormat();
-  
-    bool load( AddressBook *, const QString &fileName );
-    bool save( AddressBook *, const QString &fileName );
 
-  private:
+    bool load(AddressBook *, const QString &fileName);
+    bool save(AddressBook *, const QString &fileName);
+
+private:
     VCardFormatImpl *mImpl;
 };
-
 }
 
 #endif

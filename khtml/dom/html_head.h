@@ -43,19 +43,21 @@ class DOMString;
  * BASE element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLBaseElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLBaseElement : public HTMLElement {
 public:
     HTMLBaseElement();
     HTMLBaseElement(const HTMLBaseElement &other);
     HTMLBaseElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLBaseElement(HTMLBaseElementImpl *impl);
-public:
 
-    HTMLBaseElement & operator = (const HTMLBaseElement &other);
-    HTMLBaseElement & operator = (const Node &other);
+public:
+    HTMLBaseElement &operator=(const HTMLBaseElement &other);
+    HTMLBaseElement &operator=(const Node &other);
 
     ~HTMLBaseElement();
 
@@ -70,7 +72,7 @@ public:
     /**
      * see href
      */
-    void setHref( const DOMString & );
+    void setHref(const DOMString &);
 
     /**
      * The default target frame. See the <a
@@ -83,7 +85,7 @@ public:
     /**
      * see target
      */
-    void setTarget( const DOMString & );
+    void setTarget(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -98,19 +100,21 @@ class HTMLLinkElementImpl;
  * LINK element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLLinkElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLLinkElement : public HTMLElement {
 public:
     HTMLLinkElement();
     HTMLLinkElement(const HTMLLinkElement &other);
     HTMLLinkElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLLinkElement(HTMLLinkElementImpl *impl);
-public:
 
-    HTMLLinkElement & operator = (const HTMLLinkElement &other);
-    HTMLLinkElement & operator = (const Node &other);
+public:
+    HTMLLinkElement &operator=(const HTMLLinkElement &other);
+    HTMLLinkElement &operator=(const Node &other);
 
     ~HTMLLinkElement();
 
@@ -125,7 +129,7 @@ public:
     /**
      * see disabled
      */
-    void setDisabled( bool );
+    void setDisabled(bool);
 
     /**
      * The character encoding of the resource being linked to. See the
@@ -139,7 +143,7 @@ public:
     /**
      * see charset
      */
-    void setCharset( const DOMString & );
+    void setCharset(const DOMString &);
 
     /**
      * The URI of the linked resource. See the <a
@@ -152,7 +156,7 @@ public:
     /**
      * see href
      */
-    void setHref( const DOMString & );
+    void setHref(const DOMString &);
 
     /**
      * Language code of the linked resource. See the <a
@@ -165,7 +169,7 @@ public:
     /**
      * see hreflang
      */
-    void setHreflang( const DOMString & );
+    void setHreflang(const DOMString &);
 
     /**
      * Designed for use with one or more target media. See the <a
@@ -178,7 +182,7 @@ public:
     /**
      * see media
      */
-    void setMedia( const DOMString & );
+    void setMedia(const DOMString &);
 
     /**
      * Forward link type. See the <a
@@ -191,7 +195,7 @@ public:
     /**
      * see rel
      */
-    void setRel( const DOMString & );
+    void setRel(const DOMString &);
 
     /**
      * Reverse link type. See the <a
@@ -204,7 +208,7 @@ public:
     /**
      * see rev
      */
-    void setRev( const DOMString & );
+    void setRev(const DOMString &);
 
     /**
      * Frame to render the resource in. See the <a
@@ -217,7 +221,7 @@ public:
     /**
      * see target
      */
-    void setTarget( const DOMString & );
+    void setTarget(const DOMString &);
 
     /**
      * Advisory content type. See the <a
@@ -230,7 +234,7 @@ public:
     /**
      * see type
      */
-    void setType( const DOMString & );
+    void setType(const DOMString &);
 
     /**
      * Introduced in DOM Level 2
@@ -239,7 +243,6 @@ public:
      * The style sheet.
      */
     StyleSheet sheet() const;
-
 };
 
 // --------------------------------------------------------------------------
@@ -253,19 +256,21 @@ class HTMLMetaElementImpl;
  * META element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLMetaElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLMetaElement : public HTMLElement {
 public:
     HTMLMetaElement();
     HTMLMetaElement(const HTMLMetaElement &other);
     HTMLMetaElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLMetaElement(HTMLMetaElementImpl *impl);
-public:
 
-    HTMLMetaElement & operator = (const HTMLMetaElement &other);
-    HTMLMetaElement & operator = (const Node &other);
+public:
+    HTMLMetaElement &operator=(const HTMLMetaElement &other);
+    HTMLMetaElement &operator=(const Node &other);
 
     ~HTMLMetaElement();
 
@@ -280,7 +285,7 @@ public:
     /**
      * see content
      */
-    void setContent( const DOMString & );
+    void setContent(const DOMString &);
 
     /**
      * HTTP response header name. See the <a
@@ -293,7 +298,7 @@ public:
     /**
      * see httpEquiv
      */
-    void setHttpEquiv( const DOMString & );
+    void setHttpEquiv(const DOMString &);
 
     /**
      * Meta information name. See the <a
@@ -306,7 +311,7 @@ public:
     /**
      * see name
      */
-    void setName( const DOMString & );
+    void setName(const DOMString &);
 
     /**
      * Select form of content. See the <a
@@ -319,7 +324,7 @@ public:
     /**
      * see scheme
      */
-    void setScheme( const DOMString & );
+    void setScheme(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -332,19 +337,21 @@ class HTMLScriptElementImpl;
  * SCRIPT element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLScriptElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLScriptElement : public HTMLElement {
 public:
     HTMLScriptElement();
     HTMLScriptElement(const HTMLScriptElement &other);
     HTMLScriptElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLScriptElement(HTMLScriptElementImpl *impl);
-public:
 
-    HTMLScriptElement & operator = (const HTMLScriptElement &other);
-    HTMLScriptElement & operator = (const Node &other);
+public:
+    HTMLScriptElement &operator=(const HTMLScriptElement &other);
+    HTMLScriptElement &operator=(const Node &other);
 
     ~HTMLScriptElement();
 
@@ -357,7 +364,7 @@ public:
     /**
      * see text
      */
-    void setText( const DOMString & );
+    void setText(const DOMString &);
 
     /**
      * Reserved for future use.
@@ -368,7 +375,7 @@ public:
     /**
      * see htmlFor
      */
-    void setHtmlFor( const DOMString & );
+    void setHtmlFor(const DOMString &);
 
     /**
      * Reserved for future use.
@@ -379,7 +386,7 @@ public:
     /**
      * see event
      */
-    void setEvent( const DOMString & );
+    void setEvent(const DOMString &);
 
     /**
      * The character encoding of the linked resource. See the <a
@@ -392,7 +399,7 @@ public:
     /**
      * see charset
      */
-    void setCharset( const DOMString & );
+    void setCharset(const DOMString &);
 
     /**
      * Indicates that the user agent can defer processing of the
@@ -406,7 +413,7 @@ public:
     /**
      * see defer
      */
-    void setDefer( bool );
+    void setDefer(bool);
 
     /**
      * URI designating an external script. See the <a
@@ -419,7 +426,7 @@ public:
     /**
      * see src
      */
-    void setSrc( const DOMString & );
+    void setSrc(const DOMString &);
 
     /**
      * The content type of the script language. See the <a
@@ -432,7 +439,7 @@ public:
     /**
      * see type
      */
-    void setType( const DOMString & );
+    void setType(const DOMString &);
 };
 
 // --------------------------------------------------------------------------
@@ -446,19 +453,21 @@ class HTMLStyleElementImpl;
  * STYLE element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLStyleElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLStyleElement : public HTMLElement {
 public:
     HTMLStyleElement();
     HTMLStyleElement(const HTMLStyleElement &other);
     HTMLStyleElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLStyleElement(HTMLStyleElementImpl *impl);
-public:
 
-    HTMLStyleElement & operator = (const HTMLStyleElement &other);
-    HTMLStyleElement & operator = (const Node &other);
+public:
+    HTMLStyleElement &operator=(const HTMLStyleElement &other);
+    HTMLStyleElement &operator=(const Node &other);
 
     ~HTMLStyleElement();
 
@@ -471,7 +480,7 @@ public:
     /**
      * see disabled
      */
-    void setDisabled( bool );
+    void setDisabled(bool);
 
     /**
      * Designed for use with one or more target media. See the <a
@@ -484,7 +493,7 @@ public:
     /**
      * see media
      */
-    void setMedia( const DOMString & );
+    void setMedia(const DOMString &);
 
     /**
      * The style sheet language (Internet media type). See the <a
@@ -497,7 +506,7 @@ public:
     /**
      * see type
      */
-    void setType( const DOMString & );
+    void setType(const DOMString &);
 
     /**
      * Introduced in DOM Level 2
@@ -506,7 +515,6 @@ public:
      * The style sheet.
      */
     StyleSheet sheet() const;
-
 };
 
 // --------------------------------------------------------------------------
@@ -519,19 +527,21 @@ class HTMLTitleElementImpl;
  * TITLE element definition </a> in HTML 4.0.
  *
  */
-class KHTML_EXPORT HTMLTitleElement : public HTMLElement
-{
+class KHTML_EXPORT HTMLTitleElement : public HTMLElement {
 public:
     HTMLTitleElement();
     HTMLTitleElement(const HTMLTitleElement &other);
     HTMLTitleElement(const Node &other) : HTMLElement()
-         {(*this)=other;}
+    {
+        (*this) = other;
+    }
+
 protected:
     HTMLTitleElement(HTMLTitleElementImpl *impl);
-public:
 
-    HTMLTitleElement & operator = (const HTMLTitleElement &other);
-    HTMLTitleElement & operator = (const Node &other);
+public:
+    HTMLTitleElement &operator=(const HTMLTitleElement &other);
+    HTMLTitleElement &operator=(const Node &other);
 
     ~HTMLTitleElement();
 
@@ -544,9 +554,9 @@ public:
     /**
      * see text
      */
-    void setText( const DOMString & );
+    void setText(const DOMString &);
 };
 
-} //namespace
+} // namespace
 
 #endif

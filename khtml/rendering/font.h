@@ -33,55 +33,60 @@
 class QFontDatabase;
 class QPaintDeviceMetrics;
 
-namespace khtml
-{
+namespace khtml {
 class RenderStyle;
 class CSSStyleSelector;
 
-class FontDef
-{
+class FontDef {
 public:
-    FontDef()
-        : size( 0 ), italic( false ), smallCaps( false ), weight( 50 ) {}
-    bool operator == ( const FontDef &other ) const {
-        return ( family == other.family &&
-                 size == other.size &&
-                 italic == other.italic &&
-                 smallCaps == other.smallCaps &&
-                 weight == other.weight );
+    FontDef() : size(0), italic(false), smallCaps(false), weight(50)
+    {
+    }
+    bool operator==(const FontDef &other) const
+    {
+        return (family == other.family && size == other.size && italic == other.italic && smallCaps == other.smallCaps && weight == other.weight);
     }
 
     QString family;
     short int size;
-    bool italic 		: 1;
-    bool smallCaps 		: 1;
-    unsigned int weight 		: 8;
+    bool italic : 1;
+    bool smallCaps : 1;
+    unsigned int weight : 8;
 };
 
 
-class Font
-{
+class Font {
     friend class RenderStyle;
     friend class CSSStyleSelector;
 
 public:
-    Font() : fontDef(), f(), fm( f ), scFont( 0 ), letterSpacing( 0 ), wordSpacing( 0 ) {}
-    Font( const FontDef &fd )
-        :  fontDef( fd ), f(), fm( f ), scFont( 0 ), letterSpacing( 0 ), wordSpacing( 0 )
-        {}
-    Font(const Font& o)
-        : fontDef(o.fontDef), f(o.f), fm(o.fm), scFont(o.scFont), letterSpacing(o.letterSpacing), wordSpacing(o.wordSpacing) { if (o.scFont) scFont = new QFont(*o.scFont); }
-    ~Font() { delete scFont; }
-
-    bool operator == ( const Font &other ) const {
-        return (fontDef == other.fontDef &&
-                letterSpacing == other.letterSpacing &&
-                wordSpacing == other.wordSpacing );
+    Font() : fontDef(), f(), fm(f), scFont(0), letterSpacing(0), wordSpacing(0)
+    {
+    }
+    Font(const FontDef &fd) : fontDef(fd), f(), fm(f), scFont(0), letterSpacing(0), wordSpacing(0)
+    {
+    }
+    Font(const Font &o) : fontDef(o.fontDef), f(o.f), fm(o.fm), scFont(o.scFont), letterSpacing(o.letterSpacing), wordSpacing(o.wordSpacing)
+    {
+        if(o.scFont)
+            scFont = new QFont(*o.scFont);
+    }
+    ~Font()
+    {
+        delete scFont;
     }
 
-    const FontDef& getFontDef() const { return fontDef; }
+    bool operator==(const Font &other) const
+    {
+        return (fontDef == other.fontDef && letterSpacing == other.letterSpacing && wordSpacing == other.wordSpacing);
+    }
 
-    void update( QPaintDeviceMetrics *devMetrics ) const;
+    const FontDef &getFontDef() const
+    {
+        return fontDef;
+    }
+
+    void update(QPaintDeviceMetrics *devMetrics) const;
 
     /**
      * Draws a piece from the given piece of text.
@@ -107,9 +112,8 @@ public:
      *		decoration painting
      * @param deco combined text decoration (see Decoration)
      */
-    void drawText( QPainter *p, int x, int y, QChar *str, int slen, int pos, int len, int width,
-                   QPainter::TextDirection d, int from=-1, int to=-1, QColor bg=QColor(),
-		   int uy=-1, int h=-1, int deco=0 ) const;
+    void drawText(QPainter *p, int x, int y, QChar *str, int slen, int pos, int len, int width, QPainter::TextDirection d, int from = -1, int to = -1,
+                  QColor bg = QColor(), int uy = -1, int h = -1, int deco = 0) const;
 
     /** returns the width of the given string chunk in pixels.
      *
@@ -126,7 +130,7 @@ public:
      * str. Note that toAdd applies to all spaces within str, but only those
      * within [pos, pos+len) are counted towards the width.
      */
-    int width( QChar *str, int slen, int pos, int len, int start = 0, int end = 0, int toAdd = 0 ) const;
+    int width(QChar *str, int slen, int pos, int len, int start = 0, int end = 0, int toAdd = 0) const;
     /** return the width of the given char in pixels.
      *
      * The method also considers various styles like text-align and font-variant
@@ -134,14 +138,19 @@ public:
      * @param slen total length of string
      * @param pos zero-based position of char in string
      */
-    int width( QChar *str, int slen, int pos) const;
+    int width(QChar *str, int slen, int pos) const;
 
     /** Text decoration constants.
      *
      * The enumeration constant values match those of ETextDecoration, but only
      * a subset is supported.
      */
-    enum Decoration { UNDERLINE = 0x1, OVERLINE = 0x2, LINE_THROUGH= 0x4 };
+    enum Decoration
+    {
+        UNDERLINE = 0x1,
+        OVERLINE = 0x2,
+        LINE_THROUGH = 0x4
+    };
     // Keep in sync with ETextDecoration
 
     /** draws text decoration
@@ -158,10 +167,16 @@ public:
 
     /** returns letter spacing
      */
-    int getLetterSpacing() const { return letterSpacing; }
+    int getLetterSpacing() const
+    {
+        return letterSpacing;
+    }
     /** returns word spacing
      */
-    int getWordSpacing() const { return wordSpacing; }
+    int getWordSpacing() const
+    {
+        return wordSpacing;
+    }
 
 private:
     mutable FontDef fontDef;
@@ -172,15 +187,16 @@ private:
     short wordSpacing;
 
     struct ScalKey;
-    enum   ScalInfo {
+    enum ScalInfo
+    {
         Unknown,
         No,
         Yes
     };
 
-    static QMap<ScalKey, ScalInfo>* scalCache;
-    static QMap<ScalKey, QValueList<int> >* scalSizesCache;
-    static bool isFontScalable(QFontDatabase& db, const QFont& font);
+    static QMap< ScalKey, ScalInfo > *scalCache;
+    static QMap< ScalKey, QValueList< int > > *scalSizesCache;
+    static bool isFontScalable(QFontDatabase &db, const QFont &font);
 };
 
 } // namespace

@@ -26,20 +26,19 @@
 
 class QLabel;
 
-class KDEPRINT_EXPORT KMPropBackend : public KMPropWidget
-{
+class KDEPRINT_EXPORT KMPropBackend : public KMPropWidget {
 public:
-	KMPropBackend(QWidget *parent = 0, const char *name = 0);
-	~KMPropBackend();
+    KMPropBackend(QWidget *parent = 0, const char *name = 0);
+    ~KMPropBackend();
 
-	void setPrinter(KMPrinter*);
+    void setPrinter(KMPrinter *);
 
 protected:
-	void configureWizard(KMWizard*);
+    void configureWizard(KMWizard *);
 
 private:
-	QLabel	*m_type;
-	QLabel	*m_uri;
+    QLabel *m_type;
+    QLabel *m_uri;
 };
 
 #endif

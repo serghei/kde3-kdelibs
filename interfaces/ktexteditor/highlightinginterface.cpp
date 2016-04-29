@@ -21,16 +21,17 @@
 #include "highlightinginterface.h"
 #include "document.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateHighlightingInterface
-{
-  public:
-    PrivateHighlightingInterface() {}
-    ~PrivateHighlightingInterface() {}
+class PrivateHighlightingInterface {
+public:
+    PrivateHighlightingInterface()
+    {
+    }
+    ~PrivateHighlightingInterface()
+    {
+    }
 };
-
 }
 
 using namespace KTextEditor;
@@ -39,31 +40,31 @@ unsigned int HighlightingInterface::globalHighlightingInterfaceNumber = 0;
 
 HighlightingInterface::HighlightingInterface()
 {
-  globalHighlightingInterfaceNumber++;
-  myHighlightingInterfaceNumber = globalHighlightingInterfaceNumber++;
+    globalHighlightingInterfaceNumber++;
+    myHighlightingInterfaceNumber = globalHighlightingInterfaceNumber++;
 
-  d = new PrivateHighlightingInterface();
+    d = new PrivateHighlightingInterface();
 }
 
 HighlightingInterface::~HighlightingInterface()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int HighlightingInterface::highlightingInterfaceNumber () const
+unsigned int HighlightingInterface::highlightingInterfaceNumber() const
 {
-  return myHighlightingInterfaceNumber;
+    return myHighlightingInterfaceNumber;
 }
 
-void HighlightingInterface::setHighlightingInterfaceDCOPSuffix (const QCString &/*suffix*/)
+void HighlightingInterface::setHighlightingInterfaceDCOPSuffix(const QCString & /*suffix*/)
 {
-  //d->interface->setObjId ("HighlightingInterface#"+suffix);
+    // d->interface->setObjId ("HighlightingInterface#"+suffix);
 }
 
-HighlightingInterface *KTextEditor::highlightingInterface (Document *doc)
-{       
-  if (!doc)
-    return 0;
+HighlightingInterface *KTextEditor::highlightingInterface(Document *doc)
+{
+    if(!doc)
+        return 0;
 
-  return static_cast<HighlightingInterface*>(doc->qt_cast("KTextEditor::HighlightingInterface"));
+    return static_cast< HighlightingInterface * >(doc->qt_cast("KTextEditor::HighlightingInterface"));
 }

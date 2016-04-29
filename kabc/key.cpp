@@ -25,129 +25,131 @@
 
 using namespace KABC;
 
-Key::Key( const QString &text, int type )
-  : mTextData( text ), mIsBinary( false ), mType( type )
+Key::Key(const QString &text, int type) : mTextData(text), mIsBinary(false), mType(type)
 {
-  mId = KApplication::randomString(8);
+    mId = KApplication::randomString(8);
 }
 
 Key::~Key()
 {
 }
 
-bool Key::operator==( const Key &k ) const
+bool Key::operator==(const Key &k) const
 {
-  if ( mIsBinary != k.mIsBinary ) return false;
-  if ( mIsBinary )
-    if ( mBinaryData != k.mBinaryData ) return false;
-  else
-    if ( mTextData != k.mTextData ) return false;
-  if ( mType != k.mType ) return false;
-  if ( mCustomTypeString != k.mCustomTypeString ) return false;
-  
-  return true;
+    if(mIsBinary != k.mIsBinary)
+        return false;
+    if(mIsBinary)
+        if(mBinaryData != k.mBinaryData)
+            return false;
+        else if(mTextData != k.mTextData)
+            return false;
+    if(mType != k.mType)
+        return false;
+    if(mCustomTypeString != k.mCustomTypeString)
+        return false;
+
+    return true;
 }
 
-bool Key::operator!=( const Key &k ) const
+bool Key::operator!=(const Key &k) const
 {
-  return !( k == *this );
+    return !(k == *this);
 }
 
-void Key::setId( const QString &id )
+void Key::setId(const QString &id)
 {
-  mId = id;
+    mId = id;
 }
 
 QString Key::id() const
 {
-  return mId;
+    return mId;
 }
 
-void Key::setBinaryData( const QByteArray &binary )
+void Key::setBinaryData(const QByteArray &binary)
 {
-  mBinaryData = binary;
-  mIsBinary = true;
+    mBinaryData = binary;
+    mIsBinary = true;
 }
 
 QByteArray Key::binaryData() const
 {
-  return mBinaryData;
+    return mBinaryData;
 }
 
-void Key::setTextData( const QString &text )
+void Key::setTextData(const QString &text)
 {
-  mTextData = text;
-  mIsBinary = false;
+    mTextData = text;
+    mIsBinary = false;
 }
 
 QString Key::textData() const
 {
-  return mTextData;
+    return mTextData;
 }
 
 bool Key::isBinary() const
 {
-  return mIsBinary;
+    return mIsBinary;
 }
 
-void Key::setType( int type )
+void Key::setType(int type)
 {
-  mType = type;
+    mType = type;
 }
 
-void Key::setCustomTypeString( const QString &custom )
+void Key::setCustomTypeString(const QString &custom)
 {
-  mCustomTypeString = custom;
+    mCustomTypeString = custom;
 }
 
 int Key::type() const
 {
-  return mType;
+    return mType;
 }
 
 QString Key::customTypeString() const
 {
-  return mCustomTypeString;
+    return mCustomTypeString;
 }
 
 Key::TypeList Key::typeList()
 {
-  TypeList list;
-  list << X509;
-  list << PGP;
-  list << Custom;
-  
-  return list;
-}
-  
-QString Key::typeLabel( int type )
-{
-  switch ( type ) {
-    case X509:
-      return i18n( "X509" );
-      break;
-    case PGP:
-      return i18n( "PGP" );
-      break;
-    case Custom:
-      return i18n( "Custom" );
-      break;
-    default:
-      return i18n( "Unknown type" );
-      break;
-  }
+    TypeList list;
+    list << X509;
+    list << PGP;
+    list << Custom;
+
+    return list;
 }
 
-QDataStream &KABC::operator<<( QDataStream &s, const Key &key )
+QString Key::typeLabel(int type)
 {
-    return s << key.mId << key.mIsBinary << key.mTextData << key.mBinaryData <<
-             key.mCustomTypeString << key.mType;
+    switch(type)
+    {
+        case X509:
+            return i18n("X509");
+            break;
+        case PGP:
+            return i18n("PGP");
+            break;
+        case Custom:
+            return i18n("Custom");
+            break;
+        default:
+            return i18n("Unknown type");
+            break;
+    }
 }
 
-QDataStream &KABC::operator>>( QDataStream &s, Key &key )
+QDataStream &KABC::operator<<(QDataStream &s, const Key &key)
 {
-    s >> key.mId >> key.mIsBinary >> key.mTextData >> key.mBinaryData >>
-    key.mCustomTypeString >> key.mType;
+    return s << key.mId << key.mIsBinary << key.mTextData << key.mBinaryData << key.mCustomTypeString << key.mType;
+}
+
+QDataStream &KABC::operator>>(QDataStream &s, Key &key)
+{
+    s >> key.mId >> key.mIsBinary >> key.mTextData >> key.mBinaryData >> key.mCustomTypeString >> key.mType;
 
     return s;
 }

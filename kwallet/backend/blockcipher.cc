@@ -20,18 +20,18 @@
 #include "blockcipher.h"
 
 
-
-BlockCipher::BlockCipher() {
-	_blksz = -1;
+BlockCipher::BlockCipher()
+{
+    _blksz = -1;
 }
 
 
-BlockCipher::~BlockCipher() {
+BlockCipher::~BlockCipher()
+{
 }
 
 
-int BlockCipher::blockSize() const {
-	return _blksz;
+int BlockCipher::blockSize() const
+{
+    return _blksz;
 }
-
-

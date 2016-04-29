@@ -45,18 +45,20 @@ class QBitmap;
  *
  * @author Daniel M. Duley <mosfet@kde.org>
  */
-class KDEUI_EXPORT KDualColorButton : public QWidget
-{
+class KDEUI_EXPORT KDualColorButton : public QWidget {
     Q_OBJECT
-    Q_ENUMS( DualColor )
-    Q_PROPERTY( QColor foreground READ foreground WRITE setForeground )
-    Q_PROPERTY( QColor background READ background WRITE setBackground )
-    Q_PROPERTY( QColor currentColor READ currentColor WRITE setCurrentColor STORED false DESIGNABLE false )
-    Q_PROPERTY( DualColor current READ current WRITE setCurrent )
+    Q_ENUMS(DualColor)
+    Q_PROPERTY(QColor foreground READ foreground WRITE setForeground)
+    Q_PROPERTY(QColor background READ background WRITE setBackground)
+    Q_PROPERTY(QColor currentColor READ currentColor WRITE setCurrentColor STORED false DESIGNABLE false)
+    Q_PROPERTY(DualColor current READ current WRITE setCurrent)
 
 public:
-
-    enum DualColor { Foreground, Background };
+    enum DualColor
+    {
+        Foreground,
+        Background
+    };
     /**
      * Constructs a new KDualColorButton using the default black and white
      * colors.
@@ -64,14 +66,13 @@ public:
      * As of KDE 3.5.1, sets the dialog parent to the same as "parent" if that
      * argument is non-null and the dialogParent argument is null.
      */
-    KDualColorButton(QWidget *parent=0, const char *name=0, QWidget* dialogParent=0);
+    KDualColorButton(QWidget *parent = 0, const char *name = 0, QWidget *dialogParent = 0);
 
     /**
      * Constructs a new KDualColorButton with the supplied foreground and
      * background colors.
      */
-    KDualColorButton(const QColor &fgColor, const QColor &bgColor,
-                     QWidget *parent=0, const char *name=0, QWidget* dialogParent=0);
+    KDualColorButton(const QColor &fgColor, const QColor &bgColor, QWidget *parent = 0, const char *name = 0, QWidget *dialogParent = 0);
 
     ~KDualColorButton();
     /**
@@ -125,6 +126,7 @@ signals:
      * Emitted when the user changes the current color selection.
      */
     void currentChanged(KDualColorButton::DualColor s);
+
 protected:
     /**
      * Sets the supplied rectangles to the proper size and position for the
@@ -141,6 +143,7 @@ protected:
     // Dnd
     virtual void dragEnterEvent(QDragEnterEvent *ev);
     virtual void dropEvent(QDropEvent *ev);
+
 private:
     QBitmap *arrowBitmap;
     QPixmap *resetPixmap;
@@ -150,7 +153,8 @@ private:
     DualColor curColor, tmpColor;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KDualColorPrivate;
     KDualColorPrivate *d;

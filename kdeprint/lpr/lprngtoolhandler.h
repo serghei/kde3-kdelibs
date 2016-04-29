@@ -25,30 +25,29 @@
 #include <qstringlist.h>
 #include <qpair.h>
 
-class LPRngToolHandler : public LprHandler
-{
+class LPRngToolHandler : public LprHandler {
 public:
-	LPRngToolHandler(KMManager *mgr = 0);
+    LPRngToolHandler(KMManager *mgr = 0);
 
-	bool validate(PrintcapEntry*);
-	bool completePrinter(KMPrinter*, PrintcapEntry*, bool = true);
-	DrMain* loadDriver(KMPrinter*, PrintcapEntry*, bool = false);
-	DrMain* loadDbDriver(const QString&);
-	PrintcapEntry* createEntry(KMPrinter*);
-	bool savePrinterDriver(KMPrinter*, PrintcapEntry*, DrMain*, bool* = 0);
-	QString printOptions(KPrinter*);
+    bool validate(PrintcapEntry *);
+    bool completePrinter(KMPrinter *, PrintcapEntry *, bool = true);
+    DrMain *loadDriver(KMPrinter *, PrintcapEntry *, bool = false);
+    DrMain *loadDbDriver(const QString &);
+    PrintcapEntry *createEntry(KMPrinter *);
+    bool savePrinterDriver(KMPrinter *, PrintcapEntry *, DrMain *, bool * = 0);
+    QString printOptions(KPrinter *);
 
 protected:
-	QMap<QString,QString> parseXferOptions(const QString&);
-	void loadAuthFile(const QString&, QString&, QString&);
-	QValueList< QPair<QString,QStringList> > loadChoiceDict(const QString&);
-	QMap<QString,QString> parseZOptions(const QString&);
-	QString filterDir();
-	QString driverDirInternal();
+    QMap< QString, QString > parseXferOptions(const QString &);
+    void loadAuthFile(const QString &, QString &, QString &);
+    QValueList< QPair< QString, QStringList > > loadChoiceDict(const QString &);
+    QMap< QString, QString > parseZOptions(const QString &);
+    QString filterDir();
+    QString driverDirInternal();
 
 
 private:
-	QValueList< QPair<QString,QStringList> >	m_dict;
+    QValueList< QPair< QString, QStringList > > m_dict;
 };
 
 #endif

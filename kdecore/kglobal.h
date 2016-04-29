@@ -41,53 +41,51 @@ class QString;
  * @see KStaticDeleterBase
  * @author Sirtaj Singh Kang (taj@kde.org)
  */
-class KDECORE_EXPORT KGlobal
-{
+class KDECORE_EXPORT KGlobal {
 public:
-
     /**
      * Returns the global instance.  There is always at least
      * one instance of a component in one application (in most
      * cases the application itself).
      * @return the global instance
      */
-    static KInstance            *instance();
+    static KInstance *instance();
 
     /**
      *  Returns the application standard dirs object.
      * @return the global standard dir object
      */
-    static KStandardDirs	*dirs();
+    static KStandardDirs *dirs();
 
     /**
      *  Returns the general config object.
      * @return the global configuration object.
      */
-    static KConfig		*config();
+    static KConfig *config();
 
     /**
      *  Returns the general config object.
      * @return the global configuration object.
      */
-    static KSharedConfig        *sharedConfig();
+    static KSharedConfig *sharedConfig();
 
     /**
      *  Returns an iconloader object.
      * @return the global iconloader object
      */
-    static KIconLoader	        *iconLoader();
+    static KIconLoader *iconLoader();
 
     /**
      * Returns the global locale object.
      * @return the global locale object
      */
-    static KLocale              *locale();
+    static KLocale *locale();
 
     /**
      * The global charset manager.
      * @return the global charset manager
      */
-    static KCharsets	        *charsets();
+    static KCharsets *charsets();
 
     /**
      * Creates a static QString.
@@ -106,7 +104,7 @@ public:
      * @param str the string to create
      * @return the static string
      */
-    static const QString        &staticQString(const char *str);
+    static const QString &staticQString(const char *str);
 
     /**
      * Creates a static QString.
@@ -125,7 +123,7 @@ public:
      * @param str the string to create
      * @return the static string
      */
-    static const QString        &staticQString(const QString &str);
+    static const QString &staticQString(const QString &str);
 
     /**
      * Registers a static deleter.
@@ -151,12 +149,12 @@ public:
      */
     static void deleteStaticDeleters();
 
-    //private:
-    static  KStringDict         *_stringDict;
-    static  KInstance           *_instance;
-    static  KLocale             *_locale;
-    static  KCharsets	        *_charsets;
-    static  KStaticDeleterList  *_staticDeleters;
+    // private:
+    static KStringDict *_stringDict;
+    static KInstance *_instance;
+    static KLocale *_locale;
+    static KCharsets *_charsets;
+    static KStaticDeleterList *_staticDeleters;
 
     /**
      * The instance currently active (useful in a multi-instance
@@ -165,49 +163,60 @@ public:
      * @internal
      */
     static void setActiveInstance(KInstance *d);
-    static KInstance *activeInstance() { return _activeInstance; }
+    static KInstance *activeInstance()
+    {
+        return _activeInstance;
+    }
 
-    static  KInstance           *_activeInstance;
+    static KInstance *_activeInstance;
 };
 
 /**
  * \relates KGlobal
  * A typesafe function to find the minimum of the two arguments.
  */
-#define KMIN(a,b)	kMin(a,b)
+#define KMIN(a, b) kMin(a, b)
 /**
  * \relates KGlobal
  * A typesafe function to find the maximum of the two arguments.
  */
-#define KMAX(a,b)	kMax(a,b)
+#define KMAX(a, b) kMax(a, b)
 /**
  * \relates KGlobal
  * A typesafe function to determine the absolute value of the argument.
  */
-#define KABS(a)	kAbs(a)
+#define KABS(a) kAbs(a)
 /**
  * \relates KGlobal
  * A typesafe function that returns x if it's between low and high values.
  * low if x is smaller than then low and high if x is bigger than high.
  */
-#define KCLAMP(x,low,high) kClamp(x,low,high)
+#define KCLAMP(x, low, high) kClamp(x, low, high)
 
 // XXX KDE4: Make kMin, kMax and kClamp return "T" instead of "const T &"!
-template<class T>
-inline const T& kMin (const T& a, const T& b) { return a < b ? a : b; }
-
-template<class T>
-inline const T& kMax (const T& a, const T& b) { return b < a ? a : b; }
-
-template<class T>
-inline T kAbs (const T& a) { return a < 0 ? -a : a; }
-
-template<class T>
-inline const T& kClamp( const T& x, const T& low, const T& high )
+template < class T > inline const T &kMin(const T &a, const T &b)
 {
-    if ( x < low )       return low;
-    else if ( high < x ) return high;
-    else                 return x;
+    return a < b ? a : b;
+}
+
+template < class T > inline const T &kMax(const T &a, const T &b)
+{
+    return b < a ? a : b;
+}
+
+template < class T > inline T kAbs(const T &a)
+{
+    return a < 0 ? -a : a;
+}
+
+template < class T > inline const T &kClamp(const T &x, const T &low, const T &high)
+{
+    if(x < low)
+        return low;
+    else if(high < x)
+        return high;
+    else
+        return x;
 }
 
 /**
@@ -216,8 +225,8 @@ inline const T& kClamp( const T& x, const T& low, const T& high )
  * qstricmp fails with e.g. the Turkish locale where 'I'.lower() != 'i'
  * @since 3.4
  */
-int KDECORE_EXPORT kasciistricmp( const char *str1, const char *str2 );
- 
+int KDECORE_EXPORT kasciistricmp(const char *str1, const char *str2);
+
 
 /**
  * \mainpage The KDE Core Functionality Library
@@ -234,4 +243,3 @@ int KDECORE_EXPORT kasciistricmp( const char *str1, const char *str2 );
  */
 
 #endif // _KGLOBAL_H
-

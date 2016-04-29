@@ -35,7 +35,7 @@ in this Software without prior written authorization from The Open Group.
 #endif /* NeedFunctionPrototypes */
 
 #ifndef NeedVarargsPrototypes
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus) || (FUNCPROTO&2)
+#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus) || (FUNCPROTO & 2)
 #define NeedVarargsPrototypes 1
 #else
 #define NeedVarargsPrototypes 0
@@ -45,7 +45,7 @@ in this Software without prior written authorization from The Open Group.
 #if NeedFunctionPrototypes
 
 #ifndef NeedNestedPrototypes
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus) || (FUNCPROTO&8)
+#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus) || (FUNCPROTO & 8)
 #define NeedNestedPrototypes 1
 #else
 #define NeedNestedPrototypes 0
@@ -53,7 +53,7 @@ in this Software without prior written authorization from The Open Group.
 #endif /* NeedNestedPrototypes */
 
 #ifndef _Xconst
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus) || (FUNCPROTO&4)
+#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus) || (FUNCPROTO & 4)
 #define _Xconst const
 #else
 #define _Xconst
@@ -64,15 +64,15 @@ in this Software without prior written authorization from The Open Group.
 #ifdef NARROWPROTO
 #define NeedWidePrototypes 0
 #else
-#define NeedWidePrototypes 1		/* default to make interropt. easier */
+#define NeedWidePrototypes 1 /* default to make interropt. easier */
 #endif
 #endif /* NeedWidePrototypes */
 
 #endif /* NeedFunctionPrototypes */
 
 #ifndef _XFUNCPROTOBEGIN
-#ifdef __cplusplus			/* for C++ V2.0 */
-#define _XFUNCPROTOBEGIN extern "C" {	/* do not leave open across includes */
+#ifdef __cplusplus                    /* for C++ V2.0 */
+#define _XFUNCPROTOBEGIN extern "C" { /* do not leave open across includes */
 #define _XFUNCPROTOEND }
 #else
 #define _XFUNCPROTOBEGIN

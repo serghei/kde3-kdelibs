@@ -40,16 +40,15 @@ class KSharedConfig;
  *
  * @author Torben Weis
  */
-class KDECORE_EXPORT KInstance
-{
+class KDECORE_EXPORT KInstance {
     friend class KStandardDirs;
 
- public:
+public:
     /**
      *  Constructor.
      *  @param instanceName the name of the instance
      */
-    KInstance( const QCString& instanceName) ;
+    KInstance(const QCString &instanceName);
 
     /**
      *  Constructor.
@@ -61,15 +60,15 @@ class KDECORE_EXPORT KInstance
      *  KCmdLineArgs and KApplication (not destroyed until the app exits).
      *  @param aboutData data about this instance (see KAboutData)
      */
-    KInstance( const KAboutData * aboutData );
+    KInstance(const KAboutData *aboutData);
 
     /*
      * @internal
      * Only for K(Unique)Application
      * Initialize from src and delete it.
      */
-     
-    KInstance( KInstance* src );
+
+    KInstance(KInstance *src);
 
     /**
      * Destructor.
@@ -80,25 +79,25 @@ class KDECORE_EXPORT KInstance
      * Returns the application standard dirs object.
      * @return The KStandardDirs of the application.
      */
-    KStandardDirs	*dirs() const;
+    KStandardDirs *dirs() const;
 
     /**
      * Returns the general config object ("appnamerc").
      * @return the KConfig object for the instance.
      */
-    KConfig            *config() const;
+    KConfig *config() const;
 
     /**
      * Returns the general config object ("appnamerc").
      * @return the KConfig object for the instance.
      */
-    KSharedConfig      *sharedConfig() const;
+    KSharedConfig *sharedConfig() const;
 
     /**
      *  Returns an iconloader object.
      * @return the iconloader object.
      */
-    KIconLoader	       *iconLoader() const;
+    KIconLoader *iconLoader() const;
 
     /**
      * Re-allocate the global iconloader.
@@ -108,30 +107,30 @@ class KDECORE_EXPORT KInstance
     /**
      *  Returns the about data of this instance
      *  Warning, can be 0L
-     * @return the about data of the instance, or 0 if it has 
+     * @return the about data of the instance, or 0 if it has
      *         not been set yet
      */
     const KAboutData *aboutData() const;
 
     /**
      * Returns the name of the instance
-     * @return the instance name, can be null if the KInstance has been 
+     * @return the instance name, can be null if the KInstance has been
      *         created with a null name
      */
-    QCString          instanceName() const;
+    QCString instanceName() const;
 
     /**
      * Returns the KMimeSourceFactory of the instance.
      * Mainly added for API completeness and future extensibility.
      * @return the KMimeSourceFactory set as default for this application.
      */
-    KMimeSourceFactory* mimeSourceFactory () const;
+    KMimeSourceFactory *mimeSourceFactory() const;
 
 protected:
     /**
      *  Copy Constructor is not allowed
      */
-    KInstance( const KInstance& );
+    KInstance(const KInstance &);
 
     /**
      * Set name of default config file.
@@ -141,19 +140,19 @@ protected:
     void setConfigName(const QString &name);
 
 private:
-    mutable KStandardDirs       *_dirs;
+    mutable KStandardDirs *_dirs;
 
-    mutable KConfig             *_config;
-    mutable KIconLoader         *_iconLoader;
+    mutable KConfig *_config;
+    mutable KIconLoader *_iconLoader;
 
-    QCString                     _name;
-    const KAboutData            *_aboutData;
+    QCString _name;
+    const KAboutData *_aboutData;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     KInstancePrivate *d;
 };
 
 #endif
-

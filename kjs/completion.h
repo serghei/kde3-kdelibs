@@ -30,40 +30,59 @@
 
 namespace KJS {
 
-  /**
-   * Completion types.
-   */
-  enum ComplType { Normal, Break, Continue, ReturnValue, Throw };
+/**
+ * Completion types.
+ */
+enum ComplType
+{
+    Normal,
+    Break,
+    Continue,
+    ReturnValue,
+    Throw
+};
 
-  /**
-   * Completion objects are used to convey the return status and value
-   * from functions.
-   *
-   * See FunctionImp::execute()
-   *
-   * @see FunctionImp
-   *
-   * @short Handle for a Completion type.
-   */
+/**
+ * Completion objects are used to convey the return status and value
+ * from functions.
+ *
+ * See FunctionImp::execute()
+ *
+ * @see FunctionImp
+ *
+ * @short Handle for a Completion type.
+ */
 // delme
-  class KJS_EXPORT Completion : public Value {
-// fixme
-/*   class Completion : private Value { */
-  public:
-    Completion(ComplType c = Normal, const Value& v = Value(),
-               const Identifier &t = Identifier::null())
-        : comp(c), val(v), tar(t) { }
+class KJS_EXPORT Completion : public Value {
+    // fixme
+    /*   class Completion : private Value { */
+public:
+    Completion(ComplType c = Normal, const Value &v = Value(), const Identifier &t = Identifier::null()) : comp(c), val(v), tar(t)
+    {
+    }
 
-    ComplType complType() const { return comp; }
-    Value value() const { return val; }
-    Identifier target() const { return tar; }
-    bool isValueCompletion() const { return val.isValid(); }
-  private:
+    ComplType complType() const
+    {
+        return comp;
+    }
+    Value value() const
+    {
+        return val;
+    }
+    Identifier target() const
+    {
+        return tar;
+    }
+    bool isValueCompletion() const
+    {
+        return val.isValid();
+    }
+
+private:
     ComplType comp;
     Value val;
     Identifier tar;
-  };
-
+};
 }
 
-#endif 
+#endif

@@ -34,16 +34,18 @@ namespace KABC {
 /**
   @short Special ListViewItem, that is used by the AddresseeDialog.
 */
-class KABC_EXPORT AddresseeItem : public QListViewItem
-{
-  public:
-
+class KABC_EXPORT AddresseeItem : public QListViewItem {
+public:
     /**
       Type of column
       @li @p Name -  Name in Addressee
       @li @p Email - Email in Addressee
     */
-    enum columns { Name = 0, Email = 1 };
+    enum columns
+    {
+        Name = 0,
+        Email = 1
+    };
 
     /**
       Constructor.
@@ -51,19 +53,22 @@ class KABC_EXPORT AddresseeItem : public QListViewItem
       @param parent    The parent listview.
       @param addressee The associated addressee.
     */
-    AddresseeItem( QListView *parent, const Addressee &addressee );
+    AddresseeItem(QListView *parent, const Addressee &addressee);
 
     /**
       Returns the addressee.
     */
-    Addressee addressee() const { return mAddressee; }
+    Addressee addressee() const
+    {
+        return mAddressee;
+    }
 
     /**
       Method used by QListView to sort the items.
     */
-    virtual QString key( int column, bool ascending ) const;
+    virtual QString key(int column, bool ascending) const;
 
-  private:
+private:
     Addressee mAddressee;
 };
 
@@ -80,18 +85,17 @@ class KABC_EXPORT AddresseeItem : public QListViewItem
   return or pressing the ok button to return the selected addressee to the
   application.
 */
-class KABC_EXPORT AddresseeDialog : public KDialogBase
-{
+class KABC_EXPORT AddresseeDialog : public KDialogBase {
     Q_OBJECT
 
-  public:
+public:
     /**
       Construct addressbook entry select dialog.
 
       @param parent parent widget
       @param multiple if true, indicates a multiple selection.
     */
-    AddresseeDialog( QWidget *parent=0, bool multiple=false );
+    AddresseeDialog(QWidget *parent = 0, bool multiple = false);
 
     /**
       Destructor.
@@ -117,7 +121,7 @@ class KABC_EXPORT AddresseeDialog : public KDialogBase
       If the user doesn't select an entry or presses cancel, the returned
       addressee is empty.
     */
-    static Addressee getAddressee( QWidget *parent );
+    static Addressee getAddressee(QWidget *parent);
 
     /**
       Select multiple address book entries.
@@ -126,20 +130,20 @@ class KABC_EXPORT AddresseeDialog : public KDialogBase
       If the user doesn't select an entry or presses cancel, the returned
       addressee list is empty.
     */
-    static Addressee::List getAddressees( QWidget *parent );
+    static Addressee::List getAddressees(QWidget *parent);
 
-  private slots:
-    void selectItem( const QString & );
-    void updateEdit( QListViewItem *item );
-    void addSelected( QListViewItem *item );
+private slots:
+    void selectItem(const QString &);
+    void updateEdit(QListViewItem *item);
+    void addSelected(QListViewItem *item);
     void removeSelected();
 
-  protected slots:
+protected slots:
     void addressBookChanged();
 
-  private:
+private:
     void loadAddressBook();
-    void addCompletionItem( const QString &str, QListViewItem *item );
+    void addCompletionItem(const QString &str, QListViewItem *item);
 
     bool mMultiple;
 
@@ -150,12 +154,11 @@ class KABC_EXPORT AddresseeDialog : public KDialogBase
 
     AddressBook *mAddressBook;
 
-    QDict<QListViewItem> mItemDict;
-    QDict<QListViewItem> mSelectedDict;
+    QDict< QListViewItem > mItemDict;
+    QDict< QListViewItem > mSelectedDict;
 
     class AddresseeDialogPrivate;
     AddresseeDialogPrivate *d;
 };
-
 }
 #endif

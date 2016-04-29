@@ -26,60 +26,59 @@
 class KSambaSharePrivate;
 
 /**
- * Similar functionality like KFileShare, 
- * but works only for Samba and do not need 
+ * Similar functionality like KFileShare,
+ * but works only for Samba and do not need
  * any suid script.
  * Singleton class, call instance() to get an instance.
  */
-class KIO_EXPORT KSambaShare : public QObject 
-{
-Q_OBJECT
+class KIO_EXPORT KSambaShare : public QObject {
+    Q_OBJECT
 public:
-  /**
-   * Returns the one and only instance of KSambaShare
-   */
-  static KSambaShare* instance();
+    /**
+     * Returns the one and only instance of KSambaShare
+     */
+    static KSambaShare *instance();
 
-  /**
-   * Whether or not the given path is shared by Samba.
-   * @param path the path to check if it is shared by Samba.
-   * @return whether the given path is shared by Samba.
-   */
-  bool isDirectoryShared( const QString & path ) const;
-  
-  /**
-   * Returns a list of all directories shared by Samba.
-   * The resulting list is not sorted.
-   * @return a list of all directories shared by Samba.
-   */
-  QStringList sharedDirectories() const;
-  
-  /**
-   * KSambaShare destructor. 
-   * Do not call!
-   * The instance is destroyed automatically!
-   */ 
-  virtual ~KSambaShare();
-  
-  /**
-   * Returns the path to the used smb.conf file
-   * or null if no file was found
-   */
-  QString smbConfPath() const;
-  
+    /**
+     * Whether or not the given path is shared by Samba.
+     * @param path the path to check if it is shared by Samba.
+     * @return whether the given path is shared by Samba.
+     */
+    bool isDirectoryShared(const QString &path) const;
+
+    /**
+     * Returns a list of all directories shared by Samba.
+     * The resulting list is not sorted.
+     * @return a list of all directories shared by Samba.
+     */
+    QStringList sharedDirectories() const;
+
+    /**
+     * KSambaShare destructor.
+     * Do not call!
+     * The instance is destroyed automatically!
+     */
+    virtual ~KSambaShare();
+
+    /**
+     * Returns the path to the used smb.conf file
+     * or null if no file was found
+     */
+    QString smbConfPath() const;
+
 signals:
-  /**
-   * Emitted when the smb.conf file has changed
-   */
-  void changed();  
-  
+    /**
+     * Emitted when the smb.conf file has changed
+     */
+    void changed();
+
 private:
-  KSambaShare();
-  static KSambaShare* _instance;
-  KSambaSharePrivate* d;
-  
+    KSambaShare();
+    static KSambaShare *_instance;
+    KSambaSharePrivate *d;
+
 private slots:
-  void slotFileChange(const QString&);  
+    void slotFileChange(const QString &);
 };
 
 #endif

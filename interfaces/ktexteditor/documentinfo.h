@@ -24,37 +24,33 @@ class QCString;
 
 #include <kdelibs_export.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
  * This is an interface for accessing information about files open
  * in the Document, Plugin and PluginViewInterface classes.
  */
-class KTEXTEDITOR_EXPORT DocumentInfoInterface
-{
-  friend class PrivateDocumentInterface;
+class KTEXTEDITOR_EXPORT DocumentInfoInterface {
+    friend class PrivateDocumentInterface;
 
-  public:
+public:
     DocumentInfoInterface();
     virtual ~DocumentInfoInterface();
 
-    virtual QString mimeType()=0;
-    virtual long  fileSize()=0;
-    virtual QString niceFileSize()=0;
+    virtual QString mimeType() = 0;
+    virtual long fileSize() = 0;
+    virtual QString niceFileSize() = 0;
 
-    unsigned int documentInfoInterfaceNumber () const;
-    
-  protected:  
-    void setDocumentInfoInterfaceDCOPSuffix (const QCString &suffix);  
+    unsigned int documentInfoInterfaceNumber() const;
 
-  private:
+protected:
+    void setDocumentInfoInterfaceDCOPSuffix(const QCString &suffix);
+
+private:
     class PrivateDocumentInfoInterface *d;
     static unsigned int globalDocumentInfoInterfaceNumber;
     unsigned int myDocumentInfoInterfaceNumber;
 };
-
-
 }
 
 #endif

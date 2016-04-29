@@ -30,45 +30,44 @@ class KateUndo;
 /**
  * Class to manage a group of undo items
  */
-class KateUndoGroup
-{
-  public:
+class KateUndoGroup {
+public:
     /**
      * Constructor
      * @param doc document to belong to
      */
-    KateUndoGroup (KateDocument *doc);
+    KateUndoGroup(KateDocument *doc);
 
     /**
      * Destructor
      */
-    ~KateUndoGroup ();
+    ~KateUndoGroup();
 
-  public:
+public:
     /**
      * Undo the contained undo items
      */
-    void undo ();
+    void undo();
 
     /**
      * Redo the contained undo items
      */
-    void redo ();
+    void redo();
 
-  public:
+public:
     /**
      * Types for undo items
      */
     enum UndoType
     {
-      editInsertText,
-      editRemoveText,
-      editWrapLine,
-      editUnWrapLine,
-      editInsertLine,
-      editRemoveLine,
-      editMarkLineAutoWrapped,
-      editInvalid
+        editInsertText,
+        editRemoveText,
+        editWrapLine,
+        editUnWrapLine,
+        editInsertLine,
+        editRemoveLine,
+        editMarkLineAutoWrapped,
+        editInvalid
     };
 
     /**
@@ -79,7 +78,7 @@ class KateUndoGroup
      * @param len lenght of change
      * @param text text removed/inserted
      */
-    void addItem (KateUndoGroup::UndoType type, uint line, uint col, uint len, const QString &text);
+    void addItem(KateUndoGroup::UndoType type, uint line, uint col, uint len, const QString &text);
 
     /**
      * merge this group with an other
@@ -87,19 +86,22 @@ class KateUndoGroup
      * @param complex set if a complex undo
      * @return success
      */
-    bool merge(KateUndoGroup* newGroup,bool complex);
+    bool merge(KateUndoGroup *newGroup, bool complex);
 
     /**
     * set group as as savepoint. the next group will not merge with this one
     */
-    void safePoint (bool safePoint=true);
+    void safePoint(bool safePoint = true);
 
     /**
      * is this undogroup empty?
      */
-    bool isEmpty () const { return m_items.isEmpty(); }
+    bool isEmpty() const
+    {
+        return m_items.isEmpty();
+    }
 
-  private:
+private:
     /**
      * singleType
      * @return the type if it's only one type, or editInvalid if it contains multiple types.
@@ -117,9 +119,9 @@ class KateUndoGroup
      * add an undo item
      * @param u item to add
      */
-    void addItem (KateUndo *u);
+    void addItem(KateUndo *u);
 
-  private:
+private:
     /**
      * Document we belong to
      */
@@ -128,7 +130,7 @@ class KateUndoGroup
     /**
      * list of items contained
      */
-    QPtrList<KateUndo> m_items;
+    QPtrList< KateUndo > m_items;
 
     /**
      * prohibit merging with the next group

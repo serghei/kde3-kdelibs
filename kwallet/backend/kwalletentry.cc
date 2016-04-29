@@ -16,7 +16,7 @@
  * along with this library; see the file COPYING.LIB.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
- */ 
+ */
 
 #include "kwalletentry.h"
 
@@ -24,66 +24,75 @@
 using namespace KWallet;
 
 
-Entry::Entry() {
+Entry::Entry()
+{
 }
 
-Entry::~Entry() {
-	_value.fill(0);
+Entry::~Entry()
+{
+    _value.fill(0);
 }
 
-const QString& Entry::key() const {
-	return _key;
-}
-
-
-const QByteArray& Entry::value() const {
-	return _value;
-}
-
-
-QString Entry::password() const {
-QString x;
-	QDataStream qds(_value, IO_ReadOnly);
-	qds >> x;
-	return x;
+const QString &Entry::key() const
+{
+    return _key;
 }
 
 
-void Entry::setValue(const QByteArray& val) {
-	// do a direct copy from one into the other without
-	// temporary variables
-	_value.fill(0);
-	_value.duplicate(val);
+const QByteArray &Entry::value() const
+{
+    return _value;
 }
 
 
-void Entry::setValue(const QString& val) {
-	_value.fill(0);
-	QDataStream qds(_value, IO_WriteOnly);
-	qds << val;
+QString Entry::password() const
+{
+    QString x;
+    QDataStream qds(_value, IO_ReadOnly);
+    qds >> x;
+    return x;
 }
 
 
-void Entry::setKey(const QString& key) {
-	_key = key;
+void Entry::setValue(const QByteArray &val)
+{
+    // do a direct copy from one into the other without
+    // temporary variables
+    _value.fill(0);
+    _value.duplicate(val);
 }
 
 
-Wallet::EntryType Entry::type() const {
-	return _type;
+void Entry::setValue(const QString &val)
+{
+    _value.fill(0);
+    QDataStream qds(_value, IO_WriteOnly);
+    qds << val;
 }
 
 
-void Entry::setType(Wallet::EntryType type) {
-	_type = type;
+void Entry::setKey(const QString &key)
+{
+    _key = key;
 }
 
 
-void Entry::copy(const Entry* x) {
-	_type = x->_type;
-	_key = x->_key;
-	_value.fill(0);
-	_value.duplicate(x->_value);
+Wallet::EntryType Entry::type() const
+{
+    return _type;
 }
 
 
+void Entry::setType(Wallet::EntryType type)
+{
+    _type = type;
+}
+
+
+void Entry::copy(const Entry *x)
+{
+    _type = x->_type;
+    _key = x->_key;
+    _value.fill(0);
+    _value.duplicate(x->_value);
+}

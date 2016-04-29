@@ -26,72 +26,64 @@ class KCModuleProxy;
 /***************************************************************/
 /** @internal
     @ingroup internal */
-class KCModuleProxyIfaceImpl: public QObject, virtual public KCModuleProxyIface
-{
-	/* KDE4 Merge KCModuleProxyIfaceImpl with KCModuleProxy(MI)
-	 * if it doesn't break what DCOPClient it binds to.
-	 * Update: This is probably not possible, since we don't want the DCOPObject when 
-	 * we're running in root mode. */
+class KCModuleProxyIfaceImpl : public QObject, virtual public KCModuleProxyIface {
+    /* KDE4 Merge KCModuleProxyIfaceImpl with KCModuleProxy(MI)
+     * if it doesn't break what DCOPClient it binds to.
+     * Update: This is probably not possible, since we don't want the DCOPObject when
+     * we're running in root mode. */
 
-	Q_OBJECT
+    Q_OBJECT
 
 public:
+    /* Reimplementations of DCOP members */
+    KCModuleProxyIfaceImpl(const QCString &name, KCModuleProxy *const client);
 
-	/* Reimplementations of DCOP members */
-	KCModuleProxyIfaceImpl( const QCString& name, KCModuleProxy* const client );
+    virtual void save();
 
-	virtual void save();
+    virtual void load();
 
-	virtual void load();
+    virtual void defaults();
 
-	virtual void defaults();
+    virtual QString applicationName();
 
-	virtual QString applicationName();
+    virtual QString quickHelp();
 
-	virtual QString quickHelp();
-
-	virtual bool changed();
+    virtual bool changed();
 public slots:
 
-	/**
-	 * Emits the changed(bool) DCOP signal.
-	 */
-	void changedRelay( bool c );
+    /**
+     * Emits the changed(bool) DCOP signal.
+     */
+    void changedRelay(bool c);
 
-	/**
-	 * Simply relays KCModuleProxy's signal with the same name.
-	 */
-	void quickHelpRelay();
-	
+    /**
+     * Simply relays KCModuleProxy's signal with the same name.
+     */
+    void quickHelpRelay();
+
 
 private:
-
-	KCModuleProxy* p;
+    KCModuleProxy *p;
 };
 /***************************************************************/
-
-
 
 
 /***************************************************************/
 /** @internal
     @ingroup internal */
-class KCModuleProxyRootCommunicatorImpl: public QObject, 
-	virtual public KCModuleProxyRootDispatcher
-{
-	Q_OBJECT
+class KCModuleProxyRootCommunicatorImpl : public QObject, virtual public KCModuleProxyRootDispatcher {
+    Q_OBJECT
 
 public:
-	KCModuleProxyRootCommunicatorImpl( const QCString& name, KCModuleProxy* const client );
+    KCModuleProxyRootCommunicatorImpl(const QCString &name, KCModuleProxy *const client);
 
-	/* Reimplementations of DCOP members */
-	virtual void changed( bool c );
+    /* Reimplementations of DCOP members */
+    virtual void changed(bool c);
 
-	virtual void quickHelpChanged();
+    virtual void quickHelpChanged();
 
-KCModuleProxy* p;
+    KCModuleProxy *p;
 };
 /***************************************************************/
 
 #endif // __KCMODULEPROXYIFACEIMPL_H__
-

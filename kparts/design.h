@@ -9,12 +9,12 @@
  *
  * The library also provides a framework for applications that want to
  * use parts. Such applications need to inherit their main window
- * from KParts::MainWindow and provide a so-called shell GUI, 
+ * from KParts::MainWindow and provide a so-called shell GUI,
  * which provides a basic skeleton GUI with part-independent functionality/actions.
  *
  * Some KParts applications won't be specific to a given part, but expect
  * to be able to embed, for instance, all types of viewers out there. For this
- * the basic functionality of any viewer has been implemented in 
+ * the basic functionality of any viewer has been implemented in
  * KParts::ReadOnlyPart, which viewer-like parts should inherit from.
  * The same applies to KParts::ReadWritePart, which is for editor-like parts.
  *

@@ -25,7 +25,7 @@ using namespace DOM;
 
 DomShared::~DomShared()
 {
-  // deliberately left blank
+    // deliberately left blank
 }
 
 
@@ -33,5 +33,3 @@ bool DomShared::deleteMe()
 {
     return !_ref;
 }
-
-

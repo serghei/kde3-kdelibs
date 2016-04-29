@@ -1,7 +1,7 @@
 /*
 Copyright (c) 2005 Luciano Montanaro <mikelima@cirulla.net>
 
-based on the Keramick configuration dialog 
+based on the Keramick configuration dialog
 Copyright (c) 2003 Maksim Orlovich <maksim.orlovich@kdemail.net>
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -33,17 +33,15 @@ DEALINGS IN THE SOFTWARE.
 
 #include "highcontrastconfig.h"
 
-extern "C" KDE_EXPORT QWidget* 
-allocate_kstyle_config(QWidget* parent)
+extern "C" KDE_EXPORT QWidget *allocate_kstyle_config(QWidget *parent)
 {
     return new HighContrastStyleConfig(parent);
 }
 
-HighContrastStyleConfig::HighContrastStyleConfig(
-        QWidget* parent): QWidget(parent)
+HighContrastStyleConfig::HighContrastStyleConfig(QWidget *parent) : QWidget(parent)
 {
     // Should have no margins here, the dialog provides them
-    QVBoxLayout* layout = new QVBoxLayout(this, 0, 0);
+    QVBoxLayout *layout = new QVBoxLayout(this, 0, 0);
     KGlobal::locale()->insertCatalogue("kstyle_highcontrast_config");
 
     wideLinesBox = new QCheckBox(i18n("Use wider lines"), this);
@@ -53,8 +51,7 @@ HighContrastStyleConfig::HighContrastStyleConfig(
 
     QSettings s;
 
-    originalWideLinesState = s.readBoolEntry(
-            "/highcontraststyle/Settings/wideLines", false);
+    originalWideLinesState = s.readBoolEntry("/highcontraststyle/Settings/wideLines", false);
     wideLinesBox->setChecked(originalWideLinesState);
 
     connect(wideLinesBox, SIGNAL(toggled(bool)), SLOT(updateChanged()));
@@ -66,27 +63,26 @@ HighContrastStyleConfig::~HighContrastStyleConfig()
 }
 
 
-void 
-HighContrastStyleConfig::save()
+void HighContrastStyleConfig::save()
 {
     QSettings s;
-    s.writeEntry("/highcontraststyle/Settings/wideLines", 
-            wideLinesBox->isChecked());
+    s.writeEntry("/highcontraststyle/Settings/wideLines", wideLinesBox->isChecked());
 }
 
-void 
-HighContrastStyleConfig::defaults()
+void HighContrastStyleConfig::defaults()
 {
     wideLinesBox->setChecked(false);
     // updateChanged would be done by setChecked already
 }
 
-void 
-HighContrastStyleConfig::updateChanged()
+void HighContrastStyleConfig::updateChanged()
 {
-    if ((wideLinesBox->isChecked() == originalWideLinesState)) {
+    if((wideLinesBox->isChecked() == originalWideLinesState))
+    {
         emit changed(false);
-    } else {
+    }
+    else
+    {
         emit changed(true);
     }
 }

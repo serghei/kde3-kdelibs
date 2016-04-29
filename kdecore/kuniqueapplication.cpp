@@ -39,8 +39,8 @@
 #include <kaboutdata.h>
 
 #if defined Q_WS_X11
-#include <kwin.h> 
-#include <kstartupinfo.h> 
+#include <kwin.h>
+#include <kstartupinfo.h>
 #endif
 
 #include <kconfig.h>
@@ -48,15 +48,15 @@
 #include "kuniqueapplication.h"
 
 #if defined Q_WS_X11
-#include <netwm.h> 
-#include <X11/Xlib.h> 
+#include <netwm.h>
+#include <X11/Xlib.h>
 #define DISPLAY "DISPLAY"
 #else
-#  ifdef Q_WS_QWS
-#    define DISPLAY "QWS_DISPLAY"
-#  else
-#    define DISPLAY "DISPLAY"
-#  endif
+#ifdef Q_WS_QWS
+#define DISPLAY "QWS_DISPLAY"
+#else
+#define DISPLAY "DISPLAY"
+#endif
 #endif
 
 bool KUniqueApplication::s_nofork = false;
@@ -64,125 +64,123 @@ bool KUniqueApplication::s_multipleInstances = false;
 bool KUniqueApplication::s_uniqueTestDone = false;
 bool KUniqueApplication::s_handleAutoStarted = false;
 
-static KCmdLineOptions kunique_options[] =
-{
-  { "nofork", "Don't run in the background.", 0 },
-  KCmdLineLastOption
-};
+static KCmdLineOptions kunique_options[] = {{"nofork", "Don't run in the background.", 0}, KCmdLineLastOption};
 
-struct DCOPRequest {
-   QCString fun;
-   QByteArray data;
-   DCOPClientTransaction *transaction;
+struct DCOPRequest
+{
+    QCString fun;
+    QByteArray data;
+    DCOPClientTransaction *transaction;
 };
 
 class KUniqueApplicationPrivate {
 public:
-   QPtrList <DCOPRequest> requestList;
-   bool processingRequest;
-   bool firstInstance;
+    QPtrList< DCOPRequest > requestList;
+    bool processingRequest;
+    bool firstInstance;
 };
 
-void
-KUniqueApplication::addCmdLineOptions()
+void KUniqueApplication::addCmdLineOptions()
 {
-  KCmdLineArgs::addCmdLineOptions(kunique_options, 0, "kuniqueapp", "kde" );
+    KCmdLineArgs::addCmdLineOptions(kunique_options, 0, "kuniqueapp", "kde");
 }
 
-bool
-KUniqueApplication::start()
+bool KUniqueApplication::start()
 {
-  if( s_uniqueTestDone )
-    return true;
-  s_uniqueTestDone = true;
-  addCmdLineOptions(); // Make sure to add cmd line options
+    if(s_uniqueTestDone)
+        return true;
+    s_uniqueTestDone = true;
+    addCmdLineOptions(); // Make sure to add cmd line options
 #ifdef Q_WS_WIN
-  s_nofork = true;
+    s_nofork = true;
 #else
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kuniqueapp");
-  s_nofork = !args->isSet("fork");
-  delete args;
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kuniqueapp");
+    s_nofork = !args->isSet("fork");
+    delete args;
 #endif
 
-  QCString appName = KCmdLineArgs::about->appName();
+    QCString appName = KCmdLineArgs::about->appName();
 
-  if (s_nofork)
-  {
-     if (s_multipleInstances)
-     {
-        QCString pid;
-        pid.setNum(getpid());
-        appName = appName + "-" + pid;
-     }
-
-     // Check to make sure that we're actually able to register with the DCOP
-     // server.
-
-#ifndef Q_WS_WIN //TODO
-     if(dcopClient()->registerAs(appName, false).isEmpty()) {
-        startKdeinit();
-        if(dcopClient()->registerAs(appName, false).isEmpty()) {
-           kdError() << "KUniqueApplication: Can't setup DCOP communication." << endl;
-           ::exit(255);
-        }           
-     }
-#endif
-
-     // We'll call newInstance in the constructor. Do nothing here.
-     return true;
-  }
-  DCOPClient *dc;
-  int fd[2];
-  signed char result;
-  if (0 > pipe(fd))
-  {
-     kdError() << "KUniqueApplication: pipe() failed!" << endl;
-     ::exit(255);
-  }
-  int fork_result = fork();
-  switch(fork_result) {
-  case -1:
-     kdError() << "KUniqueApplication: fork() failed!" << endl;
-     ::exit(255);
-     break;
-  case 0:
-     // Child
-     ::close(fd[0]);
-     if (s_multipleInstances)
-        appName.append("-").append(QCString().setNum(getpid()));
-     dc = dcopClient();
-     {
-        QCString regName = dc->registerAs(appName, false);
-        if (regName.isEmpty())
+    if(s_nofork)
+    {
+        if(s_multipleInstances)
         {
-           // Check DISPLAY
-           if (QCString(getenv(DISPLAY)).isEmpty())
-           {
-              kdError() << "KUniqueApplication: Can't determine DISPLAY. Aborting." << endl;
-              result = -1; // Error
-              ::write(fd[1], &result, 1);
-              ::exit(255);
-           }
-
-           // Try to launch kdeinit.
-           startKdeinit();
-           regName = dc->registerAs(appName, false);
-           if (regName.isEmpty())
-           {
-              kdError() << "KUniqueApplication: Can't setup DCOP communication." << endl;
-              result = -1;
-              delete dc;	// Clean up DCOP commmunication
-              ::write(fd[1], &result, 1);
-              ::exit(255);
-           }
+            QCString pid;
+            pid.setNum(getpid());
+            appName = appName + "-" + pid;
         }
-        if (regName != appName)
+
+// Check to make sure that we're actually able to register with the DCOP
+// server.
+
+#ifndef Q_WS_WIN // TODO
+        if(dcopClient()->registerAs(appName, false).isEmpty())
         {
-           // Already running. Ok.
-           result = 0;
-           delete dc;	// Clean up DCOP commmunication
-           ::write(fd[1], &result, 1);
-           ::close(fd[1]);
+            startKdeinit();
+            if(dcopClient()->registerAs(appName, false).isEmpty())
+            {
+                kdError() << "KUniqueApplication: Can't setup DCOP communication." << endl;
+                ::exit(255);
+            }
+        }
+#endif
+
+        // We'll call newInstance in the constructor. Do nothing here.
+        return true;
+    }
+    DCOPClient *dc;
+    int fd[2];
+    signed char result;
+    if(0 > pipe(fd))
+    {
+        kdError() << "KUniqueApplication: pipe() failed!" << endl;
+        ::exit(255);
+    }
+    int fork_result = fork();
+    switch(fork_result)
+    {
+        case -1:
+            kdError() << "KUniqueApplication: fork() failed!" << endl;
+            ::exit(255);
+            break;
+        case 0:
+            // Child
+            ::close(fd[0]);
+            if(s_multipleInstances)
+                appName.append("-").append(QCString().setNum(getpid()));
+            dc = dcopClient();
+            {
+                QCString regName = dc->registerAs(appName, false);
+                if(regName.isEmpty())
+                {
+                    // Check DISPLAY
+                    if(QCString(getenv(DISPLAY)).isEmpty())
+                    {
+                        kdError() << "KUniqueApplication: Can't determine DISPLAY. Aborting." << endl;
+                        result = -1; // Error
+                        ::write(fd[1], &result, 1);
+                        ::exit(255);
+                    }
+
+                    // Try to launch kdeinit.
+                    startKdeinit();
+                    regName = dc->registerAs(appName, false);
+                    if(regName.isEmpty())
+                    {
+                        kdError() << "KUniqueApplication: Can't setup DCOP communication." << endl;
+                        result = -1;
+                        delete dc; // Clean up DCOP commmunication
+                        ::write(fd[1], &result, 1);
+                        ::exit(255);
+                    }
+                }
+                if(regName != appName)
+                {
+                    // Already running. Ok.
+                    result = 0;
+                    delete dc; // Clean up DCOP commmunication
+                    ::write(fd[1], &result, 1);
+                    ::close(fd[1]);
 #if 0
 #ifdef Q_WS_X11
            // say we're up and running ( probably no new window will appear )
@@ -200,287 +198,285 @@ KUniqueApplication::start()
                    XCloseDisplay( disp );
                }
            }
-#else //FIXME(E): implement
+#else // FIXME(E): implement
 #endif
 #endif
-           return false;
-        }
-        dc->setPriorityCall(true);
-     }
+                    return false;
+                }
+                dc->setPriorityCall(true);
+            }
 
-     {
+            {
 #ifdef Q_WS_X11
-         KStartupInfoId id;
-         if( kapp != NULL ) // KApplication constructor unsets the env. variable
-             id.initId( kapp->startupId());
-         else
-             id = KStartupInfo::currentStartupIdEnv();
-         if( !id.none())
-         { // notice about pid change
-            Display* disp = XOpenDisplay( NULL );
-            if( disp != NULL ) // use extra X connection
-               {
-               KStartupInfoData data;
-               data.addPid( getpid());
-               KStartupInfo::sendChangeX( disp, id, data );
-               XCloseDisplay( disp );
-               }
-         }
-#else //FIXME(E): Implement
+                KStartupInfoId id;
+                if(kapp != NULL) // KApplication constructor unsets the env. variable
+                    id.initId(kapp->startupId());
+                else
+                    id = KStartupInfo::currentStartupIdEnv();
+                if(!id.none())
+                { // notice about pid change
+                    Display *disp = XOpenDisplay(NULL);
+                    if(disp != NULL) // use extra X connection
+                    {
+                        KStartupInfoData data;
+                        data.addPid(getpid());
+                        KStartupInfo::sendChangeX(disp, id, data);
+                        XCloseDisplay(disp);
+                    }
+                }
+#else // FIXME(E): Implement
 #endif
-     }
-     result = 0;
-     ::write(fd[1], &result, 1);
-     ::close(fd[1]);
-     return true; // Finished.
-  default:
-     // Parent
-//     DCOPClient::emergencyClose();
-//     dcopClient()->detach();
-     if (s_multipleInstances)
-        appName.append("-").append(QCString().setNum(fork_result));
-     ::close(fd[1]);
-     for(;;)
-     {
-       int n = ::read(fd[0], &result, 1);
-       if (n == 1) break;
-       if (n == 0)
-       {
-          kdError() << "KUniqueApplication: Pipe closed unexpectedly." << endl;
-          ::exit(255);
-       }
-       if (errno != EINTR)
-       {
-          kdError() << "KUniqueApplication: Error reading from pipe." << endl;
-          ::exit(255);
-       }
-     }
-     ::close(fd[0]);
+            }
+            result = 0;
+            ::write(fd[1], &result, 1);
+            ::close(fd[1]);
+            return true; // Finished.
+        default:
+            // Parent
+            //     DCOPClient::emergencyClose();
+            //     dcopClient()->detach();
+            if(s_multipleInstances)
+                appName.append("-").append(QCString().setNum(fork_result));
+            ::close(fd[1]);
+            for(;;)
+            {
+                int n = ::read(fd[0], &result, 1);
+                if(n == 1)
+                    break;
+                if(n == 0)
+                {
+                    kdError() << "KUniqueApplication: Pipe closed unexpectedly." << endl;
+                    ::exit(255);
+                }
+                if(errno != EINTR)
+                {
+                    kdError() << "KUniqueApplication: Error reading from pipe." << endl;
+                    ::exit(255);
+                }
+            }
+            ::close(fd[0]);
 
-     if (result != 0)
-        ::exit(result); // Error occurred in child.
+            if(result != 0)
+                ::exit(result); // Error occurred in child.
 
-     dc = new DCOPClient();
-     if (!dc->attach())
-     {
-        kdError() << "KUniqueApplication: Parent process can't attach to DCOP." << endl;
-        delete dc;	// Clean up DCOP commmunication
-        ::exit(255);
-     }
-     if (!dc->isApplicationRegistered(appName)) {
-        kdError() << "KUniqueApplication: Registering failed!" << endl;
-     }
+            dc = new DCOPClient();
+            if(!dc->attach())
+            {
+                kdError() << "KUniqueApplication: Parent process can't attach to DCOP." << endl;
+                delete dc; // Clean up DCOP commmunication
+                ::exit(255);
+            }
+            if(!dc->isApplicationRegistered(appName))
+            {
+                kdError() << "KUniqueApplication: Registering failed!" << endl;
+            }
 
-     QCString new_asn_id;
+            QCString new_asn_id;
 #if defined Q_WS_X11
-     KStartupInfoId id;
-     if( kapp != NULL ) // KApplication constructor unsets the env. variable
-         id.initId( kapp->startupId());
-     else
-         id = KStartupInfo::currentStartupIdEnv();
-     if( !id.none())
-         new_asn_id = id.id();
+            KStartupInfoId id;
+            if(kapp != NULL) // KApplication constructor unsets the env. variable
+                id.initId(kapp->startupId());
+            else
+                id = KStartupInfo::currentStartupIdEnv();
+            if(!id.none())
+                new_asn_id = id.id();
 #endif
-     
-     QByteArray data, reply;
-     QDataStream ds(data, IO_WriteOnly);
 
-     KCmdLineArgs::saveAppArgs(ds);
-     ds << new_asn_id;
+            QByteArray data, reply;
+            QDataStream ds(data, IO_WriteOnly);
 
-     dc->setPriorityCall(true);
-     QCString replyType;
-     if (!dc->call(appName, KCmdLineArgs::about->appName(), "newInstance()", data, replyType, reply))
-     {
-        kdError() << "Communication problem with " << KCmdLineArgs::about->appName() << ", it probably crashed." << endl;
-        delete dc;	// Clean up DCOP commmunication
-        ::exit(255);
-     }
-     dc->setPriorityCall(false);
-     if (replyType != "int")
-     {
-        kdError() << "KUniqueApplication: DCOP communication error!" << endl;
-        delete dc;	// Clean up DCOP commmunication
-        ::exit(255);
-     }
-     QDataStream rs(reply, IO_ReadOnly);
-     int exitCode;
-     rs >> exitCode;
-     delete dc;	// Clean up DCOP commmunication
-     ::exit(exitCode);
-     break;
-  }
-  return false; // make insure++ happy
+            KCmdLineArgs::saveAppArgs(ds);
+            ds << new_asn_id;
+
+            dc->setPriorityCall(true);
+            QCString replyType;
+            if(!dc->call(appName, KCmdLineArgs::about->appName(), "newInstance()", data, replyType, reply))
+            {
+                kdError() << "Communication problem with " << KCmdLineArgs::about->appName() << ", it probably crashed." << endl;
+                delete dc; // Clean up DCOP commmunication
+                ::exit(255);
+            }
+            dc->setPriorityCall(false);
+            if(replyType != "int")
+            {
+                kdError() << "KUniqueApplication: DCOP communication error!" << endl;
+                delete dc; // Clean up DCOP commmunication
+                ::exit(255);
+            }
+            QDataStream rs(reply, IO_ReadOnly);
+            int exitCode;
+            rs >> exitCode;
+            delete dc; // Clean up DCOP commmunication
+            ::exit(exitCode);
+            break;
+    }
+    return false; // make insure++ happy
 }
 
 
 KUniqueApplication::KUniqueApplication(bool allowStyles, bool GUIenabled, bool configUnique)
-  : KApplication( allowStyles, GUIenabled, initHack( configUnique )),
-    DCOPObject(KCmdLineArgs::about->appName())
+    : KApplication(allowStyles, GUIenabled, initHack(configUnique)), DCOPObject(KCmdLineArgs::about->appName())
 {
-  d = new KUniqueApplicationPrivate;
-  d->processingRequest = false;
-  d->firstInstance = true;
+    d = new KUniqueApplicationPrivate;
+    d->processingRequest = false;
+    d->firstInstance = true;
 
-  if (s_nofork)
-    // Can't call newInstance directly from the constructor since it's virtual...
-    QTimer::singleShot( 0, this, SLOT(newInstanceNoFork()) );
+    if(s_nofork)
+        // Can't call newInstance directly from the constructor since it's virtual...
+        QTimer::singleShot(0, this, SLOT(newInstanceNoFork()));
 }
 
 
 #ifdef Q_WS_X11
-KUniqueApplication::KUniqueApplication(Display *display, Qt::HANDLE visual,
-		Qt::HANDLE colormap, bool allowStyles, bool configUnique)
-  : KApplication( display, visual, colormap, allowStyles, initHack( configUnique )),
-    DCOPObject(KCmdLineArgs::about->appName())
+KUniqueApplication::KUniqueApplication(Display *display, Qt::HANDLE visual, Qt::HANDLE colormap, bool allowStyles, bool configUnique)
+    : KApplication(display, visual, colormap, allowStyles, initHack(configUnique)), DCOPObject(KCmdLineArgs::about->appName())
 {
-  d = new KUniqueApplicationPrivate;
-  d->processingRequest = false;
-  d->firstInstance = true;
+    d = new KUniqueApplicationPrivate;
+    d->processingRequest = false;
+    d->firstInstance = true;
 
-  if (s_nofork)
-    // Can't call newInstance directly from the constructor since it's virtual...
-    QTimer::singleShot( 0, this, SLOT(newInstanceNoFork()) );
+    if(s_nofork)
+        // Can't call newInstance directly from the constructor since it's virtual...
+        QTimer::singleShot(0, this, SLOT(newInstanceNoFork()));
 }
 #endif
 
 
 KUniqueApplication::~KUniqueApplication()
 {
-  delete d;
+    delete d;
 }
 
 // this gets called before even entering QApplication::QApplication()
-KInstance* KUniqueApplication::initHack( bool configUnique )
+KInstance *KUniqueApplication::initHack(bool configUnique)
 {
-  KInstance* inst = new KInstance( KCmdLineArgs::about );
-  if (configUnique)
-  {
-    KConfigGroupSaver saver( inst->config(), "KDE" );
-    s_multipleInstances = inst->config()->readBoolEntry("MultipleInstances", false);
-  }
-  if( !start())
-         // Already running
-      ::exit( 0 );
-  return inst;
+    KInstance *inst = new KInstance(KCmdLineArgs::about);
+    if(configUnique)
+    {
+        KConfigGroupSaver saver(inst->config(), "KDE");
+        s_multipleInstances = inst->config()->readBoolEntry("MultipleInstances", false);
+    }
+    if(!start())
+        // Already running
+        ::exit(0);
+    return inst;
 }
 
 void KUniqueApplication::newInstanceNoFork()
 {
-  if (dcopClient()->isSuspended())
-  {
-    // Try again later.
-    QTimer::singleShot( 200, this, SLOT(newInstanceNoFork()) );
-    return;
-  }
-  
-  s_handleAutoStarted = false;
-  newInstance();
-  d->firstInstance = false;
+    if(dcopClient()->isSuspended())
+    {
+        // Try again later.
+        QTimer::singleShot(200, this, SLOT(newInstanceNoFork()));
+        return;
+    }
+
+    s_handleAutoStarted = false;
+    newInstance();
+    d->firstInstance = false;
 #if defined Q_WS_X11
-  // KDE4 remove
-  // A hack to make startup notification stop for apps which override newInstance()
-  // and reuse an already existing window there, but use KWin::activateWindow()
-  // instead of KStartupInfo::setNewStartupId(). Therefore KWin::activateWindow()
-  // for now sets this flag. Automatically ending startup notification always
-  // would cause problem if the new window would show up with a small delay.
-  if( s_handleAutoStarted )
-      KStartupInfo::handleAutoAppStartedSending();
+    // KDE4 remove
+    // A hack to make startup notification stop for apps which override newInstance()
+    // and reuse an already existing window there, but use KWin::activateWindow()
+    // instead of KStartupInfo::setNewStartupId(). Therefore KWin::activateWindow()
+    // for now sets this flag. Automatically ending startup notification always
+    // would cause problem if the new window would show up with a small delay.
+    if(s_handleAutoStarted)
+        KStartupInfo::handleAutoAppStartedSending();
 #endif
-  // What to do with the return value ?
+    // What to do with the return value ?
 }
 
-bool KUniqueApplication::process(const QCString &fun, const QByteArray &data,
-				 QCString &replyType, QByteArray &replyData)
+bool KUniqueApplication::process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData)
 {
-  if (fun == "newInstance()")
-  {
-    delayRequest(fun, data);
-    return true;
-  } else
-    return DCOPObject::process(fun, data, replyType, replyData);
+    if(fun == "newInstance()")
+    {
+        delayRequest(fun, data);
+        return true;
+    }
+    else
+        return DCOPObject::process(fun, data, replyType, replyData);
 }
 
-void
-KUniqueApplication::delayRequest(const QCString &fun, const QByteArray &data)
+void KUniqueApplication::delayRequest(const QCString &fun, const QByteArray &data)
 {
-  DCOPRequest *request = new DCOPRequest;
-  request->fun = fun;
-  request->data = data;
-  request->transaction = dcopClient()->beginTransaction();
-  d->requestList.append(request);
-  if (!d->processingRequest)
-  {
-     QTimer::singleShot(0, this, SLOT(processDelayed()));
-  }
+    DCOPRequest *request = new DCOPRequest;
+    request->fun = fun;
+    request->data = data;
+    request->transaction = dcopClient()->beginTransaction();
+    d->requestList.append(request);
+    if(!d->processingRequest)
+    {
+        QTimer::singleShot(0, this, SLOT(processDelayed()));
+    }
 }
 
-void
-KUniqueApplication::processDelayed()
+void KUniqueApplication::processDelayed()
 {
-  if (dcopClient()->isSuspended())
-  {
-    // Try again later.
-    QTimer::singleShot( 200, this, SLOT(processDelayed()));
-    return;
-  }
-  d->processingRequest = true;
-  while( !d->requestList.isEmpty() )
-  {
-     DCOPRequest *request = d->requestList.take(0);
-     QByteArray replyData;
-     QCString replyType;
-     if (request->fun == "newInstance()") {
-       dcopClient()->setPriorityCall(false);
-       QDataStream ds(request->data, IO_ReadOnly);
-       KCmdLineArgs::loadAppArgs(ds);
-       if( !ds.atEnd()) // backwards compatibility
-       {
-           QCString asn_id;
-           ds >> asn_id;
-           setStartupId( asn_id );
-       }
-       s_handleAutoStarted = false;
-       int exitCode = newInstance();
-       d->firstInstance = false;
+    if(dcopClient()->isSuspended())
+    {
+        // Try again later.
+        QTimer::singleShot(200, this, SLOT(processDelayed()));
+        return;
+    }
+    d->processingRequest = true;
+    while(!d->requestList.isEmpty())
+    {
+        DCOPRequest *request = d->requestList.take(0);
+        QByteArray replyData;
+        QCString replyType;
+        if(request->fun == "newInstance()")
+        {
+            dcopClient()->setPriorityCall(false);
+            QDataStream ds(request->data, IO_ReadOnly);
+            KCmdLineArgs::loadAppArgs(ds);
+            if(!ds.atEnd()) // backwards compatibility
+            {
+                QCString asn_id;
+                ds >> asn_id;
+                setStartupId(asn_id);
+            }
+            s_handleAutoStarted = false;
+            int exitCode = newInstance();
+            d->firstInstance = false;
 #if defined Q_WS_X11
-       if( s_handleAutoStarted )
-           KStartupInfo::handleAutoAppStartedSending(); // KDE4 remove?
+            if(s_handleAutoStarted)
+                KStartupInfo::handleAutoAppStartedSending(); // KDE4 remove?
 #endif
-       QDataStream rs(replyData, IO_WriteOnly);
-       rs << exitCode;
-       replyType = "int";
-     }
-     dcopClient()->endTransaction( request->transaction, replyType, replyData);
-     delete request;
-  }
+            QDataStream rs(replyData, IO_WriteOnly);
+            rs << exitCode;
+            replyType = "int";
+        }
+        dcopClient()->endTransaction(request->transaction, replyType, replyData);
+        delete request;
+    }
 
-  d->processingRequest = false;
+    d->processingRequest = false;
 }
 
 bool KUniqueApplication::restoringSession()
 {
-  return d->firstInstance && isRestored();
+    return d->firstInstance && isRestored();
 }
 
 int KUniqueApplication::newInstance()
 {
-  if (!d->firstInstance)
-  {
-    
-    if ( mainWidget() )
+    if(!d->firstInstance)
     {
-      mainWidget()->show();
+
+        if(mainWidget())
+        {
+            mainWidget()->show();
 #if defined Q_WS_X11
-    // This is the line that handles window activation if necessary,
-    // and what's important, it does it properly. If you reimplement newInstance(),
-    // and don't call the inherited one, use this (but NOT when newInstance()
-    // is called for the first time, like here).
-      KStartupInfo::setNewStartupId( mainWidget(), kapp->startupId());
+            // This is the line that handles window activation if necessary,
+            // and what's important, it does it properly. If you reimplement newInstance(),
+            // and don't call the inherited one, use this (but NOT when newInstance()
+            // is called for the first time, like here).
+            KStartupInfo::setNewStartupId(mainWidget(), kapp->startupId());
 #endif
+        }
     }
-  }
-  return 0; // do nothing in default implementation
+    return 0; // do nothing in default implementation
 }
 
 void KUniqueApplication::setHandleAutoStarted()
@@ -488,8 +484,10 @@ void KUniqueApplication::setHandleAutoStarted()
     s_handleAutoStarted = false;
 }
 
-void KUniqueApplication::virtual_hook( int id, void* data )
-{ KApplication::virtual_hook( id, data );
-  DCOPObject::virtual_hook( id, data ); }
+void KUniqueApplication::virtual_hook(int id, void *data)
+{
+    KApplication::virtual_hook(id, data);
+    DCOPObject::virtual_hook(id, data);
+}
 
 #include "kuniqueapplication.moc"

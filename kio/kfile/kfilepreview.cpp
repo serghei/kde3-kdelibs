@@ -28,78 +28,76 @@
 
 #include "config-kfile.h"
 
-KFilePreview::KFilePreview(KFileView *view, QWidget *parent, const char *name)
-    : QSplitter(parent, name), KFileView()
+KFilePreview::KFilePreview(KFileView *view, QWidget *parent, const char *name) : QSplitter(parent, name), KFileView()
 {
-    if ( view )
-        init( view );
+    if(view)
+        init(view);
     else
-        init( new KFileIconView( (QSplitter*) this, "left" ));
+        init(new KFileIconView((QSplitter *)this, "left"));
 }
 
 
-KFilePreview::KFilePreview(QWidget *parent, const char *name) :
-                           QSplitter(parent, name), KFileView()
+KFilePreview::KFilePreview(QWidget *parent, const char *name) : QSplitter(parent, name), KFileView()
 {
-    init( new KFileIconView((QSplitter*)this, "left") );
+    init(new KFileIconView((QSplitter *)this, "left"));
 }
 
 KFilePreview::~KFilePreview()
 {
     // Why copy the actions in the first place? --ellis, 13 Jan 02.
     //// don't delete the view's actions (inserted into our collection)!
-    //for ( uint i = 0; i < left->actionCollection()->count(); i++ )
+    // for ( uint i = 0; i < left->actionCollection()->count(); i++ )
     //    actionCollection()->take( left->actionCollection()->action( i ));
 
     // don't delete the preview, we can reuse it
     // (it will get deleted by ~KDirOperator)
-    if ( preview && preview->parentWidget() == this ) {
+    if(preview && preview->parentWidget() == this)
+    {
         preview->reparent(0L, 0, QPoint(0, 0), false);
     }
 }
 
-void KFilePreview::init( KFileView *view )
+void KFilePreview::init(KFileView *view)
 {
-    setViewName( i18n("Preview") );
+    setViewName(i18n("Preview"));
 
     left = 0L;
-    setFileView( view );
+    setFileView(view);
 
-    preview = new QWidget((QSplitter*)this, "preview");
+    preview = new QWidget((QSplitter *)this, "preview");
     QString tmp = i18n("No preview available.");
     QLabel *l = new QLabel(tmp, preview);
     l->setMinimumSize(l->sizeHint());
     l->move(10, 5);
-    preview->setMinimumWidth(l->sizeHint().width()+20);
+    preview->setMinimumWidth(l->sizeHint().width() + 20);
     setResizeMode(preview, QSplitter::KeepSize);
 
     // Why copy the actions? --ellis, 13 Jan 02.
-    //for ( uint i = 0; i < view->actionCollection()->count(); i++ )
+    // for ( uint i = 0; i < view->actionCollection()->count(); i++ )
     //    actionCollection()->insert( view->actionCollection()->action( i ));
 }
 
-void KFilePreview::setFileView( KFileView *view )
+void KFilePreview::setFileView(KFileView *view)
 {
-    Q_ASSERT( view );
+    Q_ASSERT(view);
 
     // Why copy the actions? --ellis, 13 Jan 02.
-    //if ( left ) { // remove any previous actions
+    // if ( left ) { // remove any previous actions
     //    for ( uint i = 0; i < left->actionCollection()->count(); i++ )
     //        actionCollection()->take( left->actionCollection()->action( i ));
     //}
 
     delete left;
-    view->widget()->reparent( this, QPoint(0,0) );
+    view->widget()->reparent(this, QPoint(0, 0));
     view->KFileView::setViewMode(All);
     view->setParentView(this);
-    view->setSorting( sorting() );
+    view->setSorting(sorting());
     left = view;
 
-    connect( left->signaler(), SIGNAL( fileHighlighted(const KFileItem*) ),
-             SLOT( slotHighlighted( const KFileItem * )));
+    connect(left->signaler(), SIGNAL(fileHighlighted(const KFileItem *)), SLOT(slotHighlighted(const KFileItem *)));
 
     // Why copy the actions? --ellis, 13 Jan 02.
-    //for ( uint i = 0; i < view->actionCollection()->count(); i++ )
+    // for ( uint i = 0; i < view->actionCollection()->count(); i++ )
     //    actionCollection()->insert( view->actionCollection()->action( i ));
 }
 
@@ -107,36 +105,36 @@ void KFilePreview::setFileView( KFileView *view )
 // what for?
 void KFilePreview::setPreviewWidget(const QWidget *w, const KURL &)
 {
-    left->setOnlyDoubleClickSelectsFiles( onlyDoubleClickSelectsFiles() );
+    left->setOnlyDoubleClickSelectsFiles(onlyDoubleClickSelectsFiles());
 
-    if (w) {
-        connect(this, SIGNAL( showPreview(const KURL &) ),
-                w, SLOT( showPreview(const KURL &) ));
-        connect( this, SIGNAL( clearPreview() ),
-                w, SLOT( clearPreview() ));
+    if(w)
+    {
+        connect(this, SIGNAL(showPreview(const KURL &)), w, SLOT(showPreview(const KURL &)));
+        connect(this, SIGNAL(clearPreview()), w, SLOT(clearPreview()));
     }
-    else {
+    else
+    {
         preview->hide();
         return;
     }
 
     delete preview;
-    preview = const_cast<QWidget*>(w);
-    preview->reparent((QSplitter*)this, 0, QPoint(0, 0), true);
+    preview = const_cast< QWidget * >(w);
+    preview->reparent((QSplitter *)this, 0, QPoint(0, 0), true);
     preview->resize(preview->sizeHint());
     preview->show();
 }
 
 void KFilePreview::insertItem(KFileItem *item)
 {
-    KFileView::insertItem( item );
+    KFileView::insertItem(item);
     left->insertItem(item);
 }
 
-void KFilePreview::setSorting( QDir::SortSpec sort )
+void KFilePreview::setSorting(QDir::SortSpec sort)
 {
-    left->setSorting( sort );
-    KFileView::setSorting( left->sorting() );
+    left->setSorting(sort);
+    KFileView::setSorting(left->sorting());
 }
 
 void KFilePreview::clearView()
@@ -159,11 +157,11 @@ void KFilePreview::updateView(const KFileItem *i)
 
 void KFilePreview::removeItem(const KFileItem *i)
 {
-    if ( left->isSelected( i ) )
+    if(left->isSelected(i))
         emit clearPreview();
 
     left->removeItem(i);
-    KFileView::removeItem( i );
+    KFileView::removeItem(i);
 }
 
 void KFilePreview::listingCompleted()
@@ -193,38 +191,41 @@ void KFilePreview::invertSelection()
     left->invertSelection();
 }
 
-bool KFilePreview::isSelected( const KFileItem *i ) const
+bool KFilePreview::isSelected(const KFileItem *i) const
 {
-    return left->isSelected( i );
+    return left->isSelected(i);
 }
 
-void KFilePreview::setSelectionMode(KFile::SelectionMode sm) {
-    left->setSelectionMode( sm );
-}
-
-void KFilePreview::setSelected(const KFileItem *item, bool enable) {
-    left->setSelected( item, enable );
-}
-
-void KFilePreview::setCurrentItem( const KFileItem *item )
+void KFilePreview::setSelectionMode(KFile::SelectionMode sm)
 {
-    left->setCurrentItem( item );
+    left->setSelectionMode(sm);
 }
 
-KFileItem * KFilePreview::currentFileItem() const
+void KFilePreview::setSelected(const KFileItem *item, bool enable)
+{
+    left->setSelected(item, enable);
+}
+
+void KFilePreview::setCurrentItem(const KFileItem *item)
+{
+    left->setCurrentItem(item);
+}
+
+KFileItem *KFilePreview::currentFileItem() const
 {
     return left->currentFileItem();
 }
 
-void KFilePreview::slotHighlighted(const KFileItem* item)
+void KFilePreview::slotHighlighted(const KFileItem *item)
 {
-    if ( item )
-        emit showPreview( item->url() );
+    if(item)
+        emit showPreview(item->url());
 
-    else { // item = 0 -> multiselection mode
+    else
+    { // item = 0 -> multiselection mode
         const KFileItemList *items = selectedItems();
-        if ( items->count() == 1 )
-            emit showPreview( items->getFirst()->url() );
+        if(items->count() == 1)
+            emit showPreview(items->getFirst()->url());
         else
             emit clearPreview();
     }
@@ -232,48 +233,50 @@ void KFilePreview::slotHighlighted(const KFileItem* item)
     // the preview widget appears and takes some space of the left view,
     // so we may have to scroll to make the current item visible
     left->ensureItemVisible(item);
- }
+}
 
 void KFilePreview::ensureItemVisible(const KFileItem *item)
 {
     left->ensureItemVisible(item);
 }
 
-KFileItem * KFilePreview::firstFileItem() const
+KFileItem *KFilePreview::firstFileItem() const
 {
     return left->firstFileItem();
 }
 
-KFileItem * KFilePreview::nextItem( const KFileItem *item ) const
+KFileItem *KFilePreview::nextItem(const KFileItem *item) const
 {
-    return left->nextItem( item );
+    return left->nextItem(item);
 }
 
-KFileItem * KFilePreview::prevItem( const KFileItem *item ) const
+KFileItem *KFilePreview::prevItem(const KFileItem *item) const
 {
-    return left->prevItem( item );
+    return left->prevItem(item);
 }
 
-KActionCollection * KFilePreview::actionCollection() const
+KActionCollection *KFilePreview::actionCollection() const
 {
-    if ( left )
+    if(left)
         return left->actionCollection();
-    else {
-        kdWarning() << "KFilePreview::actionCollection(): called before setFileView()." << endl; //ellis
+    else
+    {
+        kdWarning() << "KFilePreview::actionCollection(): called before setFileView()." << endl; // ellis
         return KFileView::actionCollection();
     }
 }
 
-void KFilePreview::readConfig( KConfig *config, const QString& group )
+void KFilePreview::readConfig(KConfig *config, const QString &group)
 {
-    left->readConfig( config, group );
+    left->readConfig(config, group);
 }
 
-void KFilePreview::writeConfig( KConfig *config, const QString& group )
+void KFilePreview::writeConfig(KConfig *config, const QString &group)
 {
-    left->writeConfig( config, group );
+    left->writeConfig(config, group);
 }
 
-void KFilePreview::virtual_hook( int id, void* data )
-{ KFileView::virtual_hook( id, data ); }
-
+void KFilePreview::virtual_hook(int id, void *data)
+{
+    KFileView::virtual_hook(id, data);
+}

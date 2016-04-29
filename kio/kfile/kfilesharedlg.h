@@ -30,11 +30,10 @@ class QPushButton;
  * @author David Faure <david@mandrakesoft.com>
  * @since 3.1
  */
-class KIO_EXPORT KFileSharePropsPlugin : public KPropsDlgPlugin
-{
+class KIO_EXPORT KFileSharePropsPlugin : public KPropsDlgPlugin {
     Q_OBJECT
 public:
-    KFileSharePropsPlugin( KPropertiesDialog *_props );
+    KFileSharePropsPlugin(KPropertiesDialog *_props);
     virtual ~KFileSharePropsPlugin();
 
     /**
@@ -44,9 +43,9 @@ public:
      */
     virtual void applyChanges();
 
-    static bool supports( const KFileItemList& items );
+    static bool supports(const KFileItemList &items);
 
-    QWidget* page() const;
+    QWidget *page() const;
 
 protected slots:
     void slotConfigureFileSharing();
@@ -54,7 +53,7 @@ protected slots:
 
 private:
     void init();
-    bool setShared( const QString&path, bool shared );
+    bool setShared(const QString &path, bool shared);
 
     QWidget *m_widget;
     QRadioButton *m_rbShare;

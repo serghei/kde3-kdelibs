@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,8 +21,8 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  CONTENTLINE_H
-#define  CONTENTLINE_H
+#ifndef CONTENTLINE_H
+#define CONTENTLINE_H
 
 #include <qptrlist.h>
 
@@ -31,46 +31,83 @@
 #include "VCardParam.h"
 #include "VCardValue.h"
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT ContentLine : public Entity
-{
+class KVCARD_EXPORT ContentLine : public Entity {
 
 #include "ContentLine-generated.h"
-	
-	QCString	group()		{ parse(); return group_;	}
-	QCString	name()		{ parse(); return name_;	}
-	Value	*	value()		{ parse(); return value_;	}
-	ParamList	paramList()	{ parse(); return paramList_;	}
-	ParamType	paramType()	{ parse(); return paramType_;	}
-	ValueType	valueType()	{ parse(); return valueType_;	}
-	EntityType	entityType()	{ parse(); return entityType_;	}
-	
-	void setGroup		(const QCString & s)
-	{ group_ = s; assembled_ = false; }
-	
-	void setName		(const QCString & s)
-	{ name_ = s; assembled_ = false; }
-	
-	void setValue		(Value *s)
-	{ value_ = s; assembled_ = false; }
-	
-	void setParamList	(const ParamList & l)
-	{ paramList_ = l; assembled_ = false; }
 
-	void clear		();
-	
-	private:
-		
-		QCString		group_;
-		QCString		name_;
-		QPtrList<Param>		paramList_;
-		Value			* value_;
-		
-		ParamType		paramType_;
-		ValueType		valueType_;
-		EntityType		entityType_;
+    QCString group()
+    {
+        parse();
+        return group_;
+    }
+    QCString name()
+    {
+        parse();
+        return name_;
+    }
+    Value *value()
+    {
+        parse();
+        return value_;
+    }
+    ParamList paramList()
+    {
+        parse();
+        return paramList_;
+    }
+    ParamType paramType()
+    {
+        parse();
+        return paramType_;
+    }
+    ValueType valueType()
+    {
+        parse();
+        return valueType_;
+    }
+    EntityType entityType()
+    {
+        parse();
+        return entityType_;
+    }
+
+    void setGroup(const QCString &s)
+    {
+        group_ = s;
+        assembled_ = false;
+    }
+
+    void setName(const QCString &s)
+    {
+        name_ = s;
+        assembled_ = false;
+    }
+
+    void setValue(Value *s)
+    {
+        value_ = s;
+        assembled_ = false;
+    }
+
+    void setParamList(const ParamList &l)
+    {
+        paramList_ = l;
+        assembled_ = false;
+    }
+
+    void clear();
+
+private:
+    QCString group_;
+    QCString name_;
+    QPtrList< Param > paramList_;
+    Value *value_;
+
+    ParamType paramType_;
+    ValueType valueType_;
+    EntityType entityType_;
 };
 }
 

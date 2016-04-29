@@ -25,29 +25,30 @@
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     NOT = 258,
-     EQ = 259,
-     NEQ = 260,
-     LEQ = 261,
-     GEQ = 262,
-     LE = 263,
-     GR = 264,
-     OR = 265,
-     AND = 266,
-     TOKEN_IN = 267,
-     EXIST = 268,
-     MAX = 269,
-     MIN = 270,
-     VAL_BOOL = 271,
-     VAL_STRING = 272,
-     VAL_ID = 273,
-     VAL_NUM = 274,
-     VAL_FLOAT = 275
-   };
+#define YYTOKENTYPE
+/* Put the tokens into the symbol table, so that GDB and other debuggers
+   know about them.  */
+enum yytokentype
+{
+    NOT = 258,
+    EQ = 259,
+    NEQ = 260,
+    LEQ = 261,
+    GEQ = 262,
+    LE = 263,
+    GR = 264,
+    OR = 265,
+    AND = 266,
+    TOKEN_IN = 267,
+    EXIST = 268,
+    MAX = 269,
+    MIN = 270,
+    VAL_BOOL = 271,
+    VAL_STRING = 272,
+    VAL_ID = 273,
+    VAL_NUM = 274,
+    VAL_FLOAT = 275
+};
 #endif
 #define NOT 258
 #define EQ 259
@@ -69,25 +70,20 @@
 #define VAL_FLOAT 275
 
 
-
-
-#if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
+#if !defined(YYSTYPE) && !defined(YYSTYPE_IS_DECLARED)
 #line 13 "yacc.y"
 typedef union YYSTYPE {
-     char valb;
-     int vali;
-     double vald;
-     char *name;
-     void *ptr;
+    char valb;
+    int vali;
+    double vald;
+    char *name;
+    void *ptr;
 } YYSTYPE;
 /* Line 1240 of yacc.c.  */
 #line 84 "yacc.tab.h"
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
-# define YYSTYPE_IS_DECLARED 1
-# define YYSTYPE_IS_TRIVIAL 1
+#define yystype YYSTYPE /* obsolescent; will be withdrawn */
+#define YYSTYPE_IS_DECLARED 1
+#define YYSTYPE_IS_TRIVIAL 1
 #endif
 
 extern YYSTYPE kiotraderlval;
-
-
-

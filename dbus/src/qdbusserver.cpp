@@ -24,12 +24,11 @@
 #include "qdbusserver.h"
 #include "qdbusconnection_p.h"
 
-QDBusServer::QDBusServer(const QString &addr, QObject *parent)
-    : QObject(parent)
+QDBusServer::QDBusServer(const QString &addr, QObject *parent) : QObject(parent)
 {
     d = new QDBusConnectionPrivate(this);
 
-    if (addr.isEmpty())
+    if(addr.isEmpty())
         return;
 
     d->setServer(dbus_server_listen(addr.utf8().data(), &d->error));
@@ -48,7 +47,8 @@ QDBusError QDBusServer::lastError() const
 QString QDBusServer::address() const
 {
     QString addr;
-    if (d->server) {
+    if(d->server)
+    {
         char *c = dbus_server_get_address(d->server);
         addr = QString::fromUtf8(c);
         dbus_free(c);

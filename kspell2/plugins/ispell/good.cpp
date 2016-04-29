@@ -215,8 +215,7 @@
 #include "ispell_checker.h"
 
 
-int		good P ((ichar_t * word, int ignoreflagbits, int allhits,
-			 int pfxopts, int sfxopts));
+int good P((ichar_t * word, int ignoreflagbits, int allhits, int pfxopts, int sfxopts));
 
 #ifndef NO_CAPITALIZATION_SUPPORT
 
@@ -229,13 +228,13 @@ int		good P ((ichar_t * word, int ignoreflagbits, int allhits,
 **
 ** \return
 */
-static int entryhasaffixes (struct dent *dent, struct success *hit)
+static int entryhasaffixes(struct dent *dent, struct success *hit)
 {
-    if (hit->prefix  &&  !TSTMASKBIT (dent->mask, hit->prefix->flagbit))
-		return 0;
-    if (hit->suffix  &&  !TSTMASKBIT (dent->mask, hit->suffix->flagbit))
-		return 0;
-    return 1;			/* Yes, these affixes are legal */
+    if(hit->prefix && !TSTMASKBIT(dent->mask, hit->prefix->flagbit))
+        return 0;
+    if(hit->suffix && !TSTMASKBIT(dent->mask, hit->suffix->flagbit))
+        return 0;
+    return 1; /* Yes, these affixes are legal */
 }
 
 /*
@@ -245,126 +244,125 @@ static int entryhasaffixes (struct dent *dent, struct success *hit)
  *
  * \return
  */
-int ISpellChecker::cap_ok (ichar_t *word, struct success *hit, int len)
+int ISpellChecker::cap_ok(ichar_t *word, struct success *hit, int len)
 {
-    register ichar_t *		dword;
-    register ichar_t *		w;
-    register struct dent *	dent;
-    ichar_t			dentword[INPUTWORDLEN + MAXAFFIXLEN];
-    int				preadd;
-    int				prestrip;
-    int				sufadd;
-    ichar_t *		limit;
-    long			thiscap;
-    long			dentcap;
+    register ichar_t *dword;
+    register ichar_t *w;
+    register struct dent *dent;
+    ichar_t dentword[INPUTWORDLEN + MAXAFFIXLEN];
+    int preadd;
+    int prestrip;
+    int sufadd;
+    ichar_t *limit;
+    long thiscap;
+    long dentcap;
 
-    thiscap = whatcap (word);
+    thiscap = whatcap(word);
     /*
     ** All caps is always legal, regardless of affixes.
     */
     preadd = prestrip = sufadd = 0;
-    if (thiscap == ALLCAPS)
-		return 1;
-    else if (thiscap == FOLLOWCASE)
-	{
-		/* Set up some constants for the while(1) loop below */
-		if (hit->prefix)
-		{
-			preadd = hit->prefix->affl;
-			prestrip = hit->prefix->stripl;
-		}
-		else
-			preadd = prestrip = 0;
-		sufadd = hit->suffix ? hit->suffix->affl : 0;
-	}
+    if(thiscap == ALLCAPS)
+        return 1;
+    else if(thiscap == FOLLOWCASE)
+    {
+        /* Set up some constants for the while(1) loop below */
+        if(hit->prefix)
+        {
+            preadd = hit->prefix->affl;
+            prestrip = hit->prefix->stripl;
+        }
+        else
+            preadd = prestrip = 0;
+        sufadd = hit->suffix ? hit->suffix->affl : 0;
+    }
     /*
     ** Search the variants for one that matches what we have.  Note
     ** that thiscap can't be ALLCAPS, since we already returned
     ** for that case.
     */
     dent = hit->dictent;
-    for (  ;  ;  )
-	{
-		dentcap = captype (dent->flagfield);
-		if (dentcap != thiscap)
-		{
-			if (dentcap == ANYCASE  &&  thiscap == CAPITALIZED
-			 &&  entryhasaffixes (dent, hit))
-				return 1;
-		}
-		else				/* captypes match */
-		{
-			if (thiscap != FOLLOWCASE)
-			{
-				if (entryhasaffixes (dent, hit))
-					return 1;
-			}
-			else
-			{
-				/*
-				** Make sure followcase matches exactly.
-				** Life is made more difficult by the
-				** possibility of affixes.  Start with
-				** the prefix.
-				*/
-				strtoichar (dentword, dent->word, INPUTWORDLEN, 1);
-				dword = dentword;
-				limit = word + preadd;
-				if (myupper (dword[prestrip]))
-				{
-					for (w = word;  w < limit;  w++)
-					{
-						if (mylower (*w))
-							goto doublecontinue;
-					}
-				}
-				else
-				{
-					for (w = word;  w < limit;  w++)
-					{
-						if (myupper (*w))
-							goto doublecontinue;
-					}
-				}
-				dword += prestrip;
-				/* Do root part of word */
-				limit = dword + len - preadd - sufadd;
-				while (dword < limit)
-				{
-					if (*dword++ != *w++)
-						goto doublecontinue;
-				}
-				/* Do suffix */
-				dword = limit - 1;
-				if (myupper (*dword))
-				{
-					for (  ;  *w;  w++)
-					{
-						if (mylower (*w))
-							goto doublecontinue;
-					}
-				}
-				else
-				{
-					for (  ;  *w;  w++)
-					{
-						if (myupper (*w))
-							goto doublecontinue;
-					}
-				}
-				/*
-				** All failure paths go to "doublecontinue,"
-				** so if we get here it must match.
-				*/
-				if (entryhasaffixes (dent, hit))
-					return 1;
-				doublecontinue:	;
-			}
-		}
-		if ((dent->flagfield & MOREVARIANTS) == 0)
-			break;
-		dent = dent->next;
-	}
+    for(;;)
+    {
+        dentcap = captype(dent->flagfield);
+        if(dentcap != thiscap)
+        {
+            if(dentcap == ANYCASE && thiscap == CAPITALIZED && entryhasaffixes(dent, hit))
+                return 1;
+        }
+        else /* captypes match */
+        {
+            if(thiscap != FOLLOWCASE)
+            {
+                if(entryhasaffixes(dent, hit))
+                    return 1;
+            }
+            else
+            {
+                /*
+                ** Make sure followcase matches exactly.
+                ** Life is made more difficult by the
+                ** possibility of affixes.  Start with
+                ** the prefix.
+                */
+                strtoichar(dentword, dent->word, INPUTWORDLEN, 1);
+                dword = dentword;
+                limit = word + preadd;
+                if(myupper(dword[prestrip]))
+                {
+                    for(w = word; w < limit; w++)
+                    {
+                        if(mylower(*w))
+                            goto doublecontinue;
+                    }
+                }
+                else
+                {
+                    for(w = word; w < limit; w++)
+                    {
+                        if(myupper(*w))
+                            goto doublecontinue;
+                    }
+                }
+                dword += prestrip;
+                /* Do root part of word */
+                limit = dword + len - preadd - sufadd;
+                while(dword < limit)
+                {
+                    if(*dword++ != *w++)
+                        goto doublecontinue;
+                }
+                /* Do suffix */
+                dword = limit - 1;
+                if(myupper(*dword))
+                {
+                    for(; *w; w++)
+                    {
+                        if(mylower(*w))
+                            goto doublecontinue;
+                    }
+                }
+                else
+                {
+                    for(; *w; w++)
+                    {
+                        if(myupper(*w))
+                            goto doublecontinue;
+                    }
+                }
+                /*
+                ** All failure paths go to "doublecontinue,"
+                ** so if we get here it must match.
+                */
+                if(entryhasaffixes(dent, hit))
+                    return 1;
+            doublecontinue:;
+            }
+        }
+        if((dent->flagfield & MOREVARIANTS) == 0)
+            break;
+        dent = dent->next;
+    }
 
     /* No matches found */
     return 0;
@@ -381,51 +379,47 @@ int ISpellChecker::cap_ok (ichar_t *word, struct success *hit, int len)
  *
  * \return
  */
-int ISpellChecker::good (ichar_t *w, int ignoreflagbits, int allhits, int pfxopts, int sfxopts)
+int ISpellChecker::good(ichar_t *w, int ignoreflagbits, int allhits, int pfxopts, int sfxopts)
 #else
 /* ARGSUSED */
-int ISpellChecker::good (ichar_t *w, int ignoreflagbits, int dummy, int pfxopts, int sfxopts)
+int ISpellChecker::good(ichar_t *w, int ignoreflagbits, int dummy, int pfxopts, int sfxopts)
 #endif
 {
-    ichar_t		nword[INPUTWORDLEN + MAXAFFIXLEN];
-    register ichar_t *	p;
-    register ichar_t *	q;
-    register int	n;
-    register struct dent * dp;
+    ichar_t nword[INPUTWORDLEN + MAXAFFIXLEN];
+    register ichar_t *p;
+    register ichar_t *q;
+    register int n;
+    register struct dent *dp;
 
     /*
     ** Make an uppercase copy of the word we are checking.
     */
-    for (p = w, q = nword;  *p;  )
-		*q++ = mytoupper (*p++);
+    for(p = w, q = nword; *p;)
+        *q++ = mytoupper(*p++);
     *q = 0;
     n = q - nword;
 
     m_numhits = 0;
 
-    if ((dp = ispell_lookup (nword, 1)) != NULL)
-	{
-		m_hits[0].dictent = dp;
-		m_hits[0].prefix = NULL;
-		m_hits[0].suffix = NULL;
+    if((dp = ispell_lookup(nword, 1)) != NULL)
+    {
+        m_hits[0].dictent = dp;
+        m_hits[0].prefix = NULL;
+        m_hits[0].suffix = NULL;
 #ifndef NO_CAPITALIZATION_SUPPORT
-		if (allhits  ||  cap_ok (w, &m_hits[0], n))
-			m_numhits = 1;
+        if(allhits || cap_ok(w, &m_hits[0], n))
+            m_numhits = 1;
 #else
-		m_numhits = 1;
+        m_numhits = 1;
 #endif
-	}
+    }
 
-    if (m_numhits  &&  !allhits)
-		return 1;
+    if(m_numhits && !allhits)
+        return 1;
 
     /* try stripping off affixes */
 
-    chk_aff (w, nword, n, ignoreflagbits, allhits, pfxopts, sfxopts);
+    chk_aff(w, nword, n, ignoreflagbits, allhits, pfxopts, sfxopts);
 
     return m_numhits;
 }
-
-
-
-

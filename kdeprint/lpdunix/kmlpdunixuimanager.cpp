@@ -23,10 +23,9 @@
 
 #include <klocale.h>
 
-KMLpdUnixUiManager::KMLpdUnixUiManager(QObject *parent, const char *name, const QStringList & /*args*/)
-: KMUiManager(parent,name)
+KMLpdUnixUiManager::KMLpdUnixUiManager(QObject *parent, const char *name, const QStringList & /*args*/) : KMUiManager(parent, name)
 {
-	m_printdialogflags |= KMUiManager::PrintCommand;
+    m_printdialogflags |= KMUiManager::PrintCommand;
 }
 
 KMLpdUnixUiManager::~KMLpdUnixUiManager()
@@ -35,11 +34,11 @@ KMLpdUnixUiManager::~KMLpdUnixUiManager()
 
 int KMLpdUnixUiManager::pluginPageCap()
 {
-	return KMUiManager::pluginPageCap();
-	//return KMUiManager::NoAutoCollate;
+    return KMUiManager::pluginPageCap();
+    // return KMUiManager::NoAutoCollate;
 }
 
-void KMLpdUnixUiManager::setupPrinterPropertyDialog( KPrinterPropertyDialog *dlg )
+void KMLpdUnixUiManager::setupPrinterPropertyDialog(KPrinterPropertyDialog *dlg)
 {
-	dlg->addPage( new KPQtPage( dlg, "QtPage" ) );
+    dlg->addPage(new KPQtPage(dlg, "QtPage"));
 }

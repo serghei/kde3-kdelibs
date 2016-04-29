@@ -30,30 +30,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 int main(int argc, char *argv[])
 {
-   const char *dcopref;
-   char *delim;
-   if ((argc != 2) || (argv[1][0] == '-'))
-   {
-      fprintf(stderr, "Usage: dcopclient <dcopref>\n");
-      return 1;
-   }
-   dcopref = argv[1];
-   if (strncmp(dcopref, "DCOPRef(", 8) != 0)
-     goto bad_ref;
+    const char *dcopref;
+    char *delim;
+    if((argc != 2) || (argv[1][0] == '-'))
+    {
+        fprintf(stderr, "Usage: dcopclient <dcopref>\n");
+        return 1;
+    }
+    dcopref = argv[1];
+    if(strncmp(dcopref, "DCOPRef(", 8) != 0)
+        goto bad_ref;
 
-   if (dcopref[strlen(dcopref)-1] != ')')
-     goto bad_ref;
+    if(dcopref[strlen(dcopref) - 1] != ')')
+        goto bad_ref;
 
-   delim = strchr(dcopref, ',');
-   if (!delim)
-     goto bad_ref;
+    delim = strchr(dcopref, ',');
+    if(!delim)
+        goto bad_ref;
 
-   dcopref += 8;
-   *delim = 0;
-   puts(dcopref);
-   return 0;
+    dcopref += 8;
+    *delim = 0;
+    puts(dcopref);
+    return 0;
 
 bad_ref:
-   fprintf(stderr, "Error: '%s' is not a valid DCOP reference.\n", dcopref);
-   return 1;
+    fprintf(stderr, "Error: '%s' is not a valid DCOP reference.\n", dcopref);
+    return 1;
 }

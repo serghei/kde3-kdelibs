@@ -26,22 +26,20 @@
 
 class QWidget;
 
-namespace KParts
-{
+namespace KParts {
 class Part;
 
 /**
  * Base class for all KParts events.
  */
-class KPARTS_EXPORT Event : public QCustomEvent
-{
+class KPARTS_EXPORT Event : public QCustomEvent {
 public:
-  Event( const char *eventName );
+    Event(const char *eventName);
 
-  virtual const char *eventName() const;
+    virtual const char *eventName() const;
 
-  static bool test( const QEvent *event );
-  static bool test( const QEvent *event, const char *name );
+    static bool test(const QEvent *event);
+    static bool test(const QEvent *event, const char *name);
 };
 
 /**
@@ -51,18 +49,25 @@ public:
  * only for parts that have GUI elements, and only if using KParts::MainWindow.
  * @see KParts::Part::guiActivateEvent()
  */
-class KPARTS_EXPORT GUIActivateEvent : public Event
-{
+class KPARTS_EXPORT GUIActivateEvent : public Event {
 public:
-  GUIActivateEvent( bool activated ) : Event( s_strGUIActivateEvent ), m_bActivated( activated ) {}
+    GUIActivateEvent(bool activated) : Event(s_strGUIActivateEvent), m_bActivated(activated)
+    {
+    }
 
-  bool activated() const { return m_bActivated; }
+    bool activated() const
+    {
+        return m_bActivated;
+    }
 
-  static bool test( const QEvent *event ) { return Event::test( event, s_strGUIActivateEvent ); }
+    static bool test(const QEvent *event)
+    {
+        return Event::test(event, s_strGUIActivateEvent);
+    }
 
 private:
-  static const char *s_strGUIActivateEvent;
-  bool m_bActivated;
+    static const char *s_strGUIActivateEvent;
+    bool m_bActivated;
 };
 
 /**
@@ -73,46 +78,73 @@ private:
  * with activated=true, part=newPart, widget=newWidget.
  * @see KParts::Part::partActivateEvent
  */
-class KPARTS_EXPORT PartActivateEvent : public Event
-{
+class KPARTS_EXPORT PartActivateEvent : public Event {
 public:
-  PartActivateEvent( bool activated, Part *part, QWidget *widget ) : Event( s_strPartActivateEvent ), m_bActivated( activated ), m_part( part ), m_widget( widget ) {}
+    PartActivateEvent(bool activated, Part *part, QWidget *widget)
+        : Event(s_strPartActivateEvent), m_bActivated(activated), m_part(part), m_widget(widget)
+    {
+    }
 
-  bool activated() const { return m_bActivated; }
+    bool activated() const
+    {
+        return m_bActivated;
+    }
 
-  Part *part() const { return m_part; }
-  QWidget *widget() const { return m_widget; }
+    Part *part() const
+    {
+        return m_part;
+    }
+    QWidget *widget() const
+    {
+        return m_widget;
+    }
 
-  static bool test( const QEvent *event ) { return Event::test( event, s_strPartActivateEvent ); }
+    static bool test(const QEvent *event)
+    {
+        return Event::test(event, s_strPartActivateEvent);
+    }
 
 private:
-  static const char *s_strPartActivateEvent;
-  bool m_bActivated;
-  Part *m_part;
-  QWidget *m_widget;
+    static const char *s_strPartActivateEvent;
+    bool m_bActivated;
+    Part *m_part;
+    QWidget *m_widget;
 };
 
 /**
  * This event is sent when a part is selected or deselected.
  * @see KParts::PartManager::setSelectionPolicy
  */
-class KPARTS_EXPORT PartSelectEvent : public Event
-{
+class KPARTS_EXPORT PartSelectEvent : public Event {
 public:
-  PartSelectEvent( bool selected, Part *part, QWidget *widget ) : Event( s_strPartSelectEvent ), m_bSelected( selected ), m_part( part ), m_widget( widget ) {}
+    PartSelectEvent(bool selected, Part *part, QWidget *widget) : Event(s_strPartSelectEvent), m_bSelected(selected), m_part(part), m_widget(widget)
+    {
+    }
 
-  bool selected() const { return m_bSelected; }
+    bool selected() const
+    {
+        return m_bSelected;
+    }
 
-  Part *part() const { return m_part; }
-  QWidget *widget() const { return m_widget; }
+    Part *part() const
+    {
+        return m_part;
+    }
+    QWidget *widget() const
+    {
+        return m_widget;
+    }
 
-  static bool test( const QEvent *event ) { return Event::test( event, s_strPartSelectEvent ); }
+    static bool test(const QEvent *event)
+    {
+        return Event::test(event, s_strPartSelectEvent);
+    }
 
 private:
-  static const char *s_strPartSelectEvent;
-  bool m_bSelected;
-  Part *m_part;
-  QWidget *m_widget;
+    static const char *s_strPartSelectEvent;
+    bool m_bSelected;
+    Part *m_part;
+    QWidget *m_widget;
 };
 
 } // namespace

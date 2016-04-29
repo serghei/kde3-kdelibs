@@ -60,8 +60,7 @@ class QImage;
  * @short A baseclass and accessor for Scanning Dialogs
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-class KIO_EXPORT KScanDialog : public KDialogBase
-{
+class KIO_EXPORT KScanDialog : public KDialogBase {
     Q_OBJECT
 
 public:
@@ -75,8 +74,7 @@ public:
      * @param modal if true the dialog is model
      * @return the KScanDialog, or 0 if the function failed
      */
-    static KScanDialog * getScanDialog( QWidget *parent=0L,
-					const char *name=0, bool modal=false );
+    static KScanDialog *getScanDialog(QWidget *parent = 0L, const char *name = 0, bool modal = false);
     /**
      * Destructs the scan dialog.
      */
@@ -105,8 +103,7 @@ protected:
      * @param modal if true the dialog is model
      * @see KDialogBase
      */
-    KScanDialog( int dialogFace=Tabbed, int buttonMask = Close|Help,
-		 QWidget *parent=0L, const char *name=0, bool modal=false );
+    KScanDialog(int dialogFace = Tabbed, int buttonMask = Close | Help, QWidget *parent = 0L, const char *name = 0, bool modal = false);
 
     /**
      * Returns the current id for an image. You can use that in your subclass
@@ -119,7 +116,10 @@ protected:
      * @see preview
      * @see textRecognized
      */
-    int id() const { return m_currentId; }
+    int id() const
+    {
+        return m_currentId;
+    }
 
     /**
      * Returns the id for the next image. You can use that in your subclass
@@ -132,7 +132,10 @@ protected:
      * @see textRecognized
      *
      */
-    int nextId() { return ++m_currentId; }
+    int nextId()
+    {
+        return ++m_currentId;
+    }
 
 signals:
     /**
@@ -140,7 +143,7 @@ signals:
      * @param img the image
      * @param id the image's id
      */
-    void preview( const QImage &img, int id );
+    void preview(const QImage &img, int id);
 
     /**
      * Informs you that an image has scanned. @p id is the same as in the
@@ -151,7 +154,7 @@ signals:
      * @param img the image
      * @param id the image's id
      */
-    void finalImage( const QImage &img, int id );
+    void finalImage(const QImage &img, int id);
 
     /**
      * Informs you that the image with the id @p id has been run through
@@ -161,13 +164,14 @@ signals:
      * @param text the text that has been recognized
      * @param id the id of the image
      */
-    void textRecognized( const QString &text, int id );
+    void textRecognized(const QString &text, int id);
 
 private:
     int m_currentId;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KScanDialogPrivate;
     KScanDialogPrivate *d;
@@ -179,8 +183,7 @@ private:
  * createDialog().
  * @short Factory for creating KScanDialogs
  */
-class KIO_EXPORT KScanDialogFactory : public KLibFactory
-{
+class KIO_EXPORT KScanDialogFactory : public KLibFactory {
 public:
     virtual ~KScanDialogFactory();
 
@@ -191,8 +194,7 @@ public:
      * @param name the name of the QObject, can be 0
      * @param modal if true the dialog is model
      */
-    virtual KScanDialog * createDialog( QWidget *parent=0, const char *name=0,
-					bool modal=false ) = 0;
+    virtual KScanDialog *createDialog(QWidget *parent = 0, const char *name = 0, bool modal = false) = 0;
 
 protected:
     /**
@@ -200,41 +202,45 @@ protected:
      * @param parent the QWidget's parent, or 0
      * @param name the name of the QObject, can be 0
      */
-    KScanDialogFactory( QObject *parent=0, const char *name=0 );
+    KScanDialogFactory(QObject *parent = 0, const char *name = 0);
 
-    virtual QObject* createObject( QObject* parent = 0, const char* name = 0,
-                                   const char* classname = "QObject",
-                                   const QStringList &args = QStringList() );
+    virtual QObject *createObject(QObject *parent = 0, const char *name = 0, const char *classname = "QObject",
+                                  const QStringList &args = QStringList());
 
 
     /**
      * Creates a new instance with the given name.
      * @param instanceName the name of the instance
      */
-    void setName( const QCString& instanceName ) {
-	delete m_instance;
-	m_instance = new KInstance( instanceName );
+    void setName(const QCString &instanceName)
+    {
+        delete m_instance;
+        m_instance = new KInstance(instanceName);
     }
 
     /**
      * Returns the instance.
      * @return the KInstance
      */
-    KInstance *instance() const { return m_instance; }
+    KInstance *instance() const
+    {
+        return m_instance;
+    }
 
 private:
     KInstance *m_instance;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-    class KScanDialogFactoryPrivate* d;
+    class KScanDialogFactoryPrivate *d;
 };
 
 /**
  * Base class for OCR Dialogs.
  */
-class KIO_EXPORT KOCRDialog : public KDialogBase
-{
+class KIO_EXPORT KOCRDialog : public KDialogBase {
     Q_OBJECT
 
 public:
@@ -248,8 +254,7 @@ public:
      * @param modal if true the dialog is model
      * @return the KOCRDialog, or 0 if the function failed
      */
-    static KOCRDialog * getOCRDialog( QWidget *parent=0L,
-					const char *name=0, bool modal=false );
+    static KOCRDialog *getOCRDialog(QWidget *parent = 0L, const char *name = 0, bool modal = false);
     ~KOCRDialog();
 
 protected:
@@ -264,8 +269,7 @@ protected:
      * @param name the name of the QObject, can be 0
      * @param modal if true the dialog is model
      */
-    KOCRDialog( int dialogFace=Tabbed, int buttonMask = Close|Help,
-		 QWidget *parent=0L, const char *name=0, bool modal=false );
+    KOCRDialog(int dialogFace = Tabbed, int buttonMask = Close | Help, QWidget *parent = 0L, const char *name = 0, bool modal = false);
 
     /**
      * Returns the current id for an image. You can use that in your subclass
@@ -276,7 +280,10 @@ protected:
      * @see nextId
      * @see textRecognized
      */
-    int id() const { return m_currentId; }
+    int id() const
+    {
+        return m_currentId;
+    }
 
     /**
      * Returns the id for the next image. You can use that in your subclass
@@ -286,7 +293,10 @@ protected:
      * @see id
      * @see textRecognized
      */
-    int nextId() { return ++m_currentId; }
+    int nextId()
+    {
+        return ++m_currentId;
+    }
 
 signals:
     /**
@@ -297,13 +307,14 @@ signals:
      * @param text the text that has been recognized
      * @param id the id of the image
      */
-    void textRecognized( const QString &text, int id );
+    void textRecognized(const QString &text, int id);
 
 private:
     int m_currentId;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KOCRDialogPrivate;
     KOCRDialogPrivate *d;
@@ -315,8 +326,7 @@ private:
  * createDialog().
  * @short Factory for creating KScanDialogs
  */
-class KIO_EXPORT KOCRDialogFactory : public KLibFactory
-{
+class KIO_EXPORT KOCRDialogFactory : public KLibFactory {
 public:
     virtual ~KOCRDialogFactory();
 
@@ -327,8 +337,7 @@ public:
      * @param name the name of the QObject, can be 0
      * @param modal if true the dialog is model
      */
-    virtual KOCRDialog * createDialog( QWidget *parent=0, const char *name=0,
-					bool modal=false ) = 0;
+    virtual KOCRDialog *createDialog(QWidget *parent = 0, const char *name = 0, bool modal = false) = 0;
 
 protected:
     /**
@@ -336,34 +345,39 @@ protected:
      * @param parent the QWidget's parent, or 0
      * @param name the name of the QObject, can be 0
      */
-    KOCRDialogFactory( QObject *parent=0, const char *name=0 );
+    KOCRDialogFactory(QObject *parent = 0, const char *name = 0);
 
-    virtual QObject* createObject( QObject* parent = 0, const char* name = 0,
-                                   const char* className = "QObject",
-                                   const QStringList &args = QStringList() );
+    virtual QObject *createObject(QObject *parent = 0, const char *name = 0, const char *className = "QObject",
+                                  const QStringList &args = QStringList());
 
 
     /**
      * Creates a new instance with the given name.
      * @param instanceName the name of the instance
      */
-    void setName( const QCString& instanceName ) {
-	delete m_instance;
-	m_instance = new KInstance( instanceName );
+    void setName(const QCString &instanceName)
+    {
+        delete m_instance;
+        m_instance = new KInstance(instanceName);
     }
 
     /**
      * Returns the instance.
      * @return the KInstance
      */
-    KInstance *instance() const { return m_instance; }
+    KInstance *instance() const
+    {
+        return m_instance;
+    }
 
 private:
     KInstance *m_instance;
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-    class KOCRDialogFactory* d;
+    class KOCRDialogFactory *d;
 };
 
 

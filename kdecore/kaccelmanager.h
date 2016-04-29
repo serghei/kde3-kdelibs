@@ -37,10 +37,8 @@ class QString;
  * @since 3.1
 */
 
-class KDECORE_EXPORT KAcceleratorManager
-{
+class KDECORE_EXPORT KAcceleratorManager {
 public:
-
     /**
      * Manages the accelerators of a widget.
      *
@@ -75,13 +73,13 @@ public:
     static void manage(QWidget *widget, bool programmers_mode);
 
     /** \internal returns the result of the last manage operation. */
-    static void last_manage(QString &added,  QString &changed,  QString &removed);
+    static void last_manage(QString &added, QString &changed, QString &removed);
 
     /**
      * Use this method for a widget (and its children) you want no accels to be set on.
      * @since 3.4
      */
-    static void setNoAccel( QWidget *widget );
+    static void setNoAccel(QWidget *widget);
 };
 
 

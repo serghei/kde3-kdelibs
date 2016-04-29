@@ -10,7 +10,7 @@
   if invoked like this ./testqtargs --bg blue --caption something --hello hi
 
   The program should list argv[] then produce output like this:
-  
+
   qt arg[0] = background
   qt arg[1] = blue
   arg bg = blue
@@ -25,10 +25,10 @@
   arg hello = hi
 
   See the extra dash in qt arg[0]?  I believe that is the cause of the problem.
-  --bg is aliased to --background but If you try it with --background or 
+  --bg is aliased to --background but If you try it with --background or
   -background, you get the same thing.
 
-  in kdecore/kapplication.cpp, KCmdLineOption qt_options is defined and used 
+  in kdecore/kapplication.cpp, KCmdLineOption qt_options is defined and used
   by the static method Kapplication::addCmdLineOptions to add the Qt options
   but its' entries look like this:
 
@@ -48,57 +48,50 @@ application palette (light and dark shades are\ncalculated)."), 0},
 #include <kaboutdata.h>
 #include <klocale.h>
 
-static const KCmdLineOptions options[] =
-{
-  { "hello ", I18N_NOOP("Says hello"), 0 },
-  KCmdLineLastOption
-};
+static const KCmdLineOptions options[] = {{"hello ", I18N_NOOP("Says hello"), 0}, KCmdLineLastOption};
 
 int main(int argc, char *argv[])
 {
-  for (int i = 0; i < argc; i++)
-  {
-    qDebug("argv[%d] = %s", i, argv[i]);
-  }
-  KAboutData aboutData( "testqtargs", I18N_NOOP("testqtargs"),
-    "1.0", I18N_NOOP("testqtargs"), KAboutData::License_GPL,
-    "", "", "", "");
+    for(int i = 0; i < argc; i++)
+    {
+        qDebug("argv[%d] = %s", i, argv[i]);
+    }
+    KAboutData aboutData("testqtargs", I18N_NOOP("testqtargs"), "1.0", I18N_NOOP("testqtargs"), KAboutData::License_GPL, "", "", "", "");
 
-  KCmdLineArgs::init(argc, argv, &aboutData);
-  KCmdLineArgs::addCmdLineOptions(options);
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KCmdLineArgs *qtargs = KCmdLineArgs::parsedArgs("qt");
-  for (int i = 0; i < qtargs->count(); i++)
-  {
-    qDebug("qt arg[%d] = %s", i, qtargs->arg(i));
-  }
+    KCmdLineArgs *qtargs = KCmdLineArgs::parsedArgs("qt");
+    for(int i = 0; i < qtargs->count(); i++)
+    {
+        qDebug("qt arg[%d] = %s", i, qtargs->arg(i));
+    }
 
-  KApplication app;
+    KApplication app;
 
-  KCmdLineArgs *kdeargs = KCmdLineArgs::parsedArgs("kde");
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *kdeargs = KCmdLineArgs::parsedArgs("kde");
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  // An arg set by Qt
-  if(qtargs->isSet("background"))
-  {
-    qDebug("arg bg = %s", (const char*)qtargs->getOption("background"));
-  }
-  // An arg set by KDE
-  if(kdeargs->isSet("caption"))
-  {
-    qDebug("arg caption = %s", (const char*)kdeargs->getOption("caption"));
-  }
-  // An arg set by us.
-  if(args->isSet("hello"))
-  {
-    qDebug("arg hello = %s", (const char*)args->getOption("hello"));
-  }
-  args->clear();
+    // An arg set by Qt
+    if(qtargs->isSet("background"))
+    {
+        qDebug("arg bg = %s", (const char *)qtargs->getOption("background"));
+    }
+    // An arg set by KDE
+    if(kdeargs->isSet("caption"))
+    {
+        qDebug("arg caption = %s", (const char *)kdeargs->getOption("caption"));
+    }
+    // An arg set by us.
+    if(args->isSet("hello"))
+    {
+        qDebug("arg hello = %s", (const char *)args->getOption("hello"));
+    }
+    args->clear();
 
-  QWidget *w = new QWidget();
-  app.setMainWidget(w);
-  w->show();
+    QWidget *w = new QWidget();
+    app.setMainWidget(w);
+    w->show();
 
-  return app.exec();
+    return app.exec();
 }
-

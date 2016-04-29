@@ -13,130 +13,132 @@
 #include <kpopupmenu.h>
 #include "kmdidocumentviewtabwidget.h"
 
-KMdiDocumentViewTabWidget::KMdiDocumentViewTabWidget( QWidget* parent, const char* name ) : KTabWidget( parent, name )
+KMdiDocumentViewTabWidget::KMdiDocumentViewTabWidget(QWidget *parent, const char *name) : KTabWidget(parent, name)
 {
-	m_visibility = KMdi::ShowWhenMoreThanOneTab;
-	tabBar() ->hide();
-	setHoverCloseButton( true );
-	connect( this, SIGNAL( closeRequest( QWidget* ) ), this, SLOT( closeTab( QWidget* ) ) );
+    m_visibility = KMdi::ShowWhenMoreThanOneTab;
+    tabBar()->hide();
+    setHoverCloseButton(true);
+    connect(this, SIGNAL(closeRequest(QWidget *)), this, SLOT(closeTab(QWidget *)));
 }
 
 KMdiDocumentViewTabWidget::~KMdiDocumentViewTabWidget()
-{}
-
-void KMdiDocumentViewTabWidget::closeTab( QWidget* w )
 {
-	w->close();
-}
-void KMdiDocumentViewTabWidget::addTab ( QWidget * child, const QString & label )
-{
-	KTabWidget::addTab( child, label );
-	showPage( child );
-	QTimer::singleShot(0, this, SLOT(maybeShow()));
 }
 
-void KMdiDocumentViewTabWidget::addTab ( QWidget * child, const QIconSet & iconset, const QString & label )
+void KMdiDocumentViewTabWidget::closeTab(QWidget *w)
 {
-	KTabWidget::addTab( child, iconset, label );
-	showPage( child );
-	QTimer::singleShot(0, this, SLOT(maybeShow()));
+    w->close();
+}
+void KMdiDocumentViewTabWidget::addTab(QWidget *child, const QString &label)
+{
+    KTabWidget::addTab(child, label);
+    showPage(child);
+    QTimer::singleShot(0, this, SLOT(maybeShow()));
 }
 
-void KMdiDocumentViewTabWidget::addTab ( QWidget * child, QTab * tab )
+void KMdiDocumentViewTabWidget::addTab(QWidget *child, const QIconSet &iconset, const QString &label)
 {
-	KTabWidget::addTab( child, tab );
-	showPage( child );
-	QTimer::singleShot(0, this, SLOT(maybeShow()));
+    KTabWidget::addTab(child, iconset, label);
+    showPage(child);
+    QTimer::singleShot(0, this, SLOT(maybeShow()));
 }
 
-void KMdiDocumentViewTabWidget::insertTab ( QWidget * child, const QString & label, int index )
+void KMdiDocumentViewTabWidget::addTab(QWidget *child, QTab *tab)
 {
-	KTabWidget::insertTab( child, label, index );
-	showPage( child );
-	QTimer::singleShot(0, this, SLOT(maybeShow()));
-	tabBar() ->repaint();
+    KTabWidget::addTab(child, tab);
+    showPage(child);
+    QTimer::singleShot(0, this, SLOT(maybeShow()));
 }
 
-void KMdiDocumentViewTabWidget::insertTab ( QWidget * child, const QIconSet & iconset, const QString & label, int index )
+void KMdiDocumentViewTabWidget::insertTab(QWidget *child, const QString &label, int index)
 {
-	KTabWidget::insertTab( child, iconset, label, index );
-	showPage( child );
-	QTimer::singleShot(0, this, SLOT(maybeShow()));
-	tabBar() ->repaint();
+    KTabWidget::insertTab(child, label, index);
+    showPage(child);
+    QTimer::singleShot(0, this, SLOT(maybeShow()));
+    tabBar()->repaint();
 }
 
-void KMdiDocumentViewTabWidget::insertTab ( QWidget * child, QTab * tab, int index )
+void KMdiDocumentViewTabWidget::insertTab(QWidget *child, const QIconSet &iconset, const QString &label, int index)
 {
-	KTabWidget::insertTab( child, tab, index );
-	showPage( child );
-	QTimer::singleShot(0, this, SLOT(maybeShow()));
-	tabBar() ->repaint();
+    KTabWidget::insertTab(child, iconset, label, index);
+    showPage(child);
+    QTimer::singleShot(0, this, SLOT(maybeShow()));
+    tabBar()->repaint();
 }
 
-void KMdiDocumentViewTabWidget::removePage ( QWidget * w )
+void KMdiDocumentViewTabWidget::insertTab(QWidget *child, QTab *tab, int index)
 {
-	KTabWidget::removePage( w );
-	QTimer::singleShot(0, this, SLOT(maybeShow()));
+    KTabWidget::insertTab(child, tab, index);
+    showPage(child);
+    QTimer::singleShot(0, this, SLOT(maybeShow()));
+    tabBar()->repaint();
 }
 
-void KMdiDocumentViewTabWidget::updateIconInView( QWidget *w, QPixmap icon )
+void KMdiDocumentViewTabWidget::removePage(QWidget *w)
 {
-	changeTab( w, icon, tabLabel( w ) );
+    KTabWidget::removePage(w);
+    QTimer::singleShot(0, this, SLOT(maybeShow()));
 }
 
-void KMdiDocumentViewTabWidget::updateCaptionInView( QWidget *w, const QString &caption )
+void KMdiDocumentViewTabWidget::updateIconInView(QWidget *w, QPixmap icon)
 {
-	changeTab( w, caption );
+    changeTab(w, icon, tabLabel(w));
+}
+
+void KMdiDocumentViewTabWidget::updateCaptionInView(QWidget *w, const QString &caption)
+{
+    changeTab(w, caption);
 }
 
 void KMdiDocumentViewTabWidget::maybeShow()
 {
-	switch (m_visibility)
-	{
-		case KMdi::AlwaysShowTabs:
-			tabBar() ->show();
-			if ( cornerWidget() )
-			{
-				if ( count() == 0 )
-					cornerWidget() ->hide();
-				else
-					cornerWidget() ->show();
-			}
-			break;
+    switch(m_visibility)
+    {
+        case KMdi::AlwaysShowTabs:
+            tabBar()->show();
+            if(cornerWidget())
+            {
+                if(count() == 0)
+                    cornerWidget()->hide();
+                else
+                    cornerWidget()->show();
+            }
+            break;
 
-		case KMdi::ShowWhenMoreThanOneTab:
-			if ( count() < 2 )
-				tabBar() ->hide();
-			else tabBar() ->show();
-			if ( cornerWidget() )
-			{
-				if ( count() < 2 )
-					cornerWidget() ->hide();
-				else
-					cornerWidget() ->show();
-			}
-			break;
-		case KMdi::NeverShowTabs:
-			tabBar() ->hide();
-			break;
-	}
+        case KMdi::ShowWhenMoreThanOneTab:
+            if(count() < 2)
+                tabBar()->hide();
+            else
+                tabBar()->show();
+            if(cornerWidget())
+            {
+                if(count() < 2)
+                    cornerWidget()->hide();
+                else
+                    cornerWidget()->show();
+            }
+            break;
+        case KMdi::NeverShowTabs:
+            tabBar()->hide();
+            break;
+    }
 }
 
-void KMdiDocumentViewTabWidget::setTabWidgetVisibility( KMdi::TabWidgetVisibility visibility )
+void KMdiDocumentViewTabWidget::setTabWidgetVisibility(KMdi::TabWidgetVisibility visibility)
 {
-	m_visibility = visibility;
-	maybeShow();
+    m_visibility = visibility;
+    maybeShow();
 }
 
-void KMdiDocumentViewTabWidget::moveTab( int from, int to )
+void KMdiDocumentViewTabWidget::moveTab(int from, int to)
 {
-  emit initiateTabMove( from, to );
-  KTabWidget::moveTab( from, to );
+    emit initiateTabMove(from, to);
+    KTabWidget::moveTab(from, to);
 }
 
-KMdi::TabWidgetVisibility KMdiDocumentViewTabWidget::tabWidgetVisibility( )
+KMdi::TabWidgetVisibility KMdiDocumentViewTabWidget::tabWidgetVisibility()
 {
-	return m_visibility;
+    return m_visibility;
 }
 
 
@@ -145,4 +147,3 @@ KMdi::TabWidgetVisibility KMdiDocumentViewTabWidget::tabWidgetVisibility( )
 #endif
 
 // kate: space-indent off; tab-width 4; replace-tabs off; indent-mode csands;
-

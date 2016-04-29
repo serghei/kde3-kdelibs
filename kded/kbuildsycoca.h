@@ -16,7 +16,7 @@
  *  Boston, MA 02110-1301, USA.
  **/
 #ifndef __kbuildsycoca_h__
-#define __kbuildsycoca_h__ 
+#define __kbuildsycoca_h__
 
 #include <sys/stat.h>
 
@@ -35,70 +35,74 @@
 class QDataStream;
 
 // No need for this in libkio - apps only get readonly access
-class KBuildSycoca : public KSycoca
-{
-   Q_OBJECT
+class KBuildSycoca : public KSycoca {
+    Q_OBJECT
 public:
-   KBuildSycoca();
-   virtual ~KBuildSycoca();
+    KBuildSycoca();
+    virtual ~KBuildSycoca();
 
-   /**
-    * Recreate the database file
-    */
-   bool recreate();
+    /**
+     * Recreate the database file
+     */
+    bool recreate();
 
-   static bool checkTimestamps( Q_UINT32 timestamp, const QStringList &dirs );
+    static bool checkTimestamps(Q_UINT32 timestamp, const QStringList &dirs);
 
-   static QStringList existingResourceDirs();
-   
-   void setTrackId(const QString &id) { m_trackId = id; }
+    static QStringList existingResourceDirs();
+
+    void setTrackId(const QString &id)
+    {
+        m_trackId = id;
+    }
 
 protected slots:
-   void slotCreateEntry(const QString &file, KService **entry);
-       
+    void slotCreateEntry(const QString &file, KService **entry);
+
 protected:
+    /**
+     * Look up gnome mimetypes.
+     */
+    void processGnomeVfs();
 
-   /**
-    * Look up gnome mimetypes.
-    */
-   void processGnomeVfs();
+    /**
+     * Add single entry to the sycoca database.
+     * Either from a previous database or regenerated from file.
+     */
+    KSycocaEntry *createEntry(const QString &file, bool addToFactory);
 
-   /**
-    * Add single entry to the sycoca database.
-    * Either from a previous database or regenerated from file.
-    */
-   KSycocaEntry *createEntry(const QString &file, bool addToFactory);
+    /**
+     * Convert a VFolderMenu::SubMenu to KServiceGroups.
+     */
+    void createMenu(QString caption, QString name, VFolderMenu::SubMenu *menu);
 
-   /**
-    * Convert a VFolderMenu::SubMenu to KServiceGroups.
-    */
-   void createMenu(QString caption, QString name, VFolderMenu::SubMenu *menu);
+    /**
+     * Build the whole system cache, from .desktop files
+     */
+    bool build();
 
-   /**
-    * Build the whole system cache, from .desktop files
-    */
-   bool build();
-   
-   /**
-    * Save the ksycoca file
-    */
-   void save();
+    /**
+     * Save the ksycoca file
+     */
+    void save();
 
-   /**
-    * Clear the factories
-    */
-   void clear();
-   
-   static bool checkDirTimestamps( const QString& dir, const QDateTime& stamp, bool top );
-   
-   /**
-    * @internal
-    * @return true if building (i.e. if a KBuildSycoca);
-    */
-   virtual bool isBuilding() { return true; }
+    /**
+     * Clear the factories
+     */
+    void clear();
 
-   QStringList m_allResourceDirs;
-   QString m_trackId;
+    static bool checkDirTimestamps(const QString &dir, const QDateTime &stamp, bool top);
+
+    /**
+     * @internal
+     * @return true if building (i.e. if a KBuildSycoca);
+     */
+    virtual bool isBuilding()
+    {
+        return true;
+    }
+
+    QStringList m_allResourceDirs;
+    QString m_trackId;
 };
 
 #endif

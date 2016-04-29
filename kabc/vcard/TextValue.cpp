@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
+    libvcard - vCard parsing library for vCard version 3.0
 
-	Copyright (C) 1998 Rik Hemsley rik@kde.org
-	
+    Copyright (C) 1998 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -27,60 +27,51 @@
 
 using namespace VCARD;
 
-TextValue::TextValue()
-	:	Value()
+TextValue::TextValue() : Value()
 {
 }
 
-TextValue::TextValue(const TextValue & x)
-	:	Value(x)
+TextValue::TextValue(const TextValue &x) : Value(x)
 {
 }
 
-TextValue::TextValue(const QCString & s)
-	:	Value(s)
+TextValue::TextValue(const QCString &s) : Value(s)
 {
 }
 
-	TextValue &
-TextValue::operator = (TextValue & x)
+TextValue &TextValue::operator=(TextValue &x)
 {
-	if (*this == x) return *this;
+    if(*this == x)
+        return *this;
 
-	Value::operator = (x);
-	return *this;
+    Value::operator=(x);
+    return *this;
 }
 
-	TextValue &
-TextValue::operator = (const QCString & s)
+TextValue &TextValue::operator=(const QCString &s)
 {
-	Value::operator = (s);
-	return *this;
+    Value::operator=(s);
+    return *this;
 }
 
-	bool
-TextValue::operator == (TextValue & x)
+bool TextValue::operator==(TextValue &x)
 {
-	return strRep_ == x.strRep_;
+    return strRep_ == x.strRep_;
 }
 
 TextValue::~TextValue()
 {
 }
 
-  TextValue *
-TextValue::clone()
+TextValue *TextValue::clone()
 {
-  return new TextValue( *this );
+    return new TextValue(*this);
 }
 
-	void
-TextValue::_parse()
+void TextValue::_parse()
 {
 }
 
-	void
-TextValue::_assemble()
+void TextValue::_assemble()
 {
 }
-

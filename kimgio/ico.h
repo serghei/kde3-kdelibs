@@ -5,7 +5,7 @@
  *
  * Distributed under the terms of the LGPL
  * Copyright (c) 2000 Malte Starostik <malte@kde.org>
- * 
+ *
  */
 
 // You can use QImageIO::setParameters() to request a specific
@@ -21,7 +21,7 @@
 //                   is present, the size and colors options will be ignored.
 //                   default: none
 // If both size and colors are given, size takes precedence.
-// 
+//
 // The old format is still supported:
 //     the parameters consist of a single string in the form
 //     "<size>[:<colors>]" which correspond to the options above
@@ -32,14 +32,13 @@
 // If the icon is in fact a cursor, its hotspot coordinates are returned
 // in the text tags "X-HotspotX" and "X-HotspotY".
 
-#ifndef	_ICO_H_
+#ifndef _ICO_H_
 #define _ICO_H_
 
 class QImageIO;
 
-extern "C"
-{
-    void kimgio_ico_read(QImageIO *);
+extern "C" {
+void kimgio_ico_read(QImageIO *);
 //    void kimgio_ico_write(QImageIO *);
 }
 

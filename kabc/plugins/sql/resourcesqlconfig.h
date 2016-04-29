@@ -28,24 +28,22 @@ class QSpinBox;
 
 namespace KABC {
 
-class ResourceSqlConfig : public ResourceConfigWidget
-{ 
-  Q_OBJECT
+class ResourceSqlConfig : public ResourceConfigWidget {
+    Q_OBJECT
 
 public:
-  ResourceSqlConfig( QWidget* parent = 0, const char* name = 0 );
+    ResourceSqlConfig(QWidget *parent = 0, const char *name = 0);
 
 public slots:
-  void loadSettings( KConfig *config );
-  void saveSettings( KConfig *config );
+    void loadSettings(KConfig *config);
+    void saveSettings(KConfig *config);
 
 private:
-  KLineEdit* mUser;
-  KLineEdit* mPassword;
-  KLineEdit* mDbName;
-  KLineEdit* mHost;
-  QSpinBox* mPort;
+    KLineEdit *mUser;
+    KLineEdit *mPassword;
+    KLineEdit *mDbName;
+    KLineEdit *mHost;
+    QSpinBox *mPort;
 };
-
 }
 #endif

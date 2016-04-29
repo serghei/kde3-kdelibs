@@ -166,7 +166,8 @@
  * ispell patch for non-English dictionaries by Henrik Berg <henrik@lansen.se>
  *
  * Revision 1.9  1999/10/20 03:19:35  paul
- * Hacked ispell code to ignore any characters that don't fit in the lookup tables loaded from the dictionary.  It ain't pretty, but at least we don't crash there any more.
+ * Hacked ispell code to ignore any characters that don't fit in the lookup tables loaded from the dictionary.  It ain't pretty, but at least we don't
+ * crash there any more.
  *
  * Revision 1.8  1999/09/29 23:33:32  justin
  * Updates to the underlying ispell-based code to support suggested corrections.
@@ -284,10 +285,10 @@ extern "C" {
 */
 
 #ifndef MASKBITS
-#define MASKBITS	64
+#define MASKBITS 64
 #endif
 
-extern int		gnMaskBits;
+extern int gnMaskBits;
 
 /*
 ** C type to use for masks.  This should be a type that the processor
@@ -299,20 +300,20 @@ extern int		gnMaskBits;
 ** define it.
 **
 ** Note that MASKTYPE *must* match MASKTYPE_WIDTH or you may get
-** division-by-zero errors! 
+** division-by-zero errors!
 */
 #ifndef MASKTYPE
-#define MASKTYPE	long
+#define MASKTYPE long
 #endif
 #ifndef MASKTYPE_WIDTH
-#define MASKTYPE_WIDTH	32
+#define MASKTYPE_WIDTH 32
 #endif
 
-  /* program: this should be coded now in init */
+/* program: this should be coded now in init */
 
 #if MASKBITS < MASKTYPE_WIDTH
 #undef MASKBITS
-#define MASKBITS	MASKTYPE_WIDTH
+#define MASKBITS MASKTYPE_WIDTH
 #endif /* MASKBITS < MASKTYPE_WIDTH */
 
 /*
@@ -320,7 +321,7 @@ extern int		gnMaskBits;
 ** for time.
 **/
 #ifndef MAXPCT
-#define MAXPCT	70		/* Expand table when 70% full */
+#define MAXPCT 70 /* Expand table when 70% full */
 #endif
 
 /*
@@ -348,7 +349,7 @@ extern int		gnMaskBits;
 ** harm will be done, but ispell may occasionally forget a capitalization.
 */
 #ifndef MAX_HITS
-#define MAX_HITS	10
+#define MAX_HITS 10
 #endif
 
 /*
@@ -359,7 +360,7 @@ extern int		gnMaskBits;
 ** correct capitalization.
 */
 #ifndef MAX_CAPS
-#define MAX_CAPS	10
+#define MAX_CAPS 10
 #endif /* MAX_CAPS */
 
 /* buffer size to use for file names if not in sys/param.h */
@@ -380,33 +381,31 @@ extern int		gnMaskBits;
 #endif
 
 #if defined(__STDC__) || defined(__cplusplus)
-#define P(x)	x
- #ifndef VOID
-   #define VOID	void
- #endif
+#define P(x) x
+#ifndef VOID
+#define VOID void
+#endif
 #else /* __STDC__ */
-#define P(x)	()
- #ifndef VOID
-   #define VOID	char
- #endif
+#define P(x) ()
+#ifndef VOID
+#define VOID char
+#endif
 #define const
 #endif /* __STDC__ */
 
 #ifdef NO8BIT
-#define SET_SIZE	128
+#define SET_SIZE 128
 #else
-#define SET_SIZE	256
+#define SET_SIZE 256
 #endif
 
-#define MASKSIZE	(gnMaskBits / MASKTYPE_WIDTH)
+#define MASKSIZE (gnMaskBits / MASKTYPE_WIDTH)
 
 #ifdef lint
-extern int	TSTMASKBIT P ((MASKTYPE * mask, int bit));
+extern int TSTMASKBIT P((MASKTYPE * mask, int bit));
 #else /* lint */
 /* The following is really testing for MASKSIZE <= 1, but cpp can't do that */
-#define TSTMASKBIT(mask, bit) \
-		    ((mask)[(bit) / MASKTYPE_WIDTH] & \
-		      ((MASKTYPE) 1 << ((bit) & (MASKTYPE_WIDTH - 1))))
+#define TSTMASKBIT(mask, bit) ((mask)[(bit) / MASKTYPE_WIDTH] & ((MASKTYPE)1 << ((bit) & (MASKTYPE_WIDTH - 1))))
 #endif /* lint */
 
 #if MASKBITS > 64
@@ -414,35 +413,35 @@ extern int	TSTMASKBIT P ((MASKTYPE * mask, int bit));
 #endif
 
 #if MASKBITS <= 32
-	#define FLAGBASE	((MASKTYPE_WIDTH) - 6)
+#define FLAGBASE ((MASKTYPE_WIDTH)-6)
 #else
-	# if MASKBITS <= 64
-		#define FLAGBASE	((MASKTYPE_WIDTH) - 6)
-	# else
-		#define FLAGBASE	0
-	# endif
+#if MASKBITS <= 64
+#define FLAGBASE ((MASKTYPE_WIDTH)-6)
+#else
+#define FLAGBASE 0
+#endif
 #endif
 
 /*
 ** Data type for internal word storage.  If necessary, we use shorts rather
 ** than chars so that string characters can be encoded as a single unit.
 */
-#if (SET_SIZE + MAXSTRINGCHARS) <= 256
+#if(SET_SIZE + MAXSTRINGCHARS) <= 256
 #ifndef lint
 #define ICHAR_IS_CHAR
 #endif /* lint */
 #endif
 
 #ifdef ICHAR_IS_CHAR
-typedef unsigned char	ichar_t;	/* Internal character */
-#define icharlen(s)	strlen ((char *) (s))
-#define icharcpy(a, b)	strcpy ((char *) (a), (char *) (b))
-#define icharcmp(a, b)	strcmp ((char *) (a), (char *) (b))
-#define icharncmp(a, b, n) strncmp ((char *) (a), (char *) (b), (n))
-#define chartoichar(x)	((ichar_t) (x))
+typedef unsigned char ichar_t; /* Internal character */
+#define icharlen(s) strlen((char *)(s))
+#define icharcpy(a, b) strcpy((char *)(a), (char *)(b))
+#define icharcmp(a, b) strcmp((char *)(a), (char *)(b))
+#define icharncmp(a, b, n) strncmp((char *)(a), (char *)(b), (n))
+#define chartoichar(x) ((ichar_t)(x))
 #else
-typedef unsigned short	ichar_t;	/* Internal character */
-#define chartoichar(x)	((ichar_t) (unsigned char) (x))
+typedef unsigned short ichar_t; /* Internal character */
+#define chartoichar(x) ((ichar_t)(unsigned char)(x))
 
 /*
  * Structure used to record data about successful lookups; these values
@@ -450,25 +449,25 @@ typedef unsigned short	ichar_t;	/* Internal character */
  */
 struct success
 {
-    struct dent *		dictent;	/* Header of dict entry chain for wd */
-    struct flagent *	prefix;		/* Prefix flag used, or NULL */
-    struct flagent *	suffix;		/* Suffix flag used, or NULL */
+    struct dent *dictent;   /* Header of dict entry chain for wd */
+    struct flagent *prefix; /* Prefix flag used, or NULL */
+    struct flagent *suffix; /* Suffix flag used, or NULL */
 };
 
-ichar_t* icharcpy (ichar_t* out, ichar_t* in);
-int icharlen (ichar_t* in);
-int icharcmp (ichar_t* s1, ichar_t* s2);
-int icharncmp (ichar_t* s1, ichar_t* s2, int n);
+ichar_t *icharcpy(ichar_t *out, ichar_t *in);
+int icharlen(ichar_t *in);
+int icharcmp(ichar_t *s1, ichar_t *s2);
+int icharncmp(ichar_t *s1, ichar_t *s2, int n);
 
 #endif
 
 struct dent
 {
-    struct dent *	next;
-    char *			word;
-    MASKTYPE		mask[2];
+    struct dent *next;
+    char *word;
+    MASKTYPE mask[2];
 #ifdef FULLMASKSET
-    char			flags;
+    char flags;
 #endif
 };
 
@@ -539,23 +538,23 @@ struct dent
 #endif
 */
 #ifdef FULLMASKSET
-#define flagfield	flags
+#define flagfield flags
 #else
-#define flagfield	mask[1]
+#define flagfield mask[1]
 #endif
-#define USED		((MASKTYPE) 1 << (FLAGBASE + 0))
-#define KEEP		((MASKTYPE) 1 << (FLAGBASE + 1))
+#define USED ((MASKTYPE)1 << (FLAGBASE + 0))
+#define KEEP ((MASKTYPE)1 << (FLAGBASE + 1))
 #ifdef NO_CAPITALIZATION_SUPPORT
-#define ALLFLAGS	(USED | KEEP)
+#define ALLFLAGS (USED | KEEP)
 #else /* NO_CAPITALIZATION_SUPPORT */
-#define ANYCASE		((MASKTYPE) 0 << (FLAGBASE + 2))
-#define ALLCAPS		((MASKTYPE) 1 << (FLAGBASE + 2))
-#define CAPITALIZED	((MASKTYPE) 2 << (FLAGBASE + 2))
-#define FOLLOWCASE	((MASKTYPE) 3 << (FLAGBASE + 2))
-#define CAPTYPEMASK	((MASKTYPE) 3 << (FLAGBASE + 2))
-#define MOREVARIANTS	((MASKTYPE) 1 << (FLAGBASE + 4))
-#define ALLFLAGS	(USED | KEEP | CAPTYPEMASK | MOREVARIANTS)
-#define captype(x)	((x) & CAPTYPEMASK)
+#define ANYCASE ((MASKTYPE)0 << (FLAGBASE + 2))
+#define ALLCAPS ((MASKTYPE)1 << (FLAGBASE + 2))
+#define CAPITALIZED ((MASKTYPE)2 << (FLAGBASE + 2))
+#define FOLLOWCASE ((MASKTYPE)3 << (FLAGBASE + 2))
+#define CAPTYPEMASK ((MASKTYPE)3 << (FLAGBASE + 2))
+#define MOREVARIANTS ((MASKTYPE)1 << (FLAGBASE + 4))
+#define ALLFLAGS (USED | KEEP | CAPTYPEMASK | MOREVARIANTS)
+#define captype(x) ((x)&CAPTYPEMASK)
 #endif /* NO_CAPITALIZATION_SUPPORT */
 
 /*
@@ -563,32 +562,32 @@ struct dent
  */
 struct flagent
 {
-    ichar_t *		strip;		/* String to strip off */
-    ichar_t *		affix;		/* Affix to append */
-    short		flagbit;		/* Flag bit this ent matches */
-    short		stripl;			/* Length of strip */
-    short		affl;			/* Length of affix */
-    short		numconds;		/* Number of char conditions */
-    short		flagflags;		/* Modifiers on this flag */
-    char		conds[SET_SIZE + MAXSTRINGCHARS]; /* Adj. char conds */
+    ichar_t *strip;                        /* String to strip off */
+    ichar_t *affix;                        /* Affix to append */
+    short flagbit;                         /* Flag bit this ent matches */
+    short stripl;                          /* Length of strip */
+    short affl;                            /* Length of affix */
+    short numconds;                        /* Number of char conditions */
+    short flagflags;                       /* Modifiers on this flag */
+    char conds[SET_SIZE + MAXSTRINGCHARS]; /* Adj. char conds */
 };
 
 /*
  * Bits in flagflags
  */
-#define FF_CROSSPRODUCT	(1 << 0)		/* Affix does cross-products */
-#define FF_COMPOUNDONLY	(1 << 1)		/* Afx works in compounds */
+#define FF_CROSSPRODUCT (1 << 0) /* Affix does cross-products */
+#define FF_COMPOUNDONLY (1 << 1) /* Afx works in compounds */
 
-union ptr_union					/* Aid for building flg ptrs */
+union ptr_union /* Aid for building flg ptrs */
 {
-    struct flagptr *	fp;			/* Pointer to more indexing */
-    struct flagent *	ent;		/* First of a list of ents */
+    struct flagptr *fp;  /* Pointer to more indexing */
+    struct flagent *ent; /* First of a list of ents */
 };
 
 struct flagptr
 {
-    union ptr_union	pu;			/* Ent list or more indexes */
-    int			numents;		/* If zero, pu.fp is valid */
+    union ptr_union pu; /* Ent list or more indexes */
+    int numents;        /* If zero, pu.fp is valid */
 };
 
 /*
@@ -596,9 +595,9 @@ struct flagptr
  */
 struct strchartype
 {
-    char *		name;			/* Name of the type */
-    char *		deformatter;	/* Deformatter to use */
-    char *		suffixes;		/* File suffixes, null seps */
+    char *name;        /* Name of the type */
+    char *deformatter; /* Deformatter to use */
+    char *suffixes;    /* File suffixes, null seps */
 };
 
 /*
@@ -606,140 +605,130 @@ struct strchartype
  */
 struct hashheader
 {
-    unsigned short magic;    	    	    	/* Magic number for ID */
-    unsigned short compileoptions;				/* How we were compiled */
-    short maxstringchars;						/* Max # strchrs we support */
-    short maxstringcharlen;						/* Max strchr len supported */
-    short compoundmin;							/* Min lth of compound parts */
-    short compoundbit;							/* Flag 4 compounding roots */
-    int stringsize;								/* Size of string table */
-    int lstringsize;							/* Size of lang. str tbl */
-    int tblsize;								/* No. entries in hash tbl */
-    int stblsize;								/* No. entries in sfx tbl */
-    int ptblsize;								/* No. entries in pfx tbl */
-    int sortval;								/* Largest sort ID assigned */
-    int nstrchars;								/* No. strchars defined */
-    int nstrchartype;							/* No. strchar types */
-    int strtypestart;							/* Start of strtype table */
-    char nrchars[5];							/* Nroff special characters */
-    char texchars[13];							/* TeX special characters */
-    char compoundflag;							/* Compund-word handling */
-    char defhardflag;							/* Default tryveryhard flag */
-    char flagmarker;							/* "Start-of-flags" char */
-    unsigned short sortorder[SET_SIZE + MAXSTRINGCHARS]; /* Sort ordering */
-    ichar_t lowerconv[SET_SIZE + MAXSTRINGCHARS]; /* Lower-conversion table */
-    ichar_t upperconv[SET_SIZE + MAXSTRINGCHARS]; /* Upper-conversion table */
-    char wordchars[SET_SIZE + MAXSTRINGCHARS]; /* NZ for chars found in wrds */
-    char upperchars[SET_SIZE + MAXSTRINGCHARS]; /* NZ for uppercase chars */
-    char lowerchars[SET_SIZE + MAXSTRINGCHARS]; /* NZ for lowercase chars */
-    char boundarychars[SET_SIZE + MAXSTRINGCHARS]; /* NZ for boundary chars */
-    char stringstarts[SET_SIZE];		/* NZ if char can start str */
+    unsigned short magic;                                   /* Magic number for ID */
+    unsigned short compileoptions;                          /* How we were compiled */
+    short maxstringchars;                                   /* Max # strchrs we support */
+    short maxstringcharlen;                                 /* Max strchr len supported */
+    short compoundmin;                                      /* Min lth of compound parts */
+    short compoundbit;                                      /* Flag 4 compounding roots */
+    int stringsize;                                         /* Size of string table */
+    int lstringsize;                                        /* Size of lang. str tbl */
+    int tblsize;                                            /* No. entries in hash tbl */
+    int stblsize;                                           /* No. entries in sfx tbl */
+    int ptblsize;                                           /* No. entries in pfx tbl */
+    int sortval;                                            /* Largest sort ID assigned */
+    int nstrchars;                                          /* No. strchars defined */
+    int nstrchartype;                                       /* No. strchar types */
+    int strtypestart;                                       /* Start of strtype table */
+    char nrchars[5];                                        /* Nroff special characters */
+    char texchars[13];                                      /* TeX special characters */
+    char compoundflag;                                      /* Compund-word handling */
+    char defhardflag;                                       /* Default tryveryhard flag */
+    char flagmarker;                                        /* "Start-of-flags" char */
+    unsigned short sortorder[SET_SIZE + MAXSTRINGCHARS];    /* Sort ordering */
+    ichar_t lowerconv[SET_SIZE + MAXSTRINGCHARS];           /* Lower-conversion table */
+    ichar_t upperconv[SET_SIZE + MAXSTRINGCHARS];           /* Upper-conversion table */
+    char wordchars[SET_SIZE + MAXSTRINGCHARS];              /* NZ for chars found in wrds */
+    char upperchars[SET_SIZE + MAXSTRINGCHARS];             /* NZ for uppercase chars */
+    char lowerchars[SET_SIZE + MAXSTRINGCHARS];             /* NZ for lowercase chars */
+    char boundarychars[SET_SIZE + MAXSTRINGCHARS];          /* NZ for boundary chars */
+    char stringstarts[SET_SIZE];                            /* NZ if char can start str */
     char stringchars[MAXSTRINGCHARS][MAXSTRINGCHARLEN + 1]; /* String chars */
-    unsigned int stringdups[MAXSTRINGCHARS];	/* No. of "base" char */
-    int dupnos[MAXSTRINGCHARS];			/* Dup char ID # */
-    unsigned short magic2;			/* Second magic for dbl chk */
+    unsigned int stringdups[MAXSTRINGCHARS];                /* No. of "base" char */
+    int dupnos[MAXSTRINGCHARS];                             /* Dup char ID # */
+    unsigned short magic2;                                  /* Second magic for dbl chk */
 };
 
 /* hash table magic number */
-#define MAGIC			0x9602
+#define MAGIC 0x9602
 
 /* compile options, put in the hash header for consistency checking */
 #ifdef NO8BIT
-# define MAGIC8BIT		0x01
+#define MAGIC8BIT 0x01
 #else
-# define MAGIC8BIT		0x00
+#define MAGIC8BIT 0x00
 #endif
 #ifdef NO_CAPITALIZATION_SUPPORT
-# define MAGICCAPITALIZATION	0x00
+#define MAGICCAPITALIZATION 0x00
 #else
-# define MAGICCAPITALIZATION	0x02
+#define MAGICCAPITALIZATION 0x02
 #endif
-#  define MAGICMASKSET		0x04
+#define MAGICMASKSET 0x04
 
 #if MASKBITS <= 32
-# define MAGICMASKSET		0x00
+#define MAGICMASKSET 0x00
 #else
-# if MASKBITS <= 64
-# else
-#  if MASKBITS <= 128
-#   define MAGICMASKSET		0x08
-#  else
-#   define MAGICMASKSET		0x0C
-#  endif
-# endif
+#if MASKBITS <= 64
+#else
+#if MASKBITS <= 128
+#define MAGICMASKSET 0x08
+#else
+#define MAGICMASKSET 0x0C
+#endif
+#endif
 #endif
 
-#define COMPILEOPTIONS	(MAGIC8BIT | MAGICCAPITALIZATION | MAGICMASKSET)
+#define COMPILEOPTIONS (MAGIC8BIT | MAGICCAPITALIZATION | MAGICMASKSET)
 
 /*
 ** Offsets into the nroff special-character array
 */
-#define NRLEFTPAREN		hashheader.nrchars[0]
-#define NRRIGHTPAREN	hashheader.nrchars[1]
-#define NRDOT			hashheader.nrchars[2]
-#define NRBACKSLASH		hashheader.nrchars[3]
-#define NRSTAR			hashheader.nrchars[4]
+#define NRLEFTPAREN hashheader.nrchars[0]
+#define NRRIGHTPAREN hashheader.nrchars[1]
+#define NRDOT hashheader.nrchars[2]
+#define NRBACKSLASH hashheader.nrchars[3]
+#define NRSTAR hashheader.nrchars[4]
 
 /*
 ** Offsets into the TeX special-character array
 */
-#define TEXLEFTPAREN	hashheader.texchars[0]
-#define TEXRIGHTPAREN	hashheader.texchars[1]
-#define TEXLEFTSQUARE	hashheader.texchars[2]
-#define TEXRIGHTSQUARE	hashheader.texchars[3]
-#define TEXLEFTCURLY	hashheader.texchars[4]
-#define TEXRIGHTCURLY	hashheader.texchars[5]
-#define TEXLEFTANGLE	hashheader.texchars[6]
-#define TEXRIGHTANGLE	hashheader.texchars[7]
-#define TEXBACKSLASH	hashheader.texchars[8]
-#define TEXDOLLAR		hashheader.texchars[9]
-#define TEXSTAR			hashheader.texchars[10]
-#define TEXDOT			hashheader.texchars[11]
-#define TEXPERCENT		hashheader.texchars[12]
+#define TEXLEFTPAREN hashheader.texchars[0]
+#define TEXRIGHTPAREN hashheader.texchars[1]
+#define TEXLEFTSQUARE hashheader.texchars[2]
+#define TEXRIGHTSQUARE hashheader.texchars[3]
+#define TEXLEFTCURLY hashheader.texchars[4]
+#define TEXRIGHTCURLY hashheader.texchars[5]
+#define TEXLEFTANGLE hashheader.texchars[6]
+#define TEXRIGHTANGLE hashheader.texchars[7]
+#define TEXBACKSLASH hashheader.texchars[8]
+#define TEXDOLLAR hashheader.texchars[9]
+#define TEXSTAR hashheader.texchars[10]
+#define TEXDOT hashheader.texchars[11]
+#define TEXPERCENT hashheader.texchars[12]
 
 /*
 ** Values for compoundflag
 */
-#define COMPOUND_NEVER		0	/* Compound words are never good */
-#define COMPOUND_ANYTIME	1	/* Accept run-together words */
-#define COMPOUND_CONTROLLED	2	/* Compounds controlled by afx flags */
-/*
-** These macros are similar to the ones above, but they take into account
-** the possibility of string characters.  Note well that they take a POINTER,
-** not a character.
-**
-** The "l_" versions set "len" to the length of the string character as a
-** handy side effect.  (Note that the global "laststringch" is also set,
-** and sometimes used, by these macros.)
-**
-** The "l1_" versions go one step further and guarantee that the "len"
-** field is valid for *all* characters, being set to 1 even if the macro
-** returns false.  This macro is a great example of how NOT to write
-** readable C.
-*/
+#define COMPOUND_NEVER 0      /* Compound words are never good */
+#define COMPOUND_ANYTIME 1    /* Accept run-together words */
+#define COMPOUND_CONTROLLED 2 /* Compounds controlled by afx flags */
+                              /*
+                              ** These macros are similar to the ones above, but they take into account
+                              ** the possibility of string characters.  Note well that they take a POINTER,
+                              ** not a character.
+                              **
+                              ** The "l_" versions set "len" to the length of the string character as a
+                              ** handy side effect.  (Note that the global "laststringch" is also set,
+                              ** and sometimes used, by these macros.)
+                              **
+                              ** The "l1_" versions go one step further and guarantee that the "len"
+                              ** field is valid for *all* characters, being set to 1 even if the macro
+                              ** returns false.  This macro is a great example of how NOT to write
+                              ** readable C.
+                              */
 /*TF NOTE: This is actually defined in code (makedent) now */
-#if 0 
-#define isstringch(ptr, canon)	(isstringstart (*(ptr)) \
-				  &&  stringcharlen ((ptr), (canon)) > 0)
-#define l_isstringch(ptr, len, canon)	\
-				(isstringstart (*(ptr)) \
-				  &&  (len = stringcharlen ((ptr), (canon))) \
-				    > 0)
-#define l1_isstringch(ptr, len, canon)	\
-				(len = 1, \
-				  isstringstart ((unsigned char)(*(ptr))) \
-				    &&  ((len = \
-					  stringcharlen ((ptr), (canon))) \
-					> 0 \
-				      ? 1 : (len = 1, 0)))
+#if 0
+#define isstringch(ptr, canon) (isstringstart(*(ptr)) && stringcharlen((ptr), (canon)) > 0)
+#define l_isstringch(ptr, len, canon) (isstringstart(*(ptr)) && (len = stringcharlen((ptr), (canon))) > 0)
+#define l1_isstringch(ptr, len, canon)                                                                                                               \
+    (len = 1, isstringstart((unsigned char)(*(ptr))) && ((len = stringcharlen((ptr), (canon))) > 0 ? 1 : (len = 1, 0)))
 #endif
 
 /*
  * Sizes of buffers returned by ichartosstr/strtosichar.
  */
 #define ICHARTOSSTR_SIZE (INPUTWORDLEN + 4 * MAXAFFIXLEN + 4)
-#define STRTOSICHAR_SIZE ((INPUTWORDLEN + 4 * MAXAFFIXLEN + 4) \
-			  * sizeof (ichar_t))
+#define STRTOSICHAR_SIZE ((INPUTWORDLEN + 4 * MAXAFFIXLEN + 4) * sizeof(ichar_t))
 /* TF CHANGE: We should fill this as a structure
               and then use it throughout.
 */
@@ -750,49 +739,49 @@ struct hashheader
  * usage are given below.
  */
 #ifdef MAIN
-#define INIT(decl, init)	decl = init
+#define INIT(decl, init) decl = init
 #else
-#define INIT(decl, init)	extern decl
+#define INIT(decl, init) extern decl
 #endif
 
 #ifdef MINIMENU
-INIT (int minimenusize, 2);		/* MUST be either 2 or zero */
-#else /* MINIMENU */
-INIT (int minimenusize, 0);		/* MUST be either 2 or zero */
-#endif /* MINIMENU */
+INIT(int minimenusize, 2); /* MUST be either 2 or zero */
+#else                      /* MINIMENU */
+INIT(int minimenusize, 0); /* MUST be either 2 or zero */
+#endif                     /* MINIMENU */
 
-INIT (int eflag, 0);			/* NZ for expand mode */
-INIT (int dumpflag, 0);			/* NZ to do dump mode */
-INIT (int fflag, 0);			/* NZ if -f specified */
+INIT(int eflag, 0);    /* NZ for expand mode */
+INIT(int dumpflag, 0); /* NZ to do dump mode */
+INIT(int fflag, 0);    /* NZ if -f specified */
 #ifndef USG
-INIT (int sflag, 0);			/* NZ to stop self after EOF */
+INIT(int sflag, 0); /* NZ to stop self after EOF */
 #endif
-INIT (int vflag, 0);			/* NZ to display characters as M-xxx */
-INIT (int xflag, DEFNOBACKUPFLAG);	/* NZ to suppress backups */
-INIT (int deftflag, -1);		/* NZ for TeX mode by default */
-INIT (int tflag, DEFTEXFLAG);		/* NZ for TeX mode in current file */
-INIT (int prefstringchar, -1);		/* Preferred string character type */
+INIT(int vflag, 0);               /* NZ to display characters as M-xxx */
+INIT(int xflag, DEFNOBACKUPFLAG); /* NZ to suppress backups */
+INIT(int deftflag, -1);           /* NZ for TeX mode by default */
+INIT(int tflag, DEFTEXFLAG);      /* NZ for TeX mode in current file */
+INIT(int prefstringchar, -1);     /* Preferred string character type */
 
-INIT (int terse, 0);			/* NZ for "terse" mode */
+INIT(int terse, 0); /* NZ for "terse" mode */
 
-INIT (char tempfile[MAXPATHLEN], "");	/* Name of file we're spelling into */
+INIT(char tempfile[MAXPATHLEN], ""); /* Name of file we're spelling into */
 
-INIT (int minword, MINWORD);		/* Longest always-legal word */
-INIT (int sortit, 1);			/* Sort suggestions alphabetically */
-INIT (int compoundflag, -1);		/* How to treat compounds: see above */
-INIT (int tryhardflag, -1);		/* Always call tryveryhard */
+INIT(int minword, MINWORD); /* Longest always-legal word */
+INIT(int sortit, 1);        /* Sort suggestions alphabetically */
+INIT(int compoundflag, -1); /* How to treat compounds: see above */
+INIT(int tryhardflag, -1);  /* Always call tryveryhard */
 
-INIT (char * currentfile, NULL);	/* Name of current input file */
+INIT(char *currentfile, NULL); /* Name of current input file */
 
 /* Odd numbers for math mode in LaTeX; even for LR or paragraph mode */
-INIT (int math_mode, 0);
+INIT(int math_mode, 0);
 /* P -- paragraph or LR mode
  * b -- parsing a \begin statement
  * e -- parsing an \end statement
  * r -- parsing a \ref type of argument.
  * m -- looking for a \begin{minipage} argument.
  */
-INIT (char LaTeX_Mode, 'P');
+INIT(char LaTeX_Mode, 'P');
 
 #ifdef __cplusplus
 }

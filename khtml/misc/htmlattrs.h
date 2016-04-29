@@ -163,6 +163,6 @@ using namespace DOM;
 #define ATTR_VALUE 152
 #define ATTR_LAST_ATTR 152
 #define ATTR_LAST_CI_ATTR 103
-const char* getAttrName(unsigned short id) KDE_NO_EXPORT;
+const char *getAttrName(unsigned short id) KDE_NO_EXPORT;
 
 #endif

@@ -21,17 +21,19 @@
 #include "documentinfo.h"
 #include "documentdcopinfo.h"
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
-class PrivateDocumentInfoInterface
-{
-  public:
-    PrivateDocumentInfoInterface() {interface = 0;}
-    ~PrivateDocumentInfoInterface() {}
+class PrivateDocumentInfoInterface {
+public:
+    PrivateDocumentInfoInterface()
+    {
+        interface = 0;
+    }
+    ~PrivateDocumentInfoInterface()
+    {
+    }
     DocumentInfoDCOPInterface *interface;
 };
-
 }
 
 using namespace KTextEditor;
@@ -40,26 +42,26 @@ unsigned int DocumentInfoInterface::globalDocumentInfoInterfaceNumber = 0;
 
 DocumentInfoInterface::DocumentInfoInterface()
 {
-  globalDocumentInfoInterfaceNumber++;
-  myDocumentInfoInterfaceNumber = globalDocumentInfoInterfaceNumber++;
+    globalDocumentInfoInterfaceNumber++;
+    myDocumentInfoInterfaceNumber = globalDocumentInfoInterfaceNumber++;
 
-  d = new PrivateDocumentInfoInterface();
-  QString name = "DocumentInterface#" + QString::number(myDocumentInfoInterfaceNumber);
-  d->interface = new DocumentInfoDCOPInterface(this, name.latin1());
+    d = new PrivateDocumentInfoInterface();
+    QString name = "DocumentInterface#" + QString::number(myDocumentInfoInterfaceNumber);
+    d->interface = new DocumentInfoDCOPInterface(this, name.latin1());
 }
 
 DocumentInfoInterface::~DocumentInfoInterface()
 {
-  delete d->interface;
-  delete d;
+    delete d->interface;
+    delete d;
 }
 
-unsigned int DocumentInfoInterface::documentInfoInterfaceNumber () const
+unsigned int DocumentInfoInterface::documentInfoInterfaceNumber() const
 {
-  return myDocumentInfoInterfaceNumber;
+    return myDocumentInfoInterfaceNumber;
 }
 
-void DocumentInfoInterface::setDocumentInfoInterfaceDCOPSuffix (const QCString &suffix)
+void DocumentInfoInterface::setDocumentInfoInterfaceDCOPSuffix(const QCString &suffix)
 {
-  d->interface->setObjId ("DocumentInfoInterface#"+suffix);
+    d->interface->setObjId("DocumentInfoInterface#" + suffix);
 }

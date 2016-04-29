@@ -29,61 +29,58 @@ namespace KABC {
 
 /**
  * @short Time zone information.
- * 
+ *
  * This class stores information about a time zone.
  */
-class KABC_EXPORT TimeZone
-{
-  friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const TimeZone & );
-  friend KABC_EXPORT QDataStream &operator>>( QDataStream &, TimeZone & );
+class KABC_EXPORT TimeZone {
+    friend KABC_EXPORT QDataStream &operator<<(QDataStream &, const TimeZone &);
+    friend KABC_EXPORT QDataStream &operator>>(QDataStream &, TimeZone &);
 
 public:
+    /**
+     * Construct invalid time zone.
+     */
+    TimeZone();
 
-  /**
-   * Construct invalid time zone.
-   */
-  TimeZone();
+    /**
+     * Construct time zone.
+     *
+     * @param offset Offset in minutes relative to UTC.
+     */
+    TimeZone(int offset);
 
-  /**
-   * Construct time zone.
-   * 
-   * @param offset Offset in minutes relative to UTC.
-   */
-  TimeZone( int offset );
-    
-  /**
-   * Set time zone offset relative to UTC.
-   *   
-   * @param offset Offset in minutes.
-   */
-  void setOffset( int offset );
+    /**
+     * Set time zone offset relative to UTC.
+     *
+     * @param offset Offset in minutes.
+     */
+    void setOffset(int offset);
 
-  /**
-   * Return offset in minutes relative to UTC.
-   */
-  int offset() const;
+    /**
+     * Return offset in minutes relative to UTC.
+     */
+    int offset() const;
 
-  /**
-   * Return, if this time zone object is valid.
-   */
-  bool isValid() const;
-    
-  bool operator==( const TimeZone & ) const;
-  bool operator!=( const TimeZone & ) const;
-    
-  /**
-   * Return string representation of time zone offset.
-   */
-  QString asString() const;
-    
+    /**
+     * Return, if this time zone object is valid.
+     */
+    bool isValid() const;
+
+    bool operator==(const TimeZone &) const;
+    bool operator!=(const TimeZone &) const;
+
+    /**
+     * Return string representation of time zone offset.
+     */
+    QString asString() const;
+
 private:
-  int mOffset;  // Offset in minutes
+    int mOffset; // Offset in minutes
 
-  bool mValid;
+    bool mValid;
 };
 
-KABC_EXPORT QDataStream &operator<<( QDataStream &, const TimeZone & );
-KABC_EXPORT QDataStream &operator>>( QDataStream &, TimeZone & );
-
+KABC_EXPORT QDataStream &operator<<(QDataStream &, const TimeZone &);
+KABC_EXPORT QDataStream &operator>>(QDataStream &, TimeZone &);
 }
 #endif

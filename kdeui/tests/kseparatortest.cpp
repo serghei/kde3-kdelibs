@@ -27,25 +27,21 @@
 
 int main(int argc, char **argv)
 {
-   QApplication app(argc, argv);
-   
-   QWidget *toplevel = new QWidget();
-   
-   QBoxLayout *mainbox = new QBoxLayout(toplevel, QBoxLayout::TopToBottom, 10);
-   
-   KSeparator *sep1 = new KSeparator( KSeparator::VLine, toplevel );
-   mainbox->addWidget(sep1);
-   
-   KSeparator *sep2 = new KSeparator( KSeparator::HLine, toplevel );
-   mainbox->addWidget(sep2);
-   
-   mainbox->activate();
-   
-   app.setMainWidget(toplevel);
-   toplevel->show();
-   return app.exec();
+    QApplication app(argc, argv);
+
+    QWidget *toplevel = new QWidget();
+
+    QBoxLayout *mainbox = new QBoxLayout(toplevel, QBoxLayout::TopToBottom, 10);
+
+    KSeparator *sep1 = new KSeparator(KSeparator::VLine, toplevel);
+    mainbox->addWidget(sep1);
+
+    KSeparator *sep2 = new KSeparator(KSeparator::HLine, toplevel);
+    mainbox->addWidget(sep2);
+
+    mainbox->activate();
+
+    app.setMainWidget(toplevel);
+    toplevel->show();
+    return app.exec();
 }
-
-
-
-

@@ -29,108 +29,105 @@
 #include <qstring.h>
 
 class KSharedConfig;
-template <typename T>
-class QPtrDict;
+template < typename T > class QPtrDict;
 
-namespace KSpell2
-{
-    class Settings;
-    class Dictionary;
-    class DefaultDictionary;
+namespace KSpell2 {
+class Settings;
+class Dictionary;
+class DefaultDictionary;
+
+/**
+ * @short Class used to deal with dictionaries
+ *
+ * This class manages all dictionaries. It's the top level
+ * KSpell2 class, you can think of it as the kernel or manager
+ * of the KSpell2 architecture.
+ */
+class KDE_EXPORT Broker : public QObject, public KShared {
+    Q_OBJECT
+public:
+    typedef KSharedPtr< Broker > Ptr;
+    /**
+     * Constructs the broker.
+     *
+     * It's very important that you assign it to Broker::Ptr
+     * as soon as possible. Broker is reference counted so
+     * if you don't want to have it deleted under you simply
+     * have to hold it in a Broker::Ptr for as long as you're
+     * using it.
+     *
+     * @param config is the name of config file which
+     *        broker should use to read default language
+     *        and default client values. If no value will
+     *        be passed Broker will use global kspellrc file.
+     */
+    static Broker *openBroker(KSharedConfig *config = 0);
+
+public:
+    ~Broker();
 
     /**
-     * @short Class used to deal with dictionaries
-     *
-     * This class manages all dictionaries. It's the top level
-     * KSpell2 class, you can think of it as the kernel or manager
-     * of the KSpell2 architecture.
+     * Function returns the so-called DefaultDictionary. It's a
+     * special form a dictionary which automatically mutates
+     * according to changes tot the KSpell2::Settings object.
+     * You also can't delete it like other dictionaries since
+     * it's owned by the Broker and it will take care of it.
      */
-    class KDE_EXPORT Broker : public QObject,
-                   public KShared
-    {
-        Q_OBJECT
-    public:
-        typedef KSharedPtr<Broker> Ptr;
-        /**
-         * Constructs the broker.
-         *
-         * It's very important that you assign it to Broker::Ptr
-         * as soon as possible. Broker is reference counted so
-         * if you don't want to have it deleted under you simply
-         * have to hold it in a Broker::Ptr for as long as you're
-         * using it.
-         *
-         * @param config is the name of config file which
-         *        broker should use to read default language
-         *        and default client values. If no value will
-         *        be passed Broker will use global kspellrc file.
-         */
-        static Broker *openBroker( KSharedConfig *config = 0 );
+    DefaultDictionary *defaultDictionary() const;
 
-    public:
-        ~Broker();
+    /**
+     * Returns dictionary for the given language and preferred client.
+     *
+     * @param language specifies the language of the dictionary. If an
+     *        empty string will be passed the default language will
+     *        be used. Has to be one of the values returned by
+     *        \ref languages()
+     * @param client specifies the preferred client. If no client is
+     *               specified a client which supports the given
+     *               language is picked. If a few clients supports
+     *               the same language the one with the biggest
+     *               reliability value is returned.
+     *
+     */
+    Dictionary *dictionary(const QString &language = QString::null, const QString &client = QString::null) const;
 
-        /**
-         * Function returns the so-called DefaultDictionary. It's a
-         * special form a dictionary which automatically mutates
-         * according to changes tot the KSpell2::Settings object.
-         * You also can't delete it like other dictionaries since
-         * it's owned by the Broker and it will take care of it.
-         */
-        DefaultDictionary *defaultDictionary() const;
+    /**
+     * Returns names of all supported clients (e.g. ISpell, ASpell)
+     */
+    QStringList clients() const;
 
-        /**
-         * Returns dictionary for the given language and preferred client.
-         *
-         * @param language specifies the language of the dictionary. If an
-         *        empty string will be passed the default language will
-         *        be used. Has to be one of the values returned by
-         *        \ref languages()
-         * @param client specifies the preferred client. If no client is
-         *               specified a client which supports the given
-         *               language is picked. If a few clients supports
-         *               the same language the one with the biggest
-         *               reliability value is returned.
-         *
-         */
-        Dictionary *dictionary(
-            const QString& language = QString::null,
-            const QString& client = QString::null ) const;
+    /**
+     * Returns a list of supported languages.
+     */
+    QStringList languages() const;
 
-        /**
-         * Returns names of all supported clients (e.g. ISpell, ASpell)
-         */
-        QStringList clients() const;
+    /**
+     * Returns the Settings object used by the broker.
+     */
+    Settings *settings() const;
+signals:
+    /**
+     * Signal is emitted whenever the Settings object
+     * associated with this Broker changes.
+     */
+    void configurationChanged();
 
-        /**
-         * Returns a list of supported languages.
-         */
-        QStringList languages() const;
+protected:
+    friend class Settings;
+    void changed();
 
-        /**
-         * Returns the Settings object used by the broker.
-         */
-        Settings *settings() const;
-    signals:
-        /**
-         * Signal is emitted whenever the Settings object
-         * associated with this Broker changes.
-         */
-        void configurationChanged();
+private:
+    Broker(KSharedConfig *config);
+    void loadPlugins();
+    void loadPlugin(const QString &);
 
-    protected:
-        friend class Settings;
-        void changed();
-    private:
-        Broker( KSharedConfig *config );
-        void loadPlugins();
-        void loadPlugin( const QString& );
-    private:
-        class Private;
-        Private *d;
-    private:
-        static QPtrDict<Broker> *s_brokers;
-    };
+private:
+    class Private;
+    Private *d;
+
+private:
+    static QPtrDict< Broker > *s_brokers;
+};
 }
 
 #endif

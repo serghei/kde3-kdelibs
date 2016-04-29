@@ -30,76 +30,74 @@
 #define KIPCDomainsChanged 2014
 
 class QStringList;
-namespace DNSSD
-{
+namespace DNSSD {
 class DomainBrowserPrivate;
 
 /**
 @short Class used to provide current list of domains for browsing.
 @author Jakub Stachowski
 */
-class KDNSSD_EXPORT DomainBrowser : public QObject
-{
-	Q_OBJECT
+class KDNSSD_EXPORT DomainBrowser : public QObject {
+    Q_OBJECT
 public:
-	/**
-	Standard constructor. It takes all parameters from global configuration.
-	All changes in configuration are applied immediately.
-	@param parent Parent object.
-	 */
-	DomainBrowser(QObject *parent=0);
-	
-	/**
-	Constructor that creates browser for domain list. This does not use global
-	configuration at all.
-	@param domains List of domains 
-	@param recursive TRUE - additionally local network will be browsed for more domains
-	@param parent Parent object.
-	This process is recursive.
-	 */
-	DomainBrowser(const QStringList& domains, bool recursive=false, QObject *parent=0);
+    /**
+    Standard constructor. It takes all parameters from global configuration.
+    All changes in configuration are applied immediately.
+    @param parent Parent object.
+     */
+    DomainBrowser(QObject *parent = 0);
 
-	~DomainBrowser();
-	
-	/**
-	Current list of domains to browse.
-	 */
-	const QStringList& domains() const;
-	
-	/**
-	Starts browsing. To stop destroy this object.
-	 */
-	void startBrowse() ;
-	
-	/**
-	Returns true when browse has already started
-	 */
-	bool isRunning() const;
+    /**
+    Constructor that creates browser for domain list. This does not use global
+    configuration at all.
+    @param domains List of domains
+    @param recursive TRUE - additionally local network will be browsed for more domains
+    @param parent Parent object.
+    This process is recursive.
+     */
+    DomainBrowser(const QStringList &domains, bool recursive = false, QObject *parent = 0);
+
+    ~DomainBrowser();
+
+    /**
+    Current list of domains to browse.
+     */
+    const QStringList &domains() const;
+
+    /**
+    Starts browsing. To stop destroy this object.
+     */
+    void startBrowse();
+
+    /**
+    Returns true when browse has already started
+     */
+    bool isRunning() const;
 
 signals:
-	/**
-	Emitted when domain has been removed from browsing list
-	 */
-	void domainRemoved(const QString&);
-	/**
-	New domain has been discovered. Also emitted for domain specified in constructor
-	and in global configuration
-	 */
-	void domainAdded(const QString&);
+    /**
+    Emitted when domain has been removed from browsing list
+     */
+    void domainRemoved(const QString &);
+    /**
+    New domain has been discovered. Also emitted for domain specified in constructor
+    and in global configuration
+     */
+    void domainAdded(const QString &);
 
 protected:
-	virtual void virtual_hook(int,void*);
-private:
-	friend class DomainBrowserPrivate;
-	DomainBrowserPrivate *d;
+    virtual void virtual_hook(int, void *);
 
-	void gotNewDomain(const QString&);
-	void gotRemoveDomain(const QString&);
+private:
+    friend class DomainBrowserPrivate;
+    DomainBrowserPrivate *d;
+
+    void gotNewDomain(const QString &);
+    void gotRemoveDomain(const QString &);
 
 private slots:
-	void domainListChanged(int,int);
+    void domainListChanged(int, int);
 };
-
 }
 
 #endif

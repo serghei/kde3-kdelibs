@@ -94,13 +94,10 @@ class KReplaceNextDialog;
  *  unless you gave it a parent widget on construction.
  *
  */
-class KUTILS_EXPORT KReplace :
-    public KFind
-{
+class KUTILS_EXPORT KReplace : public KFind {
     Q_OBJECT
 
 public:
-
     /**
      * Only use this constructor if you don't use KFindDialog, or if
      * you use it as a modal dialog.
@@ -121,7 +118,7 @@ public:
      * @param parent The parent widget.
      * @param replaceDialog A pointer to the KReplaceDialog object.
      */
-    KReplace(const QString &pattern, const QString &replacement, long options, QWidget *parent, QWidget* replaceDialog);
+    KReplace(const QString &pattern, const QString &replacement, long options, QWidget *parent, QWidget *replaceDialog);
 
     /**
      * Destructor.
@@ -135,7 +132,10 @@ public:
      * The final dialog does so already, unless you used setDisplayFinalDialog(false).
      * @return The number of replacements.
      */
-    int numReplacements() const { return m_replacements; }
+    int numReplacements() const
+    {
+        return m_replacements;
+    }
 
     /**
      * Call this to reset the numMatches & numReplacements counts.
@@ -160,7 +160,7 @@ public:
      * program may want to call setActiveWindow() on that dialog.
      * @return The replace next dialog.
      */
-    KDialogBase* replaceNextDialog( bool create = false );
+    KDialogBase *replaceNextDialog(bool create = false);
 
     /**
      * Close the "replace next?" dialog. The application should do this when
@@ -186,7 +186,7 @@ public:
      * Not always the same as replacement.length(), when backreferences are used.
      * @return The index at which a match was found, or -1 if no match was found.
      */
-    static int replace( QString &text, const QString &pattern, const QString &replacement, int index, long options, int *replacedLength );
+    static int replace(QString &text, const QString &pattern, const QString &replacement, int index, long options, int *replacedLength);
 
     /**
      * Searches the given regular expression, replaces with the given replacement string,
@@ -204,7 +204,7 @@ public:
      * Not always the same as replacement.length(), when backreferences are used.
      * @return The index at which a match was found, or -1 if no match was found.
      */
-    static int replace( QString &text, const QRegExp &pattern, const QString &replacement, int index, long options, int *replacedLength );
+    static int replace(QString &text, const QRegExp &pattern, const QString &replacement, int index, long options, int *replacedLength);
 
     /**
      * Returns @c true if we should restart the search from scratch.
@@ -222,7 +222,7 @@ public:
      *
      * @return @c true, if the search should be restarted.
      */
-    virtual bool shouldRestart( bool forceAsking = false, bool showNumMatches = true ) const;
+    virtual bool shouldRestart(bool forceAsking = false, bool showNumMatches = true) const;
 
     /**
      * Displays the final dialog telling the user how many replacements were made.
@@ -255,9 +255,9 @@ protected slots:
     void slotReplaceAll();
 
 private:
-    KReplaceNextDialog* dialog();
+    KReplaceNextDialog *dialog();
     void doReplace();
-    static int replace( QString &text, const QString &replacement, int index, long options, int length );
+    static int replace(QString &text, const QString &replacement, int index, long options, int length);
 
     QString m_replacement;
     unsigned m_replacements;

@@ -36,8 +36,7 @@ namespace DOM {
 class HTMLFormElementImpl;
 class DOMStringImpl;
 
-class HTMLObjectBaseElementImpl : public QObject, public HTMLElementImpl
-{
+class HTMLObjectBaseElementImpl : public QObject, public HTMLElementImpl {
     Q_OBJECT
 public:
     HTMLObjectBaseElementImpl(DocumentImpl *doc);
@@ -45,7 +44,7 @@ public:
     virtual void parseAttribute(AttributeImpl *attr);
     virtual void attach();
 
-    virtual void recalcStyle( StyleChange ch );
+    virtual void recalcStyle(StyleChange ch);
 
     void renderAlternative();
 
@@ -59,18 +58,18 @@ public:
 
     virtual void insertedIntoDocument();
     virtual void removedFromDocument();
-    virtual void addId(const QString& id);
-    virtual void removeId(const QString& id);
+    virtual void addId(const QString &id);
+    virtual void removeId(const QString &id);
 protected slots:
     void slotRenderAlternative();
+
 protected:
-    DOMString     m_name;
+    DOMString m_name;
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLAppletElementImpl : public HTMLObjectBaseElementImpl
-{
+class HTMLAppletElementImpl : public HTMLObjectBaseElementImpl {
 public:
     HTMLAppletElementImpl(DocumentImpl *doc);
 
@@ -80,14 +79,14 @@ public:
 
     virtual void parseAttribute(AttributeImpl *token);
     virtual void attach();
+
 protected:
     khtml::VAlign valign;
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLEmbedElementImpl : public HTMLObjectBaseElementImpl
-{
+class HTMLEmbedElementImpl : public HTMLObjectBaseElementImpl {
 public:
     HTMLEmbedElementImpl(DocumentImpl *doc);
     ~HTMLEmbedElementImpl();
@@ -103,8 +102,7 @@ public:
 
 // -------------------------------------------------------------------------
 
-class HTMLObjectElementImpl : public HTMLObjectBaseElementImpl
-{
+class HTMLObjectElementImpl : public HTMLObjectBaseElementImpl {
 public:
     HTMLObjectElementImpl(DocumentImpl *doc);
 
@@ -118,25 +116,33 @@ public:
 
     virtual void attach();
 
-    DocumentImpl* contentDocument() const;
+    DocumentImpl *contentDocument() const;
 };
 
 // -------------------------------------------------------------------------
 
-class HTMLParamElementImpl : public HTMLElementImpl
-{
+class HTMLParamElementImpl : public HTMLElementImpl {
     friend class HTMLAppletElementImpl;
+
 public:
-    HTMLParamElementImpl(DocumentImpl* _doc) : HTMLElementImpl(_doc) {}
+    HTMLParamElementImpl(DocumentImpl *_doc) : HTMLElementImpl(_doc)
+    {
+    }
 
     virtual Id id() const;
 
     virtual void parseAttribute(AttributeImpl *token);
 
-    QString name() const { return m_name; }
-    QString value() const { return m_value; }
+    QString name() const
+    {
+        return m_name;
+    }
+    QString value() const
+    {
+        return m_value;
+    }
 
- protected:
+protected:
     QString m_name;
     QString m_value;
 };

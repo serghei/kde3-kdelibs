@@ -31,10 +31,9 @@ namespace KABC {
   This class provides a lock without actually locking. It can be constructed in
   two ways: One that let all locks succeed and one that let all locks fail.
 */
-class KABC_EXPORT LockNull : public Lock
-{
-  public:
-    LockNull( bool allowAccess );
+class KABC_EXPORT LockNull : public Lock {
+public:
+    LockNull(bool allowAccess);
     ~LockNull();
 
     bool lock();
@@ -42,13 +41,12 @@ class KABC_EXPORT LockNull : public Lock
 
     QString error() const;
 
-  private:
+private:
     bool mAllowAccess;
 
     class Private;
     Private *d;
 };
-
 }
 
 #endif

@@ -29,89 +29,88 @@
  *
  ***********************************************************************/
 
-KAutoMount::KAutoMount( bool _readonly, const QString& _format, const QString& _device,
-                        const QString&  _mountpoint, const QString & _desktopFile,
-                        bool _show_filemanager_window )
-  : m_strDevice( _device ),
-    m_desktopFile( _desktopFile )
+KAutoMount::KAutoMount(bool _readonly, const QString &_format, const QString &_device, const QString &_mountpoint, const QString &_desktopFile,
+                       bool _show_filemanager_window)
+    : m_strDevice(_device), m_desktopFile(_desktopFile)
 {
-  //kdDebug(7015) << "KAutoMount device=" << _device << " mountpoint=" << _mountpoint << endl;
-  m_bShowFilemanagerWindow = _show_filemanager_window;
+    // kdDebug(7015) << "KAutoMount device=" << _device << " mountpoint=" << _mountpoint << endl;
+    m_bShowFilemanagerWindow = _show_filemanager_window;
 
-  KIO::Job* job = KIO::mount( _readonly, _format.ascii(), _device, _mountpoint );
-  connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotResult( KIO::Job * ) ) );
+    KIO::Job *job = KIO::mount(_readonly, _format.ascii(), _device, _mountpoint);
+    connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotResult(KIO::Job *)));
 }
 
-void KAutoMount::slotResult( KIO::Job * job )
+void KAutoMount::slotResult(KIO::Job *job)
 {
-  if ( job->error() ) {
-    emit error();
-    job->showErrorDialog();
-  }
-  else
-  {
-    KURL mountpoint;
-    mountpoint.setPath( KIO::findDeviceMountPoint( m_strDevice ) );
-    //kdDebug(7015) << "KAutoMount: m_strDevice=" << m_strDevice << " -> mountpoint=" << mountpoint << endl;
-    Q_ASSERT( mountpoint.isValid() );
+    if(job->error())
+    {
+        emit error();
+        job->showErrorDialog();
+    }
+    else
+    {
+        KURL mountpoint;
+        mountpoint.setPath(KIO::findDeviceMountPoint(m_strDevice));
+        // kdDebug(7015) << "KAutoMount: m_strDevice=" << m_strDevice << " -> mountpoint=" << mountpoint << endl;
+        Q_ASSERT(mountpoint.isValid());
 
-    if ( mountpoint.path().isEmpty() )
-        kdWarning(7015) << m_strDevice << " was correctly mounted, but KIO::findDeviceMountPoint didn't find it. "
-                        << "This looks like a bug, please report it on http://bugs.kde.org, together with your /etc/fstab line" << endl;
-    else if ( m_bShowFilemanagerWindow )
-      KRun::runURL( mountpoint, "inode/directory" );
+        if(mountpoint.path().isEmpty())
+            kdWarning(7015) << m_strDevice << " was correctly mounted, but KIO::findDeviceMountPoint didn't find it. "
+                            << "This looks like a bug, please report it on http://bugs.kde.org, together with your /etc/fstab line" << endl;
+        else if(m_bShowFilemanagerWindow)
+            KRun::runURL(mountpoint, "inode/directory");
 
-    // Notify about the new stuff in that dir, in case of opened windows showing it
-    KDirNotify_stub allDirNotify("*", "KDirNotify*");
-    allDirNotify.FilesAdded( mountpoint );
+        // Notify about the new stuff in that dir, in case of opened windows showing it
+        KDirNotify_stub allDirNotify("*", "KDirNotify*");
+        allDirNotify.FilesAdded(mountpoint);
 
-    // Update the desktop file which is used for mount/unmount (icon change)
-    kdDebug(7015) << " mount finished : updating " << m_desktopFile << endl;
-    KURL dfURL;
-    dfURL.setPath( m_desktopFile );
-    allDirNotify.FilesChanged( dfURL );
-    //KDirWatch::self()->setFileDirty( m_desktopFile );
+        // Update the desktop file which is used for mount/unmount (icon change)
+        kdDebug(7015) << " mount finished : updating " << m_desktopFile << endl;
+        KURL dfURL;
+        dfURL.setPath(m_desktopFile);
+        allDirNotify.FilesChanged(dfURL);
+        // KDirWatch::self()->setFileDirty( m_desktopFile );
 
-    emit finished();
-  }
-  delete this;
+        emit finished();
+    }
+    delete this;
 }
 
-KAutoUnmount::KAutoUnmount( const QString & _mountpoint, const QString & _desktopFile )
-  : m_desktopFile( _desktopFile ), m_mountpoint( _mountpoint )
+KAutoUnmount::KAutoUnmount(const QString &_mountpoint, const QString &_desktopFile) : m_desktopFile(_desktopFile), m_mountpoint(_mountpoint)
 {
-  KIO::Job * job = KIO::unmount( m_mountpoint );
-  connect( job, SIGNAL( result( KIO::Job * ) ), this, SLOT( slotResult( KIO::Job * ) ) );
+    KIO::Job *job = KIO::unmount(m_mountpoint);
+    connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotResult(KIO::Job *)));
 }
 
-void KAutoUnmount::slotResult( KIO::Job * job )
+void KAutoUnmount::slotResult(KIO::Job *job)
 {
-  if ( job->error() ) {
-    emit error();
-    job->showErrorDialog();
-  }
-  else
-  {
-    KDirNotify_stub allDirNotify("*", "KDirNotify*");
-    // Update the desktop file which is used for mount/unmount (icon change)
-    kdDebug(7015) << "unmount finished : updating " << m_desktopFile << endl;
-    KURL dfURL;
-    dfURL.setPath( m_desktopFile );
-    allDirNotify.FilesChanged( dfURL );
-    //KDirWatch::self()->setFileDirty( m_desktopFile );
+    if(job->error())
+    {
+        emit error();
+        job->showErrorDialog();
+    }
+    else
+    {
+        KDirNotify_stub allDirNotify("*", "KDirNotify*");
+        // Update the desktop file which is used for mount/unmount (icon change)
+        kdDebug(7015) << "unmount finished : updating " << m_desktopFile << endl;
+        KURL dfURL;
+        dfURL.setPath(m_desktopFile);
+        allDirNotify.FilesChanged(dfURL);
+        // KDirWatch::self()->setFileDirty( m_desktopFile );
 
-    // Notify about the new stuff in that dir, in case of opened windows showing it
-    // You may think we removed files, but this may have also readded some
-    // (if the mountpoint wasn't empty). The only possible behavior on FilesAdded
-    // is to relist the directory anyway.
-    KURL mp;
-    mp.setPath( m_mountpoint );
-    allDirNotify.FilesAdded( mp );
+        // Notify about the new stuff in that dir, in case of opened windows showing it
+        // You may think we removed files, but this may have also readded some
+        // (if the mountpoint wasn't empty). The only possible behavior on FilesAdded
+        // is to relist the directory anyway.
+        KURL mp;
+        mp.setPath(m_mountpoint);
+        allDirNotify.FilesAdded(mp);
 
-    emit finished();
-  }
+        emit finished();
+    }
 
-  delete this;
+    delete this;
 }
 
 #include "kautomount.moc"

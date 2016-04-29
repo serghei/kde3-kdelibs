@@ -27,33 +27,28 @@
 
 class QTextEdit;
 
-namespace KSpell2
-{
-    class Highlighter : public QSyntaxHighlighter
-    {
-    public:
-        Highlighter( QTextEdit *textEdit,
-                     const QString& configFile = QString::null,
-                     Filter *filter = Filter::defaultFilter() );
-        ~Highlighter();
+namespace KSpell2 {
+class Highlighter : public QSyntaxHighlighter {
+public:
+    Highlighter(QTextEdit *textEdit, const QString &configFile = QString::null, Filter *filter = Filter::defaultFilter());
+    ~Highlighter();
 
-        virtual int highlightParagraph( const QString& text,
-                                        int endStateOfLastPara );
+    virtual int highlightParagraph(const QString &text, int endStateOfLastPara);
 
-        Filter *currentFilter() const;
-        void setCurrentFilter( Filter *filter );
+    Filter *currentFilter() const;
+    void setCurrentFilter(Filter *filter);
 
-        QString currentLanguage() const;
-        void setCurrentLanguage( const QString& lang );
+    QString currentLanguage() const;
+    void setCurrentLanguage(const QString &lang);
 
-    protected:
-        virtual void setMisspelled( int start, int count );
-        virtual void unsetMisspelled( int start,  int count );
-    private:
-        class Private;
-        Private *d;
-    };
+protected:
+    virtual void setMisspelled(int start, int count);
+    virtual void unsetMisspelled(int start, int count);
 
+private:
+    class Private;
+    Private *d;
+};
 }
 
 #endif

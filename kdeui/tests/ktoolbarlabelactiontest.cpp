@@ -24,74 +24,57 @@
 #include <klistview.h>
 #include <kstandarddirs.h>
 #include <ktoolbarlabelaction.h>
-#include <ksqueezedtextlabel.h> 
+#include <ksqueezedtextlabel.h>
 #include <kdebug.h>
 #include <qvbox.h>
 
 #include <assert.h>
 
-class MainWindow : public KMainWindow
-{
+class MainWindow : public KMainWindow {
 public:
-  MainWindow()
-  {
-    QVBox* main = new QVBox(this);
-    setCentralWidget(main);
+    MainWindow()
+    {
+        QVBox *main = new QVBox(this);
+        setCentralWidget(main);
 
-    KSqueezedTextLabel* accel = new KSqueezedTextLabel
-      ("&Really long, long, long and boring text goes here", main, 
-       "kde toolbar widget");
-    new KSqueezedTextLabel
-      ("Really long, long, long and boring text goes here", main, 
-       "kde toolbar widget");
+        KSqueezedTextLabel *accel = new KSqueezedTextLabel("&Really long, long, long and boring text goes here", main, "kde toolbar widget");
+        new KSqueezedTextLabel("Really long, long, long and boring text goes here", main, "kde toolbar widget");
 
 
-    // first constructor
-    KToolBarLabelAction* label1 = new KToolBarLabelAction("&Label 1", 0,
-							  0, 0,
-							  actionCollection(),
-							  "label1");
-    // second constructor
-    KLineEdit* lineEdit = new KLineEdit(this);
-    new KWidgetAction(lineEdit, "Line Edit", 0, this, 0,
-		      actionCollection(), "lineEdit");
-    KToolBarLabelAction* label2 = 
-      new KToolBarLabelAction(lineEdit, "L&abel 2", 0, 0, 0,
-			      actionCollection(),
-			      "label2");
+        // first constructor
+        KToolBarLabelAction *label1 = new KToolBarLabelAction("&Label 1", 0, 0, 0, actionCollection(), "label1");
+        // second constructor
+        KLineEdit *lineEdit = new KLineEdit(this);
+        new KWidgetAction(lineEdit, "Line Edit", 0, this, 0, actionCollection(), "lineEdit");
+        KToolBarLabelAction *label2 = new KToolBarLabelAction(lineEdit, "L&abel 2", 0, 0, 0, actionCollection(), "label2");
 
-    // set buddy for label1
-    label1->setBuddy(lineEdit);
-    accel->setBuddy(lineEdit);
+        // set buddy for label1
+        label1->setBuddy(lineEdit);
+        accel->setBuddy(lineEdit);
 
-     // third constructor
-    QLabel* customLabel =  new KSqueezedTextLabel
-      ("&Really long, long, long and boring text goes here", this, 
-        "kde toolbar widget");
+        // third constructor
+        QLabel *customLabel = new KSqueezedTextLabel("&Really long, long, long and boring text goes here", this, "kde toolbar widget");
 
-    KToolBarLabelAction* label3 = new KToolBarLabelAction(customLabel, 0, 0, 0,
- 							  actionCollection(),
-							  "label3");
-  
-    // set buddy for label3
-    label3->setBuddy(lineEdit);
+        KToolBarLabelAction *label3 = new KToolBarLabelAction(customLabel, 0, 0, 0, actionCollection(), "label3");
 
-    // customLabel->setText("&test me again some time soon");
-    
-    createGUI("ktoolbarlabelactiontestui.rc");
-  }
+        // set buddy for label3
+        label3->setBuddy(lineEdit);
+
+        // customLabel->setText("&test me again some time soon");
+
+        createGUI("ktoolbarlabelactiontestui.rc");
+    }
 };
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-  KApplication app( argc, argv, "ktoolbarlabelactiontest" );
+    KApplication app(argc, argv, "ktoolbarlabelactiontest");
 
-  KGlobal::instance()->dirs()->addResourceDir("data", ".");
+    KGlobal::instance()->dirs()->addResourceDir("data", ".");
 
-  MainWindow* mw = new MainWindow;
-  app.setMainWidget(mw);
-  mw->show();
+    MainWindow *mw = new MainWindow;
+    app.setMainWidget(mw);
+    mw->show();
 
-  return app.exec();
+    return app.exec();
 }
-

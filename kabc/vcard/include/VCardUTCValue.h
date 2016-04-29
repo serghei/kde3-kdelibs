@@ -1,8 +1,8 @@
 /*
-	libvcard - vCard parsing library for vCard version 3.0
-	
-	Copyright (C) 1999 Rik Hemsley rik@kde.org
-	
+    libvcard - vCard parsing library for vCard version 3.0
+
+    Copyright (C) 1999 Rik Hemsley rik@kde.org
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to
   deal in the Software without restriction, including without limitation the
@@ -21,38 +21,58 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef  UTCVALUE_H
-#define  UTCVALUE_H
+#ifndef UTCVALUE_H
+#define UTCVALUE_H
 
 #include <qcstring.h>
 
 #include <VCardValue.h>
 
-namespace VCARD
-{
+namespace VCARD {
 
-class KVCARD_EXPORT UTCValue : public Value
-{
-	
+class KVCARD_EXPORT UTCValue : public Value {
+
 #include "UTCValue-generated.h"
 
-  UTCValue *clone();
-	
-  void setPositive( int p ) { positive_ = p; assembled_ = false; }
-  void setHour( int h ) { hour_ = h; assembled_ = false; }
-  void setMinute( int m ) { minute_ = m; assembled_ = false; }
+    UTCValue *clone();
 
-	bool positive() { parse(); return positive_; }
-	unsigned int hour() { parse(); return hour_; }
-	unsigned int minute() { parse(); return minute_; }
-	
-	private:
-		
-		bool positive_;
-		unsigned int hour_;
-		unsigned int minute_;
+    void setPositive(int p)
+    {
+        positive_ = p;
+        assembled_ = false;
+    }
+    void setHour(int h)
+    {
+        hour_ = h;
+        assembled_ = false;
+    }
+    void setMinute(int m)
+    {
+        minute_ = m;
+        assembled_ = false;
+    }
+
+    bool positive()
+    {
+        parse();
+        return positive_;
+    }
+    unsigned int hour()
+    {
+        parse();
+        return hour_;
+    }
+    unsigned int minute()
+    {
+        parse();
+        return minute_;
+    }
+
+private:
+    bool positive_;
+    unsigned int hour_;
+    unsigned int minute_;
 };
-
 }
 
 #endif

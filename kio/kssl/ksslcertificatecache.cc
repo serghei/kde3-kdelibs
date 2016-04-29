@@ -30,370 +30,371 @@
 
 
 class KSSLCertificateCache::KSSLCertificateCachePrivate {
-  public:
-  DCOPClient *dcc;
+public:
+    DCOPClient *dcc;
 
-  KSSLCertificateCachePrivate()  { dcc = new DCOPClient; dcc->attach(); }
-  ~KSSLCertificateCachePrivate() { delete dcc;}
-
+    KSSLCertificateCachePrivate()
+    {
+        dcc = new DCOPClient;
+        dcc->attach();
+    }
+    ~KSSLCertificateCachePrivate()
+    {
+        delete dcc;
+    }
 };
 
 
-
-KSSLCertificateCache::KSSLCertificateCache() {
-  d = new KSSLCertificateCachePrivate;
+KSSLCertificateCache::KSSLCertificateCache()
+{
+    d = new KSSLCertificateCachePrivate;
 }
 
 
-KSSLCertificateCache::~KSSLCertificateCache() {
-  delete d;
+KSSLCertificateCache::~KSSLCertificateCache()
+{
+    delete d;
 }
 
 
-void KSSLCertificateCache::saveToDisk() {
-   kdDebug() << "Deprecated function KSSLCertificateCache::saveToDisk() called" << endl;
+void KSSLCertificateCache::saveToDisk()
+{
+    kdDebug() << "Deprecated function KSSLCertificateCache::saveToDisk() called" << endl;
 }
 
 
-void KSSLCertificateCache::clearList() {
-   kdDebug() << "Deprecated function KSSLCertificateCache::clearList() called" << endl;
+void KSSLCertificateCache::clearList()
+{
+    kdDebug() << "Deprecated function KSSLCertificateCache::clearList() called" << endl;
 }
 
 
-void KSSLCertificateCache::loadDefaultPolicies() {
-   kdDebug() << "Deprecated function KSSLCertificateCache::loadDefaultPolicies() called" << endl;
+void KSSLCertificateCache::loadDefaultPolicies()
+{
+    kdDebug() << "Deprecated function KSSLCertificateCache::loadDefaultPolicies() called" << endl;
 }
 
 
-void KSSLCertificateCache::reload() {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     d->dcc->call("kded", "kssld",
-                  "cacheReload()",
-                  data, rettype, retval);
+void KSSLCertificateCache::reload()
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    d->dcc->call("kded", "kssld", "cacheReload()", data, rettype, retval);
 }
 
 
-void KSSLCertificateCache::addCertificate(KSSLCertificate& cert, 
-                       KSSLCertificatePolicy policy, bool permanent) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cert;
-     arg << policy;
-     arg << permanent;
-     d->dcc->call("kded", "kssld",
-                  "cacheAddCertificate(KSSLCertificate,KSSLCertificateCache::KSSLCertificatePolicy,bool)",
-                  data, rettype, retval);
+void KSSLCertificateCache::addCertificate(KSSLCertificate &cert, KSSLCertificatePolicy policy, bool permanent)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cert;
+    arg << policy;
+    arg << permanent;
+    d->dcc->call("kded", "kssld", "cacheAddCertificate(KSSLCertificate,KSSLCertificateCache::KSSLCertificatePolicy,bool)", data, rettype, retval);
 }
 
 
 // KDE 4: Make it const QString &
-KSSLCertificateCache::KSSLCertificatePolicy KSSLCertificateCache::getPolicyByCN(QString& cn) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cn;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheGetPolicyByCN(QString)",
-                            data, rettype, retval);
+KSSLCertificateCache::KSSLCertificatePolicy KSSLCertificateCache::getPolicyByCN(QString &cn)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cn;
+    bool rc = d->dcc->call("kded", "kssld", "cacheGetPolicyByCN(QString)", data, rettype, retval);
 
-     if (rc && rettype == "KSSLCertificateCache::KSSLCertificatePolicy") {
+    if(rc && rettype == "KSSLCertificateCache::KSSLCertificatePolicy")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         KSSLCertificateCache::KSSLCertificatePolicy drc;
         retStream >> drc;
-	return drc;
-     }
-return KSSLCertificateCache::Ambiguous;
+        return drc;
+    }
+    return KSSLCertificateCache::Ambiguous;
 }
 
 
-KSSLCertificateCache::KSSLCertificatePolicy KSSLCertificateCache::getPolicyByCertificate(KSSLCertificate& cert) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cert;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheGetPolicyByCertificate(KSSLCertificate)",
-                            data, rettype, retval);
+KSSLCertificateCache::KSSLCertificatePolicy KSSLCertificateCache::getPolicyByCertificate(KSSLCertificate &cert)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cert;
+    bool rc = d->dcc->call("kded", "kssld", "cacheGetPolicyByCertificate(KSSLCertificate)", data, rettype, retval);
 
-     if (rc && rettype == "KSSLCertificateCache::KSSLCertificatePolicy") {
+    if(rc && rettype == "KSSLCertificateCache::KSSLCertificatePolicy")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         KSSLCertificateCache::KSSLCertificatePolicy drc;
         retStream >> drc;
-	return drc;
-     }
-return KSSLCertificateCache::Ambiguous;
+        return drc;
+    }
+    return KSSLCertificateCache::Ambiguous;
 }
 
 
 // KDE 4: Make it const QString &
-bool KSSLCertificateCache::seenCN(QString& cn) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cn;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheSeenCN(QString)",
-                            data, rettype, retval);
+bool KSSLCertificateCache::seenCN(QString &cn)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cn;
+    bool rc = d->dcc->call("kded", "kssld", "cacheSeenCN(QString)", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
-        QDataStream retStream(retval, IO_ReadOnly);
-        bool drc;
-        retStream >> drc;
-	return drc;
-     }
-
-return false;
-}
-
-
-bool KSSLCertificateCache::seenCertificate(KSSLCertificate& cert) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cert;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheSeenCertificate(KSSLCertificate)",
-                            data, rettype, retval);
-
-     if (rc && rettype == "bool") {
-        QDataStream retStream(retval, IO_ReadOnly);
-        bool drc;
-        retStream >> drc;
-	return drc;
-     }
-
-return false;
-}
-
-
-bool KSSLCertificateCache::isPermanent(KSSLCertificate& cert) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cert;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheIsPermanent(KSSLCertificate)",
-                            data, rettype, retval);
-
-     if (rc && rettype == "bool") {
-        QDataStream retStream(retval, IO_ReadOnly);
-        bool drc;
-        retStream >> drc;
-	return drc;
-     }
-
-return false;
-}
-
-
-// KDE 4: Make it const QString &
-bool KSSLCertificateCache::removeByCN(QString& cn) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cn;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheRemoveByCN(QString)",
-                            data, rettype, retval);
-
-     if (rc && rettype == "bool") {
-        QDataStream retStream(retval, IO_ReadOnly);
-        bool drc;
-        retStream >> drc;
-	return drc;
-     }
-
-return false;
-}
-
-
-bool KSSLCertificateCache::removeByCertificate(KSSLCertificate& cert) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cert;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheRemoveByCertificate(KSSLCertificate)",
-                            data, rettype, retval);
-
-     if (rc && rettype == "bool") {
-        QDataStream retStream(retval, IO_ReadOnly);
-        bool drc;
-        retStream >> drc;
-	return drc;
-     }
-
-return false;
-}
-
-
-// KDE 4: Make it const QString &
-bool KSSLCertificateCache::modifyByCN(QString& cn,
-                  KSSLCertificateCache::KSSLCertificatePolicy policy,
-                  bool permanent,
-                  QDateTime& expires) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cn << policy << permanent << expires;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheModifyByCN(QString,KSSLCertificateCache::KSSLCertificatePolicy,bool,QDateTime)",
-                            data, rettype, retval);
-
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
 }
 
 
-bool KSSLCertificateCache::modifyByCertificate(KSSLCertificate& cert,
-                           KSSLCertificateCache::KSSLCertificatePolicy policy,
-                           bool permanent,
-                           QDateTime& expires) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cert << policy << permanent << expires;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheModifyByCertificate(KSSLCertificate,KSSLCertificateCache::KSSLCertificatePolicy,bool,QDateTime)",
-                            data, rettype, retval);
+bool KSSLCertificateCache::seenCertificate(KSSLCertificate &cert)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cert;
+    bool rc = d->dcc->call("kded", "kssld", "cacheSeenCertificate(KSSLCertificate)", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
 }
 
 
-QStringList KSSLCertificateCache::getHostList(KSSLCertificate& cert) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cert;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheGetHostList(KSSLCertificate)",
-                            data, rettype, retval);
+bool KSSLCertificateCache::isPermanent(KSSLCertificate &cert)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cert;
+    bool rc = d->dcc->call("kded", "kssld", "cacheIsPermanent(KSSLCertificate)", data, rettype, retval);
 
-     if (rc && rettype == "QStringList") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
-        QStringList drc;
+        bool drc;
         retStream >> drc;
-	return drc;
-     }
-return QStringList();
+        return drc;
+    }
+
+    return false;
 }
 
 
 // KDE 4: Make it const QString &
-bool KSSLCertificateCache::addHost(KSSLCertificate& cert, QString& host) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cert << host;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheAddHost(KSSLCertificate,QString)",
-                            data, rettype, retval);
+bool KSSLCertificateCache::removeByCN(QString &cn)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cn;
+    bool rc = d->dcc->call("kded", "kssld", "cacheRemoveByCN(QString)", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
+}
+
+
+bool KSSLCertificateCache::removeByCertificate(KSSLCertificate &cert)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cert;
+    bool rc = d->dcc->call("kded", "kssld", "cacheRemoveByCertificate(KSSLCertificate)", data, rettype, retval);
+
+    if(rc && rettype == "bool")
+    {
+        QDataStream retStream(retval, IO_ReadOnly);
+        bool drc;
+        retStream >> drc;
+        return drc;
+    }
+
+    return false;
 }
 
 
 // KDE 4: Make it const QString &
-bool KSSLCertificateCache::removeHost(KSSLCertificate& cert, QString& host) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << cert << host;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "cacheRemoveHost(KSSLCertificate,QString)",
-                            data, rettype, retval);
+bool KSSLCertificateCache::modifyByCN(QString &cn, KSSLCertificateCache::KSSLCertificatePolicy policy, bool permanent, QDateTime &expires)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cn << policy << permanent << expires;
+    bool rc =
+        d->dcc->call("kded", "kssld", "cacheModifyByCN(QString,KSSLCertificateCache::KSSLCertificatePolicy,bool,QDateTime)", data, rettype, retval);
 
-     if (rc && rettype == "bool") {
+    if(rc && rettype == "bool")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         bool drc;
         retStream >> drc;
         return drc;
-     }
+    }
 
-return false;
+    return false;
 }
 
 
-QStringList KSSLCertificateCache::getKDEKeyByEmail(const QString &email) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << email;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "getKDEKeyByEmail(QString)",
-                            data, rettype, retval);
+bool KSSLCertificateCache::modifyByCertificate(KSSLCertificate &cert, KSSLCertificateCache::KSSLCertificatePolicy policy, bool permanent,
+                                               QDateTime &expires)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cert << policy << permanent << expires;
+    bool rc = d->dcc->call("kded", "kssld", "cacheModifyByCertificate(KSSLCertificate,KSSLCertificateCache::KSSLCertificatePolicy,bool,QDateTime)",
+                           data, rettype, retval);
 
-     if (rc && rettype == "QStringList") {
+    if(rc && rettype == "bool")
+    {
+        QDataStream retStream(retval, IO_ReadOnly);
+        bool drc;
+        retStream >> drc;
+        return drc;
+    }
+
+    return false;
+}
+
+
+QStringList KSSLCertificateCache::getHostList(KSSLCertificate &cert)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cert;
+    bool rc = d->dcc->call("kded", "kssld", "cacheGetHostList(KSSLCertificate)", data, rettype, retval);
+
+    if(rc && rettype == "QStringList")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         QStringList drc;
         retStream >> drc;
         return drc;
-     }
+    }
+    return QStringList();
+}
 
-     return QStringList();
-}     
+
+// KDE 4: Make it const QString &
+bool KSSLCertificateCache::addHost(KSSLCertificate &cert, QString &host)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cert << host;
+    bool rc = d->dcc->call("kded", "kssld", "cacheAddHost(KSSLCertificate,QString)", data, rettype, retval);
+
+    if(rc && rettype == "bool")
+    {
+        QDataStream retStream(retval, IO_ReadOnly);
+        bool drc;
+        retStream >> drc;
+        return drc;
+    }
+
+    return false;
+}
 
 
-KSSLCertificate *KSSLCertificateCache::getCertByMD5Digest(const QString &key) {
-     QByteArray data, retval;
-     QCString rettype;
-     QDataStream arg(data, IO_WriteOnly);
-     arg << key;
-     bool rc = d->dcc->call("kded", "kssld",
-                            "getCertByMD5Digest(QString)",
-                            data, rettype, retval);
+// KDE 4: Make it const QString &
+bool KSSLCertificateCache::removeHost(KSSLCertificate &cert, QString &host)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << cert << host;
+    bool rc = d->dcc->call("kded", "kssld", "cacheRemoveHost(KSSLCertificate,QString)", data, rettype, retval);
 
-     if (rc && rettype == "KSSLCertificate") {
+    if(rc && rettype == "bool")
+    {
+        QDataStream retStream(retval, IO_ReadOnly);
+        bool drc;
+        retStream >> drc;
+        return drc;
+    }
+
+    return false;
+}
+
+
+QStringList KSSLCertificateCache::getKDEKeyByEmail(const QString &email)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << email;
+    bool rc = d->dcc->call("kded", "kssld", "getKDEKeyByEmail(QString)", data, rettype, retval);
+
+    if(rc && rettype == "QStringList")
+    {
+        QDataStream retStream(retval, IO_ReadOnly);
+        QStringList drc;
+        retStream >> drc;
+        return drc;
+    }
+
+    return QStringList();
+}
+
+
+KSSLCertificate *KSSLCertificateCache::getCertByMD5Digest(const QString &key)
+{
+    QByteArray data, retval;
+    QCString rettype;
+    QDataStream arg(data, IO_WriteOnly);
+    arg << key;
+    bool rc = d->dcc->call("kded", "kssld", "getCertByMD5Digest(QString)", data, rettype, retval);
+
+    if(rc && rettype == "KSSLCertificate")
+    {
         QDataStream retStream(retval, IO_ReadOnly);
         KSSLCertificate *drc = new KSSLCertificate;
         retStream >> *drc;
-	if (drc->getCert())
-             return drc; 
-	delete drc; // should not happen too often if used in conjunction with getKDEKeyByEmail
-     }
+        if(drc->getCert())
+            return drc;
+        delete drc; // should not happen too often if used in conjunction with getKDEKeyByEmail
+    }
 
-     return 0L;
-}     
-
-
-QDataStream& operator<<(QDataStream& s, const KSSLCertificateCache::KSSLCertificatePolicy& p) {
-  s << (Q_UINT32)p;
-return s;
+    return 0L;
 }
 
 
-QDataStream& operator>>(QDataStream& s, KSSLCertificateCache::KSSLCertificatePolicy& p) {
-  Q_UINT32 pd;
-  s >> pd;
-  p = (KSSLCertificateCache::KSSLCertificatePolicy) pd;
-  return s;
+QDataStream &operator<<(QDataStream &s, const KSSLCertificateCache::KSSLCertificatePolicy &p)
+{
+    s << (Q_UINT32)p;
+    return s;
 }
 
 
-
-
-
+QDataStream &operator>>(QDataStream &s, KSSLCertificateCache::KSSLCertificatePolicy &p)
+{
+    Q_UINT32 pd;
+    s >> pd;
+    p = (KSSLCertificateCache::KSSLCertificatePolicy)pd;
+    return s;
+}

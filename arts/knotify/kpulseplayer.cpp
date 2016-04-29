@@ -33,287 +33,292 @@
 
 class KPulsePlayerWorker : public QThread {
 public:
-	KPulsePlayerWorker(KPulsePlayerPrivate *parent, const QCString &file);
-	~KPulsePlayerWorker();
+    KPulsePlayerWorker(KPulsePlayerPrivate *parent, const QCString &file);
+    ~KPulsePlayerWorker();
 
-	void rewind() { do_rewind = true; }
-	void cancel() { do_cancel = true; }
+    void rewind()
+    {
+        do_rewind = true;
+    }
+    void cancel()
+    {
+        do_cancel = true;
+    }
 
 protected:
-	void run();
+    void run();
 
 private:
-	void runOgg();
-	void runWav();
+    void runOgg();
+    void runWav();
 
 private:
-	KPulsePlayerPrivate *parent;
-	QCString file;
+    KPulsePlayerPrivate *parent;
+    QCString file;
 
-	//std::atomic_bool do_rewind;
-	//std::atomic_bool do_cancel;
-	bool do_rewind;
-	bool do_cancel;
+    // std::atomic_bool do_rewind;
+    // std::atomic_bool do_cancel;
+    bool do_rewind;
+    bool do_cancel;
 };
 
 
 KPulsePlayerWorker::KPulsePlayerWorker(KPulsePlayerPrivate *parent, const QCString &file)
-	: parent(parent), file(file), do_rewind(false), do_cancel(false)
+    : parent(parent), file(file), do_rewind(false), do_cancel(false)
 {
-	start();
+    start();
 }
 
 
 KPulsePlayerWorker::~KPulsePlayerWorker()
 {
-	wait();
+    wait();
 }
 
 
 void KPulsePlayerWorker::run()
 {
-	QCString endsWith = file.right(4);
+    QCString endsWith = file.right(4);
 
-	if(".ogg" == endsWith)
-		runOgg();
-	else if(".wav" == endsWith)
-		runWav();
-	else
-		kdDebug() << "KPulsePlayerWorker::run(): unsupported format \"" << endsWith << "\"" << endl;
+    if(".ogg" == endsWith)
+        runOgg();
+    else if(".wav" == endsWith)
+        runWav();
+    else
+        kdDebug() << "KPulsePlayerWorker::run(): unsupported format \"" << endsWith << "\"" << endl;
 
-	if(!do_cancel)
-		QApplication::postEvent(reinterpret_cast<QObject*>(parent), new QCustomEvent(QEvent::User, file.data()));
+    if(!do_cancel)
+        QApplication::postEvent(reinterpret_cast< QObject * >(parent), new QCustomEvent(QEvent::User, file.data()));
 }
 
 
 void KPulsePlayerWorker::runOgg()
 {
-	OggVorbis_File vf;
+    OggVorbis_File vf;
 
-	int rc = ov_fopen(file.data(), &vf);
+    int rc = ov_fopen(file.data(), &vf);
 
-	if(0 < rc)
-	{
-		const char *err = "Unknown error";
+    if(0 < rc)
+    {
+        const char *err = "Unknown error";
 
-		switch(rc)
-		{
-			case OV_EREAD:
-				err = "A read from media returned an error";
-				break;
-			case OV_ENOTVORBIS:
-				err = "Bitstream does not contain any Vorbis data";
-				break;
-			case OV_EVERSION:
-				err = "Vorbis version mismatch";
-				break;
-			case OV_EBADHEADER:
-				err = "Invalid Vorbis bitstream header";
-				break;
-			case OV_EFAULT:
-				err = "Internal logic fault; indicates a bug or heap/stack corruption";
-				break;
-		}
+        switch(rc)
+        {
+            case OV_EREAD:
+                err = "A read from media returned an error";
+                break;
+            case OV_ENOTVORBIS:
+                err = "Bitstream does not contain any Vorbis data";
+                break;
+            case OV_EVERSION:
+                err = "Vorbis version mismatch";
+                break;
+            case OV_EBADHEADER:
+                err = "Invalid Vorbis bitstream header";
+                break;
+            case OV_EFAULT:
+                err = "Internal logic fault; indicates a bug or heap/stack corruption";
+                break;
+        }
 
-		kdDebug() << "KPulsePlayerWorker::runOgg() - vorbisfile: " << err << endl;
-		return;
-	}
+        kdDebug() << "KPulsePlayerWorker::runOgg() - vorbisfile: " << err << endl;
+        return;
+    }
 
-	vorbis_info *vi = ov_info(&vf, -1);
+    vorbis_info *vi = ov_info(&vf, -1);
 
-	pa_sample_spec ss;
-	ss.format = PA_SAMPLE_S16LE;
-	ss.rate = vi->rate;
-	ss.channels = vi->channels;
+    pa_sample_spec ss;
+    ss.format = PA_SAMPLE_S16LE;
+    ss.rate = vi->rate;
+    ss.channels = vi->channels;
 
-	int error;
-	pa_simple *s = pa_simple_new(NULL, "KNotify", PA_STREAM_PLAYBACK, NULL, "Playback", &ss, NULL, NULL, &error);
+    int error;
+    pa_simple *s = pa_simple_new(NULL, "KNotify", PA_STREAM_PLAYBACK, NULL, "Playback", &ss, NULL, NULL, &error);
 
-	if(NULL == s)
-	{
-		kdDebug() << "KPulsePlayerWorker::runOgg() - pulseaudio: " << pa_strerror(error) << endl;
-		goto VORBIS_CLEANUP;
-	}
+    if(NULL == s)
+    {
+        kdDebug() << "KPulsePlayerWorker::runOgg() - pulseaudio: " << pa_strerror(error) << endl;
+        goto VORBIS_CLEANUP;
+    }
 
-	for(int bitstream = 0; !do_cancel;)
-	{
-		if(do_rewind)
-		{
-			ov_raw_seek(&vf, 0);
-			do_rewind = false;
-		}
+    for(int bitstream = 0; !do_cancel;)
+    {
+        if(do_rewind)
+        {
+            ov_raw_seek(&vf, 0);
+            do_rewind = false;
+        }
 
-		char buf[4192];
-		long len = ov_read(&vf, buf, sizeof(buf), 0, 2, 1, &bitstream);
+        char buf[4192];
+        long len = ov_read(&vf, buf, sizeof(buf), 0, 2, 1, &bitstream);
 
-		if(0 < len)
-		{
-			if(0 > pa_simple_write(s, buf, len, &error))
-			{
-				kdDebug() << "KPulsePlayerWorker::runOgg() - pulseaudio: " << pa_strerror(error) << endl;
-				break;
-			}
-		}
-		else
-		{
-			if(0 > len)
-				kdDebug() << "KPulsePlayerWorker::runOgg() - vorbisfile: the ogg stream seems corrupted, abort playing" << endl;
-			break;
-		}
-	}
+        if(0 < len)
+        {
+            if(0 > pa_simple_write(s, buf, len, &error))
+            {
+                kdDebug() << "KPulsePlayerWorker::runOgg() - pulseaudio: " << pa_strerror(error) << endl;
+                break;
+            }
+        }
+        else
+        {
+            if(0 > len)
+                kdDebug() << "KPulsePlayerWorker::runOgg() - vorbisfile: the ogg stream seems corrupted, abort playing" << endl;
+            break;
+        }
+    }
 
-	pa_simple_drain(s, &error);
-	pa_simple_free(s);
+    pa_simple_drain(s, &error);
+    pa_simple_free(s);
 
 VORBIS_CLEANUP:
-	ov_clear(&vf);
+    ov_clear(&vf);
 }
 
 
 void KPulsePlayerWorker::runWav()
 {
-	AFfilehandle af = afOpenFile(file.data(), "r", AF_NULL_FILESETUP);
+    AFfilehandle af = afOpenFile(file.data(), "r", AF_NULL_FILESETUP);
 
-	if(!af)
-	{
-		kdDebug() << "KPulsePlayerWorker::runWav() - could not open " << file << endl;
-		return;
-	}
+    if(!af)
+    {
+        kdDebug() << "KPulsePlayerWorker::runWav() - could not open " << file << endl;
+        return;
+    }
 
-	afSetVirtualByteOrder(af, AF_DEFAULT_TRACK, AF_BYTEORDER_LITTLEENDIAN);
+    afSetVirtualByteOrder(af, AF_DEFAULT_TRACK, AF_BYTEORDER_LITTLEENDIAN);
 
-	int sampleFormat, sampleWidth;
-	afGetVirtualSampleFormat(af, AF_DEFAULT_TRACK, &sampleFormat, &sampleWidth);
+    int sampleFormat, sampleWidth;
+    afGetVirtualSampleFormat(af, AF_DEFAULT_TRACK, &sampleFormat, &sampleWidth);
 
-	// KPulsePlayer only supports 8 bit unsigned and 16 bit signed data
-	// so force it to be compatible.
-	if(8 == sampleWidth)
-		afSetVirtualSampleFormat(af, AF_DEFAULT_TRACK, AF_SAMPFMT_UNSIGNED, 8);
-	else
-		afSetVirtualSampleFormat(af, AF_DEFAULT_TRACK, AF_SAMPFMT_TWOSCOMP, 16);
+    // KPulsePlayer only supports 8 bit unsigned and 16 bit signed data
+    // so force it to be compatible.
+    if(8 == sampleWidth)
+        afSetVirtualSampleFormat(af, AF_DEFAULT_TRACK, AF_SAMPFMT_UNSIGNED, 8);
+    else
+        afSetVirtualSampleFormat(af, AF_DEFAULT_TRACK, AF_SAMPFMT_TWOSCOMP, 16);
 
-	pa_sample_spec ss;
-	ss.format = (8 == sampleWidth ? PA_SAMPLE_U8 : PA_SAMPLE_S16LE);
-	ss.rate = afGetRate(af, AF_DEFAULT_TRACK);
-	ss.channels = afGetChannels(af, AF_DEFAULT_TRACK);
+    pa_sample_spec ss;
+    ss.format = (8 == sampleWidth ? PA_SAMPLE_U8 : PA_SAMPLE_S16LE);
+    ss.rate = afGetRate(af, AF_DEFAULT_TRACK);
+    ss.channels = afGetChannels(af, AF_DEFAULT_TRACK);
 
-	int sampleSize = ss.channels * (sampleWidth / 8);
+    int sampleSize = ss.channels * (sampleWidth / 8);
 
-	int error;
-	pa_simple *s = pa_simple_new(NULL, "KNotify", PA_STREAM_PLAYBACK, NULL, "Playback", &ss, NULL, NULL, &error);
+    int error;
+    pa_simple *s = pa_simple_new(NULL, "KNotify", PA_STREAM_PLAYBACK, NULL, "Playback", &ss, NULL, NULL, &error);
 
-	if(NULL == s)
-	{
-		kdDebug() << "KPulsePlayerWorker::runWav() - pulseaudio: " << pa_strerror(error) << endl;
-		goto AUDIOFILE_CLEANUP;
-	}
+    if(NULL == s)
+    {
+        kdDebug() << "KPulsePlayerWorker::runWav() - pulseaudio: " << pa_strerror(error) << endl;
+        goto AUDIOFILE_CLEANUP;
+    }
 
-	for(;!do_cancel;)
-	{
-		if(do_rewind)
-		{
-			afSeekFrame(af, AF_DEFAULT_TRACK, 0);
-			do_rewind = false;
-		}
+    for(; !do_cancel;)
+    {
+        if(do_rewind)
+        {
+            afSeekFrame(af, AF_DEFAULT_TRACK, 0);
+            do_rewind = false;
+        }
 
-		char buf[4192 * sampleSize];
-		AFframecount len = afReadFrames(af, AF_DEFAULT_TRACK, buf, sizeof(buf) / sampleSize);
+        char buf[4192 * sampleSize];
+        AFframecount len = afReadFrames(af, AF_DEFAULT_TRACK, buf, sizeof(buf) / sampleSize);
 
-		if(0 < len)
-		{
-			if(0 > pa_simple_write(s, buf, len * sampleSize, &error))
-			{
-				kdDebug() << "KPulsePlayerWorker::runWav() - pulseaudio: " << pa_strerror(error) << endl;
-				break;
-			}
-		}
-		else
-		{
-			if(0 > len)
-				kdDebug() << "KPulsePlayerWorker::runWav() - audiofile: the wav stream seems corrupted, abort playing" << endl;
-			break;
-		}
-	}
+        if(0 < len)
+        {
+            if(0 > pa_simple_write(s, buf, len * sampleSize, &error))
+            {
+                kdDebug() << "KPulsePlayerWorker::runWav() - pulseaudio: " << pa_strerror(error) << endl;
+                break;
+            }
+        }
+        else
+        {
+            if(0 > len)
+                kdDebug() << "KPulsePlayerWorker::runWav() - audiofile: the wav stream seems corrupted, abort playing" << endl;
+            break;
+        }
+    }
 
-	pa_simple_drain(s, &error);
-	pa_simple_free(s);
+    pa_simple_drain(s, &error);
+    pa_simple_free(s);
 
 AUDIOFILE_CLEANUP:
-	afCloseFile(af);
+    afCloseFile(af);
 }
 
 
 class KPulsePlayerPrivate : public QObject {
 public:
-	KPulsePlayerPrivate();
-	~KPulsePlayerPrivate();
-	void play(const QCString &file);
+    KPulsePlayerPrivate();
+    ~KPulsePlayerPrivate();
+    void play(const QCString &file);
 
 protected:
-	void customEvent(QCustomEvent *e);
+    void customEvent(QCustomEvent *e);
 
 private:
-	QAsciiDict<KPulsePlayerWorker> workers;
+    QAsciiDict< KPulsePlayerWorker > workers;
 };
 
 
-KPulsePlayerPrivate::KPulsePlayerPrivate()
-	: QObject(0, "KPulsePlayerPrivate")
+KPulsePlayerPrivate::KPulsePlayerPrivate() : QObject(0, "KPulsePlayerPrivate")
 {
-	workers.setAutoDelete(true);
+    workers.setAutoDelete(true);
 }
 
 
 KPulsePlayerPrivate::~KPulsePlayerPrivate()
 {
-	QAsciiDictIterator<KPulsePlayerWorker> it(workers);
+    QAsciiDictIterator< KPulsePlayerWorker > it(workers);
 
-	// inform the workers to cancel their jobs
-	for(; it.current(); ++it)
-	{
-		it.current()->cancel();
-	}
+    // inform the workers to cancel their jobs
+    for(; it.current(); ++it)
+    {
+        it.current()->cancel();
+    }
 }
 
 
 void KPulsePlayerPrivate::customEvent(QCustomEvent *e)
 {
-	workers.remove(static_cast<const char*>(e->data()));
+    workers.remove(static_cast< const char * >(e->data()));
 }
 
 
 void KPulsePlayerPrivate::play(const QCString &file)
 {
-	// check if this sound is already playing
-	KPulsePlayerWorker *worker = workers.find(file);
+    // check if this sound is already playing
+    KPulsePlayerWorker *worker = workers.find(file);
 
-	// if yes, just rewind it
-	if(worker)
-	{
-		worker->rewind();
-	}
-	// if not, start the worker for this sound
-	else
-	{
-		worker = new KPulsePlayerWorker(this, file);
-		workers.insert(file, worker);
-	}
+    // if yes, just rewind it
+    if(worker)
+    {
+        worker->rewind();
+    }
+    // if not, start the worker for this sound
+    else
+    {
+        worker = new KPulsePlayerWorker(this, file);
+        workers.insert(file, worker);
+    }
 }
 
 
 KPulsePlayer::KPulsePlayer()
 {
-	d = new KPulsePlayerPrivate;
+    d = new KPulsePlayerPrivate;
 }
 
 
 KPulsePlayer::~KPulsePlayer()
 {
-	delete d;
+    delete d;
 }
 
 
 void KPulsePlayer::play(const QCString &file)
 {
-	d->play(file);
+    d->play(file);
 }

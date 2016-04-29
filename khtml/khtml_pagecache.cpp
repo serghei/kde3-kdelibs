@@ -36,278 +36,267 @@
 #define KHTML_PAGE_CACHE_SIZE 12
 #endif
 
-template class QPtrList<KHTMLPageCacheDelivery>;
-class KHTMLPageCacheEntry
-{
-  friend class KHTMLPageCache;
+template class QPtrList< KHTMLPageCacheDelivery >;
+class KHTMLPageCacheEntry {
+    friend class KHTMLPageCache;
+
 public:
-  KHTMLPageCacheEntry(long id);
+    KHTMLPageCacheEntry(long id);
 
-  ~KHTMLPageCacheEntry();
+    ~KHTMLPageCacheEntry();
 
-  void addData(const QByteArray &data);
+    void addData(const QByteArray &data);
 
-  void endData();
+    void endData();
 
-  bool isComplete()
-   { return m_complete; }
+    bool isComplete()
+    {
+        return m_complete;
+    }
 
-  KHTMLPageCacheDelivery *fetchData(QObject *recvObj, const char *recvSlot);
+    KHTMLPageCacheDelivery *fetchData(QObject *recvObj, const char *recvSlot);
+
 private:
-  long m_id;
-  bool m_complete;
-  QValueList<QByteArray> m_data;
-  KTempFile *m_file;
+    long m_id;
+    bool m_complete;
+    QValueList< QByteArray > m_data;
+    KTempFile *m_file;
 };
 
-class KHTMLPageCachePrivate
-{
+class KHTMLPageCachePrivate {
 public:
-  long newId;
-  QIntDict<KHTMLPageCacheEntry> dict;
-  QPtrList<KHTMLPageCacheDelivery> delivery;
-  QPtrList<KHTMLPageCacheEntry> expireQueue;
-  bool deliveryActive;
+    long newId;
+    QIntDict< KHTMLPageCacheEntry > dict;
+    QPtrList< KHTMLPageCacheDelivery > delivery;
+    QPtrList< KHTMLPageCacheEntry > expireQueue;
+    bool deliveryActive;
 };
 
 KHTMLPageCacheEntry::KHTMLPageCacheEntry(long id) : m_id(id), m_complete(false)
 {
-  QString path = locateLocal("tmp", "khtmlcache");
-  m_file = new KTempFile(path);
-  m_file->unlink();
+    QString path = locateLocal("tmp", "khtmlcache");
+    m_file = new KTempFile(path);
+    m_file->unlink();
 }
 
 KHTMLPageCacheEntry::~KHTMLPageCacheEntry()
 {
-  delete m_file;
+    delete m_file;
 }
 
 
-void
-KHTMLPageCacheEntry::addData(const QByteArray &data)
+void KHTMLPageCacheEntry::addData(const QByteArray &data)
 {
-  if (m_file->status() == 0)
-     m_file->dataStream()->writeRawBytes(data.data(), data.size());
+    if(m_file->status() == 0)
+        m_file->dataStream()->writeRawBytes(data.data(), data.size());
 }
 
-void
-KHTMLPageCacheEntry::endData()
+void KHTMLPageCacheEntry::endData()
 {
-  m_complete = true;
-  if ( m_file->status() == 0) {
-    m_file->dataStream()->device()->flush();
-    m_file->dataStream()->device()->at(0);
-  }
+    m_complete = true;
+    if(m_file->status() == 0)
+    {
+        m_file->dataStream()->device()->flush();
+        m_file->dataStream()->device()->at(0);
+    }
 }
 
 
-KHTMLPageCacheDelivery *
-KHTMLPageCacheEntry::fetchData(QObject *recvObj, const char *recvSlot)
+KHTMLPageCacheDelivery *KHTMLPageCacheEntry::fetchData(QObject *recvObj, const char *recvSlot)
 {
-  // Duplicate fd so that entry can be safely deleted while delivering the data.
-  int fd = dup(m_file->handle());
-  lseek(fd, 0, SEEK_SET);
-  KHTMLPageCacheDelivery *delivery = new KHTMLPageCacheDelivery(fd);
-  recvObj->connect(delivery, SIGNAL(emitData(const QByteArray&)), recvSlot);
-  delivery->recvObj = recvObj;
-  return delivery;
+    // Duplicate fd so that entry can be safely deleted while delivering the data.
+    int fd = dup(m_file->handle());
+    lseek(fd, 0, SEEK_SET);
+    KHTMLPageCacheDelivery *delivery = new KHTMLPageCacheDelivery(fd);
+    recvObj->connect(delivery, SIGNAL(emitData(const QByteArray &)), recvSlot);
+    delivery->recvObj = recvObj;
+    return delivery;
 }
 
-static KStaticDeleter<KHTMLPageCache> pageCacheDeleter;
+static KStaticDeleter< KHTMLPageCache > pageCacheDeleter;
 
 KHTMLPageCache *KHTMLPageCache::_self = 0;
 
-KHTMLPageCache *
-KHTMLPageCache::self()
+KHTMLPageCache *KHTMLPageCache::self()
 {
-  if (!_self)
-     _self = pageCacheDeleter.setObject(_self, new KHTMLPageCache);
-  return _self;
+    if(!_self)
+        _self = pageCacheDeleter.setObject(_self, new KHTMLPageCache);
+    return _self;
 }
 
 KHTMLPageCache::KHTMLPageCache()
 {
-  d = new KHTMLPageCachePrivate;
-  d->newId = 1;
-  d->deliveryActive = false;
+    d = new KHTMLPageCachePrivate;
+    d->newId = 1;
+    d->deliveryActive = false;
 }
 
 KHTMLPageCache::~KHTMLPageCache()
 {
-  d->delivery.setAutoDelete(true);
-  d->dict.setAutoDelete(true);
-  delete d;
+    d->delivery.setAutoDelete(true);
+    d->dict.setAutoDelete(true);
+    delete d;
 }
 
-long
-KHTMLPageCache::createCacheEntry()
+long KHTMLPageCache::createCacheEntry()
 {
-  KHTMLPageCacheEntry *entry = new KHTMLPageCacheEntry(d->newId);
-  d->dict.insert(d->newId, entry);
-  d->expireQueue.append(entry);
-  if (d->expireQueue.count() > KHTML_PAGE_CACHE_SIZE)
-  {
-     KHTMLPageCacheEntry *entry = d->expireQueue.take(0);
-     d->dict.remove(entry->m_id);
-     delete entry;
-  }
-  return (d->newId++);
+    KHTMLPageCacheEntry *entry = new KHTMLPageCacheEntry(d->newId);
+    d->dict.insert(d->newId, entry);
+    d->expireQueue.append(entry);
+    if(d->expireQueue.count() > KHTML_PAGE_CACHE_SIZE)
+    {
+        KHTMLPageCacheEntry *entry = d->expireQueue.take(0);
+        d->dict.remove(entry->m_id);
+        delete entry;
+    }
+    return (d->newId++);
 }
 
-void
-KHTMLPageCache::addData(long id, const QByteArray &data)
+void KHTMLPageCache::addData(long id, const QByteArray &data)
 {
-  KHTMLPageCacheEntry *entry = d->dict.find(id);
-  if (entry)
-     entry->addData(data);
+    KHTMLPageCacheEntry *entry = d->dict.find(id);
+    if(entry)
+        entry->addData(data);
 }
 
-void
-KHTMLPageCache::endData(long id)
+void KHTMLPageCache::endData(long id)
 {
-  KHTMLPageCacheEntry *entry = d->dict.find(id);
-  if (entry)
-     entry->endData();
+    KHTMLPageCacheEntry *entry = d->dict.find(id);
+    if(entry)
+        entry->endData();
 }
 
-void
-KHTMLPageCache::cancelEntry(long id)
+void KHTMLPageCache::cancelEntry(long id)
 {
-  KHTMLPageCacheEntry *entry = d->dict.take(id);
-  if (entry)
-  {
-     d->expireQueue.removeRef(entry);
-     delete entry;
-  }
+    KHTMLPageCacheEntry *entry = d->dict.take(id);
+    if(entry)
+    {
+        d->expireQueue.removeRef(entry);
+        delete entry;
+    }
 }
 
-bool
-KHTMLPageCache::isValid(long id)
+bool KHTMLPageCache::isValid(long id)
 {
-  return (d->dict.find(id) != 0);
+    return (d->dict.find(id) != 0);
 }
 
-bool
-KHTMLPageCache::isComplete(long id)
+bool KHTMLPageCache::isComplete(long id)
 {
-  KHTMLPageCacheEntry *entry = d->dict.find(id);
-  if (entry)
-     return entry->isComplete();
-  return false;
+    KHTMLPageCacheEntry *entry = d->dict.find(id);
+    if(entry)
+        return entry->isComplete();
+    return false;
 }
 
-void
-KHTMLPageCache::fetchData(long id, QObject *recvObj, const char *recvSlot)
+void KHTMLPageCache::fetchData(long id, QObject *recvObj, const char *recvSlot)
 {
-  KHTMLPageCacheEntry *entry = d->dict.find(id);
-  if (!entry || !entry->isComplete()) return;
+    KHTMLPageCacheEntry *entry = d->dict.find(id);
+    if(!entry || !entry->isComplete())
+        return;
 
-  // Make this entry the most recent entry.
-  d->expireQueue.removeRef(entry);
-  d->expireQueue.append(entry);
+    // Make this entry the most recent entry.
+    d->expireQueue.removeRef(entry);
+    d->expireQueue.append(entry);
 
-  d->delivery.append( entry->fetchData(recvObj, recvSlot) );
-  if (!d->deliveryActive)
-  {
-     d->deliveryActive = true;
-     QTimer::singleShot(20, this, SLOT(sendData()));
-  }
+    d->delivery.append(entry->fetchData(recvObj, recvSlot));
+    if(!d->deliveryActive)
+    {
+        d->deliveryActive = true;
+        QTimer::singleShot(20, this, SLOT(sendData()));
+    }
 }
 
-void
-KHTMLPageCache::cancelFetch(QObject *recvObj)
+void KHTMLPageCache::cancelFetch(QObject *recvObj)
 {
-  KHTMLPageCacheDelivery *next;
-  for(KHTMLPageCacheDelivery* delivery = d->delivery.first();
-      delivery;
-      delivery = next)
-  {
-      next = d->delivery.next();
-      if (delivery->recvObj == recvObj)
-      {
-         d->delivery.removeRef(delivery);
-         delete delivery;
-      }
-  }
+    KHTMLPageCacheDelivery *next;
+    for(KHTMLPageCacheDelivery *delivery = d->delivery.first(); delivery; delivery = next)
+    {
+        next = d->delivery.next();
+        if(delivery->recvObj == recvObj)
+        {
+            d->delivery.removeRef(delivery);
+            delete delivery;
+        }
+    }
 }
 
-void
-KHTMLPageCache::sendData()
+void KHTMLPageCache::sendData()
 {
-  if (d->delivery.isEmpty())
-  {
-     d->deliveryActive = false;
-     return;
-  }
-  KHTMLPageCacheDelivery *delivery = d->delivery.take(0);
-  assert(delivery);
+    if(d->delivery.isEmpty())
+    {
+        d->deliveryActive = false;
+        return;
+    }
+    KHTMLPageCacheDelivery *delivery = d->delivery.take(0);
+    assert(delivery);
 
-  char buf[8192];
-  QByteArray byteArray;
+    char buf[8192];
+    QByteArray byteArray;
 
-  int n = read(delivery->fd, buf, 8192);
+    int n = read(delivery->fd, buf, 8192);
 
-  if ((n < 0) && (errno == EINTR))
-  {
-     // try again later
-     d->delivery.append( delivery );
-  }
-  else if (n <= 0)
-  {
-     // done.
-     delivery->emitData(byteArray); // Empty array
-     delete delivery;
-  }
-  else
-  {
-     byteArray.setRawData(buf, n);
-     delivery->emitData(byteArray);
-     byteArray.resetRawData(buf, n);
-     d->delivery.append( delivery );
-  }
-  QTimer::singleShot(0, this, SLOT(sendData()));
-}
-
-void
-KHTMLPageCache::saveData(long id, QDataStream *str)
-{
-  KHTMLPageCacheEntry *entry = d->dict.find(id);
-  assert(entry);
-
-  int fd = entry->m_file->handle();
-  if ( fd < 0 ) return;
-
-  off_t pos = lseek(fd, 0, SEEK_CUR);
-  lseek(fd, 0, SEEK_SET);
-
-  char buf[8192];
-
-  while(true)
-  {
-     int n = read(fd, buf, 8192);
-     if ((n < 0) && (errno == EINTR))
-     {
-        // try again
-        continue;
-     }
-     else if (n <= 0)
-     {
+    if((n < 0) && (errno == EINTR))
+    {
+        // try again later
+        d->delivery.append(delivery);
+    }
+    else if(n <= 0)
+    {
         // done.
-        break;
-     }
-     else
-     {
-        str->writeRawBytes(buf, n);
-     }
-  }
+        delivery->emitData(byteArray); // Empty array
+        delete delivery;
+    }
+    else
+    {
+        byteArray.setRawData(buf, n);
+        delivery->emitData(byteArray);
+        byteArray.resetRawData(buf, n);
+        d->delivery.append(delivery);
+    }
+    QTimer::singleShot(0, this, SLOT(sendData()));
+}
 
-  if (pos != (off_t)-1)
-    lseek(fd, pos, SEEK_SET);
+void KHTMLPageCache::saveData(long id, QDataStream *str)
+{
+    KHTMLPageCacheEntry *entry = d->dict.find(id);
+    assert(entry);
+
+    int fd = entry->m_file->handle();
+    if(fd < 0)
+        return;
+
+    off_t pos = lseek(fd, 0, SEEK_CUR);
+    lseek(fd, 0, SEEK_SET);
+
+    char buf[8192];
+
+    while(true)
+    {
+        int n = read(fd, buf, 8192);
+        if((n < 0) && (errno == EINTR))
+        {
+            // try again
+            continue;
+        }
+        else if(n <= 0)
+        {
+            // done.
+            break;
+        }
+        else
+        {
+            str->writeRawBytes(buf, n);
+        }
+    }
+
+    if(pos != (off_t)-1)
+        lseek(fd, pos, SEEK_SET);
 }
 
 KHTMLPageCacheDelivery::~KHTMLPageCacheDelivery()
 {
-  close(fd);
+    close(fd);
 }
 
 #include "khtml_pagecache.moc"

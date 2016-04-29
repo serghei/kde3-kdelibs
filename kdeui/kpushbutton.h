@@ -23,7 +23,7 @@
 #include <qpoint.h>
 #include <qpushbutton.h>
 #include <kguiitem.h>
-#include <kstdguiitem.h> 
+#include <kstdguiitem.h>
 
 class QDragObject;
 /**
@@ -34,35 +34,32 @@ class QDragObject;
  * @short A QPushButton with drag-support and KGuiItem support
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-class KDEUI_EXPORT KPushButton : public QPushButton
-{
+class KDEUI_EXPORT KPushButton : public QPushButton {
     Q_OBJECT
-    Q_PROPERTY(int stdItem READ guiItm WRITE setGuiItm )
+    Q_PROPERTY(int stdItem READ guiItm WRITE setGuiItm)
     Q_PROPERTY(bool isDragEnabled READ isDragEnabled WRITE setDragEnabled)
 
 public:
-
     /**
      * Default constructor.
      */
-    KPushButton( QWidget *parent, const char *name=0 );
+    KPushButton(QWidget *parent, const char *name = 0);
 
     /**
      * Constructor, that sets the button-text to @p text
      */
-    KPushButton( const QString &text, QWidget *parent, const char *name=0);
+    KPushButton(const QString &text, QWidget *parent, const char *name = 0);
 
     /**
      * Constructor, that sets an icon and the button-text to @p text
      */
-    KPushButton( const QIconSet &icon, const QString &text,
-		     QWidget *parent, const char *name=0 );
+    KPushButton(const QIconSet &icon, const QString &text, QWidget *parent, const char *name = 0);
 
     /**
      * Constructor that takes a KGuiItem for the text, the icon, the tooltip
      * and the what's this help
      */
-    KPushButton( const KGuiItem &item, QWidget *parent, const char *name = 0 );
+    KPushButton(const KGuiItem &item, QWidget *parent, const char *name = 0);
 
     /**
      * Destructs the button.
@@ -72,44 +69,53 @@ public:
     /**
      * Enables/disables drag-support. Default is disabled.
      */
-    void setDragEnabled( bool enable );
+    void setDragEnabled(bool enable);
 
     /**
      * @returns if drag support is enabled or not.
      */
-    bool isDragEnabled() const { return m_dragEnabled; }
+    bool isDragEnabled() const
+    {
+        return m_dragEnabled;
+    }
 
     /**
      * Sets the KGuiItem for this button.
      */
-    void setGuiItem( const KGuiItem& item );
+    void setGuiItem(const KGuiItem &item);
 
-    /** 
+    /**
     * Sets the standard KGuiItem for this button.
     * @since 3.4
     */
-    void setGuiItem( KStdGuiItem::StdItem item );
+    void setGuiItem(KStdGuiItem::StdItem item);
 
     /**
-    * Reads the standard KGuiItem for this button. 
+    * Reads the standard KGuiItem for this button.
     * @since 3.4
     */
     KStdGuiItem::StdItem guiItem() const;
 
     // Hack for Qt designer
-    void setGuiItm(int itm ) { setGuiItem( (KStdGuiItem::StdItem)itm );}
-    int guiItm() const { return (int)guiItem(); }
+    void setGuiItm(int itm)
+    {
+        setGuiItem((KStdGuiItem::StdItem)itm);
+    }
+    int guiItm() const
+    {
+        return (int)guiItem();
+    }
 
     /**
      * Sets the Icon Set for this button. It also takes into account hte
      * KGlobalSettings::showIconsOnPushButtons() setting.
      */
-    void setIconSet( const QIconSet &iconSet );
+    void setIconSet(const QIconSet &iconSet);
 
     /**
     * Sets the text of the button
     */
-    void setText( const QString &text );
+    void setText(const QString &text);
 
 protected:
     /**
@@ -117,16 +123,16 @@ protected:
      * for the drag.
      * Default implementation returns 0L, so that no drag is initiated.
      */
-    virtual QDragObject * dragObject();
+    virtual QDragObject *dragObject();
 
     /**
      * Reimplemented to add drag-support
      */
-    virtual void mousePressEvent( QMouseEvent * );
+    virtual void mousePressEvent(QMouseEvent *);
     /**
      * Reimplemented to add drag-support
      */
-    virtual void mouseMoveEvent( QMouseEvent * );
+    virtual void mouseMoveEvent(QMouseEvent *);
 
     /**
      * Starts a drag (dragCopy() by default) using dragObject()
@@ -138,24 +144,24 @@ private:
     QPoint startPos;
 
 private slots:
-    void slotSettingsChanged( int category );
+    void slotSettingsChanged(int category);
 
 private:
     /**
      * Internal.
      * Initialize the KPushButton instance
      */
-    void init( const KGuiItem &item );
+    void init(const KGuiItem &item);
 
     void readSettings();
     static bool s_useIcons;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KPushButtonPrivate;
     KPushButtonPrivate *d;
-
 };
 
 #endif // KPUSHBUTTON_H

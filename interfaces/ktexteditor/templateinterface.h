@@ -25,8 +25,7 @@
 
 #include <kdelibs_export.h>
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 class Document;
 
@@ -34,11 +33,12 @@ class Document;
  * This is an interface for inserting template strings with user editable
  * fields into a document.
  */
-class KTEXTEDITOR_EXPORT TemplateInterface //should be named AbstractTemplateInterface, but for consistency with the other classes it is not (for the 3.x release series)
+class KTEXTEDITOR_EXPORT
+    TemplateInterface // should be named AbstractTemplateInterface, but for consistency with the other classes it is not (for the 3.x release series)
 {
-  friend class PrivateTemplateInterface;
+    friend class PrivateTemplateInterface;
 
-  public:
+public:
     TemplateInterface();
     virtual ~TemplateInterface();
 
@@ -46,21 +46,20 @@ class KTEXTEDITOR_EXPORT TemplateInterface //should be named AbstractTemplateInt
      * Parses @p templateString for macros in the form [$%]{NAME} and finds
      * the value corresponding to NAME if any. The NAME string may contain
      * any non-whitespace character execpt '}'
-     * @param initialValues a map with the keys for the macros to expand. 
+     * @param initialValues a map with the keys for the macros to expand.
      * keys with a value are ignored.
      * @param parentWindow is used if dialogs have to be shown
      * @return true if all macros was sucessfully expanded
      * @see insertTemplateText for a list of supported macros
      */
-    static bool expandMacros( QMap<QString, QString> &initialValues, QWidget *parentWindow );
+    static bool expandMacros(QMap< QString, QString > &initialValues, QWidget *parentWindow);
 
-    uint templateInterfaceNumber () const;
+    uint templateInterfaceNumber() const;
 
-  protected:
-    void setTemplateInterfaceDCOPSuffix (const QCString &suffix);
+protected:
+    void setTemplateInterfaceDCOPSuffix(const QCString &suffix);
 
-  public:
-
+public:
     /**
      * Inserts an interactive ediable template text at line "line", column "col".
      * @p parentWindow is used if dialogs have to be shown
@@ -103,7 +102,8 @@ class KTEXTEDITOR_EXPORT TemplateInterface //should be named AbstractTemplateInt
      * If the editor supports some kind of smart indentation, the inserted code
      * should be layouted by the indenter.
      */
-    bool insertTemplateText ( uint line, uint column, const QString &templateString, const QMap<QString,QString> &initialValues, QWidget *parentWindow=0);
+    bool insertTemplateText(uint line, uint column, const QString &templateString, const QMap< QString, QString > &initialValues,
+                            QWidget *parentWindow = 0);
 
 protected:
     /**
@@ -113,19 +113,19 @@ protected:
      * insertTemplateText above.
      * @return true if any text was inserted.
      */
-    virtual bool insertTemplateTextImplementation ( uint line, uint column, const QString &templateString, const QMap<QString,QString> &initialValues, QWidget *parentWindow=0 )=0;
+    virtual bool insertTemplateTextImplementation(uint line, uint column, const QString &templateString,
+                                                  const QMap< QString, QString > &initialValues, QWidget *parentWindow = 0) = 0;
 
-  /**
-  * only for the interface itself - REAL PRIVATE
-  */
-  private:
+    /**
+    * only for the interface itself - REAL PRIVATE
+    */
+private:
     class PrivateTemplateInterface *d;
     static uint globalTemplateInterfaceNumber;
     uint myTemplateInterfaceNumber;
 };
 
-KTEXTEDITOR_EXPORT TemplateInterface *templateInterface (Document *doc);
-
+KTEXTEDITOR_EXPORT TemplateInterface *templateInterface(Document *doc);
 }
 
 #endif

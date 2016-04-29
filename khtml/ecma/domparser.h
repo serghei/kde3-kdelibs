@@ -30,28 +30,38 @@
 
 namespace KJS {
 
-  class DOMParserConstructorImp : public ObjectImp {
-  public:
+class DOMParserConstructorImp : public ObjectImp {
+public:
     DOMParserConstructorImp(ExecState *, DOM::DocumentImpl *d);
     virtual bool implementsConstruct() const;
     virtual Object construct(ExecState *exec, const List &args);
+
 private:
-    khtml::SharedPtr<DOM::DocumentImpl> doc;
-  };
+    khtml::SharedPtr< DOM::DocumentImpl > doc;
+};
 
-  class DOMParser : public DOMObject {
-  public:
+class DOMParser : public DOMObject {
+public:
     DOMParser(ExecState *, DOM::DocumentImpl *d);
-    virtual bool toBoolean(ExecState *) const { return true; }
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual bool toBoolean(ExecState *) const
+    {
+        return true;
+    }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    enum { ParseFromString };
+    enum
+    {
+        ParseFromString
+    };
 
-  private:
-    QGuardedPtr<DOM::DocumentImpl> doc;
+private:
+    QGuardedPtr< DOM::DocumentImpl > doc;
 
     friend class DOMParserProtoFunc;
-  };
+};
 
 } // namespace
 

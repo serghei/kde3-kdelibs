@@ -55,15 +55,14 @@ class DocumentImpl;
  * instruction </a> .
  *
  */
-class KHTML_EXPORT StyleSheet
-{
+class KHTML_EXPORT StyleSheet {
 public:
     StyleSheet();
     StyleSheet(const StyleSheet &other);
     StyleSheet(StyleSheetImpl *impl);
-public:
 
-    StyleSheet & operator = (const StyleSheet &other);
+public:
+    StyleSheet &operator=(const StyleSheet &other);
 
     ~StyleSheet();
 
@@ -96,7 +95,7 @@ public:
     /**
      * see disabled
      */
-    void setDisabled( bool );
+    void setDisabled(bool);
 
     /**
      * The node that associates this style sheet with the document.
@@ -159,8 +158,15 @@ public:
      * @internal
      */
     bool isCSSStyleSheet() const;
-    StyleSheetImpl *handle() const { return impl; }
-    bool isNull() const { return !impl; }
+    StyleSheetImpl *handle() const
+    {
+        return impl;
+    }
+    bool isNull() const
+    {
+        return !impl;
+    }
+
 protected:
     StyleSheetImpl *impl;
 };
@@ -170,27 +176,37 @@ protected:
  * This exception is raised when a specific CSS operation is impossible
  * to perform.
  */
-class KHTML_EXPORT CSSException
-{
+class KHTML_EXPORT CSSException {
 public:
-    CSSException(unsigned short _code) { code = _code; }
-    CSSException(const CSSException &other) { code = other.code; }
+    CSSException(unsigned short _code)
+    {
+        code = _code;
+    }
+    CSSException(const CSSException &other)
+    {
+        code = other.code;
+    }
 
-    CSSException & operator = (const CSSException &other)
-        { code = other.code; return *this; }
+    CSSException &operator=(const CSSException &other)
+    {
+        code = other.code;
+        return *this;
+    }
 
-    virtual ~CSSException() {}
+    virtual ~CSSException()
+    {
+    }
     /**
      * An integer indicating the type of error generated.
      *
      */
-    unsigned short   code;
+    unsigned short code;
 
     enum ExceptionCode
     {
-        SYNTAX_ERR                     = 0,
-        INVALID_MODIFICATION_ERR       = 1,
-        _EXCEPTION_OFFSET              = 1000
+        SYNTAX_ERR = 0,
+        INVALID_MODIFICATION_ERR = 1,
+        _EXCEPTION_OFFSET = 1000
     };
 };
 
@@ -204,17 +220,16 @@ class CSSRuleList;
  * content type is "text/css".
  *
  */
-class KHTML_EXPORT CSSStyleSheet : public StyleSheet
-{
+class KHTML_EXPORT CSSStyleSheet : public StyleSheet {
 public:
     CSSStyleSheet();
     CSSStyleSheet(const CSSStyleSheet &other);
     CSSStyleSheet(const StyleSheet &other);
     CSSStyleSheet(CSSStyleSheetImpl *impl);
-public:
 
-    CSSStyleSheet & operator = (const CSSStyleSheet &other);
-    CSSStyleSheet & operator = (const StyleSheet &other);
+public:
+    CSSStyleSheet &operator=(const CSSStyleSheet &other);
+    CSSStyleSheet &operator=(const StyleSheet &other);
 
     ~CSSStyleSheet();
 
@@ -276,7 +291,7 @@ public:
      * and is unparsable.
      *
      */
-    unsigned long insertRule ( const DOM::DOMString &rule, unsigned long index );
+    unsigned long insertRule(const DOM::DOMString &rule, unsigned long index);
 
     /**
      * Used to delete a rule from the style sheet.
@@ -294,7 +309,7 @@ public:
      * readonly.
      *
      */
-    void deleteRule ( unsigned long index );
+    void deleteRule(unsigned long index);
 };
 
 
@@ -306,15 +321,14 @@ class StyleSheet;
  * abstraction of an ordered collection of style sheets.
  *
  */
-class KHTML_EXPORT StyleSheetList
-{
+class KHTML_EXPORT StyleSheetList {
 public:
     StyleSheetList();
     StyleSheetList(const StyleSheetList &other);
     StyleSheetList(StyleSheetListImpl *impl);
-public:
 
-    StyleSheetList & operator = (const StyleSheetList &other);
+public:
+    StyleSheetList &operator=(const StyleSheetList &other);
 
     ~StyleSheetList();
 
@@ -336,7 +350,7 @@ public:
      * that is not a valid index.
      *
      */
-    StyleSheet item ( unsigned long index );
+    StyleSheet item(unsigned long index);
 
     /**
      * @internal
@@ -360,15 +374,14 @@ class CSSStyleSheet;
  * strings.
  *
  */
-class KHTML_EXPORT MediaList
-{
+class KHTML_EXPORT MediaList {
 public:
     MediaList();
     MediaList(const MediaList &other);
     MediaList(MediaListImpl *impl);
-public:
 
-    MediaList & operator = (const MediaList &other);
+public:
+    MediaList &operator=(const MediaList &other);
 
     ~MediaList();
 
@@ -444,14 +457,13 @@ protected:
 
 class LinkStyleImpl;
 
-class KHTML_EXPORT LinkStyle
-{
+class KHTML_EXPORT LinkStyle {
 public:
     LinkStyle();
     LinkStyle(const LinkStyle &other);
 
-    LinkStyle & operator = (const LinkStyle &other);
-    LinkStyle & operator = (const Node &other);
+    LinkStyle &operator=(const LinkStyle &other);
+    LinkStyle &operator=(const Node &other);
 
     ~LinkStyle();
 
@@ -466,14 +478,13 @@ protected:
 
 class DocumentStyleImpl;
 
-class KHTML_EXPORT DocumentStyle
-{
+class KHTML_EXPORT DocumentStyle {
 public:
     DocumentStyle();
     DocumentStyle(const DocumentStyle &other);
 
-    DocumentStyle & operator = (const DocumentStyle &other);
-    DocumentStyle & operator = (const Document &other);
+    DocumentStyle &operator=(const DocumentStyle &other);
+    DocumentStyle &operator=(const Document &other);
 
     ~DocumentStyle();
 
@@ -482,9 +493,12 @@ public:
 
     DOMString preferredStylesheetSet() const;
     DOMString selectedStylesheetSet() const;
-    void setSelectedStylesheetSet( const DOMString& aString );
+    void setSelectedStylesheetSet(const DOMString &aString);
 
-    bool isNull() const { return !impl; }
+    bool isNull() const
+    {
+        return !impl;
+    }
 
 protected:
     DOM::DocumentImpl *doc;

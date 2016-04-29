@@ -39,8 +39,7 @@
  * @short Resolves pixmaps for URLs
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-class KIO_EXPORT KURLPixmapProvider : public KPixmapProvider
-{
+class KIO_EXPORT KURLPixmapProvider : public KPixmapProvider {
 public:
     /**
      * Returns a pixmap for @p url with size @p size.
@@ -50,9 +49,10 @@ public:
      * @return the resulting pixmap
      * @see KIcon::StdSizes
      */
-    virtual QPixmap pixmapFor( const QString& url, int size = 0 );
+    virtual QPixmap pixmapFor(const QString &url, int size = 0);
+
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 };
 
 

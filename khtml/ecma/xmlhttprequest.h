@@ -28,82 +28,104 @@
 
 namespace KJS {
 
-  class JSEventListener;
-  class XMLHttpRequestQObject;
+class JSEventListener;
+class XMLHttpRequestQObject;
 
-  // these exact numeric values are important because JS expects them
-  enum XMLHttpRequestState {
+// these exact numeric values are important because JS expects them
+enum XMLHttpRequestState
+{
     Uninitialized = 0,
     Loading = 1,
     Loaded = 2,
     Interactive = 3,
     Completed = 4
-  };
+};
 
-  class XMLHttpRequestConstructorImp : public ObjectImp {
-  public:
+class XMLHttpRequestConstructorImp : public ObjectImp {
+public:
     XMLHttpRequestConstructorImp(ExecState *exec, const DOM::Document &d);
     virtual bool implementsConstruct() const;
     virtual Object construct(ExecState *exec, const List &args);
-  private:
-    DOM::Document doc;
-  };
 
-  class XMLHttpRequest : public DOMObject {
-  public:
+private:
+    DOM::Document doc;
+};
+
+class XMLHttpRequest : public DOMObject {
+public:
     XMLHttpRequest(ExecState *, const DOM::Document &d);
     ~XMLHttpRequest();
     virtual Value tryGet(ExecState *exec, const Identifier &propertyName) const;
     Value getValueProperty(ExecState *exec, int token) const;
-    virtual void tryPut(ExecState *exec, const Identifier &propertyName, const Value& value, int attr = None);
-    void putValueProperty(ExecState *exec, int token, const Value& value, int /*attr*/);
-    virtual bool toBoolean(ExecState *) const { return true; }
-    virtual const ClassInfo* classInfo() const { return &info; }
+    virtual void tryPut(ExecState *exec, const Identifier &propertyName, const Value &value, int attr = None);
+    void putValueProperty(ExecState *exec, int token, const Value &value, int /*attr*/);
+    virtual bool toBoolean(ExecState *) const
+    {
+        return true;
+    }
+    virtual const ClassInfo *classInfo() const
+    {
+        return &info;
+    }
     static const ClassInfo info;
-    enum { Onload, Onreadystatechange, ReadyState, ResponseText, ResponseXML, Status, StatusText, Abort,
-           GetAllResponseHeaders, GetResponseHeader, Open, Send, SetRequestHeader,
-           OverrideMIMEType };
+    enum
+    {
+        Onload,
+        Onreadystatechange,
+        ReadyState,
+        ResponseText,
+        ResponseXML,
+        Status,
+        StatusText,
+        Abort,
+        GetAllResponseHeaders,
+        GetResponseHeader,
+        Open,
+        Send,
+        SetRequestHeader,
+        OverrideMIMEType
+    };
 
-  private:
+private:
     friend class XMLHttpRequestProtoFunc;
     friend class XMLHttpRequestQObject;
 
     Value getStatusText() const;
     Value getStatus() const;
-    bool urlMatchesDocumentDomain(const KURL&) const;
+    bool urlMatchesDocumentDomain(const KURL &) const;
 
     XMLHttpRequestQObject *qObject;
 
 #ifdef APPLE_CHANGES
-    void slotData( KIO::Job* job, const char *data, int size );
+    void slotData(KIO::Job *job, const char *data, int size);
 #else
-    void slotData( KIO::Job* job, const QByteArray &data );
+    void slotData(KIO::Job *job, const QByteArray &data);
 #endif
-    void slotFinished( KIO::Job* );
-    void slotRedirection( KIO::Job*, const KURL& );
+    void slotFinished(KIO::Job *);
+    void slotRedirection(KIO::Job *, const KURL &);
 
     void processSyncLoadResults(const QByteArray &data, const KURL &finalURL, const QString &headers);
 
-    void open(const QString& _method, const KURL& _url, bool _async);
-    void send(const QString& _body);
+    void open(const QString &_method, const KURL &_url, bool _async);
+    void send(const QString &_body);
     void abort();
-    void setRequestHeader(const QString& name, const QString &value);
-    void overrideMIMEType(const QString& override);
+    void setRequestHeader(const QString &name, const QString &value);
+    void overrideMIMEType(const QString & override);
     Value getAllResponseHeaders() const;
-    Value getResponseHeader(const QString& name) const;
+    Value getResponseHeader(const QString &name) const;
 
     void changeState(XMLHttpRequestState newState);
 
-    QGuardedPtr<DOM::DocumentImpl> doc;
+    QGuardedPtr< DOM::DocumentImpl > doc;
 
     KURL url;
     QString method;
     bool async;
-    QMap<QString,QString> requestHeaders;
+    QMap< QString, QString > requestHeaders;
     QString m_mimeTypeOverride;
     QString contentType;
 
-    KIO::TransferJob * job;
+    KIO::TransferJob *job;
 
     XMLHttpRequestState state;
     JSEventListener *onReadyStateChangeListener;
@@ -119,23 +141,23 @@ namespace KJS {
     mutable DOM::Document responseXML;
 
     bool aborted;
-  };
+};
 
 
-  class XMLHttpRequestQObject : public QObject {
+class XMLHttpRequestQObject : public QObject {
     Q_OBJECT
 
-  public:
+public:
     XMLHttpRequestQObject(XMLHttpRequest *_jsObject);
 
-  public slots:
-    void slotData( KIO::Job* job, const QByteArray &data );
-    void slotFinished( KIO::Job* job );
-    void slotRedirection( KIO::Job* job, const KURL& url);
+public slots:
+    void slotData(KIO::Job *job, const QByteArray &data);
+    void slotFinished(KIO::Job *job);
+    void slotRedirection(KIO::Job *job, const KURL &url);
 
-  private:
+private:
     XMLHttpRequest *jsObject;
-  };
+};
 
 } // namespace
 

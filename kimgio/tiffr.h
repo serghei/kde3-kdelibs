@@ -13,8 +13,8 @@
 class QImageIO;
 
 extern "C" {
-void kimgio_tiff_read( QImageIO *io );
-void kimgio_tiff_write( QImageIO *io );
+void kimgio_tiff_read(QImageIO *io);
+void kimgio_tiff_write(QImageIO *io);
 }
 
 #endif

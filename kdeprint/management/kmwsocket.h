@@ -17,8 +17,8 @@
  *  Boston, MA 02110-1301, USA.
  **/
 
-#ifndef	KMWSOCKET_H
-#define	KMWSOCKET_H
+#ifndef KMWSOCKET_H
+#define KMWSOCKET_H
 
 #include "kmwizardpage.h"
 
@@ -27,25 +27,24 @@ class QListViewItem;
 class QLineEdit;
 class NetworkScanner;
 
-class KMWSocket : public KMWizardPage
-{
-	Q_OBJECT
+class KMWSocket : public KMWizardPage {
+    Q_OBJECT
 public:
-	KMWSocket(QWidget *parent = 0, const char *name = 0);
-	~KMWSocket();
+    KMWSocket(QWidget *parent = 0, const char *name = 0);
+    ~KMWSocket();
 
-	bool isValid(QString&);
-	void updatePrinter(KMPrinter*);
+    bool isValid(QString &);
+    void updatePrinter(KMPrinter *);
 
 protected slots:
-	void slotPrinterSelected(QListViewItem*);
-	void slotScanStarted();
-	void slotScanFinished();
+    void slotPrinterSelected(QListViewItem *);
+    void slotScanStarted();
+    void slotScanFinished();
 
 private:
-	KListView	*m_list;
-	NetworkScanner *m_scanner;
-	QLineEdit	*m_printer, *m_port;
+    KListView *m_list;
+    NetworkScanner *m_scanner;
+    QLineEdit *m_printer, *m_port;
 };
 
 #endif

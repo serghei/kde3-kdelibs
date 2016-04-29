@@ -38,198 +38,187 @@ class KURLCompletionPrivate;
  * @short Completion of a single URL
  * @author David Smith <dsmith@algonet.se>
  */
-class KIO_EXPORT KURLCompletion : public KCompletion
-{
-	Q_OBJECT
+class KIO_EXPORT KURLCompletion : public KCompletion {
+    Q_OBJECT
 
 public:
-	/**
-	 * Determines how completion is done.
-	 * @li ExeCompletion - executables in $PATH or with full path.
-	 * @li FileCompletion - all files with full path or in dir(), URLs
-	 * are listed using KIO.
-	 * @li DirCompletion - Same as FileCompletion but only returns directories.
-	 */
-	enum Mode { ExeCompletion=1, FileCompletion, DirCompletion };
+    /**
+     * Determines how completion is done.
+     * @li ExeCompletion - executables in $PATH or with full path.
+     * @li FileCompletion - all files with full path or in dir(), URLs
+     * are listed using KIO.
+     * @li DirCompletion - Same as FileCompletion but only returns directories.
+     */
+    enum Mode
+    {
+        ExeCompletion = 1,
+        FileCompletion,
+        DirCompletion
+    };
 
-	/**
-	 * Constructs a KURLCompletion object in FileCompletion mode.
-	 */
-	KURLCompletion();
-	/**
-	 * This overloaded constructor allows you to set the Mode to ExeCompletion
-	 * or FileCompletion without using setMode. Default is FileCompletion.
-	 */
-	KURLCompletion(Mode);
-	/**
-	 * Destructs the KURLCompletion object.
-	 */
-	virtual ~KURLCompletion();
+    /**
+     * Constructs a KURLCompletion object in FileCompletion mode.
+     */
+    KURLCompletion();
+    /**
+     * This overloaded constructor allows you to set the Mode to ExeCompletion
+     * or FileCompletion without using setMode. Default is FileCompletion.
+     */
+    KURLCompletion(Mode);
+    /**
+     * Destructs the KURLCompletion object.
+     */
+    virtual ~KURLCompletion();
 
-	/**
-	 * Finds completions to the given text.
-	 *
-	 * Remote URLs are listed with KIO. For performance reasons, local files
-	 * are listed with KIO only if KURLCOMPLETION_LOCAL_KIO is set.
-	 * The completion is done asyncronously if KIO is used.
-	 *
-	 * Returns the first match for user, environment, and local dir completion
-	 * and QString::null for asynchronous completion (KIO or threaded).
-	 *
-	 * @param text the text to complete
-	 * @return the first match, or QString::null if not found
-	 */
-	virtual QString makeCompletion(const QString &text); // KDE4: remove return value, it's often null due to threading
+    /**
+     * Finds completions to the given text.
+     *
+     * Remote URLs are listed with KIO. For performance reasons, local files
+     * are listed with KIO only if KURLCOMPLETION_LOCAL_KIO is set.
+     * The completion is done asyncronously if KIO is used.
+     *
+     * Returns the first match for user, environment, and local dir completion
+     * and QString::null for asynchronous completion (KIO or threaded).
+     *
+     * @param text the text to complete
+     * @return the first match, or QString::null if not found
+     */
+    virtual QString makeCompletion(const QString &text); // KDE4: remove return value, it's often null due to threading
 
-	/**
-	 * Sets the current directory (used as base for completion).
-	 * Default = $HOME.
-	 * @param dir the current directory, either as a path or URL
-	 */
-	virtual void setDir(const QString &dir);
+    /**
+     * Sets the current directory (used as base for completion).
+     * Default = $HOME.
+     * @param dir the current directory, either as a path or URL
+     */
+    virtual void setDir(const QString &dir);
 
-	/**
-	 * Returns the current directory, as it was given in setDir
-	 * @return the current directory (path or URL)
-	 */
-	virtual QString dir() const;
+    /**
+     * Returns the current directory, as it was given in setDir
+     * @return the current directory (path or URL)
+     */
+    virtual QString dir() const;
 
-	/**
-	 * Check whether asynchronous completion is in progress.
-	 * @return true if asynchronous completion is in progress
-	 */
-	virtual bool isRunning() const;
+    /**
+     * Check whether asynchronous completion is in progress.
+     * @return true if asynchronous completion is in progress
+     */
+    virtual bool isRunning() const;
 
-	/**
-	 * Stops asynchronous completion.
-	 */
-	virtual void stop();
+    /**
+     * Stops asynchronous completion.
+     */
+    virtual void stop();
 
-	/**
-	 * Returns the completion mode: exe or file completion (default FileCompletion).
-	 * @return the completion mode
-	 */
-	virtual Mode mode() const;
+    /**
+     * Returns the completion mode: exe or file completion (default FileCompletion).
+     * @return the completion mode
+     */
+    virtual Mode mode() const;
 
-	/**
-	 * Changes the completion mode: exe or file completion
-	 * @param mode the new completion mode
-	 */
-	virtual void setMode( Mode mode );
+    /**
+     * Changes the completion mode: exe or file completion
+     * @param mode the new completion mode
+     */
+    virtual void setMode(Mode mode);
 
-	/**
-	 * Checks whether environment variables are completed and
-	 * whether they are replaced internally while finding completions.
-	 * Default is enabled.
-	 * @return true if environment vvariables will be replaced
-	 */
-	virtual bool replaceEnv() const;
+    /**
+     * Checks whether environment variables are completed and
+     * whether they are replaced internally while finding completions.
+     * Default is enabled.
+     * @return true if environment vvariables will be replaced
+     */
+    virtual bool replaceEnv() const;
 
-	/**
-	 * Enables/disables completion and replacement (internally) of
-	 * environment variables in URLs. Default is enabled.
-	 * @param replace true to replace environment variables
-	 */
-	virtual void setReplaceEnv( bool replace );
+    /**
+     * Enables/disables completion and replacement (internally) of
+     * environment variables in URLs. Default is enabled.
+     * @param replace true to replace environment variables
+     */
+    virtual void setReplaceEnv(bool replace);
 
-	/**
-	 * Returns whether ~username is completed and whether ~username
-	 * is replaced internally with the user's home directory while
-	 * finding completions. Default is enabled.
-	 * @return true to replace tilde with the home directory
-	 */
-	virtual bool replaceHome() const;
+    /**
+     * Returns whether ~username is completed and whether ~username
+     * is replaced internally with the user's home directory while
+     * finding completions. Default is enabled.
+     * @return true to replace tilde with the home directory
+     */
+    virtual bool replaceHome() const;
 
-	/**
-	 * Enables/disables completion of ~username and replacement
-	 * (internally) of ~username with the user's home directory.
-	 * Default is enabled.
-	 * @param replace true to replace tilde with the home directory
-	 */
-	virtual void setReplaceHome( bool replace );
+    /**
+     * Enables/disables completion of ~username and replacement
+     * (internally) of ~username with the user's home directory.
+     * Default is enabled.
+     * @param replace true to replace tilde with the home directory
+     */
+    virtual void setReplaceHome(bool replace);
 
-	/**
-	 * Replaces username and/or environment variables, depending on the
-	 * current settings and returns the filtered url. Only works with
-	 * local files, i.e. returns back the original string for non-local
-	 * urls.
-	 * @param text the text to process
-	 * @return the path or URL resulting from this operation. If you
+    /**
+     * Replaces username and/or environment variables, depending on the
+     * current settings and returns the filtered url. Only works with
+     * local files, i.e. returns back the original string for non-local
+     * urls.
+     * @param text the text to process
+     * @return the path or URL resulting from this operation. If you
          * want to convert it to a KURL, use KURL::fromPathOrURL.
-	 */
-	QString replacedPath( const QString& text );
+     */
+    QString replacedPath(const QString &text);
 
-	/**
-	 * @internal I'll let ossi add a real one to KShell :)
-	 * @since 3.2
-	*/
-	static QString replacedPath( const QString& text,
-                                     bool replaceHome, bool replaceEnv = true );
+    /**
+     * @internal I'll let ossi add a real one to KShell :)
+     * @since 3.2
+    */
+    static QString replacedPath(const QString &text, bool replaceHome, bool replaceEnv = true);
 
-	class MyURL;
+    class MyURL;
+
 protected:
-	// Called by KCompletion, adds '/' to directories
-	void postProcessMatch( QString *match ) const;
-	void postProcessMatches( QStringList *matches ) const;
-	void postProcessMatches( KCompletionMatches* matches ) const;
+    // Called by KCompletion, adds '/' to directories
+    void postProcessMatch(QString *match) const;
+    void postProcessMatches(QStringList *matches) const;
+    void postProcessMatches(KCompletionMatches *matches) const;
 
-	virtual void customEvent( QCustomEvent *e );
+    virtual void customEvent(QCustomEvent *e);
 
 protected slots:
-	void slotEntries( KIO::Job *, const KIO::UDSEntryList& );
-	void slotIOFinished( KIO::Job * );
+    void slotEntries(KIO::Job *, const KIO::UDSEntryList &);
+    void slotIOFinished(KIO::Job *);
 
 private:
+    bool isAutoCompletion();
 
-	bool isAutoCompletion();
+    bool userCompletion(const MyURL &url, QString *match);
+    bool envCompletion(const MyURL &url, QString *match);
+    bool exeCompletion(const MyURL &url, QString *match);
+    bool fileCompletion(const MyURL &url, QString *match);
+    bool urlCompletion(const MyURL &url, QString *match);
 
-	bool userCompletion(const MyURL &url, QString *match);
-	bool envCompletion(const MyURL &url, QString *match);
-	bool exeCompletion(const MyURL &url, QString *match);
-	bool fileCompletion(const MyURL &url, QString *match);
-	bool urlCompletion(const MyURL &url, QString *match);
+    // List a directory using readdir()
+    void listDir(const QString &dir, QStringList *matches, const QString &filter, bool only_exe, bool no_hidden);
 
-	// List a directory using readdir()
-	void listDir( const QString& dir,
-	              QStringList *matches,
-	              const QString& filter,
-	              bool only_exe,
-	              bool no_hidden );
+    // List the next dir in m_dirs
+    QString listDirectories(const QStringList &, const QString &, bool only_exe = false, bool only_dir = false, bool no_hidden = false,
+                            bool stat_files = true);
 
-	// List the next dir in m_dirs
-	QString listDirectories(const QStringList &,
-	                        const QString &,
-	                        bool only_exe = false,
-	                        bool only_dir = false,
-	                        bool no_hidden = false,
-	                        bool stat_files = true);
+    void listURLs(const QValueList< KURL * > &urls, const QString &filter = QString::null, bool only_exe = false, bool no_hidden = false);
 
-	void listURLs( const QValueList<KURL *> &urls,
-	               const QString &filter = QString::null,
-	               bool only_exe = false,
-	               bool no_hidden = false );
+    void addMatches(const QStringList &);
+    QString finished();
 
-	void addMatches( const QStringList & );
-	QString finished();
+    void init();
 
-	void init();
+    void setListedURL(int compl_type /* enum ComplType */, const QString &dir = QString::null, const QString &filter = QString::null,
+                      bool no_hidden = false);
 
-	void setListedURL(int compl_type /* enum ComplType */,
-	                  const QString& dir = QString::null,
-	                  const QString& filter = QString::null,
-	                  bool no_hidden = false );
+    bool isListedURL(int compl_type /* enum ComplType */, const QString &dir = QString::null, const QString &filter = QString::null,
+                     bool no_hidden = false);
 
-	bool isListedURL( int compl_type /* enum ComplType */,
-	                  const QString& dir = QString::null,
-	                  const QString& filter = QString::null,
-	                  bool no_hidden = false );
-
-	void adjustMatch( QString& match ) const;
+    void adjustMatch(QString &match) const;
 
 protected:
-	virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-	KURLCompletionPrivate *d;
+    KURLCompletionPrivate *d;
 };
 
 #endif // KURLCOMPLETION_H

@@ -15,7 +15,7 @@
    along with this library; see the file COPYING.LIB.  If not, write to
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
-   
+
    $Id: selectioninterfaceext.h 465272 2005-09-29 09:47:40Z mueller $
 */
 
@@ -26,8 +26,7 @@
 
 class QCString;
 
-namespace KTextEditor
-{
+namespace KTextEditor {
 
 /**
     Provide access to seleciton positions.
@@ -35,30 +34,29 @@ namespace KTextEditor
     Mainly here for dcop and the sake of scripting.
     @author Anders Lund <anders@alweb.dk>
 */
-class KTEXTEDITOR_EXPORT SelectionInterfaceExt
-{
-  friend class PrivateSelectionInterfaceExt;
+class KTEXTEDITOR_EXPORT SelectionInterfaceExt {
+    friend class PrivateSelectionInterfaceExt;
 
-  public:
+public:
     SelectionInterfaceExt();
     virtual ~SelectionInterfaceExt();
-        
-    unsigned int selectionInterfaceExtNumber () const;
-    
-  protected:  
-    void setSelectionInterfaceExtDCOPSuffix (const QCString &suffix);  
-    
-  public:
+
+    unsigned int selectionInterfaceExtNumber() const;
+
+protected:
+    void setSelectionInterfaceExtDCOPSuffix(const QCString &suffix);
+
+public:
     /** The selection start line number */
-    virtual int selStartLine()=0;
+    virtual int selStartLine() = 0;
     /** The selection start col */
-    virtual int selStartCol()=0;
+    virtual int selStartCol() = 0;
     /** The selection end line */
-    virtual int selEndLine()=0;
+    virtual int selEndLine() = 0;
     /** The selection end col */
-    virtual int selEndCol()=0;
-  
-  private:
+    virtual int selEndCol() = 0;
+
+private:
     class PrivateSelectionInterfaceExt *d;
     static unsigned int globalSelectionInterfaceExtNumber;
     unsigned int mySelectionInterfaceExtNumber;
@@ -67,8 +65,8 @@ class KTEXTEDITOR_EXPORT SelectionInterfaceExt
 class Document;
 class View;
 
-KTEXTEDITOR_EXPORT SelectionInterfaceExt *selectionInterfaceExt (Document *doc);
-KTEXTEDITOR_EXPORT SelectionInterfaceExt *selectionInterfaceExt (View *view);
+KTEXTEDITOR_EXPORT SelectionInterfaceExt *selectionInterfaceExt(Document *doc);
+KTEXTEDITOR_EXPORT SelectionInterfaceExt *selectionInterfaceExt(View *view);
 
-}  // namespace KTextEditor
+} // namespace KTextEditor
 #endif

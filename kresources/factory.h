@@ -59,14 +59,12 @@ namespace KRES {
  *
  * \endcode
  */
-class KRESOURCES_EXPORT Factory
-{
-  public:
-
+class KRESOURCES_EXPORT Factory {
+public:
     /**
      * Returns the global resource factory.
      */
-    static Factory *self( const QString& resourceFamily );
+    static Factory *self(const QString &resourceFamily);
 
     ~Factory();
 
@@ -77,7 +75,7 @@ class KRESOURCES_EXPORT Factory
      * @param type   The type of the resource, returned by typeNames()
      * @param parent The parent widget
      */
-    ConfigWidget *configWidget( const QString& type, QWidget *parent = 0 );
+    ConfigWidget *configWidget(const QString &type, QWidget *parent = 0);
 
     /**
      * Returns a pointer to a resource object or a null pointer
@@ -87,7 +85,7 @@ class KRESOURCES_EXPORT Factory
      * @param config The config object where the resource get it settings from,
      *               or 0 if a resource with default values should be created.
      */
-    Resource *resource( const QString& type, const KConfig *config );
+    Resource *resource(const QString &type, const KConfig *config);
 
     /**
      * Returns a list of all available resource types.
@@ -97,22 +95,21 @@ class KRESOURCES_EXPORT Factory
     /**
      * Returns the name for a special type.
      */
-    QString typeName( const QString &type ) const;
+    QString typeName(const QString &type) const;
 
     /**
      * Returns the description for a special type.
      */
-    QString typeDescription( const QString &type ) const;
+    QString typeDescription(const QString &type) const;
 
-  protected:
-    Factory( const QString& resourceFamily );
+protected:
+    Factory(const QString &resourceFamily);
 
-  private:
-    static QDict<Factory> *mSelves;
+private:
+    static QDict< Factory > *mSelves;
 
     QString mResourceFamily;
-    QMap<QString, KService::Ptr> mTypeMap;
+    QMap< QString, KService::Ptr > mTypeMap;
 };
-
 }
 #endif

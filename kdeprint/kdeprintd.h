@@ -31,36 +31,34 @@ class KPrintProcess;
 class KProcess;
 class StatusWindow;
 
-class KDEPrintd : public KDEDModule
-{
-	Q_OBJECT
-	K_DCOP
+class KDEPrintd : public KDEDModule {
+    Q_OBJECT
+    K_DCOP
 
 public:
-	KDEPrintd(const QCString& obj);
-	~KDEPrintd();
+    KDEPrintd(const QCString &obj);
+    ~KDEPrintd();
 
-k_dcop:
-	int print(const QString& cmd, const QStringList& files, bool remove);
-	QString openPassDlg(const QString& user);
-	ASYNC statusMessage(const QString& msg, int pid = -1, const QString& appName = QString::null);
-	QString requestPassword( const QString& user, const QString& host, int port, int seqNbr );
-	void initPassword( const QString& user, const QString& passwd, const QString& host, int port );
+    k_dcop : int print(const QString &cmd, const QStringList &files, bool remove);
+    QString openPassDlg(const QString &user);
+    ASYNC statusMessage(const QString &msg, int pid = -1, const QString &appName = QString::null);
+    QString requestPassword(const QString &user, const QString &host, int port, int seqNbr);
+    void initPassword(const QString &user, const QString &passwd, const QString &host, int port);
 
 protected slots:
-	void slotPrintTerminated( KPrintProcess* );
-	void slotPrintError( KPrintProcess*, const QString& );
-	void slotClosed();
-	void processRequest();
+    void slotPrintTerminated(KPrintProcess *);
+    void slotPrintError(KPrintProcess *, const QString &);
+    void slotClosed();
+    void processRequest();
 
 protected:
-	bool checkFiles(QString& cmd, const QStringList& files);
+    bool checkFiles(QString &cmd, const QStringList &files);
 
 private:
-	class Request;
-	QPtrList<KPrintProcess>	m_processpool;
-	QIntDict<StatusWindow>	m_windows;
-	QPtrList<Request>       m_requestsPending;
+    class Request;
+    QPtrList< KPrintProcess > m_processpool;
+    QIntDict< StatusWindow > m_windows;
+    QPtrList< Request > m_requestsPending;
 };
 
 #endif

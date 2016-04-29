@@ -27,26 +27,24 @@
 
 namespace KABC {
 
-class KABC_EXPORT Plugin
-{
+class KABC_EXPORT Plugin {
 public:
-  Plugin();
-  virtual ~Plugin();
+    Plugin();
+    virtual ~Plugin();
 
-  virtual void setType( const QString& type );
-  virtual QString type() const;
+    virtual void setType(const QString &type);
+    virtual QString type() const;
 
-  virtual void setNameLabel( const QString& label );
-  virtual QString nameLabel() const;
+    virtual void setNameLabel(const QString &label);
+    virtual QString nameLabel() const;
 
-  virtual void setDescriptionLabel( const QString& label );
-  virtual QString descriptionLabel() const;
+    virtual void setDescriptionLabel(const QString &label);
+    virtual QString descriptionLabel() const;
 
 private:
-  QString mType;
-  QString mNameLabel;
-  QString mDescriptionLabel;
+    QString mType;
+    QString mNameLabel;
+    QString mDescriptionLabel;
 };
-
 }
 #endif

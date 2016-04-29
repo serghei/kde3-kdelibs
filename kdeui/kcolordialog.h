@@ -29,7 +29,7 @@
 // FIXME(E): Do we need the KColorDialog extra functionality in Qt Embedded?
 #include <qcolordialog.h>
 #define KColorDialog QColorDialog
-#else //UNIX, WIN32
+#else // UNIX, WIN32
 #include <kdialogbase.h>
 #include <qframe.h>
 #include <qpixmap.h>
@@ -55,40 +55,40 @@ class KColorCells;
  * @see KXYSelector, KValueSelector, KColorDialog
  * @author Martin Jones (mjones@kde.org)
 */
-class KDEUI_EXPORT KHSSelector : public KXYSelector
-{
-  Q_OBJECT
+class KDEUI_EXPORT KHSSelector : public KXYSelector {
+    Q_OBJECT
 
 public:
-  /**
-   * Constructs a hue/saturation selection widget.
-   */
-  KHSSelector( QWidget *parent=0, const char *name=0 );
+    /**
+     * Constructs a hue/saturation selection widget.
+     */
+    KHSSelector(QWidget *parent = 0, const char *name = 0);
 
 protected:
-  /**
-   * Draws the contents of the widget on a pixmap,
-   * which is used for buffering.
-   */
-  virtual void drawPalette( QPixmap *pixmap );
-  virtual void resizeEvent( QResizeEvent * );
+    /**
+     * Draws the contents of the widget on a pixmap,
+     * which is used for buffering.
+     */
+    virtual void drawPalette(QPixmap *pixmap);
+    virtual void resizeEvent(QResizeEvent *);
 
-  /**
-   * Reimplemented from KXYSelector. This drawing is
-   * buffered in a pixmap here. As real drawing
-   * routine, drawPalette() is used.
-   */
-  virtual void drawContents( QPainter *painter );
+    /**
+     * Reimplemented from KXYSelector. This drawing is
+     * buffered in a pixmap here. As real drawing
+     * routine, drawPalette() is used.
+     */
+    virtual void drawContents(QPainter *painter);
 
 private:
-  void updateContents();
-  QPixmap pixmap;
+    void updateContents();
+    QPixmap pixmap;
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KHSSelectorPrivate;
-  KHSSelectorPrivate *d;
+    class KHSSelectorPrivate;
+    KHSSelectorPrivate *d;
 };
 
 
@@ -99,55 +99,64 @@ class KValueSelectorPrivate;
  * @see KHSSelector, KColorDialog
  * @author Martin Jones (mjones@kde.org)
  */
-class KDEUI_EXPORT KValueSelector : public KSelector
-{
-  Q_OBJECT
+class KDEUI_EXPORT KValueSelector : public KSelector {
+    Q_OBJECT
 
 public:
-  /**
-   * Constructs a widget for color selection.
-   */
-  KValueSelector( QWidget *parent=0, const char *name=0 );
-  /**
-   * Constructs a widget for color selection with a given orientation
-   */
-  KValueSelector( Orientation o, QWidget *parent = 0, const char *name = 0 );
+    /**
+     * Constructs a widget for color selection.
+     */
+    KValueSelector(QWidget *parent = 0, const char *name = 0);
+    /**
+     * Constructs a widget for color selection with a given orientation
+     */
+    KValueSelector(Orientation o, QWidget *parent = 0, const char *name = 0);
 
-  int hue() const
-        { return _hue; }
-  void setHue( int h )
-        { _hue = h; }
-  int saturation() const
-        { return _sat; }
-  void setSaturation( int s )
-        { _sat = s; }
+    int hue() const
+    {
+        return _hue;
+    }
+    void setHue(int h)
+    {
+        _hue = h;
+    }
+    int saturation() const
+    {
+        return _sat;
+    }
+    void setSaturation(int s)
+    {
+        _sat = s;
+    }
 
-  void updateContents();
-protected:
-  /**
-   * Draws the contents of the widget on a pixmap,
-   * which is used for buffering.
-   */
-  virtual void drawPalette( QPixmap *pixmap );
-  virtual void resizeEvent( QResizeEvent * );
-
-  /**
-   * Reimplemented from KSelector. The drawing is
-   * buffered in a pixmap here. As real drawing
-   * routine, drawPalette() is used.
-   */
-  virtual void drawContents( QPainter *painter );
-
-private:
-  int _hue;
-  int _sat;
-  QPixmap pixmap;
+    void updateContents();
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    /**
+     * Draws the contents of the widget on a pixmap,
+     * which is used for buffering.
+     */
+    virtual void drawPalette(QPixmap *pixmap);
+    virtual void resizeEvent(QResizeEvent *);
+
+    /**
+     * Reimplemented from KSelector. The drawing is
+     * buffered in a pixmap here. As real drawing
+     * routine, drawPalette() is used.
+     */
+    virtual void drawContents(QPainter *painter);
+
 private:
-  class KValueSelectorPrivate;
-  KValueSelectorPrivate *d;
+    int _hue;
+    int _sat;
+    QPixmap pixmap;
+
+protected:
+    virtual void virtual_hook(int id, void *data);
+
+private:
+    class KValueSelectorPrivate;
+    KValueSelectorPrivate *d;
 };
 
 
@@ -161,33 +170,33 @@ private:
  *
  * @author Waldo Bastian <bastian@kde.org>
  **/
-class KDEUI_EXPORT KColor : public QColor
-{
+class KDEUI_EXPORT KColor : public QColor {
 public:
-  KColor();
-  KColor( const KColor &col);
-  KColor( const QColor &col);
+    KColor();
+    KColor(const KColor &col);
+    KColor(const QColor &col);
 
-  KColor& operator=( const KColor& col);
+    KColor &operator=(const KColor &col);
 
-  bool operator==( const KColor& col) const;
+    bool operator==(const KColor &col) const;
 
-  void setHsv(int _h, int _s, int _v);
-  void setRgb(int _r, int _g, int _b);
+    void setHsv(int _h, int _s, int _v);
+    void setRgb(int _r, int _g, int _b);
 
-  void rgb(int *_r, int *_g, int *_b) const;
-  void hsv(int *_h, int *_s, int *_v) const;
+    void rgb(int *_r, int *_g, int *_b) const;
+    void hsv(int *_h, int *_s, int *_v) const;
+
 protected:
-  int h;
-  int s;
-  int v;
-  int r;
-  int g;
-  int b;
+    int h;
+    int s;
+    int v;
+    int r;
+    int g;
+    int b;
 
 private:
-  class KColorPrivate;
-  KColorPrivate *d;
+    class KColorPrivate;
+    KColorPrivate *d;
 };
 
 /**
@@ -195,53 +204,56 @@ private:
  *
  * @author Waldo Bastian <bastian@kde.org>
  **/
-class KDEUI_EXPORT KPaletteTable : public QWidget
-{
-  Q_OBJECT
+class KDEUI_EXPORT KPaletteTable : public QWidget {
+    Q_OBJECT
 public:
-  KPaletteTable( QWidget *parent, int minWidth=210, int cols = 16);
-  ~KPaletteTable();
-  void addToCustomColors( const QColor &);
-  void addToRecentColors( const QColor &);
-  QString palette() const;
+    KPaletteTable(QWidget *parent, int minWidth = 210, int cols = 16);
+    ~KPaletteTable();
+    void addToCustomColors(const QColor &);
+    void addToRecentColors(const QColor &);
+    QString palette() const;
 public slots:
-  void setPalette(const QString &paletteName);
+    void setPalette(const QString &paletteName);
 signals:
-  void colorSelected( const QColor &, const QString & );
-  void colorDoubleClicked( const QColor &, const QString & );
+    void colorSelected(const QColor &, const QString &);
+    void colorDoubleClicked(const QColor &, const QString &);
 
 protected slots:
-  void slotColorCellSelected( int );
-  void slotColorCellDoubleClicked( int );
-  void slotColorTextSelected( const QString &colorText );
-  void slotSetPalette( const QString &_paletteName );
-  void slotShowNamedColorReadError( void );
+    void slotColorCellSelected(int);
+    void slotColorCellDoubleClicked(int);
+    void slotColorTextSelected(const QString &colorText);
+    void slotSetPalette(const QString &_paletteName);
+    void slotShowNamedColorReadError(void);
 
 protected:
-  void readNamedColor( void );
+    void readNamedColor(void);
 
 protected:
-  /// \deprecated
-  QString i18n_customColors; /// ### KDE4: remove
-  /// \deprecated
-  QString i18n_recentColors; /// ### KDE4: remove
-  QString i18n_namedColors;
-  QComboBox *combo;
-  KColorCells *cells;
-  QScrollView *sv;
-  KListBox *mNamedColorList;
-  KPalette *mPalette;
-  int mMinWidth;
-  int mCols;
+    /// \deprecated
+    QString i18n_customColors; /// ### KDE4: remove
+    /// \deprecated
+    QString i18n_recentColors; /// ### KDE4: remove
+    QString i18n_namedColors;
+    QComboBox *combo;
+    KColorCells *cells;
+    QScrollView *sv;
+    KListBox *mNamedColorList;
+    KPalette *mPalette;
+    int mMinWidth;
+    int mCols;
 
 private:
+    virtual void setPalette(const QPalette &p)
+    {
+        QWidget::setPalette(p);
+    }
 
-  virtual void setPalette(const QPalette& p) { QWidget::setPalette(p); }
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KPaletteTablePrivate;
-  KPaletteTablePrivate *d;
+    class KPaletteTablePrivate;
+    KPaletteTablePrivate *d;
 };
 
 
@@ -250,54 +262,66 @@ private:
 *
 * @author Martin Jones <mjones@kde.org>
 */
-class KDEUI_EXPORT KColorCells : public QGridView
-{
-  Q_OBJECT
+class KDEUI_EXPORT KColorCells : public QGridView {
+    Q_OBJECT
 public:
-  KColorCells( QWidget *parent, int rows, int cols );
-  ~KColorCells();
+    KColorCells(QWidget *parent, int rows, int cols);
+    ~KColorCells();
 
-  void setColor( int colNum, const QColor &col );
-  QColor color( int indx ) const
-  {	return colors[indx]; }
-  int numCells() const
-  {	return numRows() * numCols(); }
+    void setColor(int colNum, const QColor &col);
+    QColor color(int indx) const
+    {
+        return colors[indx];
+    }
+    int numCells() const
+    {
+        return numRows() * numCols();
+    }
 
-  void setShading(bool _shade) { shade = _shade; }
+    void setShading(bool _shade)
+    {
+        shade = _shade;
+    }
 
-  void setAcceptDrags(bool _acceptDrags) { acceptDrags = _acceptDrags; }
+    void setAcceptDrags(bool _acceptDrags)
+    {
+        acceptDrags = _acceptDrags;
+    }
 
-  int getSelected() const
-  {	return selected; }
+    int getSelected() const
+    {
+        return selected;
+    }
 
-  signals:
-  void colorSelected( int col );
-  void colorDoubleClicked( int col );
-
-protected:
-  virtual void paintCell( QPainter *painter, int row, int col );
-  virtual void resizeEvent( QResizeEvent * );
-  virtual void mouseReleaseEvent( QMouseEvent * );
-  virtual void mousePressEvent( QMouseEvent * );
-  virtual void mouseMoveEvent( QMouseEvent * );
-  virtual void dragEnterEvent( QDragEnterEvent *);
-  virtual void dropEvent( QDropEvent *);
-  virtual void mouseDoubleClickEvent( QMouseEvent * );
-
-  int posToCell(const QPoint &pos, bool ignoreBorders=false);
-
-  QColor *colors;
-  bool inMouse;
-  QPoint mPos;
-  int	selected;
-  bool shade;
-  bool acceptDrags;
+signals:
+    void colorSelected(int col);
+    void colorDoubleClicked(int col);
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void paintCell(QPainter *painter, int row, int col);
+    virtual void resizeEvent(QResizeEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
+    virtual void mouseDoubleClickEvent(QMouseEvent *);
+
+    int posToCell(const QPoint &pos, bool ignoreBorders = false);
+
+    QColor *colors;
+    bool inMouse;
+    QPoint mPos;
+    int selected;
+    bool shade;
+    bool acceptDrags;
+
+protected:
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KColorCellsPrivate;
-  KColorCellsPrivate *d;
+    class KColorCellsPrivate;
+    KColorCellsPrivate *d;
 };
 
 /**
@@ -308,34 +332,34 @@ private:
  * automatically handles drag and drop from and on the widget.
  *
  */
-class KDEUI_EXPORT KColorPatch : public QFrame
-{
-  Q_OBJECT
+class KDEUI_EXPORT KColorPatch : public QFrame {
+    Q_OBJECT
 public:
-  KColorPatch( QWidget *parent );
-  virtual ~KColorPatch();
+    KColorPatch(QWidget *parent);
+    virtual ~KColorPatch();
 
-  void setColor( const QColor &col );
+    void setColor(const QColor &col);
 
 signals:
-  void colorChanged( const QColor&);
+    void colorChanged(const QColor &);
 
 protected:
-  virtual void drawContents( QPainter *painter );
-  virtual void mouseMoveEvent( QMouseEvent * );
-  virtual void dragEnterEvent( QDragEnterEvent *);
-  virtual void dropEvent( QDropEvent *);
+    virtual void drawContents(QPainter *painter);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dropEvent(QDropEvent *);
 
 private:
-  QColor color;
-  uint pixel;
-  int colContext;
+    QColor color;
+    uint pixel;
+    int colContext;
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KColorPatchPrivate;
-  KColorPatchPrivate *d;
+    class KColorPatchPrivate;
+    KColorPatchPrivate *d;
 };
 
 /**
@@ -374,16 +398,14 @@ private:
  * the currently selected color is a KColorPatch.
  *
  **/
-class KDEUI_EXPORT KColorDialog : public KDialogBase
-{
-  Q_OBJECT
+class KDEUI_EXPORT KColorDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Constructs a color selection dialog.
      */
-    KColorDialog( QWidget *parent = 0L, const char *name = 0L,
-		  bool modal = false );
+    KColorDialog(QWidget *parent = 0L, const char *name = 0L, bool modal = false);
     /**
      * Destroys the color selection dialog.
      */
@@ -402,7 +424,7 @@ class KDEUI_EXPORT KColorDialog : public KDialogBase
      *
      * @returns QDialog::result().
      */
-    static int getColor( QColor &theColor, QWidget *parent=0L );
+    static int getColor(QColor &theColor, QWidget *parent = 0L);
 
     /**
      * Creates a modal color dialog, lets the user choose a
@@ -416,7 +438,7 @@ class KDEUI_EXPORT KColorDialog : public KDialogBase
      *
      * @returns QDialog::result().
      */
-    static int getColor( QColor &theColor, const QColor& defaultColor, QWidget *parent=0L );
+    static int getColor(QColor &theColor, const QColor &defaultColor, QWidget *parent = 0L);
 
     /**
      * Gets the color from the pixel at point p on the screen.
@@ -429,36 +451,36 @@ class KDEUI_EXPORT KColorDialog : public KDialogBase
      * This can be used to mean "the default text color", for instance,
      * the one with the KDE text color on screen, but black when printing.
      */
-    void setDefaultColor( const QColor& defaultCol );
+    void setDefaultColor(const QColor &defaultCol);
 
     /**
      * @return the value passed to setDefaultColor
      */
     QColor defaultColor() const;
 
-  public slots:
+public slots:
     /**
      * Preselects a color.
      */
-    void setColor( const QColor &col );
+    void setColor(const QColor &col);
 
-  signals:
+signals:
     /**
      * Emitted when a color is selected.
      * Connect to this to monitor the color as it as selected if you are
      * not running modal.
      */
-    void colorSelected( const QColor &col );
+    void colorSelected(const QColor &col);
 
-  private slots:
-    void slotRGBChanged( void );
-    void slotHSVChanged( void );
-    void slotHtmlChanged( void );
-    void slotHSChanged( int, int );
-    void slotVChanged( int );
-    void slotColorSelected( const QColor &col );
-    void slotColorSelected( const QColor &col, const QString &name );
-    void slotColorDoubleClicked( const QColor &col, const QString &name );
+private slots:
+    void slotRGBChanged(void);
+    void slotHSVChanged(void);
+    void slotHtmlChanged(void);
+    void slotHSChanged(int, int);
+    void slotVChanged(int);
+    void slotColorSelected(const QColor &col);
+    void slotColorSelected(const QColor &col, const QString &name);
+    void slotColorDoubleClicked(const QColor &col, const QString &name);
     void slotColorPicker();
     void slotAddToCustomColors();
     void slotDefaultColorClicked();
@@ -467,30 +489,30 @@ class KDEUI_EXPORT KColorDialog : public KDialogBase
      **/
     void slotWriteSettings();
 
-  private:
+private:
     /**
      * Read the settings for the dialog from config file.
      **/
     void readSettings();
 
-    void setRgbEdit( const KColor &col );
-    void setHsvEdit( const KColor &col );
-    void setHtmlEdit( const KColor &col );
-    void _setColor( const KColor &col, const QString &name=QString::null );
-    void showColor( const KColor &color, const QString &name );
+    void setRgbEdit(const KColor &col);
+    void setHsvEdit(const KColor &col);
+    void setHtmlEdit(const KColor &col);
+    void _setColor(const KColor &col, const QString &name = QString::null);
+    void showColor(const KColor &color, const QString &name);
 
-  protected:
-    virtual void mouseReleaseEvent( QMouseEvent * );
-    virtual void keyPressEvent( QKeyEvent * );
-    virtual bool eventFilter( QObject *obj, QEvent *ev );
+protected:
+    virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual bool eventFilter(QObject *obj, QEvent *ev);
 
-  protected:
-    virtual void virtual_hook( int id, void* data );
-  private:
+protected:
+    virtual void virtual_hook(int id, void *data);
+
+private:
     class KColorDialogPrivate;
     KColorDialogPrivate *d;
 };
 
-#endif		// !Q_WS_QWS
-#endif		// KDELIBS_KCOLORDIALOG_H
-
+#endif // !Q_WS_QWS
+#endif // KDELIBS_KCOLORDIALOG_H

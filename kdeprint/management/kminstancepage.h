@@ -28,31 +28,30 @@ class KListBox;
 class KMPrinter;
 class QButton;
 
-class KMInstancePage : public QWidget, public KMPrinterPage
-{
-	Q_OBJECT
+class KMInstancePage : public QWidget, public KMPrinterPage {
+    Q_OBJECT
 public:
-	KMInstancePage(QWidget *parent = 0, const char *name = 0);
-	~KMInstancePage();
+    KMInstancePage(QWidget *parent = 0, const char *name = 0);
+    ~KMInstancePage();
 
-	void setPrinter(KMPrinter*);
+    void setPrinter(KMPrinter *);
 
 protected slots:
-	void slotNew();
-	void slotCopy();
-	void slotRemove();
-	void slotDefault();
-	void slotTest();
-	void slotSettings();
+    void slotNew();
+    void slotCopy();
+    void slotRemove();
+    void slotDefault();
+    void slotTest();
+    void slotSettings();
 
 protected:
-	void initActions();
-	void addButton(const QString& text, const QString& pixmap, const char *receiver);
+    void initActions();
+    void addButton(const QString &text, const QString &pixmap, const char *receiver);
 
 private:
-	KListBox		*m_view;
-	QValueList<QButton*>	m_buttons;
-	KMPrinter		*m_printer;
+    KListBox *m_view;
+    QValueList< QButton * > m_buttons;
+    KMPrinter *m_printer;
 };
 
 #endif

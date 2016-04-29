@@ -29,29 +29,28 @@ class QComboBox;
 class QLabel;
 class DrMain;
 
-class KDEPRINT_EXPORT KPQtPage : public KPrintDialogPage
-{
-	Q_OBJECT
+class KDEPRINT_EXPORT KPQtPage : public KPrintDialogPage {
+    Q_OBJECT
 public:
-	KPQtPage(QWidget *parent = 0, const char *name = 0);
-	KPQtPage(DrMain *driver, QWidget *parent = 0, const char *name = 0);
-	~KPQtPage();
+    KPQtPage(QWidget *parent = 0, const char *name = 0);
+    KPQtPage(DrMain *driver, QWidget *parent = 0, const char *name = 0);
+    ~KPQtPage();
 
-	void setOptions(const QMap<QString,QString>& opts);
-	void getOptions(QMap<QString,QString>& opts, bool incldef = false);
+    void setOptions(const QMap< QString, QString > &opts);
+    void getOptions(QMap< QString, QString > &opts, bool incldef = false);
 
 protected slots:
-	void slotOrientationChanged(int);
-	void slotColorModeChanged(int);
-	void slotNupChanged(int);
+    void slotOrientationChanged(int);
+    void slotColorModeChanged(int);
+    void slotNupChanged(int);
 
 protected:
-	void init();
+    void init();
 
 protected:
-	QButtonGroup	*m_orientbox, *m_colorbox, *m_nupbox;
-	QComboBox	*m_pagesize;
-	QLabel		*m_orientpix, *m_colorpix, *m_nuppix;
+    QButtonGroup *m_orientbox, *m_colorbox, *m_nupbox;
+    QComboBox *m_pagesize;
+    QLabel *m_orientpix, *m_colorpix, *m_nuppix;
 };
 
 #endif

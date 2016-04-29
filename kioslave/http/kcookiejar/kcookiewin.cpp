@@ -72,138 +72,135 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "kcookiejar.h"
 #include "kcookiewin.h"
 
-KCookieWin::KCookieWin( QWidget *parent, KHttpCookieList cookieList,
-                        int defaultButton, bool showDetails )
-           :KDialog( parent, "cookiealert", true )
+KCookieWin::KCookieWin(QWidget *parent, KHttpCookieList cookieList, int defaultButton, bool showDetails) : KDialog(parent, "cookiealert", true)
 {
-#ifndef Q_WS_QWS //FIXME(E): Implement for Qt Embedded
-    setCaption( i18n("Cookie Alert") );
-    setIcon( SmallIcon("cookie") );
-    // all cookies in the list should have the same window at this time, so let's take the first
-# ifdef Q_WS_X11
-    if( cookieList.first()->windowIds().count() > 0 )
+#ifndef Q_WS_QWS // FIXME(E): Implement for Qt Embedded
+    setCaption(i18n("Cookie Alert"));
+    setIcon(SmallIcon("cookie"));
+// all cookies in the list should have the same window at this time, so let's take the first
+#ifdef Q_WS_X11
+    if(cookieList.first()->windowIds().count() > 0)
     {
-        XSetTransientForHint( qt_xdisplay(), winId(), cookieList.first()->windowIds().first());
+        XSetTransientForHint(qt_xdisplay(), winId(), cookieList.first()->windowIds().first());
     }
     else
     {
         // No window associated... make sure the user notices our dialog.
-        KWin::setState( winId(), NET::KeepAbove );
+        KWin::setState(winId(), NET::KeepAbove);
         kapp->updateUserTimestamp();
     }
-# endif
+#endif
 #endif
     // Main widget's layout manager...
-    QVBoxLayout* vlayout = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
-    vlayout->setResizeMode( QLayout::Fixed );
+    QVBoxLayout *vlayout = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
+    vlayout->setResizeMode(QLayout::Fixed);
 
     // Cookie image and message to user
-    QHBox* hBox = new QHBox( this );
-    hBox->setSpacing( KDialog::spacingHint() );
-    QLabel* icon = new QLabel( hBox );
-    icon->setPixmap( QMessageBox::standardIcon(QMessageBox::Warning) );
-    icon->setAlignment( Qt::AlignCenter );
-    icon->setFixedSize( 2*icon->sizeHint() );
+    QHBox *hBox = new QHBox(this);
+    hBox->setSpacing(KDialog::spacingHint());
+    QLabel *icon = new QLabel(hBox);
+    icon->setPixmap(QMessageBox::standardIcon(QMessageBox::Warning));
+    icon->setAlignment(Qt::AlignCenter);
+    icon->setFixedSize(2 * icon->sizeHint());
 
     int count = cookieList.count();
 
-    QVBox* vBox = new QVBox( hBox );
-    QString txt = i18n("You received a cookie from",
-                       "You received %n cookies from", count);
-    QLabel* lbl = new QLabel( txt, vBox );
-    lbl->setAlignment( Qt::AlignCenter );
+    QVBox *vBox = new QVBox(hBox);
+    QString txt = i18n("You received a cookie from", "You received %n cookies from", count);
+    QLabel *lbl = new QLabel(txt, vBox);
+    lbl->setAlignment(Qt::AlignCenter);
     KHttpCookiePtr cookie = cookieList.first();
 
-    QString host (cookie->host());
+    QString host(cookie->host());
     int pos = host.find(':');
-    if ( pos > 0 )
+    if(pos > 0)
     {
-      QString portNum = host.left(pos);
-      host.remove(0, pos+1);
-      host += ':';
-      host += portNum;
+        QString portNum = host.left(pos);
+        host.remove(0, pos + 1);
+        host += ':';
+        host += portNum;
     }
 
-    txt = QString("<b>%1</b>").arg( KIDNA::toUnicode(host) );
-    if (cookie->isCrossDomain())
-       txt += i18n(" <b>[Cross Domain!]</b>");
-    lbl = new QLabel( txt, vBox );
-    lbl->setAlignment( Qt::AlignCenter );
-    lbl = new QLabel( i18n("Do you want to accept or reject?"), vBox );
-    lbl->setAlignment( Qt::AlignCenter );
-    vlayout->addWidget( hBox, 0, Qt::AlignLeft );
+    txt = QString("<b>%1</b>").arg(KIDNA::toUnicode(host));
+    if(cookie->isCrossDomain())
+        txt += i18n(" <b>[Cross Domain!]</b>");
+    lbl = new QLabel(txt, vBox);
+    lbl->setAlignment(Qt::AlignCenter);
+    lbl = new QLabel(i18n("Do you want to accept or reject?"), vBox);
+    lbl->setAlignment(Qt::AlignCenter);
+    vlayout->addWidget(hBox, 0, Qt::AlignLeft);
 
     // Cookie Details dialog...
-    m_detailView = new KCookieDetail( cookieList, count, this );
-    vlayout->addWidget( m_detailView );
+    m_detailView = new KCookieDetail(cookieList, count, this);
+    vlayout->addWidget(m_detailView);
     m_showDetails = showDetails;
-    m_showDetails ? m_detailView->show():m_detailView->hide();
+    m_showDetails ? m_detailView->show() : m_detailView->hide();
 
     // Cookie policy choice...
-    m_btnGrp = new QVButtonGroup( i18n("Apply Choice To"), this );
-    m_btnGrp->setRadioButtonExclusive( true );
+    m_btnGrp = new QVButtonGroup(i18n("Apply Choice To"), this);
+    m_btnGrp->setRadioButtonExclusive(true);
 
-    txt = (count == 1)? i18n("&Only this cookie") : i18n("&Only these cookies");
-    QRadioButton* rb = new QRadioButton( txt, m_btnGrp );
+    txt = (count == 1) ? i18n("&Only this cookie") : i18n("&Only these cookies");
+    QRadioButton *rb = new QRadioButton(txt, m_btnGrp);
 #ifndef QT_NO_WHATSTHIS
-    QWhatsThis::add( rb, i18n("Select this option to accept/reject only this cookie. "
-                              "You will be prompted if another cookie is received. "
-                              "<em>(see WebBrowsing/Cookies in the Control Center)</em>." ) );
+    QWhatsThis::add(rb, i18n("Select this option to accept/reject only this cookie. "
+                             "You will be prompted if another cookie is received. "
+                             "<em>(see WebBrowsing/Cookies in the Control Center)</em>."));
 #endif
-    m_btnGrp->insert( rb );
-    rb = new QRadioButton( i18n("All cookies from this do&main"), m_btnGrp );
+    m_btnGrp->insert(rb);
+    rb = new QRadioButton(i18n("All cookies from this do&main"), m_btnGrp);
 #ifndef QT_NO_WHATSTHIS
-    QWhatsThis::add( rb, i18n("Select this option to accept/reject all cookies from "
-                              "this site. Choosing this option will add a new policy for "
-                              "the site this cookie originated from. This policy will be "
-                              "permanent until you manually change it from the Control Center "
-                              "<em>(see WebBrowsing/Cookies in the Control Center)</em>.") );
+    QWhatsThis::add(rb, i18n("Select this option to accept/reject all cookies from "
+                             "this site. Choosing this option will add a new policy for "
+                             "the site this cookie originated from. This policy will be "
+                             "permanent until you manually change it from the Control Center "
+                             "<em>(see WebBrowsing/Cookies in the Control Center)</em>."));
 #endif
-    m_btnGrp->insert( rb );
-    rb = new QRadioButton( i18n("All &cookies"), m_btnGrp );
+    m_btnGrp->insert(rb);
+    rb = new QRadioButton(i18n("All &cookies"), m_btnGrp);
 #ifndef QT_NO_WHATSTHIS
-    QWhatsThis::add( rb, i18n("Select this option to accept/reject all cookies from "
-                              "anywhere. Choosing this option will change the global "
-                              "cookie policy set in the Control Center for all cookies "
-                              "<em>(see WebBrowsing/Cookies in the Control Center)</em>.") );
+    QWhatsThis::add(rb, i18n("Select this option to accept/reject all cookies from "
+                             "anywhere. Choosing this option will change the global "
+                             "cookie policy set in the Control Center for all cookies "
+                             "<em>(see WebBrowsing/Cookies in the Control Center)</em>."));
 #endif
-    m_btnGrp->insert( rb );
-    vlayout->addWidget( m_btnGrp );
+    m_btnGrp->insert(rb);
+    vlayout->addWidget(m_btnGrp);
 
-    if ( defaultButton > -1 && defaultButton < 3 )
-        m_btnGrp->setButton( defaultButton );
+    if(defaultButton > -1 && defaultButton < 3)
+        m_btnGrp->setButton(defaultButton);
     else
-        m_btnGrp->setButton( 1 );
+        m_btnGrp->setButton(1);
 
     // Accept/Reject buttons
-    QWidget* bbox = new QWidget( this );
-    QBoxLayout* bbLay = new QHBoxLayout( bbox );
-    bbLay->setSpacing( KDialog::spacingHint() );
-    QPushButton* btn = new QPushButton( i18n("&Accept"), bbox );
-    btn->setDefault( true );
+    QWidget *bbox = new QWidget(this);
+    QBoxLayout *bbLay = new QHBoxLayout(bbox);
+    bbLay->setSpacing(KDialog::spacingHint());
+    QPushButton *btn = new QPushButton(i18n("&Accept"), bbox);
+    btn->setDefault(true);
     btn->setFocus();
-    connect( btn, SIGNAL(clicked()), SLOT(accept()) );
-    bbLay->addWidget( btn );
-    btn = new QPushButton( i18n("&Reject"), bbox );
-    connect( btn, SIGNAL(clicked()), SLOT(reject()) );
-    bbLay->addWidget( btn );
-    bbLay->addStretch( 1 );
+    connect(btn, SIGNAL(clicked()), SLOT(accept()));
+    bbLay->addWidget(btn);
+    btn = new QPushButton(i18n("&Reject"), bbox);
+    connect(btn, SIGNAL(clicked()), SLOT(reject()));
+    bbLay->addWidget(btn);
+    bbLay->addStretch(1);
 #ifndef QT_NO_ACCEL
-    QAccel* a = new QAccel( this );
-    a->connectItem( a->insertItem(Qt::Key_Escape), btn, SLOT(animateClick()) );
+    QAccel *a = new QAccel(this);
+    a->connectItem(a->insertItem(Qt::Key_Escape), btn, SLOT(animateClick()));
 #endif
 
-    m_button = new QPushButton( bbox );
-    m_button->setText( m_showDetails ? i18n("&Details <<"):i18n("&Details >>") );
-    connect( m_button, SIGNAL(clicked()), SLOT(slotCookieDetails()) );
-    bbLay->addWidget( m_button );
+    m_button = new QPushButton(bbox);
+    m_button->setText(m_showDetails ? i18n("&Details <<") : i18n("&Details >>"));
+    connect(m_button, SIGNAL(clicked()), SLOT(slotCookieDetails()));
+    bbLay->addWidget(m_button);
 #ifndef QT_NO_WHATSTHIS
-    QWhatsThis::add( m_button, i18n("See or modify the cookie information") );
+    QWhatsThis::add(m_button, i18n("See or modify the cookie information"));
 #endif
 
 
-    vlayout->addWidget( bbox );
-    setFixedSize( sizeHint() );
+    vlayout->addWidget(bbox);
+    setFixedSize(sizeHint());
 }
 
 KCookieWin::~KCookieWin()
@@ -212,42 +209,42 @@ KCookieWin::~KCookieWin()
 
 void KCookieWin::slotCookieDetails()
 {
-    if ( m_detailView->isVisible() )
+    if(m_detailView->isVisible())
     {
-        m_detailView->setMaximumSize( 0, 0 );
+        m_detailView->setMaximumSize(0, 0);
         m_detailView->adjustSize();
         m_detailView->hide();
-        m_button->setText( i18n( "&Details >>" ) );
+        m_button->setText(i18n("&Details >>"));
         m_showDetails = false;
     }
     else
     {
-        m_detailView->setMaximumSize( 1000, 1000 );
+        m_detailView->setMaximumSize(1000, 1000);
         m_detailView->adjustSize();
         m_detailView->show();
-        m_button->setText( i18n( "&Details <<" ) );
+        m_button->setText(i18n("&Details <<"));
         m_showDetails = true;
     }
 }
 
-KCookieAdvice KCookieWin::advice( KCookieJar *cookiejar, KHttpCookie* cookie )
+KCookieAdvice KCookieWin::advice(KCookieJar *cookiejar, KHttpCookie *cookie)
 {
     int result = exec();
-    
-    cookiejar->setShowCookieDetails ( m_showDetails );
-    
-    KCookieAdvice advice = (result==QDialog::Accepted) ? KCookieAccept:KCookieReject;
-    
-    int preferredPolicy = m_btnGrp->id( m_btnGrp->selected() );
-    cookiejar->setPreferredDefaultPolicy( preferredPolicy );
-    
-    switch ( preferredPolicy )
+
+    cookiejar->setShowCookieDetails(m_showDetails);
+
+    KCookieAdvice advice = (result == QDialog::Accepted) ? KCookieAccept : KCookieReject;
+
+    int preferredPolicy = m_btnGrp->id(m_btnGrp->selected());
+    cookiejar->setPreferredDefaultPolicy(preferredPolicy);
+
+    switch(preferredPolicy)
     {
         case 2:
-            cookiejar->setGlobalAdvice( advice );
+            cookiejar->setGlobalAdvice(advice);
             break;
         case 1:
-            cookiejar->setDomainAdvice( cookie, advice );
+            cookiejar->setDomainAdvice(cookie, advice);
             break;
         case 0:
         default:
@@ -256,68 +253,64 @@ KCookieAdvice KCookieWin::advice( KCookieJar *cookiejar, KHttpCookie* cookie )
     return advice;
 }
 
-KCookieDetail::KCookieDetail( KHttpCookieList cookieList, int cookieCount,
-                              QWidget* parent, const char* name )
-              :QGroupBox( parent, name )
+KCookieDetail::KCookieDetail(KHttpCookieList cookieList, int cookieCount, QWidget *parent, const char *name) : QGroupBox(parent, name)
 {
-    setTitle( i18n("Cookie Details") );
-    QGridLayout* grid = new QGridLayout( this, 9, 2,
-                                         KDialog::spacingHint(),
-                                         KDialog::marginHint() );
-    grid->addRowSpacing( 0, fontMetrics().lineSpacing() );
-    grid->setColStretch( 1, 3 );
+    setTitle(i18n("Cookie Details"));
+    QGridLayout *grid = new QGridLayout(this, 9, 2, KDialog::spacingHint(), KDialog::marginHint());
+    grid->addRowSpacing(0, fontMetrics().lineSpacing());
+    grid->setColStretch(1, 3);
 
-    QLabel* label = new QLabel( i18n("Name:"), this );
-    grid->addWidget( label, 1, 0 );
-    m_name = new KLineEdit( this );
-    m_name->setReadOnly( true );
-    m_name->setMaximumWidth( fontMetrics().maxWidth() * 25 );
-    grid->addWidget( m_name, 1 ,1 );
+    QLabel *label = new QLabel(i18n("Name:"), this);
+    grid->addWidget(label, 1, 0);
+    m_name = new KLineEdit(this);
+    m_name->setReadOnly(true);
+    m_name->setMaximumWidth(fontMetrics().maxWidth() * 25);
+    grid->addWidget(m_name, 1, 1);
 
-    //Add the value
-    label = new QLabel( i18n("Value:"), this );
-    grid->addWidget( label, 2, 0 );
-    m_value = new KLineEdit( this );
-    m_value->setReadOnly( true );
-    m_value->setMaximumWidth( fontMetrics().maxWidth() * 25 );
-    grid->addWidget( m_value, 2, 1);
+    // Add the value
+    label = new QLabel(i18n("Value:"), this);
+    grid->addWidget(label, 2, 0);
+    m_value = new KLineEdit(this);
+    m_value->setReadOnly(true);
+    m_value->setMaximumWidth(fontMetrics().maxWidth() * 25);
+    grid->addWidget(m_value, 2, 1);
 
-    label = new QLabel( i18n("Expires:"), this );
-    grid->addWidget( label, 3, 0 );
-    m_expires = new KLineEdit( this );
-    m_expires->setReadOnly( true );
-    m_expires->setMaximumWidth(fontMetrics().maxWidth() * 25 );
-    grid->addWidget( m_expires, 3, 1);
+    label = new QLabel(i18n("Expires:"), this);
+    grid->addWidget(label, 3, 0);
+    m_expires = new KLineEdit(this);
+    m_expires->setReadOnly(true);
+    m_expires->setMaximumWidth(fontMetrics().maxWidth() * 25);
+    grid->addWidget(m_expires, 3, 1);
 
-    label = new QLabel( i18n("Path:"), this );
-    grid->addWidget( label, 4, 0 );
-    m_path = new KLineEdit( this );
-    m_path->setReadOnly( true );
-    m_path->setMaximumWidth( fontMetrics().maxWidth() * 25 );
-    grid->addWidget( m_path, 4, 1);
+    label = new QLabel(i18n("Path:"), this);
+    grid->addWidget(label, 4, 0);
+    m_path = new KLineEdit(this);
+    m_path->setReadOnly(true);
+    m_path->setMaximumWidth(fontMetrics().maxWidth() * 25);
+    grid->addWidget(m_path, 4, 1);
 
-    label = new QLabel( i18n("Domain:"), this );
-    grid->addWidget( label, 5, 0 );
-    m_domain = new KLineEdit( this );
-    m_domain->setReadOnly( true );
-    m_domain->setMaximumWidth( fontMetrics().maxWidth() * 25 );
-    grid->addWidget( m_domain, 5, 1);
+    label = new QLabel(i18n("Domain:"), this);
+    grid->addWidget(label, 5, 0);
+    m_domain = new KLineEdit(this);
+    m_domain->setReadOnly(true);
+    m_domain->setMaximumWidth(fontMetrics().maxWidth() * 25);
+    grid->addWidget(m_domain, 5, 1);
 
-    label = new QLabel( i18n("Exposure:"), this );
-    grid->addWidget( label, 6, 0 );
-    m_secure = new KLineEdit( this );
-    m_secure->setReadOnly( true );
-    m_secure->setMaximumWidth( fontMetrics().maxWidth() * 25 );
-    grid->addWidget( m_secure, 6, 1 );
+    label = new QLabel(i18n("Exposure:"), this);
+    grid->addWidget(label, 6, 0);
+    m_secure = new KLineEdit(this);
+    m_secure->setReadOnly(true);
+    m_secure->setMaximumWidth(fontMetrics().maxWidth() * 25);
+    grid->addWidget(m_secure, 6, 1);
 
-    if ( cookieCount > 1 )
+    if(cookieCount > 1)
     {
-        QPushButton* btnNext = new QPushButton( i18n("Next cookie","&Next >>"), this );
-        btnNext->setFixedSize( btnNext->sizeHint() );
-        grid->addMultiCellWidget( btnNext, 8, 8, 0, 1 );
-        connect( btnNext, SIGNAL(clicked()), SLOT(slotNextCookie()) );
+        QPushButton *btnNext = new QPushButton(i18n("Next cookie", "&Next >>"), this);
+        btnNext->setFixedSize(btnNext->sizeHint());
+        grid->addMultiCellWidget(btnNext, 8, 8, 0, 1);
+        connect(btnNext, SIGNAL(clicked()), SLOT(slotNextCookie()));
 #ifndef QT_NO_TOOLTIP
-        QToolTip::add( btnNext, i18n("Show details of the next cookie") );
+        QToolTip::add(btnNext, i18n("Show details of the next cookie"));
 #endif
     }
     m_cookieList = cookieList;
@@ -332,50 +325,51 @@ KCookieDetail::~KCookieDetail()
 void KCookieDetail::slotNextCookie()
 {
     KHttpCookiePtr cookie = m_cookieList.first();
-    if (m_cookie) while(cookie)
-    {
-       if (cookie == m_cookie)
-       {
-          cookie = m_cookieList.next();
-          break;
-       }
-       cookie = m_cookieList.next();
-    }
+    if(m_cookie)
+        while(cookie)
+        {
+            if(cookie == m_cookie)
+            {
+                cookie = m_cookieList.next();
+                break;
+            }
+            cookie = m_cookieList.next();
+        }
     m_cookie = cookie;
-    if (!m_cookie)
+    if(!m_cookie)
         m_cookie = m_cookieList.first();
 
-    if ( m_cookie )
+    if(m_cookie)
     {
-        m_name->setText( m_cookie->name() );
-        m_value->setText( ( m_cookie->value() ) );
-        if ( m_cookie->domain().isEmpty() )
-          m_domain->setText( i18n("Not specified") );
+        m_name->setText(m_cookie->name());
+        m_value->setText((m_cookie->value()));
+        if(m_cookie->domain().isEmpty())
+            m_domain->setText(i18n("Not specified"));
         else
-          m_domain->setText( m_cookie->domain() );
-        m_path->setText( m_cookie->path() );
+            m_domain->setText(m_cookie->domain());
+        m_path->setText(m_cookie->path());
         QDateTime cookiedate;
-        cookiedate.setTime_t( m_cookie->expireDate() );
-        if ( m_cookie->expireDate() )
-          m_expires->setText( KGlobal::locale()->formatDateTime(cookiedate) );
+        cookiedate.setTime_t(m_cookie->expireDate());
+        if(m_cookie->expireDate())
+            m_expires->setText(KGlobal::locale()->formatDateTime(cookiedate));
         else
-          m_expires->setText( i18n("End of Session") );
+            m_expires->setText(i18n("End of Session"));
         QString sec;
-        if (m_cookie->isSecure())
+        if(m_cookie->isSecure())
         {
-          if (m_cookie->isHttpOnly())
-            sec = i18n("Secure servers only");
-          else
-            sec = i18n("Secure servers, page scripts");
+            if(m_cookie->isHttpOnly())
+                sec = i18n("Secure servers only");
+            else
+                sec = i18n("Secure servers, page scripts");
         }
         else
         {
-          if (m_cookie->isHttpOnly())
-            sec = i18n("Servers");
-          else
-            sec = i18n("Servers, page scripts");
+            if(m_cookie->isHttpOnly())
+                sec = i18n("Servers");
+            else
+                sec = i18n("Servers, page scripts");
         }
-        m_secure->setText( sec );
+        m_secure->setText(sec);
     }
 }
 

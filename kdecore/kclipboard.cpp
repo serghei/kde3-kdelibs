@@ -38,159 +38,155 @@
  *  especially the second one.
  */
 
-class KClipboardSynchronizer::MimeSource : public QMimeSource
-{
+class KClipboardSynchronizer::MimeSource : public QMimeSource {
 public:
-    MimeSource( const QMimeSource * src )
-        : QMimeSource(),
-          m_formats( true ) // deep copies!
+    MimeSource(const QMimeSource *src) : QMimeSource(), m_formats(true) // deep copies!
     {
-        m_formats.setAutoDelete( true );
-        m_data.setAutoDelete( true );
+        m_formats.setAutoDelete(true);
+        m_data.setAutoDelete(true);
 
-        if ( src )
+        if(src)
         {
             QByteArray *byteArray;
             const char *format;
             int i = 0;
-            while ( (format = src->format( i++ )) )
+            while((format = src->format(i++)))
             {
                 byteArray = new QByteArray();
-                *byteArray = src->encodedData( format ).copy();
-                m_data.append( byteArray );
-                m_formats.append( format );
+                *byteArray = src->encodedData(format).copy();
+                m_data.append(byteArray);
+                m_formats.append(format);
             }
         }
     }
 
-    ~MimeSource() {}
+    ~MimeSource()
+    {
+    }
 
-    virtual const char *format( int i ) const {
-        if ( i < (int) m_formats.count() )
-            return m_formats.at( i );
+    virtual const char *format(int i) const
+    {
+        if(i < (int)m_formats.count())
+            return m_formats.at(i);
         else
             return 0L;
     }
-    virtual bool provides( const char *mimeType ) const {
-        return ( m_formats.find( mimeType ) > -1 );
-    }
-    virtual QByteArray encodedData( const char *format ) const
+    virtual bool provides(const char *mimeType) const
     {
-        int index = m_formats.find( format );
-        if ( index > -1 )
-            return *(m_data.at( index ));
+        return (m_formats.find(mimeType) > -1);
+    }
+    virtual QByteArray encodedData(const char *format) const
+    {
+        int index = m_formats.find(format);
+        if(index > -1)
+            return *(m_data.at(index));
 
         return QByteArray();
     }
 
 private:
     mutable QStrList m_formats;
-    mutable QPtrList<QByteArray> m_data;
+    mutable QPtrList< QByteArray > m_data;
 };
 
 
-KClipboardSynchronizer * KClipboardSynchronizer::s_self = 0L;
+KClipboardSynchronizer *KClipboardSynchronizer::s_self = 0L;
 bool KClipboardSynchronizer::s_sync = false;
 bool KClipboardSynchronizer::s_reverse_sync = false;
 bool KClipboardSynchronizer::s_blocked = false;
 
-KClipboardSynchronizer * KClipboardSynchronizer::self()
+KClipboardSynchronizer *KClipboardSynchronizer::self()
 {
-    if ( !s_self )
-        s_self = new KClipboardSynchronizer( kapp, "KDE Clipboard" );
+    if(!s_self)
+        s_self = new KClipboardSynchronizer(kapp, "KDE Clipboard");
 
     return s_self;
 }
 
-KClipboardSynchronizer::KClipboardSynchronizer( QObject *parent, const char *name )
-    : QObject( parent, name )
+KClipboardSynchronizer::KClipboardSynchronizer(QObject *parent, const char *name) : QObject(parent, name)
 {
     s_self = this;
 
-    KConfigGroup config( KGlobal::config(), "General" );
-    s_sync = config.readBoolEntry( "SynchronizeClipboardAndSelection", s_sync);
-    s_reverse_sync = config.readBoolEntry( "ClipboardSetSelection",
-                                                s_reverse_sync );
+    KConfigGroup config(KGlobal::config(), "General");
+    s_sync = config.readBoolEntry("SynchronizeClipboardAndSelection", s_sync);
+    s_reverse_sync = config.readBoolEntry("ClipboardSetSelection", s_reverse_sync);
 
     setupSignals();
 }
 
 KClipboardSynchronizer::~KClipboardSynchronizer()
 {
-    if ( s_self == this )
+    if(s_self == this)
         s_self = 0L;
 }
 
 void KClipboardSynchronizer::setupSignals()
 {
     QClipboard *clip = QApplication::clipboard();
-    disconnect( clip, NULL, this, NULL );
-    if( s_sync )
-        connect( clip, SIGNAL( selectionChanged() ),
-                 SLOT( slotSelectionChanged() ));
-    if( s_reverse_sync )
-        connect( clip, SIGNAL( dataChanged() ),
-                 SLOT( slotClipboardChanged() ));
+    disconnect(clip, NULL, this, NULL);
+    if(s_sync)
+        connect(clip, SIGNAL(selectionChanged()), SLOT(slotSelectionChanged()));
+    if(s_reverse_sync)
+        connect(clip, SIGNAL(dataChanged()), SLOT(slotClipboardChanged()));
 }
 
 void KClipboardSynchronizer::slotSelectionChanged()
 {
     QClipboard *clip = QApplication::clipboard();
 
-//     qDebug("*** sel changed: %i", s_blocked);
-    if ( s_blocked || !clip->ownsSelection() )
+    //     qDebug("*** sel changed: %i", s_blocked);
+    if(s_blocked || !clip->ownsSelection())
         return;
 
-    setClipboard( new MimeSource( clip->data( QClipboard::Selection) ),
-                  QClipboard::Clipboard );
+    setClipboard(new MimeSource(clip->data(QClipboard::Selection)), QClipboard::Clipboard);
 }
 
 void KClipboardSynchronizer::slotClipboardChanged()
 {
     QClipboard *clip = QApplication::clipboard();
 
-//     qDebug("*** clip changed : %i (implicit: %i, ownz: clip: %i, selection: %i)", s_blocked, s_implicitSelection, clip->ownsClipboard(), clip->ownsSelection());
-    if ( s_blocked || !clip->ownsClipboard() )
+    //     qDebug("*** clip changed : %i (implicit: %i, ownz: clip: %i, selection: %i)", s_blocked, s_implicitSelection, clip->ownsClipboard(),
+    //     clip->ownsSelection());
+    if(s_blocked || !clip->ownsClipboard())
         return;
 
-    setClipboard( new MimeSource( clip->data( QClipboard::Clipboard ) ),
-                  QClipboard::Selection );
+    setClipboard(new MimeSource(clip->data(QClipboard::Clipboard)), QClipboard::Selection);
 }
 
-void KClipboardSynchronizer::setClipboard( QMimeSource *data, QClipboard::Mode mode )
+void KClipboardSynchronizer::setClipboard(QMimeSource *data, QClipboard::Mode mode)
 {
-//     qDebug("---> setting clipboard: %p", data);
+    //     qDebug("---> setting clipboard: %p", data);
 
     QClipboard *clip = QApplication::clipboard();
 
     s_blocked = true;
 
-    if ( mode == QClipboard::Clipboard )
+    if(mode == QClipboard::Clipboard)
     {
-        clip->setData( data, QClipboard::Clipboard );
+        clip->setData(data, QClipboard::Clipboard);
     }
-    else if ( mode == QClipboard::Selection )
+    else if(mode == QClipboard::Selection)
     {
-        clip->setData( data, QClipboard::Selection );
+        clip->setData(data, QClipboard::Selection);
     }
 
     s_blocked = false;
 }
 
-void KClipboardSynchronizer::setSynchronizing( bool sync )
+void KClipboardSynchronizer::setSynchronizing(bool sync)
 {
     s_sync = sync;
     self()->setupSignals();
 }
 
-void KClipboardSynchronizer::setReverseSynchronizing( bool enable )
+void KClipboardSynchronizer::setReverseSynchronizing(bool enable)
 {
     s_reverse_sync = enable;
     self()->setupSignals();
 }
 
 // private, called by KApplication
-void KClipboardSynchronizer::newConfiguration( int config )
+void KClipboardSynchronizer::newConfiguration(int config)
 {
     s_sync = (config & Synchronize);
     self()->setupSignals();

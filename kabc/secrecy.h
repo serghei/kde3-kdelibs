@@ -27,74 +27,73 @@
 
 namespace KABC {
 
-class KABC_EXPORT Secrecy
-{
-    friend KABC_EXPORT QDataStream &operator<<( QDataStream &, const Secrecy & );
-    friend KABC_EXPORT QDataStream &operator>>( QDataStream &, Secrecy & );
+class KABC_EXPORT Secrecy {
+    friend KABC_EXPORT QDataStream &operator<<(QDataStream &, const Secrecy &);
+    friend KABC_EXPORT QDataStream &operator>>(QDataStream &, Secrecy &);
 
 public:
-  typedef QValueList<int> TypeList;  
+    typedef QValueList< int > TypeList;
 
-  /**
-   * Secrecy types
-   *
-   * @li Public       - for public access
-   * @li Private      - only private access
-   * @li Confidential - access for confidential persons
-   */
-  enum Types {
-    Public,
-    Private,
-    Confidential,
-    Invalid
-  };
+    /**
+     * Secrecy types
+     *
+     * @li Public       - for public access
+     * @li Private      - only private access
+     * @li Confidential - access for confidential persons
+     */
+    enum Types
+    {
+        Public,
+        Private,
+        Confidential,
+        Invalid
+    };
 
-  /**
-   * Constructor.
-   *
-   * @param type  The secrecy type, see Types.
-   */
-  Secrecy( int type = Invalid );
+    /**
+     * Constructor.
+     *
+     * @param type  The secrecy type, see Types.
+     */
+    Secrecy(int type = Invalid);
 
-  bool operator==( const Secrecy & ) const;
-  bool operator!=( const Secrecy & ) const;
+    bool operator==(const Secrecy &) const;
+    bool operator!=(const Secrecy &) const;
 
-  /**
-    Returns if the Secrecy object has a valid value.
-  */
-  bool isValid() const;
+    /**
+      Returns if the Secrecy object has a valid value.
+    */
+    bool isValid() const;
 
-  /**
-   * Sets the type, see Types.
-   */
-  void setType( int type );
+    /**
+     * Sets the type, see Types.
+     */
+    void setType(int type);
 
-  /**
-   * Returns the type, see Types.
-   */
-  int type() const;
+    /**
+     * Returns the type, see Types.
+     */
+    int type() const;
 
-  /**
-   * Returns a list of all available secrecy types.
-   */
-  static TypeList typeList();
-  
-  /**
-   * Returns a translated label for a given secrecy type.
-   */
-  static QString typeLabel( int type );
+    /**
+     * Returns a list of all available secrecy types.
+     */
+    static TypeList typeList();
 
-  /**
-   * For debug.
-   */
-  QString asString() const;
+    /**
+     * Returns a translated label for a given secrecy type.
+     */
+    static QString typeLabel(int type);
+
+    /**
+     * For debug.
+     */
+    QString asString() const;
 
 private:
-  int mType;
+    int mType;
 };
 
-KABC_EXPORT QDataStream& operator<<( QDataStream &s, const Secrecy &secrecy );
-KABC_EXPORT QDataStream& operator>>( QDataStream &s, Secrecy &secrecy );
-
+KABC_EXPORT QDataStream &operator<<(QDataStream &s, const Secrecy &secrecy);
+KABC_EXPORT QDataStream &operator>>(QDataStream &s, Secrecy &secrecy);
 }
 #endif

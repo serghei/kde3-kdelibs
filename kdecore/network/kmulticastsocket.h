@@ -10,7 +10,7 @@
  *  permit persons to whom the Software is furnished to do so, subject to
  *  the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
@@ -40,74 +40,71 @@ class KMulticastSocketPrivate;
  * the join and leave group functions are added.
  *
  * Other more low-level options on multicast sockets can be accessed
- * directly with the @ref KMulticastSocketImpl class returned by 
+ * directly with the @ref KMulticastSocketImpl class returned by
  * @ref multicastSocketDevice.
  *
  * @author Thiago Macieira <thiago.macieira@kdemail.net>
  */
-class KDECORE_EXPORT KMulticastSocket: public KDatagramSocket
-{
-  // Q_add-it-here_OBJECT
+class KDECORE_EXPORT KMulticastSocket : public KDatagramSocket {
+    // Q_add-it-here_OBJECT
 public:
-  /**
-   * Constructor.
-   */
-  KMulticastSocket(QObject* parent = 0L, const char *name = 0L);
+    /**
+     * Constructor.
+     */
+    KMulticastSocket(QObject *parent = 0L, const char *name = 0L);
 
-  /**
-   * Destructor.
-   */
-  ~KMulticastSocket();
+    /**
+     * Destructor.
+     */
+    ~KMulticastSocket();
 
-  /**
-   * Returns the multicast socket device in use by this object.
-   *
-   * @note The returned object can be null.
-   */
-  KMulticastSocketImpl* multicastSocketDevice();
+    /**
+     * Returns the multicast socket device in use by this object.
+     *
+     * @note The returned object can be null.
+     */
+    KMulticastSocketImpl *multicastSocketDevice();
 
-  /**
-   * @overload
-   */
-  const KMulticastSocketImpl* multicastSocketDevice() const;
+    /**
+     * @overload
+     */
+    const KMulticastSocketImpl *multicastSocketDevice() const;
 
-  /**
-   * Joins a multicast group. The group to be joined is identified by the 
-   * @p group parameter.
-   *
-   * @param group	the multicast group to join
-   * @returns true on success
-   */
-  virtual bool joinGroup(const KSocketAddress& group);
+    /**
+     * Joins a multicast group. The group to be joined is identified by the
+     * @p group parameter.
+     *
+     * @param group	the multicast group to join
+     * @returns true on success
+     */
+    virtual bool joinGroup(const KSocketAddress &group);
 
-  /**
-   * @overload
-   * Joins a multicast group. This function also specifies the network interface
-   * to be used.
-   */
-  virtual bool joinGroup(const KSocketAddress& group, 
-			 const KNetworkInterface& iface);
+    /**
+     * @overload
+     * Joins a multicast group. This function also specifies the network interface
+     * to be used.
+     */
+    virtual bool joinGroup(const KSocketAddress &group, const KNetworkInterface &iface);
 
-  /**
-   * Leaves a multicast group. The group being left is given by its address in the
-   * @p group parameter.
-   *
-   * @param group	the group to leave
-   * @returns true on successful leaving the group
-   */
-  virtual bool leaveGroup(const KSocketAddress& group);
+    /**
+     * Leaves a multicast group. The group being left is given by its address in the
+     * @p group parameter.
+     *
+     * @param group	the group to leave
+     * @returns true on successful leaving the group
+     */
+    virtual bool leaveGroup(const KSocketAddress &group);
 
-  /**
-   * @overload
-   * Leaves a multicast group.
-   */
-  virtual bool leaveGroup(const KSocketAddress& group,
-			  const KNetworkInterface& iface);
+    /**
+     * @overload
+     * Leaves a multicast group.
+     */
+    virtual bool leaveGroup(const KSocketAddress &group, const KNetworkInterface &iface);
 
 private:
-  KMulticastSocketPrivate *d;
+    KMulticastSocketPrivate *d;
 };
 
-}				// namespace KNetwork
+} // namespace KNetwork
 
 #endif
