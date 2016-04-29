@@ -1,3 +1,5 @@
+// clang-format off
+
 /*
     This file is part of libkabc.
     Copyright (c) 2002 Cornelius Schumacher <schumacher@kde.org>
