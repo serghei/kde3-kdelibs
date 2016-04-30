@@ -11,6 +11,24 @@
 
 #################################################
 #####
+##### setup cmake policies
+
+if( NOT CMAKE_VERSION VERSION_LESS 2.8.12 )
+  cmake_policy( SET CMP0022 NEW )
+endif ( )
+
+if( NOT CMAKE_VERSION VERSION_LESS 3.0 )
+  cmake_policy( SET CMP0026 OLD )
+  cmake_policy( SET CMP0046 OLD )
+endif ( )
+
+if( NOT CMAKE_VERSION VERSION_LESS 3.1 )
+  cmake_policy( SET CMP0054 NEW )
+endif ( )
+
+
+#################################################
+#####
 ##### kde_message_notfound
 
 macro( kde_message_notfound )
