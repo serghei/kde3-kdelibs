@@ -229,12 +229,6 @@ void KMdiChildArea::resizeEvent(QResizeEvent *e)
     KMdiChildFrm *child = topChild();
     if(child && child->state() == KMdiChildFrm::Maximized)
     {
-        int clientw = 0, clienth = 0;
-        if(child->m_pClient != 0L)
-        {
-            clientw = child->m_pClient->width();
-            clienth = child->m_pClient->height();
-        }
         child->resize(width() + KMDI_CHILDFRM_DOUBLE_BORDER,
                       height() + child->m_pCaption->heightHint() + KMDI_CHILDFRM_SEPARATOR + KMDI_CHILDFRM_DOUBLE_BORDER);
     }

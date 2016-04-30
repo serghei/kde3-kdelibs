@@ -529,17 +529,11 @@ void KBuildSycoca::save()
     m_str->device()->at(0);
 
     (*m_str) << (Q_INT32)KSycoca::version();
-    KSycocaFactory *servicetypeFactory = 0L;
-    KSycocaFactory *serviceFactory = 0L;
     for(KSycocaFactory *factory = m_lstFactories->first(); factory; factory = m_lstFactories->next())
     {
         Q_INT32 aId;
         Q_INT32 aOffset;
         aId = factory->factoryId();
-        if(aId == KST_KServiceTypeFactory)
-            servicetypeFactory = factory;
-        else if(aId == KST_KServiceFactory)
-            serviceFactory = factory;
         aOffset = factory->offset();
         (*m_str) << aId;
         (*m_str) << aOffset;

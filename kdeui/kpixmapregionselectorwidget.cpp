@@ -91,8 +91,6 @@ void KPixmapRegionSelectorWidget::setSelectedRegion(const QRect &rect)
     {
         m_selectedRegion = rect;
         updatePixmap();
-
-        QRect r = unzoomedSelectedRegion();
     }
 }
 

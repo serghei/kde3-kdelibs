@@ -4282,7 +4282,6 @@ void DeleteJob::slotResult(Job *job)
             UDSEntry entry = ((StatJob *)job)->statResult();
             bool bDir = false;
             bool bLink = false;
-            KIO::filesize_t size = (KIO::filesize_t)-1;
             UDSEntry::ConstIterator it2 = entry.begin();
             int atomsFound(0);
             for(; it2 != entry.end(); it2++)
@@ -4299,7 +4298,6 @@ void DeleteJob::slotResult(Job *job)
                 }
                 else if(((*it2).m_uds) == UDS_SIZE)
                 {
-                    size = (*it2).m_long;
                     atomsFound++;
                 }
                 if(atomsFound == 3)

@@ -635,8 +635,7 @@ bool KZip::openArchive(int mode)
                     else
                     {
                         // 			kdDebug(7040) << "before interesting dev->at(): " << dev->at() << endl;
-                        bool success;
-                        success = dev->at(dev->at() + compr_size); // can this fail ???
+                        dev->at(dev->at() + compr_size); // can this fail ???
                                                                    /*			kdDebug(7040) << "after interesting dev->at(): " << dev->at() << endl;
                                                                                if ( success )
                                                                                    kdDebug(7040) << "dev->at was successful... " << endl;

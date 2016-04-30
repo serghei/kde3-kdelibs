@@ -277,13 +277,12 @@ public:
     }
     void append(T *e)
     {
-        PtrListEntry *t_last = 0, *t_current = m_first;
+        PtrListEntry *t_current = m_first;
         int count = 0;
         while(t_current)
         {
             if(t_current->insert(e))
                 return;
-            t_last = t_current;
             t_current = t_current->next;
             count++;
         }

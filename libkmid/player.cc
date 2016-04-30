@@ -148,7 +148,6 @@ void MidiPlayer::generateBeats(void)
     double beatstep = T2MS(ticksleft);
     double nextbeatms = 0;
     double lastbeatms = 0;
-    double measurems = 0;
 
     while(nextev != NULL)
     {
@@ -189,13 +188,6 @@ void MidiPlayer::generateBeats(void)
         };
         if(nextev->absmilliseconds > nextbeatms)
         {
-            // printf("Adding %d,%d\n",num,tot);
-            // printf("beat at %g , %d/%d\n",nextbeatms,i,num);
-            // printf("  %ld %d\n",nextev->absmilliseconds,nextev->type);
-            if(i == 1)
-            {
-                measurems = nextbeatms;
-            }
             insertBeat(ev, static_cast< unsigned long >(nextbeatms), i++, num);
             if(i > num)
             {
@@ -203,7 +195,6 @@ void MidiPlayer::generateBeats(void)
             }
             lastbeatms = nextbeatms;
             nextbeatms += beatstep;
-            // nextbeatms=measurems+beatstep*i;
 
             ticksleft = ((static_cast< double >(info->ticksPerCuarterNote) * 4) / den);
         }
@@ -228,9 +219,6 @@ void MidiPlayer::generateBeats(void)
         }
         while(nextbeatms < info->millisecsTotal)
         {
-            //            printf("beat2 at %g , %d/%d\n",nextbeatms,i,num);
-            if(i == 1)
-                measurems = nextbeatms;
             insertBeat(ev, static_cast< unsigned long >(nextbeatms), i++, num);
             if(i > num)
                 i = 1;
@@ -594,13 +582,10 @@ void MidiPlayer::play(bool calloutput, void output(void))
     ctl->ticksTotal = info->ticksTotal;
     ctl->ticksPlayed = 0;
     // ctl->millisecsPlayed=0;
-    ulong ticksplayed = 0;
-    double absTimeAtChangeTempo = 0;
     double absTime = 0;
     double diffTime = 0;
     MidiStatus *midistat;
     // ulong mspass;
-    double prevms = 0;
     int j;
     int halt = 0;
     ctl->tempo = tempo;
@@ -618,7 +603,6 @@ void MidiPlayer::play(bool calloutput, void output(void))
         midistat = new MidiStatus();
         setPos(ctl->gotomsec, midistat);
         minTime = ctl->gotomsec;
-        prevms = (ulong)minTime;
         midi->openDev();
         midi->tmrStart(info->ticksPerCuarterNote);
         diffTime = ctl->gotomsec;
@@ -644,60 +628,6 @@ void MidiPlayer::play(bool calloutput, void output(void))
 
     while(playing)
     {
-        /*
-        if (ctl->message!=0)
-        {
-      if (ctl->message & PLAYER_DOPAUSE)
-      {
-        diffTime=minTime;
-        ctl->message&=~PLAYER_DOPAUSE;
-        midi->sync(1);
-        midi->tmrStop();
-        ctl->paused=1;
-        midi->closeDev();
-        while ((ctl->paused)&&(!(ctl->message&PLAYER_DOSTOP))
-            &&(!(ctl->message&PLAYER_HALT))) sleep(1);
-        midi->openDev();
-        midi->tmrStart();
-        ctl->OK=1;
-        printf("Continue playing ... \n");
-      };
-      if (ctl->message & PLAYER_DOSTOP)
-      {
-        ctl->message&=~PLAYER_DOSTOP;
-        playing=0;
-      };
-      if (ctl->message & PLAYER_HALT)
-      {
-        ctl->message&=~PLAYER_HALT;
-        playing=0;
-        halt=1;
-      };
-      if (ctl->message & PLAYER_SETPOS)
-      {
-        ctl->moving=1;
-        ctl->message&=~PLAYER_SETPOS;
-        midi->sync(1);
-        midi->tmrStop();
-        midi->closeDev();
-        midistat = new midiStat();
-        SetPos(ctl->gotomsec,midistat);
-        minTime=ctl->gotomsec;
-        prevms=(ulong)minTime;
-        midi->openDev();
-        midi->tmrStart();
-        diffTime=ctl->gotomsec;
-        ctl->moving=0;
-        midistat->sendData(midi,ctl->gm);
-        delete midistat;
-        ctl->OK=1;
-        while (ctl->OK==1) ;
-        ctl->moving=0;
-      };
-        };
-        */
-        prevms = minTime;
-        //    ctl->millisecsPlayed=minTime;
         trk = 0;
         minTrk = 0;
         maxTime = minTime + 120000L /* milliseconds */;
@@ -770,8 +700,6 @@ void MidiPlayer::play(bool calloutput, void output(void))
                     }
                     if(ev->d1 == ME_SET_TEMPO)
                     {
-                        absTimeAtChangeTempo = absTime;
-                        ticksplayed = 0;
                         ctl->SPEVplayed++;
                         tempo = (ulong)(((ev->data[0] << 16) | (ev->data[1] << 8) | (ev->data[2])) * ctl->ratioTempo);
 #ifdef PLAYERDEBUG
@@ -826,7 +754,7 @@ void MidiPlayer::setPos(ulong gotomsec, MidiStatus *midistat)
 {
     int trk, minTrk;
     ulong tempo = (ulong)(500000 * ctl->ratioTempo);
-    double minTime = 0, maxTime, prevms = 0;
+    double minTime = 0, maxTime;
     int i, j, likeplaying = 1;
 
     MidiEvent *ev = new MidiEvent;
@@ -869,16 +797,11 @@ void MidiPlayer::setPos(ulong gotomsec, MidiStatus *midistat)
         {
             if(minTime >= gotomsec)
             {
-                prevms = gotomsec;
                 likeplaying = 0;
 #ifdef GENERAL_DEBUG_MESSAGES
                 printf("Position reached !! \n");
 #endif
                 minTime = gotomsec;
-            }
-            else
-            {
-                prevms = minTime;
             }
             trk = 0;
             while(trk < info->ntracks)

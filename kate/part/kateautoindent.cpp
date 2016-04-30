@@ -713,21 +713,8 @@ void KateCSmartIndent::processChar(QChar c)
     KateDocCursor begin(view->cursorLine(), 0, doc);
 
     KateTextLine::Ptr textLine = doc->plainKateTextLine(begin.line());
-    const QChar curChar = textLine->getChar(curCol);
     const int first = textLine->firstChar();
     const QChar firstChar = textLine->getChar(first);
-
-#if 0 // nice try
-  // Only indent on symbols or preprocessing directives -- never on
-  // anything else
-  kdDebug() << "curChar " << curChar << " curCol " << curCol << " textlen " << textLine->length() << " a " << textLine->attribute( curCol ) << " sym " << symbolAttrib << " pp " << preprocessorAttrib << endl;
-  if (!(((curChar == '#' || curChar == 'n')
-         && textLine->attribute( curCol ) == preprocessorAttrib)
-        || textLine->attribute( curCol ) == symbolAttrib)
-     )
-    return;
-  kdDebug() << "curChar " << curChar << endl;
-#endif
 
     if(c == 'n')
     {

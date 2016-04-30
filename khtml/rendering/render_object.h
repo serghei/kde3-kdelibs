@@ -565,11 +565,9 @@ public:
         if(!b)
         {
             RenderObject *o = this;
-            RenderObject *root = this;
             while(o)
-            { // ### && !o->m_recalcMinMax ) {
+            {
                 o->m_recalcMinMax = true;
-                root = o;
                 o = o->m_parent;
             }
         }

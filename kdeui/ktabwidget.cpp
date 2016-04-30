@@ -174,9 +174,8 @@ bool KTabWidget::tabCloseActivatePrevious() const
 
 unsigned int KTabWidget::tabBarWidthForMaxChars(uint maxLength)
 {
-    int hframe, overlap;
+    int hframe;
     hframe = tabBar()->style().pixelMetric(QStyle::PM_TabBarTabHSpace, tabBar());
-    overlap = tabBar()->style().pixelMetric(QStyle::PM_TabBarTabOverlap, tabBar());
 
     QFontMetrics fm = tabBar()->fontMetrics();
     int x = 0;

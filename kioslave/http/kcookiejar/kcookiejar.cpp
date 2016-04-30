@@ -850,7 +850,6 @@ KHttpCookieList KCookieJar::makeDOMCookies(const QString &_url, const QCString &
 {
     // A lot copied from above
     KHttpCookieList cookieList;
-    KHttpCookiePtr lastCookie = 0;
 
     const char *cookieStr = cookie_domstring.data();
     QString Name;
@@ -877,7 +876,6 @@ KHttpCookieList KCookieJar::makeDOMCookies(const QString &_url, const QCString &
             cookie->mWindowIds.append(windowId);
 
         cookieList.append(cookie);
-        lastCookie = cookie;
 
         if(*cookieStr != '\0')
             cookieStr++; // Skip ';' or '\n'

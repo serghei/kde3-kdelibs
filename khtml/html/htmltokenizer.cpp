@@ -1533,12 +1533,10 @@ void HTMLTokenizer::write(const TokenizerString &str, bool appendData)
         else if(startTag)
         {
             startTag = false;
-            bool endTag = false;
 
             switch(cc)
             {
                 case '/':
-                    endTag = true;
                     break;
                 case '!':
                 {

@@ -139,7 +139,6 @@ void FMOut::loadFMPatches(void)
         patchloaded[i] = 0;
     int stereoeffect = rand() % 3;
     FILE *fh;
-    int datasize;
 
     if(opl == 3)
     {
@@ -160,7 +159,6 @@ void FMOut::loadFMPatches(void)
         fread(tmp, size, 1, fh);
         patchloaded[i] = 1;
         instr.key = ((strncmp(tmp, "4OP", 3) == 0)) ? OPL3_PATCH : FM_PATCH;
-        datasize = (strncmp(tmp, "4OP", 3) == 0) ? 22 : 11;
         instr.device = device;
         instr.channel = i;
         // Let's get some stereo effect ...
@@ -190,7 +188,6 @@ void FMOut::loadFMPatches(void)
         fread(tmp, size, 1, fh);
         patchloaded[i] = 1;
         instr.key = (strncmp(tmp, "4OP", 3) == 0) ? OPL3_PATCH : FM_PATCH;
-        datasize = (strncmp(tmp, "4OP", 3) == 0) ? 22 : 11;
         instr.device = device;
         instr.channel = i;
         // Let's get some stereo effect ...

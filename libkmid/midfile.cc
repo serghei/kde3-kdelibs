@@ -335,7 +335,6 @@ void parsePatchesUsed(MidiTrack **tracks, MidiFileInfo *info, int gm)
     {
         tracks[i]->init();
     }
-    double prevms = 0;
     double minTime = 0;
     double maxTime;
     ulong tmp;
@@ -348,7 +347,6 @@ void parsePatchesUsed(MidiTrack **tracks, MidiFileInfo *info, int gm)
 
     while(parsing)
     {
-        prevms = minTime;
         trk = 0;
         minTrk = 0;
         maxTime = minTime + 2 * 60000L;

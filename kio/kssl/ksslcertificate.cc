@@ -683,7 +683,6 @@ KSSLCertificate::KSSLValidationList KSSLCertificate::validateVerbose(KSSLCertifi
     X509_STORE *certStore;
     X509_LOOKUP *certLookup;
     X509_STORE_CTX *certStoreCTX;
-    int rc = 0;
 
     if(!d->m_cert)
     {
@@ -769,7 +768,7 @@ KSSLCertificate::KSSLValidationList KSSLCertificate::validateVerbose(KSSLCertifi
         KSSL_X509CallBack_ca_found = false;
 
         certStoreCTX->error = X509_V_OK;
-        rc = d->kossl->X509_verify_cert(certStoreCTX);
+        d->kossl->X509_verify_cert(certStoreCTX);
         int errcode = certStoreCTX->error;
         if(ca && !KSSL_X509CallBack_ca_found)
         {
@@ -785,7 +784,7 @@ KSSLCertificate::KSSLValidationList KSSLCertificate::validateVerbose(KSSLCertifi
             d->kossl->X509_STORE_CTX_set_purpose(certStoreCTX, X509_PURPOSE_NS_SSL_SERVER);
 
             certStoreCTX->error = X509_V_OK;
-            rc = d->kossl->X509_verify_cert(certStoreCTX);
+            d->kossl->X509_verify_cert(certStoreCTX);
             errcode = certStoreCTX->error;
             ksslv = processError(errcode);
         }

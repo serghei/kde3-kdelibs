@@ -216,7 +216,6 @@ void DownloadDialog::addProvider(Provider *p)
     QFrame *frame;
     QTabWidget *ctl;
     QWidget *w_d, *w_r, *w_l;
-    QWidget *w2;
     QTextBrowser *rt;
     QString tmp;
     int ret;
@@ -252,7 +251,6 @@ void DownloadDialog::addProvider(Provider *p)
     frame = addPage(p->name(), p->name(), pix);
     m_frame = frame;
 
-    w2 = new QWidget(frame);
     w_d = new QWidget(frame);
     w_r = new QWidget(frame);
     w_l = new QWidget(frame);

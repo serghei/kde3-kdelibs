@@ -546,7 +546,6 @@ void AlsaOut::tmrStart(int)
 #else
 void AlsaOut::tmrStart(int tpcn)
 {
-    int ret;
     di->timerStarted = true;
     di->tPCN = tpcn;
 
@@ -555,14 +554,14 @@ void AlsaOut::tmrStart(int tpcn)
     snd_seq_queue_tempo_alloca(&queuetempo);
     snd_seq_queue_tempo_set_ppq(queuetempo, tpcn);
     snd_seq_queue_tempo_set_tempo(queuetempo, 60 * 1000000 / 120);
-    ret = snd_seq_set_queue_tempo(di->handle, di->queue, queuetempo);
+    snd_seq_set_queue_tempo(di->handle, di->queue, queuetempo);
 #else
     snd_seq_queue_tempo_t queuetempo;
     memset(&queuetempo, 0, sizeof(queuetempo));
     queuetempo.queue = di->queue;
     queuetempo.ppq = tpcn;
     queuetempo.tempo = 60 * 1000000 / 120;
-    ret = snd_seq_set_queue_tempo(di->handle, di->queue, &queuetempo);
+    snd_seq_set_queue_tempo(di->handle, di->queue, &queuetempo);
 #endif
 
     timerEventSend(SND_SEQ_EVENT_START);

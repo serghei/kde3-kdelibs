@@ -128,7 +128,6 @@ int KSSLKeyGen::generateCSR(const QString &name, const QString &pass, int bits, 
 {
 #ifdef KSSL_HAVE_SSL
     KOSSL *kossl = KOSSL::self();
-    int rc;
 
     X509_REQ *req = kossl->X509_REQ_new();
     if(!req)
@@ -151,9 +150,9 @@ int KSSLKeyGen::generateCSR(const QString &name, const QString &pass, int bits, 
         return -3;
     }
 
-    rc = kossl->EVP_PKEY_assign(pkey, EVP_PKEY_RSA, (char *)rsakey);
+    kossl->EVP_PKEY_assign(pkey, EVP_PKEY_RSA, (char *)rsakey);
 
-    rc = kossl->X509_REQ_set_pubkey(req, pkey);
+    kossl->X509_REQ_set_pubkey(req, pkey);
 
     // Set the subject
     X509_NAME *n = kossl->X509_NAME_new();
@@ -166,10 +165,10 @@ int KSSLKeyGen::generateCSR(const QString &name, const QString &pass, int bits, 
     kossl->X509_NAME_add_entry_by_txt(n, (char *)LN_commonName, MBSTRING_UTF8, (unsigned char *)name.local8Bit().data(), -1, -1, 0);
     kossl->X509_NAME_add_entry_by_txt(n, (char *)LN_pkcs9_emailAddress, MBSTRING_UTF8, (unsigned char *)name.local8Bit().data(), -1, -1, 0);
 
-    rc = kossl->X509_REQ_set_subject_name(req, n);
+    kossl->X509_REQ_set_subject_name(req, n);
 
 
-    rc = kossl->X509_REQ_sign(req, pkey, kossl->EVP_md5());
+    kossl->X509_REQ_sign(req, pkey, kossl->EVP_md5());
 
     // We write it to the database and then the caller can obtain it
     // back from there.  Yes it's inefficient, but it doesn't happen

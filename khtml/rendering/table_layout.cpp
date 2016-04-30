@@ -419,7 +419,6 @@ void AutoTableLayout::recalcColumn(int effCol)
         {
             RenderTableSection *section = static_cast< RenderTableSection * >(child);
             int numRows = section->numRows();
-            RenderTableCell *last = 0;
             for(int i = 0; i < numRows; i++)
             {
                 RenderTableCell *cell = section->cellAt(i, effCol);
@@ -489,7 +488,6 @@ void AutoTableLayout::recalcColumn(int effCol)
                         l.maxWidth = kMax(int(l.maxWidth), 1);
                         insertSpanCell(cell);
                     }
-                    last = cell;
                 }
             }
         }
@@ -995,7 +993,6 @@ void AutoTableLayout::layout()
 #endif
 
     bool havePercent = false;
-    bool haveRelative = false;
     int totalRelative = 0;
     int numVariable = 0;
     int numFixed = 0;
@@ -1018,7 +1015,6 @@ void AutoTableLayout::layout()
                 totalPercent += width.value();
                 break;
             case Relative:
-                haveRelative = true;
                 totalRelative += width.value();
                 break;
             case Fixed:

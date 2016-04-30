@@ -270,7 +270,6 @@ void KIMProxy::registeredToDCOP(const QCString &appId)
     if(appId.isEmpty())
         return;
 
-    bool newApp = false;
     // get an up to date list of offers in case a new app was installed
     // and check each of the offers that implement the service type we're looking for,
     // to see if any of them are the app that just registered
@@ -285,7 +284,6 @@ void KIMProxy::registeredToDCOP(const QCString &appId)
             // if it's not already known, insert it
             if(!m_im_client_stubs.find(appId))
             {
-                newApp = true;
                 kdDebug(790) << "App: " << appId << ", dcopService: " << dcopService << " started, using it for presence info." << endl;
                 m_im_client_stubs.insert(appId, new KIMIface_stub(d->dc, appId, dcopObjectId));
             }

@@ -63,7 +63,6 @@ void ForwardingSlaveBase::prepareUDSEntry(KIO::UDSEntry &entry, bool listing) co
 {
     kdDebug() << "ForwardingSlaveBase::prepareUDSEntry: listing==" << listing << endl;
 
-    bool url_found = false;
     QString name;
     KURL url;
 
@@ -81,7 +80,6 @@ void ForwardingSlaveBase::prepareUDSEntry(KIO::UDSEntry &entry, bool listing) co
                 kdDebug() << "Name = " << name << endl;
                 break;
             case KIO::UDS_URL:
-                url_found = true;
                 url = (*it).m_str;
                 if(listing)
                 {

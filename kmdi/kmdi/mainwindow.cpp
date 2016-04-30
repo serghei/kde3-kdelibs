@@ -152,12 +152,6 @@ void MainWindow::setupToolViews()
     m_bottomContainer = createDockWidget("KMdiDock::bottomDock", SmallIcon("misc"), 0L, "Bottom Dock");
 
     KDockWidget *mainDock = getMainDockWidget();
-    KDockWidget *w = mainDock;
-
-    if(mainDock->parentDockTabGroup())
-    {
-        w = static_cast< KDockWidget * >(mainDock->parentDockTabGroup()->parent());
-    }
 
     QPtrList< KDockWidget > leftReparentWidgets;
     QPtrList< KDockWidget > rightReparentWidgets;

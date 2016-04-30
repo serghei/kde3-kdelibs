@@ -3851,13 +3851,6 @@ bool KateDocument::removeStartLineCommentFromSelection(KateView *view, int attri
         el--;
     }
 
-    // Find out how many char will be removed from the last line
-    int removeLength = 0;
-    if(m_buffer->plainLine(el)->startingWith(longCommentMark))
-        removeLength = longCommentMark.length();
-    else if(m_buffer->plainLine(el)->startingWith(shortCommentMark))
-        removeLength = shortCommentMark.length();
-
     bool removed = false;
 
     editStart();

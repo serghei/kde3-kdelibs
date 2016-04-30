@@ -298,8 +298,6 @@ int AddressBook::Entry::noOfAddresses() const
 AddressBook::AddressBook(QWidget *parent, const char *name, bool loadit)
     : QFrame(parent, name), config(new QConfigDB(this)), data(new QConfigDB(this)), entries(new StringKabKeyMap), state(NoFile)
 {
-    register bool GUARD;
-    GUARD = true;
     // ###########################################################################
     QString dir, filename;
     bool createBackup = true;
@@ -897,8 +895,6 @@ AddressBook::ErrorCode AddressBook::getKey(int index, KabKey &key)
 
 AddressBook::ErrorCode AddressBook::getIndex(const KabKey &key, int &index)
 {
-    register bool GUARD;
-    GUARD = true;
     // ###########################################################################
     StringKabKeyMap::iterator pos;
     // -----

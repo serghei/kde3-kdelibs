@@ -97,7 +97,7 @@ bool KAr::openArchive(int mode)
         QCString ar_header;
         ar_header.resize(61);
         QCString name;
-        int date, uid, gid, mode, size;
+        int date, mode, size;
 
         dev->at(dev->at() + (2 - (dev->at() % 2)) % 2); // Ar headers are padded to byte boundary
 
@@ -118,8 +118,6 @@ bool KAr::openArchive(int mode)
 
         name = ar_header.mid(0, 16); // Process header
         date = ar_header.mid(16, 12).toInt();
-        uid = ar_header.mid(28, 6).toInt();
-        gid = ar_header.mid(34, 6).toInt();
         mode = ar_header.mid(40, 8).toInt();
         size = ar_header.mid(48, 10).toInt();
 
