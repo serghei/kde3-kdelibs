@@ -525,7 +525,7 @@ protected:
         /** compares whether this seek box matches the given specification */
         bool equalsBox(const InlineBox *box, bool outside, bool outsideEnd) const
         {
-            return (this->box && this->box == box || this->r == box->object()) && this->outside == outside
+            return ((this->box && this->box == box) || this->r == box->object()) && this->outside == outside
                    && (!this->outside || this->outsideEnd == outsideEnd);
         }
         /** compares whether this seek box matches the given caret box */

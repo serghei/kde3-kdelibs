@@ -366,7 +366,7 @@ QString Decoder::decode(const char *data, int len)
                         ptr++, end = true;
                     char tmp[20];
                     int len = 0;
-                    while(((*ptr >= 'a') && (*ptr <= 'z') || (*ptr >= 'A') && (*ptr <= 'Z') || (*ptr >= '0') && (*ptr <= '9')) && len < 19)
+                    while((((*ptr >= 'a') && (*ptr <= 'z')) || ((*ptr >= 'A') && (*ptr <= 'Z')) || ((*ptr >= '0') && (*ptr <= '9'))) && len < 19)
                     {
                         tmp[len] = tolower(*ptr);
                         ptr++;
@@ -405,7 +405,7 @@ QString Decoder::decode(const char *data, int len)
                                     break;
                                 if(str[pos++] != '=')
                                     continue;
-                                while(pos < (int)str.length() && (str[pos] <= ' ') || str[pos] == '=' || str[pos] == '"' || str[pos] == '\'')
+                                while((pos < (int)str.length() && (str[pos] <= ' ')) || str[pos] == '=' || str[pos] == '"' || str[pos] == '\'')
                                     pos++;
 
                                 // end ?

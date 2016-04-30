@@ -1039,10 +1039,12 @@ void KStyle::drawComplexControl(ComplexControl control, QPainter *p, const QWidg
             subline2 = addline;
 
             if(useThreeButtonScrollBar)
+            {
                 if(horizontal)
                     subline2.moveBy(-addline.width(), 0);
                 else
                     subline2.moveBy(0, -addline.height());
+            }
 
             // Draw the up/left button set
             if((controls & SC_ScrollBarSubLine) && subline.isValid())

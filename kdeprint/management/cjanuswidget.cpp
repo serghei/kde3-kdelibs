@@ -194,10 +194,12 @@ void CJanusWidget::disablePage(QWidget *w)
         page->m_item = 0;
         m_iconlist->computeWidth();
         if(needReselect)
+        {
             if(m_iconlist->count() > 0)
                 m_iconlist->setSelected(m_iconlist->firstItem(), true);
             else
                 slotSelected(0);
+        }
     }
 }
 

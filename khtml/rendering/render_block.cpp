@@ -240,7 +240,7 @@ void RenderBlock::updateFirstLetter()
             while(length < oldText->l && (oldText->s + length)->isSpace())
                 length++;
             begin = length;
-            while(length < oldText->l && ((oldText->s + length)->isPunct()) || (oldText->s + length)->isSpace())
+            while((length < oldText->l && ((oldText->s + length)->isPunct())) || (oldText->s + length)->isSpace())
                 length++;
             if(length < oldText->l && !((oldText->s + length)->isSpace() || (oldText->s + length)->isPunct()))
                 length++;

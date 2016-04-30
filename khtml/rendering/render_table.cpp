@@ -1864,7 +1864,7 @@ void RenderTableSection::paint(PaintInfo &pI, int tx, int ty)
             for(; c < endcol; c++)
             {
                 RenderTableCell *cell = (*row)[c];
-                if(!cell || cell == (RenderTableCell *)-1 || nextrow && (*nextrow)[c] == cell)
+                if(!cell || cell == (RenderTableCell *)-1 || (nextrow && (*nextrow)[c] == cell))
                     continue;
 #ifdef TABLE_PRINT
                 kdDebug(6040) << "painting cell " << r << "/" << c << endl;

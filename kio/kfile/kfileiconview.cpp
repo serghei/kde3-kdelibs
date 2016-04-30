@@ -596,6 +596,7 @@ void KFileIconView::gotPreview(const KFileItem *item, const QPixmap &pix)
 {
     KFileIconViewItem *it = viewItem(item);
     if(it)
+    {
         if(item->overlays() & KIcon::HiddenOverlay)
         {
             QPixmap p(pix);
@@ -605,6 +606,7 @@ void KFileIconView::gotPreview(const KFileItem *item, const QPixmap &pix)
         }
         else
             it->setPixmap(pix);
+    }
 }
 
 bool KFileIconView::canPreview(const KFileItem *item) const

@@ -537,6 +537,7 @@ void KMMainView::slotRemove()
         KMTimer::self()->hold();
         bool result(false);
         if(KMessageBox::warningYesNo(this, i18n("Do you really want to remove %1?").arg(m_current->printerName())) == KMessageBox::Yes)
+        {
             if(m_current->isSpecial())
             {
                 if(!(result = m_manager->removeSpecialPrinter(m_current)))
@@ -544,6 +545,7 @@ void KMMainView::slotRemove()
             }
             else if(!(result = m_manager->removePrinter(m_current)))
                 showErrorMsg(i18n("Unable to remove printer %1.").arg(m_current->printerName()));
+        }
         KMTimer::self()->release(result);
     }
 }

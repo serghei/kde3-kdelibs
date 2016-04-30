@@ -116,12 +116,12 @@ ulong MidiTrack::readVariableLengthValue(void)
         else
 #endif
         {
-            dticks = (dticks << 7) | (*ptrdata) & 0x7F;
+            dticks = (dticks << 7) | ((*ptrdata) & 0x7F);
             ptrdata++;
             currentpos++;
         }
     }
-    dticks = ((dticks << 7) | (*ptrdata) & 0x7F);
+    dticks = ((dticks << 7) | ((*ptrdata) & 0x7F));
     ptrdata++;
     currentpos++;
 

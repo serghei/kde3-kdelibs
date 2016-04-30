@@ -1089,7 +1089,7 @@ static QString translatePath(QString path)
 
     // return original path, if it refers to another type of URL (e.g. http:/), or
     // if the path is already relative to another directory
-    if(!startsWithFile && path[0] != '/' || startsWithFile && path[5] != '/')
+    if((!startsWithFile && path[0] != '/') || (startsWithFile && path[5] != '/'))
         return path;
 
     if(startsWithFile)

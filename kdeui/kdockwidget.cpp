@@ -875,6 +875,7 @@ void KDockWidget::applyToWidget(QWidget *s, const QPoint &p)
 void KDockWidget::show()
 {
     if(parent() || manager->main->isVisible())
+    {
         if(!parent())
         {
             emit manager->setDockDefaultPos(this);
@@ -892,6 +893,7 @@ void KDockWidget::show()
         {
             QWidget::show();
         }
+    }
 }
 
 #ifndef NO_KDE2

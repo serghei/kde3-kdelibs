@@ -652,10 +652,12 @@ void LightStyleV2::drawControl(ControlElement control, QPainter *p, const QWidge
                 p->drawRect(tr);
 
                 if(tr.left() == 0)
+                {
                     if(below)
                         p->drawPoint(tr.left(), tr.top() - 1);
                     else
                         p->drawPoint(tr.left(), tr.bottom() + 1);
+                }
 
                 p->setPen(cg.light());
                 if(below)
@@ -820,7 +822,7 @@ void LightStyleV2::drawControl(ControlElement control, QPainter *p, const QWidge
                 ir = visualRect(ir, r);
             }
 
-            if(mi->isChecked() && !(flags & Style_Active) & (flags & Style_Enabled))
+            if(mi->isChecked() && (!(flags & Style_Active)) & (flags & Style_Enabled))
                 qDrawShadePanel(p, cr, cg, true, 1, &cg.brush(QColorGroup::Midlight));
 
             if(mi->iconSet())

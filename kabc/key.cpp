@@ -39,10 +39,12 @@ bool Key::operator==(const Key &k) const
     if(mIsBinary != k.mIsBinary)
         return false;
     if(mIsBinary)
+    {
         if(mBinaryData != k.mBinaryData)
             return false;
         else if(mTextData != k.mTextData)
             return false;
+    }
     if(mType != k.mType)
         return false;
     if(mCustomTypeString != k.mCustomTypeString)

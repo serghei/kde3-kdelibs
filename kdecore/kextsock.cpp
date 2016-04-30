@@ -1253,7 +1253,7 @@ void KExtendedSocket::cancelAsyncConnect()
 
 bool KExtendedSocket::open(int mode)
 {
-    if(mode != IO_Raw | IO_ReadWrite)
+    if(mode != (IO_Raw | IO_ReadWrite))
         return false; // invalid open mode
 
     if(d->flags & passiveSocket)

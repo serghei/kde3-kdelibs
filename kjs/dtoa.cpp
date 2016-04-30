@@ -1228,17 +1228,17 @@ int *e;
 #ifdef Pack_32
     if(k < Ebits)
     {
-        d0 = Exp_1 | y >> Ebits - k;
+        d0 = Exp_1 | y >> (Ebits - k);
         w = xa > xa0 ? *--xa : 0;
-        d1 = y << (32 - Ebits) + k | w >> Ebits - k;
+        d1 = y << (32 - Ebits + k) | w >> (Ebits - k);
         goto ret_d;
     }
     z = xa > xa0 ? *--xa : 0;
     if(k -= Ebits)
     {
-        d0 = Exp_1 | y << k | z >> 32 - k;
+        d0 = Exp_1 | y << k | z >> (32 - k);
         y = xa > xa0 ? *--xa : 0;
-        d1 = z << k | y >> 32 - k;
+        d1 = z << k | y >> (32 - k);
     }
     else
     {
@@ -1319,7 +1319,7 @@ int *e, *bits;
     {
         if((k = lo0bits(&y)))
         {
-            x[0] = y | z << 32 - k;
+            x[0] = y | z << (32 - k);
             z >>= k;
         }
         else
@@ -2018,7 +2018,7 @@ dig_done:
                     if(j >= 53)
                         word0(rv) = (P + 2) * Exp_msk1;
                     else
-                        word0(rv) &= 0xffffffff << j - 32;
+                        word0(rv) &= 0xffffffff << (j - 32);
                 }
                 else
                     word1(rv) &= 0xffffffff << j;
@@ -2953,7 +2953,7 @@ else
     /* d is denormalized */
 
     i = bbits + be + (Bias + (P - 1) - 1);
-    x = i > 32 ? word0(d) << 64 - i | word1(d) >> i - 32 : word1(d) << 32 - i;
+    x = i > 32 ? word0(d) << (64 - i) | word1(d) >> (i - 32) : word1(d) << (32 - i);
     dval(d2) = x;
     word0(d2) -= 31 * Exp_msk1; /* adjust exponent */
     i -= (Bias + (P - 1) - 1) + 1;
@@ -3207,7 +3207,7 @@ if(be >= 0 && k <= Int_max)
                 }
 #endif
             dval(d) += dval(d);
-            if(dval(d) > ds || dval(d) == ds && L & 1)
+            if(dval(d) > ds || (dval(d) == ds && L & 1))
             {
             bump_up:
                 while(*--s == '9')
@@ -3397,11 +3397,11 @@ if(leftright)
         }
 #endif
         if(j < 0
-           || j == 0 && mode != 1
+           || (j == 0 && mode != 1
 #ifndef ROUND_BIASED
                   && !(word1(d) & 1)
 #endif
-               )
+               ))
         {
             if(!b->x[0] && b->wds <= 1)
             {
@@ -3424,7 +3424,7 @@ if(leftright)
             {
                 b = lshift(b, 1);
                 j1 = cmp(b, S);
-                if((j1 > 0 || j1 == 0 && dig & 1) && dig++ == '9')
+                if((j1 > 0 || (j1 == 0 && dig & 1)) && dig++ == '9')
                     goto round_9_up;
             }
         accept_dig:
@@ -3491,7 +3491,7 @@ switch(rounding)
 #endif
 b = lshift(b, 1);
 j = cmp(b, S);
-if(j > 0 || j == 0 && dig & 1)
+if(j > 0 || (j == 0 && dig) & 1)
 {
 roundoff:
     while(*--s == '9')

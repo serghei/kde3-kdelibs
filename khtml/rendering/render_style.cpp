@@ -493,7 +493,7 @@ bool StyleCSS3InheritedData::operator==(const StyleCSS3InheritedData &o) const
 
 bool StyleCSS3InheritedData::shadowDataEquivalent(const StyleCSS3InheritedData &o) const
 {
-    if(!textShadow && o.textShadow || textShadow && !o.textShadow)
+    if((!textShadow && o.textShadow) || (textShadow && !o.textShadow))
         return false;
     if(textShadow && o.textShadow && (*textShadow != *o.textShadow))
         return false;
@@ -862,8 +862,8 @@ RenderStyle::Diff RenderStyle::diff(const RenderStyle *other) const
         assert(other->position() != STATIC);                   // this style is positioned or relatively positioned
         if(surround->hasSamePBMData(*other->surround.get()) && // padding/border/margin are identical
            (other->position() == RELATIVE
-            || !(other->left().isVariable() && other->right().isVariable()) &&    // X isn't static
-                   !(other->top().isVariable() && other->bottom().isVariable()))) // neither is Y
+            || (!(other->left().isVariable() && other->right().isVariable()) &&    // X isn't static
+                   !(other->top().isVariable() && other->bottom().isVariable())))) // neither is Y
             // therefore only the offset is different
             return Position;
         return Layout;

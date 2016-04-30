@@ -636,10 +636,12 @@ Value DOMNodeProtoFunc::tryCall(ExecState *exec, Object &thisObj, const List &ar
             else if(where == "beforeEnd" || where == "BeforeEnd")
                 return getDOMNode(exec, node.appendChild(docFrag));
             else if(where == "afterEnd" || where == "AfterEnd")
+            {
                 if(!node.nextSibling().isNull())
                     node.parentNode().insertBefore(docFrag, node.nextSibling());
                 else
                     node.parentNode().appendChild(docFrag);
+            }
 
             return Undefined();
         }

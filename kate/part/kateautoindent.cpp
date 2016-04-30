@@ -670,8 +670,8 @@ static inline bool isColonImmune(const KateNormalIndent &indenter, uchar attr1, 
            // line comment. Therefore, using prev? is futile.
            || attr1 == indenter.commentAttrib /*&& prev2 != '*' && prev1 != '/'*/
            || attr1 == indenter.doxyCommentAttrib
-           || attr1 == indenter.stringAttrib && (attr2 != indenter.stringAttrib || (prev1 != '"' || prev2 == '\\' && attr2 == indenter.charAttrib))
-           || prev1 == '\'' && attr1 != indenter.charAttrib;
+           || (attr1 == indenter.stringAttrib && (attr2 != indenter.stringAttrib || (prev1 != '"' || (prev2 == '\\' && attr2 == indenter.charAttrib))))
+           || (prev1 == '\'' && attr1 != indenter.charAttrib);
 }
 
 /**
@@ -1875,7 +1875,7 @@ bool KateCSAndSIndent::inStatement(const KateDocCursor &begin)
         char c = textLine->getChar(last);
 
         // brace => not a continuation.
-        if(attrib == symbolAttrib && c == '{' || c == '}')
+        if((attrib == symbolAttrib && c == '{') || c == '}')
             return false;
 
         // ; => not a continuation, unless in a for (;;)
@@ -2427,9 +2427,9 @@ bool KateVarIndent::hasRelevantOpening(const KateDocCursor &end) const
     QChar opener;
     if(close == '}')
         opener = '{';
-    else if(close = ')')
+    else if((close = ')'))
         opener = '(';
-    else if(close = ']')
+    else if((close = ']'))
         opener = '[';
     else
         return false;

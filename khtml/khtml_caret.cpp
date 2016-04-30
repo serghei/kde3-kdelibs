@@ -1153,7 +1153,7 @@ static CaretBoxLine *findCaretBoxLine(DOM::NodeImpl *node, long offset, CaretBox
         // On render blocks, if we are outside, or have a totally empty render
         // block, we simply construct a special caret box line.
         // The latter case happens only when the render block is a leaf object itself.
-        if(isrepl || r->isRenderBlock() && (outside || !firstLineBox) || r->isRenderInline() && !firstLineBox)
+        if(isrepl || (r->isRenderBlock() && (outside || !firstLineBox)) || (r->isRenderInline() && !firstLineBox))
         {
 #if DEBUG_CARETMODE > 0
             kdDebug(6200) << "=================== end findCaretBoxLine (box " << (outside ? (outsideEnd ? "outside end" : "outside begin") : "inside")
@@ -1771,10 +1771,10 @@ void EditableCaretBoxIterator::advance(bool toBegin)
                 const bool isnextindicated = !next || isIndicatedInlineBox(next);
                 const bool last = haslast && !islastuseable;
                 const bool coming = hascoming && !iscominguseable;
-                const bool left = !prev || prev->isInlineFlowBox() && isprevindicated || (toBegin && coming || !toBegin && last);
-                const bool right = !next || next->isInlineFlowBox() && isnextindicated || (!toBegin && coming || toBegin && last);
+                const bool left = !prev || (prev->isInlineFlowBox() && isprevindicated) || ((toBegin && coming) || (!toBegin && last));
+                const bool right = !next || (next->isInlineFlowBox() && isnextindicated) || ((!toBegin && coming) || (toBegin && last));
                 const bool text2indicated =
-                    toBegin && next && next->isInlineTextBox() && isprevindicated || !toBegin && prev && prev->isInlineTextBox() && isnextindicated;
+                    (toBegin && next && (next->isInlineTextBox() && isprevindicated)) || (!toBegin && prev && prev->isInlineTextBox() && isnextindicated);
                 const bool indicated2text = !toBegin && next && next->isInlineTextBox() && prev && isprevindicated
                     // ### this code is so broken.
                     /*|| toBegin && prev && prev->isInlineTextBox() && isnextindicated*/;
@@ -1784,7 +1784,7 @@ void EditableCaretBoxIterator::advance(bool toBegin)
                               << " text2indicated " << text2indicated << " indicated2text " << indicated2text << endl;
 #endif
 
-                if(left && right && !text2indicated || indicated2text)
+                if((left && right && !text2indicated) || indicated2text)
                 {
                     adjacent = false;
 #if DEBUG_CARETMODE > 4

@@ -435,6 +435,7 @@ bool KStandardDirs::exists(const QString &fullPath)
 {
     KDE_struct_stat buff;
     if(access(QFile::encodeName(fullPath), R_OK) == 0 && KDE_stat(QFile::encodeName(fullPath), &buff) == 0)
+    {
         if(fullPath.at(fullPath.length() - 1) != '/')
         {
             if(S_ISREG(buff.st_mode))
@@ -442,6 +443,7 @@ bool KStandardDirs::exists(const QString &fullPath)
         }
         else if(S_ISDIR(buff.st_mode))
             return true;
+    }
     return false;
 }
 

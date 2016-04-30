@@ -120,11 +120,13 @@ KateSuperRangeList &KateArbitraryHighlight::rangesIncluding(uint line, KateView 
     if(m_docHLs.count() + m_viewHLs.count() == 0)
         return s_return;
     else if(m_docHLs.count() + m_viewHLs.count() == 1)
+    {
         if(m_docHLs.count())
             return *(m_docHLs.first());
         else if(m_viewHLs.values().first() && m_viewHLs.values().first()->count() == 1)
             if(m_viewHLs.keys().first() == view && m_viewHLs.values().first())
                 return *(m_viewHLs.values().first()->first());
+    }
     //--- END Temporary optimisation ---
 
     if(view)

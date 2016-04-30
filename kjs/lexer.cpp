@@ -741,15 +741,15 @@ bool Lexer::isIdentLetter(unsigned short c)
     // Titlecase letter (Lt)", Modifier letter (Lm),
     // Other letter (Lo), or Letter number (Nl).
     // Also see: http://www.unicode.org/Public/UNIDATA/UnicodeData.txt */
-    return (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' ||
+    return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
             // A with grave - O with diaeresis
-            c >= 0x00c0 && c <= 0x00d6 ||
+            (c >= 0x00c0 && c <= 0x00d6) ||
             // O with stroke - o with diaeresis
-            c >= 0x00d8 && c <= 0x00f6 ||
+            (c >= 0x00d8 && c <= 0x00f6) ||
             // o with stroke - turned h with fishook and tail
-            c >= 0x00f8 && c <= 0x02af ||
+            (c >= 0x00f8 && c <= 0x02af) ||
             // Greek etc. TODO: not precise
-            c >= 0x0388 && c <= 0x1ffc || c == '$' || c == '_');
+            (c >= 0x0388 && c <= 0x1ffc) || c == '$' || c == '_');
     /* TODO: use complete category table */
 }
 
@@ -760,7 +760,7 @@ bool Lexer::isDecimalDigit(unsigned short c)
 
 bool Lexer::isHexDigit(unsigned short c)
 {
-    return (c >= '0' && c <= '9' || c >= 'a' && c <= 'f' || c >= 'A' && c <= 'F');
+    return ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
 }
 
 bool Lexer::isOctalDigit(unsigned short c)

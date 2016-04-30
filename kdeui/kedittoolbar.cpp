@@ -1015,10 +1015,12 @@ void KEditToolbarWidget::loadActionList(QDomElement &elem)
                 ToolbarItem *act = new ToolbarItem(m_activeList, it.tagName(), action->name(), action->toolTip());
                 act->setText(1, action->plainText());
                 if(action->hasIcon())
+                {
                     if(!action->icon().isEmpty())
                         act->setPixmap(0, loader->loadIcon(action->icon(), KIcon::Toolbar, 16, KIcon::DefaultState, 0, true));
                     else // Has iconset
                         act->setPixmap(0, action->iconSet(KIcon::Toolbar).pixmap());
+                }
 
                 active_list.insert(action->name(), true);
                 break;
@@ -1038,10 +1040,12 @@ void KEditToolbarWidget::loadActionList(QDomElement &elem)
         ToolbarItem *act = new ToolbarItem(m_inactiveList, tagActionList, action->name(), action->toolTip());
         act->setText(1, action->plainText());
         if(action->hasIcon())
+        {
             if(!action->icon().isEmpty())
                 act->setPixmap(0, loader->loadIcon(action->icon(), KIcon::Toolbar, 16, KIcon::DefaultState, 0, true));
             else // Has iconset
                 act->setPixmap(0, action->iconSet(KIcon::Toolbar).pixmap());
+        }
     }
 
     // finally, add default separators to the inactive list

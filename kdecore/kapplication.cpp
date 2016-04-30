@@ -2498,11 +2498,13 @@ void KApplication::invokeMailer(const QString &_to, const QString &_cc, const QS
     // TODO this should check if cmd has a .desktop file, and use data from it, together
     // with sending more ASN data
     if(kdeinitExec(cmd, cmdTokens, &error, NULL, startup_id))
+    {
         if(Tty != kapp->type())
             QMessageBox::critical(kapp->mainWidget(), i18n("Could not Launch Mail Client"),
                                   i18n("Could not launch the mail client:\n\n%1").arg(error), i18n("&OK"));
         else
             kdWarning() << "Could not launch mail client:\n" << error << endl;
+    }
 }
 
 void KApplication::invokeBrowser(const QString &url)

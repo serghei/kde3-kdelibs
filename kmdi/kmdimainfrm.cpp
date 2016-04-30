@@ -1060,7 +1060,7 @@ void KMdiMainFrm::activateView(KMdiChildView *pWnd)
     if(m_pTaskBar)
         m_pTaskBar->setActiveButton(pWnd);
 
-    if(m_documentTabWidget && m_mdiMode == KMdi::TabPageMode || m_mdiMode == KMdi::IDEAlMode)
+    if((m_documentTabWidget && m_mdiMode == KMdi::TabPageMode) || m_mdiMode == KMdi::IDEAlMode)
     {
         m_documentTabWidget->showPage(pWnd);
         pWnd->activate();

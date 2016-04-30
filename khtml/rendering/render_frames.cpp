@@ -501,7 +501,7 @@ bool RenderFrameSet::userResize(MouseEventImpl *evt)
     int _x = evt->clientX();
     int _y = evt->clientY();
 
-    if(!m_resizing && evt->id() == EventImpl::MOUSEMOVE_EVENT || evt->id() == EventImpl::MOUSEDOWN_EVENT)
+    if((!m_resizing && evt->id() == EventImpl::MOUSEMOVE_EVENT) || evt->id() == EventImpl::MOUSEDOWN_EVENT)
     {
 #ifdef DEBUG_LAYOUT
         kdDebug(6031) << "mouseEvent:check" << endl;

@@ -958,7 +958,7 @@ void LightStyleV3::drawControl(ControlElement control, QPainter *p, const QWidge
                 ir = visualRect(ir, r);
             }
 
-            if(mi->isChecked() && !(flags & Style_Active) & (flags & Style_Enabled))
+            if(mi->isChecked() && (!(flags & Style_Active)) & (flags & Style_Enabled))
                 qDrawShadePanel(p, cr, cg, true, 1, &cg.brush(QColorGroup::Midlight));
 
             if(mi->iconSet())

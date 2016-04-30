@@ -2232,10 +2232,12 @@ bool KHTMLView::focusNextPrevNode(bool next)
             toFocus = doc->previousFocusNode(oldFocusNode);
 
         if(!toFocus && oldFocusNode)
+        {
             if(next)
                 toFocus = doc->nextFocusNode(NULL);
             else
                 toFocus = doc->previousFocusNode(NULL);
+        }
 
         while(toFocus && toFocus != oldFocusNode)
         {
@@ -2267,10 +2269,12 @@ bool KHTMLView::focusNextPrevNode(bool next)
                 toFocus = doc->previousFocusNode(toFocus);
 
             if(!toFocus && oldFocusNode)
+            {
                 if(next)
                     toFocus = doc->nextFocusNode(NULL);
                 else
                     toFocus = doc->previousFocusNode(NULL);
+            }
         }
 
         d->scrollBarMoved = false;
@@ -3406,11 +3410,11 @@ void KHTMLView::viewportWheelEvent(QWheelEvent *e)
     {
         e->accept();
     }
-    else if(((e->orientation() == Vertical && ((d->ignoreWheelEvents && !verticalScrollBar()->isVisible()) || e->delta() > 0 && contentsY() <= 0
-                                               || e->delta() < 0 && contentsY() >= contentsHeight() - visibleHeight()))
+    else if(((e->orientation() == Vertical && ((d->ignoreWheelEvents && !verticalScrollBar()->isVisible()) || (e->delta() > 0 && contentsY() <= 0)
+                                               || (e->delta() < 0 && contentsY() >= contentsHeight() - visibleHeight())))
              || (e->orientation() == Horizontal
-                 && ((d->ignoreWheelEvents && !horizontalScrollBar()->isVisible()) || e->delta() > 0 && contentsX() <= 0
-                     || e->delta() < 0 && contentsX() >= contentsWidth() - visibleWidth())))
+                 && ((d->ignoreWheelEvents && !horizontalScrollBar()->isVisible()) || (e->delta() > 0 && contentsX() <= 0)
+                     || (e->delta() < 0 && contentsX() >= contentsWidth() - visibleWidth()))))
             && m_part->parentPart())
     {
         if(m_part->parentPart()->view())

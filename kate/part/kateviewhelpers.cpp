@@ -838,6 +838,7 @@ void KateIconBorder::paintBorder(int /*x*/, int y, int /*width*/, int height)
             lnX += 2;
 
             if(realLine > -1)
+            {
                 if(m_viewInternal->lineRanges[z].startCol == 0)
                 {
                     if(m_lineNumbersOn)
@@ -847,6 +848,7 @@ void KateIconBorder::paintBorder(int /*x*/, int y, int /*width*/, int height)
                 {
                     p.drawPixmap(lnX + lnWidth - m_arrow.width() - 4, y, m_arrow);
                 }
+            }
 
             lnX += lnWidth;
         }

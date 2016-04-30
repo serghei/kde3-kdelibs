@@ -320,10 +320,12 @@ void DrOptionView::slotItemSelected(QListViewItem *i)
         m_item = 0;
     int ID(0);
     if(m_item)
+    {
         if(m_item->drItem()->type() == DrBase::Float)
             ID = DrBase::Integer;
         else
             ID = m_item->drItem()->type();
+    }
 
     OptionBaseView *w = (OptionBaseView *)m_stack->widget(ID);
     if(w)

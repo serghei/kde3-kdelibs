@@ -147,6 +147,7 @@ void KSSLInfoDlg::setSecurityInQuestion(bool isIt)
 {
     d->inQuestion = isIt;
     if(KSSL::doesSSLWork())
+    {
         if(isIt)
         {
             d->pixmap->setPixmap(BarIcon("halfencrypted"));
@@ -172,6 +173,7 @@ void KSSLInfoDlg::setSecurityInQuestion(bool isIt)
                 d->info->setText(i18n("Current connection is not secured with SSL."));
             }
         }
+    }
 }
 
 

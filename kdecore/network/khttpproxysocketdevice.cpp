@@ -166,10 +166,12 @@ bool KHttpProxySocketDevice::parseServerReply()
 {
     // make sure we're connected
     if(!KSocketDevice::connect(d->proxy))
+    {
         if(error() == InProgress)
             return true;
         else if(error() != NoError)
             return false;
+    }
 
     if(!d->request.isEmpty())
     {

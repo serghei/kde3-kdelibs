@@ -67,6 +67,7 @@ public:
         int tmpwidth = 8;
         // FIXME the height is for some reasons at least 3 items heigh, even if there is only one item in the list
         if(count > 0)
+        {
             if(count < 11)
                 height = count * itemHeight(0);
             else
@@ -74,6 +75,7 @@ public:
                 height = 10 * itemHeight(0);
                 tmpwidth += verticalScrollBar()->width();
             }
+        }
 
         int maxcount = 0, tmpcount = 0;
         for(int i = 0; i < count; ++i)

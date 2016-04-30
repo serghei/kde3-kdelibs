@@ -140,7 +140,7 @@ inline bool isBreakable(const QChar *str, const int pos, int len)
             else
                 return false;
         }
-        if(row > 0x2d && row < 0xfb || row == 0x11)
+        if((row > 0x2d && row < 0xfb) || row == 0x11)
         {
             /* asian line breaking. */
             if(pos == 0)

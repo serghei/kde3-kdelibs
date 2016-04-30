@@ -1049,7 +1049,7 @@ static int checkEscapedChar(const QString &text, int offset, int &len)
                 // for right now they work
                 // check for hexdigits
                 for(i = 0; (len > 0) && (i < 2)
-                           && (text[offset] >= '0' && text[offset] <= '9' || (text[offset] & 0xdf) >= 'A' && (text[offset] & 0xdf) <= 'F');
+                           && ((text[offset] >= '0' && text[offset] <= '9') || ((text[offset] & 0xdf) >= 'A' && (text[offset] & 0xdf) <= 'F'));
                     i++)
                 {
                     offset++;
@@ -2888,7 +2888,7 @@ int KateHighlighting::addToContextList(const QString &ident, int ctx0)
                     // to be matched to at once)
                     datasub = KateHlManager::self()->syntax->getSubItems(data);
                     bool tmpbool;
-                    if(tmpbool = KateHlManager::self()->syntax->nextItem(datasub))
+                    if((tmpbool = KateHlManager::self()->syntax->nextItem(datasub)))
                     {
                         for(; tmpbool; tmpbool = KateHlManager::self()->syntax->nextItem(datasub))
                         {

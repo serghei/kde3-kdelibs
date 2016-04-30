@@ -156,9 +156,9 @@ static bool decodeHex(UChar hi, UChar lo, unsigned short *val)
     if(hi.uc >= '0' && hi.uc <= '9')
         *val = (hi.uc - '0') << 4;
     else if(hi.uc >= 'a' && hi.uc <= 'f')
-        *val = 10 + (hi.uc - 'a') << 4;
+        *val = (10 + (hi.uc - 'a')) << 4;
     else if(hi.uc >= 'A' && hi.uc <= 'F')
-        *val = 10 + (hi.uc - 'A') << 4;
+        *val = (10 + (hi.uc - 'A')) << 4;
     else
         return false;
 

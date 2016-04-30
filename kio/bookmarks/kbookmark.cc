@@ -290,6 +290,7 @@ QString KBookmark::icon() const
 {
     QString icon = element.attribute("icon");
     if(icon.isEmpty())
+    {
         // Default icon depends on URL for bookmarks, and is default directory
         // icon for groups.
         if(isGroup())
@@ -298,6 +299,7 @@ QString KBookmark::icon() const
             icon = "eraser"; // whatever
         else
             icon = KMimeType::iconForURL(url());
+    }
     return icon;
 }
 

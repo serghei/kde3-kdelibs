@@ -1097,7 +1097,7 @@ void KThemeStyle::drawControl(ControlElement element, QPainter *p, const QWidget
             }
 
             // Make the label indicate if the button is a default button or not
-            if(active || button->isDefault() && button->isEnabled())
+            if(active || (button->isDefault() && button->isEnabled()))
             {
                 // Draw "fake" bold text  - this enables the font metrics to remain
                 // the same as computed in QPushButton::sizeHint(), but gives

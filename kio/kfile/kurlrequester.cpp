@@ -270,7 +270,7 @@ QString KURLRequester::url() const
 void KURLRequester::slotOpenDialog()
 {
     KURL newurl;
-    if((d->fileDialogMode & KFile::Directory) && !(d->fileDialogMode & KFile::File) ||
+    if(((d->fileDialogMode & KFile::Directory) && !(d->fileDialogMode & KFile::File)) ||
        /* catch possible fileDialog()->setMode( KFile::Directory ) changes */
        (myFileDialog && ((myFileDialog->mode() & KFile::Directory) && (myFileDialog->mode() & (KFile::File | KFile::Files)) == 0)))
     {

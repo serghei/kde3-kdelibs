@@ -339,10 +339,12 @@ QString KInputDialog::getItem(const QString &caption, const QString &label, cons
 
     QString result;
     if(_ok)
+    {
         if(editable)
             result = dlg.comboBox()->currentText();
         else
             result = dlg.listBox()->currentText();
+    }
 
     return result;
 }

@@ -53,10 +53,12 @@ PublicService::PublicService(const QString &name, const QString &type, unsigned 
 {
     d = new PublicServicePrivate;
     if(domain.isNull())
+    {
         if(Configuration::publishType() == Configuration::EnumPublishType::LAN)
             m_domain = "local.";
         else
             m_domain = Configuration::publishDomain();
+    }
 }
 
 

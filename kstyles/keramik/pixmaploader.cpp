@@ -605,12 +605,14 @@ int ScrollBarPainter::tileName(unsigned int column, unsigned int row) const
 {
     unsigned int num = (column ? column : row) + 1;
     if(m_count == 5)
+    {
         if(num == 3)
             num = 4;
         else if(num == 4)
             num = 2;
         else if(num == 5)
             num = 3;
+    }
 
     return m_type + (num - 1) * 16;
 }

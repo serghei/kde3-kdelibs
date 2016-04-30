@@ -704,7 +704,7 @@ bool KateSearch::doSearch(const QString &text)
                 end.setCol(kMax(s.selBegin.col(), s.selEnd.col()));
             }
 
-            if(!s.flags.backward && KateTextCursor(foundLine, foundCol) >= end || s.flags.backward && KateTextCursor(foundLine, foundCol) < start)
+            if((!s.flags.backward && KateTextCursor(foundLine, foundCol) >= end) || (s.flags.backward && KateTextCursor(foundLine, foundCol) < start))
             {
                 found = false;
             }

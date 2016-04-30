@@ -1278,6 +1278,7 @@ static void _round(QString &str, int precision)
     int decimalSymbolPos = str.find('.');
 
     if(decimalSymbolPos == -1)
+    {
         if(precision == 0)
             return;
         else if(precision > 0) // add dot if missing (and needed)
@@ -1285,6 +1286,7 @@ static void _round(QString &str, int precision)
             str.append('.');
             decimalSymbolPos = str.length() - 1;
         }
+    }
 
     // fill up with more than enough zeroes (in case fractional part too short)
     str.append(QString().fill('0', precision));
