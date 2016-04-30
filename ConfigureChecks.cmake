@@ -30,7 +30,10 @@ if( NOT COMPILER_CHECKED )
   set( COMPILER_CHECKED 1 CACHE INTERNAL "" )
 endif( )
 
-check_cxx_compiler_flag( -fvisibility __KDE_HAVE_GCC_VISIBILITY )
+check_cxx_compiler_flag( -fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY )
+if( __KDE_HAVE_GCC_VISIBILITY )
+  add_definitions( -fvisibility=hidden )
+endif( )
 
 check_cxx_compiler_flag( -Woverloaded-virtual WOVERLOADED_VIRTUAL )
 if( WOVERLOADED_VIRTUAL )

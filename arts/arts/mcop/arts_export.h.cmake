@@ -20,7 +20,7 @@
 #ifndef ARTS_EXPORT_H
 #define ARTS_EXPORT_H
 
-#undef __KDE_HAVE_GCC_VISIBILITY
+#cmakedefine __KDE_HAVE_GCC_VISIBILITY
 
 /**
  * The ARTS_NO_EXPORT macro marks the symbol of the given variable 

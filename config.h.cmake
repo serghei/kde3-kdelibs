@@ -1040,7 +1040,9 @@ int snprintf(char *str, size_t n, char const *fmt, ...);
 #define __KDE_EXECPREFIX "@EXEC_INSTALL_PREFIX@"
 
 /* define to 1 if -fvisibility is supported */
+#ifndef __KDE_HAVE_GCC_VISIBILITY
 #cmakedefine __KDE_HAVE_GCC_VISIBILITY 1
+#endif
 
 /* path to su */
 #define __PATH_SU "@WITH_SU_PATH@"
