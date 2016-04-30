@@ -1936,7 +1936,6 @@ void TransparencyHandler::removeShadowWindows(const QPopupMenu *p)
 
 bool TransparencyHandler::eventFilter(QObject *object, QEvent *event)
 {
-#if !defined Q_WS_MAC && !defined Q_WS_WIN
     // Transparency idea was borrowed from KDE2's "MegaGradient" Style,
     // Copyright (C) 2000 Daniel M. Duley <mosfet@kde.org>
 
@@ -1995,7 +1994,6 @@ bool TransparencyHandler::eventFilter(QObject *object, QEvent *event)
             p->setErasePixmap(QPixmap());
     }
 
-#endif
     return false;
 }
 

@@ -88,9 +88,7 @@
 #endif
 #include <sys/wait.h>
 
-#ifndef Q_WS_WIN
 #include "kwin.h"
-#endif
 
 #include <fcntl.h>
 #include <stdlib.h> // getenv(), srand(), rand()
@@ -120,16 +118,7 @@
 #include <fixx11h.h>
 #endif
 
-#ifndef Q_WS_WIN
 #include <KDE-ICE/ICElib.h>
-#else
-typedef void *IceIOErrorHandler;
-#include <windows.h>
-// KDE4: remove
-#define Button1Mask (1 << 8)
-#define Button2Mask (1 << 9)
-#define Button3Mask (1 << 10)
-#endif
 
 #ifdef Q_WS_X11
 #define DISPLAY "DISPLAY"
@@ -195,12 +184,6 @@ static void kde_ice_ioerrorhandler(IceConn conn)
 }
 #endif
 
-#ifdef Q_WS_WIN
-void KApplication_init_windows(bool GUIenabled);
-
-class QAssistantClient;
-#endif
-
 /*
   Private data to make keeping binary compatibility easier
  */
@@ -219,17 +202,12 @@ public:
 #ifdef Q_WS_X11
         , oldXErrorHandler(NULL)
         , oldXIOErrorHandler(NULL)
-#elif defined Q_WS_WIN
-        , qassistantclient(0)
 #endif
     {
     }
 
     ~KApplicationPrivate()
     {
-#ifdef Q_WS_WIN
-        delete qassistantclient;
-#endif
     }
 
 
@@ -253,8 +231,6 @@ public:
 #ifdef Q_WS_X11
     int (*oldXErrorHandler)(Display *, XErrorEvent *);
     int (*oldXIOErrorHandler)(Display *);
-#elif defined Q_WS_WIN
-    QAssistantClient *qassistantclient;
 #endif
 
     class URLActionRule {
@@ -944,8 +920,6 @@ void KApplication::init(bool GUIenabled)
         XChangeProperty(qt_xdisplay(), smw->winId(), atom_DesktopWindow, atom_DesktopWindow, 32, PropModeReplace, (unsigned char *)&data, 1);
     }
     d->oldIceIOErrorHandler = IceSetIOErrorHandler(kde_ice_ioerrorhandler);
-#elif defined(Q_WS_WIN)
-    KApplication_init_windows(GUIenabled);
 #else
 // FIXME(E): Implement for Qt Embedded
 #endif
@@ -1370,7 +1344,6 @@ bool KApplication::sessionSaving() const
 
 void KApplication::startKdeinit()
 {
-#ifndef Q_WS_WIN // TODO
     KInstance inst("startkdeinitlock");
     KLockFile lock(locateLocal("tmp", "startkdeinitlock", &inst));
     if(lock.lock(KLockFile::LockNoBlock) != KLockFile::LockOK)
@@ -1391,7 +1364,6 @@ void KApplication::startKdeinit()
     my_system(QFile::encodeName(srv) + " --suicide" + " --new-startup");
     if(kapp && (Tty != kapp->type()))
         restoreOverrideCursor();
-#endif
 }
 
 void KApplication::dcopFailure(const QString &msg)
@@ -1405,11 +1377,6 @@ void KApplication::dcopFailure(const QString &msg)
     }
     if(failureCount == 2)
     {
-#ifdef Q_WS_WIN
-        KGlobal::config()->setGroup("General");
-        if(KGlobal::config()->readBoolEntry("ignoreDCOPFailures", false))
-            return;
-#endif
         QString msgStr(
             i18n("There was an error setting up inter-process "
                  "communications for KDE. The message returned "
@@ -2226,9 +2193,6 @@ void KApplication::invokeHelp(const QString &anchor, const QString &_appname) co
     return invokeHelp(anchor, _appname, "");
 }
 
-#ifndef Q_WS_WIN
-// for win32 we're using simple help tools like Qt Assistant,
-// see kapplication_win.cpp
 void KApplication::invokeHelp(const QString &anchor, const QString &_appname, const QCString &startup_id) const
 {
     QString url;
@@ -2259,7 +2223,6 @@ void KApplication::invokeHelp(const QString &anchor, const QString &_appname, co
     else
         DCOPRef("khelpcenter", "KHelpCenterIface").send("openUrl", url, startup_id);
 }
-#endif
 
 void KApplication::invokeHTMLHelp(const QString &_filename, const QString &topic) const
 {
@@ -2348,10 +2311,6 @@ void KApplication::invokeMailer(const QString &to, const QString &cc, const QStr
 {
     return invokeMailer(to, cc, bcc, subject, body, messageFile, attachURLs, "");
 }
-
-#ifndef Q_WS_WIN
-// on win32, for invoking browser we're using win32 API
-// see kapplication_win.cpp
 
 static QStringList splitEmailAddressList(const QString &aStr)
 {
@@ -2558,16 +2517,12 @@ void KApplication::invokeMailer(const QString &_to, const QString &_cc, const QS
         else
             kdWarning() << "Could not launch mail client:\n" << error << endl;
 }
-#endif
 
 void KApplication::invokeBrowser(const QString &url)
 {
     return invokeBrowser(url, "");
 }
 
-#ifndef Q_WS_WIN
-// on win32, for invoking browser we're using win32 API
-// see kapplication_win.cpp
 void KApplication::invokeBrowser(const QString &url, const QCString &startup_id)
 {
     QString error;
@@ -2582,7 +2537,6 @@ void KApplication::invokeBrowser(const QString &url, const QCString &startup_id)
         return;
     }
 }
-#endif
 
 void KApplication::cut()
 {
@@ -3151,14 +3105,6 @@ uint KApplication::mouseState()
     Window child;
     int root_x, root_y, win_x, win_y;
     XQueryPointer(qt_xdisplay(), qt_xrootwin(), &root, &child, &root_x, &root_y, &win_x, &win_y, &mousestate);
-#elif defined(Q_WS_WIN)
-    const bool mousebtn_swapped = GetSystemMetrics(SM_SWAPBUTTON);
-    if(GetAsyncKeyState(VK_LBUTTON))
-        mousestate |= (mousebtn_swapped ? Button3Mask : Button1Mask);
-    if(GetAsyncKeyState(VK_MBUTTON))
-        mousestate |= Button2Mask;
-    if(GetAsyncKeyState(VK_RBUTTON))
-        mousestate |= (mousebtn_swapped ? Button1Mask : Button3Mask);
 #elif defined(Q_WS_MACX)
     mousestate = GetCurrentEventButtonState();
 #else
@@ -3190,22 +3136,6 @@ Qt::ButtonState KApplication::keyboardMouseState()
     if(state & KKeyNative::modX(KKey::ALT))
         ret |= AltButton;
     if(state & KKeyNative::modX(KKey::WIN))
-        ret |= MetaButton;
-#elif defined(Q_WS_WIN)
-    const bool mousebtn_swapped = GetSystemMetrics(SM_SWAPBUTTON);
-    if(GetAsyncKeyState(VK_LBUTTON))
-        ret |= (mousebtn_swapped ? RightButton : LeftButton);
-    if(GetAsyncKeyState(VK_MBUTTON))
-        ret |= MidButton;
-    if(GetAsyncKeyState(VK_RBUTTON))
-        ret |= (mousebtn_swapped ? LeftButton : RightButton);
-    if(GetAsyncKeyState(VK_SHIFT))
-        ret |= ShiftButton;
-    if(GetAsyncKeyState(VK_CONTROL))
-        ret |= ControlButton;
-    if(GetAsyncKeyState(VK_MENU))
-        ret |= AltButton;
-    if(GetAsyncKeyState(VK_LWIN) || GetAsyncKeyState(VK_RWIN))
         ret |= MetaButton;
 #else
 // TODO: other platforms

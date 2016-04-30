@@ -22,11 +22,7 @@
 
 #include <kdemacros.h>
 
-#ifdef Q_WS_WIN
-#include "ksslconfig_win.h"
-#else
 #include "ksslconfig.h"
-#endif
 
 #include <unistd.h>
 #ifdef KSSL_HAVE_SSL

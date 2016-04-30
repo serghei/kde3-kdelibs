@@ -91,9 +91,7 @@ public:
 
 void Slave::accept(KSocket *socket)
 {
-#ifndef Q_WS_WIN
     slaveconn.init(socket);
-#endif
     delete serv;
     serv = 0;
     slaveconn.connect(this, SLOT(gotInput()));
@@ -154,9 +152,8 @@ Slave::Slave(KServerSocket *socket, const QString &protocol, const QString &sock
     idle_since = contact_started;
     m_pid = 0;
     m_port = 0;
-#ifndef Q_WS_WIN
+
     connect(serv, SIGNAL(accepted(KSocket *)), SLOT(accept(KSocket *)));
-#endif
 }
 
 Slave::Slave(bool /*derived*/, KServerSocket *socket, const QString &protocol, const QString &socketname)
@@ -174,9 +171,7 @@ Slave::Slave(bool /*derived*/, KServerSocket *socket, const QString &protocol, c
     m_port = 0;
     if(serv != 0)
     {
-#ifndef Q_WS_WIN
         connect(serv, SIGNAL(accepted(KSocket *)), SLOT(accept(KSocket *)));
-#endif
     }
 }
 
@@ -380,13 +375,9 @@ Slave *Slave::createSlave(const QString &protocol, const KURL &url, int &error, 
     socketfile.close();
 #endif
 
-#ifndef Q_WS_WIN
     KServerSocket *kss = new KServerSocket(QFile::encodeName(socketfile.name()));
 
     Slave *slave = new Slave(kss, protocol, socketfile.name());
-#else
-    Slave *slave = 0;
-#endif
 
     // WABA: if the dcopserver is running under another uid we don't ask
     // klauncher for a slave, because the slave might have that other uid
@@ -423,10 +414,8 @@ Slave *Slave::createSlave(const QString &protocol, const KURL &url, int &error, 
 
         proc.start(KProcess::DontCare);
 
-#ifndef Q_WS_WIN
         slave->setPID(proc.pid());
         QTimer::singleShot(1000 * SLAVE_CONNECTION_TIMEOUT_MIN, slave, SLOT(timeout()));
-#endif
         return slave;
     }
 
@@ -455,10 +444,10 @@ Slave *Slave::createSlave(const QString &protocol, const KURL &url, int &error, 
         delete slave;
         return 0;
     }
-#ifndef Q_WS_WIN
+
     slave->setPID(pid);
     QTimer::singleShot(1000 * SLAVE_CONNECTION_TIMEOUT_MIN, slave, SLOT(timeout()));
-#endif
+
     return slave;
 }
 
@@ -483,13 +472,9 @@ Slave *Slave::holdSlave(const QString &protocol, const KURL &url)
     socketfile.unlink();
 #endif
 
-#ifndef Q_WS_WIN
     KServerSocket *kss = new KServerSocket(QFile::encodeName(socketfile.name()));
 
     Slave *slave = new Slave(kss, protocol, socketfile.name());
-#else
-    Slave *slave = 0;
-#endif
 
     QByteArray params, reply;
     QCString replyType;
@@ -510,10 +495,10 @@ Slave *Slave::holdSlave(const QString &protocol, const KURL &url)
         delete slave;
         return 0;
     }
-#ifndef Q_WS_WIN
+
     slave->setPID(pid);
     QTimer::singleShot(1000 * SLAVE_CONNECTION_TIMEOUT_MIN, slave, SLOT(timeout()));
-#endif
+
     return slave;
 }
 

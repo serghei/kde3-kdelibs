@@ -26,11 +26,6 @@
 /* needed, because e.g. Q_OS_UNIX is so frequently used */
 #include <qglobal.h>
 
-#ifdef Q_WS_WIN
-#include <kdelibs_export_win.h>
-
-#else /* Q_OS_UNIX */
-
 /* export statements for unix */
 #define KDECORE_EXPORT KDE_EXPORT
 #define KDEUI_EXPORT KDE_EXPORT
@@ -60,8 +55,6 @@
 
 #ifndef O_BINARY
 #define O_BINARY 0 /* for open() */
-#endif
-
 #endif
 
 #endif /*_KDELIBS_EXPORT_H*/

@@ -57,7 +57,6 @@
 // BEGIN KatePrinter
 bool KatePrinter::print(KateDocument *doc)
 {
-#ifndef Q_WS_WIN // TODO: reenable
     KPrinter printer;
 
     // docname is now always there, including the right Untitled name
@@ -627,12 +626,10 @@ bool KatePrinter::print(KateDocument *doc)
         return true;
     }
 
-#endif //! Q_WS_WIN
     return false;
 }
 // END KatePrinter
 
-#ifndef Q_WS_WIN // TODO: reenable
 // BEGIN KatePrintTextSettings
 KatePrintTextSettings::KatePrintTextSettings(KPrinter * /*printer*/, QWidget *parent, const char *name) : KPrintDialogPage(parent, name)
 {
@@ -988,6 +985,5 @@ void KatePrintLayout::setOptions(const QMap< QString, QString > &opts)
 // END KatePrintLayout
 
 #include "kateprinter.moc"
-#endif //! Q_WS_WIN
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

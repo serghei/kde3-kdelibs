@@ -72,14 +72,12 @@ public:
         return stream;
     }
 
-#ifndef Q_WS_WIN // not needed
     friend void qSwap(KateTextCursor &c1, KateTextCursor &c2)
     {
         KateTextCursor tmp = c1;
         c1 = c2;
         c2 = tmp;
     }
-#endif
 
     inline void pos(int *pline, int *pcol) const
     {

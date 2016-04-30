@@ -76,10 +76,6 @@ private:
     void x11KeyPressEvent(XEvent *pEvent);
     void x11KeyReleaseEvent(XEvent *pEvent);
 #endif
-#ifdef Q_WS_WIN
-    virtual void keyPressEvent(QKeyEvent *e);
-    virtual bool event(QEvent *e);
-#endif
 
 protected slots:
     void slotDetails();

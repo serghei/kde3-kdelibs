@@ -419,15 +419,6 @@ QString KStandardDirs::findResourceDir(const char *type, const QString &filename
     {
         if(exists(*it + filename))
         {
-#ifdef Q_WS_WIN // this ensures we're using installed .la files
-            if((*it).isEmpty() && filename.right(3) == ".so")
-            {
-#ifndef NDEBUG
-                kdDebug() << "KStandardDirs::findResourceDir() found .la in cwd: skipping. (fname=" << filename << ")" << endl;
-#endif
-                continue;
-            }
-#endif // Q_WS_WIN
             return *it;
         }
     }
@@ -467,11 +458,7 @@ static void lookupDirectory(const QString &path, const QString &relPart, const Q
         if(!dp)
             return;
 
-#ifdef Q_WS_WIN
-        assert(path.at(path.length() - 1) == '/' || path.at(path.length() - 1) == '\\');
-#else
         assert(path.at(path.length() - 1) == '/');
-#endif
 
         struct dirent *ep;
         KDE_struct_stat buff;
@@ -558,11 +545,9 @@ static void lookupPrefix(const QString &prefix, const QString &relpath, const QS
 
     if(prefix.isEmpty()) // for sanity
         return;
-#ifdef Q_WS_WIN
-    assert(prefix.at(prefix.length() - 1) == '/' || prefix.at(prefix.length() - 1) == '\\');
-#else
+
     assert(prefix.at(prefix.length() - 1) == '/');
-#endif
+
     KDE_struct_stat buff;
 
     if(path.contains('*') || path.contains('?'))
@@ -731,15 +716,7 @@ void KStandardDirs::createSpecialResource(const char *type)
             }
         }
     }
-#ifdef Q_WS_WIN
-    if(relink)
-    {
-        if(!makeDir(dir, 0700))
-            fprintf(stderr, "failed to create \"%s\"", dir.latin1());
-        else
-            result = readlink(QFile::encodeName(dir).data(), link, 1023);
-    }
-#else // UNIX
+
     if(relink)
     {
         QString srv = findExe(QString::fromLatin1("lnusertemp"), kfsstnd_defaultbindir());
@@ -759,7 +736,7 @@ void KStandardDirs::createSpecialResource(const char *type)
         else
             dir = QDir::cleanDirPath(dir + QFile::decodeName(link));
     }
-#endif
+
     addResourceDir(type, dir + '/');
 }
 
@@ -896,11 +873,7 @@ QStringList KStandardDirs::systemPaths(const QString &pstr)
 
 QString KStandardDirs::findExe(const QString &appname, const QString &pstr, bool ignore)
 {
-#ifdef Q_WS_WIN
-    QString real_appname = appname + ".exe";
-#else
     QString real_appname = appname;
-#endif
     QFileInfo info;
 
     // absolute or relative path given
@@ -944,11 +917,7 @@ QString KStandardDirs::findExe(const QString &appname, const QString &pstr, bool
 
 int KStandardDirs::findAllExe(QStringList &list, const QString &appname, const QString &pstr, bool ignore)
 {
-#ifdef Q_WS_WIN
-    QString real_appname = appname + ".exe";
-#else
     QString real_appname = appname;
-#endif
     QFileInfo info;
     QString p;
     list.clear();
@@ -1217,16 +1186,9 @@ QString KStandardDirs::kfsstnd_defaultprefix()
     KStandardDirsSingleton *s = KStandardDirsSingleton::self();
     if(!s->defaultprefix.isEmpty())
         return s->defaultprefix;
-#ifdef Q_WS_WIN
-    s->defaultprefix = readEnvPath("KDEDIR");
-    if(s->defaultprefix.isEmpty())
-    {
-        s->defaultprefix = QFile::decodeName("c:\\kde");
-        // TODO: find other location (the Registry?)
-    }
-#else // UNIX
+
     s->defaultprefix = KDEDIR;
-#endif
+
     if(s->defaultprefix.isEmpty())
         kdWarning() << "KStandardDirs::kfsstnd_defaultprefix(): default KDE prefix not found!" << endl;
     return s->defaultprefix;
@@ -1237,13 +1199,11 @@ QString KStandardDirs::kfsstnd_defaultbindir()
     KStandardDirsSingleton *s = KStandardDirsSingleton::self();
     if(!s->defaultbindir.isEmpty())
         return s->defaultbindir;
-#ifdef Q_WS_WIN
-    s->defaultbindir = kfsstnd_defaultprefix() + QString::fromLatin1("/bin");
-#else // UNIX
+
     s->defaultbindir = __KDE_BINDIR;
     if(s->defaultbindir.isEmpty())
         s->defaultbindir = kfsstnd_defaultprefix() + QString::fromLatin1("/bin");
-#endif
+
     if(s->defaultbindir.isEmpty())
         kdWarning() << "KStandardDirs::kfsstnd_defaultbindir(): default binary KDE dir not found!" << endl;
     return s->defaultbindir;
@@ -1322,11 +1282,7 @@ void KStandardDirs::addKDEDefaults()
     {
         xdgdirList.clear();
         xdgdirList.append("/etc/xdg");
-#ifdef Q_WS_WIN
-        xdgdirList.append(kfsstnd_defaultprefix() + "/etc/xdg");
-#else
         xdgdirList.append(KDESYSCONFDIR "/xdg");
-#endif
     }
 
     QString localXdgDir = readEnvPath("XDG_CONFIG_HOME");

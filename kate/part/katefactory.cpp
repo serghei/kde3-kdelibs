@@ -27,9 +27,7 @@
 #include "kateschema.h"
 #include "katesearch.h"
 #include "kateconfig.h"
-#ifndef Q_WS_WIN // todo
 #include "katejscript.h"
-#endif
 #include "kateluaindentscript.h"
 #include "../interfaces/katecmd.h"
 
@@ -136,14 +134,10 @@ KateFactory::KateFactory()
     // vm allocator
     m_vm = new KVMAllocator();
 
-#ifndef Q_WS_WIN // todo
     // create script man (search scripts) + register commands
     m_jscriptManager = new KateJScriptManager();
     KateCmd::self()->registerCommand(m_jscriptManager);
     m_indentScriptManagers.append(new KateIndentJScriptManager());
-#else
-    m_jscriptManager = 0;
-#endif
 #ifdef HAVE_LUA
     m_indentScriptManagers.append(new KateLUAIndentScriptManager());
 #endif
@@ -253,14 +247,10 @@ void KateFactory::deregisterRenderer(KateRenderer *renderer)
 
 KateJScript *KateFactory::jscript()
 {
-#ifndef Q_WS_WIN // todo
     if(m_jscript)
         return m_jscript;
 
     return m_jscript = new KateJScript();
-#else
-    return 0;
-#endif
 }
 
 

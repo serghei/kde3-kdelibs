@@ -49,10 +49,6 @@
 #define DISPLAY "QWS_DISPLAY"
 #endif
 
-#ifdef Q_WS_WIN
-#include <win32_utils.h>
-#endif
-
 template class QAsciiDict< QCString >;
 template class QPtrList< KCmdLineArgs >;
 
@@ -182,9 +178,7 @@ void KCmdLineArgs::init(int _argc, char **_argv, const KAboutData *_about, bool 
     parsed = false;
     mCwd = mCwdd.setObject(mCwd, new char[PATH_MAX + 1], true);
     (void)getcwd(mCwd, PATH_MAX);
-#ifdef Q_WS_WIN
-    win32_slashify(mCwd, PATH_MAX);
-#endif
+
     if(!noKApp)
         KApplication::addCmdLineOptions();
 }

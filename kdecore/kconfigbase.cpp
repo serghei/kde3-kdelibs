@@ -1063,13 +1063,8 @@ void KConfigBase::writePathEntry(const QString &pKey, const QString &path, bool 
 
 static bool cleanHomeDirPath(QString &path, const QString &homeDir)
 {
-#ifdef Q_WS_WIN // safer
-    if(!QDir::convertSeparators(path).startsWith(QDir::convertSeparators(homeDir)))
-        return false;
-#else
     if(!path.startsWith(homeDir))
         return false;
-#endif
 
     unsigned int len = homeDir.length();
     // replace by "$HOME" if possible

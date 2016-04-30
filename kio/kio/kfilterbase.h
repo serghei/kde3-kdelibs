@@ -24,10 +24,6 @@
 
 #include <kdelibs_export.h>
 
-#ifdef Q_WS_WIN
-#undef ERROR // avoid conflicts
-#endif
-
 class QIODevice;
 
 /**

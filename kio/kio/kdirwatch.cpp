@@ -1297,12 +1297,7 @@ void KDirWatchPrivate::emitEvent(Entry *e, int event, const QString &fileName)
         if(!QDir::isRelativePath(fileName))
             path = fileName;
         else
-#ifdef Q_OS_UNIX
             path += "/" + fileName;
-#elif defined(Q_WS_WIN)
-            // current drive is passed instead of /
-            path += QDir::currentDirPath().left(2) + "/" + fileName;
-#endif
     }
 
     QPtrListIterator< Client > cit(e->m_clients);

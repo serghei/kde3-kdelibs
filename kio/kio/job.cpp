@@ -4646,11 +4646,7 @@ QString CacheInfo::cachedFileName()
 
 QFile *CacheInfo::cachedFile()
 {
-#ifdef Q_WS_WIN
-    const char *mode = (readWrite ? "rb+" : "rb");
-#else
     const char *mode = (readWrite ? "r+" : "r");
-#endif
 
     FILE *fs = fopen(QFile::encodeName(CEF), mode); // Open for reading and writing
     if(!fs)

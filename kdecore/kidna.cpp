@@ -21,22 +21,14 @@
 
 #include "kidna.h"
 
-#ifndef Q_WS_WIN // TODO kresolver not ported
 #include "kresolver.h"
-#endif
 #include <kdebug.h>
 
-#ifndef Q_WS_WIN // TODO knetwork not ported
 using namespace KNetwork;
-#endif
 
 QCString KIDNA::toAsciiCString(const QString &idna)
 {
-#ifndef Q_WS_WIN // TODO kresolver not ported
     return KResolver::domainToAscii(idna);
-#else
-    return QCString();
-#endif
 }
 
 QString KIDNA::toAscii(const QString &idna)
@@ -53,11 +45,7 @@ QString KIDNA::toAscii(const QString &idna)
 
 QString KIDNA::toUnicode(const QString &idna)
 {
-#ifndef Q_WS_WIN // TODO kresolver not ported
     if(idna.length() && (idna[0] == "."))
         return idna[0] + KResolver::domainToUnicode(idna.mid(1));
     return KResolver::domainToUnicode(idna);
-#else
-    return QString::null;
-#endif
 }

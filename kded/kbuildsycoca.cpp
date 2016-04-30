@@ -444,9 +444,6 @@ void KBuildSycoca::createMenu(QString caption, QString name, VFolderMenu::SubMen
 bool KBuildSycoca::recreate()
 {
     QString path(sycocaPath());
-#ifdef Q_WS_WIN
-    printf("kbuildsycoca: path='%s'\n", (const char *)path);
-#endif
 
     // KSaveFile first writes to a temp file.
     // Upon close() it moves the stuff to the right place.

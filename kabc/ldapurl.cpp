@@ -35,11 +35,7 @@ LDAPUrl::LDAPUrl(const KURL &_url) : KURL(_url), m_extensions()
 {
     m_dn = path();
     if(!QDir::isRelativePath(m_dn))
-#ifdef Q_WS_WIN
-        m_dn.remove(0, 3); // e.g. "c:/"
-#else
         m_dn.remove(0, 1);
-#endif
     parseQuery();
 }
 
@@ -47,11 +43,7 @@ void LDAPUrl::setDn(const QString &dn)
 {
     m_dn = dn;
     if(!QDir::isRelativePath(m_dn))
-#ifdef Q_WS_WIN
-        m_dn.remove(0, 3); // e.g. "c:/"
-#else
         m_dn.remove(0, 1);
-#endif
     setPath(m_dn);
 }
 

@@ -25,8 +25,6 @@
 #include <qnamespace.h>
 #include <qwindowdefs.h>
 
-#if defined(Q_WS_X11) || defined(Q_WS_WIN) || defined(Q_WS_MACX) // Only compile this module if we're compiling for X11, mac or win32
-
 #include "kkeyserver_x11.h"
 #include "kkeynative.h"
 #include "kshortcut.h"
@@ -411,10 +409,7 @@ bool Sym::initQt(int keyQt)
         return true;
     }
 
-#ifdef Q_WS_WIN
-    m_sym = symQt;
-    return true;
-#elif defined(Q_WS_X11)
+#if defined(Q_WS_X11)
     for(uint i = 0; i < sizeof(g_rgQtToSymX) / sizeof(TransKey); i++)
     {
         if(g_rgQtToSymX[i].keySymQt == symQt)
@@ -454,18 +449,7 @@ bool Sym::init(const QString &s)
         }
     }
 
-#ifdef Q_WS_WIN
-    // search for name in KKeys array
-    for(KKeys const *pKey = kde_KKEYS; pKey->code != 0xffff; pKey++)
-    {
-        if(qstricmp(s.latin1(), pKey->name) == 0)
-        {
-            m_sym = pKey->code;
-            return true;
-        }
-    }
-    m_sym = 0;
-#elif defined(Q_WS_X11)
+#if defined(Q_WS_X11)
     // search X list: 's' as is, all lower, first letter in caps
     m_sym = XStringToKeysym(s.latin1());
     if(!m_sym)
@@ -490,10 +474,7 @@ int Sym::qt() const
             return QChar(m_sym).upper();
         return m_sym;
     }
-#ifdef Q_WS_WIN
-    if(m_sym < 0x3000)
-        return m_sym;
-#elif defined(Q_WS_X11)
+#if defined(Q_WS_X11)
     if(m_sym < 0x3000)
         return m_sym | Qt::UNICODE_ACCEL;
 
@@ -509,14 +490,9 @@ QString Sym::toString(bool bUserSpace) const
     if(m_sym == 0)
         return QString::null;
 
-// If it's a unicode character,
-#ifdef Q_WS_WIN
-    else if(m_sym < 0x1000)
-    {
-#else
+    // If it's a unicode character,
     else if(m_sym < 0x3000)
     {
-#endif
         QChar c = QChar(m_sym).upper();
         // Print all non-space characters directly when output is user-visible.
         // Otherwise only print alphanumeric latin1 characters directly (A,B,C,1,2,3).
@@ -532,12 +508,8 @@ QString Sym::toString(bool bUserSpace) const
     }
 
     QString s;
-#ifdef Q_WS_WIN
-    s = QKeySequence(m_sym);
-#elif defined(Q_WS_X11)
     // Get X-name
     s = XKeysymToString(m_sym);
-#endif
     capitalizeKeyname(s);
     return bUserSpace ? i18n("QAccel", s.latin1()) : s;
 }
@@ -747,32 +719,7 @@ bool modToModQt(uint mod, int &modQt)
     return true;
 }
 
-#ifdef Q_WS_WIN
-// wrapped
-bool modXToModQt(uint modX, int &modQt)
-{
-    return modToModQt(modX, modQt);
-}
-
-KDECORE_EXPORT int qtButtonStateToMod(Qt::ButtonState s)
-{
-    int modQt = 0;
-    if(s & Qt::ShiftButton)
-        modQt |= KKey::SHIFT;
-    if(s & Qt::ControlButton)
-        modQt |= KKey::CTRL;
-    if(s & Qt::AltButton)
-        modQt |= KKey::ALT;
-    return modQt;
-}
-
-bool keyboardHasWinKey()
-{
-    //! TODO
-    return true;
-}
-
-#elif defined(Q_WS_MACX)
+#if defined(Q_WS_MACX)
 
 bool modXToModQt(uint modX, int &modQt)
 {
@@ -865,7 +812,7 @@ bool codeXToSym(uchar codeX, uint modX, uint &sym)
     sym = (uint)keySym;
     return true;
 }
-#endif //! Q_WS_WIN
+#endif //! Q_WS_MACX
 
 static QString modToString(uint mod, bool bUserSpace)
 {
@@ -1045,13 +992,9 @@ KKey Key::key() const
         return KKey(keyCodeQt());
     else
     {
-#if defined(Q_WS_WIN) || defined(Q_WS_MACX)
-        return KKey();
-#else
         uint mod;
         modXToMod(m_mod, mod);
         return KKey(m_sym, mod);
-#endif
     }
 }
 
@@ -1170,5 +1113,3 @@ void KKey::simplify()
     m_mod &= ~KKeyServer::Sym(m_sym).getModsRequired();
 #endif
 }
-
-#endif // Q_WS_X11 || Q_WS_WIN

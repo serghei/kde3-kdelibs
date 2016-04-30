@@ -26,19 +26,7 @@
 #include <kconfig.h>
 #include <ksimpleconfig.h>
 #include <kapplication.h>
-
 #include <kipc.h>
-
-#ifdef Q_WS_WIN
-#include <windows.h>
-#include "qt_windows.h"
-#include <win32_utils.h>
-static QRgb qt_colorref2qrgb(COLORREF col)
-{
-    return qRgb(GetRValue(col), GetGValue(col), GetBValue(col));
-}
-#endif
-
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kshortcut.h>
@@ -158,49 +146,33 @@ QColor KGlobalSettings::toolBarHighlightColor()
 
 QColor KGlobalSettings::inactiveTitleColor()
 {
-#ifdef Q_WS_WIN
-    return qt_colorref2qrgb(GetSysColor(COLOR_INACTIVECAPTION));
-#else
     if(!_inactiveBackground)
         _inactiveBackground = new QColor(157, 170, 186);
     KConfigGroup g(KGlobal::config(), "WM");
     return g.readColorEntry("inactiveBackground", _inactiveBackground);
-#endif
 }
 
 QColor KGlobalSettings::inactiveTextColor()
 {
-#ifdef Q_WS_WIN
-    return qt_colorref2qrgb(GetSysColor(COLOR_INACTIVECAPTIONTEXT));
-#else
     if(!_inactiveForeground)
         _inactiveForeground = new QColor(221, 221, 221);
     KConfigGroup g(KGlobal::config(), "WM");
     return g.readColorEntry("inactiveForeground", _inactiveForeground);
-#endif
 }
 
 QColor KGlobalSettings::activeTitleColor()
 {
-#ifdef Q_WS_WIN
-    return qt_colorref2qrgb(GetSysColor(COLOR_ACTIVECAPTION));
-#else
     initColors();
     if(!_activeBackground)
         _activeBackground = new QColor(65, 142, 220);
     KConfigGroup g(KGlobal::config(), "WM");
     return g.readColorEntry("activeBackground", _activeBackground);
-#endif
 }
 
 QColor KGlobalSettings::activeTextColor()
 {
-#ifdef Q_WS_WIN
-    return qt_colorref2qrgb(GetSysColor(COLOR_CAPTIONTEXT));
-#else
     KConfigGroup g(KGlobal::config(), "WM");
     return g.readColorEntry("activeForeground", &Qt::white);
-#endif
 }
 
 int KGlobalSettings::contrast()
@@ -504,13 +476,7 @@ void KGlobalSettings::initStatic() // should be called initPaths(). Don't put an
         s_autostartPath->append('/');
 
     // Document Path
-    *s_documentPath = g.readPathEntry("Documents",
-#ifdef Q_WS_WIN
-                                      getWin32ShellFoldersPath("Personal")
-#else
-                                      QDir::homeDirPath()
-#endif
-                                          );
+    *s_documentPath = g.readPathEntry("Documents", QDir::homeDirPath());
     *s_documentPath = QDir::cleanDirPath(*s_documentPath);
     if(!s_documentPath->endsWith("/"))
         s_documentPath->append('/');
@@ -569,7 +535,6 @@ KGlobalSettings::KMouseSettings &KGlobalSettings::mouseSettings()
         s_mouseSettings = new KMouseSettings;
         KMouseSettings &s = *s_mouseSettings; // for convenience
 
-#ifndef Q_WS_WIN
         KConfigGroup g(KGlobal::config(), "Mouse");
         QString setting = g.readEntry("MouseButtonMapping");
         if(setting == "RightHanded")
@@ -603,35 +568,25 @@ KGlobalSettings::KMouseSettings &KGlobalSettings::mouseSettings()
 // FIXME(E): Implement in Qt Embedded
 #endif
         }
-#endif // Q_WS_WIN
     }
-#ifdef Q_WS_WIN
-    // not cached
-    s_mouseSettings->handed = (GetSystemMetrics(SM_SWAPBUTTON) ? KMouseSettings::LeftHanded : KMouseSettings::RightHanded);
-#endif
+
     return *s_mouseSettings;
 }
 
 void KGlobalSettings::rereadMouseSettings()
 {
-#ifndef Q_WS_WIN
     delete s_mouseSettings;
     s_mouseSettings = 0L;
-#endif
 }
 
 bool KGlobalSettings::isMultiHead()
 {
-#ifdef Q_WS_WIN
-    return GetSystemMetrics(SM_CMONITORS) > 1;
-#else
     QCString multiHead = getenv("KDE_MULTIHEAD");
     if(!multiHead.isEmpty())
     {
         return (multiHead.lower() == "true");
     }
     return false;
-#endif
 }
 
 bool KGlobalSettings::wheelMouseZooms()

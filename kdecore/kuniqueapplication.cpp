@@ -91,13 +91,10 @@ bool KUniqueApplication::start()
         return true;
     s_uniqueTestDone = true;
     addCmdLineOptions(); // Make sure to add cmd line options
-#ifdef Q_WS_WIN
-    s_nofork = true;
-#else
+
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kuniqueapp");
     s_nofork = !args->isSet("fork");
     delete args;
-#endif
 
     QCString appName = KCmdLineArgs::about->appName();
 
@@ -110,10 +107,8 @@ bool KUniqueApplication::start()
             appName = appName + "-" + pid;
         }
 
-// Check to make sure that we're actually able to register with the DCOP
-// server.
-
-#ifndef Q_WS_WIN // TODO
+        // Check to make sure that we're actually able to register with the DCOP
+        // server.
         if(dcopClient()->registerAs(appName, false).isEmpty())
         {
             startKdeinit();
@@ -123,7 +118,6 @@ bool KUniqueApplication::start()
                 ::exit(255);
             }
         }
-#endif
 
         // We'll call newInstance in the constructor. Do nothing here.
         return true;

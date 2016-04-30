@@ -46,11 +46,7 @@ void KSSLCertificateHome::setDefaultCertificate(QString name, QString host, bool
 {
     KSimpleConfig cfg("ksslauthmap", false);
 
-#ifdef Q_WS_WIN // temporary
-    cfg.setGroup(host);
-#else
     cfg.setGroup(KResolver::domainToAscii(host));
-#endif
     cfg.writeEntry("certificate", name);
     cfg.writeEntry("send", send);
     cfg.writeEntry("prompt", prompt);
@@ -177,24 +173,15 @@ QString KSSLCertificateHome::getDefaultCertificateName(QString host, KSSLAuthAct
 {
     KSimpleConfig cfg("ksslauthmap", false);
 
-#ifdef Q_WS_WIN // temporary
-    if(!cfg.hasGroup(host))
-    {
-#else
     if(!cfg.hasGroup(KResolver::domainToAscii(host)))
     {
-#endif
         if(aa)
             *aa = AuthNone;
         return QString::null;
     }
     else
     {
-#ifdef Q_WS_WIN // temporary
-        cfg.setGroup(host);
-#else
         cfg.setGroup(KResolver::domainToAscii(host));
-#endif
         if(aa)
         {
             bool tmp = cfg.readBoolEntry("send", false);

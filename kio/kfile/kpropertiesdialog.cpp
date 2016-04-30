@@ -135,10 +135,6 @@ extern "C" {
 
 #include "kpropertiesdialog.h"
 
-#ifdef Q_WS_WIN
-#include <win32_utils.h>
-#endif
-
 static QString nameFromFileName(QString nameStr)
 {
     if(nameStr.endsWith(".desktop"))
@@ -266,21 +262,12 @@ KPropertiesDialog::KPropertiesDialog(const KURL &_tempUrl, const KURL &_currentD
 
 bool KPropertiesDialog::showDialog(KFileItem *item, QWidget *parent, const char *name, bool modal)
 {
-#ifdef Q_WS_WIN
-    QString localPath = item->localPath();
-    if(!localPath.isEmpty())
-        return showWin32FilePropertyDialog(localPath);
-#endif
     new KPropertiesDialog(item, parent, name, modal);
     return true;
 }
 
 bool KPropertiesDialog::showDialog(const KURL &_url, QWidget *parent, const char *name, bool modal)
 {
-#ifdef Q_WS_WIN
-    if(_url.isLocalFile())
-        return showWin32FilePropertyDialog(_url.path());
-#endif
     new KPropertiesDialog(_url, parent, name, modal);
     return true;
 }

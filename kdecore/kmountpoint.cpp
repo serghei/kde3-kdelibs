@@ -331,8 +331,6 @@ KMountPoint::List KMountPoint::currentMountPoints(int infoNeeded)
     }
 
     free(mntctl_buffer);
-#elif defined(Q_WS_WIN)
-// TODO?
 #else
     STRUCT_SETMNTENT mnttab;
     if((mnttab = SETMNTENT(MNTTAB, "r")) == 0)

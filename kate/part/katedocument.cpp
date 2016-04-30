@@ -2004,9 +2004,7 @@ void KateDocument::configDialog()
     KDialogBase *kd = new KDialogBase(KDialogBase::IconList, i18n("Configure"), KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Help,
                                       KDialogBase::Ok, kapp->mainWidget());
 
-#ifndef Q_WS_WIN // TODO: reenable
     KWin::setIcons(kd->winId(), kapp->icon(), kapp->miniIcon());
-#endif
 
     QPtrList< KTextEditor::ConfigPage > editorPages;
 

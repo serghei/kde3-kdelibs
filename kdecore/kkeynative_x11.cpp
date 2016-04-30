@@ -23,8 +23,6 @@
 #include <qnamespace.h>
 #include <qwindowdefs.h>
 
-#if defined(Q_WS_X11) || defined(Q_WS_WIN) || defined(Q_WS_MACX) // Only compile this module if we're compiling for X11, mac or win32
-
 #include "kkeynative.h"
 #include "kkeyserver_x11.h"
 
@@ -103,11 +101,6 @@ bool KKeyNative::init(const XEvent *pEvent)
 
 bool KKeyNative::init(const KKey &key)
 {
-#ifdef Q_WS_WIN
-    m_sym = key.sym();
-    m_code = m_sym; // key.keyCodeQt();
-    m_mod = key.m_mod;
-#elif !defined(Q_WS_WIN) && !defined(Q_WS_MACX)
     // Get any extra mods required by the sym.
     //  E.g., XK_Plus requires SHIFT on the en layout.
     m_sym = key.sym();
@@ -137,7 +130,7 @@ bool KKeyNative::init(const KKey &key)
     //  E.g., Shift+Equal => Plus on the en layout.
     if(key.modFlags() && ((m_sym < XK_Home || m_sym > XK_Begin) && m_sym != XK_Insert && m_sym != XK_Delete))
         KKeyServer::codeXToSym(m_code, m_mod, m_sym);
-#endif
+
     return true;
 }
 
@@ -189,15 +182,11 @@ KKeyNative &KKeyNative::null()
 
 KKey KKeyNative::key() const
 {
-#ifdef Q_WS_WIN
-    return KKey(m_sym, m_mod);
-#else
     uint modSpec;
     if(KKeyServer::modXToMod(m_mod, modSpec))
         return KKey(m_sym, modSpec);
     else
         return KKey();
-#endif
 }
 
 int KKeyNative::keyCodeQt() const
@@ -241,5 +230,3 @@ uint KKeyNative::modXModeSwitch()
     return KKeyServer::modXModeSwitch();
 }
 #endif
-
-#endif // Q_WS_X11

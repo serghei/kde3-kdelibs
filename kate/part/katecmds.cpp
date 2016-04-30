@@ -127,11 +127,7 @@ bool KateCommands::CoreCommands::exec(Kate::View *view, const QString &_cmd, QSt
     }
     else if(cmd == "run-myself")
     {
-#ifndef Q_WS_WIN // todo
         return KateFactory::self()->jscript()->execute(v, v->doc()->text(), errorMsg);
-#else
-        return 0;
-#endif
     }
     else if(cmd == "unindent")
     {

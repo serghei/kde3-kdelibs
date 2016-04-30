@@ -40,9 +40,6 @@
 #ifdef __KDE_HAVE_GCC_VISIBILITY
 #define KDE_NO_EXPORT __attribute__ ((visibility("hidden")))
 #define KDE_EXPORT __attribute__ ((visibility("default")))
-#elif defined(Q_WS_WIN)
-#define KDE_NO_EXPORT
-#define KDE_EXPORT __declspec(dllexport)
 #else
 #define KDE_NO_EXPORT
 #define KDE_EXPORT

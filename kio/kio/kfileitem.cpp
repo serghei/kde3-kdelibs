@@ -802,13 +802,12 @@ QString KFileItem::getToolTipText(int maxcount)
     QString timeStr = timeString(KIO::UDS_MODIFICATION_TIME);
     if(!timeStr.isEmpty())
         tip += start + i18n("Modified:") + mid + timeStr + end;
-#ifndef Q_WS_WIN // TODO: show win32-specific permissions
+
     QString userStr = user();
     QString groupStr = group();
     if(!userStr.isEmpty() || !groupStr.isEmpty())
         tip += start + i18n("Owner:") + mid + userStr + " - " + groupStr + end + start + i18n("Permissions:") + mid + parsePermissions(m_permissions)
                + end;
-#endif
 
     if(info.isValid() && !info.isEmpty())
     {
