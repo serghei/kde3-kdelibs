@@ -617,12 +617,11 @@ void KArchiveDirectory::copyTo(const QString &dest, bool recursiveCopy) const
             {
                 const QString linkName = curDirName + '/' + curEntry->name();
                 kdDebug() << "symlink(" << curEntry->symlink() << ',' << linkName << ')';
-#ifdef Q_OS_UNIX
+
                 if(!::symlink(curEntry->symlink().local8Bit(), linkName.local8Bit()))
                 {
                     kdDebug() << "symlink(" << curEntry->symlink() << ',' << linkName << ") failed:" << strerror(errno);
                 }
-#endif
             }
             else
             {

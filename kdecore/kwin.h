@@ -25,8 +25,6 @@
 #include <qpixmap.h>
 #include "kdelibs_export.h"
 
-#ifdef Q_OS_UNIX
-
 #include <netwm_def.h>
 class NETWinInfo;
 
@@ -717,7 +715,5 @@ public:
 private:
     WindowInfoPrivate *d;
 };
-
-#endif // Q_OS_UNIX
 
 #endif

@@ -31,10 +31,6 @@
 
 #include <kurl.h>
 
-#ifdef Q_OS_WIN
-#undef ERROR
-#endif
-
 class KURIFilterPrivate;
 class KURIFilterDataPrivate;
 

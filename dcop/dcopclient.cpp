@@ -252,13 +252,8 @@ static QCString dcopServerFile(const QCString &hostname, bool old)
         fprintf(stderr, "Aborting. $HOME is not set.\n");
         exit(1);
     }
-#ifdef Q_WS_X11
+
     QCString disp = getenv("DISPLAY");
-#elif defined(Q_WS_QWS)
-    QCString disp = getenv("QWS_DISPLAY");
-#else
-    QCString disp;
-#endif
     if(disp.isEmpty())
         disp = "NODISPLAY";
 
@@ -715,12 +710,6 @@ static bool peerIsUs(int sockfd)
 // Check whether the socket is owned by the same user.
 static bool isServerSocketOwnedByUser(const char *server)
 {
-#ifdef Q_OS_WIN
-    if(strncmp(server, "tcp/", 4) != 0)
-        return false; // Not a local socket -> foreign.
-    else
-        return true;
-#else
     if(strncmp(server, "local/", 6) != 0)
         return false; // Not a local socket -> foreign.
     const char *path = strchr(server, KPATH_SEPARATOR);
@@ -733,7 +722,6 @@ static bool isServerSocketOwnedByUser(const char *server)
         return false;
 
     return (stat_buf.st_uid == getuid());
-#endif
 }
 #endif
 

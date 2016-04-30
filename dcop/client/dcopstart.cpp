@@ -77,10 +77,6 @@ void startApp(const char *_app, int argc, const char **args)
     }
 }
 
-#ifdef Q_OS_WIN
-#define main kdemain
-#endif
-
 int main(int argc, char **argv)
 {
     if((argc < 2) || (argv[1][0] == '-'))

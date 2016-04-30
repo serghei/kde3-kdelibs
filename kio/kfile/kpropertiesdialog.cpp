@@ -1714,7 +1714,6 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin(KPropertiesDialog *_pro
     if(user != 0L)
         strUser = user->pw_name;
 
-#ifdef Q_OS_UNIX
     setgrent();
     for(i = 0; ((ge = getgrent()) != 0L) && (i < maxEntries); i++)
     {
@@ -1737,7 +1736,6 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin(KPropertiesDialog *_pro
         }
     }
     endgrent();
-#endif // Q_OS_UNIX
 
     /* add the effective Group to the list .. */
     ge = getgrgid(getegid());

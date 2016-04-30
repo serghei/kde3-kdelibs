@@ -22,8 +22,6 @@
 
 #include "kdelibs_export.h"
 
-#ifdef Q_OS_UNIX
-
 #include <sys/time.h>
 
 #include <qstring.h>
@@ -1134,7 +1132,5 @@ public:
 
     friend class KExtendedSocket;
 };
-
-#endif // Q_OS_UNIX
 
 #endif // KEXTSOCK_H

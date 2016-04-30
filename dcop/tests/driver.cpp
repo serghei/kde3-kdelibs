@@ -45,10 +45,6 @@ void Driver::test()
 
 #include "driver.moc"
 
-#ifdef Q_OS_WIN
-#define main kdemain
-#endif
-
 int main(int argc, char **argv)
 {
     if(argc < 2)

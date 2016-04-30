@@ -24,8 +24,6 @@
 #include <kstaticdeleter.h>
 #include <kdelibs_export.h>
 
-#ifdef Q_OS_UNIX
-
 class KSocksTable;
 class KSocksPrivate;
 class KLibrary;
@@ -197,7 +195,5 @@ private:
     KSocksTable *_st;
     KSocksPrivate *d;
 };
-
-#endif // Q_OS_UNIX
 
 #endif //_KSOCKS_H_

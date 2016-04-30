@@ -91,9 +91,7 @@ static void theReaper(int num)
 }
 }
 
-#ifdef Q_OS_UNIX
 struct sigaction KProcessController::oldChildHandlerData;
-#endif
 bool KProcessController::handlerSet = false;
 
 void KProcessController::setupHandlers()
@@ -102,7 +100,6 @@ void KProcessController::setupHandlers()
         return;
     handlerSet = true;
 
-#ifdef Q_OS_UNIX
     struct sigaction act;
     sigemptyset(&act.sa_mask);
 
@@ -122,9 +119,6 @@ void KProcessController::setupHandlers()
     sigaddset(&act.sa_mask, SIGCHLD);
     // Make sure we don't block this signal. gdb tends to do that :-(
     sigprocmask(SIG_UNBLOCK, &act.sa_mask, 0);
-#else
-// TODO: win32
-#endif
 }
 
 void KProcessController::resetHandlers()
@@ -133,11 +127,7 @@ void KProcessController::resetHandlers()
         return;
     handlerSet = false;
 
-#ifdef Q_OS_UNIX
     sigaction(SIGCHLD, &oldChildHandlerData, 0);
-#else
-// TODO: win32
-#endif
     // there should be no problem with SIGPIPE staying SIG_IGN
 }
 
@@ -151,12 +141,8 @@ void KProcessController::theSigCHLDHandler(int arg)
     char dummy = 0;
     ::write(theKProcessController->fd[1], &dummy, 1);
 
-#ifdef Q_OS_UNIX
     if(oldChildHandlerData.sa_handler != SIG_IGN && oldChildHandlerData.sa_handler != SIG_DFL)
         oldChildHandlerData.sa_handler(arg); // call the old handler
-#else
-// TODO: win32
-#endif
 
     errno = saved_errno;
 }
@@ -221,7 +207,6 @@ again:
 
 bool KProcessController::waitForProcessExit(int timeout)
 {
-#ifdef Q_OS_UNIX
     for(;;)
     {
         struct timeval tv, *tvp;
@@ -251,10 +236,6 @@ bool KProcessController::waitForProcessExit(int timeout)
                 return true;
         }
     }
-#else
-    // TODO: win32
-    return false;
-#endif
 }
 
 void KProcessController::addKProcess(KProcess *p)

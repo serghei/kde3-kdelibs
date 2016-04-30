@@ -236,11 +236,8 @@ KServiceType::List KServiceTypeFactory::allServiceTypes()
     KSycocaEntry::List list = allEntries();
     for(KSycocaEntry::List::Iterator it = list.begin(); it != list.end(); ++it)
     {
-#ifndef Q_WS_QWS
         KServiceType *newServiceType = dynamic_cast< KServiceType * >((*it).data());
-#else // FIXME
-        KServiceType *newServiceType = (KServiceType *)(*it).data();
-#endif
+
         if(newServiceType)
             result.append(KServiceType::Ptr(newServiceType));
     }

@@ -41,11 +41,8 @@
 #define _ALL_SOURCE
 #endif
 
-#ifdef Q_OS_UNIX
 #include <sys/socket.h>
 #include <sys/ioctl.h>
-#endif
-
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/resource.h>
@@ -87,16 +84,7 @@
 
 class KProcessPrivate {
 public:
-    KProcessPrivate()
-        : usePty(KProcess::NoCommunication)
-        , addUtmp(false)
-        , useShell(false)
-        ,
-#ifdef Q_OS_UNIX
-        pty(0)
-        ,
-#endif
-        priority(0)
+    KProcessPrivate() : usePty(KProcess::NoCommunication), addUtmp(false), useShell(false), pty(0), priority(0)
     {
     }
 
@@ -104,9 +92,7 @@ public:
     bool addUtmp : 1;
     bool useShell : 1;
 
-#ifdef Q_OS_UNIX
     KPty *pty;
-#endif
 
     int priority;
 
@@ -205,7 +191,6 @@ bool KProcess::runPrivileged() const
 
 bool KProcess::setPriority(int prio)
 {
-#ifdef Q_OS_UNIX
     if(runs)
     {
         if(setpriority(PRIO_PROCESS, pid_, prio))
@@ -216,7 +201,7 @@ bool KProcess::setPriority(int prio)
         if(prio > 19 || prio < (geteuid() ? getpriority(PRIO_PROCESS, 0) : -20))
             return false;
     }
-#endif
+
     d->priority = prio;
     return true;
 }
@@ -227,9 +212,7 @@ KProcess::~KProcess()
         kill(SIGKILL);
     detach();
 
-#ifdef Q_OS_UNIX
     delete d->pty;
-#endif
     delete d;
 
     KProcessController::theKProcessController->removeKProcess(this);
@@ -311,7 +294,7 @@ bool KProcess::start(RunMode runmode, Communication comm)
         kdDebug(175) << "Attempted to start a process without arguments" << endl;
         return false;
     }
-#ifdef Q_OS_UNIX
+
     char **arglist;
     QCString shellCmd;
     if(d->useShell)
@@ -491,19 +474,14 @@ bool KProcess::start(RunMode runmode, Communication comm)
             break;
     }
     return true;
-#else
-    // TODO
-    return false;
-#endif
 }
 
 
 bool KProcess::kill(int signo)
 {
-#ifdef Q_OS_UNIX
     if(runs && pid_ > 0 && !::kill(run_mode == OwnGroup ? -pid_ : pid_, signo))
         return true;
-#endif
+
     return false;
 }
 
@@ -556,7 +534,6 @@ bool KProcess::wait(int timeout)
         tvp = &tv;
     }
 
-#ifdef Q_OS_UNIX
     int fd = KProcessController::theKProcessController->notifierFd();
     for(;;)
     {
@@ -593,7 +570,7 @@ bool KProcess::wait(int timeout)
                 }
         }
     }
-#endif // Q_OS_UNIX
+
     return false;
 }
 
@@ -716,7 +693,6 @@ bool KProcess::closeStderr()
 
 bool KProcess::closePty()
 {
-#ifdef Q_OS_UNIX
     if(d->pty && d->pty->masterFd() >= 0)
     {
         if(d->addUtmp)
@@ -726,9 +702,6 @@ bool KProcess::closePty()
     }
     else
         return false;
-#else
-    return false;
-#endif
 }
 
 void KProcess::closeAll()
@@ -805,7 +778,6 @@ void KProcess::setUseShell(bool useShell, const char *shell)
         d->shell = "/bin/sh";
 }
 
-#ifdef Q_OS_UNIX
 void KProcess::setUsePty(Communication usePty, bool addUtmp)
 {
     d->usePty = usePty;
@@ -826,7 +798,6 @@ KPty *KProcess::pty() const
 {
     return d->pty;
 }
-#endif // Q_OS_UNIX
 
 QString KProcess::quote(const QString &arg)
 {
@@ -897,7 +868,6 @@ int KProcess::childError(int fdno)
 
 int KProcess::setupCommunication(Communication comm)
 {
-#ifdef Q_OS_UNIX
     // PTY stuff //
     if(d->usePty)
     {
@@ -961,7 +931,7 @@ fail1:
     }
 fail0:
     communication = NoCommunication;
-#endif        // Q_OS_UNIX
+
     return 0; // Error
 }
 
@@ -1013,7 +983,6 @@ int KProcess::commSetupDoneP()
 int KProcess::commSetupDoneC()
 {
     int ok = 1;
-#ifdef Q_OS_UNIX
 
     if(d->usePty & Stdin)
     {
@@ -1069,7 +1038,6 @@ int KProcess::commSetupDoneC()
         if(d->addUtmp)
             d->pty->login(KUser(KUser::UseRealUserID).loginName().local8Bit().data(), getenv("DISPLAY"));
     }
-#endif // Q_OS_UNIX
 
     return ok;
 }
@@ -1079,7 +1047,6 @@ void KProcess::commClose()
 {
     closeStdin();
 
-#ifdef Q_OS_UNIX
     if(pid_)
     { // detached, failed, and killed processes have no output. basta. :)
         // If both channels are being read we need to make sure that one socket
@@ -1146,7 +1113,6 @@ void KProcess::commClose()
             }
         }
     }
-#endif // Q_OS_UNIX
 
     closeStdout();
     closeStderr();

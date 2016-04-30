@@ -1401,8 +1401,6 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
     return ret;
 }
 
-#ifdef Q_OS_UNIX
-
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -2064,52 +2062,31 @@ static QString get_mount_info(const QString &filename, MountState &isautofs, Mou
     return mountPoint;
 }
 
-#else //! Q_OS_UNIX
-// dummy
-QString KIO::findDeviceMountPoint(const QString &filename)
-{
-    return QString::null;
-}
-#endif
-
 QString KIO::findPathMountPoint(const QString &filename)
 {
-#ifdef Q_OS_UNIX
     MountState isautofs = Unseen, isslow = Unseen, ismanual = Wrong;
     QString fstype;
     return get_mount_info(filename, isautofs, isslow, ismanual, fstype);
-#else //! Q_OS_UNIX
-    return QString::null;
-#endif
 }
 
 bool KIO::manually_mounted(const QString &filename)
 {
-#ifdef Q_OS_UNIX
     MountState isautofs = Unseen, isslow = Unseen, ismanual = Unseen;
     QString fstype;
     QString mountPoint = get_mount_info(filename, isautofs, isslow, ismanual, fstype);
     return !mountPoint.isNull() && (ismanual == Right);
-#else //! Q_OS_UNIX
-    return false;
-#endif
 }
 
 bool KIO::probably_slow_mounted(const QString &filename)
 {
-#ifdef Q_OS_UNIX
     MountState isautofs = Unseen, isslow = Unseen, ismanual = Wrong;
     QString fstype;
     QString mountPoint = get_mount_info(filename, isautofs, isslow, ismanual, fstype);
     return !mountPoint.isNull() && (isslow == Right);
-#else //! Q_OS_UNIX
-    return false;
-#endif
 }
 
 bool KIO::testFileSystemFlag(const QString &filename, FileSystemFlag flag)
 {
-#ifdef Q_OS_UNIX
     MountState isautofs = Unseen, isslow = Unseen, ismanual = Wrong;
     QString fstype;
     QString mountPoint = get_mount_info(filename, isautofs, isslow, ismanual, fstype);
@@ -2127,7 +2104,7 @@ bool KIO::testFileSystemFlag(const QString &filename, FileSystemFlag flag)
         case CaseInsensitive:
             return isMsDos;
     }
-#endif
+
     return false;
 }
 

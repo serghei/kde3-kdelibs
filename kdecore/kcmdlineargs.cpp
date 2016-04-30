@@ -43,11 +43,7 @@
 #include <kstringhandler.h>
 #include <kstaticdeleter.h>
 
-#ifdef Q_WS_X11
 #define DISPLAY "DISPLAY"
-#elif defined(Q_WS_QWS)
-#define DISPLAY "QWS_DISPLAY"
-#endif
 
 template class QAsciiDict< QCString >;
 template class QPtrList< KCmdLineArgs >;

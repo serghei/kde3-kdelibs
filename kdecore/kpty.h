@@ -26,8 +26,6 @@
 #include <qglobal.h>
 #include <kdelibs_export.h>
 
-#ifdef Q_OS_UNIX
-
 struct KPtyPrivate;
 
 /**
@@ -143,5 +141,4 @@ private:
     KPtyPrivate *d;
 };
 
-#endif // Q_OS_UNIX
 #endif

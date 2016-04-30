@@ -175,10 +175,6 @@ void TestObject::slotCallBack(int callId, const QCString &replyType, const QByte
     qWarning("Value = %s", arg1.latin1());
 }
 
-#ifdef Q_OS_WIN
-#define main kdemain
-#endif
-
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv, "testdcop");

@@ -251,8 +251,6 @@ bool KMenuBar::eventFilter(QObject *obj, QEvent *ev)
         {
 #ifdef Q_WS_X11
             XSetTransientForHint(qt_xdisplay(), winId(), parentWidget()->topLevelWidget()->winId());
-#else
-// TODO: WIN32?
 #endif
             setShown(parentWidget()->isTopLevel() || parentWidget()->isVisible());
         }
@@ -262,8 +260,6 @@ bool KMenuBar::eventFilter(QObject *obj, QEvent *ev)
             {
 #ifdef Q_WS_X11
                 XSetTransientForHint(qt_xdisplay(), winId(), parentWidget()->topLevelWidget()->winId());
-#else
-// TODO: WIN32?
 #endif
                 show();
             }

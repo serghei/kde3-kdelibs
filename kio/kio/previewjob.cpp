@@ -29,10 +29,8 @@
 #endif
 #include <sys/types.h>
 
-#ifdef Q_OS_UNIX
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#endif
 
 #include <qdir.h>
 #include <qfile.h>
@@ -150,13 +148,12 @@ PreviewJob::PreviewJob(const KFileItemList &items, int width, int height, int ic
 
 PreviewJob::~PreviewJob()
 {
-#ifdef Q_OS_UNIX
     if(d->shmaddr)
     {
         shmdt((char *)d->shmaddr);
         shmctl(d->shmid, IPC_RMID, 0);
     }
-#endif
+
     delete d;
 }
 
@@ -461,7 +458,7 @@ void PreviewJob::createThumbnail(QString pixPath)
     job->addMetaData("iconSize", QString().setNum(save ? 64 : d->iconSize));
     job->addMetaData("iconAlpha", QString().setNum(d->iconAlpha));
     job->addMetaData("plugin", d->currentItem.plugin->library());
-#ifdef Q_OS_UNIX
+
     if(d->shmid == -1)
     {
         if(d->shmaddr)
@@ -485,7 +482,6 @@ void PreviewJob::createThumbnail(QString pixPath)
     }
     if(d->shmid != -1)
         job->addMetaData("shmid", QString().setNum(d->shmid));
-#endif
 }
 
 void PreviewJob::slotThumbData(KIO::Job *, const QByteArray &data)
@@ -493,7 +489,7 @@ void PreviewJob::slotThumbData(KIO::Job *, const QByteArray &data)
     bool save = d->bSave && d->currentItem.plugin->property("CacheThumbnail").toBool()
                 && (d->currentItem.item->url().protocol() != "file" || !d->currentItem.item->url().directory(false).startsWith(d->thumbRoot));
     QImage thumb;
-#ifdef Q_OS_UNIX
+
     if(d->shmaddr)
     {
         QDataStream str(data, IO_ReadOnly);
@@ -504,7 +500,6 @@ void PreviewJob::slotThumbData(KIO::Job *, const QByteArray &data)
         thumb.setAlphaBuffer(alpha);
     }
     else
-#endif
         thumb.loadFromData(data);
 
     if(save)

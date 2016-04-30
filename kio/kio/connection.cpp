@@ -128,12 +128,12 @@ void Connection::init(KSocket *sock)
 {
     delete notifier;
     notifier = 0;
-#ifdef Q_OS_UNIX // TODO: not yet available on WIN32
+
     delete socket;
     socket = sock;
     fd_in = socket->socket();
     f_out = KDE_fdopen(socket->socket(), "wb");
-#endif
+
     if(receiver && (fd_in != -1))
     {
         notifier = new QSocketNotifier(fd_in, QSocketNotifier::Read);

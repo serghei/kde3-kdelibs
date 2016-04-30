@@ -47,17 +47,9 @@
 #include "kdebug.h"
 #include "kuniqueapplication.h"
 
-#if defined Q_WS_X11
 #include <netwm.h>
 #include <X11/Xlib.h>
 #define DISPLAY "DISPLAY"
-#else
-#ifdef Q_WS_QWS
-#define DISPLAY "QWS_DISPLAY"
-#else
-#define DISPLAY "DISPLAY"
-#endif
-#endif
 
 bool KUniqueApplication::s_nofork = false;
 bool KUniqueApplication::s_multipleInstances = false;

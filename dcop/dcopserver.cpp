@@ -531,11 +531,8 @@ static char *unique_filename(const char *path, const char *prefix, int *pFd)
     char tempFile[PATH_MAX];
     char *ptr;
 
-#ifdef Q_OS_WIN
-    snprintf(tempFile, PATH_MAX, "%s\\%sXXXXXX", path, prefix);
-#else
     snprintf(tempFile, PATH_MAX, "%s/%sXXXXXX", path, prefix);
-#endif
+
     ptr = static_cast< char * >(malloc(strlen(tempFile) + 1));
     if(ptr != NULL)
     {
@@ -567,21 +564,10 @@ Status SetAuthentication(int count, IceListenObj *_listenObjs, IceAuthDataEntry 
 
     original_umask = umask(0077); /* disallow non-owner access */
 
-#ifdef Q_OS_WIN
-    char temppath[512];
-    DWORD dw = GetTempPathA(sizeof(temppath), temppath);
-    if(dw != 0)
-    {
-        temppath[dw - 1] = 0;
-        path = temppath;
-    }
-    else
-        path = ".";
-#else
     path = getenv("DCOP_SAVE_DIR");
     if(!path)
         path = "/tmp";
-#endif
+
     if((addAuthFile = unique_filename(path, "dcop", &fd)) == NULL)
         goto bad;
 
@@ -932,7 +918,6 @@ static Status DCOPServerProtocolSetupProc(IceConn /*iceConn*/, int majorVersion,
     return (majorVersion == DCOPVersionMajor && minorVersion == DCOPVersionMinor);
 }
 
-#ifndef Q_OS_WIN
 static int pipeOfDeath[2];
 
 static void sighandler(int sig)
@@ -945,7 +930,6 @@ static void sighandler(int sig)
 
     write(pipeOfDeath[1], "x", 1);
 }
-#endif
 
 extern "C" {
 extern int _kde_IceLastMajorOpcode; // from libICE
@@ -1045,16 +1029,6 @@ DCOPServer::DCOPServer(bool _suicide) : QObject(0, 0), currentClientNumber(0), a
     m_deadConnectionTimer = new QTimer(this);
     connect(m_deadConnectionTimer, SIGNAL(timeout()), this, SLOT(slotCleanDeadConnections()));
 
-#ifdef Q_OS_WIN
-    char szEventName[256];
-    sprintf(szEventName, "dcopserver%i", GetCurrentProcessId());
-    m_evTerminate = CreateEventA(NULL, TRUE, FALSE, (LPCSTR)szEventName);
-    ResetEvent(m_evTerminate);
-    m_hTerminateThread = CreateThread(NULL, 0, TerminatorThread, this, 0, &m_dwTerminateThreadId);
-    if(m_hTerminateThread)
-        CloseHandle(m_hTerminateThread);
-#endif
-
 #ifdef DCOP_LOG
     char hostname_buffer[256];
     memset(hostname_buffer, 0, sizeof(hostname_buffer));
@@ -1078,10 +1052,6 @@ DCOPServer::~DCOPServer()
     delete m_stream;
     m_logger->close();
     delete m_logger;
-#endif
-#ifdef Q_OS_WIN
-    SetEvent(m_evTerminate);
-    CloseHandle(m_evTerminate);
 #endif
 }
 
@@ -1299,9 +1269,9 @@ void DCOPServer::slotShutdown()
     fprintf(stderr, "DCOPServer : slotShutdown() -> waiting for clients to disconnect.\n");
 #endif
     char c;
-#ifndef Q_OS_WIN
+
     read(pipeOfDeath[0], &c, 1);
-#endif
+
     if(!shutdown)
     {
         shutdown = true;
@@ -1320,12 +1290,7 @@ void DCOPServer::slotExit()
 #ifndef NDEBUG
     fprintf(stderr, "DCOPServer : slotExit() -> exit.\n");
 #endif
-#ifdef Q_OS_WIN
-    SetEvent(m_evTerminate);
-    if(m_dwTerminateThreadId != GetCurrentThreadId())
-        WaitForSingleObject(m_hTerminateThread, INFINITE);
-    CloseHandle(m_hTerminateThread);
-#endif
+
     exit(0);
 }
 
@@ -1783,20 +1748,12 @@ extern "C" DCOP_EXPORT int kdemain(int argc, char *argv[])
     IceSetIOErrorHandler(IoErrorHandler);
     DCOPServer *server = new DCOPServer(suicide); // this sets the_server
 
-#ifdef Q_OS_WIN
-    SetConsoleCtrlHandler(DCOPServer::dcopServerConsoleProc, TRUE);
-#else
     QSocketNotifier DEATH(pipeOfDeath[0], QSocketNotifier::Read, 0, 0);
     server->connect(&DEATH, SIGNAL(activated(int)), SLOT(slotShutdown()));
-#endif
 
     int ret = a.exec();
     delete server;
     return ret;
 }
-
-#ifdef Q_OS_WIN
-#include "dcopserver_win.cpp"
-#endif
 
 #include "dcopserver.moc"

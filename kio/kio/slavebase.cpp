@@ -166,7 +166,6 @@ static volatile bool slaveWriteError = false;
 
 static const char *s_protocol;
 
-#ifdef Q_OS_UNIX
 static void genericsig_handler(int sigNumber)
 {
     signal(sigNumber, SIG_IGN);
@@ -180,7 +179,6 @@ static void genericsig_handler(int sigNumber)
     signal(SIGALRM, SIG_DFL);
     alarm(5); // generate an alarm signal in 5 seconds, in this time the slave has to exit
 }
-#endif
 
 //////////////
 
@@ -188,7 +186,7 @@ SlaveBase::SlaveBase(const QCString &protocol, const QCString &pool_socket, cons
     : mProtocol(protocol), m_pConnection(0), mPoolSocket(QFile::decodeName(pool_socket)), mAppSocket(QFile::decodeName(app_socket))
 {
     s_protocol = protocol.data();
-#ifdef Q_OS_UNIX
+
     if(!getenv("KDE_DEBUG"))
     {
         KCrash::setCrashHandler(sigsegv_handler);
@@ -224,7 +222,6 @@ SlaveBase::SlaveBase(const QCString &protocol, const QCString &pool_socket, cons
     signal(SIGINT, &genericsig_handler);
     signal(SIGQUIT, &genericsig_handler);
     signal(SIGTERM, &genericsig_handler);
-#endif
 
     globalSlave = this;
 
@@ -277,7 +274,6 @@ DCOPClient *SlaveBase::dcopClient()
 
 void SlaveBase::dispatchLoop()
 {
-#ifdef Q_OS_UNIX // TODO: WIN32
     fd_set rfds;
     int retval;
 
@@ -356,12 +352,10 @@ void SlaveBase::dispatchLoop()
             return;
         }
     }
-#endif
 }
 
 void SlaveBase::connectSlave(const QString &path)
 {
-#ifdef Q_OS_UNIX // TODO: KSocket not yet available on WIN32
     appconn->init(new KSocket(QFile::encodeName(path)));
     if(!appconn->inited())
     {
@@ -370,7 +364,6 @@ void SlaveBase::connectSlave(const QString &path)
     }
 
     setConnection(appconn);
-#endif
 }
 
 void SlaveBase::disconnectSlave()
@@ -761,7 +754,6 @@ void SlaveBase::delCachedAuthentication(const QString &key)
 
 void SlaveBase::sigsegv_handler(int sig)
 {
-#ifdef Q_OS_UNIX
     signal(sig, SIG_DFL); // Next one kills
 
     // Kill us if we deadlock
@@ -782,7 +774,6 @@ void SlaveBase::sigsegv_handler(int sig)
 #endif
 #endif
     ::exit(1);
-#endif
 }
 
 void SlaveBase::sigpipe_handler(int)
@@ -1105,9 +1096,9 @@ void SlaveBase::dispatch(int command, const QByteArray &data)
             break;
         case CMD_CONFIG:
             stream >> d->configData;
-#ifdef Q_OS_UNIX // TODO: not yet available on WIN32
+
             KSocks::setConfig(d->config);
-#endif
+
             delete d->remotefile;
             d->remotefile = 0;
             break;
@@ -1233,7 +1224,6 @@ QString SlaveBase::createAuthCacheKey(const KURL &url)
 
 bool SlaveBase::pingCacheDaemon() const
 {
-#ifdef Q_OS_UNIX
     // TODO: Ping kded / kpasswdserver
     KDEsuClient client;
     int success = client.ping();
@@ -1248,9 +1238,6 @@ bool SlaveBase::pingCacheDaemon() const
         kdDebug(7019) << "Sucessfully started new cache deamon!!" << endl;
     }
     return true;
-#else
-    return false;
-#endif
 }
 
 bool SlaveBase::checkCachedAuthentication(AuthInfo &info)

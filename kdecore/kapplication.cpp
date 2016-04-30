@@ -100,7 +100,6 @@
 #include <string.h>
 #include <netdb.h>
 #if defined Q_WS_X11
-//#ifndef Q_WS_QWS //FIXME(E): NetWM should talk to QWS...
 #include <netwm.h>
 #endif
 
@@ -120,11 +119,7 @@
 
 #include <KDE-ICE/ICElib.h>
 
-#ifdef Q_WS_X11
 #define DISPLAY "DISPLAY"
-#elif defined(Q_WS_QWS)
-#define DISPLAY "QWS_DISPLAY"
-#endif
 
 #if defined Q_WS_X11
 #include <kipc.h>
@@ -1398,12 +1393,7 @@ void KApplication::dcopFailure(const QString &msg)
 }
 
 static const KCmdLineOptions qt_options[] = {
-// FIXME: Check if other options are specific to Qt/X11
-#ifdef Q_WS_X11
     {"display <displayname>", I18N_NOOP("Use the X-server display 'displayname'"), 0},
-#else
-    {"display <displayname>", I18N_NOOP("Use the QWS display 'displayname'"), 0},
-#endif
     {"session <sessionId>", I18N_NOOP("Restore the application for the given 'sessionId'"), 0},
     {"cmap", I18N_NOOP("Causes the application to install a private color\nmap on an 8-bit display"), 0},
     {"ncols <count>", I18N_NOOP("Limits the number of colors allocated in the color\ncube on an 8-bit display, if the application is\nusing the "
@@ -1428,9 +1418,6 @@ static const KCmdLineOptions qt_options[] = {
      0},
     {"im <XIM server>", I18N_NOOP("set XIM server"), 0},
     {"noxim", I18N_NOOP("disable XIM"), 0},
-#endif
-#ifdef Q_WS_QWS
-    {"qws", I18N_NOOP("forces the application to run as QWS Server"), 0},
 #endif
     {"reverse", I18N_NOOP("mirrors the whole layout of widgets"), 0},
     KCmdLineLastOption};
@@ -3145,13 +3132,11 @@ Qt::ButtonState KApplication::keyboardMouseState()
 
 void KApplication::installSigpipeHandler()
 {
-#ifdef Q_OS_UNIX
     struct sigaction act;
     act.sa_handler = SIG_IGN;
     sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
     sigaction(SIGPIPE, &act, 0);
-#endif
 }
 
 void KApplication::sigpipeHandler(int)

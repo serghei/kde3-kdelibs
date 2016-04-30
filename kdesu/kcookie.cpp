@@ -85,11 +85,8 @@ void KCookie::getXCookie()
     char buf[1024];
     FILE *f;
 
-#ifdef Q_WS_X11
     m_Display = getenv("DISPLAY");
-#else
-    m_Display = getenv("QWS_DISPLAY");
-#endif
+
     if(m_Display.isEmpty())
     {
         kdError(900) << k_lineinfo << "$DISPLAY is not set.\n";

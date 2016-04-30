@@ -32,8 +32,6 @@
 
 #include <qlabel.h>
 
-#ifndef Q_WS_QWS // We don't have Java in Qt Embedded
-
 #include "java/kjavaappletwidget.h"
 #include "misc/htmltags.h"
 #include "html/html_objectimpl.h"
@@ -146,5 +144,3 @@ void RenderApplet::processArguments(const QMap< QString, QString > &args)
             applet->setArchives(args[QString::fromLatin1("archive")]);
     }
 }
-
-#endif

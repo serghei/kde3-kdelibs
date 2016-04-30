@@ -51,20 +51,10 @@ static char *getDisplay()
     char *result;
     char *screen;
     char *colon;
-/*
- don't test for a value from qglobal.h but instead distinguish
- Qt/X11 from Qt/Embedded by the fact that Qt/E apps have -DQWS
- on the commandline (which in qglobal.h however triggers Q_WS_QWS,
- but we don't want to include that here) (Simon)
-#ifdef Q_WS_X11
- */
-#if !defined(QWS)
     display = getenv("DISPLAY");
-#else
-    display = getenv("QWS_DISPLAY");
-#endif
-    if(!display || !*display)
-    {
+
+	if(!display || !*display)
+	{
         display = "NODISPLAY";
     }
     result = malloc(strlen(display) + 1);

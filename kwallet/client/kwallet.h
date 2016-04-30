@@ -23,7 +23,6 @@
 #define _KWALLET_H
 
 #include <qglobal.h>
-#ifdef Q_OS_UNIX
 
 #include <qstring.h>
 #include <qstringlist.h>
@@ -525,7 +524,5 @@ protected:
     virtual void virtual_hook(int id, void *data);
 };
 }
-
-#endif // Q_OS_UNIX
 
 #endif //_KWALLET_H

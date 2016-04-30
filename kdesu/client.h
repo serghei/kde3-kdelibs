@@ -18,8 +18,6 @@
 #include <qglobal.h>
 #include <kdelibs_export.h>
 
-#ifdef Q_OS_UNIX
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -201,7 +199,5 @@ private:
     class KDEsuClientPrivate;
     KDEsuClientPrivate *d;
 };
-
-#endif // Q_OS_UNIX
 
 #endif //__KDE_su_Client_h_Included__

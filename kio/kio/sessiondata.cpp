@@ -85,26 +85,20 @@ public:
     void purgeCachedData();
 
 private:
-#ifdef Q_OS_UNIX
     KDEsuClient *m_kdesuClient;
-#endif
 };
 
 SessionData::AuthDataList::AuthDataList()
 {
-#ifdef Q_OS_UNIX
     m_kdesuClient = new KDEsuClient;
-#endif
     setAutoDelete(true);
 }
 
 SessionData::AuthDataList::~AuthDataList()
 {
     purgeCachedData();
-#ifdef Q_OS_UNIX
     delete m_kdesuClient;
     m_kdesuClient = 0;
-#endif
 }
 
 void SessionData::AuthDataList::addData(SessionData::AuthData *d)
@@ -134,7 +128,6 @@ void SessionData::AuthDataList::removeData(const QCString &gkey)
 
 bool SessionData::AuthDataList::pingCacheDaemon()
 {
-#ifdef Q_OS_UNIX
     Q_ASSERT(m_kdesuClient);
 
     int success = m_kdesuClient->ping();
@@ -145,9 +138,6 @@ bool SessionData::AuthDataList::pingCacheDaemon()
             return false;
     }
     return true;
-#else
-    return false;
-#endif
 }
 
 void SessionData::AuthDataList::registerAuthData(SessionData::AuthData *d)
@@ -155,7 +145,6 @@ void SessionData::AuthDataList::registerAuthData(SessionData::AuthData *d)
     if(!pingCacheDaemon())
         return;
 
-#ifdef Q_OS_UNIX
     bool ok;
     QCString ref_key = d->key + "-refcount";
     int count = m_kdesuClient->getVar(ref_key).toInt(&ok);
@@ -167,7 +156,6 @@ void SessionData::AuthDataList::registerAuthData(SessionData::AuthData *d)
     }
     else
         m_kdesuClient->setVar(ref_key, "1", 0, d->group);
-#endif
 }
 
 void SessionData::AuthDataList::unregisterAuthData(SessionData::AuthData *d)
@@ -179,7 +167,6 @@ void SessionData::AuthDataList::unregisterAuthData(SessionData::AuthData *d)
     int count;
     QCString ref_key = d->key + "-refcount";
 
-#ifdef Q_OS_UNIX
     count = m_kdesuClient->getVar(ref_key).toInt(&ok);
     if(ok)
     {
@@ -194,7 +181,6 @@ void SessionData::AuthDataList::unregisterAuthData(SessionData::AuthData *d)
             m_kdesuClient->delVars(d->key);
         }
     }
-#endif
 }
 
 void SessionData::AuthDataList::purgeCachedData()

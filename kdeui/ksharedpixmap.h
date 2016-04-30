@@ -103,7 +103,7 @@ private:
 
     KSharedPixmapPrivate *d;
 };
-#else // WIN32, Qt Embedded
+#else // Qt Embedded
 // Let's simply assume KPixmap will do for now. Yes, I know that's broken.
 #define KSharedPixmap KPixmap
 #endif

@@ -475,28 +475,6 @@ private:
     QGuardedPtr< khtml::ChildFrame > m_frame;
 };
 
-#ifdef Q_WS_QWS
-class Konqueror : public ObjectImp {
-    friend class KonquerorFunc;
-
-public:
-    Konqueror(KHTMLPart *p) : part(p)
-    {
-    }
-    virtual Value get(ExecState *exec, const Identifier &propertyName) const;
-    virtual bool hasProperty(ExecState *exec, const Identifier &p) const;
-    virtual UString toString(ExecState *exec) const;
-    virtual const ClassInfo *classInfo() const
-    {
-        return &info;
-    }
-    static const ClassInfo info;
-
-private:
-    KHTMLPart *part;
-};
-#endif
-
 } // namespace
 
 #endif

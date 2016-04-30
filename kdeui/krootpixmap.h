@@ -15,8 +15,6 @@
 #include <qcolor.h>
 #include <kdelibs_export.h>
 
-#ifndef Q_WS_QWS // FIXME
-
 class QRect;
 class QWidget;
 class QTimer;
@@ -228,5 +226,4 @@ private:
     void init();
 };
 
-#endif // ! Q_WS_QWS
 #endif // __KRootPixmap_h_Included__

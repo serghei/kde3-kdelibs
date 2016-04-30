@@ -23,10 +23,8 @@
 #include <kdebug.h>
 
 #include <sys/types.h>
-#ifdef Q_OS_UNIX
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#endif
 
 #ifdef Q_WS_X11
 #include <X11/X.h>

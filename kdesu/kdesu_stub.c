@@ -183,9 +183,8 @@ char **xstrsep(char *str)
 int main()
 {
     char buf[BUFSIZE + 1];
-#ifndef QWS
     char xauthority[200];
-#endif
+
     char iceauthority[200];
     char **host, **auth;
     int i /*, res, sycoca*/, prio;
@@ -306,7 +305,6 @@ int main()
 
     if(strcmp(params[P_DISPLAY].value, "no"))
     {
-#ifndef QWS
         xsetenv("DISPLAY", params[P_DISPLAY].value);
         if(params[P_DISPLAY_AUTH].value[0])
         {
@@ -343,9 +341,6 @@ int main()
             fprintf(fout, "add %s %s\n", disp, params[P_DISPLAY_AUTH].value);
             pclose(fout);
         }
-#else
-        xsetenv("DISPLAY", params[P_DISPLAY].value);
-#endif
     }
 
 
@@ -422,9 +417,7 @@ int main()
                 xit = WEXITSTATUS(state);
         }
 
-#ifndef QWS
         unlink(xauthority);
-#endif
         unlink(iceauthority);
         exit(xit);
     }

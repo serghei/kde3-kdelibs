@@ -138,19 +138,6 @@ private:
     QGuardedPtr< KHTMLPart > part;
 };
 
-#ifdef Q_WS_QWS
-class KonquerorFunc : public DOMFunction {
-public:
-    KonquerorFunc(ExecState *exec, const Konqueror *k, const char *name) : DOMFunction(exec), konqueror(k), m_name(name)
-    {
-    }
-    virtual Value tryCall(ExecState *exec, Object &thisObj, const List &args);
-
-private:
-    const Konqueror *konqueror;
-    QCString m_name;
-};
-#endif
 } // namespace KJS
 
 #include "kjs_window.lut.h"
@@ -458,10 +445,8 @@ Window *Window::retrieveWindow(KParts::ReadOnlyPart *p)
     if(part && part->jScriptEnabled())
     {
         assert(obj.isValid());
-#ifndef QWS
-        assert(dynamic_cast< KJS::Window * >(obj.imp())); // type checking
-#endif
-    }
+		assert(dynamic_cast< KJS::Window * >(obj.imp())); // type checking
+	}
 #endif
     if(!obj.isValid()) // JS disabled
         return 0;
@@ -472,10 +457,8 @@ Window *Window::retrieveActive(ExecState *exec)
 {
     ValueImp *imp = exec->interpreter()->globalObject().imp();
     assert(imp);
-#ifndef QWS
-    assert(dynamic_cast< KJS::Window * >(imp));
-#endif
-    return static_cast< KJS::Window * >(imp);
+	assert(dynamic_cast< KJS::Window * >(imp));
+	return static_cast< KJS::Window * >(imp);
 }
 
 Value Window::retrieve(KParts::ReadOnlyPart *p)
@@ -898,14 +881,6 @@ Value Window::get(ExecState *exec, const Identifier &p) const
                 const_cast< Window * >(this)->put(exec, "clientInformation", nav, DontDelete | ReadOnly | Internal);
                 return nav;
             }
-#ifdef Q_WS_QWS
-            case _Konqueror:
-            {
-                Value k(new Konqueror(part));
-                const_cast< Window * >(this)->put(exec, "konqueror", k, DontDelete | ReadOnly | Internal);
-                return k;
-            }
-#endif
             case OffscreenBuffering:
                 return Boolean(true);
             case OuterHeight:
@@ -3020,77 +2995,6 @@ Value HistoryFunc::tryCall(ExecState *exec, Object &thisObj, const List &args)
     return Undefined();
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-#ifdef Q_WS_QWS
-
-const ClassInfo Konqueror::info = {"Konqueror", 0, 0, 0};
-
-bool Konqueror::hasProperty(ExecState *exec, const Identifier &p) const
-{
-    if(p.qstring().startsWith("goHistory"))
-        return false;
-
-    return true;
-}
-
-Value Konqueror::get(ExecState *exec, const Identifier &p) const
-{
-    if(p == "goHistory" || part->url().protocol() != "http" || part->url().host() != "localhost")
-        return Undefined();
-
-    KParts::BrowserExtension *ext = part->browserExtension();
-    if(ext)
-    {
-        KParts::BrowserInterface *iface = ext->browserInterface();
-        if(iface)
-        {
-            QVariant prop = iface->property(p.qstring().latin1());
-
-            if(prop.isValid())
-            {
-                switch(prop.type())
-                {
-                    case QVariant::Int:
-                        return Number(prop.toInt());
-                    case QVariant::String:
-                        return String(prop.toString());
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-    return Value(new KonquerorFunc(exec, this, p.qstring().latin1()));
-}
-
-Value KonquerorFunc::tryCall(ExecState *exec, Object &, const List &args)
-{
-    KParts::BrowserExtension *ext = konqueror->part->browserExtension();
-
-    if(!ext)
-        return Undefined();
-
-    KParts::BrowserInterface *iface = ext->browserInterface();
-
-    if(!iface)
-        return Undefined();
-
-    QCString n = m_name.data();
-    n += "()";
-    iface->callMethod(n.data(), QVariant());
-
-    return Undefined();
-}
-
-UString Konqueror::toString(ExecState *) const
-{
-    return UString("[object Konqueror]");
-}
-
-#endif
-/////////////////////////////////////////////////////////////////////////////
 } // namespace KJS
 
 #include "kjs_window.moc"

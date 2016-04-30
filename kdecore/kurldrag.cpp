@@ -148,26 +148,6 @@ bool KURLDrag::decode(const QMimeSource *e, KURL::List &uris, QMap< QString, QSt
     return false; // Couldn't decode the URLs
 }
 
-#ifdef Q_WS_QWS
-bool KURLDrag::decode(QStringList const &e, KURL::List &uris)
-{
-    QStringList::ConstIterator end(e.end());
-    for(QStringList::ConstIterator it = e.begin(); it != end; ++it)
-    {
-        KURL url = KURL(*it, 106); // 106 is mib enum for utf8 codec
-        if(!url.isValid())
-        {
-            uris.clear();
-            break;
-        }
-        uris.append(url);
-    }
-    return !uris.isEmpty();
-}
-#endif
-
-////
-
 const char *KURLDrag::format(int i) const
 {
     if(i == 0)

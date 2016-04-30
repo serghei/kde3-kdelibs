@@ -129,7 +129,6 @@ static KLockFile::LockResult lockFile(const QString &lockFile, KDE_struct_stat &
 
     QCString uniqueName = QFile::encodeName(uniqueFile.name());
 
-#ifdef Q_OS_UNIX
     // Create lock file
     result = ::link(uniqueName, lockFileName);
     if(result != 0)
@@ -137,10 +136,6 @@ static KLockFile::LockResult lockFile(const QString &lockFile, KDE_struct_stat &
 
     if(!linkCountSupport)
         return KLockFile::LockOK;
-#else
-    // TODO for win32
-    return KLockFile::LockOK;
-#endif
 
     KDE_struct_stat st_buf2;
     result = KDE_lstat(uniqueName, &st_buf2);
@@ -181,14 +176,9 @@ static KLockFile::LockResult deleteStaleLock(const QString &lockFile, KDE_struct
     ktmpFile.close();
     ktmpFile.unlink();
 
-#ifdef Q_OS_UNIX
     // link to lock file
     if(::link(lckFile, tmpFile) != 0)
         return KLockFile::LockFail; // Try again later
-#else
-    // TODO for win32
-    return KLockFile::LockOK;
-#endif
 
     // check if link count increased with exactly one
     // and if the lock file still matches
@@ -333,11 +323,7 @@ KLockFile::LockResult KLockFile::lock(int options)
         if(n < 2000)
             n = n * 2;
 
-#ifdef Q_OS_UNIX
         select(0, 0, 0, 0, &tv);
-#else
-// TODO for win32
-#endif
     }
     if(result == LockOK)
         d->isLocked = true;

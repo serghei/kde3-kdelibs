@@ -49,7 +49,7 @@ public:
 KDEsuClient::KDEsuClient()
 {
     sockfd = -1;
-#ifdef Q_WS_X11
+
     QCString display(getenv("DISPLAY"));
     if(display.isEmpty())
     {
@@ -59,9 +59,6 @@ KDEsuClient::KDEsuClient()
 
     // strip the screen number from the display
     display.replace(QRegExp("\\.[0-9]+$"), "");
-#else
-    QCString display("QWS");
-#endif
 
     sock = QFile::encodeName(locateLocal("socket", QString("kdesud_%1").arg(display)));
     d = new KDEsuClientPrivate;

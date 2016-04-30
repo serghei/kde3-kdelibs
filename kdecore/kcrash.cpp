@@ -83,7 +83,6 @@ void KCrash::setEmergencySaveFunction(HandlerType saveFunction)
 // the application crash handling.
 void KCrash::setCrashHandler(HandlerType handler)
 {
-#ifdef Q_OS_UNIX
     if(!handler)
         handler = SIG_DFL;
 
@@ -108,14 +107,12 @@ void KCrash::setCrashHandler(HandlerType handler)
 #endif
 
     sigprocmask(SIG_UNBLOCK, &mask, 0);
-#endif // Q_OS_UNIX
 
     _crashHandler = handler;
 }
 
 void KCrash::defaultCrashHandler(int sig)
 {
-#ifdef Q_OS_UNIX
     // WABA: Do NOT use kdDebug() in this function because it is much too risky!
     // Handle possible recursions
     static int crashRecursionCounter = 0;
@@ -160,18 +157,12 @@ void KCrash::defaultCrashHandler(int sig)
             // argument 0 has to be drkonqi
             argv[i++] = "drkonqi";
 
-#if defined Q_WS_X11
             // start up on the correct display
             argv[i++] = "-display";
             if(qt_xdisplay())
                 argv[i++] = XDisplayString(qt_xdisplay());
             else
                 argv[i++] = getenv("DISPLAY");
-#elif defined(Q_WS_QWS)
-            // start up on the correct display
-            argv[i++] = "-display";
-            argv[i++] = getenv("QWS_DISPLAY");
-#endif
 
             // we have already tested this
             argv[i++] = "--appname";
@@ -245,12 +236,9 @@ void KCrash::defaultCrashHandler(int sig)
     {
         fprintf(stderr, "Unable to start Dr. Konqi\n");
     }
-#endif // Q_OS_UNIX
 
     _exit(255);
 }
-
-#ifdef Q_OS_UNIX
 
 // Since we can't fork() in the crashhandler, we cannot execute any external code
 // (there can be functions registered to be performed before fork(), for example
@@ -351,18 +339,9 @@ static char *getDisplay()
     char *screen;
     char *colon;
     char *i;
-/*
- don't test for a value from qglobal.h but instead distinguish
- Qt/X11 from Qt/Embedded by the fact that Qt/E apps have -DQWS
- on the commandline (which in qglobal.h however triggers Q_WS_QWS,
- but we don't want to include that here) (Simon)
-#ifdef Q_WS_X11
- */
-#if !defined(QWS)
+
     display = getenv("DISPLAY");
-#else
-    display = getenv("QWS_DISPLAY");
-#endif
+
     if(!display || !*display)
     {
         display = ":0";
@@ -521,5 +500,3 @@ static int openSocket()
     }
     return s;
 }
-
-#endif // Q_OS_UNIX

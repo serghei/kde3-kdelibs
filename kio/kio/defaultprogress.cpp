@@ -82,11 +82,9 @@ void DefaultProgress::init()
 {
     d = new DefaultProgressPrivate;
 
-#ifdef Q_WS_X11 // FIXME(E): Remove once all the KWin::foo calls have been ported to QWS
     // Set a useful icon for this window!
     KWin::setIcons(winId(), KGlobal::iconLoader()->loadIcon("filesave", KIcon::NoGroup, 32),
                    KGlobal::iconLoader()->loadIcon("filesave", KIcon::NoGroup, 16));
-#endif
 
     QVBoxLayout *topLayout = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
     topLayout->addStrut(360); // makes dlg at least that wide

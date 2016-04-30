@@ -24,8 +24,6 @@
 
 #include <kdelibs_export.h>
 
-#ifdef Q_OS_UNIX
-
 namespace KIO {
 class Job;
 }
@@ -119,7 +117,5 @@ private:
     }
     class KAutoUnmountPrivate *d;
 };
-
-#endif // Q_OS_UNIX
 
 #endif

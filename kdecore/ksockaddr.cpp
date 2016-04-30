@@ -23,9 +23,7 @@
 
 #include <sys/types.h>
 
-#ifdef Q_OS_UNIX
 #include <arpa/inet.h>
-#endif
 #include <netinet/in.h>
 
 #include <limits.h>

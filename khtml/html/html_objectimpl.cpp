@@ -276,8 +276,7 @@ void HTMLAppletElementImpl::attach()
 {
     KHTMLView *w = getDocument()->view();
 
-#ifndef Q_WS_QWS // FIXME?
-    DOMString codeBase = getAttribute(ATTR_CODEBASE);
+	DOMString codeBase = getAttribute(ATTR_CODEBASE);
     DOMString code = getAttribute(ATTR_CODE);
     if(!codeBase.isEmpty())
         url = codeBase.string();
@@ -285,8 +284,7 @@ void HTMLAppletElementImpl::attach()
         url = code.string();
 
     if(!w || !w->part()->javaEnabled())
-#endif
-        m_renderAlternative = true;
+		m_renderAlternative = true;
 
     HTMLObjectBaseElementImpl::attach();
 }

@@ -234,9 +234,7 @@ public:
         m_jsedlg = 0;
         m_formNotification = KHTMLPart::NoNotification;
 
-#ifndef Q_WS_QWS
         m_javaContext = 0;
-#endif
         m_cacheId = 0;
         m_frameNameId = 1;
 
@@ -312,9 +310,7 @@ public:
 #ifndef KHTML_NO_WALLET
         delete m_wallet;
 #endif
-#ifndef Q_WS_QWS
-// delete m_javaContext;
-#endif
+        // delete m_javaContext;
     }
 
     QGuardedPtr< khtml::ChildFrame > m_frame;
@@ -364,9 +360,7 @@ public:
     int m_dcop_counter;
     DCOPObject *m_dcopobject;
 
-#ifndef Q_WS_QWS
     KJavaAppletContext *m_javaContext;
-#endif
 
     KHTMLSettings *m_settings;
 

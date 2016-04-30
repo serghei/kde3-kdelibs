@@ -617,13 +617,8 @@ QStringList KStandardDirs::findAllResources(const char *type, const QString &fil
     QStringList candidates;
     if(!QDir::isRelativePath(filter)) // absolute path
     {
-#ifdef Q_OS_WIN
-        candidates << filterPath.left(3); // e.g. "C:\"
-        filterPath = filterPath.mid(3);
-#else
         candidates << "/";
         filterPath = filterPath.mid(1);
-#endif
     }
     else
     {
@@ -1146,12 +1141,8 @@ static QString readEnvPath(const char *env)
     QCString c_path = getenv(env);
     if(c_path.isEmpty())
         return QString::null;
-#ifdef Q_OS_WIN
-    // win32 paths are case-insensitive: avoid duplicates on various dir lists
-    return QFile::decodeName(c_path).lower();
-#else
+
     return QFile::decodeName(c_path);
-#endif
 }
 
 #ifdef __linux__
@@ -1229,9 +1220,7 @@ void KStandardDirs::addKDEDefaults()
         }
     }
 
-#ifndef Q_OS_WIN // no default KDEDIR on win32 defined
     kdedirList.append(KDEDIR);
-#endif
 
 #ifdef __KDE_EXECPREFIX
     QString execPrefix(__KDE_EXECPREFIX);

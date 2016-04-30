@@ -146,7 +146,6 @@ void JobTest::cleanup()
 
 static void setTimeStamp(const QString &path)
 {
-#ifdef Q_OS_UNIX
     // Put timestamp in the past so that we can check that the
     // copy actually preserves it.
     struct timeval tp;
@@ -156,7 +155,6 @@ static void setTimeStamp(const QString &path)
     utbuf.modtime = tp.tv_sec - 60; // 60 second ago
     utime(QFile::encodeName(path), &utbuf);
     qDebug("Time changed for %s", path.latin1());
-#endif
 }
 
 static void createTestFile(const QString &path)

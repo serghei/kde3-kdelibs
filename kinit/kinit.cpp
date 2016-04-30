@@ -110,14 +110,12 @@ static char sock_file_old[MAX_SOCK_FILE];
 //#if defined Q_WS_X11 && ! defined K_WS_QTONLY
 #ifdef Q_WS_X11
 #define DISPLAY "DISPLAY"
-#elif defined(Q_WS_QWS)
-#define DISPLAY "QWS_DISPLAY"
 #elif defined(Q_WS_MACX)
 #define DISPLAY "MAC_DISPLAY"
 #elif defined(K_WS_QTONLY)
 #define DISPLAY "QT_DISPLAY"
 #else
-#error Use QT/X11 or QT/Embedded
+#error Use QT/X11
 #endif
 
 /* Group data */

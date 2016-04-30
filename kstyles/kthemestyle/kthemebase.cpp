@@ -399,14 +399,11 @@ void KThemeBase::readConfig(Qt::GUIStyle /*style*/)
     {
         if(config.entryList(configFileName + widgetEntries[i]).size())
             applyResourceGroup(&config, i);
-#ifndef Q_WS_QWS // FIXME
-
         else
         {
             Prop &copyProp = d->props[widgetEntries[i]];
             copyProp["CopyWidget"] = QString(widgetEntries[i - INHERIT_ITEMS]);
         }
-#endif
     }
     for(; i < WIDGETS; ++i)
         applyResourceGroup(&config, i);
@@ -572,15 +569,11 @@ void KThemeBase::applyConfigFile(QSettings &config)
     else
         d->overrideWindowForeground = false;
 
-
-#ifndef Q_WS_QWS // FIXME
-
     for(int input = 0; input < WIDGETS; ++input)
     {
         d->props.erase(widgetEntries[input]);
     }
     d->props.erase("Misc");
-#endif
 }
 
 KThemeBase::~KThemeBase()
@@ -1021,7 +1014,6 @@ QColorGroup *KThemeBase::makeColorGroup(const QColor &fg, const QColor &bg, Qt::
 
 void KThemeBase::applyMiscResourceGroup(QSettings *config)
 {
-#ifndef Q_WS_QWS            // FIXME
     d->props.erase("Misc"); // clear the old property
 
     QString base = configFileName + "Misc/";
@@ -1065,7 +1057,6 @@ void KThemeBase::applyMiscResourceGroup(QSettings *config)
     prop["FrameWidth"] = QString::number(config->readNumEntry(base + "FrameWidth", 2));
     prop["Cache"] = QString::number(config->readNumEntry(base + "Cache", 1024));
     prop["ScrollBarExtent"] = QString::number(config->readNumEntry(base + "ScrollBarExtent", 16));
-#endif
 }
 
 static int readNumEntry(Prop &prop, QString setting, int def)
@@ -1091,7 +1082,6 @@ static QColor readColorEntry(Prop &prop, QString setting, const QColor &def)
 
 void KThemeBase::readMiscResourceGroup()
 {
-#ifndef Q_WS_QWS // FIXME
     Prop &prop = d->props["Misc"];
 
     sbPlacement = (SButton)readNumEntry(prop, "SButtonPosition", (int)SBOpposite);
@@ -1100,13 +1090,11 @@ void KThemeBase::readMiscResourceGroup()
     defaultFrame = readNumEntry(prop, "FrameWidth", 2);
     cacheSize = readNumEntry(prop, "Cache", 1024);
     sbExtent = readNumEntry(prop, "ScrollBarExtent", 16);
-#endif
 }
 
 
 void KThemeBase::applyResourceGroup(QSettings *config, int i)
 {
-#ifndef Q_WS_QWS // FIXME
     QString tmpStr;
     int tmpVal;
 
@@ -1250,12 +1238,10 @@ void KThemeBase::applyResourceGroup(QSettings *config, int i)
         else
             prop["Round"] = "5000";
     }
-#endif
 }
 
 void KThemeBase::readResourceGroup(int i, QString *pixnames, QString *brdnames, bool *loadArray)
 {
-#ifndef Q_WS_QWS // FIXME
     if(loadArray[i] == true)
     {
         return; // already been preloaded.
@@ -1449,7 +1435,6 @@ void KThemeBase::readResourceGroup(int i, QString *pixnames, QString *brdnames, 
             roundedButton = tmpVal;
     }
     loadArray[i] = true;
-#endif
 }
 
 

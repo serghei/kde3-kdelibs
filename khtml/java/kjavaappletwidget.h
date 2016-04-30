@@ -25,7 +25,6 @@
 #define KJAVAAPPLETWIDGET_H
 
 #include <qwidget.h>
-#ifndef Q_WS_QWS // FIXME(?) I don't think this is possible with Qt Embedded
 #include "java/kjavaappletcontext.h"
 #include "java/kjavaapplet.h"
 #include <qxembed.h>
@@ -121,5 +120,4 @@ private:
     QString m_swallowTitle;
 };
 
-#endif
 #endif // KJAVAAPPLETWIDGET_H

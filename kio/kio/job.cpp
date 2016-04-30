@@ -70,9 +70,7 @@ extern "C" {
 #include <ktempfile.h>
 #include <dcopclient.h>
 
-#ifdef Q_OS_UNIX
 #include <utime.h>
-#endif
 #if defined Q_WS_X11
 #include <netwm.h>
 #include <fixx11h.h>
@@ -3509,7 +3507,7 @@ void CopyJob::setNextDirAttribute()
     if(!d->m_directoriesCopied.isEmpty())
     {
         state = STATE_SETTING_DIR_ATTRIBUTES;
-#ifdef Q_OS_UNIX
+
         // TODO KDE4: this should use a SlaveBase method, but we have none yet in KDE3.
         QValueList< CopyInfo >::Iterator it = d->m_directoriesCopied.begin();
         for(; it != d->m_directoriesCopied.end(); ++it)
@@ -3528,7 +3526,7 @@ void CopyJob::setNextDirAttribute()
                 }
             }
         }
-#endif
+
         d->m_directoriesCopied.clear();
     }
 

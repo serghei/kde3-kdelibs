@@ -74,11 +74,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 KCookieWin::KCookieWin(QWidget *parent, KHttpCookieList cookieList, int defaultButton, bool showDetails) : KDialog(parent, "cookiealert", true)
 {
-#ifndef Q_WS_QWS // FIXME(E): Implement for Qt Embedded
     setCaption(i18n("Cookie Alert"));
     setIcon(SmallIcon("cookie"));
-// all cookies in the list should have the same window at this time, so let's take the first
-#ifdef Q_WS_X11
+	// all cookies in the list should have the same window at this time, so let's take the first
     if(cookieList.first()->windowIds().count() > 0)
     {
         XSetTransientForHint(qt_xdisplay(), winId(), cookieList.first()->windowIds().first());
@@ -89,8 +87,7 @@ KCookieWin::KCookieWin(QWidget *parent, KHttpCookieList cookieList, int defaultB
         KWin::setState(winId(), NET::KeepAbove);
         kapp->updateUserTimestamp();
     }
-#endif
-#endif
+
     // Main widget's layout manager...
     QVBoxLayout *vlayout = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
     vlayout->setResizeMode(QLayout::Fixed);
