@@ -24,7 +24,7 @@
 #ifndef QDBUSMACROS_H
 #define QDBUSMACROS_H
 
-#include <kdecore/kdemacros.h>
+#include <kdemacros.h>
 
 #define QDBUS_EXPORT KDE_EXPORT
 

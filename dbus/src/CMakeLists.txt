@@ -11,7 +11,7 @@
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_BINARY_DIR}
+  ${CMAKE_BINARY_DIR}/kdecore
   ${QT_INCLUDE_DIR}
   ${DBUS_INCLUDE_DIRS}
 )
