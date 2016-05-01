@@ -34,7 +34,26 @@ endif( )
 
 check_symbol_exists( __GNU_LIBRARY__ "features.h" _GNU_SOURCE )
 if( _GNU_SOURCE )
-    add_definitions( -D_GNU_SOURCE )
+  add_definitions( -D_GNU_SOURCE )
+endif( )
+
+option( USE_LTO "Enable GCC interprocedural optimizations" OFF )
+if( USE_LTO )
+  check_cxx_compiler_flag( "-flto;-fno-fat-lto-objects" GCC_LTO )
+  if( NOT GCC_LTO )
+      message( FATAL_ERROR
+        "################################################################\n"
+        " You asked for interprocedural optimizations but\n"
+        " `-flto -fno-fat-lto-objects` is not supported by your compiler\n"
+        "################################################################" )
+  endif( )
+
+  add_compile_options( -O2 -flto -fno-fat-lto-objects )
+  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O2 -flto -fuse-linker-plugin" )
+  set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -O2 -flto -fuse-linker-plugin" )
+  set( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -O2 -flto -fuse-linker-plugin" )
+  set( CMAKE_AR gcc-ar )
+  set( CMAKE_RANLIB gcc-ranlib )
 endif( )
 
 
