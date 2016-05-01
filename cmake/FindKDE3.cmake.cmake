@@ -44,6 +44,7 @@ set( XDG_MIME_INSTALL_DIR      "@XDG_MIME_INSTALL_DIR@" )
 
 # path to cmake modules
 set( CMAKE_MODULE_PATH "${CMAKE_INSTALL_DIR}" )
+include( "${CMAKE_INSTALL_DIR}/SetupCompiler.cmake" )
 include( "${CMAKE_INSTALL_DIR}/KDE3Macros.cmake" )
 include( "${CMAKE_INSTALL_DIR}/kdelibs.cmake" )
 
@@ -67,12 +68,6 @@ set( KDE_DCOPIDL2CPP_EXECUTABLE "${BIN_INSTALL_DIR}/dcopidl2cpp" )
 set( KDE_KCFGC_EXECUTABLE "${BIN_INSTALL_DIR}/kconfig_compiler" )
 set( KDE_MEINPROC_EXECUTABLE "${BIN_INSTALL_DIR}/meinproc" )
 set( KDE_MAKEKDEWIDGETS_EXECUTABLE "${BIN_INSTALL_DIR}/makekdewidgets" )
-
-# default c++ flags
-add_definitions( -DHAVE_CONFIG_H )
-set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags" )
-set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined -Wl,--disable-new-dtags" )
-set( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--no-undefined -Wl,--disable-new-dtags" )
 
 # paths to kde
 set( KDE_INCLUDE_DIR "${INCLUDE_INSTALL_DIR}" )
