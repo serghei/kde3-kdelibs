@@ -57,9 +57,6 @@ set( TEMPLATE_LIBTOOL_FILE "${CMAKE_MODULE_PATH}/template_libtool_file.cmake" )
 # find Qt3
 include( "${CMAKE_INSTALL_DIR}/FindQt3.cmake" )
 
-# kde3 macros
-include( "${CMAKE_INSTALL_DIR}/KDE3Macros.cmake" )
-
 # paths to kde3 tools
 set( KDE_CONFIG_EXECUTABLE "${BIN_INSTALL_DIR}/kde-config" )
 set( KDE_MCOPIDL_EXECUTABLE "${BIN_INSTALL_DIR}/mcopidl" )
@@ -79,5 +76,4 @@ set( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--no-undefined 
 
 # paths to kde
 set( KDE_INCLUDE_DIR "${INCLUDE_INSTALL_DIR}" )
-set( KDE_LIBRARY_DIR "${LIB_INSTALL_DIR}" )
 set( KDE_LIBRARY_DIR "${LIB_INSTALL_DIR}" )
