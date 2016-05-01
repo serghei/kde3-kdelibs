@@ -25,16 +25,6 @@ include( ${CMAKE_SOURCE_DIR}/cmake/SetupPaths.cmake )
 
 ##### check for compiler capabilities ###########
 
-if( NOT COMPILER_CHECKED )
-  message( "\n** Checking for compiler capabilities..." )
-  set( COMPILER_CHECKED 1 CACHE INTERNAL "" )
-endif( )
-
-check_cxx_compiler_flag( -fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY )
-if( __KDE_HAVE_GCC_VISIBILITY )
-  add_definitions( -fvisibility=hidden )
-endif( )
-
 check_cxx_compiler_flag( -Woverloaded-virtual WOVERLOADED_VIRTUAL )
 if( WOVERLOADED_VIRTUAL )
   set( WOVERLOADED_VIRTUAL -Woverloaded-virtual CACHE INTERNAL "" )
@@ -44,14 +34,6 @@ check_cxx_compiler_flag( -fno-builtin NO_BUILTIN )
 if( NO_BUILTIN )
   set( NO_BUILTIN -fno-builtin CACHE INTERNAL "" )
 endif( NO_BUILTIN )
-
-check_c_source_compiles("
-  #include <features.h>
-  #ifndef __GNU_LIBRARY__
-  #error
-  #endif
-  int main(int argc, char *argv[]) { return 0; } "
-  _GNU_SOURCE )
 
 # currently I think is sane to assume that is true (at least on GNU/Linux)
 set( STDC_HEADERS 1 CACHE INTERNAL "" )
@@ -505,9 +487,6 @@ find_program( XMLLINT xmllint )
 ##### global compiler settings ##################
 
 add_definitions( -DHAVE_CONFIG_H )
-set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--disable-new-dtags" )
-set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined -Wl,--disable-new-dtags" )
-set( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--no-undefined -Wl,--disable-new-dtags" )
 
 
 ##### internal tools ############################
