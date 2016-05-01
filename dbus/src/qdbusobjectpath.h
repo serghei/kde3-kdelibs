@@ -24,6 +24,7 @@
 #ifndef QDBUSOBJECTPATH_H
 #define QDBUSOBJECTPATH_H
 
+#include "qdbusmacros.h"
 #include <qcstring.h>
 
 /**
@@ -35,7 +36,7 @@
  *
  * @see @ref dbusconventions-objectpath
  */
-class QDBusObjectPath : public QCString {
+class QDBUS_EXPORT QDBusObjectPath : public QCString {
 public:
     /**
      * @brief Creates an empty and invalid object path
