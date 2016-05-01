@@ -24,6 +24,7 @@ include( CheckSymbolExists )
 ##### set default compiler options
 
 set( CMAKE_CXX_STANDARD 11 )
+add_definitions( -DHAVE_CONFIG_H )
 
 check_cxx_compiler_flag( -fvisibility=hidden GCC_VISIBILITY )
 if( GCC_VISIBILITY )
