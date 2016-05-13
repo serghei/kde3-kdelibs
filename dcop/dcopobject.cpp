@@ -21,16 +21,17 @@ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************/
+#include <map>
 
 #include <dcopobject.h>
 #include <dcopclient.h>
 
-QMap< QCString, DCOPObject * > *kde_dcopObjMap = 0;
+std::map< QCString, DCOPObject * > *kde_dcopObjMap = nullptr;
 
-static inline QMap< QCString, DCOPObject * > *objMap()
+static inline std::map< QCString, DCOPObject * > *objMap()
 {
     if(!kde_dcopObjMap)
-        kde_dcopObjMap = new QMap< QCString, DCOPObject * >;
+        kde_dcopObjMap = new std::map< QCString, DCOPObject * >;
     return kde_dcopObjMap;
 }
 
@@ -50,7 +51,7 @@ DCOPObject::DCOPObject()
 {
     d = new DCOPObjectPrivate;
     ident.sprintf("%p", (void *)this);
-    objMap()->insert(ident, this);
+    objMap()->emplace(ident, this);
 }
 
 DCOPObject::DCOPObject(QObject *obj)
@@ -66,7 +67,7 @@ DCOPObject::DCOPObject(QObject *obj)
     if(ident[0] == '/')
         ident = ident.mid(1);
 
-    objMap()->insert(ident, this);
+    objMap()->emplace(ident, this);
 }
 
 DCOPObject::DCOPObject(const QCString &_objId) : ident(_objId)
@@ -74,7 +75,7 @@ DCOPObject::DCOPObject(const QCString &_objId) : ident(_objId)
     d = new DCOPObjectPrivate;
     if(ident.isEmpty())
         ident.sprintf("%p", (void *)this);
-    objMap()->insert(ident, this);
+    objMap()->emplace(ident, this);
 }
 
 DCOPObject::~DCOPObject()
@@ -83,7 +84,7 @@ DCOPObject::~DCOPObject()
     if(d->m_signalConnections > 0 && client)
         client->disconnectDCOPSignal(0, 0, 0, objId(), 0);
 
-    objMap()->remove(ident);
+    objMap()->erase(ident);
     delete d;
 }
 
@@ -106,9 +107,9 @@ bool DCOPObject::setObjId(const QCString &objId)
     if(d->m_signalConnections > 0 && client)
         client->disconnectDCOPSignal(0, 0, 0, ident, 0);
 
-    objMap()->remove(ident);
+    objMap()->erase(ident);
     ident = objId;
-    objMap()->insert(ident, this);
+    objMap()->emplace(ident, this);
     return true;
 }
 
@@ -119,7 +120,7 @@ QCString DCOPObject::objId() const
 
 bool DCOPObject::hasObject(const QCString &_objId)
 {
-    if(objMap()->contains(_objId))
+    if(objMap()->count(_objId))
         return true;
     else
         return false;
@@ -127,21 +128,22 @@ bool DCOPObject::hasObject(const QCString &_objId)
 
 DCOPObject *DCOPObject::find(const QCString &_objId)
 {
-    QMap< QCString, DCOPObject * >::ConstIterator it;
-    it = objMap()->find(_objId);
+    const auto it = objMap()->find(_objId);
+
     if(it != objMap()->end())
-        return *it;
-    else
-        return 0L;
+        return it->second;
+
+    return nullptr;
 }
 
 QPtrList< DCOPObject > DCOPObject::match(const QCString &partialId)
 {
     QPtrList< DCOPObject > mlist;
-    QMap< QCString, DCOPObject * >::ConstIterator it(objMap()->begin());
-    for(; it != objMap()->end(); ++it)
-        if(it.key().left(partialId.length()) == partialId) // found it?
-            mlist.append(it.data());
+
+    for(const auto it : *objMap())
+        if(it.first.left(partialId.length()) == partialId) // found it?
+            mlist.append(it.second);
+
     return mlist;
 }
 

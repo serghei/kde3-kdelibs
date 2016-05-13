@@ -21,6 +21,7 @@ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************/
+#include <map>
 
 // qt <-> dcop integration
 #include <qobjectlist.h>
@@ -79,7 +80,7 @@ extern "C" {
 
 // #define DCOPCLIENT_DEBUG	1
 
-extern QMap< QCString, DCOPObject * > *kde_dcopObjMap; // defined in dcopobject.cpp
+extern std::map< QCString, DCOPObject * > *kde_dcopObjMap; // defined in dcopobject.cpp
 
 /*********************************************
  * Keep track of local clients
@@ -1588,14 +1589,13 @@ bool DCOPClient::receive(const QCString & /*app*/, const QCString &objId, const 
             }
             if(kde_dcopObjMap)
             {
-                QMap< QCString, DCOPObject * >::ConstIterator it(kde_dcopObjMap->begin());
-                for(; it != kde_dcopObjMap->end(); ++it)
+                for(const auto it : *kde_dcopObjMap)
                 {
-                    if(!it.key().isEmpty())
+                    if(!it.first.isEmpty())
                     {
-                        if(it.key() == d->defaultObject)
+                        if(it.first == d->defaultObject)
                             l << "default";
-                        l << it.key();
+                        l << it.first;
                     }
                 }
             }
