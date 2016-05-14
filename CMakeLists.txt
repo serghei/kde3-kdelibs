@@ -109,6 +109,7 @@ add_subdirectory( libkscreensaver )
 add_subdirectory( licenses )
 add_subdirectory( mimetypes )
 add_subdirectory( pics )
+add_subdirectory( triq )
 
 
 ##### write config ##############################
