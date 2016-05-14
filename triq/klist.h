@@ -53,6 +53,7 @@ public:
 
     ConstIterator find(const T &val);
 
+    Iterator insert(Iterator it, const T &val);
     void prepend(const T &val);
     void append(const T &val);
     KList<T> &operator<<(const T &val);
@@ -154,6 +155,13 @@ template <class T>
 typename KList<T>::ConstIterator KList<T>::find(const T &val)
 {
     return std::find(list.begin(), list.end(), val);
+}
+
+
+template <class T>
+typename KList<T>::Iterator KList<T>::insert(KList::Iterator it, const T &val)
+{
+    return list.insert(it, val);
 }
 
 
