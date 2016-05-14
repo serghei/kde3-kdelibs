@@ -19,6 +19,7 @@
 #ifndef _KLIST_H_
 #define _KLIST_H_
 
+#include <algorithm>
 #include <deque>
 
 class QDataStream;
@@ -49,6 +50,8 @@ public:
 
     reference operator[] (size_type n);
     const_reference operator[] (size_type n) const;
+
+    ConstIterator find(const T &val);
 
     void prepend(const T &val);
     void append(const T &val);
@@ -144,6 +147,13 @@ template <class T>
 typename KList<T>::const_reference KList<T>::operator[](KList::size_type n) const
 {
     return list.at(n);
+}
+
+
+template <class T>
+typename KList<T>::ConstIterator KList<T>::find(const T &val)
+{
+    return std::find(list.begin(), list.end(), val);
 }
 
 
