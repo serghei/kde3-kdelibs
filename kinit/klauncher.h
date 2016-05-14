@@ -83,7 +83,7 @@ public:
 class KLaunchRequest {
 public:
     QCString name;
-    QValueList< QCString > arg_list;
+    KStringList arg_list;
     QCString dcop_name;
     enum status_t
     {
@@ -103,7 +103,7 @@ public:
     QCString startup_id;  // "" is the default, "0" for none
     QCString startup_dpy; // Display to send startup notification to.
 #endif
-    QValueList< QCString > envs; // env. variables to be app's environment
+    KStringList envs; // env. variables to be app's environment
     QCString cwd;
 };
 
@@ -138,17 +138,17 @@ protected:
     void requestDone(KLaunchRequest *request);
 
     void setLaunchEnv(const QCString &name, const QCString &value);
-    void exec_blind(const QCString &name, const QValueList< QCString > &arg_list, const QValueList< QCString > &envs,
+    void exec_blind(const QCString &name, const KStringList &arg_list, const KStringList &envs,
                     const QCString &startup_id = "");
-    bool start_service(KService::Ptr service, const QStringList &urls, const QValueList< QCString > &envs, const QCString &startup_id = "",
+    bool start_service(KService::Ptr service, const QStringList &urls, const KStringList &envs, const QCString &startup_id = "",
                        bool blind = false, bool autoStart = false);
-    bool start_service_by_name(const QString &serviceName, const QStringList &urls, const QValueList< QCString > &envs, const QCString &startup_id,
+    bool start_service_by_name(const QString &serviceName, const QStringList &urls, const KStringList &envs, const QCString &startup_id,
                                bool blind);
-    bool start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QValueList< QCString > &envs,
+    bool start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const KStringList &envs,
                                        const QCString &startup_id, bool blind);
-    bool start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QValueList< QCString > &envs,
+    bool start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const KStringList &envs,
                                        const QCString &startup_id, bool blind);
-    bool kdeinit_exec(const QString &app, const QStringList &args, const QValueList< QCString > &envs, QCString startup_id, bool wait);
+    bool kdeinit_exec(const QString &app, const QStringList &args, const KStringList &envs, QCString startup_id, bool wait);
 
     void waitForSlave(pid_t pid);
 
@@ -162,8 +162,8 @@ protected:
 
     void queueRequest(KLaunchRequest *);
 
-    void send_service_startup_info(KLaunchRequest *request, KService::Ptr service, const QCString &startup_id, const QValueList< QCString > &envs);
-    void cancel_service_startup_info(KLaunchRequest *request, const QCString &startup_id, const QValueList< QCString > &envs);
+    void send_service_startup_info(KLaunchRequest *request, KService::Ptr service, const QCString &startup_id, const KStringList &envs);
+    void cancel_service_startup_info(KLaunchRequest *request, const QCString &startup_id, const KStringList &envs);
 
 public slots:
     void slotAutoStart();

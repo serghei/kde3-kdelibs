@@ -299,7 +299,7 @@ QCString KDEsuClient::getVar(const QCString &key)
     return reply;
 }
 
-QValueList< QCString > KDEsuClient::getKeys(const QCString &group)
+KStringList KDEsuClient::getKeys(const QCString &group)
 {
     QCString cmd = "GETK ";
     cmd += escape(group);
@@ -307,7 +307,7 @@ QValueList< QCString > KDEsuClient::getKeys(const QCString &group)
     QCString reply;
     command(cmd, &reply);
     int index = 0, pos;
-    QValueList< QCString > list;
+    KStringList list;
     if(!reply.isEmpty())
     {
         // kdDebug(900) << "Found a matching entry: " << reply << endl;

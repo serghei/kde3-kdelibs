@@ -193,7 +193,7 @@ void EscpWidget::startCommand(const QString &arg)
     m_proc << arg << "-q";
     m_errorbuffer = m_outbuffer = QString::null;
     m_hasoutput = (arg == "-i" || arg == "-d");
-    for(QValueList< QCString >::ConstIterator it = m_proc.args().begin(); it != m_proc.args().end(); ++it)
+    for(KStringList::ConstIterator it = m_proc.args().begin(); it != m_proc.args().end(); ++it)
         kdDebug() << "ARG: " << *it << endl;
     if(m_proc.start(KProcess::NotifyOnExit, KProcess::AllOutput))
         setEnabled(false);

@@ -69,7 +69,7 @@
 using namespace KIO;
 
 template class QPtrList< QValueList< UDSAtom > >;
-typedef QValueList< QCString > AuthKeysList;
+typedef KStringList AuthKeysList;
 typedef QMap< QString, QCString > AuthKeysMap;
 #define KIO_DATA                                                                                                                                     \
     QByteArray data;                                                                                                                                 \

@@ -151,7 +151,7 @@ bool KDCOPPropertyProxy::processPropertyRequest(const QCString &fun, const QByte
         QDataStream stream(data, IO_ReadOnly);
         stream >> b;
 
-        QValueList< QCString > res;
+        KStringList res;
         QStrList props = object->metaObject()->propertyNames(static_cast< bool >(b));
         QStrListIterator it(props);
         for(; it.current(); ++it)

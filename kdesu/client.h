@@ -122,7 +122,7 @@ public:
      * @param group the group name of the variables.
      * @return a list of the keys in the group.
      */
-    QValueList< QCString > getKeys(const QCString &group);
+    KStringList getKeys(const QCString &group);
 
     /**
      * Returns true if the specified group exists is

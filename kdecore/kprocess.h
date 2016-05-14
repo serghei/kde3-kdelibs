@@ -27,6 +27,7 @@
 #include <qvaluelist.h>
 #include <qcstring.h>
 #include <qobject.h>
+#include <kstringlist.h>
 #include "kdelibs_export.h"
 
 class QSocketNotifier;
@@ -469,7 +470,7 @@ public:
      * Lets you see what your arguments are for debugging.
      * @return the list of arguments
      */
-    const QValueList< QCString > &args() /* const */
+    const KStringList &args() /* const */
     {
         return arguments;
     }
@@ -701,7 +702,7 @@ protected:
      * The list of the process' command line arguments. The first entry
      * in this list is the executable itself.
      */
-    QValueList< QCString > arguments;
+    KStringList arguments;
     /**
      * How to run the process (Block, NotifyOnExit, DontCare). You should
      *  not modify this data member directly from derived classes.

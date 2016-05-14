@@ -618,7 +618,7 @@ QString KFolderType::icon(const KURL &_url, bool _is_local) const
             dp = opendir(QFile::encodeName(_url.path()));
             if(dp)
             {
-                QValueList< QCString > entries;
+                KStringList entries;
                 // Note that readdir isn't guaranteed to return "." and ".." first (#79826)
                 ep = readdir(dp);
                 if(ep)

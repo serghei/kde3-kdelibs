@@ -2593,7 +2593,7 @@ static int startServiceInternal(const QCString &function, const QString &_name, 
     QCString replyType;
     QByteArray replyData;
     QCString _launcher = KApplication::launcher();
-    QValueList< QCString > envs;
+    KStringList envs;
 #ifdef Q_WS_X11
     if(qt_xdisplay())
     {

@@ -15,6 +15,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/kdecore
   ${CMAKE_BINARY_DIR}/kio/kssl
   ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/triq
   ${CMAKE_SOURCE_DIR}/kdecore
   ${CMAKE_SOURCE_DIR}/kdeui
   ${CMAKE_SOURCE_DIR}/kio

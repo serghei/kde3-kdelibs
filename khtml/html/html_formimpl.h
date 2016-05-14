@@ -34,6 +34,8 @@
 #include <qcstring.h>
 #include <qmemarray.h>
 
+#include <kstringlist.h>
+
 class KHTMLView;
 class QTextCodec;
 
@@ -45,7 +47,7 @@ class RenderLineEdit;
 class RenderRadioButton;
 class RenderFileButton;
 
-typedef QValueList< QCString > encodingList;
+typedef KStringList encodingList;
 }
 
 namespace KWallet {

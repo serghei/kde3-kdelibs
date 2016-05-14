@@ -86,7 +86,7 @@ protected:
     KConfig *mConfig;
 
 private:
-    virtual int newInstance(QValueList< QCString >)
+    virtual int newInstance(KStringList)
     {
         return 0;
     }
