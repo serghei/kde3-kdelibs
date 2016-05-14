@@ -20,10 +20,10 @@
 #include <qstringlist.h>
 #include <qvaluelist.h>
 
+#include <kstringlist.h>
 #include <kdelibs_export.h>
 
 class PTY;
-typedef QValueList< QCString > QCStringList;
 
 /**
  * Synchronous communication with tty programs.
@@ -45,7 +45,7 @@ public:
      * @param command The command to execute.
      * @param args The arguments to the command.
      */
-    int exec(const QCString &command, const QCStringList &args);
+    int exec(const QCString &command, const KStringList &args);
 
     /**
      * Reads a line from the program's standard out. Depending on the @em block
@@ -121,7 +121,7 @@ public:
     /**
      * Set additinal environment variables.
      */
-    void setEnvironment(const QCStringList &env);
+    void setEnvironment(const KStringList &env);
 
     /**
      * Returns the filedescriptor of the process.
@@ -183,7 +183,7 @@ public: /* static */
 
 
 protected:
-    const QCStringList &environment() const;
+    const KStringList &environment() const;
 
     bool m_bErase, m_bTerminal;
     int m_Pid, m_Fd;

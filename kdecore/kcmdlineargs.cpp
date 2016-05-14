@@ -1129,9 +1129,9 @@ QCString KCmdLineArgs::getOption(const char *_opt) const
     return QCString(def);
 }
 
-QCStringList KCmdLineArgs::getOptionList(const char *_opt) const
+KStringList KCmdLineArgs::getOptionList(const char *_opt) const
 {
-    QCStringList result;
+    KStringList result;
     if(!parsedOptionList)
         return result;
 
@@ -1149,9 +1149,9 @@ QCStringList KCmdLineArgs::getOptionList(const char *_opt) const
     // to the API like "you can only call this function once".
     // I can't access all items without taking them out of the list.
     // So taking them out and then putting them back is the only way.
-    for(QCStringList::ConstIterator it = result.begin(); it != result.end(); ++it)
+    for(const auto &it : result)
     {
-        parsedOptionList->insert(_opt, new QCString(*it));
+        parsedOptionList->insert(_opt, new QCString(it));
     }
     return result;
 }

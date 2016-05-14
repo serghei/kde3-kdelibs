@@ -198,9 +198,9 @@ bool Scheduler::process(const QCString &fun, const QByteArray &data, QCString &r
     return true;
 }
 
-QCStringList Scheduler::functions()
+KStringList Scheduler::functions()
 {
-    QCStringList funcs = DCOPObject::functions();
+    KStringList funcs = DCOPObject::functions();
     funcs << "void reparseSlaveConfiguration(QString)";
     return funcs;
 }

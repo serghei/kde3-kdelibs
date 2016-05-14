@@ -119,7 +119,7 @@ int PtyProcess::checkPidExited(pid_t pid)
 
 class PtyProcess::PtyProcessPrivate {
 public:
-    QCStringList env;
+    KStringList env;
 };
 
 
@@ -158,12 +158,12 @@ PtyProcess::~PtyProcess()
 }
 
 /** Set additinal environment variables. */
-void PtyProcess::setEnvironment(const QCStringList &env)
+void PtyProcess::setEnvironment(const KStringList &env)
 {
     d->env = env;
 }
 
-const QCStringList &PtyProcess::environment() const
+const KStringList &PtyProcess::environment() const
 {
     return d->env;
 }
@@ -327,7 +327,7 @@ void PtyProcess::unreadLine(const QCString &line, bool addnl)
  * Fork and execute the command. This returns in the parent.
  */
 
-int PtyProcess::exec(const QCString &command, const QCStringList &args)
+int PtyProcess::exec(const QCString &command, const KStringList &args)
 {
     kdDebug(900) << k_lineinfo << "Running `" << command << "'\n";
 
@@ -359,7 +359,7 @@ int PtyProcess::exec(const QCString &command, const QCStringList &args)
     if(SetupTTY(slave) < 0)
         _exit(1);
 
-    for(QCStringList::ConstIterator it = d->env.begin(); it != d->env.end(); it++)
+    for(KStringList::ConstIterator it = d->env.begin(); it != d->env.end(); it++)
     {
         putenv((*it).data());
     }
@@ -392,7 +392,7 @@ int PtyProcess::exec(const QCString &command, const QCStringList &args)
     const char **argp = (const char **)malloc((args.count() + 2) * sizeof(char *));
     int i = 0;
     argp[i++] = path;
-    for(QCStringList::ConstIterator it = args.begin(); it != args.end(); ++it)
+    for(KStringList::ConstIterator it = args.begin(); it != args.end(); ++it)
         argp[i++] = *it;
 
     argp[i] = 0L;

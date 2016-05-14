@@ -172,14 +172,14 @@ bool DCOPObject::process(const QCString &fun, const QByteArray &data, QCString &
 {
     if(fun == "interfaces()")
     {
-        replyType = "QCStringList";
+        replyType = "KStringList";
         QDataStream reply(replyData, IO_WriteOnly);
         reply << interfaces();
         return true;
     }
     else if(fun == "functions()")
     {
-        replyType = "QCStringList";
+        replyType = "KStringList";
         QDataStream reply(replyData, IO_WriteOnly);
         reply << functions();
         return true;
@@ -191,29 +191,29 @@ bool DCOPObject::processDynamic(const QCString &, const QByteArray &, QCString &
 {
     return false;
 }
-QCStringList DCOPObject::interfacesDynamic()
+KStringList DCOPObject::interfacesDynamic()
 {
-    QCStringList result;
+    KStringList result;
     return result;
 }
 
-QCStringList DCOPObject::functionsDynamic()
+KStringList DCOPObject::functionsDynamic()
 {
-    QCStringList result;
+    KStringList result;
     return result;
 }
-QCStringList DCOPObject::interfaces()
+KStringList DCOPObject::interfaces()
 {
-    QCStringList result = interfacesDynamic();
+    KStringList result = interfacesDynamic();
     result << "DCOPObject";
     return result;
 }
 
-QCStringList DCOPObject::functions()
+KStringList DCOPObject::functions()
 {
-    QCStringList result = functionsDynamic();
-    result.prepend("QCStringList functions()");
-    result.prepend("QCStringList interfaces()");
+    KStringList result = functionsDynamic();
+    result.prepend("KStringList functions()");
+    result.prepend("KStringList interfaces()");
     return result;
 }
 

@@ -77,7 +77,7 @@ int SshProcess::exec(const char *password, int check)
     if(check)
         setTerminal(true);
 
-    QCStringList args;
+    KStringList args;
     args += "-l";
     args += m_User;
     args += "-o";

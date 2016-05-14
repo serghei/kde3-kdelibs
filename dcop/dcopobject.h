@@ -29,18 +29,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <qptrlist.h>
 #include <qvaluelist.h>
 #include <kdatastream.h> // needed for proper bool marshalling
+#include <kstringlist.h>
 #include "kdelibs_export.h"
 
 class DCOPClient;
-typedef QValueList< QCString > QCStringList;
 
 // Makros for DCOP interfaces
 
 #define K_DCOP                                                                                                                                       \
 public:                                                                                                                                              \
     virtual bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);                                   \
-    QCStringList functions();                                                                                                                        \
-    QCStringList interfaces();                                                                                                                       \
+    KStringList functions();                                                                                                                        \
+    KStringList interfaces();                                                                                                                       \
                                                                                                                                                      \
 private:
 
@@ -172,7 +172,7 @@ public:
     *
     * @see functions(),
     */
-    virtual QCStringList functionsDynamic();
+    virtual KStringList functionsDynamic();
 
     /**
    * This function is of interest when you used an IDL compiler
@@ -185,7 +185,7 @@ public:
    *
    * @see interfaces(),
    */
-    virtual QCStringList interfacesDynamic();
+    virtual KStringList interfacesDynamic();
 
     /**
      * Returns the names of the interfaces, specific ones last. The
@@ -196,7 +196,7 @@ public:
      * @return a list of interfaces
      * @see functions()
      */
-    virtual QCStringList interfaces();
+    virtual KStringList interfaces();
 
     /**
      * Returns the list of functions understood by the object. It gets
@@ -216,7 +216,7 @@ public:
      * @see processDynamic()
      * @see DCOPClient::normalizeFunctionSignature()
      */
-    virtual QCStringList functions();
+    virtual KStringList functions();
 
     /**
      * Emit @p signal as DCOP signal from this object with @p data as

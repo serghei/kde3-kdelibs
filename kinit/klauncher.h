@@ -128,8 +128,8 @@ public:
 
     // DCOP
     virtual bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
-    virtual QCStringList functions();
-    virtual QCStringList interfaces();
+    virtual KStringList functions();
+    virtual KStringList interfaces();
 
 protected:
     void processDied(pid_t pid, long exitStatus);

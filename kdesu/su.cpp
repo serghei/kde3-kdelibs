@@ -96,7 +96,7 @@ int SuProcess::exec(const char *password, int check)
         superUserCommand = "su";
     }
 
-    QCStringList args;
+    KStringList args;
     if(superUserCommand == "sudo")
     {
         args += "-u";

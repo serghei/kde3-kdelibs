@@ -56,12 +56,12 @@ void StubProcess::setPriority(int prio)
 }
 
 
-QCString StubProcess::commaSeparatedList(QCStringList lst)
+QCString StubProcess::commaSeparatedList(KStringList lst)
 {
     if(lst.count() == 0)
         return QCString("");
 
-    QCStringList::Iterator it = lst.begin();
+    KStringList::Iterator it = lst.begin();
     QCString str = *it;
     for(it++; it != lst.end(); it++)
     {
@@ -171,9 +171,9 @@ int StubProcess::ConverseStub(int check)
         }
         else if(line == "app_startup_id")
         {
-            QCStringList env = environment();
+            KStringList env = environment();
             QCString tmp;
-            for(QCStringList::ConstIterator it = env.begin(); it != env.end(); ++it)
+            for(KStringList::ConstIterator it = env.begin(); it != env.end(); ++it)
             {
                 if((*it).find("DESKTOP_STARTUP_ID=") == 0)
                     tmp = (*it).mid(strlen("DESKTOP_STARTUP_ID="));
@@ -189,8 +189,8 @@ int StubProcess::ConverseStub(int check)
         }
         else if(line == "environment")
         { // additional env vars
-            QCStringList env = environment();
-            for(QCStringList::ConstIterator it = env.begin(); it != env.end(); ++it)
+            KStringList env = environment();
+            for(KStringList::ConstIterator it = env.begin(); it != env.end(); ++it)
                 writeLine(*it);
             writeLine("");
         }

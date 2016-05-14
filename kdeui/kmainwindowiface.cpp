@@ -41,11 +41,11 @@ KMainWindowInterface::~KMainWindowInterface()
     delete m_dcopPropertyProxy;
 }
 
-QCStringList KMainWindowInterface::actions()
+KStringList KMainWindowInterface::actions()
 {
     delete m_dcopActionProxy;
     m_dcopActionProxy = new KDCOPActionProxy(m_MainWindow->actionCollection(), this);
-    QCStringList tmp_actions;
+    KStringList tmp_actions;
     QValueList< KAction * > lst = m_dcopActionProxy->actions();
     QValueList< KAction * >::ConstIterator it = lst.begin();
     QValueList< KAction * >::ConstIterator end = lst.end();
@@ -181,7 +181,7 @@ void KMainWindowInterface::show()
 {
     m_MainWindow->show();
 }
-QCStringList KMainWindowInterface::functionsDynamic()
+KStringList KMainWindowInterface::functionsDynamic()
 {
     return m_dcopPropertyProxy->functions();
 }

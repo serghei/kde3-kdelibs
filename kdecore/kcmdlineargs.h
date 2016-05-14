@@ -20,13 +20,13 @@
 #define _KCMDLINEARGS_H_
 
 #include "kdelibs_export.h"
+#include <kstringlist.h>
 #include <kurl.h>
 
 #include <qptrlist.h>
 #include <qstring.h>
 #include <qvaluelist.h>
 
-typedef QValueList< QCString > QCStringList;
 
 /**
  * @short Structure that holds command line options.
@@ -446,7 +446,7 @@ public:
      *  @return A list of all option values. If no option was present
      *          on the command line, an empty list is returned.
      */
-    QCStringList getOptionList(const char *option) const;
+    KStringList getOptionList(const char *option) const;
 
     /**
      *  Read out a boolean option or check for the presence of string option.

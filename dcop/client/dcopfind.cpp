@@ -38,7 +38,7 @@ static DCOPClient *dcop = 0;
 static bool bAppIdOnly = 0;
 static bool bLaunchApp = 0;
 
-bool findObject(const char *app, const char *obj, const char *func, QCStringList args)
+bool findObject(const char *app, const char *obj, const char *func, KStringList args)
 {
     QString f = func; // Qt is better with unicode strings, so use one.
     int left = f.find('(');
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
         argc = 0;
     }
 
-    QCStringList params;
+    KStringList params;
     for(int i = 0; i < argc; i++)
         params.append(args[i]);
     bool ok = findObject(app, objid, function, params);

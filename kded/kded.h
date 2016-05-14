@@ -59,13 +59,13 @@ public:
      */
     bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
 
-    virtual QCStringList functions();
+    virtual KStringList functions();
 
     void noDemandLoad(const QString &obj); // Don't load obj on demand
 
     KDEDModule *loadModule(const QCString &obj, bool onDemand);
     KDEDModule *loadModule(const KService *service, bool onDemand);
-    QCStringList loadedModules();
+    KStringList loadedModules();
     bool unloadModule(const QCString &obj);
     bool isWindowRegistered(long windowId);
     void registerWindowId(long windowId);

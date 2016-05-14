@@ -61,7 +61,6 @@ class QTextStream;
 class QFile;
 #endif
 
-typedef QValueList< QCString > QCStringList;
 
 /**
  * @internal

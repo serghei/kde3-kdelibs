@@ -373,32 +373,32 @@ void generateSkel(const QString &idl, const QString &filename, QDomElement de)
         // close the 'process' function
         str << "}" << endl << endl;
 
-        str << "QCStringList " << className;
+        str << "KStringList " << className;
         str << "::interfaces()" << endl;
         str << "{" << endl;
         if(!DCOPParent.isEmpty())
         {
-            str << "    QCStringList ifaces = " << DCOPParent << "::interfaces();" << endl;
+            str << "    KStringList ifaces = " << DCOPParent << "::interfaces();" << endl;
         }
         else
         {
-            str << "    QCStringList ifaces;" << endl;
+            str << "    KStringList ifaces;" << endl;
         }
-        str << "    ifaces += \"" << classNameFull << "\";" << endl;
+        str << "    ifaces << \"" << classNameFull << "\";" << endl;
         str << "    return ifaces;" << endl;
         str << "}" << endl << endl;
 
 
-        str << "QCStringList " << className;
+        str << "KStringList " << className;
         str << "::functions()" << endl;
         str << "{" << endl;
         if(!DCOPParent.isEmpty())
         {
-            str << "    QCStringList funcs = " << DCOPParent << "::functions();" << endl;
+            str << "    KStringList funcs = " << DCOPParent << "::functions();" << endl;
         }
         else
         {
-            str << "    QCStringList funcs;" << endl;
+            str << "    KStringList funcs;" << endl;
         }
         str << "    for ( int i = 0; " << className << "_ftable[i][2]; i++ ) {" << endl;
         if(functions.count() > 0)

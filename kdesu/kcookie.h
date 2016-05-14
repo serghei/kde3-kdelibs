@@ -16,8 +16,6 @@
 #include <qcstring.h>
 #include <qvaluelist.h>
 
-typedef QValueList< QCString > QCStringList;
-
 
 /**
  * Utility class to access the authentication tokens needed to run a KDE
@@ -70,7 +68,7 @@ public:
 private:
     void getXCookie();
     void getICECookie();
-    QCStringList split(const QCString &line, char ch);
+    KStringList split(const QCString &line, char ch);
 
     void blockSigChild();
     void unblockSigChild();

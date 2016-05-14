@@ -21,7 +21,6 @@
 
 #include <kdelibs_export.h>
 
-typedef QValueList< QCString > QCStringList;
 
 /**
  * Chat with kdesu_stub.
@@ -161,7 +160,7 @@ protected:
     KCookie *m_pCookie;
 
 private:
-    QCString commaSeparatedList(QCStringList);
+    QCString commaSeparatedList(KStringList);
 
 protected:
     virtual void virtual_hook(int id, void *data);

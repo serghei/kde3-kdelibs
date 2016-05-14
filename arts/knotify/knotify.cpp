@@ -775,10 +775,8 @@ WId KNotify::checkWinId(const QString &appName, WId senderWinId)
         int len = compare.length();
         // kdDebug() << "notifyByPassivePopup: appName=" << appName << " sender=" << senderId << endl;
 
-        QCStringList objs = kapp->dcopClient()->remoteObjects(senderId);
-        for(QCStringList::ConstIterator it = objs.begin(); it != objs.end(); ++it)
+        for(const auto &obj : kapp->dcopClient()->remoteObjects(senderId))
         {
-            QCString obj(*it);
             if(obj.left(len) == compare)
             {
                 // kdDebug( ) << "found " << obj << endl;

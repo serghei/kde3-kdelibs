@@ -95,10 +95,9 @@ bool endsWith(QCString &id, char c)
 void queryApplications(const QCString &filter)
 {
     int filterLen = filter.length();
-    QCStringList apps = dcop->registeredApplications();
-    for(QCStringList::Iterator it = apps.begin(); it != apps.end(); ++it)
+
+    for(const auto &clientId : dcop->registeredApplications())
     {
-        QCString &clientId = *it;
         if((clientId != dcop->appId()) && !startsWith(clientId, "anonymous", 9) && startsWith(clientId, filter, filterLen))
             printf("%s\n", clientId.data());
     }
@@ -115,11 +114,10 @@ void queryObjects(const QCString &app, const QCString &filter)
     int filterLen = filter.length();
     bool ok = false;
     bool isDefault = false;
-    QCStringList objs = dcop->remoteObjects(app, &ok);
-    for(QCStringList::Iterator it = objs.begin(); it != objs.end(); ++it)
-    {
-        QCString &objId = *it;
+    KStringList objs = dcop->remoteObjects(app, &ok);
 
+    for(const auto &objId : objs)
+    {
         if(objId == "default")
         {
             isDefault = true;
@@ -148,10 +146,11 @@ void queryObjects(const QCString &app, const QCString &filter)
 void queryFunctions(const char *app, const char *obj)
 {
     bool ok = false;
-    QCStringList funcs = dcop->remoteFunctions(app, obj, &ok);
-    for(QCStringList::Iterator it = funcs.begin(); it != funcs.end(); ++it)
+    KStringList funcs = dcop->remoteFunctions(app, obj, &ok);
+
+    for(const auto &func : funcs)
     {
-        printf("%s\n", (*it).data());
+        printf("%s\n", func.data());
     }
     if(!ok)
     {
@@ -160,7 +159,7 @@ void queryFunctions(const char *app, const char *obj)
     }
 }
 
-int callFunction(const char *app, const char *obj, const char *func, const QCStringList args)
+int callFunction(const char *app, const char *obj, const char *func, const KStringList args)
 {
     QString f = func; // Qt is better with unicode strings, so use one.
     int left = f.find('(');
@@ -176,7 +175,7 @@ int callFunction(const char *app, const char *obj, const char *func, const QCStr
     {
         // try to get the interface from the server
         bool ok = false;
-        QCStringList funcs = dcop->remoteFunctions(app, obj, &ok);
+        KStringList funcs = dcop->remoteFunctions(app, obj, &ok);
         QCString realfunc;
         if(!ok && args.isEmpty())
             goto doit;
@@ -185,24 +184,24 @@ int callFunction(const char *app, const char *obj, const char *func, const QCStr
             qWarning("object not accessible");
             return (1);
         }
-        for(QCStringList::Iterator it = funcs.begin(); it != funcs.end(); ++it)
+        for(const auto &it : funcs)
         {
-            int l = (*it).find('(');
+            int l = it.find('(');
             int s;
             if(l > 0)
-                s = (*it).findRev(' ', l);
+                s = it.findRev(' ', l);
             else
-                s = (*it).find(' ');
+                s = it.find(' ');
 
             if(s < 0)
                 s = 0;
             else
                 s++;
 
-            if(l > 0 && (*it).mid(s, l - s) == func)
+            if(l > 0 && it.mid(s, l - s) == func)
             {
-                realfunc = (*it).mid(s);
-                const QString arguments = (*it).mid(l + 1, (*it).find(')') - l - 1);
+                realfunc = it.mid(s);
+                const QString arguments = it.mid(l + 1, it.find(')') - l - 1);
                 uint a = arguments.contains(',');
                 if((a == 0 && !arguments.isEmpty()) || a > 0)
                     a++;
@@ -468,13 +467,13 @@ void sendUserTime(const char *app)
 /**
  * Do the actual DCOP call
  */
-int runDCOP(QCStringList args, UserList users, Session session, const QString sessionName, bool readStdin, bool updateUserTime)
+int runDCOP(KStringList args, UserList users, Session session, const QString sessionName, bool readStdin, bool updateUserTime)
 {
     bool DCOPrefmode = false;
     QCString app;
     QCString objid;
     QCString function;
-    QCStringList params;
+    KStringList params;
     DCOPClient *client = 0L;
     int retval = 0;
     if(!args.isEmpty() && args[0].find("DCOPRef(") == 0)
@@ -712,9 +711,9 @@ int runDCOP(QCStringList args, UserList users, Session session, const QString se
                         sendUserTime(app);
                     if(readStdin)
                     {
-                        QCStringList::Iterator replaceArg = params.end();
+                        KStringList::Iterator replaceArg = params.end();
 
-                        QCStringList::Iterator it = params.begin();
+                        KStringList::Iterator it = params.begin();
                         for(; it != params.end(); ++it)
                             if(*it == "%1")
                                 replaceArg = it;
@@ -847,7 +846,7 @@ int main(int argc, char **argv)
 
     argc -= numOptions;
 
-    QCStringList args;
+    KStringList args;
 
 #ifdef DCOPQUIT
     if(argc > 1)

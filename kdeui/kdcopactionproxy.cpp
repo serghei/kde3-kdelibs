@@ -136,14 +136,14 @@ bool KDCOPActionProxy::processAction(const QCString &, const QCString &fun, cons
 
     if(fun == "functions()")
     {
-        QValueList< QCString > res;
-        res << "QCStringList functions()";
+        KStringList res;
+        res << "KStringList functions()";
         res << "void activate()";
         res << "bool isPlugged()";
 
         res += KDCOPPropertyProxy::functions(action);
 
-        replyType = "QCStringList";
+        replyType = "KStringList";
         QDataStream reply(replyData, IO_WriteOnly);
         reply << res;
         return true;

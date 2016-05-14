@@ -22,6 +22,7 @@
 #include <qobject.h>
 #include <qcstring.h>
 #include <qvaluelist.h>
+#include <kstringlist.h>
 #include "kdelibs_export.h"
 
 class KDCOPPropertyProxyPrivate;
@@ -65,7 +66,7 @@ public:
      * Convenience method, when using this class as object. See documentation of the constructor and
      * static functions method.
      */
-    QValueList< QCString > functions();
+    KStringList functions();
 
     /**
      * Returns a semicolon-separated list of functions understood by the PropertyProxy for the given
@@ -76,7 +77,7 @@ public:
      *
      * @see DCOPObject::functions()
      */
-    static QValueList< QCString > functions(QObject *object);
+    static KStringList functions(QObject *object);
 
     /**
      * Returns true if the method request in the fun argument matches the signature of the three standard

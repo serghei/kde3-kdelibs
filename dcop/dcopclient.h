@@ -27,14 +27,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <qcstring.h>
 #include <qvaluelist.h>
 #include <qstring.h>
+#include <kstringlist.h>
 #include <kdatastream.h> // needed for proper bool marshalling
 #include <kdelibs_export.h>
 
 class DCOPObjectProxy;
 class DCOPClientPrivate;
 class DCOPClientTransaction;
-
-typedef QValueList< QCString > QCStringList;
 
 /**
  * Inter-process communication and remote procedure calls
@@ -506,7 +505,7 @@ public:
      * from dcopserver.
      * @return a list of all regietered applications
      */
-    QCStringList registeredApplications();
+    KStringList registeredApplications();
 
     /**
      * Retrieves the list of objects of the remote application @p remApp.
@@ -515,7 +514,7 @@ public:
      *           and false if an error occurred
      * @return the list of object ids
      */
-    QCStringList remoteObjects(const QCString &remApp, bool *ok = 0);
+    KStringList remoteObjects(const QCString &remApp, bool *ok = 0);
 
     /**
      * Retrieves the list of interfaces of the remote object @p remObj
@@ -526,7 +525,7 @@ public:
      *           and false if an error occurred
      * @return the list of interfaces
     */
-    QCStringList remoteInterfaces(const QCString &remApp, const QCString &remObj, bool *ok = 0);
+    KStringList remoteInterfaces(const QCString &remApp, const QCString &remObj, bool *ok = 0);
 
     /**
      * Retrieves the list of functions of the remote object @p remObj
@@ -537,7 +536,7 @@ public:
      *           and false if an error occurred
      * @return the list of function ids
     */
-    QCStringList remoteFunctions(const QCString &remApp, const QCString &remObj, bool *ok = 0);
+    KStringList remoteFunctions(const QCString &remApp, const QCString &remObj, bool *ok = 0);
 
     /**
      * @internal

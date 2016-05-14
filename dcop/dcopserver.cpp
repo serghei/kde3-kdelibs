@@ -1429,14 +1429,14 @@ bool DCOPServer::receive(const QCString & /*app*/, const QCString &obj, const QC
     else if(fun == "registeredApplications()")
     {
         QDataStream reply(replyData, IO_WriteOnly);
-        QCStringList applications;
+        KStringList applications;
         QAsciiDictIterator< DCOPConnection > it(appIds);
         while(it.current())
         {
             applications << it.currentKey();
             ++it;
         }
-        replyType = "QCStringList";
+        replyType = "KStringList";
         reply << applications;
         return true;
     }

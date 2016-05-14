@@ -99,8 +99,8 @@ QStringList KCrashBookmarkImporterImpl::getCrashLogs()
 
     DCOPClient *dcop = kapp->dcopClient();
 
-    QCStringList apps = dcop->registeredApplications();
-    for(QCStringList::Iterator it = apps.begin(); it != apps.end(); ++it)
+    KStringList apps = dcop->registeredApplications();
+    for(KStringList::Iterator it = apps.begin(); it != apps.end(); ++it)
     {
         QCString &clientId = *it;
 

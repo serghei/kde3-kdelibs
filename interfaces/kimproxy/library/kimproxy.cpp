@@ -224,10 +224,9 @@ bool KIMProxy::initialize()
             // see what apps implementing our service type are out there
             KService::List offers = KServiceType::offers(IM_SERVICE_TYPE);
             KService::List::iterator offer;
-            typedef QValueList< QCString > QCStringList;
-            QCStringList registeredApps = d->dc->registeredApplications();
-            QCStringList::iterator app;
-            const QCStringList::iterator end = registeredApps.end();
+            KStringList registeredApps = d->dc->registeredApplications();
+            KStringList::Iterator app;
+            const KStringList::Iterator end = registeredApps.end();
             // for each registered app
             for(app = registeredApps.begin(); app != end; ++app)
             {

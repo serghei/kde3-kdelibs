@@ -85,10 +85,10 @@ KHostName::KHostName()
     }
 }
 
-static QCStringList split(const QCString &str)
+static KStringList split(const QCString &str)
 {
     const char *s = str.data();
-    QCStringList result;
+    KStringList result;
     while(*s)
     {
         const char *i = strchr(s, ' ');
@@ -114,7 +114,7 @@ void KHostName::changeX()
         fprintf(stderr, "Warning: Can't run xauth.\n");
         return;
     }
-    QCStringList lines;
+    KStringList lines;
     {
         char buf[1024 + 1];
         while(!feof(xFile))
@@ -128,9 +128,9 @@ void KHostName::changeX()
     }
     pclose(xFile);
 
-    for(QCStringList::ConstIterator it = lines.begin(); it != lines.end(); ++it)
+    for(KStringList::ConstIterator it = lines.begin(); it != lines.end(); ++it)
     {
-        QCStringList entries = split(*it);
+        KStringList entries = split(*it);
         if(entries.count() != 3)
             continue;
 
@@ -231,7 +231,7 @@ void KHostName::changeDcop()
             fprintf(stderr, "Warning: Can't run iceauth.\n");
             return;
         }
-        QCStringList lines;
+        KStringList lines;
         {
             char buf[1024 + 1];
             while(!feof(iceFile))
@@ -245,9 +245,9 @@ void KHostName::changeDcop()
         }
         pclose(iceFile);
 
-        for(QCStringList::ConstIterator it = lines.begin(); it != lines.end(); ++it)
+        for(KStringList::ConstIterator it = lines.begin(); it != lines.end(); ++it)
         {
-            QCStringList entries = split(*it);
+            KStringList entries = split(*it);
             if(entries.count() != 5)
                 continue;
 

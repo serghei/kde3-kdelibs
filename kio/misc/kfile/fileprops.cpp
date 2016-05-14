@@ -420,8 +420,8 @@ int main(int argc, char **argv)
     }
 
     QStringList groupsToUse;
-    QCStringList suppliedGroups = args->getOptionList("groups");
-    QCStringList::ConstIterator it = suppliedGroups.begin();
+    KStringList suppliedGroups = args->getOptionList("groups");
+    KStringList::ConstIterator it = suppliedGroups.begin();
     for(; it != suppliedGroups.end(); ++it)
         groupsToUse.append(QString::fromLocal8Bit((*it)));
 

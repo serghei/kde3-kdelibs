@@ -321,9 +321,9 @@ bool Kded::unloadModule(const QCString &obj)
 }
 
 // DCOP
-QCStringList Kded::loadedModules()
+KStringList Kded::loadedModules()
 {
-    QCStringList modules;
+    KStringList modules;
     QAsciiDictIterator< KDEDModule > it(m_modules);
     for(; it.current(); ++it)
         modules.append(it.currentKey());
@@ -331,9 +331,9 @@ QCStringList Kded::loadedModules()
     return modules;
 }
 
-QCStringList Kded::functions()
+KStringList Kded::functions()
 {
-    QCStringList res = DCOPObject::functions();
+    KStringList res = DCOPObject::functions();
     res += "ASYNC recreate()";
     return res;
 }
@@ -720,9 +720,9 @@ public:
         return DCOPObject::process(fun, data, replyType, replyData);
     }
 
-    QCStringList functions()
+    KStringList functions()
     {
-        QCStringList res = DCOPObject::functions();
+        KStringList res = DCOPObject::functions();
         res += "void quit()";
         return res;
     }
@@ -752,14 +752,14 @@ public:
         return 0;
     }
 
-    QCStringList functions()
+    KStringList functions()
     {
-        QCStringList res = KUniqueApplication::functions();
+        KStringList res = KUniqueApplication::functions();
         res += "bool loadModule(QCString)";
         res += "bool unloadModule(QCString)";
         res += "void registerWindowId(long int)";
         res += "void unregisterWindowId(long int)";
-        res += "QCStringList loadedModules()";
+        res += "KStringList loadedModules()";
         res += "void reconfigure()";
         res += "void loadSecondPhase()";
         res += "void quit()";
@@ -812,7 +812,7 @@ public:
         }
         else if(fun == "loadedModules()")
         {
-            replyType = "QCStringList";
+            replyType = "KStringList";
             QDataStream _replyStream(replyData, IO_WriteOnly);
             _replyStream << Kded::self()->loadedModules();
             return true;

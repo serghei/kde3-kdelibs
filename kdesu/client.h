@@ -16,6 +16,7 @@
 #define __KDE_su_Client_h_Included__
 
 #include <qglobal.h>
+#include <kstringlist.h>
 #include <kdelibs_export.h>
 
 #include <sys/types.h>
@@ -24,8 +25,6 @@
 
 #include <qcstring.h>
 #include <qvaluelist.h>
-
-typedef QValueList< QCString > QCStringList;
 
 /**
  * A client class to access kdesud, the KDE su daemon. Kdesud can assist in
@@ -60,7 +59,7 @@ public:
      * @param env Extra environment variables.
      * @return Zero on success, -1 on failure.
      */
-    int exec(const QCString &command, const QCString &user, const QCString &options = 0, const QCStringList &env = QCStringList());
+    int exec(const QCString &command, const QCString &user, const QCString &options = 0, const KStringList &env = KStringList());
 
     /**
      * Wait for the last command to exit and return the exit code.

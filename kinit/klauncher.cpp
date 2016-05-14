@@ -432,16 +432,16 @@ bool KLauncher::process(const QCString &fun, const QByteArray &data, QCString &r
     return false;
 }
 
-QCStringList KLauncher::interfaces()
+KStringList KLauncher::interfaces()
 {
-    QCStringList ifaces = DCOPObject::interfaces();
+    KStringList ifaces = DCOPObject::interfaces();
     ifaces += "KLauncher";
     return ifaces;
 }
 
-QCStringList KLauncher::functions()
+KStringList KLauncher::functions()
 {
-    QCStringList funcs = DCOPObject::functions();
+    KStringList funcs = DCOPObject::functions();
     funcs << "void exec_blind(QCString,QValueList<QCString>)";
     funcs << "void exec_blind(QCString,QValueList<QCString>,QValueList<QCString>,QCString)";
     funcs << "serviceResult start_service_by_name(QString,QStringList)";

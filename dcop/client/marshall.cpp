@@ -174,7 +174,7 @@ QCString demarshal(QDataStream &stream, const QString &type)
     {
         stream >> result;
     }
-    else if(type == "QCStringList")
+    else if(type == "KStringList")
     {
         return demarshal(stream, "QValueList<QCString>");
     }
@@ -300,7 +300,7 @@ QCString demarshal(QDataStream &stream, const QString &type)
     return result;
 }
 
-void marshall(QDataStream &arg, QCStringList args, uint &i, QString type)
+void marshall(QDataStream &arg, KStringList args, uint &i, QString type)
 {
     if(i >= args.count())
     {
@@ -311,7 +311,7 @@ void marshall(QDataStream &arg, QCStringList args, uint &i, QString type)
 
     if(type == "QStringList")
         type = "QValueList<QString>";
-    if(type == "QCStringList")
+    if(type == "KStringList")
         type = "QValueList<QCString>";
 
     if(type == "int")

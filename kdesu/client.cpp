@@ -223,7 +223,7 @@ int KDEsuClient::setPass(const char *pass, int timeout)
     return command(cmd);
 }
 
-int KDEsuClient::exec(const QCString &prog, const QCString &user, const QCString &options, const QCStringList &env)
+int KDEsuClient::exec(const QCString &prog, const QCString &user, const QCString &options, const KStringList &env)
 {
     QCString cmd;
     cmd = "EXEC ";
@@ -234,7 +234,7 @@ int KDEsuClient::exec(const QCString &prog, const QCString &user, const QCString
     {
         cmd += " ";
         cmd += escape(options);
-        for(QCStringList::ConstIterator it = env.begin(); it != env.end(); ++it)
+        for(KStringList::ConstIterator it = env.begin(); it != env.end(); ++it)
         {
             cmd += " ";
             cmd += escape(*it);

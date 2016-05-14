@@ -68,7 +68,7 @@ bool KDCOPPropertyProxy::processPropertyRequest(const QCString &fun, const QByte
     return processPropertyRequest(fun, data, replyType, replyData, d->m_object);
 }
 
-QValueList< QCString > KDCOPPropertyProxy::functions()
+KStringList KDCOPPropertyProxy::functions()
 {
     return functions(d->m_object);
 }
@@ -83,9 +83,9 @@ bool KDCOPPropertyProxy::isPropertyRequest(const QCString &fun, QObject *object)
     return decodePropertyRequestInternal(fun, object, set, propName, arg);
 }
 
-QValueList< QCString > KDCOPPropertyProxy::functions(QObject *object)
+KStringList KDCOPPropertyProxy::functions(QObject *object)
 {
-    QValueList< QCString > res;
+    KStringList res;
     res << "QVariant property(QCString property)";
     res << "bool setProperty(QCString name,QVariant property)";
     res << "QValueList<QCString> propertyNames(bool super)";

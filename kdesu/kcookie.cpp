@@ -49,9 +49,9 @@ void KCookie::setDcopTransport(const QCString &dcopTransport)
     m_ICEAuth = "";
 }
 
-QCStringList KCookie::split(const QCString &line, char ch)
+KStringList KCookie::split(const QCString &line, char ch)
 {
-    QCStringList result;
+    KStringList result;
 
     int i = 0, pos;
     while((pos = line.find(ch, i)) != -1)
@@ -119,7 +119,7 @@ void KCookie::getXCookie()
         kdWarning(900) << "No X authentication info set for display " << m_Display << endl;
         return;
     }
-    QCStringList lst = split(output, ' ');
+    KStringList lst = split(output, ' ');
     if(lst.count() != 3)
     {
         kdError(900) << k_lineinfo << "parse error.\n";
@@ -147,14 +147,14 @@ void KCookie::getICECookie()
         dcopsrv = dcopsrv.stripWhiteSpace();
         fclose(f);
     }
-    QCStringList dcopServerList = split(dcopsrv, ',');
+    KStringList dcopServerList = split(dcopsrv, ',');
     if(dcopServerList.isEmpty())
     {
         kdError(900) << k_lineinfo << "No DCOP servers found.\n";
         return;
     }
 
-    QCStringList::Iterator it;
+    KStringList::Iterator it;
     for(it = dcopServerList.begin(); it != dcopServerList.end(); ++it)
     {
         if(strncmp((*it).data(), m_dcopTransport.data(), m_dcopTransport.length()) != 0)
@@ -168,7 +168,7 @@ void KCookie::getICECookie()
             unblockSigChild();
             break;
         }
-        QCStringList output;
+        KStringList output;
         while(fgets(buf, 1024, f))
             output += buf;
         if(pclose(f) < 0)
@@ -178,10 +178,10 @@ void KCookie::getICECookie()
             break;
         }
         unblockSigChild();
-        QCStringList::Iterator it2;
+        KStringList::Iterator it2;
         for(it2 = output.begin(); it2 != output.end(); ++it2)
         {
-            QCStringList lst = split((*it2).simplifyWhiteSpace(), ' ');
+            KStringList lst = split((*it2).simplifyWhiteSpace(), ' ');
             if(lst.count() != 5)
             {
                 kdError(900) << "parse error.\n";

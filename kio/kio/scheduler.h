@@ -314,7 +314,7 @@ public:
 
     virtual bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
 
-    virtual QCStringList functions();
+    virtual KStringList functions();
 
 public slots:
     void slotSlaveDied(KIO::Slave *slave);

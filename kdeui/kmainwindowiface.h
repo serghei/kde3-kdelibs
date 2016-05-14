@@ -53,16 +53,16 @@ public:
     **/
     ~KMainWindowInterface();
 
-    QCStringList functionsDynamic();
+    KStringList functionsDynamic();
     bool processDynamic(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
 
 
     k_dcop :
         /**
         Return a list of actions available to the application's window.
-        @return A QCStringList containing valid names actions.
+        @return A KStringList containing valid names actions.
         */
-        QCStringList
+        KStringList
         actions();
 
     /**
@@ -148,7 +148,7 @@ public:
     void show();
     void close();
 
-    //	QCStringList getQTProperties();
+    //	KStringList getQTProperties();
 
 private:
     KMainWindow *m_MainWindow;

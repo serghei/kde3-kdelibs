@@ -1108,7 +1108,7 @@ bool DCOPClient::findObject(const QCString &remApp, const QCString &remObj, cons
 bool DCOPClient::findObject(const QCString &remApp, const QCString &remObj, const QCString &remFun, const QByteArray &data, QCString &foundApp,
                             QCString &foundObj, bool useEventLoop, int timeout)
 {
-    QCStringList appList;
+    KStringList appList;
     QCString app = remApp;
     if(app.isEmpty())
         app = "*";
@@ -1122,11 +1122,13 @@ bool DCOPClient::findObject(const QCString &remApp, const QCString &remObj, cons
         // NOTE: It would be more efficient to do the filtering in
         // the dcopserver itself.
         int len = app.length() - 1;
-        QCStringList apps = registeredApplications();
-        for(QCStringList::ConstIterator it = apps.begin(); it != apps.end(); ++it)
+        //KStringList apps = registeredApplications();
+        //for(KStringList::ConstIterator it = apps.begin(); it != apps.end(); ++it)
+
+        for(const auto &it : registeredApplications())
         {
-            if(strncmp((*it).data(), app.data(), len) == 0)
-                appList.append(*it);
+            if(strncmp(it.data(), app.data(), len) == 0)
+                appList.append(it);
         }
     }
     else
@@ -1137,9 +1139,8 @@ bool DCOPClient::findObject(const QCString &remApp, const QCString &remObj, cons
     // We do all the local clients in phase1 and the rest in phase2
     for(int phase = 1; phase <= 2; phase++)
     {
-        for(QCStringList::ConstIterator it = appList.begin(); it != appList.end(); ++it)
+        for(const auto &remApp : appList)
         {
-            QCString remApp = *it;
             QCString replyType;
             QByteArray replyData;
             bool result = false;
@@ -1217,11 +1218,11 @@ bool DCOPClient::isApplicationRegistered(const QCString &remApp)
     return result;
 }
 
-QCStringList DCOPClient::registeredApplications()
+KStringList DCOPClient::registeredApplications()
 {
     QCString replyType;
     QByteArray data, replyData;
-    QCStringList result;
+    KStringList result;
     if(call("DCOPServer", "", "registeredApplications()", data, replyType, replyData))
     {
         QDataStream reply(replyData, IO_ReadOnly);
@@ -1230,11 +1231,11 @@ QCStringList DCOPClient::registeredApplications()
     return result;
 }
 
-QCStringList DCOPClient::remoteObjects(const QCString &remApp, bool *ok)
+KStringList DCOPClient::remoteObjects(const QCString &remApp, bool *ok)
 {
     QCString replyType;
     QByteArray data, replyData;
-    QCStringList result;
+    KStringList result;
     if(ok)
         *ok = false;
     if(call(remApp, "DCOPClient", "objects()", data, replyType, replyData))
@@ -1247,14 +1248,14 @@ QCStringList DCOPClient::remoteObjects(const QCString &remApp, bool *ok)
     return result;
 }
 
-QCStringList DCOPClient::remoteInterfaces(const QCString &remApp, const QCString &remObj, bool *ok)
+KStringList DCOPClient::remoteInterfaces(const QCString &remApp, const QCString &remObj, bool *ok)
 {
     QCString replyType;
     QByteArray data, replyData;
-    QCStringList result;
+    KStringList result;
     if(ok)
         *ok = false;
-    if(call(remApp, remObj, "interfaces()", data, replyType, replyData) && replyType == "QCStringList")
+    if(call(remApp, remObj, "interfaces()", data, replyType, replyData) && replyType == "KStringList")
     {
         QDataStream reply(replyData, IO_ReadOnly);
         reply >> result;
@@ -1264,14 +1265,14 @@ QCStringList DCOPClient::remoteInterfaces(const QCString &remApp, const QCString
     return result;
 }
 
-QCStringList DCOPClient::remoteFunctions(const QCString &remApp, const QCString &remObj, bool *ok)
+KStringList DCOPClient::remoteFunctions(const QCString &remApp, const QCString &remObj, bool *ok)
 {
     QCString replyType;
     QByteArray data, replyData;
-    QCStringList result;
+    KStringList result;
     if(ok)
         *ok = false;
-    if(call(remApp, remObj, "functions()", data, replyType, replyData) && replyType == "QCStringList")
+    if(call(remApp, remObj, "functions()", data, replyType, replyData) && replyType == "KStringList")
     {
         QDataStream reply(replyData, IO_ReadOnly);
         reply >> result;
@@ -1311,7 +1312,7 @@ void DCOPClient::setDaemonMode(bool daemonMode)
 
   ********************************************************************************
  */
-static void fillQtObjects(QCStringList &l, QObject *o, QCString path)
+static void fillQtObjects(KStringList &l, QObject *o, QCString path)
 {
     if(!path.isEmpty())
         path += '/';
@@ -1401,12 +1402,12 @@ static QObject *findQtObject(QCString id)
     return firstContains;
 }
 
-static QCStringList findQtObjects(QCString id)
+static KStringList findQtObjects(QCString id)
 {
     QRegExp expr(id);
     QValueList< O > l;
     fillQtObjectsEx(l, 0, "qt");
-    QCStringList result;
+    KStringList result;
     for(QValueList< O >::ConstIterator it = l.begin(); it != l.end(); ++it)
     {
         if((*it).s.contains(expr))
@@ -1421,9 +1422,9 @@ static bool receiveQtObject(const QCString &objId, const QCString &fun, const QB
     {
         if(fun == "interfaces()")
         {
-            replyType = "QCStringList";
+            replyType = "KStringList";
             QDataStream reply(replyData, IO_WriteOnly);
-            QCStringList l;
+            KStringList l;
             l << "DCOPObject";
             l << "Qt";
             reply << l;
@@ -1431,21 +1432,21 @@ static bool receiveQtObject(const QCString &objId, const QCString &fun, const QB
         }
         else if(fun == "functions()")
         {
-            replyType = "QCStringList";
+            replyType = "KStringList";
             QDataStream reply(replyData, IO_WriteOnly);
-            QCStringList l;
-            l << "QCStringList functions()";
-            l << "QCStringList interfaces()";
-            l << "QCStringList objects()";
-            l << "QCStringList find(QCString)";
+            KStringList l;
+            l << "KStringList functions()";
+            l << "KStringList interfaces()";
+            l << "KStringList objects()";
+            l << "KStringList find(QCString)";
             reply << l;
             return true;
         }
         else if(fun == "objects()")
         {
-            replyType = "QCStringList";
+            replyType = "KStringList";
             QDataStream reply(replyData, IO_WriteOnly);
-            QCStringList l;
+            KStringList l;
             fillQtObjects(l, 0, "qt");
             reply << l;
             return true;
@@ -1455,7 +1456,7 @@ static bool receiveQtObject(const QCString &objId, const QCString &fun, const QB
             QDataStream ds(data, IO_ReadOnly);
             QCString id;
             ds >> id;
-            replyType = "QCStringList";
+            replyType = "KStringList";
             QDataStream reply(replyData, IO_WriteOnly);
             reply << findQtObjects(id);
             return true;
@@ -1468,12 +1469,12 @@ static bool receiveQtObject(const QCString &objId, const QCString &fun, const QB
             return false;
         if(fun == "functions()")
         {
-            replyType = "QCStringList";
+            replyType = "KStringList";
             QDataStream reply(replyData, IO_WriteOnly);
-            QCStringList l;
-            l << "QCStringList functions()";
-            l << "QCStringList interfaces()";
-            l << "QCStringList properties()";
+            KStringList l;
+            l << "KStringList functions()";
+            l << "KStringList interfaces()";
+            l << "KStringList properties()";
             l << "bool setProperty(QCString,QVariant)";
             l << "QVariant property(QCString)";
             QStrList lst = o->metaObject()->slotNames(true);
@@ -1494,9 +1495,9 @@ static bool receiveQtObject(const QCString &objId, const QCString &fun, const QB
         }
         else if(fun == "interfaces()")
         {
-            replyType = "QCStringList";
+            replyType = "KStringList";
             QDataStream reply(replyData, IO_WriteOnly);
-            QCStringList l;
+            KStringList l;
             QMetaObject *meta = o->metaObject();
             while(meta)
             {
@@ -1508,9 +1509,9 @@ static bool receiveQtObject(const QCString &objId, const QCString &fun, const QB
         }
         else if(fun == "properties()")
         {
-            replyType = "QCStringList";
+            replyType = "KStringList";
             QDataStream reply(replyData, IO_WriteOnly);
-            QCStringList l;
+            KStringList l;
             QStrList lst = o->metaObject()->propertyNames(true);
             for(QPtrListIterator< char > it(lst); it.current(); ++it)
             {
@@ -1580,9 +1581,9 @@ bool DCOPClient::receive(const QCString & /*app*/, const QCString &objId, const 
     {
         if(fun == "objects()")
         {
-            replyType = "QCStringList";
+            replyType = "KStringList";
             QDataStream reply(replyData, IO_WriteOnly);
-            QCStringList l;
+            KStringList l;
             if(d->qt_bridge_enabled)
             {
                 l << "qt"; // the Qt bridge object

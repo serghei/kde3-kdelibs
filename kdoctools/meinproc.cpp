@@ -198,9 +198,9 @@ int main(int argc, char **argv)
         params.append(qstrdup(QFile::decodeName(args->getOption("output")).latin1()));
     }
     {
-        const QCStringList paramList = args->getOptionList("param");
-        QCStringList::ConstIterator it = paramList.begin();
-        QCStringList::ConstIterator end = paramList.end();
+        const KStringList paramList = args->getOptionList("param");
+        KStringList::ConstIterator it = paramList.begin();
+        KStringList::ConstIterator end = paramList.end();
         for(; it != end; ++it)
         {
             const QCString tuple = *it;
