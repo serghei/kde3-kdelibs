@@ -35,7 +35,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdio.h>
 #include <assert.h>
 
+#include <qptrlist.h>
 #include <qstring.h>
+
+
+// remember allocated QStrings and delete they at exit,
+// in order to avoid memory leaks and make AddressSanitizer happy
+static class QStringStack : public QPtrList<QString> {
+public:
+    QStringStack() { setAutoDelete(true); }
+    QString *push(QString *qstring) { append(qstring); return qstring; }
+} qStringStack;
+#define newQString(a) qStringStack.push(new QString(a))
+
 
 #define AMP_ENTITY "&amp;"
 #define YYERROR_VERBOSE
@@ -306,7 +318,7 @@ Identifier
 	  $$ = $1;
 	}
 	| T_IDENTIFIER T_SCOPE Identifier {
-	   QString* tmp = new QString( "%1::%2" );
+       QString* tmp = newQString( "%1::%2" );
            *tmp = tmp->arg(*($1)).arg(*($3));
            $$ = tmp;
 	}
@@ -315,13 +327,13 @@ Identifier
 super_class_name
 	: Identifier
 	  {
-		QString* tmp = new QString( "    <SUPER>%1</SUPER>\n" );
+        QString* tmp = newQString( "    <SUPER>%1</SUPER>\n" );
 		*tmp = tmp->arg( *($1) );
 		$$ = tmp;
 	  }
 	| Identifier T_LESS type_list T_GREATER
 	  {
-		QString* tmp = new QString( "    <SUPER>%1</SUPER>\n" );
+        QString* tmp = newQString( "    <SUPER>%1</SUPER>\n" );
 		*tmp = tmp->arg( *($1) + "&lt;" + *($3) + "&gt;" );
 		$$ = tmp;
 	  }
@@ -346,7 +358,7 @@ super_classes
 	| super_class T_COMMA super_classes
 	  {
 		/* $$ = $1; */
-		$$ = new QString( *($1) + *($3) );
+        $$ = newQString( *($1) + *($3) );
 	  }
 	;
 
@@ -357,7 +369,7 @@ class_header
 	  }
 	| T_LEFT_CURLY_BRACKET
 	  {
-		$$ = new QString( "" );
+        $$ = newQString( "" );
 	  }
 	;
 
@@ -371,19 +383,19 @@ opt_semicolon
 body
 	: T_RIGHT_CURLY_BRACKET
 	  {
-		$$ = new QString( "" );
+        $$ = newQString( "" );
 	  }
 	| typedef body
 	  {
-		$$ = new QString( *($1) + *($2) );
+        $$ = newQString( *($1) + *($2) );
 	  }
 	| T_INLINE function body
 	  {
-		$$ = new QString( *($2) + *($3) );
+        $$ = newQString( *($2) + *($3) );
 	  }
 	| function body
 	  {
-		$$ = new QString( *($1) + *($2) );
+        $$ = newQString( *($1) + *($2) );
 	  }
 	| dcop_signal_area_begin body
 	  {
@@ -474,11 +486,11 @@ typedef
 	: T_TYPEDEF Identifier T_LESS type_list T_GREATER Identifier T_SEMICOLON
 	  {
 		if (dcop_area) {
- 		  QString* tmp = new QString("<TYPEDEF name=\"%1\" template=\"%2\"><PARAM %3</TYPEDEF>\n");
+          QString* tmp = newQString("<TYPEDEF name=\"%1\" template=\"%2\"><PARAM %3</TYPEDEF>\n");
 		  *tmp = tmp->arg( *($6) ).arg( *($2) ).arg( *($4) );
 		  $$ = tmp;
 		} else {
-		  $$ = new QString("");
+          $$ = newQString("");
 		}
 	  }
 	| T_TYPEDEF Identifier T_LESS type_list T_GREATER T_SCOPE T_IDENTIFIER Identifier T_SEMICOLON
@@ -500,26 +512,26 @@ const_qualifier
 	;
 
 int_type
-	: T_SIGNED { $$ = new QString("signed int"); }
-	| T_SIGNED T_INT { $$ = new QString("signed int"); }
-	| T_UNSIGNED { $$ = new QString("unsigned int"); }
-	| T_UNSIGNED T_INT { $$ = new QString("unsigned int"); }
-	| T_SIGNED T_SHORT { $$ = new QString("signed short int"); }
-	| T_SIGNED T_SHORT T_INT { $$ = new QString("signed short int"); }
-	| T_SIGNED T_LONG { $$ = new QString("signed long int"); }
-	| T_SIGNED T_LONG T_INT { $$ = new QString("signed long int"); }
-	| T_UNSIGNED T_SHORT { $$ = new QString("unsigned short int"); }
-	| T_UNSIGNED T_SHORT T_INT { $$ = new QString("unsigned short int"); }
-	| T_UNSIGNED T_LONG { $$ = new QString("unsigned long int"); }
-	| T_UNSIGNED T_LONG T_INT { $$ = new QString("unsigned long int"); }
-	| T_INT { $$ = new QString("int"); }
-	| T_LONG { $$ = new QString("long int"); }
-	| T_LONG T_INT { $$ = new QString("long int"); }
-	| T_SHORT { $$ = new QString("short int"); }
-	| T_SHORT T_INT { $$ = new QString("short int"); }
-	| T_CHAR { $$ = new QString("char"); }
-	| T_SIGNED T_CHAR { $$ = new QString("signed char"); }
-	| T_UNSIGNED T_CHAR { $$ = new QString("unsigned char"); }
+    : T_SIGNED { $$ = newQString("signed int"); }
+    | T_SIGNED T_INT { $$ = newQString("signed int"); }
+    | T_UNSIGNED { $$ = newQString("unsigned int"); }
+    | T_UNSIGNED T_INT { $$ = newQString("unsigned int"); }
+    | T_SIGNED T_SHORT { $$ = newQString("signed short int"); }
+    | T_SIGNED T_SHORT T_INT { $$ = newQString("signed short int"); }
+    | T_SIGNED T_LONG { $$ = newQString("signed long int"); }
+    | T_SIGNED T_LONG T_INT { $$ = newQString("signed long int"); }
+    | T_UNSIGNED T_SHORT { $$ = newQString("unsigned short int"); }
+    | T_UNSIGNED T_SHORT T_INT { $$ = newQString("unsigned short int"); }
+    | T_UNSIGNED T_LONG { $$ = newQString("unsigned long int"); }
+    | T_UNSIGNED T_LONG T_INT { $$ = newQString("unsigned long int"); }
+    | T_INT { $$ = newQString("int"); }
+    | T_LONG { $$ = newQString("long int"); }
+    | T_LONG T_INT { $$ = newQString("long int"); }
+    | T_SHORT { $$ = newQString("short int"); }
+    | T_SHORT T_INT { $$ = newQString("short int"); }
+    | T_CHAR { $$ = newQString("char"); }
+    | T_SIGNED T_CHAR { $$ = newQString("signed char"); }
+    | T_UNSIGNED T_CHAR { $$ = newQString("unsigned char"); }
 	;
 
 asterisks
@@ -530,12 +542,12 @@ asterisks
 params
 	: /* empty */
 	  {
-		$$ = new QString( "" );
+        $$ = newQString( "" );
 	  }
 	| param
 	| params T_COMMA param
 	  {
-		$$ = new QString( *($1) + *($3) );
+        $$ = newQString( *($1) + *($3) );
 	  }
 	;
 
@@ -546,13 +558,13 @@ type_name
 	| T_STRUCT Identifier { $$ = $2; }
 	| T_CLASS Identifier { $$ = $2; }
 	| Identifier T_LESS templ_type_list T_GREATER {
-		QString *tmp = new QString("%1&lt;%2&gt;");
+        QString *tmp = newQString("%1&lt;%2&gt;");
 		*tmp = tmp->arg(*($1));
 		*tmp = tmp->arg(*($3));
 		$$ = tmp;
 	 }
 	| Identifier T_LESS templ_type_list T_GREATER T_SCOPE Identifier{
-		QString *tmp = new QString("%1&lt;%2&gt;::%3");
+        QString *tmp = newQString("%1&lt;%2&gt;::%3");
 		*tmp = tmp->arg(*($1));
 		*tmp = tmp->arg(*($3));
 		*tmp = tmp->arg(*($6));
@@ -564,7 +576,7 @@ type_name
 templ_type_list
 	: templ_type T_COMMA templ_type_list
 	  {
-	    $$ = new QString(*($1) + "," + *($3));
+        $$ = newQString(*($1) + "," + *($3));
 	  }
 	| templ_type
   	  {
@@ -595,24 +607,24 @@ type
 	  }
 	| T_CONST type_name T_AMPERSAND {
 	     if (dcop_area) {
-	  	QString* tmp = new QString("<TYPE  qleft=\"const\" qright=\"" AMP_ENTITY "\">%1</TYPE>");
+        QString* tmp = newQString("<TYPE  qleft=\"const\" qright=\"" AMP_ENTITY "\">%1</TYPE>");
 		*tmp = tmp->arg( *($2) );
 		$$ = tmp;
 	     }
 	  }
 	| T_CONST type_name %prec T_UNIMPORTANT {
-		QString* tmp = new QString("<TYPE>%1</TYPE>");
+        QString* tmp = newQString("<TYPE>%1</TYPE>");
 		*tmp = tmp->arg( *($2) );
 		$$ = tmp;
 	}
     | type_name T_CONST %prec T_UNIMPORTANT {
-        QString* tmp = new QString("<TYPE>%1</TYPE>");
+        QString* tmp = newQString("<TYPE>%1</TYPE>");
         *tmp = tmp->arg( *($1) );
         $$ = tmp;
     }
     | type_name T_CONST T_AMPERSAND { 
         if (dcop_area) { 
-           QString* tmp = new QString("<TYPE  qleft=\"const\" qright=\"" AMP_ENTITY "\">%1</TYPE>"); 
+           QString* tmp = newQString("<TYPE  qleft=\"const\" qright=\"" AMP_ENTITY "\">%1</TYPE>");
            *tmp = tmp->arg( *($1) ); 
            $$ = tmp; 
         } 
@@ -623,7 +635,7 @@ type
 	  }
 
 	| type_name %prec T_UNIMPORTANT {
-		QString* tmp = new QString("<TYPE>%1</TYPE>");
+        QString* tmp = newQString("<TYPE>%1</TYPE>");
 		*tmp = tmp->arg( *($1) );
 		$$ = tmp;
 	}
@@ -637,7 +649,7 @@ type
 type_list
 	: type T_COMMA type_list
 	  {
-	    $$ = new QString(*($1) + "," + *($3));
+        $$ = newQString(*($1) + "," + *($3));
 	  }
 	| type
   	  {
@@ -649,25 +661,25 @@ param
 	: type Identifier default
 	  {
 		if (dcop_area) {
-		   QString* tmp = new QString("\n        <ARG>%1<NAME>%2</NAME></ARG>");
+           QString* tmp = newQString("\n        <ARG>%1<NAME>%2</NAME></ARG>");
   		   *tmp = tmp->arg( *($1) );
   		   *tmp = tmp->arg( *($2) );
 		   $$ = tmp;		
-		} else $$ = new QString();
+        } else $$ = newQString();
 	  }
 	| type default
 	  {
 		if (dcop_area) {
-		   QString* tmp = new QString("\n        <ARG>%1</ARG>");
+           QString* tmp = newQString("\n        <ARG>%1</ARG>");
   		   *tmp = tmp->arg( *($1) );
 		   $$ = tmp;		
-		} else $$ = new QString();
+        } else $$ = newQString();
 	  }
 	| T_TRIPLE_DOT
 	  {
 		if (dcop_area)
 			yyerror("variable arguments not supported in dcop area.");
-		$$ = new QString("");
+        $$ = newQString("");
 	  }
 	;
 
@@ -715,8 +727,8 @@ function_header
 	: type Identifier T_LEFT_PARANTHESIS params T_RIGHT_PARANTHESIS const_qualifier
 	  {
 	     if (dcop_area || dcop_signal_area) {
-		QString* tmp = 0;
-                tmp = new QString(
+        QString* tmp = 0;
+                tmp = newQString(
                         "    <%4>\n"
                         "        %2\n"
                         "        <NAME>%1</NAME>"
@@ -732,13 +744,13 @@ function_header
                 *tmp = tmp->arg( QString("%1").arg(tagname) );
 		$$ = tmp;
    	     } else
-	        $$ = new QString("");
+            $$ = newQString("");
 	  }
 	| type T_FUNOPERATOR operator T_LEFT_PARANTHESIS params T_RIGHT_PARANTHESIS const_qualifier
 	  {
 	     if (dcop_area)
 		yyerror("operators aren't allowed in dcop areas!");
-	     $$ = new QString("");
+         $$ = newQString("");
 	  }
 	;
 
@@ -778,19 +790,19 @@ function
 	  {
 	      /* The constructor */
 	      assert(!dcop_area);
-              $$ = new QString("");
+              $$ = newQString("");
 	  }
 	| Identifier T_LEFT_PARANTHESIS params T_RIGHT_PARANTHESIS T_COLON init_list function_body
 	  {
 	      /* The constructor */
 	      assert(!dcop_area);
-              $$ = new QString("");
+              $$ = newQString("");
 	  }
 	| virtual_qualifier T_TILDE Identifier T_LEFT_PARANTHESIS T_RIGHT_PARANTHESIS function_body
 	  {
 	      /* The destructor */
   	      assert(!dcop_area);
-              $$ = new QString("");
+              $$ = newQString("");
 	  }
 	| T_STATIC function_header function_body
 	  {
@@ -800,7 +812,7 @@ function
                  else
                      yyerror("DCOP functions cannot be static");
               } else {
-                 $$ = new QString();
+                 $$ = newQString();
               }  
 	  }      
 	;

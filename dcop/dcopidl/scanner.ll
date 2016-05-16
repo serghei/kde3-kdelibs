@@ -37,7 +37,19 @@ int comment_mode;
 int function_mode = 0;
 
 #include <qstring.h>
+#include <qptrlist.h>
 #include <qregexp.h>
+
+
+// remember allocated QStrings and delete they at exit,
+// in order to avoid memory leaks and make AddressSanitizer happy
+static class QStringStack : public QPtrList<QString> {
+public:
+    QStringStack() { setAutoDelete(true); }
+    QString *push(QString *qstring) { append(qstring); return qstring; }
+} qStringStack;
+#define newQString(a) qStringStack.push(new QString(a))
+
 
 static long ascii_to_longlong( long base, const char *s )
 {
@@ -171,7 +183,7 @@ Kidl_Identifier		[_a-zA-Z][a-zA-Z0-9_]*
 			  QString s( yytext );
                           int i = s.find(QRegExp("[\"<]"))+1;
                           int j = s.find(QRegExp("[\">]"), i);
-			  yylval._str = new QString( s.mid( i, j - i ) );
+              yylval._str = newQString( s.mid( i, j - i ) );
                           idl_line_no++;
                           return T_INCLUDE;
                         }
@@ -241,7 +253,7 @@ Q_OBJECT		;
 "extern \"C\""			return T_EXTERN_C;
 
 {Kidl_Identifier}	{
-			  yylval._str = new QString( yytext );
+              yylval._str = newQString( yytext );
 			  return T_IDENTIFIER;
 			}
 
@@ -273,7 +285,7 @@ Q_OBJECT		;
 			}
 {String_Literal}	{
                           QString s( yytext );
-                          yylval._str = new QString( s.mid( 1, s.length() - 2 ) );
+                          yylval._str = newQString( s.mid( 1, s.length() - 2 ) );
 			  return T_STRING_LITERAL;
 			}
 .			{
