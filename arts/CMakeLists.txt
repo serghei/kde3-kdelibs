@@ -9,10 +9,4 @@
 #
 #################################################
 
-if( WITH_ARTS )
-  add_subdirectory( arts )
-  add_subdirectory( kde )
-  add_subdirectory( message )
-endif( )
-
- add_subdirectory( knotify )
+add_subdirectory( knotify )

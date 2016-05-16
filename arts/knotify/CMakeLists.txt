@@ -14,14 +14,8 @@
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}/../arts/mcop
-  ${CMAKE_CURRENT_BINARY_DIR}/../arts/flow
-  ${CMAKE_CURRENT_BINARY_DIR}/../arts/soundserver
-  ${CMAKE_CURRENT_SOURCE_DIR}/../arts/mcop
-  ${CMAKE_CURRENT_SOURCE_DIR}/../arts/qtmcop
   ${CMAKE_BINARY_DIR}
   ${CMAKE_BINARY_DIR}/kdecore
-  ${CMAKE_SOURCE_DIR}/arts/kde
   ${CMAKE_SOURCE_DIR}/triq
   ${CMAKE_SOURCE_DIR}/dcop
   ${CMAKE_SOURCE_DIR}/kdecore
@@ -40,8 +34,6 @@ install( FILES knotify.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 if( WITH_PULSEAUDIO )
   set( SRCS kpulseplayer.cpp )
   set( LIBS kdeui-shared ${PULSEAUDIO_LIBRARIES} ${VORBISFILE_LIBRARIES} ${AUDIOFILE_LIBRARIES} )
-elseif( WITH_ARTS )
-  set( LIBS artskde-shared )
 else( )
   set( LIBS kdeui-shared )
 endif( )

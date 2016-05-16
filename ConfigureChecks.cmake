@@ -459,14 +459,6 @@ if( WITH_PULSEAUDIO )
   kde_search_module( PULSEAUDIO libpulse-simple )
 endif( )
 
-# arts
-if( WITH_ARTS )
-  kde_search_module( GLIB2 glib-2.0 )
-  kde_search_module( GTHREAD2 gthread-2.0 )
-else( )
-  set( WITHOUT_ARTS 1 )
-endif( )
-
 # Qt3
 include( FindQt3 )
 
@@ -491,7 +483,6 @@ add_definitions( -DHAVE_CONFIG_H )
 
 ##### internal tools ############################
 
-set( KDE_MCOPIDL_EXECUTABLE "${CMAKE_BINARY_DIR}/arts/arts/mcopidl/mcopidl" )
 set( KDE_DBUSXML2QT3_EXECUTABLE "${CMAKE_BINARY_DIR}/dbus/dbusxml2qt3/dbusxml2qt3" )
 set( KDE_DCOPIDL_EXECUTABLE "${CMAKE_BINARY_DIR}/dcop/dcopidl/dcopidl" )
 set( KDE_DCOPIDL2CPP_EXECUTABLE "${CMAKE_BINARY_DIR}/dcop/dcopidl2cpp/dcopidl2cpp" )

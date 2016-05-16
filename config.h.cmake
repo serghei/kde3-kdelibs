@@ -768,10 +768,7 @@
 /* pulseaudio support */
 #cmakedefine WITH_PULSEAUDIO
 
-/* Defined if compiling without arts */
-#cmakedefine WITHOUT_ARTS 1
-
-/* audiofile support for aRts */
+/* audiofile support for pulseaudio player */
 #cmakedefine HAVE_AUDIOFILE 1
 
 /* where rgb.txt is in */
