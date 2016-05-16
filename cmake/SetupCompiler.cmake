@@ -56,6 +56,14 @@ if( USE_LTO )
   set( CMAKE_RANLIB gcc-ranlib )
 endif( )
 
+option( USE_ASAN "Enable AddressSanitizer" OFF )
+if( USE_ASAN )
+  add_compile_options( -g -fsanitize=address )
+  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address" )
+  set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=address" )
+  set( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -fsanitize=address" )
+endif( )
+
 
 #################################################
 #####
