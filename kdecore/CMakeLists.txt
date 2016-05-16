@@ -11,7 +11,6 @@
 
 configure_file( kdemacros.h.cmake kdemacros.h @ONLY )
 
-add_subdirectory( malloc )
 add_subdirectory( network )
 add_subdirectory( kconfig_compiler )
 

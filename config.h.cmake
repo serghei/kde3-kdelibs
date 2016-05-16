@@ -671,21 +671,6 @@
 /* Distribution Text to append to OS */
 #define KDE_DISTRIBUTION_TEXT "@KDE_DISTRIBUTION_TEXT@"
 
-/* Use own malloc implementation */
-#cmakedefine KDE_MALLOC 1
-
-/* Enable debugging in fast malloc */
-#cmakedefine KDE_MALLOC_DEBUG 1
-
-/* Make alloc as fast as possible */
-#cmakedefine KDE_MALLOC_FULL 1
-
-/* The libc used is glibc */
-#cmakedefine KDE_MALLOC_GLIBC 1
-
-/* The platform is x86 */
-#cmakedefine KDE_MALLOC_X86 1
-
 /* Define if we shall use KSSL */
 #cmakedefine KSSL_HAVE_SSL 1
 
