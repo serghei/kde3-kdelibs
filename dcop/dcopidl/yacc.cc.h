@@ -1,12 +1,13 @@
-/* A Bison parser, made by GNU Bison 1.875d.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
-/* Skeleton parser for Yacc-like parsing with Bison,
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+/* Bison interface for Yacc-like parsers in C
 
-   This program is free software; you can redistribute it and/or modify
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+
+   This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,22 +15,36 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* As a special exception, when this file is copied by Bison into a
-   Bison output file, you may use that output file without restriction.
-   This special exception was added by the Free Software Foundation
-   in version 1.24 of Bison.  */
+/* As a special exception, you may create a larger work that contains
+   part or all of the Bison parser skeleton and distribute that work
+   under terms of your choice, so long as that work isn't itself a
+   parser generator using the skeleton or a modified version thereof
+   as a parser skeleton.  Alternatively, if you modify or redistribute
+   the parser skeleton itself, you may (at your option) remove this
+   special exception, which will cause the skeleton and the resulting
+   Bison output files to be licensed under the GNU General Public
+   License without this special exception.
 
-/* Tokens.  */
+   This special exception was added by the Free Software Foundation in
+   version 2.2 of Bison.  */
+
+#ifndef YY_YY_YACC_HH_INCLUDED
+# define YY_YY_YACC_HH_INCLUDED
+/* Debug traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 1
+#endif
+#if YYDEBUG
+extern int yydebug;
+#endif
+
+/* Token type.  */
 #ifndef YYTOKENTYPE
-#define YYTOKENTYPE
-/* Put the tokens into the symbol table, so that GDB and other debuggers
-   know about them.  */
-enum yytokentype
-{
+# define YYTOKENTYPE
+  enum yytokentype
+  {
     T_UNIMPORTANT = 258,
     T_CHARACTER_LITERAL = 259,
     T_DOUBLE_LITERAL = 260,
@@ -94,87 +109,32 @@ enum yytokentype
     T_FUNOPERATOR = 319,
     T_MISCOPERATOR = 320,
     T_SHIFT = 321
+  };
+#endif
+
+/* Value type.  */
+#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+
+union YYSTYPE
+{
+#line 79 "yacc.yy" /* yacc.c:1909  */
+
+  long   _int;
+  QString        *_str;
+  unsigned short          _char;
+  double _float;
+
+#line 128 "yacc.hh" /* yacc.c:1909  */
 };
-#endif
-#define T_UNIMPORTANT 258
-#define T_CHARACTER_LITERAL 259
-#define T_DOUBLE_LITERAL 260
-#define T_IDENTIFIER 261
-#define T_INTEGER_LITERAL 262
-#define T_STRING_LITERAL 263
-#define T_INCLUDE 264
-#define T_CLASS 265
-#define T_STRUCT 266
-#define T_LEFT_CURLY_BRACKET 267
-#define T_LEFT_PARANTHESIS 268
-#define T_RIGHT_CURLY_BRACKET 269
-#define T_RIGHT_PARANTHESIS 270
-#define T_COLON 271
-#define T_SEMICOLON 272
-#define T_PUBLIC 273
-#define T_PROTECTED 274
-#define T_TRIPE_DOT 275
-#define T_PRIVATE 276
-#define T_VIRTUAL 277
-#define T_CONST 278
-#define T_INLINE 279
-#define T_FRIEND 280
-#define T_RETURN 281
-#define T_SIGNAL 282
-#define T_SLOT 283
-#define T_TYPEDEF 284
-#define T_PLUS 285
-#define T_MINUS 286
-#define T_COMMA 287
-#define T_ASTERISK 288
-#define T_TILDE 289
-#define T_LESS 290
-#define T_GREATER 291
-#define T_AMPERSAND 292
-#define T_EXTERN 293
-#define T_EXTERN_C 294
-#define T_ACCESS 295
-#define T_ENUM 296
-#define T_NAMESPACE 297
-#define T_USING 298
-#define T_UNKNOWN 299
-#define T_TRIPLE_DOT 300
-#define T_TRUE 301
-#define T_FALSE 302
-#define T_STATIC 303
-#define T_MUTABLE 304
-#define T_EQUAL 305
-#define T_SCOPE 306
-#define T_NULL 307
-#define T_INT 308
-#define T_ARRAY_OPEN 309
-#define T_ARRAY_CLOSE 310
-#define T_CHAR 311
-#define T_DCOP 312
-#define T_DCOP_AREA 313
-#define T_DCOP_SIGNAL_AREA 314
-#define T_SIGNED 315
-#define T_UNSIGNED 316
-#define T_LONG 317
-#define T_SHORT 318
-#define T_FUNOPERATOR 319
-#define T_MISCOPERATOR 320
-#define T_SHIFT 321
 
-
-#if !defined(YYSTYPE) && !defined(YYSTYPE_IS_DECLARED)
-#line 67 "yacc.yy"
-typedef union YYSTYPE {
-    long _int;
-    QString *_str;
-    unsigned short _char;
-    double _float;
-} YYSTYPE;
-/* Line 1285 of yacc.c.  */
-#line 176 "yacc.hh"
-#define yystype YYSTYPE /* obsolescent; will be withdrawn */
-#define YYSTYPE_IS_DECLARED 1
-#define YYSTYPE_IS_TRIVIAL 1
+typedef union YYSTYPE YYSTYPE;
+# define YYSTYPE_IS_TRIVIAL 1
+# define YYSTYPE_IS_DECLARED 1
 #endif
+
 
 extern YYSTYPE yylval;
+
+int yyparse (void);
+
+#endif /* !YY_YY_YACC_HH_INCLUDED  */
