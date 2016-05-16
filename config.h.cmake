@@ -25,21 +25,6 @@
 /* Define to 1 if you have the <alloca.h> header file. */
 #cmakedefine HAVE_ALLOCA_H 1
 
-/* Define to 1 if you have the <alsa/asoundlib.h> header file. */
-#cmakedefine HAVE_ALSA_ASOUNDLIB_H 1
-
-/* Define to 1 if you have the <sys/asoundlib.h> header file. */
-#cmakedefine HAVE_SYS_ASOUNDLIB_H 1
-
-#cmakedefine ALSA_PCM_OLD_SW_PARAMS_API 1
-#cmakedefine ALSA_PCM_OLD_HW_PARAMS_API 1
-
-/* Define if you have libasound.so.2 (required for >= ALSA 0.9.x support) */
-#cmakedefine HAVE_LIBASOUND2 1
-
-/* Define if libasound has snd_pcm_resume() */
-#cmakedefine HAVE_SND_PCM_RESUME 1
-
 /* Define to 1 if you have the <arpa/nameser8_compat.h> header file. */
 #cmakedefine HAVE_ARPA_NAMESER8_COMPAT_H 1
 
@@ -422,9 +407,6 @@
 /* if setgroups() takes short *as second arg */
 #undef HAVE_SHORTSETGROUPS
 
-/* Define if libasound has snd_pcm_resume() */
-#undef HAVE_SND_PCM_RESUME
-
 /* Define to 1 if you have the `snprintf' function. */
 #cmakedefine HAVE_SNPRINTF 1
 
@@ -547,9 +529,6 @@
 
 /* Define to 1 if you have the <sys/select.h> header file. */
 #cmakedefine HAVE_SYS_SELECT_H 1
-
-/* Define to 1 if you have the <sys/soundcard.h> header file. */
-#cmakedefine HAVE_SYS_SOUNDCARD_H 1
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #cmakedefine HAVE_SYS_STAT_H 1
