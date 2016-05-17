@@ -318,6 +318,10 @@ int main(int argc, char **argv)
         cout << "\t{ " << (images[c].haveAlpha ? "true" : "false") << "," << images[c].width << ", " << images[c].height << ", " << images[c].id
              << ", " << (char *)images[c].data << "},";
         cout << "\n";
+
+        // HACK: KeramikEmbedImage is weird, "data" member is constant,
+        // but here data was assigned with strdup(), so we need to free it
+        free(const_cast<unsigned char*>(images[c].data));
     }
     cout << "\t{0, 0, 0, 0, 0}\n";
     cout << "};\n\n";
