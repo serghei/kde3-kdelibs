@@ -222,24 +222,19 @@ bool KIMProxy::initialize()
             QCString dcopObjectId = "KIMIface";
 
             // see what apps implementing our service type are out there
-            KService::List offers = KServiceType::offers(IM_SERVICE_TYPE);
-            KService::List::iterator offer;
-            KStringList registeredApps = d->dc->registeredApplications();
-            KStringList::Iterator app;
-            const KStringList::Iterator end = registeredApps.end();
             // for each registered app
-            for(app = registeredApps.begin(); app != end; ++app)
+            for(const auto &app : d->dc->registeredApplications())
             {
                 // kdDebug( 790 ) << " considering: " << *app << endl;
                 // for each offer
-                for(offer = offers.begin(); offer != offers.end(); ++offer)
+                for(const auto &offer : KServiceType::offers(IM_SERVICE_TYPE))
                 {
-                    QCString dcopService = (*offer)->property("X-DCOP-ServiceName").toString().latin1();
+                    QCString dcopService = offer->property("X-DCOP-ServiceName").toString().latin1();
                     if(!dcopService.isEmpty())
                     {
                         // kdDebug( 790 ) << " is it: " << dcopService << "?" << endl;
                         // get the application name ( minus any process ID )
-                        QCString instanceName = (*app).left(dcopService.length());
+                        QCString instanceName = app.left(dcopService.length());
                         // if the application implements the dcop service, add it
                         if(instanceName == dcopService)
                         {
@@ -248,8 +243,8 @@ bool KIMProxy::initialize()
                             // endl;
                             if(!m_im_client_stubs.find(dcopService))
                             {
-                                kdDebug(790) << "App " << *app << ", dcopObjectId " << dcopObjectId << " found, using it for presence info." << endl;
-                                m_im_client_stubs.insert(*app, new KIMIface_stub(d->dc, *app, dcopObjectId));
+                                kdDebug(790) << "App " << app << ", dcopObjectId " << dcopObjectId << " found, using it for presence info." << endl;
+                                m_im_client_stubs.insert(app, new KIMIface_stub(d->dc, app, dcopObjectId));
                                 pollApp(*app);
                             }
                         }
@@ -272,12 +267,10 @@ void KIMProxy::registeredToDCOP(const QCString &appId)
     // get an up to date list of offers in case a new app was installed
     // and check each of the offers that implement the service type we're looking for,
     // to see if any of them are the app that just registered
-    const KService::List offers = KServiceType::offers(IM_SERVICE_TYPE);
-    KService::List::const_iterator it;
-    for(it = offers.begin(); it != offers.end(); ++it)
+    for(const auto &offer : KServiceType::offers(IM_SERVICE_TYPE))
     {
         QCString dcopObjectId = "KIMIface";
-        QCString dcopService = (*it)->property("X-DCOP-ServiceName").toString().latin1();
+        QCString dcopService = offer->property("X-DCOP-ServiceName").toString().latin1();
         if(appId.left(dcopService.length()) == dcopService)
         {
             // if it's not already known, insert it
