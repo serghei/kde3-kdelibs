@@ -31,7 +31,7 @@ install( FILES
 set( target kwalletclient )
 
 set( ${target}_SRCS
-  kwallet.skel kwallet.cc
+  kwallet.skel kwallet.cpp
 )
 
 kde_add_library( ${target} SHARED AUTOMOC

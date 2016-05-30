@@ -30,7 +30,7 @@ install( FILES ftp.protocol DESTINATION ${SERVICES_INSTALL_DIR} )
 set( target kio_ftp )
 
 set( ${target}_SRCS
-  ftp.cc
+  ftp.cpp
 )
 
 kde_add_kpart( ${target} AUTOMOC

@@ -18,7 +18,7 @@ include_directories(
 ##### dcopidl ###################################
 
 kde_add_executable( dcopidl
-  SOURCES main.cpp yacc.cc scanner.cc
+  SOURCES main.cpp yacc.cpp scanner.cpp
   LINK DCOP-shared
   DESTINATION ${BIN_INSTALL_DIR}
 )

@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class QString;
 
 #ifndef KDE_USE_FINAL
-#include "yacc.cc.h"
+#include "yacc.cpp.h"
 #endif
 
 extern int idl_line_no;

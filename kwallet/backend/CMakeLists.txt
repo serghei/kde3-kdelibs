@@ -25,9 +25,9 @@ include_directories(
 set( target kwalletbackend )
 
 set( ${target}_SRCS
-  blockcipher.cc blowfish.cc
-  cbc.cc sha1.cc kwalletentry.cc
-  kwalletbackend.cc
+  blockcipher.cpp blowfish.cpp
+  cbc.cpp sha1.cpp kwalletentry.cpp
+  kwalletbackend.cpp
 )
 
 kde_add_library( ${target} SHARED

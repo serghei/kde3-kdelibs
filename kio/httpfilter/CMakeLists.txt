@@ -24,7 +24,7 @@ include_directories(
 set( target httpfilter )
 
 set( ${target}_SRCS
-  httpfilter.cc
+  httpfilter.cpp
 )
 
 kde_add_library( ${target} STATIC_PIC AUTOMOC

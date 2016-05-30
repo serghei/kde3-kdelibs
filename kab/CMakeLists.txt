@@ -23,7 +23,7 @@ include_directories(
 set( target kab )
 
 set( ${target}_SRCS
-  kabapi.cc addressbook.cc qconfigDB.cc
+  kabapi.cpp addressbook.cpp qconfigDB.cpp
 )
 
 kde_add_library( ${target} STATIC_PIC AUTOMOC

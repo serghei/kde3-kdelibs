@@ -37,7 +37,7 @@ install( FILES kcertpart.rc DESTINATION ${DATA_INSTALL_DIR}/kcertpart )
 set( target libkcertpart )
 
 set( ${target}_SRCS
-  kcertpart.cc
+  kcertpart.cpp
 )
 
 kde_add_kpart( ${target} AUTOMOC

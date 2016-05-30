@@ -45,14 +45,14 @@ install( FILES
 set( target kssl )
 
 set( ${target}_SRCS
-  kssl.cc ksslcertificatehome.cc ksslsettings.cc
-  ksslcertificate.cc ksslconnectioninfo.cc ksslcertificatefactory.cc
-  ksslcertificatecache.cc ksslpeerinfo.cc ksslinfodlg.cc
-  ksslcertdlg.cc ksslutils.cc kopenssl.cc ksslpkcs12.cc
-  ksslcertchain.cc ksslkeygen.cc ksslx509v3.cc
-  ksslsigners.cc ksslpkcs7.cc ksslpemcallback.cc
-  ksslx509map.cc ksslsession.cc keygenwizard.ui
-  keygenwizard2.ui ksmimecrypto.cc ksslcsessioncache.cc
+  kssl.cpp ksslcertificatehome.cpp ksslsettings.cpp
+  ksslcertificate.cpp ksslconnectioninfo.cpp ksslcertificatefactory.cpp
+  ksslcertificatecache.cpp ksslpeerinfo.cpp ksslinfodlg.cpp
+  ksslcertdlg.cpp ksslutils.cpp kopenssl.cpp ksslpkcs12.cpp
+  ksslcertchain.cpp ksslkeygen.cpp ksslx509v3.cpp
+  ksslsigners.cpp ksslpkcs7.cpp ksslpemcallback.cpp
+  ksslx509map.cpp ksslsession.cpp keygenwizard.ui
+  keygenwizard2.ui ksmimecrypto.cpp ksslcsessioncache.cpp
 )
 
 kde_add_library( ${target} STATIC_PIC AUTOMOC

@@ -42,11 +42,11 @@ install( FILES
 set( target kbookmarks )
 
 set( ${target}_SRCS
-  kbookmark.cc kbookmarkbar.cc kbookmarkdrag.cc kbookmarkexporter.cc
-  kbookmarkimporter.cc kbookmarkmanager.cc kbookmarkmenu.cc
-  kbookmarkimporter_crash.cc kbookmarkimporter_opera.cc
-  kbookmarkimporter_ie.cc kbookmarkimporter_ns.cc
-  kbookmarkimporter_kde1.cc kbookmarkdombuilder.cc
+  kbookmark.cpp kbookmarkbar.cpp kbookmarkdrag.cpp kbookmarkexporter.cpp
+  kbookmarkimporter.cpp kbookmarkmanager.cpp kbookmarkmenu.cpp
+  kbookmarkimporter_crash.cpp kbookmarkimporter_opera.cpp
+  kbookmarkimporter_ie.cpp kbookmarkimporter_ns.cpp
+  kbookmarkimporter_kde1.cpp kbookmarkdombuilder.cpp
   kbookmarkmanager.skel kbookmarknotifier.skel
 )
 

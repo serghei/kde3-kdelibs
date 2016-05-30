@@ -66,8 +66,8 @@ set( target khtml )
 
 set( ${target}_SRCS
   khtmlview.cpp khtml_part.cpp khtml_run.cpp
-  khtml_factory.cpp khtml_settings.cc khtml_events.cpp
-  khtml_ext.cpp khtml_pagecache.cpp khtml_iface.cc
+  khtml_factory.cpp khtml_settings.cpp khtml_events.cpp
+  khtml_ext.cpp khtml_pagecache.cpp khtml_iface.cpp
   khtml_printsettings.cpp khtmlimage.cpp kjserrordlg.ui
   htmlpageinfo.ui khtml_iface.skel
 )

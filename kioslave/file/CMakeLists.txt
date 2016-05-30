@@ -41,7 +41,7 @@ install( FILES file.protocol DESTINATION ${SERVICES_INSTALL_DIR} )
 set( target kio_file )
 
 set( ${target}_SRCS
-  file.cc
+  file.cpp
 )
 
 kde_add_kpart( ${target} AUTOMOC

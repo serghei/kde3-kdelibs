@@ -56,7 +56,7 @@ kde_add_kdeinit_executable( ${target} AUTOMOC
 set( target kio_http )
 
 set( ${target}_SRCS
-  http.cc
+  http.cpp
 )
 
 kde_add_kpart( ${target} AUTOMOC
