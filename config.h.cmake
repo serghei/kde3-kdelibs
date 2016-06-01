@@ -1,3 +1,6 @@
+/* defined if is used Qt5 */
+#cmakedefine WITH_QT5
+
 /* Define where aspell data dir is */
 #define ASPELL_DATADIR "@WITH_ASPELL_DATADIR@"
 

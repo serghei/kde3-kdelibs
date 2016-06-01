@@ -438,8 +438,12 @@ if( WITH_PULSEAUDIO )
   kde_search_module( PULSEAUDIO libpulse-simple )
 endif( )
 
-# Qt3
-include( FindQt3 )
+# select Qt version
+if( WITH_QT5 )
+  include( FindQt5 )
+else( )
+  include( FindQt3 )
+endif( )
 
 
 ##### check for system things ###################

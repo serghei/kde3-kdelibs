@@ -60,7 +60,7 @@ DCOPObject::DCOPObject(QObject *obj)
     QObject *currentObj = obj;
     while(currentObj != 0L)
     {
-        ident.prepend(currentObj->name());
+        ident.prepend(currentObj->objectName());
         ident.prepend("/");
         currentObj = currentObj->parent();
     }
@@ -136,9 +136,9 @@ DCOPObject *DCOPObject::find(const QCString &_objId)
     return nullptr;
 }
 
-QPtrList< DCOPObject > DCOPObject::match(const QCString &partialId)
+QValueList< DCOPObject* > DCOPObject::match(const QCString &partialId)
 {
-    QPtrList< DCOPObject > mlist;
+    QValueList< DCOPObject* > mlist;
 
     for(const auto it : *objMap())
         if(it.first.left(partialId.length()) == partialId) // found it?
@@ -158,7 +158,7 @@ QCString DCOPObject::objectName(QObject *obj)
     QObject *currentObj = obj;
     while(currentObj != 0)
     {
-        identity.prepend(currentObj->name());
+        identity.prepend(currentObj->objectName());
         identity.prepend("/");
         currentObj = currentObj->parent();
     }
@@ -173,14 +173,14 @@ bool DCOPObject::process(const QCString &fun, const QByteArray &data, QCString &
     if(fun == "interfaces()")
     {
         replyType = "KStringList";
-        QDataStream reply(replyData, IO_WriteOnly);
+        QDataStream reply(&replyData, IO_WriteOnly);
         reply << interfaces();
         return true;
     }
     else if(fun == "functions()")
     {
         replyType = "KStringList";
-        QDataStream reply(replyData, IO_WriteOnly);
+        QDataStream reply(&replyData, IO_WriteOnly);
         reply << functions();
         return true;
     }
@@ -247,26 +247,26 @@ bool DCOPObject::disconnectDCOPSignal(const QCString &sender, const QCString &se
 }
 
 
-QPtrList< DCOPObjectProxy > *DCOPObjectProxy::proxies = 0;
+QValueList< DCOPObjectProxy* > *DCOPObjectProxy::proxies = 0;
 
 DCOPObjectProxy::DCOPObjectProxy()
 {
     if(!proxies)
-        proxies = new QPtrList< DCOPObjectProxy >;
+        proxies = new QValueList< DCOPObjectProxy* >;
     proxies->append(this);
 }
 
 DCOPObjectProxy::DCOPObjectProxy(DCOPClient *)
 {
     if(!proxies)
-        proxies = new QPtrList< DCOPObjectProxy >;
+        proxies = new QValueList< DCOPObjectProxy* >;
     proxies->append(this);
 }
 
 DCOPObjectProxy::~DCOPObjectProxy()
 {
     if(proxies)
-        proxies->removeRef(this);
+        proxies->removeOne(this);
 }
 
 bool DCOPObjectProxy::process(const QCString & /*obj*/, const QCString & /*fun*/, const QByteArray & /*data*/, QCString & /*replyType*/,

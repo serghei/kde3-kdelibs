@@ -27,6 +27,7 @@
 
 #include <qdict.h>
 #include <qintdict.h>
+#include <qptrlist.h>
 
 #include <dcopclient.h>
 #include <kio/authinfo.h>

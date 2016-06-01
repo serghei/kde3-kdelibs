@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <qobject.h>
 #include <qmap.h>
 #include <qstring.h>
-#include <qptrlist.h>
 #include <qvaluelist.h>
 #include <kdatastream.h> // needed for proper bool marshalling
 #include <kstringlist.h>
@@ -309,7 +308,7 @@ public:
      * @return a list of DCOPObjects beginning with the string
      * contained in @p partialId.
      */
-    static QPtrList< DCOPObject > match(const QCString &partialId);
+    static QValueList< DCOPObject* > match(const QCString &partialId);
 
     /**
      * Creates an object id for the QObject @p obj. This is done
@@ -390,7 +389,7 @@ private:
     void *unused;
     void *unused_too;
     friend class DCOPClient;
-    static QPtrList< DCOPObjectProxy > *proxies;
+    static QValueList< DCOPObjectProxy* > *proxies;
 
 protected:
     virtual void virtual_hook(int id, void *data);

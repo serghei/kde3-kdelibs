@@ -44,6 +44,8 @@ option( WITH_AVAHI "Enable AVAHI support" ${WITH_ALL_FEATURES} )
 option( WITH_ASPELL "Enable aspell support" ${WITH_ALL_FEATURES} )
 option( WITH_HUNSPELL "Enable hunspell support" ${WITH_ALL_FEATURES} )
 
+# this option is only for development
+option( WITH_QT5 "Enable Qt5 development support" OFF )
 
 # NOTE at this moment (Mar 8, 2012) su and sudo cannot be automatically detected
 # see bug http://public.kitware.com/Bug/print_bug_page.php?bug_id=10468

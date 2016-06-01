@@ -14,6 +14,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_BINARY_DIR}/kdecore
+  ${CMAKE_SOURCE_DIR}/triq
   ${CMAKE_SOURCE_DIR}/kdecore
   ${QT_INCLUDE_DIR}
   ${X11_INCLUDE_DIRS}
