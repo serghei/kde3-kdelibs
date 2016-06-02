@@ -41,6 +41,9 @@ class QBrush;
 class QVariant;
 template < class T > class QValueList;
 
+template < class T > class KList;
+typedef KList<QCString> KStringList;
+
 class kdbgstream;
 class kndbgstream;
 
@@ -446,6 +449,14 @@ public:
      * @since 3.3
      */
     template < class T > kdbgstream &operator<<(const QValueList< T > &list);
+
+    /**
+     * Prints the given value
+     * @param list the list to print
+     * @return this stream
+     * @since 2016-06-02
+     */
+    kdbgstream &operator<<(const KStringList &list);
 
 private:
     QString output;

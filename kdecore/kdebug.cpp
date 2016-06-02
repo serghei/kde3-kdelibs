@@ -402,6 +402,22 @@ kdbgstream &kdbgstream::form(const char *format, ...)
     return *this;
 }
 
+kdbgstream &kdbgstream::operator<<(const KStringList &list)
+{
+    *this << "(";
+    typename KStringList::ConstIterator it = list.begin();
+    if(!list.isEmpty())
+    {
+        *this << *it++;
+    }
+    for(; it != list.end(); ++it)
+    {
+        *this << "," << *it;
+    }
+    *this << ")";
+    return *this;
+}
+
 kdbgstream::~kdbgstream()
 {
     if(!output.isEmpty())
