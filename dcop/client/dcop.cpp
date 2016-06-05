@@ -422,19 +422,12 @@ QStringList dcopSessionList(const QString &user, const QString &home)
     d.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     d.setNameFilter(".DCOPserver*");
 
-    const QFileInfoList *list = d.entryInfoList();
-    if(!list)
-        return result;
-
-    QFileInfoListIterator it(*list);
-    QFileInfo *fi;
-
-    while((fi = it.current()) != 0)
+    for(const auto &fi : d.entryInfoList())
     {
-        if(fi->isReadable())
-            result.append(fi->fileName());
-        ++it;
+        if(fi.isReadable())
+            result.append(fi.fileName());
     }
+
     return result;
 }
 
