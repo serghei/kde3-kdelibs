@@ -14,6 +14,11 @@ if( NOT COMPILER_CHECKED )
   set( COMPILER_CHECKED 1 CACHE INTERNAL "" )
 endif( )
 
+option( USE_DISTCC "Enable distcc support" OFF )
+if( USE_DISTCC )
+    set( CMAKE_C_COMPILER_LAUNCHER distcc )
+    set( CMAKE_CXX_COMPILER_LAUNCHER distcc )
+endif( )
 
 include( CheckCXXCompilerFlag )
 include( CheckSymbolExists )
