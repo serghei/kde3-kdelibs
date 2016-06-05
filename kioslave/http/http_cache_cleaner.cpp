@@ -167,7 +167,7 @@ void scanDirectory(FileInfoList &fileEntries, const QString &name, const QString
     if(!dir.exists())
         return;
 
-    QFileInfoList *newEntries = (QFileInfoList *)dir.entryInfoList();
+    QFileInfoList_qt3 *newEntries = (QFileInfoList_qt3 *)dir.entryInfoList_qt3();
 
     if(!newEntries)
         return; // Directory not accessible ??

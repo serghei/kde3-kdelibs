@@ -586,7 +586,7 @@ bool KBuildSycoca::checkDirTimestamps(const QString &dirname, const QDateTime &s
         }
     }
     QDir dir(dirname);
-    const QFileInfoList *list = dir.entryInfoList(QDir::DefaultFilter, QDir::Unsorted);
+    const QFileInfoList_qt3 *list = dir.entryInfoList_qt3(QDir::DefaultFilter, QDir::Unsorted);
     if(!list)
         return true;
 

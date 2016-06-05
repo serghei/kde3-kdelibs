@@ -131,7 +131,7 @@ QStringList KCrashBookmarkImporterImpl::getCrashLogs()
     d.setFilter(QDir::Files);
     d.setNameFilter("konqueror-crash-*.log");
 
-    const QFileInfoList *list = d.entryInfoList();
+    const QFileInfoList_qt3 *list = d.entryInfoList_qt3();
     QFileInfoListIterator it(*list);
 
     QFileInfo *fi;

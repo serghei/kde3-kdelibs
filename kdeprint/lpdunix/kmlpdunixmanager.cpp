@@ -293,7 +293,7 @@ void KMLpdUnixManager::parseEtcPrintersConf()
 void KMLpdUnixManager::parseEtcLpPrinters()
 {
     QDir d("/etc/lp/printers");
-    const QFileInfoList *prlist = d.entryInfoList(QDir::Dirs);
+    const QFileInfoList_qt3 *prlist = d.entryInfoList_qt3(QDir::Dirs);
     if(!prlist)
         return;
 
@@ -337,7 +337,7 @@ void KMLpdUnixManager::parseEtcLpPrinters()
 void KMLpdUnixManager::parseEtcLpMember()
 {
     QDir d("/etc/lp/member");
-    const QFileInfoList *prlist = d.entryInfoList(QDir::Files);
+    const QFileInfoList_qt3 *prlist = d.entryInfoList_qt3(QDir::Files);
     if(!prlist)
         return;
 
@@ -358,7 +358,7 @@ void KMLpdUnixManager::parseEtcLpMember()
 void KMLpdUnixManager::parseSpoolInterface()
 {
     QDir d("/usr/spool/interfaces/lp");
-    const QFileInfoList *prlist = d.entryInfoList(QDir::Files);
+    const QFileInfoList_qt3 *prlist = d.entryInfoList_qt3(QDir::Files);
     if(!prlist)
         return;
 

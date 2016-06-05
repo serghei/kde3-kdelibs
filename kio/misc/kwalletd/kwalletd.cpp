@@ -932,7 +932,7 @@ QStringList KWalletD::wallets() const
 
     dir.setFilter(QDir::Files | QDir::NoSymLinks);
 
-    const QFileInfoList *list = dir.entryInfoList();
+    const QFileInfoList_qt3 *list = dir.entryInfoList_qt3();
     QFileInfoListIterator it(*list);
     QFileInfo *fi;
     while((fi = it.current()) != 0L)
