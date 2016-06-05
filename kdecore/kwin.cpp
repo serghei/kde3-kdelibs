@@ -41,7 +41,6 @@
 #include <kiconloader.h>
 #include <kdebug.h>
 
-#include <kdatastream.h>
 #include <klocale.h>
 #include <dcopclient.h>
 #include <dcopref.h>

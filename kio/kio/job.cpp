@@ -48,7 +48,6 @@ extern "C" {
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kmessagebox.h>
-#include <kdatastream.h>
 #include <kmainwindow.h>
 #include <kde_file.h>
 

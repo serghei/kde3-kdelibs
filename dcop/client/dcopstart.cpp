@@ -20,7 +20,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************/
 
-#include "../kdatastream.h"
 #include "../dcopclient.h"
 #include <stdlib.h>
 #include <stdio.h>

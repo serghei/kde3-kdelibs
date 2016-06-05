@@ -26,7 +26,6 @@
 #include <stdlib.h>
 #include <kdebug.h>
 #include <dcopclient.h>
-#include <kdatastream.h>
 
 
 KSSLSigners::KSSLSigners()

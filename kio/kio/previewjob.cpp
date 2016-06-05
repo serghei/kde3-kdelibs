@@ -38,7 +38,6 @@
 #include <qtimer.h>
 #include <qregexp.h>
 
-#include <kdatastream.h> // Do not remove, needed for correct bool serialization
 #include <kfileitem.h>
 #include <kapplication.h>
 #include <ktempfile.h>

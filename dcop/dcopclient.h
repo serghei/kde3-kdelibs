@@ -28,7 +28,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <qvaluelist.h>
 #include <qstring.h>
 #include <kstringlist.h>
-#include <kdatastream.h> // needed for proper bool marshalling
 #include <kdelibs_export.h>
 
 class DCOPObjectProxy;

@@ -87,7 +87,6 @@ using namespace DOM;
 #include <kstdaction.h>
 #include <kfiledialog.h>
 #include <ktrader.h>
-#include <kdatastream.h>
 #include <ktempfile.h>
 #include <kglobalsettings.h>
 #include <kurldrag.h>

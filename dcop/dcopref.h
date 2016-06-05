@@ -24,8 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define _DCOPREF_H
 
 #include <qcstring.h>
+#include <qdatastream.h>
 #include <dcoptypes.h>
-#include <kdatastream.h> // needed for proper bool marshalling
 #include "kdelibs_export.h"
 
 class QDataStream;

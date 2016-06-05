@@ -44,7 +44,6 @@
 #include <kdebug.h>
 #include <kdirwatch.h>
 #include <kstandarddirs.h>
-#include <kdatastream.h>
 #include <kio/global.h>
 #include <kservicetype.h>
 

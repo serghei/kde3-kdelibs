@@ -20,7 +20,6 @@
     $Id: metainfojob.cpp 465272 2005-09-29 09:47:40Z mueller $
 */
 
-#include <kdatastream.h> // Do not remove, needed for correct bool serialization
 #include <kfileitem.h>
 #include <kdebug.h>
 #include <kfilemetainfo.h>

@@ -43,7 +43,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "../dcopclient.h"
 #include "../dcopref.h"
-#include "../kdatastream.h"
 
 #include "marshall.cpp"
 

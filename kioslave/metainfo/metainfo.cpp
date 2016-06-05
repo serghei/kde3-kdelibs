@@ -18,7 +18,6 @@
 
 // $Id: metainfo.cpp 465272 2005-09-29 09:47:40Z mueller $
 
-#include <kdatastream.h> // Do not remove, needed for correct bool serialization
 #include <kurl.h>
 #include <kapplication.h>
 #include <kmimetype.h>

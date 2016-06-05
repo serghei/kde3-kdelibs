@@ -28,7 +28,6 @@
 #include <kio/authinfo.h>
 #include <kurl.h>
 #include <kmainwindow.h>
-#include <kdatastream.h>
 #include <klistview.h>
 #include <ksslcertdlg.h>
 

@@ -27,7 +27,6 @@
 #include "kdirnotify_stub.h"
 #include <dcopclient.h>
 
-#include <kdatastream.h>
 
 
 KDirNotify_stub::KDirNotify_stub(const QCString &app, const QCString &obj) : DCOPStub(app, obj)

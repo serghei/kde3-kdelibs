@@ -18,7 +18,6 @@
 
 #include <qglobal.h>
 #include <qcstring.h>
-#include <kdatastream.h>
 
 #include <kapplication.h>
 #include <kdebug.h>

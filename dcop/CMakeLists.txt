@@ -33,7 +33,7 @@ include_directories(
 
 install( FILES
     dcopclient.h dcopobject.h dcopstub.h dcopref.h
-    dcoptypes.h kdatastream.h
+    dcoptypes.h
   DESTINATION ${INCLUDE_INSTALL_DIR} )
 
 

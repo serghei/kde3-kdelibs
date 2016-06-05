@@ -33,7 +33,6 @@
 #include <kbuildimageiofactory.h>
 #include <kbuildprotocolinfofactory.h>
 #include <kctimefactory.h>
-#include <kdatastream.h>
 
 #include <qdatastream.h>
 #include <qfile.h>

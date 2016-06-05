@@ -39,7 +39,6 @@
 #include "kfile/kopenwith.h"
 #include "kfile/krecentdocument.h"
 
-#include <kdatastream.h>
 #include <kmessageboxwrapper.h>
 #include <kurl.h>
 #include <kapplication.h>

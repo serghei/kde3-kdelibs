@@ -61,7 +61,6 @@
 #include <kaboutdata.h>
 #include <kglobalsettings.h>
 #include <kcrash.h>
-#include <kdatastream.h>
 #include <klibloader.h>
 #include <kmimesourcefactory.h>
 #include <kstdaccel.h>

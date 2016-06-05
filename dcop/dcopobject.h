@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <qmap.h>
 #include <qstring.h>
 #include <qvaluelist.h>
-#include <kdatastream.h> // needed for proper bool marshalling
 #include <kstringlist.h>
 #include "kdelibs_export.h"
 

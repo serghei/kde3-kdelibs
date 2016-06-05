@@ -60,7 +60,6 @@
 #include <kresolver.h>
 #include <kmimemagic.h>
 #include <dcopclient.h>
-#include <kdatastream.h>
 #include <kapplication.h>
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
