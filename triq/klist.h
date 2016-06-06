@@ -52,6 +52,7 @@ public:
     const_reference operator[] (size_type n) const;
 
     ConstIterator find(const T &val);
+    bool contains(const T &val);
 
     Iterator insert(Iterator it, const T &val);
     void prepend(const T &val);
@@ -155,6 +156,13 @@ template <class T>
 typename KList<T>::ConstIterator KList<T>::find(const T &val)
 {
     return std::find(list.begin(), list.end(), val);
+}
+
+
+template <class T>
+bool KList<T>::contains(const T &val)
+{
+    return (list.end() != find(val));
 }
 
 
