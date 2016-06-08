@@ -9,7 +9,12 @@
 #
 #################################################
 
-add_subdirectory( KDE-ICE )
+if( NOT WITH_DCOP_DBUS )
+  add_subdirectory( KDE-ICE )
+elseif( BUILD_DCOP_TESTS )
+  add_subdirectory( tests )
+endif( )
+
 add_subdirectory( dcopidl )
 add_subdirectory( dcopidlng )
 add_subdirectory( dcopidl2cpp )
@@ -39,25 +44,38 @@ install( FILES
 
 ##### libDCOP ###################################
 
+if( WITH_DCOP_DBUS )
+    include_directories( ${CMAKE_SOURCE_DIR}/dbus/src )
+    set( KDEDBUS kdedbus-shared )
+    set( DCOPCLIENT dcopclient.cpp )
+else( )
+    set( KICE kICE-static )
+    set( DCOPCLIENT dcopclient_ice.cpp )
+endif( )
+
 kde_add_library( DCOP SHARED AUTOMOC
-  SOURCES dcopstub.cpp dcopref.cpp dcopobject.cpp dcopclient.cpp
+  SOURCES dcopstub.cpp dcopref.cpp dcopobject.cpp ${DCOPCLIENT}
   VERSION 4.2.0
-  LINK kICE-static ${QT_LIBRARY}
+  LINK ${KICE} ${KDEDBUS} ${QT_LIBRARY}
   DESTINATION ${LIB_INSTALL_DIR}
 )
 
 
 #### dcopserver (kdeinit) #######################
 
-kde_add_kdeinit_executable( dcopserver AUTOMOC
-  SOURCES dcopserver.cpp dcopsignals.cpp
-  LINK kICE-static DCOP-shared
-)
+if( NOT WITH_DCOP_DBUS )
+  kde_add_kdeinit_executable( dcopserver AUTOMOC
+    SOURCES dcopserver.cpp dcopsignals.cpp
+    LINK kICE-static DCOP-shared
+  )
+endif( )
 
 
 #### dcopserver_shutdown ########################
 
-kde_add_executable( dcopserver_shutdown
-  SOURCES dcopserver_shutdown.c
-  DESTINATION ${BIN_INSTALL_DIR}
-)
+if( NOT WITH_DCOP_DBUS )
+  kde_add_executable( dcopserver_shutdown
+    SOURCES dcopserver_shutdown.c
+    DESTINATION ${BIN_INSTALL_DIR}
+  )
+endif( )

@@ -44,6 +44,10 @@ option( WITH_AVAHI "Enable AVAHI support" ${WITH_ALL_FEATURES} )
 option( WITH_ASPELL "Enable aspell support" ${WITH_ALL_FEATURES} )
 option( WITH_HUNSPELL "Enable hunspell support" ${WITH_ALL_FEATURES} )
 
+# this option is under development
+option( WITH_DCOP_DBUS "Enable DBus version of DCOP client" OFF )
+option( BUILD_DCOP_TESTS "Build tests for DBus based DCOP" OFF )
+
 # this option is only for development
 option( WITH_QT5 "Enable Qt5 development support" OFF )
 
