@@ -401,3 +401,13 @@ bool QDBusConnection::requestName(const QString &name, int modeFlags)
 
     return !d->handleError();
 }
+
+bool QDBusConnection::releaseName(const QString &name)
+{
+    if(!d || !d->connection)
+        return false;
+
+    dbus_bus_release_name(d->connection, name.utf8(), &d->error);
+
+    return !d->handleError();
+}

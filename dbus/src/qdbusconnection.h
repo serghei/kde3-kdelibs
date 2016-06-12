@@ -335,6 +335,13 @@ public:
     bool requestName(const QString &name, int modeFlags = NoReplace);
 
     /**
+     * @brief Asks the bus to unassign the given name from this connection by invoking the ReleaseName method on the bus.
+     * @param name the name to remove
+     * @return @c true if the name was released succesfully
+     */
+    bool releaseName(const QString &name);
+
+    /**
      * @brief Returns the connection identifier assigned at connect
      *
      * The unique name is the connection address or identifier the bus assigned
