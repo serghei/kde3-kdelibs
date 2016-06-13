@@ -20,7 +20,7 @@ include_directories(
 
 kde_moc( MOCS test_dbus.cpp )
 
-kde_add_executable( test_dbus
-    SOURCES test_dbus.cpp
+kde_add_executable( test_dbus AUTOMOC
+    SOURCES test_dbus.cpp test_dbus.skel
   LINK DCOP-shared
 )
