@@ -18,10 +18,9 @@ void TestApp::testAsync()
 }
 
 
-QString TestApp::testSync()
+QString TestApp::testSync(const QString &str)
 {
-    qWarning("QString TestApp::testSync()");
-    return "executed TestApp::testSync()";
+    return QString(str).toUpper();
 }
 
 
@@ -54,7 +53,6 @@ int main(int argc, char *argv[])
 
     dcopClient.attach();
     dcopClient.registerAs("test_dbus", false);
-    dcopClient.registerAs("test_dbus1", false);
 
     return app.exec();
 }

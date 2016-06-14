@@ -13,7 +13,7 @@ public:
 
 k_dcop:
     virtual ASYNC testAsync();
-    virtual QString testSync();
+    virtual QString testSync(const QString &str);
 };
 
 #endif

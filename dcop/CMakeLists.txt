@@ -11,7 +11,9 @@
 
 if( NOT WITH_DCOP_DBUS )
   add_subdirectory( KDE-ICE )
-elseif( BUILD_DCOP_TESTS )
+endif( )
+
+if( BUILD_DCOP_TESTS )
   add_subdirectory( tests )
 endif( )
 
