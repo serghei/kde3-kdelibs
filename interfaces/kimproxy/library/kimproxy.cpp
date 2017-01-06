@@ -245,7 +245,7 @@ bool KIMProxy::initialize()
                             {
                                 kdDebug(790) << "App " << app << ", dcopObjectId " << dcopObjectId << " found, using it for presence info." << endl;
                                 m_im_client_stubs.insert(app, new KIMIface_stub(d->dc, app, dcopObjectId));
-                                pollApp(*app);
+                                pollApp(app);
                             }
                         }
                     }
