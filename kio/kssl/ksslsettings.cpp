@@ -46,15 +46,6 @@
 #endif
 #include <kopenssl.h>
 
-#ifdef KSSL_HAVE_SSL
-#define sk_new d->kossl->sk_new
-#define sk_push d->kossl->sk_push
-#define sk_free d->kossl->sk_free
-#define sk_value d->kossl->sk_value
-#define sk_num d->kossl->sk_num
-#define sk_dup d->kossl->sk_dup
-#define sk_pop d->kossl->sk_pop
-#endif
 
 class CipherNode {
 public:
@@ -169,7 +160,7 @@ QString KSSLSettings::getCipherList()
         d->kossl = KOSSL::self();
 
     if(m_bUseSSLv3 && m_bUseSSLv2)
-        meth = d->kossl->SSLv23_client_method();
+        meth = d->kossl->TLS_client_method();
     else if(m_bUseSSLv3)
         meth = d->kossl->SSLv3_client_method();
     else if(m_bUseSSLv2)
@@ -178,10 +169,10 @@ QString KSSLSettings::getCipherList()
     SSL_CTX *ctx = d->kossl->SSL_CTX_new(meth);
     SSL *ssl = d->kossl->SSL_new(ctx);
     STACK_OF(SSL_CIPHER) *sk = d->kossl->SSL_get_ciphers(ssl);
-    int cnt = sk_SSL_CIPHER_num(sk);
+    int cnt = d->kossl->OPENSSL_sk_num(sk);
     for(int i = 0; i < cnt; i++)
     {
-        SSL_CIPHER *sc = sk_SSL_CIPHER_value(sk, i);
+        SSL_CIPHER *sc = reinterpret_cast< SSL_CIPHER * >(d->kossl->OPENSSL_sk_value(sk, i));
         if(!sc)
             break;
 
@@ -190,11 +181,11 @@ QString KSSLSettings::getCipherList()
         else
             m_cfg->setGroup("SSLv3");
 
-        tcipher.sprintf("cipher_%s", sc->name);
+        tcipher.sprintf("cipher_%s", d->kossl->SSL_CIPHER_get_name(sc));
         int bits = d->kossl->SSL_CIPHER_get_bits(sc, NULL);
         if(m_cfg->readBoolEntry(tcipher, bits >= 56))
         {
-            CipherNode *xx = new CipherNode(sc->name, bits);
+            CipherNode *xx = new CipherNode(d->kossl->SSL_CIPHER_get_name(sc), bits);
             if(!cipherList.contains(xx))
                 cipherList.prepend(xx);
             else
@@ -247,11 +238,19 @@ void KSSLSettings::load()
     m_cfg->setGroup("TLS");
     m_bUseTLSv1 = m_cfg->readBoolEntry("Enabled", true);
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L || defined(OPENSSL_NO_SSL2)
+    m_bUseSSLv2 = false;
+#else
     m_cfg->setGroup("SSLv2");
     m_bUseSSLv2 = m_cfg->readBoolEntry("Enabled", false);
+#endif
 
+#if defined(OPENSSL_NO_SSL3)
+    m_bUseSSLv3 = false;
+#else
     m_cfg->setGroup("SSLv3");
     m_bUseSSLv3 = m_cfg->readBoolEntry("Enabled", true);
+#endif
 
     m_cfg->setGroup("Warnings");
     m_bWarnOnEnter = m_cfg->readBoolEntry("OnEnter", false);
@@ -432,13 +431,3 @@ QString &KSSLSettings::getEGDPath()
 {
     return d->m_EGDPath;
 }
-
-#ifdef KSSL_HAVE_SSL
-#undef sk_new
-#undef sk_push
-#undef sk_free
-#undef sk_value
-#undef sk_num
-#undef sk_pop
-#undef sk_dup
-#endif

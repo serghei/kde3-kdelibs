@@ -25,8 +25,8 @@
 #include <qptrlist.h>
 #include <kdemacros.h>
 
-class QString;
-class QCString;
+class TQString;
+class TQCString;
 class KSSL;
 class KSSLCertChainPrivate;
 class QStringList;

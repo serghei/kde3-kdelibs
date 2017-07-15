@@ -36,6 +36,9 @@ QDateTime ASN1_UTCTIME_QDateTime(ASN1_UTCTIME *tm, int *isGmt)
     QDateTime qdt;
     char *v;
     int gmt = 0;
+    int gentime = 0;
+    int yoffset = 0;
+    int yearbase = 1900;
     int i;
     int y = 0, M = 0, d = 0, h = 0, m = 0, s = 0;
     QDate qdate;
@@ -43,28 +46,35 @@ QDateTime ASN1_UTCTIME_QDateTime(ASN1_UTCTIME *tm, int *isGmt)
 
     i = tm->length;
     v = (char *)tm->data;
-
+    if((i == 15) || (i == 21))
+    {
+        gentime = 1;
+        yoffset = 2;
+        yearbase = 0;
+    }
     if(i < 10)
         goto auq_err;
     if(v[i - 1] == 'Z')
         gmt = 1;
-    for(i = 0; i < 10; i++)
+    for(i = 0; i < 10 + yoffset; i++)
         if((v[i] > '9') || (v[i] < '0'))
             goto auq_err;
-    y = (v[0] - '0') * 10 + (v[1] - '0');
+    y = (v[0 + yoffset] - '0') * 10 + (v[1 + yoffset] - '0');
+    if(gentime)
+        y += (v[0] - '0') * 1000 + (v[1] - '0') * 100;
     if(y < 50)
         y += 100;
-    M = (v[2] - '0') * 10 + (v[3] - '0');
+    M = (v[2 + yoffset] - '0') * 10 + (v[3 + yoffset] - '0');
     if((M > 12) || (M < 1))
         goto auq_err;
-    d = (v[4] - '0') * 10 + (v[5] - '0');
-    h = (v[6] - '0') * 10 + (v[7] - '0');
-    m = (v[8] - '0') * 10 + (v[9] - '0');
-    if((v[10] >= '0') && (v[10] <= '9') && (v[11] >= '0') && (v[11] <= '9'))
-        s = (v[10] - '0') * 10 + (v[11] - '0');
+    d = (v[4 + yoffset] - '0') * 10 + (v[5 + yoffset] - '0');
+    h = (v[6 + yoffset] - '0') * 10 + (v[7 + yoffset] - '0');
+    m = (v[8 + yoffset] - '0') * 10 + (v[9 + yoffset] - '0');
+    if((v[10 + yoffset] >= '0') && (v[10 + yoffset] <= '9') && (v[11 + yoffset] >= '0') && (v[11 + yoffset] <= '9'))
+        s = (v[10 + yoffset] - '0') * 10 + (v[11 + yoffset] - '0');
 
     // localize the date and display it.
-    qdate.setYMD(y + 1900, M, d);
+    qdate.setYMD(y + yearbase, M, d);
     qtime.setHMS(h, m, s);
     qdt.setDate(qdate);
     qdt.setTime(qtime);
@@ -95,7 +105,7 @@ QString ASN1_INTEGER_QString(ASN1_INTEGER *aint)
 {
     char *rep = KOSSL::self()->i2s_ASN1_INTEGER(NULL, aint);
     QString yy = rep;
-    KOSSL::self()->OPENSSL_free(rep);
+    KOSSL::self()->CRYPTO_free(rep);
     return yy;
 }
 

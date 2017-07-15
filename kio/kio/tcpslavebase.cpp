@@ -473,7 +473,7 @@ int TCPSlaveBase::startTLS()
         KSSLSession *s = KSSLSession::fromString(metaData("ssl_session_id"));
         if(s)
         {
-            d->kssl->setSession(s);
+            d->kssl->takeSession(s);
             delete s;
         }
     }
@@ -1348,7 +1348,7 @@ bool TCPSlaveBase::doSSLHandShake(bool sendError)
         KSSLSession *s = KSSLSession::fromString(metaData("ssl_session_id"));
         if(s)
         {
-            d->kssl->setSession(s);
+            d->kssl->takeSession(s);
             delete s;
         }
     }

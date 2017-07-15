@@ -22,7 +22,11 @@
 
 #include <kdemacros.h>
 
+#ifdef Q_WS_WIN
+#include "ksslconfig_win.h"
+#else
 #include "ksslconfig.h"
+#endif
 
 #include <unistd.h>
 #ifdef KSSL_HAVE_SSL
@@ -37,7 +41,7 @@ class QDateTime;
 #ifdef KSSL_HAVE_SSL
 // This functionality is missing in OpenSSL
 /**
- *  Convert an ASN1 UTCTIME value to a string.  Uses KLocale settings.
+ *  Convert an ASN1 UTCTIME value to a string.  Uses TDELocale settings.
  *
  *  @param tm the OpenSSL ASN1_UTCTIME pointer
  *
@@ -47,7 +51,7 @@ class QDateTime;
 KDE_EXPORT QString ASN1_UTCTIME_QString(ASN1_UTCTIME *tm);
 
 /**
- *  Convert an ASN1 UTCTIME value to a QDateTime.  Uses KLocale settings.
+ *  Convert an ASN1 UTCTIME value to a QDateTime.  Uses TDELocale settings.
  *
  *  @param tm the OpenSSL ASN1_UTCTIME pointer
  *  @param isGmt set to 1 if the date is set to GMT

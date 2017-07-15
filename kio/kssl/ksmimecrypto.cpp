@@ -38,15 +38,6 @@
 #endif
 
 
-// forward included macros to KOpenSSLProxy
-#define sk_new kossl->sk_new
-#define sk_free kossl->sk_free
-#define sk_push kossl->sk_push
-#define sk_value kossl->sk_value
-#define sk_num kossl->sk_num
-#define BIO_ctrl kossl->BIO_ctrl
-
-
 #ifdef KSSL_HAVE_SSL
 static const char eot = 0;
 
@@ -80,11 +71,11 @@ KSMIMECryptoPrivate::KSMIMECryptoPrivate(KOpenSSLProxy *kossl) : kossl(kossl)
 
 STACK_OF(X509) * KSMIMECryptoPrivate::certsToX509(QPtrList< KSSLCertificate > &certs)
 {
-    STACK_OF(X509) *x509 = sk_X509_new(NULL);
+    STACK_OF(X509) *x509 = reinterpret_cast< STACK_OF(X509) * >(kossl->OPENSSL_sk_new(NULL));
     KSSLCertificate *cert = certs.first();
     while(cert)
     {
-        sk_X509_push(x509, cert->getCert());
+        kossl->OPENSSL_sk_push(x509, cert->getCert());
         cert = certs.next();
     }
     return x509;
@@ -105,7 +96,7 @@ KSMIMECrypto::rc KSMIMECryptoPrivate::signMessage(BIO *clearText, BIO *cipherTex
     PKCS7 *p7 = kossl->PKCS7_sign(privKey.getCertificate()->getCert(), privKey.getPrivateKey(), other, clearText, flags);
 
     if(other)
-        sk_X509_free(other);
+        kossl->OPENSSL_sk_free(other);
 
     if(!p7)
         return sslErrToRc();
@@ -154,7 +145,7 @@ KSMIMECrypto::rc KSMIMECryptoPrivate::encryptMessage(BIO *clearText, BIO *cipher
 
     PKCS7 *p7 = kossl->PKCS7_encrypt(certs, clearText, cipher, 0);
 
-    sk_X509_free(certs);
+    kossl->OPENSSL_sk_free(certs);
 
     if(!p7)
         return sslErrToRc();
@@ -200,15 +191,15 @@ KSMIMECrypto::rc KSMIMECryptoPrivate::checkSignature(BIO *clearText, BIO *signat
     if(kossl->PKCS7_verify(p7, NULL, dummystore, in, out, PKCS7_NOVERIFY))
     {
         STACK_OF(X509) *signers = kossl->PKCS7_get0_signers(p7, 0, PKCS7_NOVERIFY);
-        int num = sk_X509_num(signers);
+        int num = kossl->OPENSSL_sk_num(signers);
 
         for(int n = 0; n < num; n++)
         {
-            KSSLCertificate *signer = KSSLCertificate::fromX509(sk_X509_value(signers, n));
+            KSSLCertificate *signer = KSSLCertificate::fromX509(reinterpret_cast< X509 * >(kossl->OPENSSL_sk_value(signers, n)));
             recip.append(signer);
         }
 
-        sk_X509_free(signers);
+        kossl->OPENSSL_sk_free(signers);
         rc = KSMIMECrypto::KSC_R_OK;
     }
     else
@@ -250,13 +241,14 @@ KSMIMECrypto::rc KSMIMECryptoPrivate::decryptMessage(BIO *cipherText, BIO *clear
 void KSMIMECryptoPrivate::MemBIOToQByteArray(BIO *src, QByteArray &dest)
 {
     char *buf;
-    long len = BIO_get_mem_data(src, &buf);
+    long len = kossl->BIO_get_mem_data(src, &buf);
     dest.assign(buf, len);
     /* Now this goes quite a bit into openssl internals.
        We assume that openssl uses malloc() (it does in
        default config) and rip out the buffer.
     */
-    reinterpret_cast< BUF_MEM * >(src->ptr)->data = NULL;
+    void *ptr = kossl->BIO_get_data(src);
+    reinterpret_cast< BUF_MEM * >(ptr)->data = NULL;
 }
 
 
@@ -347,7 +339,8 @@ KSMIMECrypto::rc KSMIMECrypto::signMessage(const QCString &clearText, QByteArray
 }
 
 
-KSMIMECrypto::rc KSMIMECrypto::checkDetachedSignature(const QCString &clearText, const QByteArray &signature, QPtrList< KSSLCertificate > &foundCerts)
+KSMIMECrypto::rc KSMIMECrypto::checkDetachedSignature(const QCString &clearText, const QByteArray &signature,
+                                                      QPtrList< KSSLCertificate > &foundCerts)
 {
 #ifdef KSSL_HAVE_SSL
     if(!kossl)

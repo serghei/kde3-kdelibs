@@ -27,7 +27,11 @@ class KOpenSSLProxyPrivate;
 
 #include <klibloader.h>
 
+#ifdef Q_WS_WIN
+#include "ksslconfig_win.h"
+#else
 #include "ksslconfig.h"
+#endif
 
 #ifdef KSSL_HAVE_SSL
 #define crypt _openssl_crypt
@@ -43,58 +47,22 @@ class KOpenSSLProxyPrivate;
 #include <openssl/evp.h>
 #include <openssl/stack.h>
 #include <openssl/bn.h>
-#if OPENSSL_VERSION_NUMBER >= 0x10000000L
-typedef struct asn1_method_st
-{
-    i2d_of_void *i2d;
-    d2i_of_void *d2i;
-    void *(*create)(void);
-    void (*destroy)(void *);
-} ASN1_METHOD;
-typedef struct asn1_header_st
-{
-    ASN1_OCTET_STRING *header;
-    void *data;
-    ASN1_METHOD *meth;
-} ASN1_HEADER;
-typedef struct stack_st STACK;
-
-#include <openssl/safestack.h>
-
-template < class S > struct KOpenSSLElementType;
-template < class T > struct KOpenSSLStackType;
-
-#define KOSSL_DECLARE_STACK_OF(type)                                                                                                                 \
-    template <> struct KOpenSSLElementType< STACK_OF(type) >                                                                                         \
-    {                                                                                                                                                \
-        typedef type value_t;                                                                                                                        \
-        typedef type *ptr_t;                                                                                                                         \
-    };                                                                                                                                               \
-    template <> struct KOpenSSLStackType< const type * >                                                                                             \
-    {                                                                                                                                                \
-        typedef STACK_OF(type) stack_t;                                                                                                              \
-        typedef STACK_OF(type) * ptr_t;                                                                                                              \
-    };
-
-KOSSL_DECLARE_STACK_OF(GENERAL_NAME)
-KOSSL_DECLARE_STACK_OF(SSL_CIPHER)
-KOSSL_DECLARE_STACK_OF(X509)
-
-template <> struct KOpenSSLElementType< STACK_OF(OPENSSL_STRING) >
-{
-    typedef char value_t;
-    typedef OPENSSL_STRING ptr_t;
-};
-
-#define KOSSL1_STACK_OF(type) STACK_OF(type)
-#else
-#define KOSSL1_STACK_OF(type) STACK
-#endif
-
 #undef crypt
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#define STACK OPENSSL_STACK
+#else
+#if OPENSSL_VERSION_NUMBER >= 0x10000000L
+#define STACK _STACK
+#endif
+#endif
 #endif
 
 #include <kstaticdeleter.h>
+
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+typedef int (*X509_STORE_CTX_verify_cb)(int, X509_STORE_CTX *);
+typedef int X509_LOOKUP_TYPE;
+#endif
 
 /**
  * Dynamically load and wrap OpenSSL.
@@ -218,17 +186,14 @@ public:
      */
     SSL_CIPHER *SSL_get_current_cipher(SSL *ssl);
 
-    /*
-     *   SSL_set_options - manipulate SSL engine options
-     *   Note: These are all mapped to SSL_ctrl so call them as the comment
-     *         specifies but know that they use SSL_ctrl.  They are #define
-     *         so they will map to the one in this class if called as a
-     *         member function of this class.
-     */
-    /* long SSL_set_options(SSL *ssl, long options); */
-    /*   Returns 0 if not reused, 1 if session id is reused */
-    /*   int SSL_session_reused(SSL *ssl); */
-    long SSL_ctrl(SSL *ssl, int cmd, long larg, char *parg);
+    /* SSL_set_options - manipulate SSL engine options */
+    long _SSL_set_options(SSL *ssl, long options);
+
+    /* Returns 0 if not reused, 1 if session id is reused */
+    int _SSL_session_reused(SSL *ssl);
+
+    /* SSL control */
+    long SSL_ctrl(SSL *ssl, int cmd, long larg, void *parg);
 
     /*
      *   RAND_egd - set the path to the EGD
@@ -273,9 +238,9 @@ public:
 
 
     /*
-     *   SSLv23_client_method - return a SSLv23 client method object
+     *   TLS_client_method - return client method object
      */
-    SSL_METHOD *SSLv23_client_method();
+    SSL_METHOD *TLS_client_method();
 
 
     /*
@@ -331,6 +296,11 @@ public:
      */
     X509 *d2i_X509(X509 **a, unsigned char **pp, long length);
 
+    /*
+     *   d2i_X509 - Covert a text representation of X509 CRL to an X509_CRL object
+     */
+    X509_CRL *d2i_X509_CRL(X509_CRL **a, unsigned char **pp, long length);
+
 
     /*
      *   i2d_X509 - Covert an X509 object into a text representation
@@ -345,9 +315,33 @@ public:
 
 
     /*
+     *   X509_subject_name_cmp - compare subject name of two X509 objects
+     */
+    int X509_subject_name_cmp(const X509 *a, const X509 *b);
+
+
+    /*
      *   X509_dup - duplicate an X509 object
      */
     X509 *X509_dup(X509 *x509);
+
+
+    /*
+     *   X509_get0_signature - get signature and algorithm
+     */
+    void X509_get0_signature(const ASN1_BIT_STRING **psig, const X509_ALGOR **palg, const X509 *x);
+
+
+    /*
+     *
+     */
+    ASN1_TIME *X509_getm_notAfter(const X509 *x);
+
+
+    /*
+     *
+     */
+    ASN1_TIME *X509_getm_notBefore(const X509 *x);
 
 
     /*
@@ -363,14 +357,64 @@ public:
 
 
     /*
-     *   X509_STORE_CTX_set_chain - set the certificate chain
+     *   X509_STORE_CTX_set0_untrusted - set the certificate chain
      */
-    void X509_STORE_CTX_set_chain(X509_STORE_CTX *v, STACK_OF(X509) * x);
+    void X509_STORE_CTX_set0_untrusted(X509_STORE_CTX *v, STACK_OF(X509) * x);
+
 
     /*
      *   X509_STORE_CTX_set_purpose - set the purpose of the certificate
      */
     void X509_STORE_CTX_set_purpose(X509_STORE_CTX *v, int purpose);
+
+
+    /*
+     *
+     */
+    X509 *X509_STORE_CTX_get_current_cert(X509_STORE_CTX *ctx);
+
+
+    /*
+     *
+     */
+    int X509_STORE_CTX_get_error(X509_STORE_CTX *ctx);
+
+
+    /*
+     *
+     */
+    int X509_STORE_CTX_get_error_depth(X509_STORE_CTX *ctx);
+
+
+    /*
+     *
+     */
+    void X509_STORE_CTX_set_error(X509_STORE_CTX *ctx, int s);
+
+
+    /*
+     *
+     */
+    void X509_STORE_set_verify_cb(X509_STORE *ctx, X509_STORE_CTX_verify_cb verify_cb);
+
+
+    /*
+     *
+     */
+    STACK_OF(X509_OBJECT) * X509_STORE_get0_objects(X509_STORE *v);
+
+
+    /*
+     *
+     */
+    X509_LOOKUP_TYPE X509_OBJECT_get_type(const X509_OBJECT *a);
+
+
+    /*
+     *
+     */
+    X509 *X509_OBJECT_get0_X509(const X509_OBJECT *a);
+
 
     /*
      *   X509_verify_cert - verify the certificate
@@ -394,6 +438,23 @@ public:
      *   X509_free - free up an X509
      */
     void X509_free(X509 *v);
+
+    /*
+     *   X509_CRL_free - free up an X509 CRL
+     */
+    void X509_CRL_free(X509_CRL *v);
+
+
+    /*
+     *
+     */
+    const ASN1_TIME *X509_CRL_get0_lastUpdate(const X509_CRL *crl);
+
+
+    /*
+     *
+     */
+    const ASN1_TIME *X509_CRL_get0_nextUpdate(const X509_CRL *crl);
 
 
     /*
@@ -485,16 +546,21 @@ public:
     int BIO_write(BIO *b, const void *data, int len);
 
     /*
+     *   BIO_get_data - retrieve (custom) data from BIO
+     */
+    void *BIO_get_data(BIO *a);
+
+    /*
      *   PEM_write_bio_X509 - write a PEM encoded cert to a BIO*
      */
     int PEM_write_bio_X509(BIO *bp, X509 *x);
 
-
+#if OPENSSL_VERSION_NUMBER < 0x10000000L
     /*
      *   X509_asn1_meth - used for netscape output
      */
     ASN1_METHOD *X509_asn1_meth();
-
+#endif
 
     /*
      *   ASN1_i2d_fp - used for netscape output
@@ -565,89 +631,69 @@ public:
     /*
      *   Pop off the stack
      */
-    void *sk_pop(STACK *s);
+    char *OPENSSL_sk_pop(STACK *s);
+
+    char *OPENSSL_sk_pop(void *s)
+    {
+        return OPENSSL_sk_pop(reinterpret_cast< STACK * >(s));
+    }
 
 
     /*
      *   Free the stack
      */
-    void sk_free(STACK *s);
+    void OPENSSL_sk_free(STACK *s);
 
+    void OPENSSL_sk_free(void *s)
+    {
+        OPENSSL_sk_free(reinterpret_cast< STACK * >(s));
+    }
 
     /*
      *  Number of elements in the stack
      */
-    int sk_num(STACK *s);
+    int OPENSSL_sk_num(STACK *s);
 
+    int OPENSSL_sk_num(void *s)
+    {
+        return OPENSSL_sk_num(reinterpret_cast< STACK * >(s));
+    }
 
     /*
      *  Value of element n in the stack
      */
-    void *sk_value(STACK *s, int n);
+    char *OPENSSL_sk_value(STACK *s, int n);
 
+    char *OPENSSL_sk_value(void *s, int n)
+    {
+        return OPENSSL_sk_value(reinterpret_cast< STACK * >(s), n);
+    }
 
     /*
      *  Create a new stack
      */
-    STACK *sk_new(int (*cmp)(const void *, const void *));
+    STACK *OPENSSL_sk_new(int (*cmp)());
 
 
     /*
      *  Add an element to the stack
      */
-    int sk_push(STACK *s, void *d);
+    int OPENSSL_sk_push(STACK *s, char *d);
 
+    int OPENSSL_sk_push(void *s, void *d)
+    {
+        return OPENSSL_sk_push(reinterpret_cast< STACK * >(s), reinterpret_cast< char * >(d));
+    }
 
     /*
      *  Duplicate the stack
      */
-    STACK *sk_dup(STACK *s);
+    STACK *OPENSSL_sk_dup(const STACK *s);
 
-
-#if defined(KSSL_HAVE_SSL) && OPENSSL_VERSION_NUMBER >= 0x10000000L
-
-    /* Use some template magic to simulate the OpenSSL 1.0.0 safestack macros */
-
-    template < class S > typename KOpenSSLElementType< S >::ptr_t sk_pop(S *s)
+    STACK *OPENSSL_sk_dup(const void *s)
     {
-        return reinterpret_cast< typename KOpenSSLElementType< S >::ptr_t >(sk_pop(reinterpret_cast< STACK * >(s)));
+        return OPENSSL_sk_dup(reinterpret_cast< const STACK * >(s));
     }
-
-    template < class S > void sk_free(S *s)
-    {
-        typedef typename KOpenSSLElementType< S >::ptr_t ensure_its_a_stack_type;
-        sk_free(reinterpret_cast< STACK * >(s));
-    }
-
-    template < class S > int sk_num(S *s)
-    {
-        typedef typename KOpenSSLElementType< S >::ptr_t ensure_its_a_stack_type;
-        return sk_num(reinterpret_cast< STACK * >(s));
-    }
-
-    template < class S > typename KOpenSSLElementType< S >::ptr_t sk_value(S *s, int n)
-    {
-        return reinterpret_cast< typename KOpenSSLElementType< S >::ptr_t >(sk_value(reinterpret_cast< STACK * >(s), n));
-    }
-
-    template < class T > typename KOpenSSLStackType< T >::ptr_t sk_new(int (*cmp)(T const *, T const *))
-    {
-        return reinterpret_cast< typename KOpenSSLStackType< T >::ptr_t >(sk_new(reinterpret_cast< int (*)(const void *, const void *) >(cmp)));
-    }
-
-    template < class S > int sk_push(S *s, typename KOpenSSLElementType< S >::ptr_t d)
-    {
-        return sk_push(reinterpret_cast< STACK * >(s), reinterpret_cast< void * >(d));
-    }
-
-    template < class S > S *sk_dup(S *s)
-    {
-        typedef typename KOpenSSLElementType< S >::ptr_t ensure_its_a_stack_type;
-        return reinterpret_cast< S * >(sk_dup(reinterpret_cast< STACK * >(s)));
-    }
-
-#endif
-
 
     /*
      *  Convert an ASN1_INTEGER to it's text form
@@ -707,6 +753,11 @@ public:
      *  ASN1_STRING_data
      */
     unsigned char *ASN1_STRING_data(ASN1_STRING *x);
+
+    /*
+    *  ASN1_STRING_length
+    */
+    int ASN1_STRING_length(ASN1_STRING *x);
 
     /*
      *
@@ -880,15 +931,51 @@ public:
 
 
     /*
+     * Get EVP private key type
+     */
+    int EVP_PKEY_base_id(const EVP_PKEY *pkey);
+
+
+    /*
      * Assign a private key
      */
     int EVP_PKEY_assign(EVP_PKEY *pkey, int type, char *key);
 
 
     /*
+     * Get RSA key
+     */
+    RSA *EVP_PKEY_get0_RSA(EVP_PKEY *pkey);
+
+
+    /*
+     * Get DSA key
+     */
+    DSA *EVP_PKEY_get0_DSA(EVP_PKEY *pkey);
+
+
+    /*
+     *  RSA_get0_key - retreive key parameters
+     */
+    void RSA_get0_key(const RSA *r, const BIGNUM **n, const BIGNUM **e, const BIGNUM **d);
+
+
+    /*
      * Generate a RSA key
      */
     RSA *RSA_generate_key(int bits, unsigned long e, void (*callback)(int, int, void *), void *cb_arg);
+
+
+    /*
+     *  DSA_get0_pqg - retreive key parameters
+     */
+    void DSA_get0_pqg(const DSA *d, const BIGNUM **p, const BIGNUM **q, const BIGNUM **g);
+
+
+    /*
+     *  DSA_get0_key - retreive key
+     */
+    void DSA_get0_key(const DSA *d, const BIGNUM **pub_key, const BIGNUM **priv_key);
 
 
     /*
@@ -907,8 +994,8 @@ public:
     int i2d_X509_REQ_fp(FILE *fp, X509_REQ *x);
 
     /* SMime support */
-    KOSSL1_STACK_OF(OPENSSL_STRING) * X509_get1_email(X509 *x);
-    void X509_email_free(KOSSL1_STACK_OF(OPENSSL_STRING) * sk);
+    STACK *X509_get1_email(X509 *x);
+    void X509_email_free(STACK *sk);
 
     /* Ciphers needed for SMime */
     EVP_CIPHER *EVP_des_ede3_cbc();
@@ -966,6 +1053,29 @@ public:
 
     /* get list of available SSL_CIPHER's sorted by preference */
     STACK_OF(SSL_CIPHER) * SSL_get_ciphers(const SSL *ssl);
+
+
+/* cover KOpenSSLProxy API compatibility */
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && OPENSSL_API_COMPAT < 0x10100000L
+#undef sk_dup
+#undef sk_free
+#undef sk_new
+#undef sk_num
+#undef sk_pop
+#undef sk_push
+#undef sk_value
+#undef X509_STORE_CTX_set_chain
+#undef SSLv23_client_method
+#endif
+    STACK *sk_dup(const STACK *s) KDE_DEPRECATED;
+    void sk_free(STACK *s) KDE_DEPRECATED;
+    STACK *sk_new(int (*cmp)()) KDE_DEPRECATED;
+    int sk_num(STACK *s) KDE_DEPRECATED;
+    char *sk_pop(STACK *s) KDE_DEPRECATED;
+    int sk_push(STACK *s, char *d) KDE_DEPRECATED;
+    char *sk_value(STACK *s, int n) KDE_DEPRECATED;
+    void X509_STORE_CTX_set_chain(X509_STORE_CTX *v, STACK_OF(X509) * x) KDE_DEPRECATED;
+    SSL_METHOD *SSLv23_client_method() KDE_DEPRECATED;
 
 #endif
 

@@ -183,7 +183,7 @@ KCertPart::KCertPart(QWidget *parentWidget, const char *widgetName, QObject *par
     _pkcsFrame = new QFrame(_frame);
 
     grid = new QGridLayout(_pkcsFrame, 13, 6, KDialog::marginHint(), KDialog::spacingHint());
-    grid->addMultiCellWidget(new QLabel(i18n("KDE Secure Certificate Import"), _pkcsFrame), 0, 0, 0, 5);
+    grid->addMultiCellWidget(new QLabel(i18n("KDE3 Secure Certificate Import"), _pkcsFrame), 0, 0, 0, 5);
     grid->addWidget(new QLabel(i18n("Chain:"), _pkcsFrame), 1, 0);
     _p12_chain = new KComboBox(_pkcsFrame);
     grid->addMultiCellWidget(_p12_chain, 1, 1, 1, 4);
@@ -270,7 +270,7 @@ KCertPart::KCertPart(QWidget *parentWidget, const char *widgetName, QObject *par
     _x509Frame = new QFrame(_frame);
 
     grid = new QGridLayout(_x509Frame, 12, 6, KDialog::marginHint(), KDialog::spacingHint());
-    grid->addMultiCellWidget(new QLabel(i18n("KDE Secure Certificate Import"), _x509Frame), 0, 0, 0, 5);
+    grid->addMultiCellWidget(new QLabel(i18n("KDE3 Secure Certificate Import"), _x509Frame), 0, 0, 0, 5);
 
     grid->addWidget(new QLabel(i18n("Subject:"), _x509Frame), 1, 0);
     grid->addWidget(new QLabel(i18n("Issued by:"), _x509Frame), 1, 3);
@@ -349,7 +349,7 @@ KCertPart::KCertPart(QWidget *parentWidget, const char *widgetName, QObject *par
     //------------------------------------------------------------------------
     _blankFrame = new QFrame(_frame);
     grid = new QGridLayout(_blankFrame, 1, 1, KDialog::marginHint(), KDialog::spacingHint());
-    grid->addMultiCellWidget(new QLabel(i18n("KDE Secure Certificate Import"), _blankFrame), 0, 0, 0, 0);
+    grid->addMultiCellWidget(new QLabel(i18n("KDE3 Secure Certificate Import"), _blankFrame), 0, 0, 0, 0);
     _blankFrame->show();
 
 
@@ -459,7 +459,7 @@ bool KCertPart::saveFile()
 bool KCertPart::openFile()
 {
 #ifndef HAVE_SSL
-    KMessageBox::sorry(_frame, i18n("You do not seem to have compiled KDE with SSL support."), i18n("Certificate Import"));
+    KMessageBox::sorry(_frame, i18n("You do not seem to have compiled KDE3 with SSL support."), i18n("Certificate Import"));
     return false;
 #else
 
@@ -578,9 +578,6 @@ bool KCertPart::openFile()
             return false;
         }
 
-#define sk_free KOSSL::self()->sk_free
-#define sk_num KOSSL::self()->sk_num
-#define sk_value KOSSL::self()->sk_value
         STACK_OF(X509_INFO) *sx5i = KOSSL::self()->PEM_X509_INFO_read(fp, NULL, KSSLPemCallback, NULL);
 
         if(!sx5i)
@@ -591,9 +588,9 @@ bool KCertPart::openFile()
         }
 
         _ca_filenameLabel->setText(m_file);
-        for(int i = 0; i < sk_X509_INFO_num(sx5i); i++)
+        for(int i = 0; i < KOSSL::self()->OPENSSL_sk_num(sx5i); i++)
         {
-            X509_INFO *x5i = sk_X509_INFO_value(sx5i, i);
+            X509_INFO *x5i = reinterpret_cast< X509_INFO * >(KOSSL::self()->OPENSSL_sk_value(sx5i, i));
             if(x5i->x_pkey && x5i->x509)
             { // a personal cert (like PKCS12)
                 KSSLCertificate *xc = KSSLCertificate::fromX509(x5i->x509);
@@ -613,11 +610,7 @@ bool KCertPart::openFile()
             }
         }
 
-        sk_X509_INFO_free(sx5i);
-
-#undef sk_free
-#undef sk_num
-#undef sk_value
+        KOSSL::self()->OPENSSL_sk_free(sx5i);
 
         fclose(fp);
         return true;
@@ -673,7 +666,7 @@ void KCertPart::displayCACert(KSSLCertificate *c)
 
     // Set the valid period
     QPalette cspl = _ca_validFrom->palette();
-    if(QDateTime::currentDateTime() < c->getQDTNotBefore())
+    if(QDateTime::currentDateTime(Qt::UTC) < c->getQDTNotBefore())
     {
         cspl.setColor(QColorGroup::Foreground, QColor(196, 33, 21));
     }
@@ -685,7 +678,7 @@ void KCertPart::displayCACert(KSSLCertificate *c)
     _ca_validFrom->setText(c->getNotBefore());
 
     cspl = _ca_validUntil->palette();
-    if(QDateTime::currentDateTime() > c->getQDTNotAfter())
+    if(QDateTime::currentDateTime(Qt::UTC) > c->getQDTNotAfter())
     {
         cspl.setColor(QColorGroup::Foreground, QColor(196, 33, 21));
     }
@@ -723,7 +716,7 @@ void KCertPart::displayPKCS12Cert(KSSLCertificate *c)
 
     // Set the valid period
     QPalette cspl = _p12_validFrom->palette();
-    if(QDateTime::currentDateTime() < c->getQDTNotBefore())
+    if(QDateTime::currentDateTime(Qt::UTC) < c->getQDTNotBefore())
     {
         cspl.setColor(QColorGroup::Foreground, QColor(196, 33, 21));
     }
@@ -735,7 +728,7 @@ void KCertPart::displayPKCS12Cert(KSSLCertificate *c)
     _p12_validFrom->setText(c->getNotBefore());
 
     cspl = _p12_validUntil->palette();
-    if(QDateTime::currentDateTime() > c->getQDTNotAfter())
+    if(QDateTime::currentDateTime(Qt::UTC) > c->getQDTNotAfter())
     {
         cspl.setColor(QColorGroup::Foreground, QColor(196, 33, 21));
     }
@@ -800,10 +793,9 @@ void KCertPart::slotImport()
         cfg.writeEntry("Password", "");
         cfg.sync();
         if(!_silentImport)
-            KMessageBox::information(
-                _frame,
-                i18n("Certificate has been successfully imported into KDE.\nYou can manage your certificate settings from the KDE Control Center."),
-                i18n("Certificate Import"));
+            KMessageBox::information(_frame, i18n("Certificate has been successfully imported into KDE3.\nYou can manage your certificate settings "
+                                                  "from the Trinity Control Center."),
+                                     i18n("Certificate Import"));
     }
     else if(_ca)
     {
@@ -823,10 +815,9 @@ void KCertPart::slotImport()
             _signers->regenerate();
 
         if(!_silentImport)
-            KMessageBox::information(
-                _frame,
-                i18n("Certificate has been successfully imported into KDE.\nYou can manage your certificate settings from the KDE Control Center."),
-                i18n("Certificate Import"));
+            KMessageBox::information(_frame, i18n("Certificate has been successfully imported into KDE3.\nYou can manage your certificate settings "
+                                                  "from the Trinity Control Center."),
+                                     i18n("Certificate Import"));
     }
 }
 
@@ -957,14 +948,15 @@ void KCertPart::slotImportAll()
     _ca = caSave;
     _curName = curNameSave;
     KMessageBox::information(
-        _frame, i18n("Certificates have been successfully imported into KDE.\nYou can manage your certificate settings from the KDE Control Center."),
+        _frame,
+        i18n("Certificates have been successfully imported into KDE3.\nYou can manage your certificate settings from the Trinity Control Center."),
         i18n("Certificate Import"));
 }
 
 
 KAboutData *KCertPart::createAboutData()
 {
-    return new KAboutData("KCertPart", I18N_NOOP("KDE Certificate Part"), "1.0");
+    return new KAboutData("KCertPart", I18N_NOOP("KDE3 Certificate Part"), "1.0");
 }
 
 #include "kcertpart.moc"

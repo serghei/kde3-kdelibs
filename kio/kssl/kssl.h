@@ -82,16 +82,15 @@ public:
     bool TLSInit();
 
     /**
-     *  Set an SSL session to use.  This deep copies the session so it
-     *  doesn't have to remain valid.  You need to call it after calling
-     *  initialize or reInitialize.  The ID is cleared in close().
+     *  Set an SSL session to use.  This takes the session from the original
+     *  KSSL object, so it is in fact a session move operation.
      *
      *  @param session A valid session to reuse.  If 0L, it will clear the
      *                 session ID in memory.
      *
      *  @return true on success
      */
-    bool setSession(const KSSLSession *session);
+    bool takeSession(KSSLSession *session);
 
     /**
      *  Close the SSL session.

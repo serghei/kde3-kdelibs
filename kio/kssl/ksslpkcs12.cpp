@@ -34,16 +34,6 @@
 
 #include <assert.h>
 
-#ifdef KSSL_HAVE_SSL
-#define sk_new kossl->sk_new
-#define sk_push kossl->sk_push
-#define sk_free kossl->sk_free
-#define sk_value kossl->sk_value
-#define sk_num kossl->sk_num
-#define sk_dup kossl->sk_dup
-#define sk_pop kossl->sk_pop
-#endif
-
 
 KSSLPKCS12::KSSLPKCS12()
 {
@@ -64,12 +54,12 @@ KSSLPKCS12::~KSSLPKCS12()
     {
         for(;;)
         {
-            X509 *x5 = sk_X509_pop(_caStack);
+            X509 *x5 = reinterpret_cast< X509 * >(kossl->OPENSSL_sk_pop(_caStack));
             if(!x5)
                 break;
             kossl->X509_free(x5);
         }
-        sk_X509_free(_caStack);
+        kossl->OPENSSL_sk_free(_caStack);
     }
     if(_pkcs)
         kossl->PKCS12_free(_pkcs);
@@ -170,12 +160,12 @@ bool KSSLPKCS12::parse(QString pass)
     {
         for(;;)
         {
-            X509 *x5 = sk_X509_pop(_caStack);
+            X509 *x5 = reinterpret_cast< X509 * >(kossl->OPENSSL_sk_pop(_caStack));
             if(!x5)
                 break;
             kossl->X509_free(x5);
         }
-        sk_X509_free(_caStack);
+        kossl->OPENSSL_sk_free(_caStack);
     }
     _pkey = NULL;
     _caStack = NULL;
@@ -320,14 +310,3 @@ QString KSSLPKCS12::name()
 {
     return _cert->getSubject();
 }
-
-
-#ifdef KSSL_HAVE_SSL
-#undef sk_new
-#undef sk_push
-#undef sk_free
-#undef sk_value
-#undef sk_num
-#undef sk_pop
-#undef sk_dup
-#endif

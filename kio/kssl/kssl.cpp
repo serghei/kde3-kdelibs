@@ -51,7 +51,6 @@
 #include <klocale.h>
 #include <ksocks.h>
 
-#define sk_dup d->kossl->sk_dup
 
 class KSSLPrivate {
 public:
@@ -192,7 +191,7 @@ bool KSSL::initialize()
     else if(!m_cfg->tlsv1() && m_cfg->sslv3() && !m_cfg->sslv2())
         d->m_meth = d->kossl->SSLv3_client_method();
     else
-        d->m_meth = d->kossl->SSLv23_client_method();
+        d->m_meth = d->kossl->TLS_client_method();
 
     /*
     if (m_cfg->sslv2() && m_cfg->sslv3()) kdDebug(7029) << "Double method" << endl;
@@ -220,7 +219,7 @@ bool KSSL::initialize()
 }
 
 
-bool KSSL::setSession(const KSSLSession *session)
+bool KSSL::takeSession(KSSLSession *session)
 {
 #ifdef KSSL_HAVE_SSL
     if(!session)
@@ -230,11 +229,10 @@ bool KSSL::setSession(const KSSLSession *session)
         return true;
     }
 
-    // Obtain a reference by incrementing the reference count.  Yuck.
-    static_cast< SSL_SESSION * >(session->_session)->references++;
-
+    // Take session reference
     d->session = new KSSLSession;
     d->session->_session = session->_session;
+    session->_session = 0L;
 
     return true;
 #else
@@ -306,13 +304,16 @@ int KSSL::accept(int sock)
 
     if(d->session)
     {
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
         if(static_cast< SSL_SESSION * >(d->session->_session)->sess_cert == 0)
         {
             kdDebug(7029) << "Can't reuse session, no certificate." << endl;
             delete d->session;
             d->session = 0;
         }
-        else if(1 == d->kossl->SSL_set_session(d->m_ssl, static_cast< SSL_SESSION * >(d->session->_session)))
+        else
+#endif
+            if(1 == d->kossl->SSL_set_session(d->m_ssl, static_cast< SSL_SESSION * >(d->session->_session)))
         {
             kdDebug(7029) << "Session ID is being reused." << endl;
         }
@@ -341,7 +342,7 @@ int KSSL::accept(int sock)
     if(!m_cfg->sslv2())
         off |= SSL_OP_NO_SSLv2;
 
-    d->kossl->SSL_set_options(d->m_ssl, off);
+    d->kossl->_SSL_set_options(d->m_ssl, off);
 
     rc = d->kossl->SSL_set_fd(d->m_ssl, sock);
     if(rc == 0)
@@ -369,7 +370,7 @@ int KSSL::accept(int sock)
         return -1;
     }
 
-    if(!d->kossl->SSL_session_reused(d->m_ssl))
+    if(!d->kossl->_SSL_session_reused(d->m_ssl))
     {
         if(d->session)
         {
@@ -409,13 +410,16 @@ int KSSL::connect(int sock)
 
     if(d->session)
     {
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
         if(static_cast< SSL_SESSION * >(d->session->_session)->sess_cert == 0)
         {
             kdDebug(7029) << "Can't reuse session, no certificate." << endl;
             delete d->session;
             d->session = 0;
         }
-        else if(1 == d->kossl->SSL_set_session(d->m_ssl, static_cast< SSL_SESSION * >(d->session->_session)))
+        else
+#endif
+            if(1 == d->kossl->SSL_set_session(d->m_ssl, static_cast< SSL_SESSION * >(d->session->_session)))
         {
             kdDebug(7029) << "Session ID is being reused." << endl;
         }
@@ -444,7 +448,7 @@ int KSSL::connect(int sock)
     if(!m_cfg->sslv2())
         off |= SSL_OP_NO_SSLv2;
 
-    d->kossl->SSL_set_options(d->m_ssl, off);
+    d->kossl->_SSL_set_options(d->m_ssl, off);
 
     rc = d->kossl->SSL_set_fd(d->m_ssl, sock);
     if(rc == 0)
@@ -483,7 +487,7 @@ connect_again:
         }
     }
 
-    if(!d->kossl->SSL_session_reused(d->m_ssl))
+    if(!d->kossl->_SSL_session_reused(d->m_ssl))
     {
         if(d->session)
         {
@@ -674,7 +678,7 @@ void KSSL::setPeerInfo()
     m_pi.m_cert.setCert(d->kossl->SSL_get_peer_certificate(d->m_ssl));
     STACK_OF(X509) *xs = d->kossl->SSL_get_peer_cert_chain(d->m_ssl);
     if(xs)
-        xs = sk_X509_dup(xs); // Leak?
+        xs = reinterpret_cast< STACK_OF(X509) * >(d->kossl->OPENSSL_sk_dup(xs)); // Leak?
     m_pi.m_cert.setChain((void *)xs);
 #endif
 }
@@ -740,8 +744,6 @@ bool KSSL::setClientCertificate(KSSLPKCS12 *pkcs)
 #endif
 }
 
-#undef sk_dup
-
 const KSSLSession *KSSL::session() const
 {
     return d->session;
@@ -750,7 +752,7 @@ const KSSLSession *KSSL::session() const
 bool KSSL::reusingSession() const
 {
 #ifdef KSSL_HAVE_SSL
-    return (d->m_ssl && d->kossl->SSL_session_reused(d->m_ssl));
+    return (d->m_ssl && d->kossl->_SSL_session_reused(d->m_ssl));
 #else
     return false;
 #endif

@@ -49,12 +49,18 @@ class KSSLX509V3;
 
 #include <kdelibs_export.h>
 
+#ifdef Q_WS_WIN
+#include "ksslconfig_win.h"
+#else
 #include "ksslconfig.h"
+#endif
 
 #ifdef KSSL_HAVE_SSL
 typedef struct x509_st X509;
+typedef struct X509_crl_st X509_CRL;
 #else
 class X509;
+class X509_CRL;
 #endif
 
 /**
@@ -92,6 +98,13 @@ public:
      *  @return the X.509 certificate, or NULL
      */
     static KSSLCertificate *fromString(QCString cert);
+
+    /**
+     *  Create an X.509 CRL certificate from a base64 encoded string.
+     *  @param cert the certificate in base64 form
+     *  @return the X.509 CRL certificate, or NULL
+     */
+    static KSSLCertificate *crlFromString(QCString cert);
 
     /**
      *  Create an X.509 certificate from the internal representation.
@@ -181,6 +194,18 @@ public:
      *  @return the date
      */
     QDateTime getQDTNotAfter() const;
+
+    /**
+     *  Get the date that the CRL was generated on.
+     *  @return the date
+     */
+    QDateTime getQDTLastUpdate() const;
+
+    /**
+     *  Get the date that the CRL must be updated by.
+     *  @return the date
+     */
+    QDateTime getQDTNextUpdate() const;
 
     /**
      *  Convert the certificate to DER (ASN.1) format.
@@ -377,6 +402,7 @@ protected:
     KSSLCertificate();
 
     void setCert(X509 *c);
+    void setCRL(X509_CRL *c);
     void setChain(void *c);
     X509 *getCert();
     KSSLValidation processError(int ec);
