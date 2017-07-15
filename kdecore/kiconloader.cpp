@@ -734,6 +734,7 @@ QPixmap KIconLoader::loadIcon(const QString &_name, KIcon::Group group, int size
 
         // Use the extension as the format. Works for XPM and PNG, but not for SVG
         QString ext = icon.path.right(3).upper();
+
         if(ext != "SVG" && ext != "VGZ")
         {
             img = new QImage(icon.path, ext.latin1());
@@ -743,9 +744,9 @@ QPixmap KIconLoader::loadIcon(const QString &_name, KIcon::Group group, int size
                 return pix;
             }
         }
-#ifdef HAVE_LIBART
         else
         {
+#ifdef HAVE_LIBART
             // Special stuff for SVG icons
             KSVGIconEngine *svgEngine = new KSVGIconEngine();
 
@@ -755,8 +756,10 @@ QPixmap KIconLoader::loadIcon(const QString &_name, KIcon::Group group, int size
                 img = new QImage();
 
             delete svgEngine;
-        }
+#else
+            img = new QImage();
 #endif
+        }
 
         iconType = icon.type;
         iconThreshold = icon.threshold;
