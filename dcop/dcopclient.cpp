@@ -182,7 +182,7 @@ DCOPClient::~DCOPClient()
 
 void DCOPClient::setServerAddress(const QCString &addr)
 {
-
+    qWarning("DCOPClient::setServerAddress(addr: \"%s\") -- not implemented", addr.data());
 }
 
 
@@ -198,7 +198,7 @@ bool DCOPClient::attach()
 
 void DCOPClient::bindToApp()
 {
-
+    qWarning("DCOPClient::bindToApp() -- not implemented");
 }
 
 
@@ -218,19 +218,20 @@ bool DCOPClient::isAttached() const
 
 bool DCOPClient::isAttachedToForeignServer() const
 {
+    qWarning("DCOPClient::isAttachedToForeignServer() -- not implemented");
     return false;
 }
 
 
 void DCOPClient::setAcceptCalls(bool b)
 {
-
+    qWarning("DCOPClient::setAcceptCalls(b: %d) -- not implemented", b);
 }
 
 
 void DCOPClient::setQtBridgeEnabled(bool b)
 {
-
+    qWarning("DCOPClient::setQtBridgeEnabled(b: %d) -- not implemented", b);
 }
 
 
@@ -307,24 +308,28 @@ QCString DCOPClient::appId() const
 
 int DCOPClient::socket() const
 {
+    qWarning("DCOPClient::socket() -- not implemented");
     return -1;
 }
 
 
 bool DCOPClient::isSuspended() const
 {
+    qWarning("DCOPClient::isSuspended() -- not implemented");
     return false;
 }
 
 
 bool DCOPClient::send(const QCString &remApp, const QCString &remObj, const QCString &remFun, const QByteArray &data)
 {
+    qWarning("DCOPClient::send(remApp: \"%s\", remObj: \"%s\", remFun: \"%s\", data: \"%s\") -- not implemented", remApp.data(), remObj.data(), remFun.data(), data.data());
     return false;
 }
 
 
 bool DCOPClient::send(const QCString &remApp, const QCString &remObj, const QCString &remFun, const QString &data)
 {
+    qWarning("DCOPClient::send(remApp: \"%s\", remObj: \"%s\", remFun: \"%s\", data: \"%s\") -- not implemented", remApp.data(), remObj.data(), remFun.data(), data.data());
     return false;
 }
 
@@ -380,55 +385,62 @@ bool DCOPClient::call(const QCString &remApp, const QCString &remObj, const QCSt
 
 int DCOPClient::callAsync(const QCString &remApp, const QCString &remObj, const QCString &remFun, const QByteArray &data, QObject *callBackObj, const char *callBackSlot)
 {
+    qWarning("DCOPClient::callAsync(remApp: \"%s\", remObj: \"%s\", remFun: \"%s\", data: \"%s\", callBackObj: %p, callBackSlot: \"%s\") -- not implemented", remApp.data(), remObj.data(), remFun.data(), data.data(), callBackObj, callBackSlot);
     return 0;
 }
 
 
 bool DCOPClient::findObject(const QCString &remApp, const QCString &remObj, const QCString &remFun, const QByteArray &data, QCString &foundApp, QCString &foundObj, bool useEventLoop, int timeout)
 {
+    qWarning("DCOPClient::findObject() -- not implemented");
     return false;
 }
 
 
 bool DCOPClient::findObject(const QCString &remApp, const QCString &remObj, const QCString &remFun, const QByteArray &data, QCString &foundApp, QCString &foundObj, bool useEventLoop)
 {
+    qWarning("DCOPClient::findObject() -- not implemented");
     return false;
 }
 
 
 void DCOPClient::emitDCOPSignal(const QCString &object, const QCString &signal, const QByteArray &data)
 {
-
+    qWarning("DCOPClient::emitDCOPSignal(object: \"%s\", signal: \"%s\", data: \"%s\") -- not implemented", object.data(), signal.data(), data.data());
 }
 
 
 bool DCOPClient::connectDCOPSignal(const QCString &sender, const QCString &senderObj, const QCString &signal, const QCString &receiverObj, const QCString &slot, bool Volatile)
 {
+    qWarning("DCOPClient::connectDCOPSignal(sender: \"%s\", senderObj: \"%s\", signal: \"%s\", receiverObj: \"%s\", slot: \"%s\", Volatile: %d) -- not implemented", sender.data(), senderObj.data(), signal.data(), receiverObj.data(), slot.data(), Volatile);
     return false;
 }
 
 
 bool DCOPClient::disconnectDCOPSignal(const QCString &sender, const QCString &senderObj, const QCString &signal, const QCString &receiverObj, const QCString &slot)
 {
+    qWarning("DCOPClient::disconnectDCOPSignal(sender: \"%s\", senderObj: \"%s\", signal: \"%s\", receiverObj: \"%s\", slot: \"%s\") -- not implemented", sender.data(), senderObj.data(), signal.data(), receiverObj.data(), slot.data());
     return false;
 }
 
 
 bool DCOPClient::process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData)
 {
+    qWarning("DCOPClient::process(fun: \"%s\", data: \"%s\", replyType: OUT, replyData: OUT) -- not implemented", fun.data(), data.data());
     return false;
 }
 
 
 DCOPClientTransaction *DCOPClient::beginTransaction()
 {
+    qWarning("DCOPClient::beginTransaction() -- not implemented");
     return nullptr;
 }
 
 
 void DCOPClient::endTransaction(DCOPClientTransaction *t, QCString &replyType, QByteArray &replyData)
 {
-
+    qWarning("DCOPClient::endTransaction(t: %p, replyType: OUT, replyData: OUT) -- not implemented", t);
 }
 
 
@@ -458,7 +470,7 @@ KStringList DCOPClient::registeredApplications()
 
 KStringList DCOPClient::remoteObjects(const QCString &remApp, bool *ok)
 {
-    qWarning("DCOPClient::remoteObjects(remApp: \"%s\")", remApp.data());
+    qWarning("DCOPClient::remoteObjects(remApp: \"%s\", ok: OUT)", remApp.data());
 
     if(ok)
         *ok = false;
@@ -480,7 +492,7 @@ KStringList DCOPClient::remoteObjects(const QCString &remApp, bool *ok)
 
 KStringList DCOPClient::remoteFunctions(const QCString &remApp, const QCString &remObj, bool *ok)
 {
-    qWarning("DCOPClient::remoteFunctions(remApp: \"%s\", remObj: \"%s\")", remApp.data(), remObj.data());
+    qWarning("DCOPClient::remoteFunctions(remApp: \"%s\", remObj: \"%s\", ok: OUT)", remApp.data(), remObj.data());
 
     if(ok)
         *ok = false;
@@ -503,31 +515,32 @@ KStringList DCOPClient::remoteFunctions(const QCString &remApp, const QCString &
 
 QCString DCOPClient::senderId() const
 {
+    qWarning("DCOPClient::senderId() -- not implemented");
     return QCString();
 }
 
 
 void DCOPClient::setDefaultObject(const QCString &objId)
 {
-
+    qWarning("DCOPClient::setDefaultObject(objId: \"%s\") -- not implemented", objId.data());
 }
 
 
 void DCOPClient::setNotifications(bool enabled)
 {
-
+    qWarning("DCOPClient::setNotifications(enabled: %d) -- not implemented", enabled);
 }
 
 
 void DCOPClient::setDaemonMode(bool daemonMode)
 {
-
+    qWarning("DCOPClient::setDaemonMode(daemonMode: %d) -- not implemented", daemonMode);
 }
 
 
-void DCOPClient::setPriorityCall(bool)
+void DCOPClient::setPriorityCall(bool b)
 {
-
+    qWarning("DCOPClient::setPriorityCall(b: %d) -- not implemented", b);
 }
 
 
@@ -545,73 +558,79 @@ void DCOPClient::setMainClient(DCOPClient *mainClient)
 
 void DCOPClient::emergencyClose()
 {
-
+    qWarning("DCOPClient::emergencyClose() -- not implemented");
 }
 
 
 const char *DCOPClient::postMortemSender()
 {
+    qWarning("DCOPClient::postMortemSender() -- not implemented");
     return nullptr;
 }
 
 
 const char *DCOPClient::postMortemObject()
 {
+    qWarning("DCOPClient::postMortemObject() -- not implemented");
     return nullptr;
 }
 
 
 const char *DCOPClient::postMortemFunction()
 {
+    qWarning("DCOPClient::postMortemFunction() -- not implemented");
     return nullptr;
 }
 
 
 QCString DCOPClient::dcopServerFile(const QCString &hostname)
 {
+    qWarning("DCOPClient::dcopServerFile(hostname: \"%s\") -- not implemented", hostname.data());
     return QCString();
 }
 
 
 QCString DCOPClient::dcopServerFileOld(const QCString &hostname)
 {
+    qWarning("DCOPClient::dcopServerFileOld(hostname: \"%s\") -- not implemented", hostname);
     return QCString();
 }
 
 
 QCString DCOPClient::iceauthPath()
 {
+    qWarning("DCOPClient::iceauthPath() -- not implemented");
     return QCString();
 }
 
 
 void DCOPClient::processSocketData(int socknum)
 {
-
+    qWarning("DCOPClient::processSocketData(socknum: %d) -- not implemented", socknum);
 }
 
 
 void DCOPClient::processPostedMessagesInternal()
 {
-
+    qWarning("DCOPClient::processPostedMessagesInternal() -- not implemented");
 }
 
 
 void DCOPClient::asyncReplyReady()
 {
-
+    qWarning("DCOPClient::asyncReplyReady() -- not implemented");
 }
 
 
 void DCOPClient::eventLoopTimeout()
 {
-
+    qWarning("DCOPClient::eventLoopTimeout() -- not implemented");
 }
 
 
 void DCOPClient::virtual_hook(int id, void *data)
 {
-
+    qWarning("DCOPClient::virtual_hook(id: %d, data: %p) -- not implemented", id, data);
 }
 
 
