@@ -19,18 +19,26 @@
 #ifndef _KPULSEPLAYER_H_
 #define _KPULSEPLAYER_H_
 
+#include <qobject.h>
 #include <qcstring.h>
 
 
 class KPulsePlayerPrivate;
 
 
-class KPulsePlayer {
+class KPulsePlayer : public QObject {
+
+    Q_OBJECT
+    friend class KPulsePlayerPrivate;
+
 public:
     KPulsePlayer();
     ~KPulsePlayer();
 
     void play(const QCString &file);
+
+signals:
+    void finished();
 
 private:
     KPulsePlayerPrivate *d;

@@ -83,6 +83,7 @@ private:
     bool isGlobal(const QString &eventname);
 
 private slots:
+    void slotPulsePlayerFinished();
     void slotPlayerProcessExited(KProcess *proc);
 
 private:

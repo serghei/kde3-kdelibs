@@ -251,7 +251,7 @@ AUDIOFILE_CLEANUP:
 
 class KPulsePlayerPrivate : public QObject {
 public:
-    KPulsePlayerPrivate();
+    KPulsePlayerPrivate(KPulsePlayer *parent);
     ~KPulsePlayerPrivate();
     void play(const QCString &file);
 
@@ -263,7 +263,8 @@ private:
 };
 
 
-KPulsePlayerPrivate::KPulsePlayerPrivate() : QObject(0, "KPulsePlayerPrivate")
+KPulsePlayerPrivate::KPulsePlayerPrivate(KPulsePlayer *parent)
+    : QObject(parent, "KPulsePlayerPrivate")
 {
     workers.setAutoDelete(true);
 }
@@ -283,7 +284,8 @@ KPulsePlayerPrivate::~KPulsePlayerPrivate()
 
 void KPulsePlayerPrivate::customEvent(QCustomEvent *e)
 {
-    workers.remove(static_cast< const char * >(e->data()));
+    workers.remove(static_cast<const char*>(e->data()));
+    emit static_cast<KPulsePlayer*>(parent())->finished();
 }
 
 
@@ -307,8 +309,9 @@ void KPulsePlayerPrivate::play(const QCString &file)
 
 
 KPulsePlayer::KPulsePlayer()
+    : QObject()
 {
-    d = new KPulsePlayerPrivate;
+    d = new KPulsePlayerPrivate(this);
 }
 
 
@@ -322,3 +325,6 @@ void KPulsePlayer::play(const QCString &file)
 {
     d->play(file);
 }
+
+
+#include "kpulseplayer.moc"

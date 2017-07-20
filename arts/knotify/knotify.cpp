@@ -77,6 +77,7 @@ public:
 
 #ifdef WITH_PULSEAUDIO
     KPulsePlayer pulsePlayer;
+    int pulsePlayerEventId;
 #endif
 };
 
@@ -129,6 +130,10 @@ KNotify::KNotify() : QObject(), DCOPObject("Notify")
     d->volume = 100;
 
     d->playTimer = 0;
+
+#ifdef WITH_PULSEAUDIO
+    connect(&d->pulsePlayer, SIGNAL(finished()), this, SLOT(slotPulsePlayerFinished()));
+#endif
 
     loadConfig();
 }
@@ -335,6 +340,7 @@ bool KNotify::notifyBySound(const QString &sound, const QString &appname, int ev
     if(!external)
     {
 #ifdef WITH_PULSEAUDIO
+        d->pulsePlayerEventId = eventId;
         d->pulsePlayer.play(soundFile.utf8());
         return true;
 #else
@@ -494,6 +500,16 @@ void KNotify::setVolume(int volume)
         volume = 100;
     d->volume = volume;
 }
+
+
+
+void KNotify::slotPulsePlayerFinished()
+{
+#ifdef WITH_PULSEAUDIO
+    soundFinished(d->pulsePlayerEventId, PlayedOK);
+#endif
+}
+
 
 void KNotify::slotPlayerProcessExited(KProcess *proc)
 {
